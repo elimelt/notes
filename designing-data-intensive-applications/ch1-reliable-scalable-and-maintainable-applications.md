@@ -11,4 +11,4 @@ A data-intensive application is typically built from standard building blocks:
 - Send a message to another process, to be handled asynchronously (stream proessing)
 - Periodically crunch a large amount of accumulated data (batch processing)
 
-[image](https://api.github.com/repos/elimelt/notes/contents/designing-data-intensive-applications/sc.png)
+![image](https://api.github.com/repos/elimelt/notes/contents/designing-data-intensive-applications/sc.png)

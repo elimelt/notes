@@ -53,5 +53,14 @@ Use percentiles. Look at the median (p50), the 95th percentile (p95), and the 99
 
 When making multiple backend calls to external services, take special care to measure the p99 of the overall request latency (not just the p99 of each individual service call). This prevents latency amplification that would potentially impact users.
 
+#### Coping with Load
+- Scaling up (vertical scaling): moving to a more powerful machine
+- Scaling out (horizontal scaling): distributing the load across multiple smaller machines
+- Elasticity: automatically add computing resources when they detect a load increase, and remove resources when the load decreases
+
+There is no generic solution. Scale based on access patterns, not on data size.
 
 ### Maintainability
+**Operability:** make it easy for operations teams to keep the system running smoothly. Make common tasks easy, and preferably automatic. Good monitering is also crucial.
+**Simplicity:** make it easy for new engineers to understand the system, by removing as much complexity as possible from the system. Manage complexity with abstraction.
+**Evolvability:** make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change. Good abstractions and modularity allow components to be replaced, and the overall system architecture to be modified, without complete reimplementation.

@@ -17,13 +17,13 @@ A data-intensive application is typically built from standard building blocks:
 ### Reliability
 A fault is usually defined as one component of the system deviating from its spec, whereas a failure is when the system as a whole stops providing the required service to the user.
 
-#### Hardware faults (hard disk crashes, RAM errors, etc.)
+**Hardware faults (hard disk crashes, RAM errors, etc.)**
 ...
 
-#### Software faults (crashes, runaway process, slowdowns, cascading failures, etc.)
+**Software faults (crashes, runaway process, slowdowns, cascading failures, etc.)**
 Lots of small things can help: carefully thinking about assumptions and interactions in the system; thorough testing; process isolation; allowing processes to crash and restart; measuring, monitoring, and analyzing system behavior in production. If a system is expected to provide some guarantee (for example, in a message queue, that the num‐ ber of incoming messages equals the number of outgoing messages), it can constantly check itself while it is running and raise an alert if a discrepancy is found
 
-#### Human errors (operator error, configuration error, etc.)
+**Human errors (operator error, configuration error, etc.)**
 - Design systems in a way that minimizes opportunities for error.
 - Decouple the places where people make the most mistakes from the places where they can cause failures.
 - Test thoroughly at all levels.
@@ -31,11 +31,10 @@ Lots of small things can help: carefully thinking about assumptions and interact
 - Set up detailed and clear monitoring
 
 
-### Scalability
-Scalability is the term we use to describe a system's ability to cope with increased
+**Scalability:** the term we use to describe a system's ability to cope with increased
 load. Load can be described with a few numbers that are easy to measure:
 
-#### Describing Load
+**Describing Load**
 - Requests per second (RPS)
 - Reads vs. writes (read-write ratio)
 - Cache hit rate
@@ -62,5 +61,7 @@ There is no generic solution. Scale based on access patterns, not on data size.
 
 ### Maintainability
 **Operability:** make it easy for operations teams to keep the system running smoothly. Make common tasks easy, and preferably automatic. Good monitering is also crucial.
+
 **Simplicity:** make it easy for new engineers to understand the system, by removing as much complexity as possible from the system. Manage complexity with abstraction.
+
 **Evolvability:** make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change. Good abstractions and modularity allow components to be replaced, and the overall system architecture to be modified, without complete reimplementation.

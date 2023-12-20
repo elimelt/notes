@@ -10,3 +10,5 @@ A data-intensive application is typically built from standard building blocks:
 - Allow users to search data by keyword or filter it in various ways (search indexes)
 - Send a message to another process, to be handled asynchronously (stream proessing)
 - Periodically crunch a large amount of accumulated data (batch processing)
+
+![image](./sc.png)

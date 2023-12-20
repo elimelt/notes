@@ -32,7 +32,7 @@ Lots of small things can help: carefully thinking about assumptions and interact
 
 
 ### Scalability
-Scalability is the term we use to describe a system’s ability to cope with increased
+Scalability is the term we use to describe a system's ability to cope with increased
 load. Load can be described with a few numbers that are easy to measure:
 
 #### Describing Load

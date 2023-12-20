@@ -1,1 +1,1 @@
-# notes
+# Notes for all kinds of things!

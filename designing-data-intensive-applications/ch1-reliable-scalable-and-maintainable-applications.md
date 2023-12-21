@@ -21,7 +21,7 @@ A fault is usually defined as one component of the system deviating from its spe
 ...
 
 **Software faults (crashes, runaway process, slowdowns, cascading failures, etc.)**
-Lots of small things can help: carefully thinking about assumptions and interactions in the system; thorough testing; process isolation; allowing processes to crash and restart; measuring, monitoring, and analyzing system behavior in production. If a system is expected to provide some guarantee (for example, in a message queue, that the num‐ ber of incoming messages equals the number of outgoing messages), it can constantly check itself while it is running and raise an alert if a discrepancy is found
+Lots of small things can help: carefully thinking about assumptions and interactions in the system; thorough testing; process isolation; allowing processes to crash and restart; measuring, monitoring, and analyzing system behavior in production. If a system is expected to provide some guarantee (for example, in a message queue, that the number of incoming messages equals the number of outgoing messages), it can constantly check itself while it is running and raise an alert if a discrepancy is found
 
 **Human errors (operator error, configuration error, etc.)**
 - Design systems in a way that minimizes opportunities for error.

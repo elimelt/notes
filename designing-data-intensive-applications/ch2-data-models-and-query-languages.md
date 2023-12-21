@@ -104,7 +104,7 @@ is the collocation of related data items on the same storage device (e.g. disk b
 
 For document databases, you need to load the entire document, even if you only need a small portion of it. Keep documents small.
 
-**Examples**: Google Spanner uses nested data structures, and it allows secondary indexes on nested fields. MongoDB and Elasticsearch allow you to index nested fields, but they don’t allow secondary indexes on nested fields. Column family databases such as BigTable, HBase, and Cassandra.
+**Examples**: Google Spanner uses nested data structures, and it allows secondary indexes on nested fields. MongoDB and Elasticsearch allow you to index nested fields, but they don't allow secondary indexes on nested fields. Column family databases such as BigTable, HBase, and Cassandra.
 
 Many relational databases also have XML and JSON data types, which allow you to store documents within a row of a table.
 

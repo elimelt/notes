@@ -45,7 +45,7 @@ When you increase a load parameter and keep the system resources (CPU, memory, n
 When you increase a load parameter, how much do you need to increase the resources if you want to keep performance unchanged?
 
 #### Latency and Response Time
-**Latency** is the duration that a request is waiting to be handled—during which it is latent, awaiting service. **Response time** is the delay between a client sending a request and receiving a response.
+**Latency** is the duration that a request is waiting to be handled-during which it is latent, awaiting service. **Response time** is the delay between a client sending a request and receiving a response.
 
 #### When Measuring Load
 Use percentiles. Look at the median (p50), the 95th percentile (p95), and the 99th percentile (p99).

@@ -84,3 +84,48 @@ As RAM gets cheaper, it makes more sense to keep data in memory. **In-memory dat
 
 ### Transaction Processing or Analytics?
 
+**OLTP** (online transaction processing) is good for real-time stateful workloads, where low latency and high throughput are important. **OLAP** (online analytics processing) is good for async batch processing, where high throughput is important, but latency is not.
+
+#### OTLP:
+- transactional databases, relational databases, key-value stores, etc.
+- ACID transactions, concurrency control, indexes, etc.
+- enterprise typically made up of several OLTP systems that require high-availability and low-latency for reads and writes.
+
+#### OLAP:
+- data warehouses, batch processing, batch analytics, Hadoop, Spark, etc.
+- read only copy of data, typically loaded and queried in batches
+- typically used for business intelligence, reporting, and data mining. Not as critical to keep up and running 24/7, and queries are able to hog system resources without consequence.
+
+
+Most of the previous indexes are more OTLP focused, whereas "data warehouses" are more OLAP focused, and often use a different schema and index model.
+
+### Stars and Snowflakes: Schemas for Analytics
+
+**Star schema** is a simple schema for OLAP. It has a single **fact table** containing all the records you want to query, and multiple **dimension tables** that contain the attributes you want to be queriable. The fact table contains foreign keys to the dimension tables.
+
+**Snowflake schema** is a more complex schema for OLAP. It is similar to a star schema, but the dimension tables are normalized into multiple tables. This can make queries more complex, but can also reduce storage space.
+
+Warehouses can get huge (petabytes), since records are often events and are kept long term. Columns are often also very wide (100s of columns), since they are often denormalized.
+
+### Column-Oriented Storage
+
+```sql
+SELECT
+ dim_date.weekday, dim_product.category,
+ SUM(fact_sales.quantity) AS quantity_sold
+FROM fact_sales
+ JOIN dim_date ON fact_sales.date_key = dim_date.date_key
+ JOIN dim_product ON fact_sales.product_sk = dim_product.product_sk
+WHERE
+ dim_date.year = 2013 AND
+ dim_product.category IN ('Fresh fruit', 'Candy')
+GROUP BY
+ dim_date.weekday, dim_product.category;
+ ```
+
+In transactional databases, storage is "row-oriented", so an entire row needs to be loaded, including columns that aren't used. **column-oriented** storage is better for OLAP, since it only needs to load the columns that are used, which can amount to a lot of space over large datasets. It also allows for better compression, since columns are often similar.
+
+Can be heavily compressed using bitmap indexes, and further by run-length encoding, delta encoding, etc. can also be optimized with vectorized processing (SIMD instructions), where instructions are executed in parallel on multiple values at once ([C++ example](https://courses.cs.washington.edu/courses/cse333/23au/lectures/27/code/cpp_simd_example.tar.gz)).
+
+#### Sort Order in Column Storage
+

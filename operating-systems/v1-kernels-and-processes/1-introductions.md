@@ -96,27 +96,27 @@ Efficiency is the ability to minimize overhead. Overhead is the cost of abstract
 
 - **Application programming interface (API)** vs. **abstract virtual machine (AVM)**?
 
-    API is the interface between client applications and the software they're consuming. AVM is the interface between the OS and the applications running on it.
+API is the interface between client applications and the software they're consuming. AVM is the interface between the OS and the applications running on it.
 
 - **Abstract virtual machine (AVM)** vs. **hardware abstraction layer (HAL)**?
 
-    AVM is the interface between the OS and the applications running on it. HAL is the interface between the OS and the hardware.
+AVM is the interface between the OS and the applications running on it. HAL is the interface between the OS and the hardware.
 
 - **Proprietary** vs. **open operating system**?
 
-    Proprietary operating systems are owned by a company and are not open source. Open operating systems are open source and free to use.
+Proprietary operating systems are owned by a company and are not open source. Open operating systems are open source and free to use.
 
 - **Batch** vs. **interactive operating system**?
 
-    Batch operating systems read from a queue of jobs, loading, running, and unloading each job. Interactive operating systems allow users to interact with the system while it is running.
+Batch operating systems read from a queue of jobs, loading, running, and unloading each job. Interactive operating systems allow users to interact with the system while it is running.
 
 - **Host** vs. **guest operating system**?
 
-    Host operating systems run on the hardware and typically manage guest operating systems. Guest operating systems run on top of the host operating system.
+Host operating systems run on the hardware and typically manage guest operating systems. Guest operating systems run on top of the host operating system.
 
 - **Multiprogramming** vs. **multiprocessing**?
 
-    Multiprogramming allows the CPU to switch to another process while waiting for I/O. Multiprocessing allows multiple processes to run concurrently.
+Multiprogramming allows the CPU to switch to another process while waiting for I/O. Multiprocessing allows multiple processes to run concurrently.
 
 ### 3. Define the term, direct memory access (DMA).
 

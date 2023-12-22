@@ -60,61 +60,61 @@ When the OS directly controls multiple concurrent processes, (**multiprocessing*
 ## Introduction
 
 1. What is an example of an operating system as:
-    - a. Referee?
+    - **Referee?**
 
     The OS manages the running processes and their access to resources.
 
-    - b. Illusionist?
+    - **Illusionist?**
 
     The OS creates the illusion of dedicated resources through abstraction, like with malloc.
 
-    - c. Glue?
+    - **Glue?**
 
 The OS provides services like the file system and network.
 
 2. What is the difference, if any, between the following terms:
 
-    - a. **Reliability** vs. **availability?**
+    - **Reliability** vs. **availability?**
 
     Reliability is the ability to do what is expected without crashing. Availability is the percentage of time a system is available. More reliable systems have higher availability.
 
-    - b. **Security** vs. **privacy?**
+    - **Security** vs. **privacy?**
 
     Security is the ability to prevent compromise from malicious users. Privacy is the ability to prevent unauthorized users from accessing data.
 
-    - c. **Security enforcement** vs. **security policy?**
+    - **Security enforcement** vs. **security policy?**
 
     Security enforcement is the mechanism that prevents compromise. Security policy is the rules that define what is allowed and what is not.
 
-    - d. **Throughput** vs. **response time?**
+    - **Throughput** vs. **response time?**
 
     Throughput is the number of requests per unit time. Response time is the time between a request and a response.
 
-    - e. **Efficiency** vs. **overhead?**
+    - **Efficiency** vs. **overhead?**
 
     Efficiency is the ability to minimize overhead. Overhead is the cost of abstraction.
 
-    - f. **Application programming interface (API)** vs. **abstract virtual machine (AVM)**?
+    - **Application programming interface (API)** vs. **abstract virtual machine (AVM)**?
 
         API is the interface between client applications and the software they're consuming. AVM is the interface between the OS and the applications running on it.
 
-    - g. **Abstract virtual machine (AVM)** vs. **hardware abstraction layer (HAL)**?
+    - **Abstract virtual machine (AVM)** vs. **hardware abstraction layer (HAL)**?
 
         AVM is the interface between the OS and the applications running on it. HAL is the interface between the OS and the hardware.
 
-    - h. **Proprietary** vs. **open operating system**?
+    - **Proprietary** vs. **open operating system**?
 
         Proprietary operating systems are owned by a company and are not open source. Open operating systems are open source and free to use.
 
-    - i. **Batch** vs. **interactive operating system**?
+    - **Batch** vs. **interactive operating system**?
 
         Batch operating systems read from a queue of jobs, loading, running, and unloading each job. Interactive operating systems allow users to interact with the system while it is running.
 
-    - j. **Host** vs. **guest operating system**?
+    - **Host** vs. **guest operating system**?
 
         Host operating systems run on the hardware and typically manage guest operating systems. Guest operating systems run on top of the host operating system.
 
-    - k. **Multiprogramming** vs. **multiprocessing**?
+    - **Multiprogramming** vs. **multiprocessing**?
 
         Multiprogramming allows the CPU to switch to another process while waiting for I/O. Multiprocessing allows multiple processes to run concurrently.
 
@@ -158,35 +158,35 @@ Process management would be done through fork/exec/wait. I would need to impleme
 ## System Design
 
 5. Suppose a computer system and all of its applications were completely bug-free and everyone in the world were completely honest and trustworthy. In other words, we need not consider fault isolation.
-    - a. How should an operating system allocate time on the processor?
+    - **How should an operating system allocate time on the processor?**
 
     Round robin
 
-    - b. How should the operating system allocate physical memory to applications?
+    - **How should the operating system allocate physical memory to applications?**
 
     Ideally, each application would have its own memory space. This requires implementing some sort of virtual memory abstraction.
 
-    - c. How should the operating system allocate its disk space?
+    - **How should the operating system allocate its disk space?**
 
     Applications should access disk through the file system, which has an interface for creating, deleting, reading, and writing files. The OS keeps a table of open files, and uses this table to perform IO operations on files in a consistent/safe way. Simply blocking access to files while they are being written to would be sufficient, although more complex buffering and locking could be used to improve performance.
 
 6. Now suppose the computer system needs to support fault isolation. What hardware and/or operating support do you think would be needed to do the following?
-    - a. Protect an application’s data structures in memory from being corrupted by other applications.
-    - b. Protecting one user’s disk files from being accessed or corrupted by another user.
-    - c. Protecting the network from a virus trying to use your computer to send spam.
+    - **Protect an application’s data structures in memory from being corrupted by other applications.**
+    - **Protecting one user’s disk files from being accessed or corrupted by another user.**
+    - **Protecting the network from a virus trying to use your computer to send spam.**
 
     Permissions ^^^ and virtualization. Each process has its own memory space, and each user has its own file system. The OS can then use permissions to control access to resources for individual users. Network access should be mutually consentual, and the OS should prevent unauthorized access to the network.
 
 7. How should an operating system support communication between applications?
-    - a. Through the file system?
+    - **Through the file system?**
 
     Each application can independently request access to a file, getting an entry on the currently open file table. If two processes want to read from the same file this is fine, but writing to the same file should be prevented from being overleaved. There should be multiple levels of locking, so that processes can lock a file to keep it for themselves, to prevent writes but allow reads, to prevent reads but allow writes, to only allow atomic reads/writes, but allow concurrent ownership, etc.
 
-    - b. Through messages passed between applications?
+    - **Through messages passed between applications?**
 
     Similar to network communication and file io, should be able to read/write to sockets. Pipes could be used to pass messages between processes, and io streams could be used to compose programs together.
 
-    - c. Through regions of memory shared between the applications?
+    - **Through regions of memory shared between the applications?**
 
     Reentrant locking service that thinly wraps a piece of shared memory owned in the kernel.
 

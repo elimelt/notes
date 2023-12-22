@@ -59,7 +59,7 @@ When the OS directly controls multiple concurrent processes, (**multiprocessing*
 
 ## Introduction
 
-1. What is an example of an operating system as:
+### 1. What is an example of an operating system as:
     - **Referee?**
 
     The OS manages the running processes and their access to resources.
@@ -72,7 +72,7 @@ When the OS directly controls multiple concurrent processes, (**multiprocessing*
 
 The OS provides services like the file system and network.
 
-2. What is the difference, if any, between the following terms:
+### 2. What is the difference, if any, between the following terms:
 
     - **Reliability** vs. **availability?**
 
@@ -118,11 +118,11 @@ The OS provides services like the file system and network.
 
         Multiprogramming allows the CPU to switch to another process while waiting for I/O. Multiprocessing allows multiple processes to run concurrently.
 
-3. Define the term, direct memory access (DMA).
+### 3. Define the term, direct memory access (DMA).
 
 DMA allows the OS to set up IO devices for another process in the background while the CPU is running another process. Through interrupts, the OS can then switch to the new process when it is ready.
 
-4. Before there were operating systems, someone needed to develop solutions without being able to look them up! How would you have designed the first operating system?
+### 4. Before there were operating systems, someone needed to develop solutions without being able to look them up! How would you have designed the first operating system?
 
 Albeit relying on what I just read...
 
@@ -157,7 +157,7 @@ Process management would be done through fork/exec/wait. I would need to impleme
 
 ## System Design
 
-5. Suppose a computer system and all of its applications were completely bug-free and everyone in the world were completely honest and trustworthy. In other words, we need not consider fault isolation.
+### 5. Suppose a computer system and all of its applications were completely bug-free and everyone in the world were completely honest and trustworthy. In other words, we need not consider fault isolation.
     - **How should an operating system allocate time on the processor?**
 
     Round robin
@@ -170,14 +170,14 @@ Process management would be done through fork/exec/wait. I would need to impleme
 
     Applications should access disk through the file system, which has an interface for creating, deleting, reading, and writing files. The OS keeps a table of open files, and uses this table to perform IO operations on files in a consistent/safe way. Simply blocking access to files while they are being written to would be sufficient, although more complex buffering and locking could be used to improve performance.
 
-6. Now suppose the computer system needs to support fault isolation. What hardware and/or operating support do you think would be needed to do the following?
+### 6. Now suppose the computer system needs to support fault isolation. What hardware and/or operating support do you think would be needed to do the following?
     - **Protect an application’s data structures in memory from being corrupted by other applications.**
     - **Protecting one user’s disk files from being accessed or corrupted by another user.**
     - **Protecting the network from a virus trying to use your computer to send spam.**
 
     Permissions ^^^ and virtualization. Each process has its own memory space, and each user has its own file system. The OS can then use permissions to control access to resources for individual users. Network access should be mutually consentual, and the OS should prevent unauthorized access to the network.
 
-7. How should an operating system support communication between applications?
+### 7. How should an operating system support communication between applications?
     - **Through the file system?**
 
     Each application can independently request access to a file, getting an entry on the currently open file table. If two processes want to read from the same file this is fine, but writing to the same file should be prevented from being overleaved. There should be multiple levels of locking, so that processes can lock a file to keep it for themselves, to prevent writes but allow reads, to prevent reads but allow writes, to only allow atomic reads/writes, but allow concurrent ownership, etc.
@@ -192,28 +192,28 @@ Process management would be done through fork/exec/wait. I would need to impleme
 
 Essentially all of the above, but programmers need to understand the tradeoffs and correcness of each approach.
 
-8. How would you design combined hardware and software support to provide the illusion of a nearly infinite virtual memory on a limited amount of physical memory?
+### 8. How would you design combined hardware and software support to provide the illusion of a nearly infinite virtual memory on a limited amount of physical memory?
 
 Analogy of cache to memory, we would use main memory as a temporary space to hold the data of running processes. Then, when another process needs time on the CPU, the context of main memory is switched to another process, and the previously occupying memory is loaded to disk.
 
 The process management service would handle this "paging" of memory by keeping a table of processes and the location and metadata for their memory. As tasks are pulled from the job queue, they are loaded into memory and added to the ready queue. When a process is blocked on IO, the OS can switch to another process and load the blocked process's memory to disk. When the process is ready again, the OS can load the process's memory from disk and resume execution.
 
-9. How would you design a system to run an entire operating system as an application on top of another operating system?
+### 9. How would you design a system to run an entire operating system as an application on top of another operating system?
 
 The hardware modules that the host OS run on all follow an interface, so by mocking the interface of these hardware systems, we can simulate the hardware. Then, simply running the guest OS on top of this simulated hardware would allow us to run the guest OS as an application on top of the host OS. This should all be done in an isolated environment, so that the guest OS cannot access the host resources directly.
 
-10. How would you design a system to update complex data structures on disk in a consistent fashion despite machine crashes?
+### 10. How would you design a system to update complex data structures on disk in a consistent fashion despite machine crashes?
 
 I would use a write ahead log (buffered in memory for high throughput events, but also flushed to disk in the background as often as possible to aid in recovery) that keeps track of all disk writes. Each record in the log would correspond to an event that happend regarding our data structure, and each event would have an id. We keep track of an atomic counter that keeps track of the last event executed on our structure. In the event of a crash, we can simply replay the log from the last event executed to the end of the log, and our data structure will be in a consistent state. We can also use this log to recover from a crash during a write, by simply replaying the log from the beginning.
 
-11. Society itself must grapple with managing resources. What ways do governments use to allocate resources, isolate misuse, and foster sharing in real life?
+### 11. Society itself must grapple with managing resources. What ways do governments use to allocate resources, isolate misuse, and foster sharing in real life?
 
 Taxes, laws, and regulations. Taxes are used to allocate resources, and laws are used to prevent misuse and foster sharing. For example, public services (firefighters) are funded by taxes, and laws are *supposed* to help ensure people can faily access these services.
 
-12. Suppose you were tasked with designing and implementing an ultra-reliable and ultra-available operating system. What techniques would you use? What tests, if any, might be sufficient to convince you of the system’s reliability, short of handing your operating system to millions of users to serve as beta testers?
+### 12. Suppose you were tasked with designing and implementing an ultra-reliable and ultra-available operating system. What techniques would you use? What tests, if any, might be sufficient to convince you of the system’s reliability, short of handing your operating system to millions of users to serve as beta testers?
 
 Extensive testing like in other forms of software (unit, integration, fuzzing, fault injection), as well as monitoring and telemetry of real devices. Formal verification would be nice, but is probably not feasible. A microkernel would be a good start, since it would allow me to isolate "trusted" code.
 
-13. For the computer you are currently using, how should the operating system designers prioritize among reliability, security, portability, performance, and adoption? Explain why.
+### 13. For the computer you are currently using, how should the operating system designers prioritize among reliability, security, portability, performance, and adoption? Explain why.
 
 As a user of a macbook pro, security, performance, and adoption are extremely important. However, as a developer it would be nice to also have a portable and (less importantly) a reliable system. Something that I think the OS designers were less concerned about is portability (Apple hardware only), but this is also a question of adoption of the Sillicon based chips in Apple's hardware.

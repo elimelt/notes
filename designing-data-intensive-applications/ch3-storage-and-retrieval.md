@@ -129,3 +129,20 @@ Can be heavily compressed using bitmap indexes, and further by run-length encodi
 
 #### Sort Order in Column Storage
 
+Can choose a **sort key** to order rows in a column, and secondary sort key to break ties for a given value. Allows fast range queries, helps optimize compression (like with run length encoding for duplicates), and gives better locality for sequential reads.
+
+Can even maintain several sort orders for a column, and choose the best one for a given query. This is called a **compound sort key**.
+
+#### Writing to Column-Oriented Storage
+
+These optimizations are good for reads and make sense in a data-warehouse, but can make writes slower because it has to update multiple indexes. This is fine for OLAP, and we can rely on LSM-trees to make writes fast initially, and periodically merge and compact the data.
+
+#### Aggregation: Data Cubes and Materialized Views
+
+**Materialized views** are precomputed joins and aggregations. They are good for speeding up queries, but can be expensive to maintain. They are often used in data warehouses, where the data is read-heavy, and the cost of maintaining the materialized views is amortized over many queries.
+
+**Data cubes** are a way to precompute aggregations over multiple dimensions. They are good for speeding up queries, but can be expensive to maintain. Essentially a multi-dimensional array, where each cell is an aggregation over a subset of the dimensions. Very expensive to maintain, and inflexible for queries that aren't covered by the precomputed aggregations.
+
+Oftentimes, it makes more sense to store raw data, and then benchmark queries to see which ones are slow, and then precompute aggregations for those queries if they need to be faster.
+
+

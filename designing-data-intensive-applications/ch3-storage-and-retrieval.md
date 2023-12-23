@@ -19,7 +19,7 @@ To make reads faster, we can use an **index**. An index is an additional structu
 
 ### Hash Indexes
 
-Map keys to offsets in the data file. This is fast for equality queries, but not for range queries. Store log-structured key-value data like above in binary format, and use a hash index to find the offset of the key in the data file. **Delete** by marking the key as deleted in the data file (sometimes with a "tombstone"), and periodically reindexing the data file to remove the deleted keys.
+Map keys to offsets in the data file. This is fast for equality queries, but not for range queries. Store log-structured key-value data like above in binary format, and use a hash index to find the offset of the key in the data file. **Delete** by marking the key as deleted in the data file (sometimes with a "tombstone"), and periodically reindex the data file to remove the deleted keys.
 
 For **crash recovery**:
 - reread log file from beginning to end, building hash table indicies in memory (slow, but no additional storage)
@@ -32,7 +32,7 @@ For concurrency, maintain a single write thread, and multiple read threads. Writ
 
 **Sorted String Tables** (SSTables) are a way to store key-value data in sorted order. Keep data sectioned based on time range, and search from most to least recent, periodically merging previous sections of data. Should store key value pairs, as well as byte offset metadata. Range queries are fast, and merge operations can be optimized by keeping most recent record and merging ranges at a time. However, both reading and writing are slower than hash indexes.
 
-Can use B-Trees to store SSTables on disk, or various balanced binary trees (e.g. AVL, red-black, etc.). These are called **Log-Structured Merge Trees** (LSM-Trees).
+Can use B-Trees to store SSTables on disk, or various balanced binary trees (e.g. AVL, red-black, etc.) to store data in memory. These are called **Log-Structured Merge Trees** (LSM-Trees).
 
 Below is a simplified version of the algorithm used by LevelDB, which is similar to the one used by Cassandra and HBase (which were inspired by Bigtable):
 

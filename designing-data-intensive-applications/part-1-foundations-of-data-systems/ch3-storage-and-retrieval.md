@@ -55,7 +55,7 @@ Keeping things append-only is a good way to keep throughput for writes high.
 
 B-trees trade off write speed for read speed. N-ary tree with sorted keys in every node. Increase branch factor for maximal locality and minimal disk seeks.
 
-LSM-trees trade off read speed for write speed. Writes are sequential, but reads are not. Writes are batched, and reads are parallelized. **Write amplifacation** (multiple writes to disk for a single DB write) can be a problem on both B-trees and LSM-trees. However, LSM-trees often still have a higher write throughput.
+LSM-trees trade off read speed for write speed. Writes are sequential, but reads are not. Writes are batched, and reads are parallelized. **Write amplification** (multiple writes to disk for a single DB write) can be a problem on both B-trees and LSM-trees. However, LSM-trees often still have a higher write throughput.
 
 Compaction can impact LSM-tree read performance, but can be mitigated by keeping a small number of SSTables per level, and by using a merge strategy that does not require reading all SSTables. Still, it can impact high percentiles of read latency.
 

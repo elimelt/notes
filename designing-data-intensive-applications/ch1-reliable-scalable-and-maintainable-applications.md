@@ -8,7 +8,7 @@ A data-intensive application is typically built from standard building blocks:
 - Store data so that they, or another application, can find it again later (databases)
 - Remember the result of an expensive operation, to speed up reads (caches)
 - Allow users to search data by keyword or filter it in various ways (search indexes)
-- Send a message to another process, to be handled asynchronously (stream proessing)
+- Send a message to another process, to be handled asynchronously (stream processing)
 - Periodically crunch a large amount of accumulated data (batch processing)
 
 ![image](./sc.png)
@@ -60,7 +60,7 @@ When making multiple backend calls to external services, take special care to me
 There is no generic solution. Scale based on access patterns, not on data size.
 
 ### Maintainability
-**Operability:** make it easy for operations teams to keep the system running smoothly. Make common tasks easy, and preferably automatic. Good monitering is also crucial.
+**Operability:** make it easy for operations teams to keep the system running smoothly. Make common tasks easy, and preferably automatic. Good monitoring is also crucial.
 
 **Simplicity:** make it easy for new engineers to understand the system, by removing as much complexity as possible from the system. Manage complexity with abstraction.
 

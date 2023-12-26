@@ -1,0 +1,157 @@
+{
+  "main": {
+    "id": "b5a2e88faf47f673",
+    "type": "split",
+    "children": [
+      {
+        "id": "bcf3a93c7f1fc5af",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9502cb4e13756642",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "designing-data-intensive-applications/ch4-encoding-and-evolution.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "cfcb638efa7915e2",
+    "type": "split",
+    "children": [
+      {
+        "id": "42e0a25e4aeacc75",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "21b47f1e4ae4301f",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "6a0498b9838ae8e0",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "c8117079fc056c20",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "7f16c28f7a4e548e",
+    "type": "split",
+    "children": [
+      {
+        "id": "fc417aa1a434882e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3e89b03c6bc6e34b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "designing-data-intensive-applications/ch4-encoding-and-evolution.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "d36a87cfcdf49c6a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "designing-data-intensive-applications/ch4-encoding-and-evolution.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "7690b31ca3ea0178",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "3393043712b26b80",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "designing-data-intensive-applications/ch4-encoding-and-evolution.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "9502cb4e13756642",
+  "lastOpenFiles": [
+    "designing-data-intensive-applications/ch3-storage-and-retrieval.md",
+    "designing-data-intensive-applications/ch4-encoding-and-evolution.md",
+    "designing-data-intensive-applications/ch10-batch-processing.md",
+    "designing-data-intensive-applications/ch1-reliable-scalable-and-maintainable-applications.md",
+    "designing-data-intensive-applications/sc.png"
+  ]
+}

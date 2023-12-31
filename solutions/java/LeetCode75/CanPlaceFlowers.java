@@ -1,7 +1,5 @@
 package LeetCode75;
 
-/* https://leetcode.com/problems/can-place-flowers */
-
 public class CanPlaceFlowers {
     public boolean canPlaceFlowers(int[] flowerbed, int n) {
         if (n <= 0) return true;

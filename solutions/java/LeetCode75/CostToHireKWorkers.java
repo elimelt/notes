@@ -3,8 +3,6 @@ package LeetCode75;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 
-/* https://leetcode.com/problems/total-cost-to-hire-k-workers */
-
 public class CostToHireKWorkers {
     public long totalCost(int[] costs, int k, int candidates) {
         PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> a.compare(b));
@@ -27,7 +25,7 @@ public class CostToHireKWorkers {
             pq.add(new Pair(hi, costs[hi--]));
         }
 
-        // all elements are candidates
+        
         if (visited[lo]) {
             for (; count < k; count++) total += pq.remove().c; 
             return total;

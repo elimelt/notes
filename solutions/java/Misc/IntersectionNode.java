@@ -1,10 +1,7 @@
 package Misc;
 
-/* https://leetcode.com/problems/intersection-of-two-linked-lists */
-
 import java.util.HashSet;
 import java.util.Set;
-
 import Misc.ReorderList.ListNode;
 
 public class IntersectionNode {

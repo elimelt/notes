@@ -2,8 +2,6 @@ package LeetCode75;
 import java.util.HashSet;
 import java.util.Set;
 
-/* https://leetcode.com/problems/reverse-vowels-of-a-string */
-
 public class ReverseVowels {
     public String reverseVowels(String s) {
         if (s.length() == 1) return s;

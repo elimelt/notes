@@ -1,7 +1,4 @@
 package Misc;
-
-/* https://leetcode.com/problems/merge-in-between-linked-lists */
-
 import Misc.ReorderList.ListNode;
 
 public class MergeLinkedLists {

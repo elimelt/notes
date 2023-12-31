@@ -1,16 +1,15 @@
 package LeetCode75;
 import java.util.Stack;
 
-/* https://leetcode.com/problems/asteroid-collision */
 public class AsteroidCollisions {
     public int[] asteroidCollision(int[] asteroids) {
         Stack<Integer> r = new Stack<>();
-        // Stack<Integer> c = new Stack<>();
         
-        // [-2,-2,1,-2]
-        // 
-        // stack : -2, -2, 1, 
-        // res   :
+        
+        
+        
+        
+        
 
         for (int curr : asteroids) {
             if (curr > 0 || (curr < 0 && (r.isEmpty() || r.peek() < 0))) 

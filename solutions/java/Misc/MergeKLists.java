@@ -1,9 +1,6 @@
 package Misc;
 
-/* https://leetcode.com/problems/merge-k-sorted-lists */
-
 import java.util.PriorityQueue;
-
 import Misc.ReorderList.ListNode;
 
 public class MergeKLists {

@@ -2,13 +2,6 @@ package Misc;
 
 import java.util.Arrays;
 import java.util.HashMap;
-
-/* https://leetcode.com/problems/contains-duplicate */
-
-/* https://leetcode.com/problems/contains-duplicate-ii */
-
-/* https://leetcode.com/problems/contains-duplicate-iii */
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

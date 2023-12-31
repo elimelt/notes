@@ -1,7 +1,5 @@
 package Misc;
 
-/* https://leetcode.com/problems/add-two-numbers */
-
 import Misc.ListNode;
 
 public class AddTwoNumbers {

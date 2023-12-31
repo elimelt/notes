@@ -3,8 +3,6 @@ package LeetCode75;
 import java.util.LinkedList;
 import java.util.Queue;
 
-/* https://leetcode.com/problems/rotting-oranges */
-
 public class RottingOranges {
     public int orangesRotting(int[][] grid) {
         int m = grid.length, n = grid[0].length, count = 0;
@@ -22,25 +20,25 @@ public class RottingOranges {
         while (!q.isEmpty()) {
             Pair curr = q.remove();
             time = curr.t;
-            // above
+            
             if (curr.i > 0 && grid[curr.i - 1][curr.j] == 1) {
                 grid[curr.i - 1][curr.j] = 2;
                 q.add(new Pair(curr.i - 1, curr.j, curr.t + 1));
                 count--;
             }
-            // below
+            
             if (curr.i < m - 1 && grid[curr.i + 1][curr.j] == 1) {
                 grid[curr.i + 1][curr.j] = 2;
                 q.add(new Pair(curr.i + 1, curr.j, curr.t + 1));
                 count--;
             }
-            // left
+            
             if (curr.j > 0 && grid[curr.i][curr.j - 1] == 1) {
                 grid[curr.i][curr.j - 1] = 2;
                 q.add(new Pair(curr.i, curr.j - 1, curr.t + 1));
                 count--;
             }
-            // right
+            
             if (curr.j < n - 1 && grid[curr.i][curr.j + 1] == 1) {
                 grid[curr.i][curr.j + 1] = 2;
                 q.add(new Pair(curr.i, curr.j + 1, curr.t + 1));

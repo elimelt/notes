@@ -1,7 +1,4 @@
 package Misc;
-
-/* https://leetcode.com/problems/reorder-data-in-log-files */
-
 import java.util.ArrayList;
 import java.util.List;
 

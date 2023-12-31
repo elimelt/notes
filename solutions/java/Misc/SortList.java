@@ -1,7 +1,4 @@
 package Misc;
-
-/* https://leetcode.com/problems/sort-list */
-
 import java.util.Arrays;
 import Misc.ReorderList.ListNode;
 

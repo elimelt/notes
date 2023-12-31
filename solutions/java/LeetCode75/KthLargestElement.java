@@ -1,7 +1,5 @@
 package LeetCode75;
 
-/* https://leetcode.com/problems/kth-largest-element-in-an-array */
-
 public class KthLargestElement {
     public int findKthLargest(int[] nums, int k) {
         int[] buckets = new int[20001];

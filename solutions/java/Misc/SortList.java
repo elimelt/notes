@@ -1,4 +1,5 @@
 package Misc;
+
 import java.util.Arrays;
 import Misc.ReorderList.ListNode;
 
@@ -37,5 +38,5 @@ public class SortList {
         curr.next = null;
         return newHead;
     }
-    
+
 }

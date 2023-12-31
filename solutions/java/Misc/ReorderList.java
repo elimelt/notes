@@ -1,4 +1,5 @@
 package Misc;
+
 import java.util.Stack;
 
 public class ReorderList {
@@ -10,7 +11,7 @@ public class ReorderList {
 
         ListNode curr = head;
 
-        while (curr !=  null) {
+        while (curr != null) {
             s.push(curr);
             curr = curr.next;
         }
@@ -36,17 +37,17 @@ public class ReorderList {
 
     }
 
-    
- 
     public class ListNode {
         int val;
         ListNode next;
-        
-        ListNode(int val) { this.val = val; }
-        
-        ListNode(int val, ListNode next) { 
-            this.val = val; 
-            this.next = next; 
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
         }
     }
 

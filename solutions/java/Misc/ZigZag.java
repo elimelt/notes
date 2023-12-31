@@ -3,7 +3,7 @@ package Misc;
 public class ZigZag {
     public String convert(String s, int numRows) {
 
-        if (numRows == 1) 
+        if (numRows == 1)
             return s;
 
         char[][] grid = new char[numRows][s.length()];
@@ -11,7 +11,7 @@ public class ZigZag {
         int col = 0;
         int numPlaced = 0;
         while (numPlaced < s.length()) {
-            for (int row = 0; row < numRows && numPlaced < s.length(); row++) 
+            for (int row = 0; row < numRows && numPlaced < s.length(); row++)
                 grid[row][col] = s.charAt(numPlaced++);
 
             col++;
@@ -22,10 +22,11 @@ public class ZigZag {
 
         StringBuilder sb = new StringBuilder();
 
-        for (char[] r : grid) 
+        for (char[] r : grid)
             for (char c : r)
-                if (c != 0) sb.append(c);
-        
+                if (c != 0)
+                    sb.append(c);
+
         return sb.toString();
     }
 }

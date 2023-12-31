@@ -24,6 +24,6 @@ public class IntersectionNode {
             curr = curr.next;
 
         return curr;
-        
+
     }
 }

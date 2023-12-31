@@ -19,7 +19,7 @@ public class AddTwoNumbers {
             l2.next = addTwoNumbers(null, l2.next);
             return l2;
         }
-    
+
         if (l2 == null) {
             return addTwoNumbers(null, l1);
         }
@@ -30,18 +30,19 @@ public class AddTwoNumbers {
             if (combined >= 10) {
                 l1.next = new ListNode(1);
                 l1.val = combined - 10;
-            } else l1.val = combined;
+            } else
+                l1.val = combined;
             return l1;
         }
 
-        
         if (combined >= 10) {
-            if (l1.next == null) 
+            if (l1.next == null)
                 l1.next = new ListNode(1);
-            else 
+            else
                 l1.next.val++;
             l1.val = combined - 10;
-        } else l1.val = combined;
+        } else
+            l1.val = combined;
 
         l1.next = addTwoNumbers(l1.next, l2.next);
         return l1;

@@ -1,4 +1,5 @@
 package Misc;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,15 +10,16 @@ public class LongestConsecutiveSequence {
         Set<Integer> set = new HashSet<>();
         Set<Integer> visited = new HashSet<>();
 
-        for (int n : nums) set.add(n);
+        for (int n : nums)
+            set.add(n);
 
         int maxStreak = 0, currStreak = 0;
         for (int n : nums) {
-            
+
             if (visited.contains(n))
-                continue; 
-                
-            currStreak = 1;    
+                continue;
+
+            currStreak = 1;
             int curr = n;
 
             visited.add(curr);
@@ -33,7 +35,7 @@ public class LongestConsecutiveSequence {
                 currStreak++;
                 visited.add(curr);
             }
-            
+
             maxStreak = Math.max(maxStreak, currStreak);
         }
 

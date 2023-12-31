@@ -1,7 +1,5 @@
 package LeetCode75;
 
-/* https://leetcode.com/problems/koko-eating-bananas */
-
 public class EatAllBananas {
     public int minEatingSpeed(int[] piles, int h) {
         int maxPileSize = piles[0];
@@ -17,9 +15,9 @@ public class EatAllBananas {
 
         int time = 0;
         for (int pile : piles) {
-            // find time to eat all 
+            
             time += Math.ceil((double) pile/midSpeed);
-            // if run out of time
+            
             if (time > h) break;
                 
         }

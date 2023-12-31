@@ -1,5 +1,4 @@
 package LeetCode75;
-/* https://leetcode.com/problems/merge-strings-alternately/ */ 
 
 class MergeStringsAlternately {
     public String mergeAlternately(String word1, String word2) {

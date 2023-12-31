@@ -1,7 +1,5 @@
 package Misc;
 
-/* https://leetcode.com/problems/trapping-rain-water */
-
 public class TrappingRainWater {
     public int trap(int[] height) {
         int[] rightMax = new int[height.length];

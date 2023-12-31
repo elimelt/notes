@@ -1,7 +1,5 @@
 package LeetCode75;
 
-/* https://leetcode.com/problems/implement-trie-prefix-tree */
-
 import java.util.HashMap;
 import java.util.Map;
 

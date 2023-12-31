@@ -1,8 +1,6 @@
 package LeetCode75;
 import java.util.*;
 
-/* https://leetcode.com/problems/letter-combinations-of-a-phone-number */
-
 public class LetterCombinationsOfPhoneNumber {
     List<String> list = new ArrayList<>();
     Map<Integer, char[]> map = new HashMap<>();

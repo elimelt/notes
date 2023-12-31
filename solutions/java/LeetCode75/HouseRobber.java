@@ -1,7 +1,5 @@
 package LeetCode75;
 
-/* https://leetcode.com/problems/house-robber */
-
 public class HouseRobber {
     public int rob(int[] nums) {
         if (nums.length == 1) return nums[0];

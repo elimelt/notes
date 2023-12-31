@@ -1,7 +1,5 @@
 package LeetCode75;
 
-/* https://leetcode.com/problems/n-th-tribonacci-number */
-
 public class Tribonacci {
     public int tribonacci(int n) {
         if (n == 0 || n == 1) return n;

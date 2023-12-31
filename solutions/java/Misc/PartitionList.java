@@ -1,6 +1,4 @@
 package Misc;
-
-/* https://leetcode.com/problems/partition-list */
 import Misc.ReorderList.ListNode;
 
 public class PartitionList {

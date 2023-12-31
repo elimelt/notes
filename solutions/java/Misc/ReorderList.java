@@ -1,8 +1,5 @@
 package Misc;
-
 import java.util.Stack;
-
-/* https://leetcode.com/problems/reorder-list */
 
 public class ReorderList {
     public void reorderList(ListNode head) {

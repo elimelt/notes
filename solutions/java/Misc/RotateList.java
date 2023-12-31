@@ -1,7 +1,4 @@
 package Misc;
-
-/* https://leetcode.com/problems/rotate-list */
-
 import Misc.ReorderList.ListNode;
 
 public class RotateList {

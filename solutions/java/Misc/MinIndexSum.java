@@ -1,7 +1,4 @@
 package Misc;
-
-/* https://leetcode.com/problems/minimum-index-sum-of-two-lists */
-
 import java.util.HashMap;
 import java.util.Map;
 

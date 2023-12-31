@@ -1,7 +1,5 @@
 package LeetCode75;
 
-/* https://leetcode.com/problems/nearest-exit-from-entrance-in-maze */
-
 import java.util.LinkedList;
 import java.util.Queue;
 

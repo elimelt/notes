@@ -9,7 +9,7 @@ class Trie {
     public Trie() {
         this.root = new TrieNode(null, false);
     }
-    
+
     public void insert(String word) {
         if (word == "") {
             this.root.contained = true;
@@ -19,7 +19,7 @@ class Trie {
         TrieNode currNode = root;
         char[] chars = word.toCharArray();
         int i = 0;
-        
+
         while (i < chars.length && currNode.pointers.containsKey(chars[i]))
             currNode = currNode.pointers.get(chars[i++]);
 
@@ -31,7 +31,7 @@ class Trie {
         currNode.contained = true;
 
     }
-    
+
     public boolean search(String word) {
         char[] chars = word.toCharArray();
         TrieNode currNode = root;
@@ -39,10 +39,10 @@ class Trie {
 
         while (i < chars.length && currNode.pointers.containsKey(chars[i]))
             currNode = currNode.pointers.get(chars[i++]);
-        
+
         return i == chars.length && currNode.contained;
     }
-    
+
     public boolean startsWith(String prefix) {
         char[] chars = prefix.toCharArray();
         TrieNode currNode = root;

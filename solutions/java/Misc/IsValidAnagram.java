@@ -18,7 +18,7 @@ public class IsValidAnagram {
         for (int i = 0; i < s.length(); i++)
             if (map.get(s.charAt(i)) != 0)
                 return false;
-        
+
         for (int i = 0; i < s.length(); i++)
             if (map.get(t.charAt(i)) != 0)
                 return false;

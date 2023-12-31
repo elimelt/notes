@@ -6,7 +6,7 @@ import java.util.Queue;
 public class NearestExit {
     public int nearestExit(char[][] maze, int[] entrance) {
         int m = maze.length, n = maze[0].length;
-        
+
         boolean[][] visited = new boolean[m][n];
         for (int r = 0; r < m; r++)
             for (int c = 0; c < n; c++)
@@ -26,12 +26,12 @@ public class NearestExit {
 
                 visited[curr.row][curr.col] = true;
 
-                if ( isExit(m, n, curr) && 
-                    (curr.row != entrance[0] || curr.col != entrance[1])
-                ) return moves;
+                if (isExit(m, n, curr) &&
+                        (curr.row != entrance[0] || curr.col != entrance[1]))
+                    return moves;
 
-                for (Pair adj : curr.getSurrounding()) 
-                    if (isInMaze(m, n, adj) && !visited[adj.row][adj.col]) 
+                for (Pair adj : curr.getSurrounding())
+                    if (isInMaze(m, n, adj) && !visited[adj.row][adj.col])
                         q.add(adj);
             }
             moves++;
@@ -41,19 +41,19 @@ public class NearestExit {
     }
 
     private boolean isInMaze(int m, int n, Pair p) {
-        return p.row < m && 
-            p.col < n && 
-            p.row >= 0 && 
-            p.col >= 0;
+        return p.row < m &&
+                p.col < n &&
+                p.row >= 0 &&
+                p.col >= 0;
     }
 
     private boolean isExit(int m, int n, Pair p) {
-        return p.row == m - 1 || 
-            p.col == n - 1 || 
-            p.row == 0 || 
-            p.col == 0;
+        return p.row == m - 1 ||
+                p.col == n - 1 ||
+                p.row == 0 ||
+                p.col == 0;
     }
-    
+
     private class Pair {
         public int row, col;
 
@@ -67,11 +67,11 @@ public class NearestExit {
         }
 
         public Pair[] getSurrounding() {
-            return new Pair[]{
-                new Pair(this.row + 1, this.col),
-                new Pair(this.row - 1, this.col),
-                new Pair(this.row, this.col + 1),
-                new Pair(this.row, this.col - 1)
+            return new Pair[] {
+                    new Pair(this.row + 1, this.col),
+                    new Pair(this.row - 1, this.col),
+                    new Pair(this.row, this.col + 1),
+                    new Pair(this.row, this.col - 1)
             };
         }
     }

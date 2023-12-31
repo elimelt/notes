@@ -1,4 +1,5 @@
 package Misc;
+
 import Misc.ReorderList.ListNode;
 
 public class RotateList {
@@ -11,7 +12,7 @@ public class RotateList {
         while (curr != null) {
             curr = curr.next;
             size++;
-        } 
+        }
 
         k %= size;
 
@@ -26,7 +27,7 @@ public class RotateList {
         while (curr.next != null) {
             curr = curr.next;
             newTail = newTail.next;
-        } 
+        }
 
         ListNode newHead = newTail.next;
         newTail.next = null;

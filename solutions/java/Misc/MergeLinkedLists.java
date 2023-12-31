@@ -1,4 +1,5 @@
 package Misc;
+
 import Misc.ReorderList.ListNode;
 
 public class MergeLinkedLists {
@@ -18,7 +19,7 @@ public class MergeLinkedLists {
 
         while (lo.next != null)
             lo = lo.next;
-        
+
         lo.next = hi.next;
 
         return list1;

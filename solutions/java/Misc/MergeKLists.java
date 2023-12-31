@@ -11,11 +11,12 @@ public class MergeKLists {
         PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
 
         for (ListNode l : lists)
-            if (l != null) pq.add(l);
+            if (l != null)
+                pq.add(l);
 
         ListNode head = null, curr = null;
 
-        while(!pq.isEmpty()) {
+        while (!pq.isEmpty()) {
             if (head == null) {
                 head = pq.remove();
                 curr = head;

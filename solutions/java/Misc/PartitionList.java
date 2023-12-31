@@ -1,17 +1,17 @@
 package Misc;
+
 import Misc.ReorderList.ListNode;
 
 public class PartitionList {
     public ListNode partition(ListNode head, int x) {
         if (head == null || head.next == null)
             return head;
-        
 
-        ListNode curr = head, 
-            lessHead = null, 
-            geqHead = null,
-            lessTail = null,
-            geqTail = null;
+        ListNode curr = head,
+                lessHead = null,
+                geqHead = null,
+                lessTail = null,
+                geqTail = null;
 
         while (curr != null) {
             if (curr.val < x) {
@@ -32,13 +32,13 @@ public class PartitionList {
                 }
             }
             curr = curr.next;
-        } 
+        }
 
         if (lessHead == null)
             return geqHead;
 
         lessTail.next = geqHead;
-        
+
         if (geqHead != null)
             geqTail.next = null;
 

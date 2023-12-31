@@ -13,11 +13,12 @@ public class CostToHireKWorkers {
         long total = 0;
 
         while (lo < candidates) {
-            if (pq.size() == costs.length) break;
+            if (pq.size() == costs.length)
+                break;
             if (hi == lo) {
                 visited[hi] = true;
                 pq.add(new Pair(hi, costs[hi]));
-                break;    
+                break;
             }
             visited[lo] = !visited[lo];
             visited[hi] = !visited[hi];
@@ -25,9 +26,9 @@ public class CostToHireKWorkers {
             pq.add(new Pair(hi, costs[hi--]));
         }
 
-        
         if (visited[lo]) {
-            for (; count < k; count++) total += pq.remove().c; 
+            for (; count < k; count++)
+                total += pq.remove().c;
             return total;
         }
 
@@ -49,19 +50,25 @@ public class CostToHireKWorkers {
             }
         }
         return total;
-        
+
     }
 
     public class Pair {
         int i, c;
-        public Pair(int index, int cost) { i = index; c = cost; }
 
-        public int compare(Pair other) { 
-            return this.c != other.c
-                ? this.c - other.c 
-                : this.i - other.i; 
+        public Pair(int index, int cost) {
+            i = index;
+            c = cost;
         }
 
-        public String toString() { return "(" + this.i + ", " + this.c + ")"; }
+        public int compare(Pair other) {
+            return this.c != other.c
+                    ? this.c - other.c
+                    : this.i - other.i;
+        }
+
+        public String toString() {
+            return "(" + this.i + ", " + this.c + ")";
+        }
     }
 }

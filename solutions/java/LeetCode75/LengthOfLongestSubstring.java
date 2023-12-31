@@ -13,7 +13,7 @@ public class LengthOfLongestSubstring {
 
             if (!set.contains(curr))
                 set.add(s.charAt(hi++));
-            else 
+            else
                 set.remove(s.charAt(lo++));
 
             max = Math.max(max, hi - lo);

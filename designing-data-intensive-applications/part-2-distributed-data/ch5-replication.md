@@ -1,4 +1,4 @@
-# Chapter 5 
+# Chapter 5
 ## Replication
 
 **Replication** is the process of keeping a copy of the same data on multiple machines that are connected via a network. Replication is important for a few reasons:
@@ -15,7 +15,7 @@ Most distributed data systems that use replication follow one of **single-leader
 
 Also known as **master slave** or **active passive** replication, this is the simplest form of replication. One node is designated as the **leader/master/primary** and the rest are **followers/slaves/secondary**. The leader handles all write requests and propagates the changes to the followers. The followers handle all read requests. If the leader goes down, one of the followers is promoted to leader. This is a common setup for relational databases. Followers are read-only, and writes are only sent to the leader.
 
-Many relational, and some non-relational databases use this setup, as does non-database systems like distributed message-brokers (Kafka, RabbitMQ, etc.). 
+Many relational, and some non-relational databases use this setup, as does non-database systems like distributed message-brokers (Kafka, RabbitMQ, etc.).
 
 
 ## Synchronous Versus Asynchronous Replication
@@ -36,16 +36,60 @@ Preventing data loss is a hot topic in distributed systems research. There are a
 
 ## Setting Up New Followers
 
-A simple "file copy" might read across inconsistent snapshots of the data. To avoid this, maintain a consistent snapshot of the data by using a consistent snapshot protocol. Follower nodes start from snapshot and request all writes that have happened since the snapshot.  The leader keeps a log of all writes, and the followers request all writes since the snapshot. This workflow varies depending on the database.
+A simple "file copy" might read across inconsistent snapshots of the data. To avoid this, maintain a consistent snapshot of the data by using a consistent snapshot protocol. Follower nodes start from snapshot and request all writes that have happened since the snapshot (using the log sequence number is Postgres and the binlog coordinates in MySQL). The leader keeps a log of all writes, and the followers request all writes since the snapshot. This workflow varies depending on the database.
+
+1. take consistent snapshots periodically, and ideally asynchronously
+2. copy the snapshot to the new follower node
+3. the follower connects to the leader and requests all writes since the snapshot
+4. follower processes backlog until it catches up to the leader
 
 ## Handling Node Outages
 
-Goal is to keep the whole system running despite individual failures. Ideally should be able to reboot individual nodes without affecting the whole system. 
+Goal is to keep the whole system running despite individual failures. Ideally should be able to reboot individual nodes without affecting the whole system.
 
 ### Follower Failure
 
-If a follower fails, it can be restarted from the log. If the log is too large, the follower can request a new snapshot from the leader. 
+If a follower fails, it can be restarted from the log located on its disk. Once the node has processed its log, it then requests any new writes from the leader. This is known as **catch-up recovery**.
 
 ### Leader Failure
 
-If the leader fails, one of the followers is elected as the new leader. The new leader may not have all of the writes that the old leader had.
+If the leader fails, one of the followers is elected as the new leader during **failover**. This is way harder. It usually consists of the following:
+
+1. Determining the leader failed. This can be acieved passively with a timeout or actively with a heartbeat.
+2. Assigning a new leader. Can be done through an election process, or a designated controller node. Probably a good idea to look for nodes with most up-to-date data.
+3. Reconfigure to use new leader. Set clients to write to new leader, and set followers to read from new leader.
+
+#### Common problems with failover:
+
+- With async replication, new leader might not have all writes in log. Some systems just throw these writes away, although this hurts our durability
+- Scenarious leading to multiple nodes thinking they are leader (*split-brain*). If they both accept writes, it is difficult to resolve and may lead to data loss. Can try to detect this and shut one down, but need to be careful not to shut both down.
+- Choosing a timeout has tradeoffs. Too short leads to unnecessary failovers, too long leads to longer time to recovery.
+
+
+## Implementation of Replication Logs
+
+### Statement-based replication
+
+Leader logs ever write request (*SQL statement* in the case of a RDB) and sends log to followers. Each follower parses and executes the statement as if it were initiated by the client.
+
+#### Problems:
+
+- Non-deterministic functions (e.g. `NOW()`) will return different values on different machines
+- Order of operations matters (ie auto incrementing keys)
+- Side effects (e.g. triggers) may not be replicated
+
+Although there are workarounds, usually not used today. MySQL <5.1 used it, and still sometimes does for deterministic functions.
+
+### Write-ahead log (WAL) shipping
+
+Append only sequence of bytes that record every write to the database. Leader sends WAL to followers, which apply the writes to their own database to build up the same data structures as the leader. Used by Postgres, Oracle, and more.
+
+#### Problems:
+- WAL is implementation specific (decided by leader), so followers must be same database as leader
+- Couples replication to the storage engine and prevents easy migration and version upgrades
+
+In particular, WAL prevent us from doing downtime-free upgrades. Without them, we could upgrade all the followers and catch them up, then failover and upgrade the leader. WAL make this impossible in many cases because the leader and follower must both read and write the same WAL format.
+
+### Logical (row-based) log replication
+
+Use different formats for storage engine (*physical*) log and replication (*logical*) log. Leader

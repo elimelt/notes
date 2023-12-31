@@ -172,8 +172,8 @@ Ideally, each application would have its own memory space. This requires impleme
 Applications should access disk through the file system, which has an interface for creating, deleting, reading, and writing files. The OS keeps a table of open files, and uses this table to perform IO operations on files in a consistent/safe way. Simply blocking access to files while they are being written to would be sufficient, although more complex buffering and locking could be used to improve performance.
 
 ### 6. Now suppose the computer system needs to support fault isolation. What hardware and/or operating support do you think would be needed to do the following?
-- **Protect an application’s data structures in memory from being corrupted by other applications.**
-- **Protecting one user’s disk files from being accessed or corrupted by another user.**
+- **Protect an application's data structures in memory from being corrupted by other applications.**
+- **Protecting one user's disk files from being accessed or corrupted by another user.**
 - **Protecting the network from a virus trying to use your computer to send spam.**
 
 Permissions ^^^ and virtualization. Each process has its own memory space, and each user has its own file system. The OS can then use permissions to control access to resources for individual users. Network access should be mutually consentual, and the OS should prevent unauthorized access to the network.
@@ -211,7 +211,7 @@ I would use a write ahead log (buffered in memory for high throughput events, bu
 
 Taxes, laws, and regulations. Taxes are used to allocate resources, and laws are used to prevent misuse and foster sharing. For example, public services (firefighters) are funded by taxes, and laws are *supposed* to help ensure people can faily access these services.
 
-### 12. Suppose you were tasked with designing and implementing an ultra-reliable and ultra-available operating system. What techniques would you use? What tests, if any, might be sufficient to convince you of the system’s reliability, short of handing your operating system to millions of users to serve as beta testers?
+### 12. Suppose you were tasked with designing and implementing an ultra-reliable and ultra-available operating system. What techniques would you use? What tests, if any, might be sufficient to convince you of the system's reliability, short of handing your operating system to millions of users to serve as beta testers?
 
 Extensive testing like in other forms of software (unit, integration, fuzzing, fault injection), as well as monitoring and telemetry of real devices. Formal verification would be nice, but is probably not feasible. A microkernel would be a good start, since it would allow me to isolate "trusted" code.
 

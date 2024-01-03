@@ -92,4 +92,12 @@ In particular, WAL prevent us from doing downtime-free upgrades. Without them, w
 
 ### Logical (row-based) log replication
 
-Use different formats for storage engine (*physical*) log and replication (*logical*) log. Leader
+Use different formats for storage engine (*physical*) log and replication (*logical*) log. For RDB, usually a sequence of records describing writes to rows in database.
+
+- For inserted row, log contains all values
+- for deleted row, log contains identifier of row (typically pk, or all values if none)
+- for updated row, log contains identifier of row and new values
+
+With multi-row transactions, log contains entry for all rows, as well as entry for transaction commit (MySQL binlog uses this approach)
+
+Logical logs decouple the replication from the storage engine, allowing better compatibility between versions. Also allows integrations with external services (e.g. Kafka, Elasticsearch, etc.)

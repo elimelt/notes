@@ -5,7 +5,11 @@ def replace_chars(input_files, backup):
     # characters to replace
     replacements = {
         '—': '-',
-        "’": "'"
+        '–': '-',
+        "’": "'",
+        '”': '"',
+        '“': '"',
+        '…': '...'
     }
 
     # generate sed script

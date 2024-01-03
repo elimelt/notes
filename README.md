@@ -4,7 +4,7 @@ This is a [repo](https://github.com/elimelt/notes) where I store my notes and re
 
 Please note that much of the info on here is paraphrased from other sources, and I claim no ownership of it. This is also a work in progress, and I am constantly adding to and editing it. If you have any questions or comments, feel free to [reach out](https://elimelt.com/contact).
 
-
+```
  .-----------------. .----------------.  .----------------.  .----------------.  .----------------.
 | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
 | | ____  _____  | || |     ____     | || |  _________   | || |  _________   | || |    _______   | |
@@ -16,3 +16,4 @@ Please note that much of the info on here is paraphrased from other sources, and
 | |              | || |              | || |              | || |              | || |              | |
 | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'
+```

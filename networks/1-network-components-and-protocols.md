@@ -45,6 +45,27 @@ Messages are **broadcast**. All nodes in range recieve the message. Often, in gr
 
 When you connect multiple networks, you get an **internetwork**, or **internet**. The Internet (capital I) is the internet we all know and love.
 
+#### Switched Network
+
+**Switched networks** forward messages from node-to-node, until they reach their destination. The two most common switched networks are **circuit-switched** (phones) and **packet-switched** (most computer networks) networks.
+
+```txt
+    +-- (Host)      --+
+    |                 |
+(Link)                |
+    |                 |  logical
+    +-- (Host)        |    link
+    |                 |
+(Link)                |
+    |                 |
+    +-- (Host)      --+
+```
+
+Packet switched networks (PSN) send data in discrete chunks, called **packets**, or messages. PSNs typically use **store-and-forward** switching, where the entire packet is received and loaded into memory, then forwarded to the next node. This is opposed to a circuit switched network, where a stream of data is sent over a maintained connection.
+
+Networks use an _address_ to identify the destination of a packet. Packets can be sent from node to node (_unicast_), but also to all other nodes _(broadcast_), or to a subset of nodes (_multicast_).
+
+
 
 ## Network Boundaries
 

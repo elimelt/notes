@@ -128,3 +128,36 @@ the cs register rather than in the processor status word (eflags register). The 
 has condition codes that are modified as a by-product of executing instructions; the eflags
 register also has other flags that control the processor's behavior, such as whether
 interrupts are masked or not"
+
+1. *Mask interrupts* to prevent the processor from being interrupted while switching modes
+2. *Save the current state* of the user program on the interrupt stack, including the stack pointer, execution flags, and instruction pointer, all to temp hardware registers
+3. *Switch onto kernel interrupt stack*  by changing the stack pointer to point to its base address
+4. *Push the current state* of the user program onto the kernel interrupt stack
+5. *Optionally save an error code* if this was an exception with one.
+6. *Invoke interrupt handler* by jumping to the correct entry in the interrupt vector table
+
+The interrupt handle also saves some registers to its own stack before executing any code that might overwrite the processor state (callee-saved registers).
+
+Once finished executing, the callee then pops the registers off the stack, restoring the interrupted process state, excluding the program counter, execution flags, and stack pointer. The interrupt handler then executes a `iret` instruction, which restores those aforementioned elements of state, fully restoring the interrupted process.
+
+*Note...* for exceptions that signal instructions in the kernel, the handler will modify the program counter to point to the instruction **after** the exception occurred, so as to prevent an infinite loop.
+
+
+
+
+
+
+
+
+
+## Implementing Secure System Calls
+
+OS kernel constructs restricted enviornment for process execution. Any time a process needs to execute something outside of its *protection domain*, it requests the OS do so on its behalf using a **system call**.
+
+**System calls** are the primary interface between user programs and the OS. When the user program makes a call, the library code will *trap* into kernel mode, and the kernel will execute the system call handler. System calls generally try to appear as a normal function call thorughout a library and often use **stubs** to mediate between the user program and the kernel. This allows the following flow:
+
+1. User calls function in library (user stub)
+2. Stub fills in code for system call, and traps into kernel mode
+3. Hardware transfers control to kernel and finds correct system call handler (kernel stub), which checks args and then executes the correct system call
+4. Syscall returns to kernel stub, which returns to user stub's next instruction, which returns to the user program
+

@@ -217,8 +217,7 @@ At a high level, before running a program the kernel must...
 
 Then, to actually run it, the kernel must...
 
-- Copy arguments into memory. *For example*, when you click on a file in MacOS or Windows, the window manager calls upon the kernel to start a new process running whatever application is associated with the filetype. To do this, the kernel copies the file name from the window manager's memory into the new process's memory (usually at the base of the new process' stack).
-
+- Copy arguments into memory. _For example_, when you click on a file in MacOS or Windows, the window manager calls upon the kernel to start a new process running whatever application is associated with the filetype. To do this, the kernel copies the file name from the window manager's memory into the new process's memory (usually at the base of the new process' stack).
 - Transfer control to user mode. When a new process starts, most kernels reuse the same code as for a any other transfer to user mode. User values are saved at the bottom of the initial kernel stack, and then the kernel uses `popad` and `iret` to "return" to the start of the user program.
 
 Finally, there is a level of indirection between program execution in the form of a stub. This ensures that the program calls exit (ie terminates), and is done by the compiler. Conceptually, this looks like:
@@ -232,7 +231,7 @@ start(int argc, char** argv) {
 
 ## Implementing Upcalls
 
-**Upcalls** are a way for the kernel to notify the user program of an event. They are similar to interrupts, but are initiated by the kernel rather than hardware. These are called *signals* in Unix, and *asynchronous events* in Windows, and are crucial for virtualization.
+**Upcalls** are a way for the kernel to notify the user program of an event. They are similar to interrupts, but are initiated by the kernel rather than hardware. These are called _signals_ in Unix, and _asynchronous events_ in Windows, and are crucial for virtualization.
 
 #### Applications:
 
@@ -242,19 +241,14 @@ start(int argc, char** argv) {
 - **user-level exception handling**: If application runtimes have their own exception system, they can be notified of processor exceptions with upcalls.
 - **user-level resource allocation**: If an application needs to be resource adaptive, it can use upcalls to monitor resource usage and adjust accordingly. The JVM uses upcalls to monitor memory usage and garbage collect.
 
-
 Upcalls aren't always needed, and many programs get by with an event loop model. In fact, Windows didn't support immediate delivery of upcalls to user-level programs until recently.
 
 ### Unix Signals
 
 - The kernel defines a fixed number of signal types that a process can receive.
-
 - Processes define their own handlers for each type, or the kernel invokes a default handler.
-
 - Handlers can either be run on the application stack, or on a seperate signal stack allocated by the user process.
-
 - While a given signal handler is executing, the OS blocks delivery of the same signal to any other process. OS also provides a syscall to mask signals as needed.
-
 - The kernel copies registers onto the signal stack before invoking the handler, and restores them after the handler returns.
 
 ## Booting an Operating System Kernel
@@ -298,7 +292,6 @@ Host kernel returns from the interrupt to the interrupt handler for the guest ke
 
 Simulation of virtual devices doesn't need to be anything like a real device. For example, when the guest OS writes to a virtual disk (ie writing to the buffer descriptor ring for the device), the host OS can read these and perform the actual write to the real disk however it wants. The guest kernel then receives an interrupt when the write is complete, which is handled similarly to a timer interrupt, but executes the guest disk interrupt handler instead of the guest timer interrupt handler.
 
-
 ```
   ______                   _
  |  ____|                 (_)
@@ -310,64 +303,76 @@ Simulation of virtual devices doesn't need to be anything like a real device. Fo
 ```
 
 1. **Kernel Stack and User Process Interruption**
-    - When a user process is interrupted or causes a processor exception, the x86 hardware switches the stack pointer to a kernel stack. This is done before saving the current process state to ensure that sensitive kernel data is not overwritten or corrupted by user-level processes.
+
+- When a user process is interrupted or causes a processor exception, the x86 hardware switches the stack pointer to a kernel stack. This is done before saving the current process state to ensure that sensitive kernel data is not overwritten or corrupted by user-level processes.
 
 2. **Screen Buffer Memory Protection**
-    - The screen’s buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.
+
+- The screen’s buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.
 
 3. **Dual-mode Operation Mechanisms**
-    - Without **privileged instructions**: User processes might be able to execute sensitive operations.
-    - Without **memory protection**: User processes could access and modify kernel memory directly.
-    - Without **timer interrupts**: User processes could monopolize the CPU, leading to a denial-of-service situation.
+
+- Without **privileged instructions**: User processes might be able to execute sensitive operations.
+- Without **memory protection**: User processes could access and modify kernel memory directly.
+- Without **timer interrupts**: User processes could monopolize the CPU, leading to a denial-of-service situation.
 
 4. **Security Checks for Web Browser**
-    - To ensure executing buggy or malicious scripts cannot corrupt or crash the browser, checks like script sandboxing, code validation, resource limitations, and privilege separation should be implemented.
+
+- To ensure executing buggy or malicious scripts cannot corrupt or crash the browser, checks like script sandboxing, code validation, resource limitations, and privilege separation should be implemented.
 
 5. **Types of User-Mode to Kernel-Mode Transfers**
-    - Software Interrupts
-    - System Calls
-    - Exceptions
+
+- Software Interrupts
+- System Calls
+- Exceptions
 
 6. **Types of Kernel-Mode to User-Mode Transfers**
-    - Returning from an interrupt
-    - Returning from a system call
-    - Resuming execution after an exception
-    - Context switching
+
+- Returning from an interrupt
+- Returning from a system call
+- Resuming execution after an exception
+- Context switching
 
 7. **IRET Instruction in OS**
-    a. The `iret` instruction is used in the interrupt service routine (ISR) to return from an interrupt, transitioning the mode from kernel-mode back to user-mode.
-    b. If an application program executes `iret`, it could potentially disrupt the operating system's internal state, leading to unpredictable behavior or crashes.
+a. The `iret` instruction is used in the interrupt service routine (ISR) to return from an interrupt, transitioning the mode from kernel-mode back to user-mode.
+b. If an application program executes `iret`, it could potentially disrupt the operating system's internal state, leading to unpredictable behavior or crashes.
 
 8. **Large Number of Registers Design**
-    a. Having a large number of registers can reduce the need for frequent memory accesses, improving performance.
-    b. Hardware features like register renaming, out-of-order execution, and branch prediction can be beneficial.
-    c. Adding a 16-stage pipeline and precise exceptions might increase the overhead of user-kernel switching due to increased complexity and potential stalls.
+a. Having a large number of registers can reduce the need for frequent memory accesses, improving performance.
+b. Hardware features like register renaming, out-of-order execution, and branch prediction can be beneficial.
+c. Adding a 16-stage pipeline and precise exceptions might increase the overhead of user-kernel switching due to increased complexity and potential stalls.
 
 9. **Virtualization and x86 Architecture**
-    a. Instructions like `popf` prevent transparent virtualization because they have different behaviors in privileged and unprivileged modes, making it challenging to virtualize without affecting guest OS behavior.
-    b. Modifying the hardware to provide consistent behavior for instructions like `popf` in both modes can resolve the virtualization issue.
+a. Instructions like `popf` prevent transparent virtualization because they have different behaviors in privileged and unprivileged modes, making it challenging to virtualize without affecting guest OS behavior.
+b. Modifying the hardware to provide consistent behavior for instructions like `popf` in both modes can resolve the virtualization issue.
 
 10. **Initial Value in Program Counter**
-    - The boot ROM is responsible for loading the initial value in the program counter for an application program before it starts running.
+
+- The boot ROM is responsible for loading the initial value in the program counter for an application program before it starts running.
 
 11. **Safe Access to Virtualized I/O Devices**
-    - To enable safe access to virtualized I/O devices, hardware support like I/O MMU, device assignment, and software support like device emulation, device drivers, and hypervisor integration are essential.
+
+- To enable safe access to virtualized I/O devices, hardware support like I/O MMU, device assignment, and software support like device emulation, device drivers, and hypervisor integration are essential.
 
 12. **System Calls vs. Procedure Calls**
-    - System calls are generally more expensive than procedure calls due to the overhead of mode switching, trap handling, and potential context switches. A test program can be designed to measure and compare the time required for each type of call.
+
+- System calls are generally more expensive than procedure calls due to the overhead of mode switching, trap handling, and potential context switches. A test program can be designed to measure and compare the time required for each type of call.
 
 13. **Substitute for Traps**
-    - Without a trap instruction, a combination of interrupts and exceptions can be used as a substitute for traps, allowing the operating system to handle events and transitions effectively.
+
+- Without a trap instruction, a combination of interrupts and exceptions can be used as a substitute for traps, allowing the operating system to handle events and transitions effectively.
 
 14. **Substitute for Interrupts**
-    - Without interrupts, a combination of exceptions and traps can be utilized to handle events and transitions within the operating system, although it may introduce additional complexity and overhead.
+
+- Without interrupts, a combination of exceptions and traps can be utilized to handle events and transitions within the operating system, although it may introduce additional complexity and overhead.
 
 15. **Steps for CPU Interrupt Handling**
-    - The operating system typically follows steps like saving the current state, identifying the interrupt source, invoking the appropriate interrupt handler, performing the required processing, and restoring the saved state.
+
+- The operating system typically follows steps like saving the current state, identifying the interrupt source, invoking the appropriate interrupt handler, performing the required processing, and restoring the saved state.
 
 16. **Operating System Stack for System Calls**
-    - The operating system stack for handling system calls should be separate from the application stack to ensure isolation and prevent potential stack-related vulnerabilities or conflicts.
+
+- The operating system stack for handling system calls should be separate from the application stack to ensure isolation and prevent potential stack-related vulnerabilities or conflicts.
 
 17. **Verifying Rogue System Calls**
-    - Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.
-
+- Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.

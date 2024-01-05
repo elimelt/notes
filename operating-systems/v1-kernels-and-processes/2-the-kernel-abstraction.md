@@ -143,13 +143,6 @@ Once finished executing, the callee then pops the registers off the stack, resto
 *Note...* for exceptions that signal instructions in the kernel, the handler will modify the program counter to point to the instruction **after** the exception occurred, so as to prevent an infinite loop.
 
 
-
-
-
-
-
-
-
 ## Implementing Secure System Calls
 
 OS kernel constructs restricted enviornment for process execution. Any time a process needs to execute something outside of its *protection domain*, it requests the OS do so on its behalf using a **system call**.

@@ -12,9 +12,9 @@
 
 ### Types of links
 
-- **Full-duplex** - Both nodes can send and receive at the same time. *Bidirectional*.
-- **Half-duplex** - Only one node can send at a time. *Bidirectional*.
-- **Simplex** - Only one node can send at a time. *Unidirectional*.
+- **Full-duplex** - Both nodes can send and receive at the same time. *Bidirectional*. Ex: ethernet
+- **Half-duplex** - Only one node can send at a time. *Bidirectional*. Ex: WiFi
+- **Simplex** - Only one node can send at a time. *Unidirectional*. Ex: 
 
 ### Wireless Links
 
@@ -79,12 +79,7 @@ Networks use an _address_ to identify the destination of a packet. Packets can b
 
 #### What part is the network?
 
-- TODO
-
-#### What part is the ISP?
-
-- TODO
-
+Everything that isn't the application level. Some people do and don't include the host, but in this course we do.
 
 #### Can think of "the cloud" as a generic network...
 
@@ -95,8 +90,6 @@ Networks use an _address_ to identify the destination of a packet. Packets can b
    |
    +-- (Host) --- server
 ```
-
-- TODO
 
 ## Key Interfaces
 

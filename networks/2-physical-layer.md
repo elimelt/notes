@@ -72,4 +72,3 @@ P = 50ms, R = 10Mbps, L = 1MB
 
 L_t = 1MB/10MBps + 50ms = .1s + .05s = .15s
 ```
-```

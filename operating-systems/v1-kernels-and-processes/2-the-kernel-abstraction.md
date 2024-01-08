@@ -308,7 +308,7 @@ Simulation of virtual devices doesn't need to be anything like a real device. Fo
 
 2. **Screen Buffer Memory Protection**
 
-- The screen’s buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.
+- The screen's buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.
 
 3. **Dual-mode Operation Mechanisms**
 

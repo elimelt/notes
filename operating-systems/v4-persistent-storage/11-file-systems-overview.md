@@ -28,4 +28,10 @@ I won't define them, but you should also know and understand the following terms
 - **Absolute Path**
 - **Relative Path**
 
+#### Links
+
 The mapping between a name and file is called a **hard link**. File systems that allow multiple hard links aren't a tree, and are instead usually a directed acyclic graph (DAG). A **symbolic link** is a mapping from a name to another file name. These are useful since they allow you to reference files that are stored on other systems/volumes. Some OS's support features managed outside of the file system. Windows has **shortcuts**, which are really just files that Windows recognizes and redirects from. MacOS has **aliases**, which are similar to symbolic links, but also refactor themselves when the target file is moved.
+
+#### Volumes
+
+A **volume** is a collection of physical storage resources that form a logical storage device. In the simplest case, a volume is a single disk. However, a disk can be partitioned into multiple volumes, and a single volume can be made of multiple disks.∂

@@ -4,14 +4,15 @@
 
 ## Coding and Modulation
 
-A modem (modulator-demodulator) converts digital signals to analog signals, and vise versa.
+A modem (modulator-demodulator) converts digital signals to analog signals, and vise versa. 
 
 ### A simple coding
-A high positive voltage for 1, and a low negative voltage for 0. This is called **NRZ**(Non-Return-to-Zero). 
 
+A high positive voltage for 1, and a low negative voltage for 0. This is called **NRZ**(Non-Return-to-Zero). Each time interval (**symbol**) is like a sample point.
 
 ### Problems?
-- TODO
+ 
+Only 1 bit/symbol. Can use more than just 2 voltage levels to get more bits/symbol. To get N bits/symbol, need 2^n voltage levels. There is a tradeoff between encoding efficiency and the sensitivity to noise.
 
 There are many other practical coding schemes, all of which are driven by engineering considerations.
 
@@ -32,20 +33,42 @@ A simple solution is to alternate between positive/negative, and zero voltages. 
 -V |___|   |   |   |   |   |   |   |___|  
 ```
 
+#### Better Solution
+
+- Can map arbitrary bit patterns to eachother (as long as you don't decrease the number of bits to decode). Design encoding such that long runs of zero can't happen
+
+- Can even use xor and a psuedorandom bit pattern to encode and decode to make the encoded data random looking as well, getting rid of most long runs of zero.
+
 ### Modulation vs. Coding
 
+In order to agree on the timing of data streams, AKA the start and end of a symbol being transmitted, you need to have a common clock between the two systems that are communicating.
+
 With **coding**, signal is sent directly on a wire. This doesn't work well for wireless, so we use **modulation**. **Modulation** carries a signal by varying the frequency, amplitude, or phase of a carrier wave. *Baseband* is the original signal, and *passband* is the modulated signal. We can modulate a signal by varying the amplitude, frequency, or phase of a carrier wave.
+
+#### Some examples:
+- NRZ signal of bits
+- Amplitude shift keying (zigbee)
+- Frequency shift keying (bluetooth)
+- Phase shift keying 
+
+WiFi for example goes all in and listens on an entire band of frequencies instead of just the binary 2 frequencies.Modern WiFi uses 256 frequency levels.
 
 ### Key Points
 
 - Everythign is analog, even digital signals.
 - Digital signals are conceptually discrete, but are represented physically in a continuous medium.
-
+- Modulating and demodulating a signal is converting between analog to digital, and vise versa.
+- A coding is an agreed upon "language" for your data.  
 
 ## Simple Link Model
 
+Two main parameters:
+
 - **Rate** (bandwidth, capacity, speed): Number of bits per second
 - **Delay**: Related to the time it takes to deliver a message
+
+Additional info:
+
 - **type of cast**: unicast, multicast, broadcast
 - **error rate**
 
@@ -72,3 +95,14 @@ P = 50ms, R = 10Mbps, L = 1MB
 
 L_t = 1MB/10MBps + 50ms = .1s + .05s = .15s
 ```
+
+
+### Cut Through Routing
+
+
+
+
+
+
+
+

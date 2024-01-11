@@ -182,6 +182,7 @@ For example, when a person submits a request on their home wifi, the router stri
 
 ## OSI Layers
 
+
 ### Application Layer
 
 Services that are used with end user applications. Examples: HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP, etc.
@@ -229,8 +230,8 @@ Transfer data on a physical medium. Examples: Hubs, NICS, Cables, etc.
 
 ## Course Reference Model
 
-**Application** - Programs that use network services
-**Transport** - Provides end-to-end data delivery
-**Network** - Provides data delivery across multiple networks
-**Link** - Sends frames over one or more links
-**Physical** - Sends bits using physical signals
+- **Application**: Programs that use network services
+- **Transport**: Provides end-to-end data delivery
+- **Network**: Provides data delivery across multiple networks
+- **Link**: Sends frames over one or more links
+- **Physical**: Sends bits using physical signals

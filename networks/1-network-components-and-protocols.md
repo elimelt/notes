@@ -172,6 +172,9 @@ When a message is recieved, it needs to be passed through exactly the protocols 
 - **Abstraction** - Each layer can be thought of as a black box. Information hiding can be used to connect different systems that rely on different protocols under the hood.
 - **Standardization** - Each layer can be standardized, and then implemented by many different vendors.
 
+For example, when a person submits a request on their home wifi, the router strips the WiFi header and adds an ethernet header to send it to the server.
+
+
 ### Disadvantages of Layering
 
 - **Inefficiency** - Each layer adds overhead to the message. This is especially true for small messages, since the amount of overhead relative to the message size is large.

@@ -107,7 +107,9 @@ Most OS's allocate a **kernel interrupt stack** (KIS) for every user process. Wh
 
 ### Interrupt Masking
 
-Hardware provides a privileged instruction to disable interrupts. This is useful for critical sections of code that should not be interrupted. On X86, disable interrupts defers interrupts until an enable interrupt instruction is executed. While they are deferred, interrupts are queued, but will be lost if this queue fills up. Generally, hardware will buffer one interrupt of each type, and will drop any additional interrupts of that type.
+Hardware provides a privileged instruction to disable interrupts. This is useful for critical sections of code that should not be interrupted. On X86, disable interrupts defers interrupts until an enable interrupt instruction is executed. While they are deferred, interrupts are queued, but will be lost if this queue fills up. Generally, hardware will buffer one interrupt of each type, and will drop any additional interrupts of that type. Interrupts are disabled with `%CLI` and enabled with `%STI`, which only applies to the current CPU (for multi-core systems).
+
+Different devices all have their own interrupt buffer, and also assign priotiries to each type of interrupt that they handle.
 
 ### Hardware Support for Saving and Restoring Registers
 
@@ -116,6 +118,12 @@ For x86...
 - If processor in user mode, push interrupted process's stack pointer onto kernel interrupt stack, then switches to kernel stack
 - Pushes interrupted process's instruction pointer
 - Pushes x86 _processor status word_, which includes control bits and condition codes (which are needed to restore state of current execution)
+
+### More on Interrup Handlers
+
+- Often part of the **device driver**
+- **non-blocking** ~ runs to completion: any waiting must be limited duration ~ Wake up other threads to do any real work (Linux: semaphore)
+- Rest of device driver runs as a kernel thread
 
 ## Putting It All Together: x86 Mode Transfers
 

@@ -43,6 +43,11 @@ The rate of change of energy, measured in Joules/sec -> Watts (W)
 
 Or the work done by the circuit
 
+```txt
+P = V * I
+P = I^2 * R
+P = V^2 / R
+```
 
 ### Units
 

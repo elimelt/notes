@@ -30,6 +30,10 @@ This "kernel bit" is just one of many flags set in the CPU. These flags aren't d
 
 Intel x86 processors actually support 4 privilege levels, but none of MacOS, Windows or Linux make use of the extra 2 levels.
 
+### User and Kernel Memory
+
+In physical memory, the kernel is stored at the top of memory, and the user program is stored at the bottom. The kernel is stored at the top because it needs to be able to access all of memory, and the user program is stored at the bottom because it needs to be able to access all of its own memory. The kernel is stored in a fixed location in memory, and the user program is loaded into memory at runtime.
+
 ## Virtual Memory
 
 In a naiive implementation (like MS-DOS), the OS directly loads the program into memory and gives it access to the entire memory space. This is problematic for a few reasons, including security, fragmentation of memory, difficulty in growing the stack/heap. **Virtual memory** solves these problems by giving each process its own virtual address space in which their memory starts at 0. The OS maps the virtual address space to physical memory, usually in fixed size chunks called **pages**. The OS can then swap pages in and out of memory as needed for each process. Modern OS's often also use address randomization to prevent attacks.

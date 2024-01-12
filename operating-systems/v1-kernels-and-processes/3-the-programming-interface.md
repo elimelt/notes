@@ -238,3 +238,76 @@ KERNEL |                                    |
                _____________
              Pipe/Kernel Buffer
 ```
+
+
+When the producer writes to the pipe (kernel buffer), they can do so entirely decoupled from the consumer. If the buffer is ever full, then writes are blocked by the producer until the consumer reads some data from the buffer. Similarly, if the buffer is ever empty, then reads are blocked by the consumer until the producer writes some data to the buffer.
+
+WIn UNIX, when the producer is done it usually closes its side of the buffer. The consumer can then read until the buffer is empty, at which point the read syscall will hit EOF and return 0. The consumer can then close its side of the buffer, and the kernel will GC the buffer.
+
+### Client/Server
+
+```txt
+         Client                              Server
+       ----------                          ----------
+       |      ^ |                             |     ^ |
+     write    | |                             |     | |
+       |      | |                       write |     | |
+       |      | v read                        |     | v read
+User   |       ^                              |      ^
+_______|_______|______________________________|______|__________
+Kernel |       |                              |      |
+       |       |                              |      |
+       |       |       _______________        |      |
+       |       +-------||||||||||||||| <------+      |
+       |               ---------------               |
+       |                                             |
+       |               _______________               |
+       +-------------->|||||||||||||||---------------+
+                       ---------------
+                       Pipe/Kernel Buffer
+```
+
+In client/server, there are two pipes, one for each direction of communication. To make a request, the client writes data into one pipe, and then reads data from the other. The server does the opposite, reading from the first pipe, validating and handling the request, and then writing to the second pipe the response.
+
+```txt
+//                   [!!!] pseudocode [!!!]
+
+Client:
+    char request[RequestSize];
+    char reply[ReplySize];
+
+    // ..compute..
+
+    // Put the request into the buffer.
+    // Send the buffer to the server.
+    write(output, request, RequestSize);
+
+    // Wait for response.
+    read(input, reply, ReplySize);
+
+    // ..compute..
+
+Server:
+    char request[RequestSize];
+    char reply[ReplySize];
+
+    // Loop waiting for requests.
+    while (1) {
+        // Read incoming command.
+        read(input, request, RequestSize);
+
+        // Do operation.
+
+        // Send result.
+        write(output, reply, ReplySize);
+    }
+ ```
+
+#### Streamlining Client/Server Communication
+
+Since both issue a write followed by a read, one could combine these into a single system call (at the expense of adding a system call...) in order to eliminate a context switch.
+
+Furthermore, the client always needs to wait for the server, so an even further optimization that was done in microkernel Windows in the early 1990s is to donate the client processor to run server code, reducing latency. However, this requires that code and data for both client and server are in cache simultaneously.
+
+Even further, on a multi-core system where the client and server have their own processors, the kernel can set up a shared memory region between them so that they can (safely) communicate directly without involving the kernel at all.
+

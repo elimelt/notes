@@ -27,6 +27,28 @@ $$\sigma = 10, \quad \rho = 28, \quad \beta = \frac{8}{3}$$
 | This | is   | a    | table |
 | This | is   | a    | table |
 
+# Another Table
+
+| This | is   | a    | table |
+|------|------|------|-------|
+| This | is   | a    | table |
+| This | is   | a    | table |
+| This | is   | a    | table |
+
+
+| This | is   | a    | table |
+|------|------|------|-------|
+| This | is   | a    | table |
+| This | is   | a    | table |
+| This | is   | a    | table |
+
+
+| This | is   | a    | table |
+|------|------|------|-------|
+| This | is   | a    | table |
+| This | is   | a    | table |
+| This | is   | a    | table |
+
 # This is a test to see if I can render a code block in a markdown file.
 
 ```python

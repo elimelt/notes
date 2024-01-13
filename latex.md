@@ -21,11 +21,11 @@ $$\sigma = 10, \quad \rho = 28, \quad \beta = \frac{8}{3}$$
 
 # This is a test to see if I can render a table in a markdown file.
 
-| Syntax                                                                                                                                                                                                                                                                                                                                                                                                              | Description |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| Header                                                                                                                                                                                                                                                                                                                                                                                                              | Title       |
-| Paragraph                                                                                                                                                                                                                                                                                                                                                                                                           | Text        |
-| Large paragraph of many words repated over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. | Text        |
+| This | is   | a    | table |
+|------|------|------|-------|
+| This | is   | a    | table |
+| This | is   | a    | table |
+| This | is   | a    | table |
 
 # This is a test to see if I can render a code block in a markdown file.
 

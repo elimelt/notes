@@ -1,19 +1,19 @@
 # This is a test to see if I can properly render LaTeX in a markdown file.
 
-
-
 \sigma = 10, \quad \rho = 28, \quad \beta = \frac{8}{3}
 
-
-$$P = \begin{bmatrix}
+$$
+P = \begin{bmatrix}
 1 & 0 & 0 & 0 \\
 0 & 0 & 1 & 0 \\
 0 & 1 & 0 & 0 \\
 0 & 0 & 0 & 1
-\end{bmatrix}$$
+\end{bmatrix}
+$$
+
+This is a matrix: $$ P = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} $$
 
 $$\sigma = 10, \quad \rho = 28, \quad \beta = \frac{8}{3}$$
-
 
 # This is a test to see if I can properly render HTML in a markdown file.
 
@@ -21,11 +21,11 @@ $$\sigma = 10, \quad \rho = 28, \quad \beta = \frac{8}{3}$$
 
 # This is a test to see if I can render a table in a markdown file.
 
-| Syntax | Description |
-| ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
-| Large paragraph of many words repated over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again.| Text |
+| Syntax                                                                                                                                                                                                                                                                                                                                                                                                              | Description |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Header                                                                                                                                                                                                                                                                                                                                                                                                              | Title       |
+| Paragraph                                                                                                                                                                                                                                                                                                                                                                                                           | Text        |
+| Large paragraph of many words repated over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. Large paragraph of many words repeated over and over and over again. | Text        |
 
 # This is a test to see if I can render a code block in a markdown file.
 

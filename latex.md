@@ -10,6 +10,8 @@
 #
 # $$
 
+\sigma = 10, \quad \rho = 28, \quad \beta = \frac{8}{3}
+
 $$
 P = \begin{bmatrix}
 1 & 0 & 0 & 0 \\

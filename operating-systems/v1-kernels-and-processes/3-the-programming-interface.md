@@ -80,8 +80,8 @@ However, the parent process may want to control various aspects of the child pro
      NULL, // Thread handle not inheritable
      FALSE, // Set handle inheritance to FALSE
      0, // No creation flags
-     NULL, // Use parent’s environment block
-     NULL, // Use parent’s starting directory
+     NULL, // Use parent's environment block
+     NULL, // Use parent's starting directory
      &si, // Pointer to STARTUPINFO structure
      &pi ) // Pointer to PROCESS_INFORMATION structure
  )
@@ -192,17 +192,17 @@ main() {
     char *prog = NULL;
     char **args = NULL;
     // Read the input a line at a time, and parse each line into the program
-    // name and its arguments. End loop if we’ve reached the end of the input.
+    // name and its arguments. End loop if we've reached the end of the input.
     while (readAndParseCmdLine(&prog, &args)) {
         // Create a child process to run the command.
         int child_pid = fork();
         if (child_pid == 0) {
-            // I’m the child process.
-            // Run program with the parent’s input and output.
+            // I'm the child process.
+            // Run program with the parent's input and output.
             exec(prog, args);
             // NOT REACHED
         } else {
-            // I’m the parent; wait for the child to complete.
+            // I'm the parent; wait for the child to complete.
             wait(child_pid);
             return 0;
         }
@@ -311,3 +311,52 @@ Furthermore, the client always needs to wait for the server, so an even further 
 
 Even further, on a multi-core system where the client and server have their own processors, the kernel can set up a shared memory region between them so that they can (safely) communicate directly without involving the kernel at all.
 
+Often, the server process needs to select one of many processes to accept a request from (ie in a print queue). This can be done with the `select` system call.
+
+```txt
+Server:
+    char request[RequestSize];
+    char reply[ReplySize];
+    FileDescriptor clientInput[NumClients];
+    FileDescriptor clientOutput[NumClients];
+    // Loop waiting for a request from any client.
+    while (fd = select(clientInput, NumClients)) {
+        // Read incoming command from a specific client.
+        read(clientInput[fd], request, RequestSize);
+        // Do operation.
+        // Send result.
+        write(clientOutput[fd], reply, ReplySize);
+    }
+ ```
+
+ ## Operating System Structures
+
+- Many parts of the operating system depend on synchronization primitives for
+coordinating access to shared data structures with the kernel.
+- The virtual memory system depends on low-level hardware support for address
+translation, support that is specific to a particular processor architecture.
+- Both the file system and the virtual memory system share a common pool of blocks of
+physical memory. They also both depend on the disk device driver.
+- The file system can depend on the network protocol stack if the disk is physically
+located on a different machine.
+
+
+There is a fundamental tradeoff between maintainability and performance when it comes to designing kernels. Keeping functionality tightly coupled and integrated with kernel code makes it more performant, but also messy.
+
+### Monolothic Kernels
+
+Monolith kernels usually have everything tightly coupled within the kernel itself. Modules often have dependencies that span multiple other modules within the kernel. Not ALL functionality is built directly into the kernel, but much of it is.
+
+Since OS designers are free to structure their code however they want with a monolith, there is a lot of variation between systems. However, two emerging patterns are usually present:
+
+#### Hardware Abstraction Layer (HAL)
+
+Portable interface to machine configuration and processor specific operations.
+
+For an OS to be portable between processor families (ex ARM -> Intel or 32 -> 64 bit), there needs to be a layer over the processor specific code that handles things like context switches, interrupts, exceptions, and traps.
+
+All of these hardware specific instructions need to be mapped to the platform independent "virtual" procedure. Porting an OS to a new platform is really just a matter of implementing this layer for a new architecture/hardwarep
+
+##### Windows HAL
+
+Windows uses two-pronged strategy for portability

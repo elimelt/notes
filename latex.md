@@ -18,3 +18,14 @@ P = \begin{bmatrix}
 0 & 0 & 0 & 1
 \end{bmatrix}
 $$
+
+# This is a test to see if I can properly render HTML in a markdown file.
+
+<em>Emphasis</em>, <strong>strong</strong>, <code>code</code>, <a href="http://example.com">link</a>.
+
+# This is a test to see if I can render a table in a markdown file.
+
+| Syntax | Description |
+| ----------- | ----------- |
+| Header | Title |
+| Paragraph | Text |

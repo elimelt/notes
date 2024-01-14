@@ -57,4 +57,4 @@ def test():
 
 # This is a test to see if I can render an image
 
-[This is an image](sc.png)
+![This is an image](sc.png)

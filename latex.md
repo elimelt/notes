@@ -54,3 +54,7 @@ $$\sigma = 10, \quad \rho = 28, \quad \beta = \frac{8}{3}$$
 def test():
     print("Hello World!")
 ```
+
+# This is a test to see if I can render an image
+
+![This is an image](sc.png)

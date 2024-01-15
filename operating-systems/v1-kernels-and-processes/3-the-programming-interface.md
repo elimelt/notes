@@ -269,7 +269,7 @@ Kernel |       |                              |      |
 
 In client/server, there are two pipes, one for each direction of communication. To make a request, the client writes data into one pipe, and then reads data from the other. The server does the opposite, reading from the first pipe, validating and handling the request, and then writing to the second pipe the response.
 
-```txt
+```c
 //                   [!!!] pseudocode [!!!]
 
 Client:
@@ -313,7 +313,7 @@ Even further, on a multi-core system where the client and server have their own 
 
 Often, the server process needs to select one of many processes to accept a request from (ie in a print queue). This can be done with the `select` system call.
 
-```txt
+```c
 Server:
     char request[RequestSize];
     char reply[ReplySize];

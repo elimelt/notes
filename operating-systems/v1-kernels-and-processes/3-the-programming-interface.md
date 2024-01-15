@@ -359,4 +359,114 @@ All of these hardware specific instructions need to be mapped to the platform in
 
 ##### Windows HAL
 
-Windows uses two-pronged strategy for portability
+Windows uses two-pronged strategy for portability. Kernel is dynamically linked at boot time with a set of libaray routines that are specific to the hardware configuration. Also runs a different kernel binary accross different processor architectures, each of which contains conditional execution for closely related processor designs.
+
+#### Dynamically Installed Device Drivers
+
+Similar considerations for supporting wide variety of IO devices. **Dynamically loadable device drivers** are provided as the kernel is already running in order to handle new devices. Device manufacturers write drivers that follow a stardard interface for the OS, and these routines are called by the kernel when the device needs to be used.
+
+When the OS boots, there are a small number of drivers that are already loaded, e.g. disk drivers. All devices physically attached to the computer have corresponding drivers usually bundled into a file that is stored along with the boot loader. When the OS starts up, it queries the I/O bus to find out what devices are attached, and then loads the corresponding drivers from disk. Any network-attached devices (like network printers) are loaded from over the internet.
+
+Drivers have been found to be responsible for ~90% of OS crashes, and are a potential source of corruption, as well as a security risk. Mitigated with...
+
+- **code inspection**: OS vendors typically require submission of drivers in advance for inspection and testing before they are allowed in the kernel.
+- **bug tracking**: after every crash, OS collections info about system config and the current kernel stack. Sends this data to a central database for analysis.
+- **user-level device drivers**: both Apple and Microsoft strongly encourage new device drivers to run at user-level. This prevents them from modifying and corrupting kernel data structures, but comes at a performance cost.
+- **VM device drivers**: to handle old drivers that need to run in kernel mode, one approach is to run device driver inside guest OS. This way, bugs can only corrupt the guest OS. This is what Apple does with their Rosetta 2 emulator for running old Intel apps on new ARM Macs.
+- **driver sandboxing**: to address performance issues with full virtualization, run drivers in a restricted execution environment that prevents them from accessing kernel data structures
+
+### Microkernels
+
+Run as much of the OS as possible in user mode. The window manager on most modern OS's is a good example of this.
+
+The difference between micro and monolithic kernels is often transparent to application programs. User level libraries can either directly make requests to the server process, or make system calls that are then redirected by the kernel.
+
+Generally, microkernels provide little benefit beyond the ease of development. The performance cost of context switching between user and kernel mode is high enough that most modern systems take on a hybrid approach.
+
+## Exercises
+
+1. Can UNIX fork return an error? Why or why not?
+
+2. Can UNIX exec return an error? Why or why not?
+
+3. What happens if we run the following program on UNIX?
+   ```c
+   main() {
+       while (fork() >= 0)
+           ;
+   }
+   ```
+
+4. Explain what must happen for UNIX wait to return immediately (and successfully).
+
+5. Suppose you were the instructor of a very large introductory programming class. Explain (in English) how you would use UNIX system calls to automate testing of submitted homework assignments.
+
+6. What happens if you run "exec csh" in a UNIX shell? Why?
+
+7. What happens if you run "exec ls" in a UNIX shell? Why?
+
+8. How many processes are created if the following program is run?
+   ```c
+   main(int argc, char ** argv) {
+       forkthem(5);
+   }
+   void forkthem(int n) {
+       if (n > 0) {
+           fork();
+           forkthem(n-1);
+       }
+   }
+   ```
+
+9. Consider the following program:
+   ```c
+   main (int argc, char ** argv) {
+       int child = fork();
+       int x = 5;
+
+       if (child == 0) {
+           x += 5;
+       } else {
+           child = fork();
+           x += 10;
+           if(child) {
+               x += 5;
+           }
+       }
+   }
+   ```
+   How many different copies of the variable x are there? What are their values when their process finishes?
+
+10. What is the output of the following programs? (Please try to solve the problem without compiling and running the programs.)
+    - Program 1:
+      ```c
+      main() {
+          int val = 5;
+          int pid;
+
+          if (pid = fork())
+              wait(pid);
+          val++;
+          printf("%d\n", val);
+          return val;
+      }
+      ```
+
+    - Program 2:
+      ```c
+      main() {
+          int val = 5;
+          int pid;
+          if (pid = fork())
+              wait(pid);
+          else
+              exit(val);
+          val++;
+          printf("%d\n", val);
+          return val;
+      }
+      ```
+
+11. Implement a simple Linux shell in C capable of executing a sequence of programs that communicate through a pipe. For example, if the user types ls | wc, your program should fork off the two programs, which together will calculate the number of files in the directory. For this, you will need to use several of the Linux system calls described in this chapter: fork, exec, open, close, pipe, dup2, and wait. Note: You will to replace stdin and stdout in the child process with the pipe file descriptors; that is the role of dup2.
+
+12. Extend the shell implemented above to support foreground and background tasks, as well as job control: suspend, resume, and kill.

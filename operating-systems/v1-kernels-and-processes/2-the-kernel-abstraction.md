@@ -92,7 +92,7 @@ The kernel needs to be able to stop a user program in the middle of execution at
 
 ### Interrupt Vector Table
 
-| Entry | Type                  | Description                                      |
+| Entry | Type                  | Example                                          |
 |-------|-----------------------|--------------------------------------------------|
 | 0-31  | Processor Exceptions  | Divide by zero, page fault, etc.                 |
 | 32-255| Interrupts            | Hardware interrupts, system calls, etc.          |

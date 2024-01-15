@@ -4,36 +4,40 @@
 
 ### Creating and managing processes
 
-- `fork()`: Create a child process as a clone of the current process. The `fork` call returns to both the parent and child.
-- `exec(prog, args)`: Run the application `prog` in the current process.
-- `exit()`: Tell the kernel the current process is complete, and its data structures should be garbage collected.
-- `wait(processID)`: Pause until the child process has exited.
-- `signal(processID, type)`: Send an interrupt of a specified type to a process.
+| Function                  | Description                                                                                                     |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `fork()`                  | Create a child process as a clone of the current process. The `fork` call returns to both the parent and child. |
+| `exec(prog, args)`        | Run the application `prog` in the current process.                                                              |
+| `exit()`                  | Tell the kernel the current process is complete, and its data structures should be garbage collected.           |
+| `wait(processID)`         | Pause until the child process has exited.                                                                       |
+| `signal(processID, type)` | Send an interrupt of a specified type to a process.                                                             |
 
 ### I/O operations
 
-- `fileDesc open(name)`: Open a file, channel, or hardware device, specified by `name`; returns a file descriptor that can be used by other calls.
-- `pipe(fileDesc[2])`: Create a one-directional pipe for communication between two processes. `pipe` returns two file descriptors, one for reading and one for writing.
-- `dup2(fromFileDesc, toFileDesc)`: Replace the `toFileDesc` file descriptor with a copy of `fromFileDesc`. Used for replacing `stdin` or `stdout` or both in a child process before calling `exec`.
-- `int read(fileDesc, buffer, size)`: Read up to `size` bytes into `buffer`, from the file, channel, or device. `read` returns the number of bytes actually read.
-- `int write(fileDesc, buffer, size)`: Analogous to `read`, write up to `size` bytes into kernel output buffer for a file, channel, or device. `write` normally returns immediately but may stall if there is no space in the kernel buffer.
-- `fileDesc select(fileDesc[], arraySize)`: Return when any of the file descriptors in the array `fileDesc[]` have data available to be read. Returns the file descriptor that has data pending.
-- `close(fileDescriptor)`: Tell the kernel the process is done with this file, channel, or device.
-
+| Function                                 | Description                                                                                                                                                                                           |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fileDesc open(name)`                    | Open a file, channel, or hardware device, specified by `name`; returns a file descriptor that can be used by other calls.                                                                             |
+| `pipe(fileDesc[2])`                      | Create a one-directional pipe for communication between two processes. `pipe` returns two file descriptors, one for reading and one for writing.                                                      |
+| `dup2(fromFileDesc, toFileDesc)`         | Replace the `toFileDesc` file descriptor with a copy of `fromFileDesc`. Used for replacing `stdin` or `stdout` or both in a child process before calling `exec`.                                      |
+| `int read(fileDesc, buffer, size)`       | Read up to `size` bytes into `buffer`, from the file, channel, or device. `read` returns the number of bytes actually read.                                                                           |
+| `int write(fileDesc, buffer, size)`      | Analogous to `read`, write up to `size` bytes into kernel output buffer for a file, channel, or device. `write` normally returns immediately but may stall if there is no space in the kernel buffer. |
+| `fileDesc select(fileDesc[], arraySize)` | Return when any of the file descriptors in the array `fileDesc[]` have data available to be read. Returns the file descriptor that has data pending.                                                  |
+| `close(fileDescriptor)`                  | Tell the kernel the process is done with this file, channel, or device.                                                                                                                               |
 
 ## Overview
 
-What functions do we need an OS to provide for applications?
+What features/functions do we need an OS to provide for applications?
 
-- **Process management**: create, destroy, and manage processes. This includes the ability to create new processes, terminate existing processes, wait for processes to complete, and send asynchronous notifications to processes.
-- **Input/Output**: Communicate with devices and files, as well as other processes.
-- **Thread management**: create, manage and destroy threads, aka tasks that share memory and other resources within a process.
-- **Memory management**: allocate and deallocate memory for processes.
-- **File management**: create, delete, and manipulate files and directories. users should be able to persist named data on disk.
-- **Networking and Distributed Systems**: processes should be able to communicate with other processes on different machines over the network. processes should also be able to coordinate their actions, despite faults and delays.
-- **Graphics/Window Management**: Processes control pixels on their portion of the screen. Should utilize hardware acceleration to draw graphics quickly.
-- **Authentication and Security**: Permissions system to control access to resources. Processes should be able to authenticate themselves to other processes and to the OS.
-
+| Function                           | Description                                                                                                                                                                                               |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Process management                 | Create, destroy, and manage processes. This includes the ability to create new processes, terminate existing processes, wait for processes to complete, and send asynchronous notifications to processes. |
+| Input/Output                       | Communicate with devices and files, as well as other processes.                                                                                                                                           |
+| Thread management                  | Create, manage and destroy threads, aka tasks that share memory and other resources within a process.                                                                                                     |
+| Memory management                  | Allocate and deallocate memory for processes.                                                                                                                                                             |
+| File management                    | Create, delete, and manipulate files and directories. Users should be able to persist named data on disk.                                                                                                 |
+| Networking and Distributed Systems | Processes should be able to communicate with other processes on different machines over the network. Processes should also be able to coordinate their actions, despite faults and delays.                |
+| Graphics/Window Management         | Processes control pixels on their portion of the screen. Should utilize hardware acceleration to draw graphics quickly.                                                                                   |
+| Authentication and Security        | Permissions system to control access to resources. Processes should be able to authenticate themselves to other processes and to the OS.                                                                  |
 
 This chapter will focus on the first two.
 
@@ -41,10 +45,12 @@ This chapter will focus on the first two.
 
 For any bit of functionality, there are several possible places it could be implemented in an OS.
 
-- **user-level programs**: in both UNIX and Windows, programs for logging in and managing processes
-- **user-level library**: user interface widgets in MacOS and Windows
-- **kernel, accessed via system calls**: file system, network stack in UNIX and Windows
-- **standalone server process invoked by kernel**: window manager in MacOS and Windows
+| Component                                   | Description                                                              |
+| ------------------------------------------- | ------------------------------------------------------------------------ |
+| User-level programs                         | Programs for logging in and managing processes in both UNIX and Windows. |
+| User-level library                          | User interface widgets in MacOS and Windows.                             |
+| Kernel, accessed via system calls           | File system and network stack in UNIX and Windows.                       |
+| Standalone server process invoked by kernel | Window manager in MacOS and Windows.                                     |
 
 However, UNIX philosophy is to implement as much as possible in user-level programs and hardware, maintaining a "thin waist" in the system architecture. Same design principle behind network stack, the key interface between the highest and lowest levels of the system follows a very simple but powerful design. So long as a program complies to the system call interface, it can run on most UNIX systems.
 
@@ -53,7 +59,6 @@ However, some things really do need to go in particular places. We want the foll
 - **Safety**: resource management and protection are the responsibility of the OS. Cannot do these things in user-level programs/libraries becaues they can be bypassed.
 - **Reliability**: kernel programs aren't protected from each other, so keeping the kernel small and simple minimizes the chance of bugs. "If it can be done in user-level, it should be done in user-level". Extreme of this is a **micro-kernel architecture**, where the kernel is a small set of primitives for inter-process communication, and everything else is implemented in user-level processes/servers, accessed though user-level programs via inter-process communication.
 - **Performance**: transferring control from user-level to kernel is expensive, so we want to minimize the number of system calls. Windows NT started out as a micro-kernel, but moved many responsibilities back into the kernel to improve performance.
-
 
 ## Process Management
 
@@ -85,7 +90,7 @@ However, the parent process may want to control various aspects of the child pro
      &si, // Pointer to STARTUPINFO structure
      &pi ) // Pointer to PROCESS_INFORMATION structure
  )
- ```
+```
 
 ### UNIX Process Management
 
@@ -183,7 +188,6 @@ int select(int nfds, fd_set *readfds, fd_set *writefds,
 int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 ```
 
-
 ## Case Study: The UNIX Shell
 
 ```c
@@ -208,11 +212,11 @@ main() {
         }
     }
 }
- ```
+```
 
- Since commands read and write to file descriptors, the programs are decoupled from their input and output. This allows for...
+Since commands read and write to file descriptors, the programs are decoupled from their input and output. This allows for...
 
- - **file of commands == program**: the shell can read commands from a file, and execute them as if they were typed in. Files can specify the *interpreter* to use, which is a program that reads commands from a file and executes them. This is how shell scripts work. `#!/bin/sh` is an example.
+- **file of commands == program**: the shell can read commands from a file, and execute them as if they were typed in. Files can specify the _interpreter_ to use, which is a program that reads commands from a file and executes them. This is how shell scripts work. `#!/bin/sh` is an example.
 - **input/output to file**: the shell can redirect input and output to files using `<` `>` respectively. Uses `dup2` to replace stdin/stdout/stderr with the file descriptors of the files to read/write to.
 - **input/output to other programs**: the shell can redirect input and output to other programs using `|`. Uses `pipe` to create a pipe, and `dup2` to replace stdin/stdout/stderr with the file descriptors of the pipes to read/write to. This allows for chaining of programs together, where each program runs in parallel in its own process.
 
@@ -238,7 +242,6 @@ KERNEL |                                    |
                _____________
              Pipe/Kernel Buffer
 ```
-
 
 When the producer writes to the pipe (kernel buffer), they can do so entirely decoupled from the consumer. If the buffer is ever full, then writes are blocked by the producer until the consumer reads some data from the buffer. Similarly, if the buffer is ever empty, then reads are blocked by the consumer until the producer writes some data to the buffer.
 
@@ -301,7 +304,7 @@ Server:
         // Send result.
         write(output, reply, ReplySize);
     }
- ```
+```
 
 #### Streamlining Client/Server Communication
 
@@ -327,19 +330,18 @@ Server:
         // Send result.
         write(clientOutput[fd], reply, ReplySize);
     }
- ```
+```
 
- ## Operating System Structures
+## Operating System Structures
 
 - Many parts of the operating system depend on synchronization primitives for
-coordinating access to shared data structures with the kernel.
+  coordinating access to shared data structures with the kernel.
 - The virtual memory system depends on low-level hardware support for address
-translation, support that is specific to a particular processor architecture.
+  translation, support that is specific to a particular processor architecture.
 - Both the file system and the virtual memory system share a common pool of blocks of
-physical memory. They also both depend on the disk device driver.
+  physical memory. They also both depend on the disk device driver.
 - The file system can depend on the network protocol stack if the disk is physically
-located on a different machine.
-
+  located on a different machine.
 
 There is a fundamental tradeoff between maintainability and performance when it comes to designing kernels. Keeping functionality tightly coupled and integrated with kernel code makes it more performant, but also messy.
 
@@ -390,6 +392,7 @@ Generally, microkernels provide little benefit beyond the ease of development. T
 2. Can UNIX exec return an error? Why or why not?
 
 3. What happens if we run the following program on UNIX?
+
    ```c
    main() {
        while (fork() >= 0)
@@ -406,6 +409,7 @@ Generally, microkernels provide little benefit beyond the ease of development. T
 7. What happens if you run "exec ls" in a UNIX shell? Why?
 
 8. How many processes are created if the following program is run?
+
    ```c
    main(int argc, char ** argv) {
        forkthem(5);
@@ -419,6 +423,7 @@ Generally, microkernels provide little benefit beyond the ease of development. T
    ```
 
 9. Consider the following program:
+
    ```c
    main (int argc, char ** argv) {
        int child = fork();
@@ -435,10 +440,13 @@ Generally, microkernels provide little benefit beyond the ease of development. T
        }
    }
    ```
+
    How many different copies of the variable x are there? What are their values when their process finishes?
 
 10. What is the output of the following programs? (Please try to solve the problem without compiling and running the programs.)
+
     - Program 1:
+
       ```c
       main() {
           int val = 5;

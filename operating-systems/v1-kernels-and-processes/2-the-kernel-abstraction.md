@@ -22,9 +22,12 @@ The **principal of least privilege** states that a process should only have acce
 
 The hardware must be able to switch between user and kernel mode safely, and must support the following restrictions for user mode:
 
-- **privileged instructions**: some instructions are prohibited
-- **memory protection**: processes should not be able to access memory that does not belong to them
-- **timer interrupts**: the CPU should be able to stop executing a process at will
+
+| Feature                | Description                                                                                       |
+|------------------------|---------------------------------------------------------------------------------------------------|
+| Privileged Instructions | Prohibited instructions that only the kernel can execute.                                         |
+| Memory Protection      | Processes are restricted from accessing memory that does not belong to them.                      |
+| Timer Interrupts       | The CPU can interrupt and stop executing a process at any time using timer interrupts.             |
 
 This "kernel bit" is just one of many flags set in the CPU. These flags aren't directly accessible to application code, but the **process status register** (PSR) is has corresponding flags that are set when the processor switches between user and kernel mode. This register works similarly to other registers (like arithmetic condition codes in assembly).
 
@@ -66,10 +69,12 @@ Exceptions are extremely useful for virtualization, and are often used as a sign
 
 There are several reasons why the kernel would want to switch to user mode.
 
-- **New Process**: When the kernel creates a new process, it needs to switch to user mode to start executing the process.
-- **Resume Process**: After interrupting a process, the kernel needs to switch back to user mode to resume the process.
-- **Switching to a Different Process**: The kernel may want to switch to a different process, for example if the current process is waiting for IO.
-- **User-Level Upcall**: Similar to interrupts, for the user program to handle asynchronous events, the kernel needs to be able to switch to user mode to call the user-level handler.
+| Action                          | Description                                                                                     |
+|---------------------------------|-------------------------------------------------------------------------------------------------|
+| New Process                     | When the kernel creates a new process, it needs to switch to user mode to start executing the process. |
+| Resume Process                  | After interrupting a process, the kernel needs to switch back to user mode to resume the process. |
+| Switching to a Different Process | The kernel may want to switch to a different process, for example if the current process is waiting for IO. |
+| User-Level Upcall               | Similar to interrupts, for the user program to handle asynchronous events, the kernel needs to be able to switch to user mode to call the user-level handler. |
 
 ## Implementing Safe Mode Transfer
 
@@ -87,11 +92,11 @@ The kernel needs to be able to stop a user program in the middle of execution at
 
 ### Interrupt Vector Table
 
-**Interrup handlers** are stored in kernel memory as a table of function pointers called the **interrupt vector table**. Each entry in the table corresponds to a specific interrupt. Although the format is processor specific, on x86, entries are broken into:
-
-- 0-31: **processor exceptions** (divide by zero, page fault, etc.)
-- 32-255: **interrupts** (hardware interrupts, system calls, etc.)
-- 64: **system call/trap** (syscall instruction)
+| Entry | Type                  | Description                                      |
+|-------|-----------------------|--------------------------------------------------|
+| 0-31  | Processor Exceptions  | Divide by zero, page fault, etc.                 |
+| 32-255| Interrupts            | Hardware interrupts, system calls, etc.          |
+| 64    | System Call/Trap      | Syscall instruction                              |
 
 On modern, multicore systems, interrup routing has become increasingly programmable at the kernel level. This is especially important for IO-heavy systems like web servers. The kernel can route interrupts to the core that is handling the IO, helping to avoid cache misses.
 
@@ -247,11 +252,13 @@ start(int argc, char** argv) {
 
 #### Applications:
 
-- **preeemptive user-level threads**: Enables threading libraries to use a periodic timer upcall to switch and/or terminate threads.
-- **asynchronous I/O Notifications**: Applications can make syscalls asynchronously. When the kernel finishes the operation, it notifies the application with an upcall.
-- **interprocess communication**: Any time two processes need to communicate in real time, they can use upcalls to notify each other of events. Another example might be when the user logs out, the kernel can send an upcall to all processes to terminate.
-- **user-level exception handling**: If application runtimes have their own exception system, they can be notified of processor exceptions with upcalls.
-- **user-level resource allocation**: If an application needs to be resource adaptive, it can use upcalls to monitor resource usage and adjust accordingly. The JVM uses upcalls to monitor memory usage and garbage collect.
+| Upcall Purpose                   | Description                                                                                          |
+|---------------------------------|------------------------------------------------------------------------------------------------------|
+| Preemptive user-level threads    | Enables threading libraries to use a periodic timer upcall to switch and/or terminate threads.       |
+| Asynchronous I/O Notifications   | Applications can make syscalls asynchronously. When the kernel finishes the operation, it notifies the application with an upcall. |
+| Interprocess communication      | Any time two processes need to communicate in real time, they can use upcalls to notify each other of events. Another example might be when the user logs out, the kernel can send an upcall to all processes to terminate. |
+| User-level exception handling    | If application runtimes have their own exception system, they can be notified of processor exceptions with upcalls. |
+| User-level resource allocation   | If an application needs to be resource adaptive, it can use upcalls to monitor resource usage and adjust accordingly. The JVM uses upcalls to monitor memory usage and garbage collect. |
 
 Upcalls aren't always needed, and many programs get by with an event loop model. In fact, Windows didn't support immediate delivery of upcalls to user-level programs until recently.
 
@@ -304,15 +311,10 @@ Host kernel returns from the interrupt to the interrupt handler for the guest ke
 
 Simulation of virtual devices doesn't need to be anything like a real device. For example, when the guest OS writes to a virtual disk (ie writing to the buffer descriptor ring for the device), the host OS can read these and perform the actual write to the real disk however it wants. The guest kernel then receives an interrupt when the write is complete, which is handled similarly to a timer interrupt, but executes the guest disk interrupt handler instead of the guest timer interrupt handler.
 
-```
-  ______                   _
- |  ____|                 (_)
- | |__  __  _____ _ __ ___ _ ___  ___  ___
- |  __| \ \/ / _ \ '__/ __| / __|/ _ \/ __|
- | |____ >  <  __/ | | (__| \__ \  __/\__ \
- |______/_/\_\___|_|  \___|_|___/\___||___/
 
-```
+
+
+## Exercises
 
 1. **Kernel Stack and User Process Interruption**
 

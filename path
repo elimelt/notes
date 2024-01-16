@@ -1,0 +1,10 @@
+ 1  10.0.0.1 (10.0.0.1)  2.797 ms  2.063 ms  1.532 ms
+ 2  96.120.102.45 (96.120.102.45)  11.031 ms  9.938 ms  9.869 ms
+ 3  po-309-1264-rur102.seattle.wa.seattle.comcast.net (162.151.209.113)  10.014 ms  12.970 ms  9.548 ms
+ 4  po-100-xar02.seattle.wa.seattle.comcast.net (69.139.160.241)  10.311 ms  13.523 ms  9.848 ms
+ 5  be-304-arsc1.seattle.wa.seattle.comcast.net (69.139.160.249)  9.383 ms  12.944 ms  10.600 ms
+ 6  be-36131-cs03.seattle.wa.ibone.comcast.net (68.86.93.9)  9.340 ms *  9.527 ms
+ 7  be-2412-pe12.seattle.wa.ibone.comcast.net (96.110.34.142)  9.841 ms
+    be-2312-pe12.seattle.wa.ibone.comcast.net (96.110.34.138)  9.707 ms  10.295 ms
+ 8  173.167.58.254 (173.167.58.254)  13.047 ms  12.468 ms  11.559 ms
+ 9  * * *

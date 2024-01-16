@@ -421,7 +421,6 @@ Generally, microkernels provide little benefit beyond the ease of development. T
        }
    }
    ```
-
 9. Consider the following program:
 
    ```c
@@ -442,7 +441,6 @@ Generally, microkernels provide little benefit beyond the ease of development. T
    ```
 
    How many different copies of the variable x are there? What are their values when their process finishes?
-
 10. What is the output of the following programs? (Please try to solve the problem without compiling and running the programs.)
 
     - Program 1:
@@ -474,7 +472,5 @@ Generally, microkernels provide little benefit beyond the ease of development. T
           return val;
       }
       ```
-
 11. Implement a simple Linux shell in C capable of executing a sequence of programs that communicate through a pipe. For example, if the user types ls | wc, your program should fork off the two programs, which together will calculate the number of files in the directory. For this, you will need to use several of the Linux system calls described in this chapter: fork, exec, open, close, pipe, dup2, and wait. Note: You will to replace stdin and stdout in the child process with the pipe file descriptors; that is the role of dup2.
-
 12. Extend the shell implemented above to support foreground and background tasks, as well as job control: suspend, resume, and kill.

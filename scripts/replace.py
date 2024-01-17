@@ -9,7 +9,8 @@ def replace_chars(input_files, backup):
         "’": "'",
         '”': '"',
         '“': '"',
-        '…': '...'
+        '…': '...',
+        ',': ','
     }
 
     # generate sed script

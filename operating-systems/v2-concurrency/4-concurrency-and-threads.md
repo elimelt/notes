@@ -27,7 +27,7 @@ A common pattern in I/O bound applications is to have multiple threads fetching 
 
 ### 4.2.1 Running, Suspending, and Resuming Threads
 
-Threads provide the illusion of infinite processors. OS uses a *thread scheduler* to switch between threads to run. How threads are interleaved and scheduled should be transparent to the application.
+Threads provide the illusion of infinite processors. OS uses a _thread scheduler_ to switch between threads to run. How threads are interleaved and scheduled should be transparent to the application.
 
 #### Cooperative vs. preemptive multithreading
 
@@ -41,11 +41,86 @@ Modern operating systems use preemptive multithreading, where the kernel can pre
 
 ## 4.3 POSIX Thread API
 
-| Function Signature | Description |
-| ----------------- | ----------- |
-| `pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)` | Create a new thread. |
-| `pthread_join(pthread_t thread, void **retval)` | Wait for a thread to finish. |
-| `pthread_detach(pthread_t thread)` | Detach a thread. |
-| `pthread_self()` | Get the current thread. |
-| `pthread_exit(void *retval)` | Terminate the current thread. |
-| `pthread_cancel(pthread_t thread)` | Cancel a thread. |
+| Function Signature                                                                                          | Description                   |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| `pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)` | Create a new thread.          |
+| `pthread_join(pthread_t thread, void **retval)`                                                             | Wait for a thread to finish.  |
+| `pthread_detach(pthread_t thread)`                                                                          | Detach a thread.              |
+| `pthread_self()`                                                                                            | Get the current thread.       |
+| `pthread_exit(void *retval)`                                                                                | Terminate the current thread. |
+| `pthread_cancel(pthread_t thread)`                                                                          | Cancel a thread.              |
+
+Threads enable **asynchronous procedure calls**, which means the function called runs in the background
+
+```c
+ #include <stdio.h>
+ #include "thread.h"
+ static void go(int n);
+ #define NTHREADS 10
+ static thread_t threads[NTHREADS];
+
+ int main(int argc, char **argv) {
+    int i;
+    long exitValue;
+    for (i = 0; i < NTHREADS; i++){
+       pthread_create(&(threads[i]), &go, i);
+    }
+
+    for (i = 0; i < NTHREADS; i++){
+        exitValue = pthread_join(threads[i]);
+        printf("Thread %d returned with %ld\n",
+        i, exitValue);
+    }
+
+    printf("Main thread done.\n");
+    return 0;
+ }
+
+ void go(int n) {
+    printf("Hello from thread %d\n", n);
+    pthread_exit(100 + n);
+    // Not reached
+ }
+```
+
+### Fork-Join Parallelism
+
+Example program to zero a block of memory using multiple threads. In operating systems, often times need to zero a block of memory (like after a process exits to prevent leaking information). This is a good example of a task that can be parallelized.
+
+For reference, zeroing 1 GB of memory takes about 50 ms on modern hardware. The overhead of creating a thread however is on the order of 10 microseconds, so it can be worth it to parallelize.
+
+```c
+ // To pass two arguments, we need a struct to hold them.
+ typedef struct params {
+    unsigned char *buffer;
+    int length;
+ };
+
+ #define NTHREADS 10
+ void go (struct params *p) {
+    memset(p->buffer, 0, p->length);
+ }
+ // Zero a block of memory using multiple threads.
+ void blockzero (unsigned char *p, int length) {
+    int i;
+    thread_t threads[NTHREADS];
+    struct params params[NTHREADS];
+
+    // For simplicity, assumes length is divisible by NTHREADS.
+    assert((length % NTHREADS) == 0);
+
+    for (i = 0; i < NTHREADS; i++) {
+        params[i].buffer = p + i * length/NTHREADS;
+        params[i].length = length/NTHREADS;
+        thread_create_p(&(threads[i]), &go, &params[i]);
+    }
+
+    for (i = 0; i < NTHREADS; i++)
+        thread_join(threads[i]);
+ }
+ ```
+
+You can also lazily zero out blocks of memory with a background thread that zeros out memory while another process runs. Then, if you need to reuse the memory, you can just call join on the background thread.
+
+## Thread Data Structes and Life Cycle
+

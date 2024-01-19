@@ -1,10 +1,9 @@
 # Lecture 2
 
-*Reminders*: 
+*Reminders*:
 
-- Lab 1 - Tuesday room 137 (pick up kit @ EE store window 3:30)
-
-- HW 1 posted on canvas Monday
+-  Lab 1 - Tuesday room 137 (pick up kit @ EE store window 3:30)
+-  HW 1 posted on canvas Monday
 
 
 ## Electricity
@@ -20,18 +19,17 @@ Current is the amount of water flowing through the pipe, and Voltage is like the
 
 If the "pressure" was 0, then the "flow" would be 0, and the same for the electrons. Battery is essentially using its chemical potential energy to push the electrons through the circuit to create a current.
 
-#### Current (I) 
+#### Current (I)
 
-- Rate of flow of electrons. 
- 
+- Rate of flow of electrons.
+
 - Unit Amperes (A) (amps) - the rate of flow of 1 Coulomb of electrons/sec
 
 #### Coulomb
 
-- The unit of *charge* (how many electrons) **Q**
-
-- 1 Coulomb is 6.24 * 10^17 electrons
-#### Energy 
+-  The unit of *charge* (how many electrons) **Q**
+-  1 Coulomb is 6.24 * 10^17 electrons
+#### Energy
 
 - Energy in circuit is the charge multiplied by the voltage, ie
 
@@ -72,7 +70,7 @@ General formula:
 v(t) - 5 * cos(w * t)
 w = 2 * pi * f
 
-AC Line Voltage (wall power): 
+AC Line Voltage (wall power):
 V(t) = 120 * cos(2 * pi * 60 Hz * t)
 ```
 

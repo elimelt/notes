@@ -38,9 +38,8 @@ Many built in serialization formats that are included with languages are not per
 
 ### What makes protobuf, thrift and avro good?
 
-- **Compact structure**: data is encoded as a sequence of fields, each of which contains a key (field tag) and a value. The key indicates the field's name and data type. Field tags are used to identify fields from the schema, and variable length integers are used for the field tags.
-
-- **Schema evolution**: new fields can be added to the schema, but must have a new tag number and either be optional or have a default value. Old code can read data with new fields (ignores new fields), and new code can read data with old fields. Fields can be removed, but only if the field tag is not reused. Fields can be renamed, but only if the field tag is not reused. Fields can be reordered without breaking compatibility.
+-  **Compact structure**: data is encoded as a sequence of fields, each of which contains a key (field tag) and a value. The key indicates the field's name and data type. Field tags are used to identify fields from the schema, and variable length integers are used for the field tags.
+-  **Schema evolution**: new fields can be added to the schema, but must have a new tag number and either be optional or have a default value. Old code can read data with new fields (ignores new fields), and new code can read data with old fields. Fields can be removed, but only if the field tag is not reused. Fields can be renamed, but only if the field tag is not reused. Fields can be reordered without breaking compatibility.
 
 ### Writer Reader Schema Setup
 

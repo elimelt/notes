@@ -4,22 +4,20 @@
 ## C Review
 **static**: has different meanings
 
-- static functions indicate it can't be used outside of the file (like private)
-
-- static variables are similar to other. ie only one
+-  static functions indicate it can't be used outside of the file (like private)
+-  static variables are similar to other. ie only one
 
 **extern**: declares variable without allocating any memory for it
 
-- variables must be defined somewhere else
-
-- allows you to use variables from other files
+-  variables must be defined somewhere else
+-  allows you to use variables from other files
 
 
 
 ```c
 
 void change(char** s) { *c = "class"; }
-   
+
 int main() {
    char* s = "hello";
    char* w = s;

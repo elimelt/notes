@@ -124,3 +124,24 @@ You can also lazily zero out blocks of memory with a background thread that zero
 
 ## Thread Data Structes and Life Cycle
 
+Important to differentiate between shared and individual state of a thread. Shared state consists of code, global variables, and heap-allocated memory. Individual state consists of the thread's stack, registers, and metadata, all of which is stored in the **thread control block (TCB)** in each thread.
+
+### Thread Control Block
+
+For every thread the OS creates, it creates a TCB to store the thread's individual state. It must store both the state of the computation, and the metadata needed to manage the thread.
+
+#### Per-thread Computation State
+
+The thread needs a pointer to the top of its stack, which works the same as a single threaded program's stack (ie one frame per function call). Each frame contains the local variables, parameters, and the return address to jump back to when the function returns. **When a new thread is created, the OS allocates a new stack for it**. 
+
+Additionally, needs to store the processor registers. Some systems just put them on the top of the thread's stack, but others have dedicated space in the TCB.
+
+#### How big of a stack?
+
+Kernel stacks allocated in physical memory, so good to keep small. The max procedure call nesting in kernel code is usually small, so the kernel stacks are usually small. This works solely because of the convention to allocate all large data structures on the heap. Small stacks can cause problems if you allocate large structures locally.
+
+User level stacks typically allocated in virtual memory, so less constrained. However, multithreaded programs can't grow their stacks indefinitely (except in languages like Go where stacks are automatically grown). Very easy to overflow the stack in multithreaded programs, but POSIX let's you configure stack size. Most implementations try to detect stack overflow with known values at the top and bottom of the stack, but this is not foolproof. 
+
+#### Per-thread Metadata
+
+Things like thread id, scheduling priority, status, etc.

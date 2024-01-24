@@ -1,4 +1,4 @@
-## Therenin's Theorem
+## Thevenin's Theorem
 
 Any two-terminal circuit with only linear elements (resistors) and sources can be replaced by an equivalent circuit consisting of a voltage source in series with a resistor.
 

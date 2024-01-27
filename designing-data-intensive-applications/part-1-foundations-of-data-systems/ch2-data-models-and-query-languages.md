@@ -199,3 +199,9 @@ CREATE INDEX edges_heads ON edges (head_vertex);
 
 In practice, graph databases are usually implemented differently, because the above model is not very efficient. Specialized query languages are used to traverse the graph in an imperative style.
 
+#### Triple-Stores and SPARQL
+
+Consists of **three-part statements** of the form `(subject, predicate, object)`. The subject and object are vertices, and the predicate is an edge.
+
+```sql
+

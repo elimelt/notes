@@ -15,9 +15,8 @@ In early Windows, they picked the BIGGEST register (floating point)
 ## Dr. Kimura's Sad Story
 
 - Everyone in the Windows team ran nightly stress tests on each new build
-- Nightly bug checking of parts of the file system on multiple test machines 
-
-- A *showstopping* bug was assigned to him. Bug was blue screening many test systems. 
+-  Nightly bug checking of parts of the file system on multiple test machines
+-  A *showstopping* bug was assigned to him. Bug was blue screening many test systems.
 - Manually checked that *RtlZeroMemory()* to see if it zeros a buffer correctly. It was not.
 
 It turns out Dave Cutler tried to optimize interrupt handling to not save fp registers. Both `RtlZeroMemory` and `RtlCopyMemory` didnt copy the fp registers. When the filesystem calls `RtlZeroMemory`, if an interrupt occurs and the device calls CopyMemory, this has side effects when control is returned to the process.

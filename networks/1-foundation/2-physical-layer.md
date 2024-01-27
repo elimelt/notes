@@ -4,14 +4,14 @@
 
 ## Coding and Modulation
 
-A modem (modulator-demodulator) converts digital signals to analog signals, and vise versa. 
+A modem (modulator-demodulator) converts digital signals to analog signals, and vise versa.
 
 ### A simple coding
 
 A high positive voltage for 1, and a low negative voltage for 0. This is called **NRZ**(Non-Return-to-Zero). Each time interval (**symbol**) is like a sample point.
 
 ### Problems?
- 
+
 Only 1 bit/symbol. Can use more than just 2 voltage levels to get more bits/symbol. To get N bits/symbol, need 2^n voltage levels. There is a tradeoff between encoding efficiency and the sensitivity to noise.
 
 There are many other practical coding schemes, all of which are driven by engineering considerations.
@@ -25,19 +25,18 @@ A simple solution is to alternate between positive/negative, and zero voltages. 
 ```txt
     0       1        1      1       0
 +V |        ___     ___     ___
-   |   |   |   |   |   |   |   |   |   |  
-   |   |   |   |   |   |   |   |   |   |  
+   |   |   |   |   |   |   |   |   |   |
+   |   |   |   |   |   |   |   |   |   |
 0  |   |___|   |___|   |___|   |___|   |
-   |   |   |   |   |   |   |   |   |   |  
-   |   |   |   |   |   |   |   |   |   |  
--V |___|   |   |   |   |   |   |   |___|  
+   |   |   |   |   |   |   |   |   |   |
+   |   |   |   |   |   |   |   |   |   |
+-V |___|   |   |   |   |   |   |   |___|
 ```
 
 #### Better Solution
 
-- Can map arbitrary bit patterns to eachother (as long as you don't decrease the number of bits to decode). Design encoding such that long runs of zero can't happen
-
-- Can even use xor and a psuedorandom bit pattern to encode and decode to make the encoded data random looking as well, getting rid of most long runs of zero.
+-  Can map arbitrary bit patterns to eachother (as long as you don't decrease the number of bits to decode). Design encoding such that long runs of zero can't happen
+-  Can even use xor and a psuedorandom bit pattern to encode and decode to make the encoded data random looking as well, getting rid of most long runs of zero.
 
 ### Modulation vs. Coding
 
@@ -49,7 +48,7 @@ With **coding**, signal is sent directly on a wire. This doesn't work well for w
 - NRZ signal of bits
 - Amplitude shift keying (zigbee)
 - Frequency shift keying (bluetooth)
-- Phase shift keying 
+- Phase shift keying
 
 WiFi for example goes all in and listens on an entire band of frequencies instead of just the binary 2 frequencies.Modern WiFi uses 256 frequency levels.
 
@@ -58,7 +57,7 @@ WiFi for example goes all in and listens on an entire band of frequencies instea
 - Everythign is analog, even digital signals.
 - Digital signals are conceptually discrete, but are represented physically in a continuous medium.
 - Modulating and demodulating a signal is converting between analog to digital, and vise versa.
-- A coding is an agreed upon "language" for your data.  
+- A coding is an agreed upon "language" for your data.
 
 ## Simple Link Model
 

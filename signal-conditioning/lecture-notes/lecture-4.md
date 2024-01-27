@@ -26,29 +26,24 @@ Current: The current arriving at any node is the same as the current leaving tha
   |          |
   +--\/\/\|--+
       R_2 = 10 Ohm
-
-
-V_1 = I * R_1
-V_2 = I * R_2
-
-Need P_2 using V/R
-     P_1 = I^2 * R
-
-V_L = V * R_2 / (R_ 1 + R_2)
-    = 120 * 10/11 = 109 V
-
-P_2 = V^2/R
-    = (109)^2/10 = 1188 W
-
-I_1 = V_1 / R_1
-    = (V - V_L) / R_1
-    = (120 - 109) / 1
-    = 11 A
-
-P_1 = I_1^2 *  R_1
-    = 11^2 * 1
-    = 121 W
 ```
+
+$$V_1 = I * R_1$$
+$$V_2 = I * R_2$$
+
+Need $P_2$ using $V/R$
+
+$$P_1 = I^2 * R$$
+
+$$V_L = V * R_2 / (R_ 1 + R_2) = 120 * 10/11 = 109 V$$
+
+$$P_2 = V^2/R = (109)^2/10 = 1188 W$$
+
+$$I_1 = V_1 / R_1 = (V - V_L) / R_1$$
+
+$$= (120 - 109) / 1 = 11 A$$
+
+$$P_1 = I_1^2 *  R_1 = 11^2 * 1 = 121 W$$
 
 
 ## Sources

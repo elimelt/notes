@@ -118,7 +118,7 @@ For reference, zeroing 1 GB of memory takes about 50 ms on modern hardware. The 
     for (i = 0; i < NTHREADS; i++)
         thread_join(threads[i]);
  }
- ```
+```
 
 You can also lazily zero out blocks of memory with a background thread that zeros out memory while another process runs. Then, if you need to reuse the memory, you can just call join on the background thread.
 
@@ -132,7 +132,7 @@ For every thread the OS creates, it creates a TCB to store the thread's individu
 
 #### Per-thread Computation State
 
-The thread needs a pointer to the top of its stack, which works the same as a single threaded program's stack (ie one frame per function call). Each frame contains the local variables, parameters, and the return address to jump back to when the function returns. **When a new thread is created, the OS allocates a new stack for it**. 
+The thread needs a pointer to the top of its stack, which works the same as a single threaded program's stack (ie one frame per function call). Each frame contains the local variables, parameters, and the return address to jump back to when the function returns. **When a new thread is created, the OS allocates a new stack for it**.
 
 Additionally, needs to store the processor registers. Some systems just put them on the top of the thread's stack, but others have dedicated space in the TCB.
 
@@ -140,8 +140,110 @@ Additionally, needs to store the processor registers. Some systems just put them
 
 Kernel stacks allocated in physical memory, so good to keep small. The max procedure call nesting in kernel code is usually small, so the kernel stacks are usually small. This works solely because of the convention to allocate all large data structures on the heap. Small stacks can cause problems if you allocate large structures locally.
 
-User level stacks typically allocated in virtual memory, so less constrained. However, multithreaded programs can't grow their stacks indefinitely (except in languages like Go where stacks are automatically grown). Very easy to overflow the stack in multithreaded programs, but POSIX let's you configure stack size. Most implementations try to detect stack overflow with known values at the top and bottom of the stack, but this is not foolproof. 
+User level stacks typically allocated in virtual memory, so less constrained. However, multithreaded programs can't grow their stacks indefinitely (except in languages like Go where stacks are automatically grown). Very easy to overflow the stack in multithreaded programs, but POSIX let's you configure stack size. Most implementations try to detect stack overflow with known values at the top and bottom of the stack, but this is not foolproof.
 
 #### Per-thread Metadata
 
 Things like thread id, scheduling priority, status, etc.
+
+Also includes thread local variables, which are similar to global variables in that they span multiple function calls. However, they are private to each thread, and are stored in the TCB. For example, `errorno` is a macro that expands to a thread local variable holding the error code of the last system call. Additionally, many details of the heap allocator are stored in thread local variables to make parallel allocation in the heap easier (ie subdivide the heap into regions, and each thread has a region).
+
+### Shared State
+
+Program code, statically allocated global variables, dynamicallty allocated heap variables. Note that the kernel doesn't enforce any protection between threads for per-thread state, so it is important know which variables are designed to be shared across threads (global variables, objects on the heap) and which are designed to be private (local/automatic variables).
+
+## Thread Life Cycle
+
+| State    | Location of TCB                         | Location of registers |
+| -------- | --------------------------------------- | --------------------- |
+| INIT     | Being created (stack)                   | TCB                   |
+| READY    | Ready list                              | TCB                   |
+| RUNNING  | Running list                            | CPU                   |
+| WAITING  | Synchronization variable's waiting list | TCB                   |
+| FINISHED | Finished list then deleted              | TCB or deleted        |
+
+### INIT
+
+- Put thread into INIT state and allocate/initialize per-thread data structures.
+- Put thread into READY state and add it to the _ready list_ (some sort of queue usually, maybe a priority queue).
+
+### READY
+
+- Thread is ready to run, but not currently running. TCB is stored in the _ready list_.
+- At any point, the scheduler can copy the thread's register values from its TCP and move it to the RUNNING state.
+
+### RUNNING
+
+- Thread is currently running on a processor.
+- Registers are stored in CPU instead of TCB.
+- At any point, can be moved to READY state by the scheduler (ie preempted, saves registers to TCB and loads new thread's registers), or by the thread itself (ie voluntarily relinquishes control with thread_yield).
+- Note that some OSes (Linux) keep RUNNING threads in the ready list (at the front).
+
+### WAITING
+
+- Thread is waiting for some event to occur (ie I/O, thread_join).
+- Stored in the _wait list_ (ie queue) for the event it is waiting for (some synchronization variable). When the event occurs, the thread is moved to the READY state.
+
+### FINISHED
+
+- Thread has finished executing and will never run again.
+- Some resources are freed, but the TCB is kept on the _finished list_ so that its exit status can be retrieved if a parent calls thread_join.
+- After the parent calls thread_join, the TCB can be fully freed.
+
+#### The idle thread
+
+If a system has k processors, it will ensure that there are exactly k threads in the RUNNING state at all times. If there is nothing to run for a given CPU, the idle thread is run instead. On modern systems, the idle thread is just a loop that calls `hlt` to put the CPU into a low power state that doesn't execute instructions until an interrupt occurs and the processor is woken up.
+
+The low-power mode is especially nice for virtualization, because the host operating system can allocate those resources to a different VM while that VM is idle.
+
+#### Where is the TCB stored?
+
+On a multiprocessor system, this is a non-trivial implementation issue. x86 has hardware support for fetching the ID of the current processor. In this case, the TCB could be stored in a global array, where the ith entry is the TCB for the thread running on the ith processor.
+
+For systems without hardware support, you can use the stack pointer (which is always unique to each thread). You can store a pointer to the TCP at the bottom of the thread's stack under the procedure frames, and then use the stack pointer to find the TCB.
+
+## Implementing Kernel Threads
+
+```c
+ // func is a pointer to a procedure the thread will run.
+ // arg is the argument to be passed to that procedure.
+ void thread_create(thread_t *thread, void (*func)(int), int arg) {
+   // Allocate TCB and stack
+   TCB *tcb = new TCB();
+   thread->tcb = tcb;
+   tcb->stack_size = INITIAL_STACK_SIZE;
+   tcb->stack = new Stack(INITIAL_STACK_SIZE);
+   // Initialize registers so that when thread is resumed, it will start running at
+   // stub. The stack starts at the top of the allocated region and grows down.
+   tcb->sp = tcb->stack + INITIAL_STACK_SIZE;
+   tcb->pc = stub;
+   // Create a stack frame by pushing stub’s arguments and start address
+   // onto the stack: func, arg
+   *(tcb->sp) = arg;
+   tcb->sp--;
+   *(tcb->sp) = func;
+   tcb->sp--;
+   // Create another stack frame so that thread_switch works correctly.
+   // This routine is explained later in the chapter.
+   thread_dummySwitchFrame(tcb);
+   tcb->state = READY;
+   readyList.add(tcb); // Put tcb on ready list
+ }
+
+ void stub(void (*func)(int), int arg) {
+   (*func)(arg); // Execute the function func()
+   thread_exit(0); // If func() does not call exit, call it here.
+ }
+```
+
+Creating a thread should run the code within `func` asynchronously with the calling thread. To create a thread, you must:
+
+1. **Allocate per-thread state**. Allocate space for the new thread's TCB and stack.
+2. **Initialize per-thread state**. Initialize TCB by setting machine specific registers to what is needed for RUNNING state. Must set up `func` to return to a stub that also calls `thread_exit`.
+3. **Put TCB on running list**. Set state to READY and put on running list, enabling it to be scheduled.
+
+### Deleting a thread
+
+When a thread calls `thread_exit`, must remove it from ready lists so it stops being scheduled, and then free the per-thread state.
+
+**NOTE**: a thread cannot free its own resources because if interrupted, it would be a memory leak (since it will never be scheduled again to finish cleanup). Instead, thread changes its state to FINISHED, and then puts itself on the finished list for some *other* thread to clean it up,

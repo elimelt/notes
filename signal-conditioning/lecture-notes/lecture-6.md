@@ -1,21 +1,83 @@
-## Thevenin's Theorem
+## Capacitors
 
-Any two-terminal circuit with only linear elements (resistors) and sources can be replaced by an equivalent circuit consisting of a voltage source in series with a resistor.
+Stores energy in electric field between two plates.
 
-Voltage source represented as $V_{th}$, and resistor as $R_{th}$.
+Passes AC, blocks DC. "High pass filter"
 
-### Algorithm
+Capacitance is the ratio of charge to voltage, measured in Farads.
+$$
+C = \frac{Q}{V}
+$$
 
-1. Find $V_{th}$, the open circuit voltage from A to B using KCL and KVL.
-2. Find $R_{th}$, the equiv resistance between A and B by replacing voltage sources with short circuits and current sources with open circuits.
+The energy stored in a capacitor is
+$$
+E = \frac{1}{2}CV^2
+$$
 
-## Norton's Theorem
+$$
+\frac{d}{dt}Q = \frac{d}{dt}CV
+$$
 
-Any two-terminal circuit with only linear elements (resistors) and sources can be replaced by an equivalent circuit consisting of a current source in parallel with a resistor.
+$$
+I_C = C\frac{dV}{dt}
+$$
 
-Current source represented as $I_{no}$, and resistor as $R_{no}$.
+## Inductors
 
-### Algorithm
-1. find $I_{no}$, the short circuit current from A to B using KCL and KVL.
-2. find $R_{no}$, the equiv shunt (parallel with source) resistance between A and B by replacing voltage sources with short circuits and current sources with open circuits.
+Stores energy in magnetic field around a coil of wire due to current flowing through it. Units are Henrys (H).
+
+Passes DC, blocks AC. "Low pass filter"
+
+Energy stored in an inductor is
+$$
+E = \frac{1}{2}LI^2
+$$
+
+$$
+V_L = L\frac{dI}{dt}
+$$
+
+
+## Complex Numbers Review
+
+$$e = 2.71828...$$
+
+$$
+j \cdot j = -1 \to j = \sqrt{-1}
+$$
+
+$$
+e^{jq} = \cos(q) + j\sin(q)
+$$
+
+## Complex Numbers for AC Signals
+
+- Pretend signals are complex during analysis, then take real part at the end.
+- Multiplying by real number is scaling (magnitude/amplitude)
+- Multiplying by imaginary number is phase shift
+- Multiplying by complex number is scaling and phase shift
+
+EX:
+
+$$
+cos(2\pi ft + \phi) = e^{j\phi}e^{j2\pi ft}
+$$
+
+## Impedance
+
+The AC version of resistance.
+
+$$
+Z_{cap} = \frac{1}{j\omega C}
+$$
+
+$$
+Z_{ind} = j\omega L
+$$
+
+$$
+Z_{res} = R
+$$
+
+
 

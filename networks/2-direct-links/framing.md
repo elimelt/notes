@@ -5,7 +5,7 @@
 - Oldest approach, viewing frames as collections of bytes.
 - Examples: BISYNC by IBM, DDCMP in DECNET, PPP.
 
-## Sentinel-based Approach
+## Sentinel-based Approach/Byte Stuffing
 
 - Use special characters (SYN, STX, ETX) to indicate frame boundaries.
 - Challenge: Special characters in data; overcome by character stuffing.

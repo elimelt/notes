@@ -1,29 +1,26 @@
-#
+# Error Detection and Correction
 
-Some bits will inevitably be recieved in error. We need to be able to...
+Some bits will inevitably be recieved in error. Noise may flip the bits recieved over the network. We need to be able to...
 
 - detect errors
 - retransmit
 - correct errors
 
-## Problem: Noise
-
-Noise may flip the bits recieved over the network. Once you 
-
 ## Approach: Add Redundancy
 
-In error detection codes, add *check bits* to the message bits.
+- In error detection codes, add *check bits* to the message bits.
+- In error correction codes, add **more** *check bits* to let some errors be corrected.
+- Key issue is to design codes to detect as many errors as possible without having too much redundancy or computation required.
 
-In error correction codes, add **more** *check bits* to let some errors be corrected.
-
-Key issue is to design codes to detect as many errors as possible without having too much redundancy or computation required.
+Generally, a **codeword** is a $D$-bit message with $R$ check bits added to it. The sender computes the check bits and appends them to the message. The reciever then verifies the check bits by recomputing them and comparing them to the recieved check bits.
 
 
 ### Example Code:
 
 $$
-1 \to 11
-0 \to 00
+1 \to 11\\
+0 \to 00\\
+x \to xx\\
 $$
 
 For example:
@@ -31,5 +28,87 @@ $$
 101110 \to 101110101110
 $$
 
-Can detect errors with this code up to 1 bit.
+Can detect errors with this code up to 1 bit. However, no guarantee if more bits are flipped. Also cannot correct errors. This sucks.
 
+## Intuition
+
+Let $S$ be the set of all possible $n$-bit sequences, and let $C$ be the set of all $n$-bit code words with $D$ data bits and $R$ check bits. We have $C \subset S$, and we want to choose $C$ such that the probability of a random $D$-bit sequence being in $C$ is low.
+
+Consider a random $n$-bit sequence $x \in S$...
+
+$$
+\mathbb{P}(x \in C) = \frac{|C|}{|S|} = \frac{2^R}{2^n} = 2^{-D}
+$$
+
+Error correction/detection is hard because even the check bits can be corrupted. Given $d$ errors, we can detect and correct $d$ errors if the distance between any two code words is $2d + 1$.
+## Hamming Distance
+
+Distance: The number of bit flips needed to change from one valid code word to another. The distance of a code is the minimum distance between any two code words. Letting $C$ be the set of all code words, the distance is:
+
+$$
+\min_{x, y \in C, x \neq y} d(x, y)
+$$
+
+- For a coding of distance $d + 1$, we can detect $d$ errors
+- For a coding of distance $2d + 1$, we can correct $d$ errors by mapping to the closest code word.
+
+
+## Internet Checksum
+
+Sum up chunks of data and append the sum to the end of the data. If the sum is 0 on the recieving end, then the data is valid.
+
+This code has a distance of 2, so it can detect 1 bit errors, and can correct 0 bit errors (since it can't correct any errors)
+
+### Internet Checksum Algorithm
+
+#### sender
+
+1. Split up data into 4 byte chunks.
+2. Sum up all the 4 byte chunks, wrapping around for carry beyond 4 bytes.
+3. netgate append the checksum to the end of the data.
+
+#### reciever
+
+1. Split up data into 4 byte chunks.
+2. Sum up all the 4 byte chunks, wrapping around for carry beyond 4 bytes.
+3. netgate append the checksum to the end of the data.
+4. If the sum is 0, then the data is valid.
+
+
+
+## Cyclical Redundancy Check (CRC)
+
+Given a generator polynomial $C$ and a message of $n$ bits, generate $k$ bits such that the $n + k$ bit message is divisible by $C$. Works with binary values that operate over the field $\mathbb{Z}_2$ (mod 2 arithmetic).
+
+### CRC Algorithm
+
+#### sender
+
+1. create binary representation of polynomial as divisor
+2. append 0s to the end of the data to be sent, equal to the degree of the polynomial
+3. divide the data by the polynomial, using XOR
+4. change redundant bits to remainder
+
+#### reciever
+
+1. create binary representation of polynomial as divisor
+2. divide the data by the polynomial, using XOR
+3. if the remainder is 0, then the data is valid
+
+### Notes:
+
+x + 1 as a generating polynomial is just a parity bit!
+
+## Hamming Code
+
+### Algorithm
+
+#### Send
+1. Put all parity bits in positions that are powers of 2 (1, 2, 4, 8, 16, etc.)
+2. Fill in all other positions with data bits.
+3. calculate parity bits for each of the ith check bits. (check the bits in ith position for all data bits whose ith bit is 1)
+
+#### Recieve
+1. calculate parity bits for each of the ith check bits. (check the bits in ith position for all data bits whose ith bit is 1 of its index is a power of 2)
+2. If the parity bits are all 0, then the data is valid (remove check bits from data bits)
+3. If the parity bits are not all 0, then the data is invalid. The syndrome (concat and reverse the parity bits) is the index of the bit that is wrong. Flip that bit.

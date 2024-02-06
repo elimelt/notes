@@ -1,19 +1,19 @@
-# Byte Oriented Protocols (PPP)
+# Byte Oriented Protocols, Point-to-point protocol (PPP)
 
 ## Byte-Oriented Framing
 
 - Oldest approach, viewing frames as collections of bytes.
 - Examples: BISYNC by IBM, DDCMP in DECNET, PPP.
 
-## Sentinel-based Approach/Byte Stuffing
-
-- Use special characters (SYN, STX, ETX) to indicate frame boundaries.
-- Challenge: Special characters in data; overcome by character stuffing.
-
 ## Length Field Approach
 
 - Include frame byte count in header (DDCMP approach).
 - Risk: Transmission error corrupting count field; framing error.
+
+## Sentinel-based Approach/Byte Stuffing
+
+- Use special characters (SYN, STX, ETX) to indicate frame boundaries.
+- Challenge: Special characters in data; overcome by character stuffing or escape sequences similar to C.
 
 ## PPP Frame Format
 
@@ -31,7 +31,7 @@
 
 ## Bit-Oriented Framing
 
-- Views frames as collections of bits, not concerned with byte boundaries.
+- Views frames as a bit stream, not concerned with byte boundaries.
 - Examples: SDLC developed by IBM, standardized as HDLC by ISO.
 
 ## HDLC Frame Format

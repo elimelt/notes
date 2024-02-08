@@ -44,3 +44,10 @@ More functionality to the PTEs:
 - **protection bits**: read/write/execute permissions
 
 More out there.
+
+
+https://calendar.google.com/calendar/u/1/r?cid=cs.washington.edu_kaujd7jilnokn62oukhdms0n8c%40group.calendar.google.com&authuser=3
+
+https://mailman.cs.washington.edu/mailman/listinfo/uw-networks
+
+https://mailman.cs.washington.edu/mailman/listinfo/uw-systems

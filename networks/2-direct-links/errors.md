@@ -75,7 +75,14 @@ This code has a distance of 2, so it can detect 1 bit errors, and can correct 0 
 3. netgate append the checksum to the end of the data.
 4. If the sum is 0, then the data is valid.
 
-
+```python
+def internet_checksum(data):
+    checksum = 0
+    for i in range(0, len(data), 4):
+        chunk = data[i:i+4]
+        checksum += int.from_bytes(chunk, 'big')
+    return checksum.to_bytes(4, 'big')
+```
 
 ## Cyclical Redundancy Check (CRC)
 

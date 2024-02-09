@@ -6,13 +6,12 @@ Make it faster by picking larger register (same optimization can be done to copy
 
 In early Windows, they picked the BIGGEST register (floating point)
 
-
 ## Speed Up Interrupt Handling
 
 - Save only the registers needed by the device driver
 - Who would've thought that a device driver would need to do floating point arithmetic.
 
-## Dr. Kimura's Sad Story
+## Gary's Sad Story
 
 - Everyone in the Windows team ran nightly stress tests on each new build
 -  Nightly bug checking of parts of the file system on multiple test machines

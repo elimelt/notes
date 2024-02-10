@@ -37,7 +37,6 @@ Multiple processes can share the same frame. This is useful for shared libraries
 - Protection by setting read/write/execute bits
 - Page table entry can point to nothing, causing a page fault
 - Accounting information for if the PTE is used, dirty bit, reference bit, etc.
-
 - **valid bit**: if the page is in memory. set when the page is in memory, cleared when the page is not in memory. Used for page faults.
 - **referenced bit**: if the page has been referenced before. set when page is read or written to. cleared by the OS but set by the hardware. Used for LRU replacement.
 - **dirty/modified bit**: page has been modified. set when page is written to. cleared by the OS but set by the hardware. Used for COW.

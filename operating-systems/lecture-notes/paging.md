@@ -32,7 +32,7 @@ Multiple processes can share the same frame. This is useful for shared libraries
 
 ### Page Table Entries
 
-More functionality to the PTEs:
+#### More functionality to the PTEs:
 
 - Protection by setting read/write/execute bits
 - Page table entry can point to nothing, causing a page fault

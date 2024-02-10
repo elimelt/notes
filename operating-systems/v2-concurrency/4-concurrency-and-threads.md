@@ -247,3 +247,71 @@ Creating a thread should run the code within `func` asynchronously with the call
 When a thread calls `thread_exit`, must remove it from ready lists so it stops being scheduled, and then free the per-thread state.
 
 **NOTE**: a thread cannot free its own resources because if interrupted, it would be a memory leak (since it will never be scheduled again to finish cleanup). Instead, thread changes its state to FINISHED, and then puts itself on the finished list for some *other* thread to clean it up,
+
+### Thread Context Switch
+
+When a thread is moved from RUNNING to READY, the OS must save the thread's register values to its TCB, and then load the register values of the next thread to run from its TCB.
+
+Note that interrupts must be disabled during a context switch (OSSP 47). This is because the if a low priority thread voluntarily yields to a high priority thread, but then gets stuck in the ready list, the high priority thread will be stuck waiting.
+
+```c
+// We enter as oldThread, but we return as newThread.
+ // Returns with newThread’s registers and stack.
+ void thread_switch(oldThreadTCB, newThreadTCB) {
+   pushad; // Push general register values onto the old stack.
+   oldThreadTCB->sp = %esp; // Save the old thread’s stack pointer.
+   %esp = newThreadTCB->sp; // Switch to the new stack.
+   popad; // Pop register values from the new stack.
+   return;
+ }
+ void thread_yield() {
+   TCB *chosenTCB, *finishedTCB;
+   // Prevent an interrupt from stopping us in the middle of a switch.
+   disableInterrupts();
+   // Choose another TCB from the ready list.
+   chosenTCB = readyList.getNextThread();
+   if (chosenTCB == NULL) {
+      // Nothing else to run, so go back to running the original thread.
+   } else {
+      // Move running thread onto the ready list.
+      runningThread->state = ready;
+      readyList.add(runningThread);
+      thread_switch(runningThread, chosenTCB); // Switch to the new thread.
+      runningThread->state = running;
+   }
+   // Delete any threads on the finished list.
+   while ((finishedTCB = finishedList->getNextThread()) != NULL) {
+      delete finishedTCB->stack;
+      delete finishedTCB;
+   }
+   enableInterrupts();
+ }
+ // thread_create must put a dummy frame at the top of its stack:
+ // the return PC and space for pushad to have stored a copy of the registers.
+ // This way, when someone switches to a newly created thread,
+ // the last two lines of thread_switch work correctly.
+ void thread_dummySwitchFrame(newThread) {
+   *(tcb->sp) = stub; // Return to the beginning of stub.
+   tcb->sp--;
+   tcb->sp -= SizeOfPopad;
+ }
+```
+
+#### Seperating mechanism from policy
+
+It is useful to seperate the mechanics of performing an action from the rules for deciding when to perform that action. For example, the `thread_switch` function is a mechanism for switching threads, but the policy for deciding when to switch threads is in the scheduler. This allows different systems to take their own approach to scheduling.
+
+Another example of this is with virtual memory. The mechanism for translating virtual addresses to physical addresses is in the MMU, but the policy for deciding which pages to keep in memory is in the page replacement algorithm.
+
+- **Voluntary Switch**: The thread can call a library function that triggers the switch (ie `thread_yield`). Similar approach to `thread_exit` and `thread_join`.
+- **Involuntary Switch**: The OS can preempt the thread (interrupt, exception, etc). Interrupt hardware saves state of current thread and then the interrupt handler is invoked (ie timer interrupt, switches to another thread). This also happens for user I/O like keyboard input.
+
+## Combining Kernel Threads and Single-Threaded User Processes
+
+### Switching between kernel threads and kernel handlers
+
+- **Entering the handler**: Checks if already kernel in eflags register. If it is, just push instruction pointer and eflags (not the stack pointer) onto stack. If not, also push the stack pointer, and change the stack pointer to the interrupt stack.
+- **Returning from the handler**: Inspect current eflags to see if we are switching back to user mode. If so, pop the stack pointer and eflags, and then return. If not, just pop the instruction pointer and eflags.
+
+## Implementing Multi-threaded Processes
+

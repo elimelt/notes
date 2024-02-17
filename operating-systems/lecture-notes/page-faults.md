@@ -15,7 +15,7 @@ On fault, an interrupt causes the CPU to jump to the page fault handler:
 - process ID gets you to the base of the page table
 - VPN portion of VA gets you to the PTE
 - data structure analogous to page table (an array with an entry for each page in the address space) contains disk address of page
-- at this point, it’s just a simple matter of I/O
+- at this point, it's just a simple matter of I/O
 - must be positive that the target page frame remains available!
 
 ### Find or create a page frame
@@ -45,8 +45,8 @@ There are 2 references to memory for every memory access: one to the page table,
 ### Memory required to hold a page table can be large
 
 - need one PTE per page in the virtual address space
-- 32 bit AS with 4KB pages = 220 PTEs = 1,048,576 PTEs- 4 bytes/PTE = 4MB per page table
-    - OS’s typically have separate page tables per process
+- 32 bit AS with 4KB pages = 220 PTEs = 1,048,576 PTEs. 4 bytes/PTE = 4MB per page table
+    - OS's typically have separate page tables per process
     - 25 processes = 100MB of page tables
 - 48 bit AS, same assumptions, 64GB per page table!
 

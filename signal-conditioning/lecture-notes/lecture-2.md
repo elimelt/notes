@@ -22,7 +22,6 @@ If the "pressure" was 0, then the "flow" would be 0, and the same for the electr
 #### Current (I)
 
 - Rate of flow of electrons.
-
 - Unit Amperes (A) (amps) - the rate of flow of 1 Coulomb of electrons/sec
 
 #### Coulomb

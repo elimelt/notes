@@ -82,3 +82,102 @@ More out there.
     - OS keeps track of pages that come and go together
     - bring in all pages in the cluster when one is referenced
     - interface may allow programmer or compiler to specify clusters
+
+### Page Replacement
+
+- When you read in a page, you either use an existing free frame, or you evict a page.
+
+#### Page Replacement Algorithms
+
+- pick one that won't be used for a while
+- pick one that hasn't been modified (so we don't have to write it to disk)
+- OS typically keeps a pool of free pages so that allocations don't need to evict.
+- OS also tries to keep clean pages around so that they can be evicted without writing to disk.
+
+##### Belady's Optimal Algorithm
+
+- Replace the page that will not be used for the longest time in the future
+- Impossible to implement in practice, but useful for comparing other algorithms
+
+##### FIFO
+
+- Replace the page that has been in memory the longest
+- Simple to implement, but not always the best
+- Can cause **Belady's Anomaly**: increasing the number of frames can increase the number of page faults
+
+##### LRU
+
+- Replace the page that has not been used for the longest time
+- Requires keeping track of the time of the last reference for each page
+
+##### Approximate LRU
+
+- Keep counter for each page
+- At some regular interval, for each page:
+    - if ref bit == 1, increment counter
+    - if ref bit == 0, zero counter
+    - zero ref bit
+- counter contains the number of intervals since the last reference to the page. page with the largest counter is least recently used
+
+##### LRU Clock
+
+- Keep a circular list of pages
+- Each page has a reference bit
+- When a page is referenced, set the reference bit to 1
+- When a page is evicted, if the reference bit is 1, set it to 0 and move to the next page. If the reference bit is 0, evict the page
+- Essentially a clock hand that moves around the list, and evicts the page that the hand is pointing to
+- Low overhead if plenty of memory
+- As memory increases, accuracy decreases. Can use multiple hands to increase accuracy.
+
+### How do you load a program?
+
+- Create descriptor/process control block (PCB)
+- Create page table
+- Put address space image on disk in page-sized blocks
+- Build page table
+    - All PTE valid bits set to 0
+    - Some data structure stores disk location of each page
+    - When process starts executing, the OS sets the PTBR to point to the page table
+
+### Locality
+
+- **Temporal locality**: if a memory location is accessed, it is likely to be accessed again soon
+- **Spatial locality**: if a memory location is accessed, it is likely that nearby memory locations will be accessed soon
+
+Locality means paging can be infrequent, and the OS can bring in multiple pages at once. This assumes that:
+
+- Once you bring in a page, you will use it many times
+- On average, you will use the pages you bring in
+
+
+
+### Local vs Global Page Replacement
+
+Local page replacement means that each process has its own set of pages that it is replacing. Global page replacement means that the OS can choose any page to replace, regardless of which process it belongs to. Linux uses global page replacement.
+
+This is typically implemented by keeping a pool of free pages, and when a page is needed, the OS can choose any page to evict. This is useful because it allows the OS to make better decisions about which pages to evict, and can reduce the number of page faults.
+
+#### Working Set Model
+
+- $t$: time
+- $w$: working set window (measured in page refs)
+- a page is in the working set (WS) only if it was referenced in the
+last w references
+
+$$
+WS(t,w) = \{\text{pages P such that P was referenced in the time
+interval } (t, t-w)\}
+$$
+
+$|WT(t, w)|$ is the number of pages in the working set at time $t$, and varies with time. During a time interval with particularly bad locality, the working set can be very large.
+
+- The working set of a process is the set of pages that the process is currently using
+- The working set window is the number of page references that are considered to be in the working set.
+- Typically, the working set is the set of pages that have been referenced in the last $n$ references, where $n$ is the working set window.
+
+The goal is to reduce page faults by keeping the working set in memory. **Thrashing** is when a process is spending more time paging than executing, and keeping the working set in memory can help prevent thrashing.
+
+### Hard vs Soft Page Faults
+
+- **Hard page fault**: when a page is not in memory, and the OS must read it from disk/backend storage
+- **Soft page fault**: when a page is not in memory, but the OS can find it in the page file, and bring it into memory without reading from the backend storage

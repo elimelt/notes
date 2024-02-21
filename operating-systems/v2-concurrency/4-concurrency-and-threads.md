@@ -16,7 +16,7 @@ A common pattern in I/O bound applications is to have multiple threads fetching 
 ##### Some scenarios:
 
 - **One thread per process.** One sequence of instructions, executing from beginning to end. Kernel runs those instructions in user mode. The process uses system calls to request privileged operations.
-- **Many threads per process.** Several concurrent threads, each executing within the restricted rights of the process. A subset of the process’s threads running, while rest are suspended. Any thread running in a process can make system calls into the kernel, blocking itself but no other threads. When the processor gets an I/O interrupt, it preempts one of the running threads so the kernel can run the interrupt handler; when the handler finishes, the kernel resumes that thread.
+- **Many threads per process.** Several concurrent threads, each executing within the restricted rights of the process. A subset of the process's threads running, while rest are suspended. Any thread running in a process can make system calls into the kernel, blocking itself but no other threads. When the processor gets an I/O interrupt, it preempts one of the running threads so the kernel can run the interrupt handler; when the handler finishes, the kernel resumes that thread.
 - **Many single-threaded processes.** Each process looks like a thread: a separate sequence of instructions, executing sometimes in the kernel and sometimes at user level. Concurrent processes can have concurrent system calls, even parallel on multiprocessor systems.
 - **Many kernel threads.** The operating system kernel itself implements the thread abstraction for its own use. Runs seperate threads, each of which are running in kernel mode.
 
@@ -217,7 +217,7 @@ For systems without hardware support, you can use the stack pointer (which is al
    // stub. The stack starts at the top of the allocated region and grows down.
    tcb->sp = tcb->stack + INITIAL_STACK_SIZE;
    tcb->pc = stub;
-   // Create a stack frame by pushing stub’s arguments and start address
+   // Create a stack frame by pushing stub's arguments and start address
    // onto the stack: func, arg
    *(tcb->sp) = arg;
    tcb->sp--;
@@ -246,7 +246,7 @@ Creating a thread should run the code within `func` asynchronously with the call
 
 When a thread calls `thread_exit`, must remove it from ready lists so it stops being scheduled, and then free the per-thread state.
 
-**NOTE**: a thread cannot free its own resources because if interrupted, it would be a memory leak (since it will never be scheduled again to finish cleanup). Instead, thread changes its state to FINISHED, and then puts itself on the finished list for some *other* thread to clean it up,
+**NOTE**: a thread cannot free its own resources because if interrupted, it would be a memory leak (since it will never be scheduled again to finish cleanup). Instead, thread changes its state to FINISHED, and then puts itself on the finished list for some _other_ thread to clean it up,
 
 ### Thread Context Switch
 
@@ -256,10 +256,10 @@ Note that interrupts must be disabled during a context switch (OSSP 47). This is
 
 ```c
 // We enter as oldThread, but we return as newThread.
- // Returns with newThread’s registers and stack.
+ // Returns with newThread's registers and stack.
  void thread_switch(oldThreadTCB, newThreadTCB) {
    pushad; // Push general register values onto the old stack.
-   oldThreadTCB->sp = %esp; // Save the old thread’s stack pointer.
+   oldThreadTCB->sp = %esp; // Save the old thread's stack pointer.
    %esp = newThreadTCB->sp; // Switch to the new stack.
    popad; // Pop register values from the new stack.
    return;
@@ -315,3 +315,113 @@ Another example of this is with virtual memory. The mechanism for translating vi
 
 ## Implementing Multi-threaded Processes
 
+### Multithreaded Processes with Kernel Threads
+
+A thread in a process has a user level stack, a kernel interrupt stack, and a kernel TCB. To create a new thread from the user's perspective, the process calls a library function that allocates a user-level stack and then makes a system call to create a new kernel thread and then returns a thread id. The kernel allocates a TCB and kernel stack, and then places the thread on the ready list.
+
+Thread `join`, `exit`, and `yield` are all system calls that the kernel handles in a similar way, by manipulating the TCBs and the ready list.
+
+### User-Level Threads without Kernel Threads
+
+Added to OS's to support concurrency without any kernel support. Early versions of the JVM used this approach with _green threads_. The running process essentially implements all of the kernel data structures and scheduling policies in user space, allowing threading operations to be simple procedure calls instead of system calls.
+
+A limitation is the lack of awareness of the OS's scheduling policies, and the inability to take advantage of multiple processors. For instance, if the process is blocked on I/O, all threads are blocked.
+
+### Preemptive User-Level Threads
+
+Similar to **upcalls** or **signals**, but for user-level threads. To preempt some process **P**:
+
+1. The user-level thread library makes a system call to register a timer signal handler and signal stack with the kernel.
+2. When a hardware timer interrupt occurs, the hardware saves P's register state and runs the kernel's handler.
+3. Instead of restoring P's register state and resuming P where it was interrupted, the kernel's handler copies P's saved registers onto P 's signal stack.
+4. The kernel resumes execution in P at the registered signal handler on the signal stack.
+5. The signal handler copies the processor state of the preempted user-level thread from the signal stack to that thread's TCB.
+6. The signal handler chooses the next thread to run, re-enables the signal handler (the equivalent of re-enabling interrupts), and restores the new thread's state from its TCB into the processor. execution with the state (newly) stored on the signal stack.
+
+### User-Level Threads with Kernel Support
+
+Process using $M$ kernel thrreads, each with their own user-level scheduler that schedules $N$ user-level threads. The kernel threads are scheduled by the OS, and the user-level threads are scheduled by the user-level scheduler.
+
+However, there is still an issue of one of your kernel threads being blocked for the entirety of an I/O operation. Solution:
+
+#### Scheduler Activations
+
+Let the user and kernel level schedulers coordinate with eachother. Involves system call and upcalls (2-way communication), and thus overhead, but doesnt require the kernel to be aware of the user-level threads, and is able to optimize the uncommon case.
+
+- User-level scheduler makes system calls to request or free processors.
+- Kernel upcalls user-level scheduler to notify it of events. Examples include:
+  - Processor becomes available or unavailable.
+  - Transition to `WAITING` state (ie for I/O).
+  - Transition from `WAITING` to `READY` state.
+  - Transition from `RUNNING` to idle.
+
+**Scheduler Activations** replace kernel threads. It has a seperate stack and CPU context, and it can be scheduled the same as a kernel thread. However, if the kernel interrups it, processor restarts execution in the user-level scheduler. Then the user-level scheduler can decide which user-level thread to run next.
+
+## Alternatives to Threads
+
+### Asynchronous I/O and Event-Driven Programming
+
+Instead of using threads to manage I/O, you can use asynchronous I/O. This is especially useful for I/O bound applications, where the CPU is idle while waiting for I/O to complete. Instead of blocking on I/O, the program can continue to run and be notified when the I/O is complete.
+
+- Process makes a system call to issue an I/O request
+- Call returns immediately, and the process continues to run
+- When the I/O is complete, the process is notified by the kernel through one of the following
+  - calling a signal handler (callback)
+  - placing the result in a queue in the processes address space
+  - placing the result in a queue in the kernel's address space and letting the process poll through a system call
+
+A common design pattern is to have a single thread interleave different I/O bound tasks by waiting for multiple different I/O events. For example, a web server that has 10 active clients might have a single thread that issues a `select` call to wait for any of the 10 clients to have data ready to read. Then, when the `select` call returns, the thread can read from the client and it will immediately (non-blocking).
+
+#### Event-Driven Programming
+
+A natural extension of this pattern is to be able to handle requests that involve a sequence of I/O operations. For instance, handling a web request can involve (1) accepting a connection, (2) reading the request, (3) processing the request, (4) locating and reading the requested data on disk or in a database, (5) writing the response back to the client.
+
+**Event-driven programming** using the notion of a **continuation**, a data structure that keeps track of a task's current state and next step.
+
+#### Event-Driven Programming vs. Threads
+
+Very similar in practice. In either case, program blocks until next task can proceed, restores state of the task, executes the next step, and then blocks again. The main difference is whether the state is stored in a continuation and managed by the program, or in a thread and managed by the OS.
+
+For example, a web server that reads from multiple clients and stores the data in a table of buffers
+
+```c
+
+ Hashtable<Buffer*> *hash;
+
+ while(1) {
+   connection = use select() to find a
+                  readable connection ID
+   buffer = hash.remove(connection);
+   got = read(connection, tmpBuf, TMP_SIZE);
+   buffer->append(tmpBuf, got);
+   buffer = hash.put(connection, buffer);
+ }
+
+ // Thread-per-client
+ Buffer *b;
+ while(1) {
+   got = read(connection, tmpBuf, TMP_SIZE);
+   buffer->append(tmpBuf, got);
+ }
+```
+
+##### Performance
+
+The common argument for event-driven programming is that it is faster for two reasons:
+
+1. **No context switch overhead**. Context switches are expensive, and the more threads you have, the more context switches you have. Context switches are also unpredictable, and can cause cache misses and TLB misses.
+2. **No memory overhead**. The thread system itself comes with a non-negligible memory overhead. This is less of a problem with modern systems, but it is still a consideration. For example, allocating 1000 threads with an 8 KB stack size on a machine with 1 GB of memory would require less than 1% of the memory to be allocated to the thread stacks.
+
+On the other hand, event driven programs by themselves don't take advantage of multiple processors, and in practice are combined with threads. A process with $N$ threads can multiplex tasks seperately using an event-driven model, and then use threads to run those tasks in parallel.
+
+Furhtermore, the event-driven model can be more complex and harder to reason about, and if there is a reasonable amount of work to be done in the background, it is often easier to use threads.
+
+### Data Parallel Programming
+
+Can use SIMD instructions to perform the same operation on multiple pieces of data at the same time. For example, the `addps` instruction in x86 can add 4 single precision floating point numbers at the same time. This is useful for things like image processing, where you can apply the same operation to every pixel in an image.
+
+In general, with data parallel programming you specify the operation to be performed on a single piece of data, and then the hardware takes care of applying that operation to multiple pieces of data at the same time.
+
+This is useful in a wide variety of areas, and is often a source of major optimizations within programs. For instance, SQL databases can take in a query and then identify which parts of the query can be parallelized, leading to a significant speedup. This is also often used in combination with specialized hardware, like GPUs. Multimedia streaming, for example, uses SIMD instructions to decode and encode video.
+
+A large scale example of this is the MapReduce programming model, which is used by Google and Hadoop. The idea is to split a large dataset into smaller pieces, and then apply a function to each piece in parallel. The results are then combined together.

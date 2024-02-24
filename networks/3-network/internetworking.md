@@ -95,10 +95,3 @@ IP is the lowest common denominator of the internet. It allows networks that sup
 - For each packet, find the longest prefix that contains the destination address, ie. the most specific match.
 - forward the packet to the next hop for that prefix.
 
-```python
-def prefix_match()
-
-def longest_prefix_match(address, table):
-    
-    return longest_match
-```

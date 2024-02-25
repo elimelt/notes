@@ -84,14 +84,30 @@ IP is the lowest common denominator of the internet. It allows networks that sup
 ```
 
 
-### IP Forwarding
+## IP Datagram Forwarding
 
-- Addresses on one network belong to a unique prefix.
-- Node uses a table that lists the next hop for each prefix.
-- Prefixes in the table might overlap.
+When a host wants to send a packet to another host, it first checks if the destination IP address is on the same network (matching subnet). If it is, it can send the packet directly over the link layer (using ARP to get resolve IP address to MAC address). Otherwise, it sends the packet to the *default gateway*, or **router**.
+
+The router then forwards the packet to its **next hop** based on the destination IP and the router's routing table.
+
+```python
+if (NetworkNum of destination = NetworkNum of one of my interfaces):
+    deliver packet to destination over that interface (using ARP)
+else:
+    if (NetworkNum of destination is in my forwarding table):
+        deliver packet to NextHop router
+    else:
+        deliver packet to default router
+```
 
 #### Longest Prefix Match
 
 - For each packet, find the longest prefix that contains the destination address, ie. the most specific match.
 - forward the packet to the next hop for that prefix.
+
+```python
+for each entry in the forwarding table:
+    if (NetworkNum of destination & Mask) == (NetworkNum of entry & Mask):
+        deliver packet to NextHop router
+```
 

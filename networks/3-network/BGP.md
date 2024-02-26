@@ -26,8 +26,8 @@ BGP works over TCP, and uses a keep-alive mechanism. If a BGP speaker doesn't re
 #### Relationships
 
 - **Provider-Customer**: A provider AS provides transit traffic to a customer AS. The customer AS pays the provider AS for the service. The provider advertises all the routes it knows about to the customer, and advertises routes it learns from the customer to everyone.
-- **Customer-Provider**: A customer AS receives transit traffic from a provider AS. Customers advertise own prefixes and routes learned from its customers (if any) to their provider, advertise routes learned from their provider to their customers (if any), but don’t advertise routes learned from one provider to another provider.
-- **Peer-Peer**: Two ASes are peers if they exchange traffic between their customers, but do not exchange traffic between their own networks. Peers advertise routes learned from their customers to their peer, advertise routes learned from their peer to their customers, but don’t advertise routes from their peers to any provider or vice versa.
+- **Customer-Provider**: A customer AS receives transit traffic from a provider AS. Customers advertise own prefixes and routes learned from its customers (if any) to their provider, advertise routes learned from their provider to their customers (if any), but don't advertise routes learned from one provider to another provider.
+- **Peer-Peer**: Two ASes are peers if they exchange traffic between their customers, but do not exchange traffic between their own networks. Peers advertise routes learned from their customers to their peer, advertise routes learned from their peer to their customers, but don't advertise routes from their peers to any provider or vice versa.
 
 ## BGP Algorithm
 

@@ -34,4 +34,4 @@ The mapping between a name and file is called a **hard link**. File systems that
 
 #### Volumes
 
-A **volume** is a collection of physical storage resources that form a logical storage device. In the simplest case, a volume is a single disk. However, a disk can be partitioned into multiple volumes, and a single volume can be made of multiple disks.∂
+A **volume** is a collection of physical storage resources that form a logical storage device. In the simplest case, a volume is a single disk. However, a disk can be partitioned into multiple volumes, and a single volume can be made of multiple disks.

@@ -247,7 +247,7 @@ void Scheduler::makeReady(TCB *thread) {
   * Lets try to take the lock again - this is needed even if
   * we get here for the first time (shortly after failing to
   * acquire the lock), to make sure that we get a wakeup once
-  * it’s unlocked. Later on, if we sleep, this is the
+  * it's unlocked. Later on, if we sleep, this is the
   * operation that gives us the lock. We xchg it to -1, so
   * that when we release the lock, we properly wake up the
   * other waiters:
@@ -255,7 +255,7 @@ void Scheduler::makeReady(TCB *thread) {
   if (atomic_xchg(&lock->count, -1) == 1)
     break;
 
-  /* didn’t get the lock, go to sleep: */
+  /* didn't get the lock, go to sleep: */
   ...
  }
  ```

@@ -24,7 +24,7 @@ The OS kernel is NOT a process, just a block of code. Remember: *the CPI is alwa
 
 ### State Queues
 
-Typically there is a queue of `proc`s that correspond to each of the states a process can take (ie “`WAITING`, `READY`). There might even be many wait queues, one for each type of wait (particular device, timer, message, etc.).
+Typically there is a queue of `proc`s that correspond to each of the states a process can take (ie `WAITING`, `READY`). There might even be many wait queues, one for each type of wait (particular device, timer, message, etc.).
 
 - procs are just data structures, dynamically allocated in the OS memory. 
 - procs are created by existing processes. creator is parent, creation is child.

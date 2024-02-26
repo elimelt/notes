@@ -114,3 +114,31 @@ broadcast(struct message* m)
 ```
 
 
+
+## Implementation
+
+To create a switch, all you need to do is buy a general-purpose processor and equip it with multiple network interfaces. However, switches that deliver high-end performance typically take advantage of additional hardware acceleration. These are referred to as hardware switches, although both approaches obviously include a combination of hardware and software.
+
+The implementation of switches and routers have so much in common that a network administrator typically buys a single forwarding box and then configures it to be an L2 switch, an L3 router, or some combination of the two.
+
+### Software Switches
+
+The performance of switches is limited by the need to pass packets through main memory. This can be a bottleneck, especially for short packets. The cost of processing each packet, such as parsing its header and making forwarding decisions, can also be a limiting factor. Non-trivial algorithms used by switches, like the spanning tree algorithm, are not directly part of the per-packet forwarding decision. Table lookups are often the most costly routine executed on a per-packet basis.
+
+### Bare-Metal Switches
+
+The distinction between the control plane (background processing) and the data plane (per-packet processing) is important. Recent advances in domain-specific processors have made it possible to build high-performance switches that combine the performance of ASICs with the agility of software. These switches can be programmed to be L2 switches, L3 routers, or a hybrid.
+
+Bare-metal switches using Network Processing Units (NPUs) have become popular. NPUs are optimized for processing packet headers and making forwarding decisions. They can process packets at rates measured in Terabits per second (Tbps). The exact programming of an NPU depends on the chip vendor.
+
+Internally, an NPU utilizes fast SRAM-based memory, TCAM-based memory for matching bit patterns, and a multi-stage forwarding pipeline. The use of a multi-stage pipeline allows for efficient packet processing and high throughput.
+
+The networking industry is entering a commoditized world, similar to the computing industry, where standardized components and open source software are available for building high-performance switches.
+
+### Software Defined Networks
+
+SDN (Software Defined Networks) decouples the network control plane from the data plane, allowing routing algorithms to run on software and packet forwarding decisions to be made by bare-metal switches. The standard interface between the control and data planes, known as OpenFlow, enables interoperability between different implementations. This concept of disaggregation has led to the trend of using commodity servers and bare-metal switches in network infrastructure.
+
+Another important aspect of disaggregation is that a logically centralized control plane can be used to control a distributed network data plane. This allows for scalability and availability, as the two planes can be configured and scaled independently. Cloud providers have embraced this approach, using SDN-based solutions within their datacenters and across their backbone networks.
+
+The Network Operating System (NOS) is a key enabler for SDN's success. It provides high-level abstractions and a Network Map to simplify network control functionality. The NOS detects changes in the network and the control application implements desired behavior on an abstract graph. By centralizing this logic, a globally optimized solution can be achieved.

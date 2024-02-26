@@ -199,7 +199,7 @@ Uses a `Confirmed` and a `Tentative` list, both of which contain entries `(Desti
 - Hierarchical routing: partitions the network into **areas**, such that a given router only needs to know about the topology of its own area.
 - Load balancing: can assign multiple paths to the same destination, and split traffic between them.
 
-Of the five OSPF message types, type 1 is the “hello” message, which a router sends to its peers to notify them that it is still alive and connected as described above. The remaining types are used to request, send, and acknowledge the receipt of link-state messages.
+Of the five OSPF message types, type 1 is the "hello" message, which a router sends to its peers to notify them that it is still alive and connected as described above. The remaining types are used to request, send, and acknowledge the receipt of link-state messages.
 
 OSPF sends Link State Advertisements (LSAs) instead of LSPs. LSAs contain information about links, including the Link ID, Link Data, and metric. The Link ID is typically the router ID of the router at the far end of the link. The metric represents the cost of the link. TOS (type of service) information allows OSPF to choose different routes based on the TOS field of IP packets.
 

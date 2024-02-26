@@ -20,11 +20,14 @@ When a device wants to send a packet to another device on the same network, it f
 ```plaintext
 ARP Request Packet:
 
-| ....Link layer..... |
+  ....Link layer.....
 +----------+----------+----------+----------+----------+
 | SRC MAC  | DST MAC  | SRC IP   | DST IP   | Payload  |
 +----------+----------+----------+----------+----------+
  from NIC    From ARP   From DHCP
 ```
 
+### ARP Reply
+
+Although the ARP request is broadcast, only nodes that already have an entry, or the destination IP address itself, will act on the request (ie refresh tables/learn MAC address). Other nodes will ignore the request. The destination IP address will then send an ARP reply to the source IP address with its MAC address.
 

@@ -64,3 +64,20 @@ Has the following extensions/features:
 TCP needs to allocate bandwidth of a network fairly and efficiently (which are conflicting goals). The network witnesses congestion and provides direct feedback to the transport layer. Then, the transport layer can decrease its sending rate to avoid congestion.
 
 This is a hard problem. The number of senders is almost never constant, and each customer's load is constantly changing. Also, senders often lack capacity in certain parts of the network, and no one entity has a complete view of the network.
+
+This is solved by having the senders continuously probe the network and adapt their sending rate based on feedback from the network.
+
+
+#### Fairness
+
+Kind of a weird problem. Just think about it like scheduling threads and processes. You want to give each process a fair share of the CPU, but simply allocating bandwidth equally to each thread in the process is not fair. You want to allocate bandwidth to each connection fairly, but you also want to allocate bandwidth to each user fairly, and you also want to allocate bandwidth to each application fairly.
+
+#### Equal per Flow Fairness
+
+The **bottleneck** for a flow of traffic is the link that limits its bandwidth. TCP tries to allocate bandwidth fairly to each flow by sharing the bottleneck bandwidth equally among the flows that traverse it.
+
+#### Max-Min Fairness
+
+Intuitively, flows bottlenecked on a link get an equal share of that link. A max-min fair allocation is one that maximizes the minimum bandwidth allocated to any flow.
+
+To find it given a network, you can imagine "pouring water" into the network and seeing how much each flow gets. You can then adjust the flow rates to maximize the minimum flow rate.

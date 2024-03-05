@@ -80,4 +80,6 @@ Z_{res} = R
 $$
 
 
+## Phasors
 
+Complex numbers that represent the amplitude and phase of a sinusoidal signal. Can be used to represent AC signals and greatly simplify analysis by 

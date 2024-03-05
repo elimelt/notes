@@ -1,6 +1,6 @@
 # Uniprocessor Scheduling
 
-## Preface: Performance Terminalogy
+## Preface: Performance Terminology
 
 | Key Word | Description |
 | - | - |

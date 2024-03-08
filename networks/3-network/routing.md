@@ -23,7 +23,7 @@ Routers are devices within a network that handle forwarding packets out of the n
 
 **3. Dynamic Updates:**
 
-- **Routing Table:** More dynamic, constantly updated based on routing protocols (e.g., RIP, OSPF, BGP) to reflect network changes.
+- **Routing Table:** More dynamic, constantly updated based on routing protocols (e.g., OSFP, BGP) to reflect network changes.
 - **Forwarding Table:** Static or dynamically updated based on learned MAC addresses of connected devices. Updates are faster than routing table changes.
 
 **4. Size:**
@@ -40,7 +40,7 @@ Routers are devices within a network that handle forwarding packets out of the n
 
 ## The Network as a Graph
 
-Model the internet as a graph of routers (nodes) and links (edges). To simplify, we can model the graph as an _undirected_ **weighted** graph, where the weight of an edge represents the cost of sending a packet over that link. In practice, the internet is more accurately modeled as a _directed_ graph, but the undirected model is simpler.
+Model the internet as a graph of routers (nodes) and links (edges). To simplify, we can model the graph as an **undirected** **weighted** graph, where the weight of an edge represents the cost of sending a packet over that link. In practice, the internet is more accurately modeled as a _directed_ graph, but the undirected model is simpler.
 
 The basic problem of routing is to find the shortest path between nodes in the graph. One could use **Dijkstra's algorithm** to find paths, and then save them to disk/memory as the routing table. However:
 
@@ -100,23 +100,22 @@ void mergeRoute (Route *new) {
     for (i = 0; i < numRoutes; ++i) {
         if (new->Destination == routingTable[i].Destination) {
             if (new->Cost + 1 < routingTable[i].Cost)
-                break; /* found a better route: */
+                break; /* found a better route */
             else if (new->NextHop == routingTable[i].NextHop)
-                break; /* metric for current next-hop may have changed: */
+                break; /* next hop may have changed */
             else
-                return; /* route is uninteresting---just ignore it */
+                return; 
         }
     }
     if (i == numRoutes) {
-        /* this is a completely new route; is there room for it? */
         if (numRoutes < MAXROUTES)
-            ++numRoutes;
+            numRoutes++;
         else
             return; /* can`t fit this route in table so give up */
     }
     routingTable[i] = *new;
     routingTable[i].TTL = MAX_TTL; /* reset TTL */
-    ++routingTable[i].Cost; /* account for hop to get to next node */
+    routingTable[i].Cost++;
 }
 
 void updateRoutingTable (Route *newRoute, int numNewRoutes) {
@@ -126,19 +125,19 @@ void updateRoutingTable (Route *newRoute, int numNewRoutes) {
 
 ```
 
-However, actual RIP operates using User Datagram Protocol (UDP) on port 520. Its messages are structured as follows:
+However, actual RIP operates on UDP port 520 and might look something like this:
 
 ```
 RIP Message:
-    Version (1 byte)
-    Command (1 byte: 1 = request, 2 = response, 3 = update)
-    Number of entries (2 bytes)
+    Version
+    Command (request, response, update)
+    Number of entries 
     RIP Entry (variable size)
-    Address Family Identifier (2 bytes)
-    Route Tag (2 bytes)
-    IP Address (4 bytes)
-    Next Hop IP Address (4 bytes)
-    Metric (4 bytes: Hop Count)
+    Address Family Identifier
+    Route Tag
+    IP Address
+    Next Hop IP Address
+    Metric
 ```
 
 RIP is a fairly limited and simple implementation of distance vector routing. It assigns a cost of 1 to each hop (effectively calculating the fewest hop path), and it only allows distances of up to 16 hops. Not used in most modern networks.

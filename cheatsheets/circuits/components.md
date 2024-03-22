@@ -145,7 +145,7 @@ B --|<
 Has 3 terminals: the gate, drain, and source. They are voltage controlled devices, and are used in pretty much every electronic device. They come in two flavors: N-channel and P-channel, or NMOS and PMOS. The high level function is the same as a BJT, but the way they work is different.
 
 $$
-I_D = k (V_GS - V_{th})^2
+I_D = k (V_{GS} - V_{th})^2
 $$
 
 Where $k$ is a constant for that specific MOSFET based on its geometry and material, $V_GS$ is the voltage between the gate and source, and $V_{th}$ is the threshold voltage, which is the voltage required to turn the MOSFET on.

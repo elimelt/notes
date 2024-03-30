@@ -74,7 +74,7 @@ note: $p \to q$ is equiv to $p \land \neg q \equiv F$
 
 #### Output is always perfect:
 
-Suppose there is a company $c_1$ with no match after the algorithm terminates. Therefore, there is also an unmatched algorithm.
+Suppose there is a company $c_1$ with no match after the algorithm terminates. Therefore, there is also an unmatched applicant.
 
 $$
 \exists \text{ unmatched company } \leftrightarrow \exists \text{ unmacted person}

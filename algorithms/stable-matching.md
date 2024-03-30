@@ -111,7 +111,7 @@ $$
 a \in valid(c) \to \exists \text{ stable matching } S \text{ such that } (c, a) \in S
 $$
 
-Say $(c', a') \in S$. If $a >_{c'} a'$, then $(a, c') is unstable for $S$, which is a contradiction to the preceding claim. Therefore, we must have $a' >_{c'} a$. This also implies that $c'$ is also rejected by $BVP(c')$, since $c'$ proposed in decreasing order of preference, so it must already be rejected by $a'$.
+Say $(c', a') \in S$. If $a >_{c'} a'$, then $(a, c')$ is unstable for $S$, which is a contradiction to the preceding claim. Therefore, we must have $a' >_{c'} a$. This also implies that $c'$ is also rejected by $BVP(c')$, since $c'$ proposed in decreasing order of preference, so it must already be rejected by $a'$.
 
 We can continue the same line of reasoning since $c'$ is also rejected by $BVP(c')$, and so on. This is a contradiction because $c$ is the first company rejected by their BVP.
 

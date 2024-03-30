@@ -1,3 +1,8 @@
+# Look Into
+
+- Remote Direct Memory Access (RDMA)
+- Network File System (NFS)
+
 # Remote Procedure Call (RPC)
 
 A request from a client to execute a function on a server/different machine.
@@ -44,6 +49,8 @@ Client/server implementation is usually auto-generated from procedure spec, e.g.
 - A process that keeps track of all available services, including versions, schemas, locations, etc.
 
 ### Interface Description Language (IDL, e.g. Protobuf)
+**Serialization is important!**
+
 - Generate client/server serialization/deserialization stubs automatically based on the IDL.
     - Procedue args can be values or pointers, which need to be assembled into a single linear message in a transportable format (not always just a string, e.g. Protobuf using binary format).
 
@@ -65,6 +72,7 @@ Some of the network issues can be mitigated by TCP, but sockets can fail and mes
     - Messages can be lost, delayed, reordered, or duplicated. Messages can be arbitrarily delayed while the network still works correctly.
     - Messages won't be corrupted (bit flips). This is another strong assumption. See error detection and correction for working without this assumption.
     - Network may partition some nodes from eachother.
+        - Possible for nodes to be in isolated groups without a connection between them.
     - Network is (1) commutative and (2) transitive.
         - (1) If A can talk to B, B can talk to A.
         - (2) If A can talk to B and B can talk to C, then A can talk to C.
@@ -80,7 +88,7 @@ Some of the network issues can be mitigated by TCP, but sockets can fail and mes
     - Client reqyest contains IP addr of client and server, name of procedure, arguments.
     - Server response contains IP addr of client and server, and results of the procedure.
 
-### Client timeout and retry
+## Client timeout and retry
 If a request or reply message is dropped, the client will wait forever for the response. This can be fixed with client timer/retransmission, where the client sends the request again if it doesn't get a response in a certain amount of time. This leads to duplication and reordering of messages at the server.
 
 We can handle this with a unique request ID. Include a message ID in each request/reply. When the client retransmits, it uses the same message ID. The server can then ignore duplicate requests.
@@ -114,5 +122,15 @@ Examples:
 | DNS lookup | Queries are read-only, so it's idempotent |
 | MapReduce | The Map phase is idempotent since it is a pure function |
 | NFS | If the client maintains offset, reading/writing a block is idempotent |
-| Non-replicated KV store | `Put(k, v)` is idempotent depending on the implementation (ie appends build up) |
+
+
+Importantly, in situations with multiple clients, operations like `Put(k, v)` are not idempotent, since the value of `k` can change between the time the client reads the value and the time it writes the value.
+
+## Two Generals Problem
+
+Just a thought experiment to emphasize the difficulty of message passing in a distributed system. Two generals are trying to coordinate an attack on a city. They are separated by a valley, and can only communicate by messenger. The messenger can be captured by the city, and the generals don't know if the message was delivered. The generals need to agree on a time to attack, but they can't be sure the message was delivered. They can only attack if they both agree on the time.
+
+The problem boils down to the fact that at any point in time, if we sent a message, we don't know if it was delivered. Regardless of how many round trips you make to confirm, the last message sent could always have been dropped. This is a fundamental and central problem in distributed systems.
+
+
 

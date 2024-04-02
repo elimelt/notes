@@ -40,8 +40,8 @@ $$
 
 ## "Efficient" Algorithms
 
-If a problem size grows by at most a constant factor, then so does its run-time.
+A CPU typically does less than $2^30$ operations per second. For this reason, some things just aren't computable.
 
-$$
-T(2n) = 
-$$
+Polynomial time algorithms are great, since if a problem size grows by at most a constant factor, then so does its run-time. 
+
+

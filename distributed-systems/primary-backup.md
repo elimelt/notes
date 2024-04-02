@@ -60,15 +60,32 @@ When the view server detects a failure, a new **view** (state of the system sent
 
 #### Primary Failures
 
-- View server detects failure through lack of pings (some sort of timeout).
+- View server detects failure through lack of pings (some sort of timeout after missing $n$ pings).
 - View server declares new view with backup as new primary, and if any idle servers are available, a new backup as well.
+    - Requests eventually time out and check in with view server.
 - View server sends new view in all subsequent responses.
 - New primary hears new view and sends state to new backup
 - Backup initializes state and sends acknowledgment to new primary.
 - New primary pings current view to view server (after receiving ack).
 - Client hears about new view and starts sending operations to new primary. If any operations were lost, client resends them.
 
+
+If primary dies with no idle servers available, then the backup becomes the primary and there is no backup.
+
 #### Managing Servers
 
 Keep a pool of idle servers that can be promoted to backup. If primary dies, create new view with old backup as primary and idle server as backup. If the backup dies, create a new view with idle server as new backup.:
 
+### Split Brain
+
+In the case where a primary appears to be offline, but is really just partitioned from the view server, the view server may elect a new primary. This leads to a **split brain** scenario, where two primaries are elected.
+
+The important part is that two servers can **think** they are the primary, but it can **never** be the case that two servers **act** as the primary.
+
+## Rules
+
+1. Primary in view $i + 1$ must have been the backup, or the primary in view $i$ (besides the first view).
+2. Primary must wait for backup to accept/execute each operation before replying to client (if there is one).
+3. Backup must accept forwarded requests only if view is correct.
+4. Non-primary must reject client requests.
+5. Every operation must be before or after state transfers (not during).

@@ -1,6 +1,5 @@
-[chapter](https://sre.google/sre-book/managing-critical-state/)
-
 # Managing Critical State
+[reading](https://sre.google/sre-book/managing-critical-state/)
 
 ## CAP Theorem
 
@@ -81,3 +80,29 @@ A **barrier** is a synchronization primitive that allows a group of nodes to wai
 While barriers can be implemented as a single coordinator node, this introduces a single point of failure. Instead, once can use an RSM to implement a barrier, which is done by Zookeeper's implementation of the barrier pattern.
 
 **Distributed locking** is a more general distributed synchronization primitive that allows for mutual exclusion of shared resources among nodes. In practice, it is essential to use renewable leases with timeouts to prevent deadlocks. Distributed locks are another fairly low-level primitive, and it is often a good idea to use a higher-level abstraction that provides distributed transactions.
+
+### Reliable Distributed Queuing and Messaging
+It is common to use a lease mechanism to ensure that only one node processes a message from a queue at a time, while also allowing for failover in case the node processing the message fails.
+
+Queuing is also a powerful abstraction that can be used to implement other patterns like **atomic broadcast** and **publish-subscribe** messaging systems, where messages need to be reliably delivered to multiple nodes. This is useful for things like sending notifications to multiple clients, but can be used in other applications like distributed cache coherence. Furthermore, **queuing as workload distribution** can be used to distribute work among a pool of worker nodes
+
+## Distributed Consensus Performance
+
+People are apparently pretty pessimistic about the performance of distributed consensus algorithms, but they can actually be quite fast. According to Google SREs, this is not the case.
+
+There are many factors that can affect the performance of distributed consensus algorithms, including:
+
+- **Workload**
+  - **Throughput**: number of proposals per second at peak load
+  - Types of requests: read-heavy, write-heavy, mixed
+  - **Consistency semantics**: can reads be stale?
+  - **Request size**: how much data is being read/written?
+- **Deployment**
+  - **Network topology**: how many nodes are in the cluster, and how are they connected? LAN, WAN, etc.
+  - **Quorum type**: how many nodes are in a quorum? Where are they located?
+  - **Optimizations**: sharding, pipelining, batching, etc.
+
+One common performance pitfall with single-leader replication is that a client's perceived latency is proportional to the round-trip time between the client and the leader.
+
+### Multi-Paxos: Detailed Message Flow
+

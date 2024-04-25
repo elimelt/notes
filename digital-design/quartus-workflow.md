@@ -1,7 +1,7 @@
 
 - Make a copy of a previous lab directory to build off of what you already have (Quartus project file, ModelSim files) while keeping the old design as a reference.
 - For each module you need to write:
-  - Create and populate two new files, one for the module definition and one for that module’stest bench.
+  - Create and populate two new files, one for the module definition and one for that module's test bench.
   - Set the new module file as the top-level module in Quartus.
   - Run Analysis and Synthesis and fix any errors it finds.
   - Edit runlab.do to include the new module and run its test bench and yet-to-be created simulation view.

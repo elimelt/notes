@@ -77,9 +77,9 @@ Then we satisfy $P(n)$ for $a, c$ because $\frac{c - a}{\epsilon} = n$, and $f(a
 
 Then we satisfy $P(n)$ for $c, b$, for the exact same reasoning.
 
-## Closest Pair of Points (non-geometrically)
+## Closest Pair of Points (geometrically)
 
-Given $n$ points and an *arbitrary* distance between them, find the closest pair (not just Euclidean distance).
+Given $n$ points and an *arbitrary* distance function between them, find the closest pair (not just Euclidean distance).
 
 ### 1 Dimensional Version
 

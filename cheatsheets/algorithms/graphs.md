@@ -47,7 +47,9 @@ For any graph $G = (V, E)$, if two of the following are true, then all three are
 
 An ordering of nodes $v_1, v_2, \ldots, v_n$ so that for every edge $(v_i, v_j)$, $i < j$.
 
-- To find, initialize map of in-degrees for each vertex, and a queue of vertices with in-degree 0. Then, while the queue isn't empty, remove a vertex, adding it to the ordering, and decrement its neighbors in-degree. If any of them become 0, add them to the queue.
+- To find, initialize map of in-degrees for each vertex, and a queue of vertices with in-degree 0.
+- Then, while the queue isn't empty, remove a vertex, adding it to the ordering, and decrement its neighbors in-degree.
+- If any of them become 0, add them to the queue.
 
 ## Cuts
 

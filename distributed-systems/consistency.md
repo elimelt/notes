@@ -63,3 +63,60 @@ Registers hold a single value, and we define operations $r_i, $w(v)$ as the $i$t
    w(v1)                w(v2)
 |------|             |---------|
 ```
+
+## Linearizability
+
+A **linearizable** system is one in which actions appear to occur in a single global order that is consistent with real time/causal order. Not all systems enforce linearizability.
+
+To do linearizable reads in Paxos, you need to first verify that the leader is **still** the leader at the time of the read. Otherwise, its possible that some other leader took over and formed a majority without the old leader. This can be done by waiting for the leader to execute some other request, which will only go through if we are indeed still the leader.
+
+### Linearizable Sharding with Paxos
+
+For linearizability with shards, we have the following requirements:
+
+- All operations from the same node occur in order
+- All operations to the same shard occur in order
+- All operations complete between the request send and response receive.
+
+Parallelism/concurrency of batched requests becomes difficult in a sharded system, since breaking up operations of a batched request into a pipeline completely throws out the original order of the request. We can instead think of systems in terms of a weaker consistency model.
+
+### Sequential Consistency
+
+**Sequential Consistency** is a weaker form of consistency that requires all operations to be executed in some order that is consistent with the order in which they were issued. However, S.C. doesn't always follow real-time order. This is also referred to as **serializability** in the context of transactions.
+
+Simplistically, we can think of sequential consistency as a system where all operations are executed in some order that is consistent with the order in which they were issued, but not necessarily during their window of request/response timing. This allows stale reads, while still maintaining some order that is consistent with a prefix of the global state of the system.
+
+
+### Snapshot Reads
+
+Gives us a consistent view of our global state across some set of views of the system. This requires all operations being serializable, but it is okay if reads return stale data.
+
+- All reads in a transaction must be from the same snapshot
+- Client can define how old is too old for their usecase
+
+To implement this (without sharding) in conjunction with Paxos, we can do the following:
+
+1. Primary defines update order in log
+2. Shadow replicas apply changes in that order
+3. Each lag primary from some variable amount
+4. Snapshot reads occur at a single replica
+5. If a replica crashes during a transaction, restart transaction at another snapshot replica
+
+### Causal Consistency
+
+- Causally related reads and writes (ordered by happens before relation) must occur in that order.
+- Concurrent writes can be seen in different orders on different nodes
+- Note that linearizability imples causality
+
+### Processor Consistency
+
+- Writes done by the same process are seen in that order.
+- Writes by different processors can be seen in different orders by different readers
+
+### Memory Barrier/Fence
+
+- Whenever consistency matters, you can insert a "fence" in a point of time that says all preceding operations happen before the fence, and all subsequent operations happen after
+- On either side of the fence, order is not enforced
+- If every operation is fenced, your system is linearizable
+
+This is how POSIX files work. Also many mutli-cache systems use fences to enforce consistency.

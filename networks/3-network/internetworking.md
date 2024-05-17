@@ -108,3 +108,13 @@ for each entry in the forwarding table:
         deliver packet to NextHop router
 ```
 
+- [Internetworking](#internetworking)
+  - [How netorks may differ](#how-netorks-may-differ)
+    - [Connecting Datagram and Virtual Circuit Networks](#connecting-datagram-and-virtual-circuit-networks)
+  - [IP Addressing](#ip-addressing)
+    - [IPv4](#ipv4)
+    - [IP Prefixes](#ip-prefixes)
+      - [Example:](#example:)
+  - [IP Datagram Forwarding](#ip-datagram-forwarding)
+      - [Longest Prefix Match](#longest-prefix-match)
+

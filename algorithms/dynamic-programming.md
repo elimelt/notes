@@ -682,20 +682,109 @@ Therefore, the overall runtime is $O(n^3)$.
 
 Given a tree $T$ with $n$ vertices and an integer $k \ge 1$ such that every vertex of $T$ has degree $deg(v) \le 3$, we want to choose a set $S$ of $k$ vertices of the tree which are connected, i.e., for any pair of vertices $u, v \in S$ the unique path between $u, v$ in $T$ is also in $S$. Design a polynomial time algorithm that outputs the number of such sets $S$.
 
-Start by choosing an arbitrary vertex $v$ as root, and run $BFS(v)$, returning the level of each vertex in the BFS-tree (with `L[v] = 0`).
+```python
+def num_sets_deg_3(T, k):
 
-Define $f(v, k)$ as the number of connected subsets of size $k$ that **must** contain $v$, and are otherwise composed of vertices $u$ with $L[u] > L[v]$, i.e. only containing children of $v$.
+  def levels(v):
+    q = deque()
+    vis = set()
+    L = {}
+    q.append((v, 0))
+
+    while q:
+      size = len(q)
+      curr, l = q.popleft()
+      L[curr] = l
+      vis.add(curr)
+      for _ in range(size):
+        for nxt in T[curr]:
+          if nxt not in vis:
+            q.append((nxt, l + 1))
+    return L
+
+  root = arb_key(T)
+  L = levels(root)
+
+  def children(v):
+    return { u for u in T[v] if L[u] == L[v] + 1 }
+
+  dp = { v: { 1: 1, 0: 1 } for v in T.keys() }
+
+  def r(v, k):
+    if k in dp[v]:
+      return dp[v][k]
+
+    c = list(children(v))
+    ans = 0
+    if len(c) == 0:
+      return 1 if k == 1 else 0
+    elif len(c) == 1:
+      ans = r(c[0], k - 1)
+    elif len(c) == 2:
+      for c1 in range(k):
+        c2 = k - c1 - 1
+        ans += r(c[0], c1) * r(c[1], c2)
+    elif len(c) == 3:
+      for c1 in range(k):
+        for c2 in range(k - c1):
+          c3 = k - c1 - c2 - 1
+          ans += r(c[0], c1) * r(c[1], c2) * r(c[2], c3)
+
+
+    dp[v][k] = ans
+    return dp[v][k]
+
+  return sum(f(u, k) for k in T.keys())
+```
+
+**Correctness**:
+
+Start by choosing an arbitrary vertex $r$ as root, and run $BFS(r)$, returning the level of each vertex in the BFS-tree (with `L[r] = 0`).
+
+Define $f(v, k)$ as the number of connected subsets of size $k$ that **must** contain $v$, and are otherwise composed of vertices $u$ with $L[u] > L[v]$, i.e. only containing descendants of $v$ in the BFS tree. We prove correctness of $f$ by inducting on $k$.
 
 Our base cases are as follows:
 
-- $f(v, 1) = 1$
-- $f(v, k) = 0$ if $k > 1$ and $children(v) = \emptyset$
+- $f(v, k) = 1$ if $k \le 1$, since there is only one empty set, and there can only be one set of size one containing $v$, namely $\{ v \}$
+- $f(v, k) = 0$ if $k > 1$ and $children(v) = \emptyset$, since there is no way to make a set of size $k$ with less than $k$ vertices, and in this case, $v$ is our only potential element.
 
 Note that $children(v)$ is defined at $\{ u \in neighbors(v) : L[u] = L[v] + 1 \}$
 
-And so to calculate $f(v, k)$, we just need to sum over all possibilities that involve $v$ in terms of children of $v$. Any given subproblem contains nodes in any subset of $children(v)$ of size $k - 1$, so we need to iterate through all possible ways to choose such a subset, for all values of $k'_1, k'_2, \ldots, k'_{k - 1}$.
+And so to calculate $f(v, k)$, we just need to sum over all possibilities that involve $v$ in terms of children of $v$. Let $c = |children(v)| \le 3$ (since $deg(v) \le 3$), and $u_1, \ldots, u_c$ be $v$'s children. Any given subproblem contains vertices in any subset of $children(v)$ of size $\le \min(k - 1, c)$, so we need to iterate through all possible ways to choose such a subset of children for a given subproblem of size $k - 1$, accounting for the fact that any subset counted must contain $v$.
 
-- *Case 1*, $k' = 1$: $f(v)$ only contains $v$, and vertices from $k' = 1$ subtree of $v$.
-  - Then $f(v, k) = \sum_{u \in children(v)} f(u, k - 1)$
-- *Case 2*, $k' = 2$: $f(v)$ only contains $v$, and vertices from $k' = 2$ subtrees of $v$.
-  - Then $f(v, k) = \sum_{}
+- Case 0: $c = 0$
+  - This is a base case, so if $k \le 1$ we return $1$, and otherwise return $0$
+- Case 1: $c = 1$
+  - We have only one child, so we just need to calculate $f(u_1, k - 1)$, since we must choose $v$ as an element of any subset counted, and so we have $k - 1$ remaining vertices to choose
+- Case 2: $c = 2$
+  - We have two children, so we need to iterate through all possible ways to choose $c_1$ vertices from the first child and $c_2$ vertices from the second child, such that $c_1 + c_2 = k - 1$, keeping a sum of all possibilities. Then, via the product rule for counting, we just multiply $f(u_1, c_1) \cdot f(u_2, c_2)$ for the total number of possibilities for each value of $c_1, c_2$.
+- Case 3: $c = 3$
+  - We have three children, so we need to iterate through all possible ways to choose $c_1, c_2, c_3$ vertices from the children, such that $c_1 + c_2 + c_3 = k - 1$, keeping a sum of all possibilities. Then, via the product rule for counting, we just multiply $f(u_1, c_1) \cdot f(u_2, c_2) \cdot f(u_3, c_3)$ for the total number of possibilities for each value of $c_1, c_2, c_3$.
+
+Note that these are disjoint cases, but the case where we choose only vertices from a subset of subtrees is handled by letting $c_i = 0$ for the subtrees not chosen.
+
+This gives rise to the following recurrence:
+
+$$
+f(v, k) = \begin{cases}
+1 & k \le 1 \\
+0 & k > 1, children(v) = \emptyset \\
+f(u_1, k - 1) & \text{if } |children(v)| = 1\\
+\sum_{c_1 + c_2 = k - 1, c_i \ge 0} f(u_1, c_1) \cdot f(u_2, c_2) & \text{if } |children(v)| = 2\\
+\sum_{c_1 + c_2 + c_3 = k - 1, c_i \ge 0} f(u_1, c_1) \cdot f(u_2, c_2) \cdot f(u_3, c_3) & \text{if } |children(v)| = 3
+\end{cases}
+$$
+
+And since each of these problems has at most size $k - 1$ in the recursive case, our inductive hypothesis holds and we can calculate $f(v, k)$.
+
+To arrive at our final answer, we partition our possible answer space by sets of subsets that contain a given vertex $v$, none of $v$'s ancestors, and some of $v$'s descendants. Our final answer is then the sum of all $f(u, k)$ for $u \in T$. Note that each of these cases is disjoint, since each set of subsets must contain $u$, and no ancestors of $u$, so any previously calculated $f(u', k)$ for $u'$ being an ancestor of $u$ will not be included in answer for $f(u, k)$.
+
+Therefore, we have a final solution of $\sum_{u \in T} f(u, k)$
+
+**Running Time**:
+
+Let $n$ be the number of vertexes in $T$. We start by calculating the levels of each node in a BFS tree rooted at an arbitrary $v$, which takes $O(n + n - 1) = O(n)$ (since $T$ is a tree and therefore has $n - 1$ edges) time.
+
+For each call to $f(n, k)$, we solve $k \cdot n$ subproblems, each of which take a constant time to compute given that subproblems with a $k' < k$ have already been solved. We only have this constant time computation since the number of children is at most $3$, since otherwise we would need to solve a number of subproblems exponential in the $deg(v)$ to check every subset of children to include. Therefore, each call takes $O(n)$ time.
+
+Since we call $f(v, k)$ on all vertices in the tree, and each call takes at most $O(n)$ time (but often performs better due to memoized answers from calls on ancestors of $v$), we have an upper bound of $O(n^2)$ on computing the overall answer, which is polynomial

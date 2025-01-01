@@ -409,13 +409,13 @@ class SiteGenerator:
 
         # Create the index page
         index_page = Page(
-            title="My Digital Garden",
+            title="My Notes",
             path=Path("index.md"),
             content=content,
             modified_date=datetime.now(),
             category=None,
             tags=[],
-            description="A collection of my digital notes and thoughts",
+            description="So so many notes",
             is_index=True
         )
 

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rpc</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Rpc</h1>
+        <div class="meta">
+            Last modified: 2024-03-27
+        </div>
+        <div class="content">
+            <h1 id="look-into">Look Into</h1>
+<ul>
+<li>Remote Direct Memory Access (RDMA)</li>
+<li>Network File System (NFS)</li>
+</ul>
+<h1 id="remote-procedure-call-rpc">Remote Procedure Call (RPC)</h1>
+<p>A request from a client to execute a function on a server/different machine.
+- To the client, looks like a local function call.
+- To the server, looks like an implementation of a function call.</p>
+<p>Google handles $10^{10}$ RPCs per second.</p>
+<h2 id="local-procedure-call">Local Procedure Call</h2>
+<ul>
+<li>Caller invokes function by name with args.<ul>
+<li>Pass args in register, push others onto stack.</li>
+<li>Push return program counter (%rip) onto stack.</li>
+<li>Jump to first instruction (entry point) of callee.</li>
+</ul>
+</li>
+<li>Callee executes function, returns to caller.<ul>
+<li>Reads params from registers/stack.</li>
+<li>Computes the function, possibly updating state.</li>
+<li>Jump back to next instruction after call.</li>
+</ul>
+</li>
+</ul>
+<p>The compiler defines the protocol for the call above.</p>
+<h2 id="remote-procedure-call">Remote Procedure Call</h2>
+<ul>
+<li>On client, implements a function that looks like a local call.<ul>
+<li>Parameters are <em>marshalled</em> into a message (arbitrary types)</li>
+<li>Message is sent to server (possibly in multiple packets).</li>
+<li>Client waits for response.</li>
+</ul>
+</li>
+<li>On server, implements the function.<ul>
+<li><em>Unmarshals</em> (parses) the message.</li>
+<li>Computes the function, possibly updating state.</li>
+<li><em>Marshals</em> the return value into a message (possibly into multiple packets).</li>
+<li>Sends the message back to the client.</li>
+</ul>
+</li>
+</ul>
+<p>Client/server implementation is usually auto-generated from procedure spec, e.g. Google's Protocol Buffers/Protobuf.</p>
+<h2 id="rpc-vs-local-procedure-call">RPC vs. Local Procedure Call</h2>
+<h3 id="binding">Binding</h3>
+<ul>
+<li>Client needs a connection to the server.</li>
+<li>Server must implement the required function</li>
+<li>Server needs to be running a compatible version/implementation of the function.</li>
+</ul>
+<h3 id="service-discovery-service">Service Discovery Service</h3>
+<ul>
+<li>A process that keeps track of all available services, including versions, schemas, locations, etc.</li>
+</ul>
+<h3 id="interface-description-language-idl-eg-protobuf">Interface Description Language (IDL, e.g. Protobuf)</h3>
+<p><strong>Serialization is important!</strong></p>
+<ul>
+<li>Generate client/server serialization/deserialization stubs automatically based on the IDL.<ul>
+<li>Procedue args can be values or pointers, which need to be assembled into a single linear message in a transportable format (not always just a string, e.g. Protobuf using binary format).</li>
+</ul>
+</li>
+</ul>
+<h3 id="failures">Failures</h3>
+<ul>
+<li>Packets can be lost, reordered, or duplicated.</li>
+<li>Client/server can crash at any time (before, during, or after the call).</li>
+<li>Server/network can be slow, and client can time out.</li>
+</ul>
+<p>Some of the network issues can be mitigated by TCP, but sockets can fail and messages aren't always transmitted over TCP anyways.</p>
+<h2 id="fault-model">Fault Model</h2>
+<ul>
+<li><strong>Asynchronous fail stop nodes</strong><ul>
+<li>Computer may be arbitrarily slow while still working.</li>
+<li>Nodes should always fail by stopping, before transmitting garbage data/forgetting state. This is a strong assumption. For non-fail-stop/arbitrarily behaving nodes, see <em>Byzantine Fault Tolerance</em>.</li>
+</ul>
+</li>
+<li><strong>Network model</strong><ul>
+<li>Messages can be lost, delayed, reordered, or duplicated. Messages can be arbitrarily delayed while the network still works correctly.</li>
+<li>Messages won't be corrupted (bit flips). This is another strong assumption. See error detection and correction for working without this assumption.</li>
+<li>Network may partition some nodes from eachother.<ul>
+<li>Possible for nodes to be in isolated groups without a connection between them.</li>
+</ul>
+</li>
+<li>Network is (1) commutative and (2) transitive.<ul>
+<li>(1) If A can talk to B, B can talk to A.</li>
+<li>(2) If A can talk to B and B can talk to C, then A can talk to C.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Clients only make one RPC request at a time, a very strong assumption.</li>
+</ul>
+<h2 id="naive-rpc">Naive RPC</h2>
+<ul>
+<li><strong>Nodes</strong><ul>
+<li>Any number of stateless clients and servers.</li>
+<li>Servers perform some computation when they recieve a message, and then reply.</li>
+</ul>
+</li>
+<li><strong>Messages</strong><ul>
+<li>Client request, server response</li>
+<li>Client reqyest contains IP addr of client and server, name of procedure, arguments.</li>
+<li>Server response contains IP addr of client and server, and results of the procedure.</li>
+</ul>
+</li>
+</ul>
+<h2 id="client-timeout-and-retry">Client timeout and retry</h2>
+<p>If a request or reply message is dropped, the client will wait forever for the response. This can be fixed with client timer/retransmission, where the client sends the request again if it doesn't get a response in a certain amount of time. This leads to duplication and reordering of messages at the server.</p>
+<p>We can handle this with a unique request ID. Include a message ID in each request/reply. When the client retransmits, it uses the same message ID. The server can then ignore duplicate requests.</p>
+<h3 id="rpc-semantics">RPC Semantics</h3>
+<ul>
+<li><strong>At least once</strong><ul>
+<li>Client resends on timeout, server executes every copy of requests that arrive</li>
+<li>If client gets a response, it knows the server executed the request at least once. Otherwise, it doesn't know if the server executed the request(s) or not.</li>
+</ul>
+</li>
+<li><strong>At most once</strong><ul>
+<li>Execute only the first copy that arrives at the server.</li>
+<li>If client gets a reply, it knows the server executed the request exactly once. Otherwise, it doesn't know if the server executed the request or not (but it knows it didn't execute it more than once).</li>
+</ul>
+</li>
+<li><strong>Exactly once</strong><ul>
+<li>Execute the request exactly once.</li>
+<li>Requires a unique request ID, and the server to remember the request ID and the result of the request.</li>
+</ul>
+</li>
+</ul>
+<h4 id="at-least-once">At least once</h4>
+<p>Client should do a finite number of retries, eventually giving up and returning an error to the caller.</p>
+<p>This only works if the server is <strong>idempotent</strong>, meaning it has the same effect if it's executed multiple times. All read-only operations are idempotent, but not all write operations are. For example, icrementing a counter is not idempotent, but setting the counter to a value is.</p>
+<p>Does TCP handle this? Not really despite being reliable. Most RPCs are sent over TCP, and it guarantees in-order delivery with retransmission and duplicate detection. However, it doesn't guarantee exactly-once semantics. If the server crashes after processing the request but before sending the response, the client will retransmit the request, and the server will execute it again.</p>
+<p><strong>End to end principle</strong>: Functionality should be implemented where it can be completely handled, rather than partially handled at each layer. This decreases the chance of partially completed work due to unrelated failures.</p>
+<p>Examples:
+| Example | Explanation |
+|---|---|
+| DNS lookup | Queries are read-only, so it's idempotent |
+| MapReduce | The Map phase is idempotent since it is a pure function |
+| NFS | If the client maintains offset, reading/writing a block is idempotent |</p>
+<p>Importantly, in situations with multiple clients, operations like <code>Put(k, v)</code> are not idempotent, since the value of <code>k</code> can change between the time the client reads the value and the time it writes the value.</p>
+<h2 id="two-generals-problem">Two Generals Problem</h2>
+<p>Just a thought experiment to emphasize the difficulty of message passing in a distributed system. Two generals are trying to coordinate an attack on a city. They are separated by a valley, and can only communicate by messenger. The messenger can be captured by the city, and the generals don't know if the message was delivered. The generals need to agree on a time to attack, but they can't be sure the message was delivered. They can only attack if they both agree on the time.</p>
+<p>The problem boils down to the fact that at any point in time, if we sent a message, we don't know if it was delivered. Regardless of how many round trips you make to confirm, the last message sent could always have been dropped. This is a fundamental and central problem in distributed systems.</p>
+        </div>
+    </main>
+</body>
+</html>

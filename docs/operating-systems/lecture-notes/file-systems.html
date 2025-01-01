@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Systems</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>File Systems</h1>
+        <div class="meta">
+            Last modified: 2024-02-28
+        </div>
+        <div class="content">
+            <h1 id="file-systems">File Systems</h1>
+<p>A file system interacts with storage by reading/writing blocks (sectors) on a per-volume basis. It is basically a thick layer of abstraction over the raw storage device.</p>
+<h2 id="programming-interface">Programming Interface</h2>
+<ul>
+<li>Naming: files and directories in a hierarchical structure.</li>
+<li>Operations: create, delete, open, close, read, write, seek, stat, etc.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Windows</th>
+<th>Unix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CreateFile(name, CREATE)</code></td>
+<td><code>open(name, O_CREAT)</code></td>
+</tr>
+<tr>
+<td><code>CreateFile(name, OPEN)</code></td>
+<td><code>open(name, O_RDONLY)</code></td>
+</tr>
+<tr>
+<td><code>ReadFile(handle, buffer, size)</code></td>
+<td><code>read(fd, buffer, size)</code></td>
+</tr>
+<tr>
+<td><code>WriteFile(handle, buffer, size)</code></td>
+<td><code>write(fd, buffer, size)</code></td>
+</tr>
+<tr>
+<td><code>CloseHandle(handle)</code></td>
+<td><code>close(fd)</code></td>
+</tr>
+<tr>
+<td><code>FlushFileBuffers(handle)</code></td>
+<td><code>fsync(fd)</code></td>
+</tr>
+<tr>
+<td><code>SetFilePointer(handle, offset, whence)</code></td>
+<td><code>lseek(fd, offset, whence)</code></td>
+</tr>
+<tr>
+<td><code>GetFileSize(handle)</code></td>
+<td><code>fstat(fd, &amp;buf)</code></td>
+</tr>
+<tr>
+<td><code>DeleteFile(name)</code></td>
+<td><code>unlink(name)</code></td>
+</tr>
+<tr>
+<td><code>MoveFile(old, new)</code></td>
+<td><code>rename(old, new)</code></td>
+</tr>
+</tbody>
+</table>
+<p>We all know about this and I'm not going to get into it.</p>
+<h3 id="windows-vs-unix">Windows vs. Unix</h3>
+<h4 id="moving-files">Moving Files</h4>
+<p>Windows and Unix have different ways of moving files. In Unix, you always use the <code>rename</code> system call. In Windows, moving a file within the same volume is a rename operation, whereas moving a file between volumes is a copy operation followed by a delete operation.</p>
+<h4 id="deleting-files">Deleting Files</h4>
+<p>In Unix, a file is not actually deleted until all references to it are removed. In Windows, a file is deleted as soon as the last reference to it is removed. This is why you can't delete a file that is open in Windows.</p>
+<h2 id="files">Files</h2>
+<p>A file is logically just a sequence of bytes, typically consisting of data and properties/metadata. Some file systems also have types (ie. regular file, directory, symbolic link, device, etc.). </p>
+<p>Some files are also understood to be executable by the OS. In Windows, the file type is determined by the file extension. In Unix, the file type is determined by the file's metadata.</p>
+<p>Shared file handles will also share the file's offset. This can be an issue if you have multiple threads or processes reading/writing to the same file handle.</p>
+<h2 id="directories">Directories</h2>
+<p>A directory is typically just a file that contains metadata about the files it contains in the form of <strong>directory entries</strong>. It is a mapping from file names to file metadata.</p>
+<h2 id="design-constriants">Design Constriants</h2>
+<ul>
+<li>Want to support small and large files efficiently. Small files need small blocks for efficient storage, whereas large files need large blocks for contiguity</li>
+<li>Store actual file data within <strong>blocks</strong>. Need an indexing structure to retrieve the blocks of a file: <strong>inode</strong> in Unix, <strong>file control block</strong> in Windows.</li>
+<li>Also need to be able to efficiently locate free space. Often done with either a <strong>bitmap</strong> or a <strong>free list</strong> on disk.</li>
+<li>Want to maximize spatial locality and minimize seek time, while minimizing fragmentation.</li>
+<li>Need reliability and fault tolerance. Can use <strong>journaling</strong> to recover from crashes, and error detection/correction codes + redundancy to recover from disk errors (RAID).</li>
+</ul>
+<h2 id="on-disk-structure">On-Disk Structure</h2>
+<p>There is typically a layer of storage that actually gets persisted on disk, as well as the in-memory representation of the file system that is manipulated by the OS.</p>
+<h3 id="fat-file-system">FAT File System</h3>
+<p>The <strong>File Allocation Table</strong> file system is a simple file system that was used in DOS and Windows. It has a simple on-disk structure that consists of a <strong>reserved area</strong>, a number of <strong>FAT areas</strong>, and a <strong>data area</strong>. The reserved area contains the boot sector and metadata about the file system/disk layout. The FAT areas contain the file allocation table, which is a table that maps file names to disk blocks. The data area contains the actual file data.</p>
+<pre><code>+-----------------+-----------------+-----------------+-----------------+
+| Reserved Area   | FAT Area 1      | FAT Area 2      | Data Area       |
++-----------------+-----------------+-----------------+-----------------+
+</code></pre>
+        </div>
+    </main>
+</body>
+</html>

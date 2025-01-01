@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch2 Data Models And Query Languages</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Ch2 Data Models And Query Languages</h1>
+        <div class="meta">
+            Last modified: 2024-01-19
+        </div>
+        <div class="content">
+            <h1 id="chapter-2">Chapter 2</h1>
+<h2 id="data-models-and-query-languages">Data Models and Query Languages</h2>
+<p><strong>Relational Model</strong> We all know SQL</p>
+<p><strong>Document Model</strong> As well as NoSQL</p>
+<h3 id="mismatch-between-relational-model-and-oop">Mismatch between Relational Model and OOP</h3>
+<p>Awkward translation between objects and relations leads to middleware, oftentimes a <strong>object-relational mapping (ORM)</strong></p>
+<h3 id="relationships">Relationships</h3>
+<p>It is useful to use ids to refer to related data, rather than embedding it. It never changes, and it is often much smaller.</p>
+<p><strong>One-to-many</strong> relationships are by far the most common type of relationship in databases.</p>
+<pre><code class="language-sql">CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    username VARCHAR(200) UNIQUE
+);
+
+CREATE TABLE orders (
+    order_id VARCHAR(255) PRIMARY KEY,
+    user_id INT REFERENCES users (user_id)
+);
+</code></pre>
+<pre><code class="language-json">{
+  &quot;user_id&quot;: 1,
+  &quot;username&quot;: &quot;martin&quot;,
+  &quot;order_ids&quot;: [1, 2]
+}
+</code></pre>
+<p><strong>Many-to-many</strong> relationships are less common, but they do exist.</p>
+<pre><code class="language-sql">CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    username VARCHAR(200) UNIQUE
+);
+
+CREATE TABLE groups (
+    group_id INT PRIMARY KEY,
+    group_name VARCHAR(200) UNIQUE
+);
+
+CREATE TABLE user_groups (
+    user_id INT REFERENCES users (user_id),
+    group_id INT REFERENCES groups (group_id),
+    PRIMARY KEY (user_id, group_id)
+);
+</code></pre>
+<pre><code class="language-json">{
+  &quot;user_id&quot;: 1,
+  &quot;username&quot;: &quot;martin&quot;,
+  &quot;group_ids&quot;: [1, 2]
+}
+</code></pre>
+<p><strong>Many-to-many relationships</strong> are natural in SQL, but awkward in document databases. Often, the best way to deal with many-to-many relationships in a document database is to denormalize some of the data, since joins are limited.</p>
+<pre><code class="language-sql">SELECT * FROM users
+JOIN user_groups USING (user_id)
+JOIN groups USING (group_id)
+WHERE group_name = 'devops';
+</code></pre>
+<pre><code class="language-json">{
+  &quot;user_id&quot;: 1,
+  &quot;username&quot;: &quot;martin&quot;,
+  &quot;groups&quot;: [
+    { &quot;group_id&quot;: 1, &quot;group_name&quot;: &quot;devops&quot; },
+    { &quot;group_id&quot;: 2, &quot;group_name&quot;: &quot;dba&quot; }
+  ]
+}
+</code></pre>
+<p><strong>Network model</strong> is a generalization of the hierarchical model, in which a child record may have several parents. It is a graph of records, connected by links.</p>
+<p><strong>Graph model</strong> is a further generalization, in which edges can have properties as well as vertices.</p>
+<h3 id="choosing-a-data-model">Choosing a data model</h3>
+<p><strong>Schema-on-write</strong> is the traditional approach of defining a relational schema for your data, and then writing data that conforms to the schema. It is good for ensuring data quality, and it is also good for performance. However, it is inflexible.</p>
+<p><strong>Schema-on-read</strong> is the approach of not enforcing a schema ahead of time, but only reading it when you read from the database. It is good for handling data with rapidly changing requirements, and for cases where you need to load data from many different applications.</p>
+<p>Choose whichever model simplifies your application code the most, and matches your access patterns.</p>
+<h3 id="data-locality">Data locality</h3>
+<p>is the collocation of related data items on the same storage device (e.g. disk block, server node, etc.). It is important for performance.</p>
+<p><strong>Locality in query execution</strong> is the collocation of data items that are accessed together in the same query. It is important for performance.</p>
+<p>For document databases, you need to load the entire document, even if you only need a small portion of it. Keep documents small.</p>
+<p><strong>Examples</strong>: Google Spanner uses nested data structures, and it allows secondary indexes on nested fields. MongoDB and Elastic search allow you to index nested fields, but they don't allow secondary indexes on nested fields. Column family databases such as BigTable, HBase, and Cassandra.</p>
+<p>Many relational databases also have XML and JSON data types, which allow you to store documents within a row of a table.</p>
+<h3 id="mapreduce-querying">MapReduce Querying</h3>
+<p><strong>MapReduce</strong> is a programming model for processing large amounts of data in bulk across many machines, popularized by Google. It is a two-step process:</p>
+<ol>
+<li>
+<p>The <strong>map</strong> step takes a document as input and produces an intermediate representation of key-value pairs.</p>
+</li>
+<li>
+<p>The <strong>reduce</strong> step takes the output of the map step, with the same key appearing once for each value, and produces a result. The result can be a single value per key, or an arbitrarily complex data structure.</p>
+</li>
+</ol>
+<p><strong>MapReduce</strong> is a good model for batch processing of data, but it is not suitable for interactive queries or applications that require low latency. Some NoSQL databases have a limited form of MapReduce for reading batches of documents (e.g. MongoDB, CouchDB).</p>
+<pre><code class="language-sql">-- traditional SQL
+SELECT date_trunc('month', observation_timestamp) AS observation_month,
+ sum(num_animals) AS total_animals
+FROM observations
+WHERE family = 'Sharks'
+GROUP BY observation_month;
+</code></pre>
+<pre><code class="language-js">// Map Reduce MongoDB
+db.observations.mapReduce(
+    // collect data
+  function map() {
+    var year = this.observationTimestamp.getFullYear()
+    var month = this.observationTimestamp.getMonth() + 1
+    emit(year + '-' + month, this.numAnimals)
+  }, // aggregate the data
+  function reduce(key, values) {
+    return Array.sum(values)
+  },
+  { // query to select the documents
+    query: { family: 'Sharks' },
+    out: 'monthlySharkReport'
+  }
+)
+</code></pre>
+<pre><code class="language-js">// Aggregation pipeline with MongoDB
+db.observations.aggregate([
+ { $match: { family: &quot;Sharks&quot; } },
+ { $group: {
+ _id: {
+ year: { $year: &quot;$observationTimestamp&quot; },
+ month: { $month: &quot;$observationTimestamp&quot; }
+ },
+ totalAnimals: { $sum: &quot;$numAnimals&quot; }
+ } }
+]);
+</code></pre>
+<h4 id="property-graphs">Property Graphs</h4>
+<p>Each <strong>vertex/node</strong> consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>A set of outgoing edges</li>
+<li>A set of incoming edges</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<p>Each <strong>edge</strong> consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>The vertex at which the edge starts (the tail vertex)</li>
+<li>The vertex at which the edge ends (the head vertex)</li>
+<li>A label to describe the kind of relationship between the two vertices</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<pre><code class="language-sql">-- Conceptual graph model in SQL
+CREATE TABLE vertices (
+ vertex_id integer PRIMARY KEY,
+ properties json
+);
+
+CREATE TABLE edges (
+ edge_id integer PRIMARY KEY,
+ tail_vertex integer REFERENCES vertices (vertex_id),
+ head_vertex integer REFERENCES vertices (vertex_id),
+ label text,
+ properties json
+);
+
+CREATE INDEX edges_tails ON edges (tail_vertex);
+
+CREATE INDEX edges_heads ON edges (head_vertex);
+</code></pre>
+<p>In practice, graph databases are usually implemented differently, because the above model is not very efficient. Specialized query languages are used to traverse the graph in an imperative style.</p>
+<h4 id="triple-stores-and-sparql">Triple-Stores and SPARQL</h4>
+<p>Consists of <strong>three-part statements</strong> of the form <code>(subject, predicate, object)</code>. The subject and object are vertices, and the predicate is an edge.</p>
+<p>```sql</p>
+        </div>
+    </main>
+</body>
+</html>

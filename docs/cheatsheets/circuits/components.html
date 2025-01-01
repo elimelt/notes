@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Components</h1>
+        <div class="meta">
+            Last modified: 2024-03-12
+        </div>
+        <div class="content">
+            <h1 id="component-dictionary">Component Dictionary</h1>
+<h2 id="dc-sources">DC Sources</h2>
+<p>Direct current sources are sources that provide a constant voltage or current. Batteries are a common example of a DC voltage source. If you graph the voltage over time, it's a flat line. </p>
+<p>Voltage sources supply the required current to maintain a constant voltage, and current sources supply the required voltage to maintain a constant current.</p>
+<h2 id="ac-sources">AC Sources</h2>
+<p>Alternating current sources provide an oscillating voltage or current over time. The voltage or current will oscillate between the two peek values, the distance between them being referred to as the <strong>peak-to-peak</strong> voltage ($V_{pp}) or current ($I_{pp}$). The frequency of oscillation ($f$) is the number of oscillations per second, and is measured in hertz (Hz), but can also be represented in radians per second ($\omega$). The average value, or mid point between the two peek values, is referred to as the <strong>DC offset</strong> ($V_{dc}). Finally, the phase shift ($\phi$) is the amount of time shift between the voltage and current oscillations.</p>
+<p>$$
+V(t) = \frac{V_{pp}}{2} \sin(\omega t + \phi) + V_{dc}
+$$</p>
+<p>$$
+I(t) = \frac{I_{pp}}{2} \sin(\omega t + \phi) + I_{dc}
+$$</p>
+<p>$$
+\omega (rad/s) = 2\pi f (Hz)
+$$</p>
+<h2 id="resistors">Resistors</h2>
+<p>Resistors are simple components that drop the voltage of a circuit branch as current flows through them. Their <strong>resistance</strong> measured in ohms ($\Omega$), and can be thought of as a hill in the flow of electricity. The voltage drop across a resistor is the product of the current flowing through it and its resistance AKA Ohm's Law.</p>
+<h3 id="resistors-in-series">Resistors in Series</h3>
+<p>$$
+R_{eq} = \sum_{i=1}^{n} R_i = R_1 + R_2 + \ldots + R_n
+$$</p>
+<h3 id="resistors-in-parallel">Resistors in Parallel</h3>
+<p>$$
+R_{eq} = (\sum_{i=1}^{n} \frac{1}{R_i})^{-1} = (\frac{1}{R_1} + \frac{1}{R_2} + \ldots + \frac{1}{R_n})^{-1}
+$$</p>
+<h2 id="capacitors">Capacitors</h2>
+<p>Capacitors store energy in an electric field between two plates. They're measured in capacitance ($C$), which has units of farads (F). A capacitor will charge up to its maximum voltage when connected to a voltage source, and will discharge when the source is removed. Treating capacitors as a black box (even though they are relatively simple), we can describe their behavior in simple AC circuits using impedance:</p>
+<p>$$
+Z_C = \frac{1}{j\omega C} = \frac{-j}{\omega C}
+$$</p>
+<h3 id="capacitors-in-series">Capacitors in Series</h3>
+<p>$$
+C_{eq} = (\sum_{i=1}^{n} \frac{1}{C_i})^{-1} = (\frac{1}{C_1} + \frac{1}{C_2} + \ldots + \frac{1}{C_n})^{-1}
+$$</p>
+<h3 id="capacitors-in-parallel">Capacitors in Parallel</h3>
+<p>$$
+C_{eq} = \sum_{i=1}^{n} C_i = C_1 + C_2 + \ldots + C_n
+$$</p>
+<p><em>Note: combining capacitors behaves opposite to resistors.</em></p>
+<h2 id="inductors">Inductors</h2>
+<p>Inductors store energy in a magnetic field created by a current flowing through a coil of wire. They're measured in inductance ($L$), which has units of henrys (H). An inductor will resist changes in current, and will generate a voltage to oppose changes in current. Treating inductors as a black box (even though they are also pretty simple), we can once again describe their behavior with impedance:</p>
+<p>$$
+Z_L = j\omega L
+$$</p>
+<h3 id="inductors-in-series">Inductors in Series</h3>
+<p>$$
+L_{eq} = \sum_{i=1}^{n} L_i = L_1 + L_2 + \ldots + L_n
+$$</p>
+<h3 id="inductors-in-parallel">Inductors in Parallel</h3>
+<p>$$
+L_{eq} = (\sum_{i=1}^{n} \frac{1}{L_i})^{-1} = (\frac{1}{L_1} + \frac{1}{L_2} + \ldots + \frac{1}{L_n})^{-1}
+$$</p>
+<p><em>Note: just like resistors!</em></p>
+<h2 id="diodes">Diodes</h2>
+<p>Diodes are one way valves for current, built by sandwiching a p-n (positive-negative) junction between two  semiconductors. Diodes have a built in voltage drop ($\approx 0.7$ V), which can be thought of as a threshold voltage that must be overcome before current can flow through the diode. Diodes are often used to <strong>rectify</strong> AC signals, whereby the negative half of the signal is removed, and the positive half is preserved. There are 2 main regions of operation for a diode:</p>
+<ol>
+<li><strong>Forward Bias</strong>: The diode is conducting, meaning there is sufficient voltage across the diode to overcome the built in voltage drop. The diode will conduct current in the direction of the arrow on the diode symbol, and acts as a voltage source with a drop of $ \approx 0.7$ V.</li>
+<li><strong>Reverse Bias</strong>: The diode is not conducting due to a voltage applied in the opposite direction (can think about it as the current "trying" to flow through it). The diode acts as an open circuit, and no current will flow through it.</li>
+<li><strong>Zero Bias</strong>: The diode is not conducting, as there is no voltage across the diode. This is the same as reverse bias, but the voltage is 0 V.</li>
+</ol>
+<h2 id="bipolar-junction-transistors-bjts">Bipolar Junction Transistors (BJTs)</h2>
+<p>BJTs are devices that allow you to control one voltage source with another (often) smaller voltage source. They are used in pretty much every electronic device, and are the building blocks of digital logic and amplifiers. They have 3 terminals: the base, collector, and emitter. They come in two flavors: NPN and PNP.</p>
+<h3 id="terminals">Terminals</h3>
+<table>
+<thead>
+<tr>
+<th>Terminal</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base</td>
+<td>The control terminal, which allows a small current to control a larger current.</td>
+</tr>
+<tr>
+<td>Collector</td>
+<td>The terminal that collects the current from the emitter.</td>
+</tr>
+<tr>
+<td>Emitter</td>
+<td>The terminal that emits the current to the collector.</td>
+</tr>
+</tbody>
+</table>
+<p>$$
+I_E = I_C + I_B = \beta I_B + I_B = (\beta + 1)I_B
+$$</p>
+<p>Where $\beta$ is the current gain of the transistor, and is typically around $20$ to $100$.</p>
+<h3 id="npn">NPN</h3>
+<p>Current flows into the collector, and out of the emitter. The base current controls the collector current. If the base current is zero, the collector current is zero, and if the base current is at its maximum, the collector current is at its maximum.</p>
+<pre><code class="language-plaintext">       C
+       |
+      /
+B --|&lt;
+      \
+       |  | Ic
+       E  v
+</code></pre>
+<p>$$
+I_c = \beta I_b
+$$</p>
+<h3 id="pnp">PNP</h3>
+<p>The opposite of NPN. Current flows into the emitter, and out of the collector. The base current controls the collector current, such that if the base current is zero, the</p>
+<pre><code class="language-plaintext">       E
+       |
+      /
+B --|&lt;
+      \
+       |  | Ic
+       C  v
+</code></pre>
+<h2 id="metal-oxide-semiconductor-field-effect-transistors-mosfets">Metal Oxide Semiconductor Field Effect Transistors (MOSFETs)</h2>
+<p>Has 3 terminals: the gate, drain, and source. They are voltage controlled devices, and are used in pretty much every electronic device. They come in two flavors: N-channel and P-channel, or NMOS and PMOS. The high level function is the same as a BJT, but the way they work is different.</p>
+<p>$$
+I_D = k (V_{GS} - V_{th})^2
+$$</p>
+<p>Where $k$ is a constant for that specific MOSFET based on its geometry and material, $V_GS$ is the voltage between the gate and source, and $V_{th}$ is the threshold voltage, which is the voltage required to turn the MOSFET on.</p>
+<h3 id="terminals_1">Terminals</h3>
+<table>
+<thead>
+<tr>
+<th>Terminal</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gate</td>
+<td>The control terminal, which allows a voltage to control the current between the drain and source.</td>
+</tr>
+<tr>
+<td>Source</td>
+<td>The input terminal for current.</td>
+</tr>
+<tr>
+<td>Drain</td>
+<td>The output terminal for current.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nmos">NMOS</h3>
+<p>When the gate voltage is <em>high</em>, the MOSFET is on and current flows from the drain to the source. When the gate voltage is <em>low</em>, the MOSFET is off and no current flows.</p>
+<h3 id="pmos">PMOS</h3>
+<p>When the gate voltage is <em>low</em>, the MOSFET is on and current flows from the drain to the source. When the gate voltage is <em>high</em>, the MOSFET is off and no current flows.</p>
+<p>PMOS are drawn with a circle on the gate terminal to indicate that the gate voltage is inverted.</p>
+<h2 id="operational-amplifiers-op-amps">Operational Amplifiers (Op-Amps)</h2>
+<p>Op-Amps are voltage amplifiers with 2 input pins and 1 output pin. They typically have very high gain, and can be used to increase the voltage or current of a signal. They often use feedback loops to control their gain, and can be used to perform a variety of operations on signals. They are often used in filters, amplifiers, and comparators, but can also be used to perform mathematical operations on signals (like addition, integration, and differentiation).</p>
+<h3 id="rules-ideal-negative-feedback-networks">Rules (ideal negative feedback networks)</h3>
+<p>Ideal Op-Amps have 3 terminals: the inverting input (-), the non-inverting input (+), and the output. Negative feedback is when the inverting input is connected to the output, and is an extremely common configuration. The difference between the two input terminal voltages is amplified, and the circuit behaves according to the following properties:</p>
+<ol>
+<li>The Op-Amp behaves so as to make the voltage difference between the two input terminals zero. You can think of these two terminals as being shorted together (<em>virtual short</em>).</li>
+<li>No current flows into either of the inputs</li>
+</ol>
+<h3 id="non-ideal-op-amps">Non-Ideal Op-Amps</h3>
+<p>In practice, real Op-Amps have two additional terminals for a positive supply and ground (or negative supply). The output voltage is limited to the range between the positive and negative supply voltages. The gain is limited by this maximum output voltage.</p>
+        </div>
+    </main>
+</body>
+</html>

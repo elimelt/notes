@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 3 Questions</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Lab 3 Questions</h1>
+        <div class="meta">
+            Last modified: 2024-02-21
+        </div>
+        <div class="content">
+            <h1 id="lab-3-questions">Lab 3 Questions</h1>
+<h2 id="question-1">Question #1</h2>
+<p><em>Q:</em> Why might an application prefer using <code>malloc</code> and <code>free</code> instead of using <code>sbrk</code> directly?</p>
+<p><em>A:</em> Malloc and free are higher-level and don't require the user to think about the details of the heap. Instead of needing to consider the current top of the heap, and how the memory you request is laid out contiguously, malloc and free handle all of that for you. Thus, user programs are able to apply more complex optimizations/strategies for memory allocation like first and best fit, as well as coalescing free blocks to reduce fragmentation, without having to manage the added complexity.</p>
+<h2 id="question-2">Question #2</h2>
+<p><em>Q:</em> What is the relationship between <code>malloc</code>/<code>free</code> and <code>sbrk</code>?</p>
+<p><em>A:</em> When malloc lacks the space nessesary to fulfill an allocation request, it calls sbrk to expand its heap region and increase the memory available to the process. With the current implementation of <code>malloc</code> in <code>umalloc.c</code>, <code>sbrk</code> only ever expands the heap (through <code>morecore</code>), but we never shrink the heap. In a real system, we would probably also want to shrink the heap once we have enough free space that it would be unlikely to be used in the near future.</p>
+<h2 id="question-3">Question #3:</h2>
+<p><em>Q:</em> How many child processes are created by the shell program in order to run the command <code>ls | wc</code>? (This mirrors real OS'es).</p>
+<blockquote>
+<p>Hint: the shell will go into the <code>case PIPE</code> case in <code>user/sh.c:runcmd</code> when it receives a cmd with the pipe operator <code>|</code>.</p>
+<p>Fun fact: the <code>|</code> operator behaves this way in most UNIX shells, and is why the infamous forkbomb command <code>:(){ :|:&amp; };:</code> <em>forks</em>. <a href="https://en.wikipedia.org/wiki/Fork_bomb">More on the forkbomb LINK</a>.</p>
+</blockquote>
+<p><em>A:</em> The shell will create two child processes, one for <code>ls</code> and one for <code>wc</code>. The <code>ls</code> process will write to the pipe, and the <code>wc</code> process will read from the pipe.</p>
+<h2 id="question-4">Question #4:</h2>
+<p><em>Q:</em> The shell will call <code>pipe()</code> when the command <code>ls | wc</code> is run. What does the shell do with the read end? What does the shell do with the write end? (~1-2 sentences).</p>
+<blockquote>
+<p>Hint: once again look at <code>case PIPE</code> in <code>user/sh.c:runcmd</code>.</p>
+</blockquote>
+<p><em>A:</em> The shell's process (ie the parent) closes both ends of the pipe. However, the child process created for ls closes its own stdout and then immediately duplicates the write end of the pipe, replacing its stdout with the write end of the pipe. The child process created for <code>wc</code> similarly closes its own stdin and then duplicates the read end of the pipe, replacing its stdin with the read end of the pipe. Both child processes then close both file descriptors of the pipe, and execute their commands using the newly duplicated file descriptors for the pipe (which are stdin/out from their perspectives).</p>
+<h2 id="question-5">Question #5:</h2>
+<p><em>Q:</em> When a syscall completes, user-level execution resumes with the instruction immediately after the syscall. When a page fault exception completes, where does user-level execution resume? (~1 sentence).</p>
+<p>It resumes at the instruction that caused the page fault. The processor exception saves the state of the program, and then the kernel handles the page fault. Once the kernel has resolved the page fault, it restores the state of the program and resumes execution at the instruction that caused the page fault (not the one after it).</p>
+<h2 id="question-6">Question #6:</h2>
+<p><em>Q:</em> How should your <code>xk</code> implementation decide whether an unmapped reference is a normal stack operation versus a stray pointer dereference that should cause the application to halt?</p>
+<blockquote>
+<p>Hint: keep in mind that your stack grower in <code>xk</code> should allow the user stack to grow to 10 pages, and no more than 10 pages.</p>
+</blockquote>
+<p>The faulting address needs to be within <code>stack-&gt;va_base &gt;= addr &gt;= stack-&gt;va_base - (PGSIZE * 10)</code>. If the faulting address is within the stack region, then it is a normal stack operation. If the faulting address is outside the stack region, then it is a stray pointer dereference and the application should halt.</p>
+<h2 id="question-7">Question #7:</h2>
+<p><em>Q:</em> Is it possible to reduce the user stack size at run-time (i.e., to deallocate the user stack when a procedure with a large number of local variables goes out of scope)? If not, explain why. If so, sketch how that might work. (~1-3 sentences).</p>
+<h2 id="question-8">Question #8:</h2>
+<p><em>Q:</em>  The TLB caches the page table entries of recently referenced pages. When you modify the page table entry to allow write access, which function in <code>vspace.c</code> should you use to ensure that the TLB does not have a stale version of the page table entry you modified?</p>
+<blockquote>
+<p>Hint: in x86-64 modifying the <code>CR3</code> register changes what page table the CPU uses and flushes the TLB. Look for a function that modifies the <code>CR3</code> register.</p>
+</blockquote>
+<h2 id="question-9">Question #9</h2>
+<p><em>Q:</em> For each member of the project team, how many hours did you spend on this lab?</p>
+<h2 id="question-10">Question #10</h2>
+<p><em>Q:</em> What did you like or dislike about this lab? Is there anything you wish you knew earlier?</p>
+<h1 id="debugging">Debugging</h1>
+<ul>
+<li>fork (user) triggers trap to call fork (kernel)</li>
+<li>return to fork_ret, which returns to trap, which returns to trap_ret</li>
+<li>iretq from trap_ret triggers kernel/vectors.S: vector14 (ie page fault)</li>
+<li>jumps to alltraps and calls trap with an addr 0x7fffff52 of a COW page</li>
+<li>allocate seperate copy for COW page and return from trap to trapret</li>
+<li>
+<p>iretq from trapret returns to bad_mem_access, reading pid which has &amp;pid == 0x7fffff52</p>
+</li>
+<li>
+<p>child runs user/lab3test.c:83    printf(stdout, "bad_mem_access: oops could read kernel addr %lp = %lx\n", a, *a);</p>
+</li>
+<li>traps with page fault addr == 0xffffffff80000000</li>
+<li>struct vpage_info* vpi = va2vpage_info(vr, addr) in trap causes another page fault trap, this time with addr == 24</li>
+<li>infinite loop on above line with addr == 24</li>
+</ul>
+        </div>
+    </main>
+</body>
+</html>

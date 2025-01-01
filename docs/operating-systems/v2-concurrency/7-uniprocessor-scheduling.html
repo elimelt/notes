@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Uniprocessor Scheduling</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>7 Uniprocessor Scheduling</h1>
+        <div class="meta">
+            Last modified: 2024-03-04
+        </div>
+        <div class="content">
+            <h1 id="uniprocessor-scheduling">Uniprocessor Scheduling</h1>
+<h2 id="preface-performance-terminology">Preface: Performance Terminology</h2>
+<table>
+<thead>
+<tr>
+<th>Key Word</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Task/Job</strong></td>
+<td>A unit of work that can be scheduled.</td>
+</tr>
+<tr>
+<td><strong>Response time/delay</strong></td>
+<td>The user-perceived time to do some task.</td>
+</tr>
+<tr>
+<td><strong>Throughput</strong></td>
+<td>The number of tasks completed per unit time.</td>
+</tr>
+<tr>
+<td><strong>Predictability</strong></td>
+<td>Inversely related to variance in response time for repeated tasks.</td>
+</tr>
+<tr>
+<td><strong>Scheduling Overhead</strong></td>
+<td>The time to switch between tasks.</td>
+</tr>
+<tr>
+<td><strong>Fairness</strong></td>
+<td>Equality in the number and timelines of resource allocations.</td>
+</tr>
+<tr>
+<td><strong>Starvation</strong></td>
+<td>Lack of progress for one task due to resources being allocated to higher-priority tasks.</td>
+</tr>
+<tr>
+<td><strong>Workload</strong></td>
+<td>The set of tasks to be scheduled.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="uniprocessor-scheduling_1">Uniprocessor Scheduling</h2>
+<h3 id="first-in-first-out-fifo">First in, First Out (FIFO)</h3>
+<p>Complete tasks as they arrive, finishing one before starting the next. On a uni-processor system with a completely CPU bound workload, this is one of the best scheduling algorithm in terms of throughput since overhead is minimized. However, it is not good for interactive systems, since short tasks are delayed by long ones. Concretely, the average response time for a FIFO scheduler is in many cases much worse than for other scheduling algorithms.</p>
+<p><strong>Memcached</strong> from Facebook uses a FIFO scheduler to handle requests to the caches in front of their databases. This works because the requests are all in memory (CPU bound) and of roughly equal length. The simplicity of FIFO makes it a good choice for extremely high-throughput systems that can work under this consistent request pattern.</p>
+<h3 id="shortest-job-first-sjf">Shortest Job First (SJF)</h3>
+<p>Complete the task with the shortest remaining time first. This is optimal in terms of average response time for a given set of tasks, but it is not implementable in practice because the run time of a task is not known in advance.</p>
+<h4 id="bias-towards-short-tasks">Bias Towards Short Tasks</h4>
+<p>SJF biases the scheduler towards short tasks, which can lead to starvation of long tasks. There is a fundamental tradeoff between average response time and the variance of response times. This is a problem in interactive systems, where long tasks are often user-initiated. Furthermore, this property can be taken advantage of by breaking a long task into many short tasks, and can even become a security vulnerability whereby malicious users can starve other users by submitting many short tasks.</p>
+<h4 id="sample-bias">Sample Bias</h4>
+<p>When evaluating the effectiveness of SJF compared to other scheduling algorithms, it is important to avoid sample bias. Starvation can occur for long tasks if there are always short tasks in the queue, and if you only sample response time for completed tasks, you will not see the starvation.</p>
+<h4 id="bandwidth-constrained-web-services">Bandwidth Constrained Web Services</h4>
+<p>SJF is in some ways ideal for a web services that is limited by its network egress bandwidth. In this case, the shortest jobs are the ones that can be sent out the door the fastest, and the system can be optimized for throughput by minimizing the time it takes to send out the most data. Since response times would be limited by the network for larger requests anyways, optimizing for the shortest jobs is a good strategy.</p>
+<p>If a server becomes overloaded, it can start dropping larger requests. This is a natural form of load shedding, and requires additional logic to handle the dropped requests.</p>
+<h3 id="round-robin-rr">Round Robin (RR)</h3>
+<p>Each task in a queue is run for a fixed <strong>time quantum</strong>. If it is not finished, the process is preempted by a timer interrupt and put at the end of the queue. This makes it impossible for a task to starve indefinitely. The time quantum should be chosen to be long enough to minimize the overhead of context switching, but short enough to ensure good response time.</p>
+<h4 id="overhead-of-rr-context-switching">Overhead of RR Context Switching</h4>
+<p>There is a tradeoff between responsiveness and overhead, mainly due to the invalidation of cache entries between context switches. It is not nessesarily possible to maintain a good cache hit rate with a very short time quantum, since the cache will be invalidated every time a new task is run. Increasing the time quantum doesn't reduce the overhead of context switching, but it does reduce the frequency of context switches, thus improving the cache hit rate.</p>
+<p>You can view RR as a compromise between FIFO and SJF. RR with an infinite time quantum is equivalent to FIFO. A special case of SJF can be thought of as having a "time quantum" of a single instruction with 0 overhead. Then, tasks would finish in the order of their lengths, albeit with alonger response times for shorter tasks than SJF without a time quantum.</p>
+<p><strong>Simultaneous Multithreading (SMT)</strong> is a technology that allows multiple threads to issue instructions to a superscalar processor in the same cycle. This can be thought of as a form of hardware-level round-robin scheduling without the overhead of context switching.</p>
+<h4 id="maximizing-response-delay">Maximizing Response Delay</h4>
+<p>Consider a workload of $n$ tasks, each of which take $t \cdot q$ seconds to complete ($q$ being the time quantum).</p>
+<p>Assuming no scheduling overhead, the overall throughput of RR, SJF, and FIFO are all equal ($n \cdot t \cdot q$). However, the average response time for RR is much worse than SJF and FIFO (derivation below).</p>
+<p>With RR, all tasks will complete during the last round of scheduling. With our parameters, this round begins at time $(n \cdot q) \cdot (t - 1)$, so our average response time is:</p>
+<p>$$
+T_{\text{RR}} = \frac{1}{n} \sum_{i=1}^{n} (nq)(t - 1) + iq
+$$</p>
+<p>$$
+= q\frac{(n + 1) (2t - 1)}{2}
+$$</p>
+<p>SJF and FIFO behave identically in this case, and have an average repsonse time as follows:</p>
+<p>$$
+T_{\text{SJF}} = T_{\text{FIFO}} = \frac{1}{n} \sum_{i=1}^{n} iqt =  q\frac{(n + 1)t}{2}
+$$</p>
+<p>This illustrates that RR has a much worse average response time than SJF and FIFO, but the same throughput. Generally, if <strong>response time</strong> is the most important metric, round-robin is not the best choice.</p>
+<h4 id="silver-lining-stream-processing">Silver Lining: Stream Processing</h4>
+<p>Round-robin scheduling is ideal for applications where the tasks are not discrete workload on the client side, but rather a continuous stream of data. For instance, when streaming video from a server, the server can send out a small chunk of video to each client in a round-robin fashion. This is a good way to ensure that all clients are served equally, and that no client is starved.</p>
+<h4 id="mixed-workloads-being-bad-for-rr">Mixed Workloads Being Bad for RR</h4>
+<p>Systems that need to schedule a mixture of I/O and CPU-bound tasks can have a hard time with RR. For instance, a text editor program needs to minimize the latency of user input being displayed on screen. If the text editor is running in a round-robin system, it would likely need to wait for the next round of scheduling to display the user's input.</p>
+<p>Consider another case where a naive browser is connected to a slow link and needs to download a large file in the background, all while the user continues to surf the web. If network I/O is scheduled in a round-robin fashion, the user's web browsing experience will be degraded.</p>
+<h3 id="max-min-fairness">Max Min Fairness</h3>
+<p>Max Min Fairness is a scheduling algorithm that tries to minimize the maximum response time of any task, effectively minimizing the variance.</p>
+<p>If all processes are compute-bound, then the algorithm is equivalent to RR. However, I/O bound processes that don't use their full time quantum will be allowed to execute fully, and then their remaining allocation will be equally distributed to the other tasks. This pattern continues until all CPU time is used up.</p>
+<p>A theoretical implementation would be to always schedule the task that has used the processor for the least amount of time. This doesn't work in practice because two equally short tasks will starve each other.</p>
+<p>Instead, the algorithm can be approximated by tracking CPU usage time only by the quantum, and allowing tasks to get no more than 1 extra quantum of CPU time than their ideal max min allocation. This however still requires a priority queue to be maintained, and is not practical for commercial operating systems.</p>
+<h3 id="multi-level-feedback-queue-mlfq">Multi-level Feedback Queue (MLFQ)</h3>
+<p><strong><em>Grocery store lines with "express lanes" of multiple priorities</em></strong></p>
+<p>MLFQ attempts to find a compromise between the following goals:</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Responsiveness</strong></td>
+<td>Short tasks should be completed quickly.</td>
+</tr>
+<tr>
+<td><strong>Low Overhead</strong></td>
+<td>Minimize the number of preemptions, as well as the time spent scheduling.</td>
+</tr>
+<tr>
+<td><strong>Starvation Avoidance</strong></td>
+<td>All tasks should be able to make progress.</td>
+</tr>
+<tr>
+<td><strong>Background Tasks</strong></td>
+<td>Deferrable tasks like system maintenance should not interfere with foreground tasks.</td>
+</tr>
+<tr>
+<td><strong>Fairness</strong></td>
+<td>Assign non-background tasks an approximately max-min fair share of the CPU.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mlfq-algorithm">MLFQ Algorithm</h4>
+<p>Maintain multiple RR queues, each with a different priority and time quantum. Tasks with higher priority have smaller time quanta and preempt lower priority tasks. Tasks at the same level are scheduled RR.</p>
+<p>Tasks are initially placed in the highest priority queue. If a task uses its entire time quantum, it is demoted to the next lower priority queue. If a task uses less than its entire time quantum, it is either kept in the same queue or moved up. This is a form of SJF within each queue.</p>
+<p>To prevent starvation and achieve max-min fairness, the scheduler monitors process execution time on the CPU. The scheduler then only schedules processes that have yet to recieve their fair share. If a process already got its fair share of the CPU, it is demoted to a lower priority, and if they've yet to get their fair share, they are promoted to a higher priority.</p>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch4 Encoding And Evolution</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Ch4 Encoding And Evolution</h1>
+        <div class="meta">
+            Last modified: 2024-01-18
+        </div>
+        <div class="content">
+            <h1 id="chapter-4">Chapter 4</h1>
+<h2 id="encoding-and-evolution">Encoding and Evolution</h2>
+<p><strong>evolvability</strong>: the ability to evolve as requirements change.</p>
+<p><strong>schema-on-read</strong>: schema isn't enforced when data is written, only when it is read. it can change over time.</p>
+<p><strong>schema-on-write</strong>: schema is enforced when data is written. it is usually enforced by a database schema.</p>
+<p><strong>backward compatibility</strong>: new code can read data that was written by old code, meaning new code understands old fields.</p>
+<p><strong>forward compatibility</strong>: old code can read data that was written by new code, meaning old code ignores new fields.</p>
+<h3 id="formats-for-encoding-data">Formats for Encoding Data</h3>
+<p>Programs typically work with at least two different representations of data: 
+- <strong>in-memory data structures</strong> (objects, arrays, hash maps, etc.)
+- <strong>serialized</strong> (encoded) <strong>bytes</strong> (often stored on disk or sent over the network).</p>
+<p><strong>serialization</strong>: the process of translating data structures or object state into a format that can be stored (for example, in a file or memory buffer) or transmitted (for example, across a network connection link) and reconstructed later (possibly in a different computer environment). Also called encoding/marshaling.</p>
+<p><strong>deserialization</strong>: the reverse process of serialization, which is to extract data structures from a series of bytes. Also called decoding/unmarshaling.</p>
+<p>Many built in serialization formats that are included with languages are not performant or space efficient (Java's built in serialization, Python's pickle, etc.). They are also not compatible with other languages. Generally a bad idea to use these formats for long term storage or communication between services.</p>
+<p><strong>JSON</strong> and <strong>XML</strong> are popular serialization formats that are language independent and human readable. Both have good support for <code>utf-8</code> strings, but not for binary strings. Workarounds with <code>base64</code> encoding work, but increase data size by 33%.</p>
+<p><strong>CSV</strong> is also popular, albeit less powerful. It is not self describing, so it is not good for data with multiple types, and instead relies on application code to interpret the data.</p>
+<p><strong>Binary encoding</strong> is essentially a custom encoding format, although binary implementations for other encodings exist. They are usually more compact than JSON, XML, and CSV, and are also usually faster to encode and decode. Probably a bad idea for inter-org communication, but acceptable for internal communication.</p>
+<p><strong>Protocol Buffers</strong> (protobuf) is a popular binary encoding format. It is a schema language that defines data types and a binary encoding format. It is not self describing, and requires a schema definition to be decoded. Most languages have protobuf libraries that generate classes from a schema definition in order to encode/decode data. Uses field tags to identify fields in the binary encoding, which are assigned to each field in the schema definition. This allows fields to be reordered without breaking compatibility. Doesn't have array/list types, instead uses repeated fields.</p>
+<p><strong>Thrift</strong> similar to protobuf, uses IDL to define data types and a binary encoding format. It is more mature than protobuf, but has a more complex schema language. Also has many code gen tools for different languages. Has 3 different protocols: dense protocol (C++ only), binary protocol (all languages), and compact protocol (all languages). In binary protocol, field names are not included, instead <strong>field tags</strong> are used, which are assigned to each field in the schema definition. Supports array/list types, and allows nested lists.</p>
+<p><strong>Avro</strong> Another binary encoding that was made as an alternative to protobuf and thrift for Hadoop. Uses a schema to specify encoding. Has two schema langs: IDL, for human editing, and one similar to JSON, for machine reading. Doesn't use tag numbers or any identifying field info; just lengths and data values. Uses variable length integers to encode lengths. Uses writer/reader schema setup.</p>
+<h3 id="what-makes-protobuf-thrift-and-avro-good">What makes protobuf, thrift and avro good?</h3>
+<ul>
+<li><strong>Compact structure</strong>: data is encoded as a sequence of fields, each of which contains a key (field tag) and a value. The key indicates the field's name and data type. Field tags are used to identify fields from the schema, and variable length integers are used for the field tags.</li>
+<li><strong>Schema evolution</strong>: new fields can be added to the schema, but must have a new tag number and either be optional or have a default value. Old code can read data with new fields (ignores new fields), and new code can read data with old fields. Fields can be removed, but only if the field tag is not reused. Fields can be renamed, but only if the field tag is not reused. Fields can be reordered without breaking compatibility.</li>
+</ul>
+<h3 id="writer-reader-schema-setup">Writer Reader Schema Setup</h3>
+<ul>
+<li><strong>Avro</strong> allows two different schemas to coexist so long as they are compatible.</li>
+<li>If the code reading data encounters a value in the writer schema that isn't in the reader schema, it is ignored.</li>
+<li>On the other hand, if the writer schema doesn't recognize a field from the reader schema, the default value is used. This allows for forward and backward compatibility.</li>
+<li>Can have old version as writer and new as reader, or vice versa. To remain compatible, may only add/remove fields with default values (ie 0, NOW(), etc.).</li>
+<li>To allow NULL as default val in Avro however, must use union type.</li>
+<li>Changing field names is backward compatible, but not forward compatible, since aliases are used to map old field names to new ones.</li>
+</ul>
+<p>Versioning is tricky. Depending on the use case, it is handled differently. For example, if you are storing gigabytes of data in Hadoop, all encoded with the same schema, then you only need to include the writer schema once in the file.</p>
+<p>However, in a database where data is written over a long period of time, you can use a version number, and a table of versions for schema version.</p>
+<p>In an inter-service communication context, schemas can be negotiated between client and server on connection setup. Using a database of schema versions might be a good idea here.</p>
+<h3 id="dynamically-generated-schemas">Dynamically Generated Schemas</h3>
+<p><strong>Situation:</strong> Want to dump database to file on disk using a binary encoding format.</p>
+<p><strong>Problem:</strong> Schema has evolved over time, and there are many different versions of the schema in the database. Would need to manuallty assign field tags for each version of the schema, and then write a custom encoder/decoder for each version.</p>
+<p><strong>Solution:</strong> Avro schema dynamically generated from database schema. Can be rerun whenever schema changes.</p>
+<p>This kind of dynamic schema generation was a design goal of Avro, and is less so for protobuf and thrift. Static code generation was a design goal of protobuf and thrift, and is less so for Avro. This makes Avro a natural choice in dynamic languages where code gen is frowned upon (and more generally compile steps), although there are also code generation tools for Avro in static languages.</p>
+<p>Keeping a database of schema versions is a good idea, and can be used to generate Avro schemas for each version of the schema. This can be used to generate a schema for each version of the database, and then used to encode/decode data from each version of the database.</p>
+<h2 id="modes-of-dataflow">Modes of Dataflow</h2>
+<p>Generally, one process encodes, and another decodes.</p>
+<h3 id="dataflow-through-databases">Dataflow Through Databases</h3>
+<p>The process that writes to the database is the encoder, and the process that reads from the database is the decoder. Backwards compatability is nessessary for the database to work. It is likely at some point that multiple processes accessing a given database will run different versions of "the code" at a given time. Thus, you need both forward and backward compatibility. Preservation of unknown fields is tricky, and sometimes needs to be solved at the application level.</p>
+<p>Generally, can update any value at any time, especially long term; "Data outlives code".</p>
+<h3 id="dataflow-dumping-to-files-to-archival-storage">Dataflow Dumping to Files to Archival Storage</h3>
+<p>Encoder: process that dumps data to file. Decoder: process that reads data from file. Typically encoded with latest schema, and is a good opportunity to encode in OLAP friendly format (column oriented). Avro is a good choice.</p>
+<h3 id="dataflow-through-services-rest-and-rpc">Dataflow Through Services: REST and RPC</h3>
+<p>Encoder: client process that sends request to server. Decoder: server process that receives request from client. Generally, client and server are written by same org, so they can be updated at the same time. However, if client and server are written by different orgs, then they may be updated at different times. Thus, you need both forward and backward compatibility.</p>
+<p><strong>Service oriented architectures</strong> are often used in large orgs, where different teams are responsible for different services. Services expose an API, which provides encapsulation that allows the service to be updated without breaking clients. This means that different services may be updated at different times, and thus may be running different versions of the code. Thus, you need both forward and backward compatibility. This is especially true for public APIs, where you have no control over the client. <strong>Web services</strong> are HTTP based services that exist in different contexts:</p>
+<ul>
+<li>intra-organization: services that are only used internally</li>
+<li>public: services that are used by external clients</li>
+<li>partner: services that are used by external clients, but are not public</li>
+</ul>
+<p><strong>REST</strong> is a design philosophy that builds on HTTP. Uses simple data formats, URLs for identifying resources, and HTTP features for cache control, authentication, and content type negotiation.</p>
+<p>I'm not even going to get into <strong>SOAP</strong>.</p>
+<p><strong>RPC</strong> is a design philosophy that builds on the idea of calling a function on a remote server. Tries to provide <em>location transperency</em> by abstracting network communication when triggering remote method calls. Many are overly complex, and are not compatible with other languages. <strong>gRPC</strong> is a modern RPC framework that uses protobuf as the interface definition language, and HTTP/2 as the underlying protocol. It is a good choice for internal services, but not for public APIs.</p>
+<h4 id="problems-with-rpc">Problems with RPC</h4>
+<p>Network requests are fundamentally different from local function calls. They can fail, be delayed, or be delivered multiple times. This makes designing systems that use RPC more complex, since you need to take into account these failure modes. <strong>Idempotence</strong> is a good way to allow transparent retries, since it means that the same request can be sent multiple times without causing unintended side effects. REST doesn't try to hide the fact that it is a network protocol, and thus is more transparent about failure modes.</p>
+<p>Furthermore, the platform lock-in of RPC is a problem. This ties you to a specific language, and makes it difficult to use other languages. This is especially true for public APIs, where you have no control over the client.</p>
+<h4 id="current-direction-of-rpc">Current Direction of RPC</h4>
+<p>Various RPC frameworks exist on top of all the previously mentioned encodings. New generations of RPC frameworks use futures/promises to represent asynchronous responses, and use streaming to represent long lived connections. Some frameworks also include service discovery, which allows clients to find servers without hardcoding their location.</p>
+<h4 id="advantages-of-rest">Advantages of REST</h4>
+<p>Vast ecosystem of tools, including servers, load balancers, proxies, caches, and monitoring tools. This makes it easy to build a scalable system. Also, since REST is built on HTTP, it is easy to debug with standard tools. Furthermore, since REST is built on HTTP, it is easy to build a system that works with web browsers. This is especially true for public APIs, where you have no control over the client.</p>
+<h4 id="data-encoding-and-evolution-in-rpc">Data Encoding and Evolution in RPC</h4>
+<p>Simplifying assumption about services: All servers updated first, then all clients. This requires forward compatibility, but not backward compatibility.</p>
+<p>Service compatibility is difficult in RPC, since it oftentimes needs to be maintained indefinitely. There is no single standard for versioning in RPC, and thus it is often done ad-hoc.</p>
+<h3 id="dataflow-through-asynchronous-message-passing">Dataflow Through Asynchronous Message-Passing</h3>
+<p>Somewhere between RPC and Databases. Messages are sent from one process to another, and the sender doesn't wait for a response. This is useful for handling high volumes of messages, and for decoupling the sender from the receiver. Uses a message broker (like Kafka, RabbitMQ, etc.), which is a server that receives messages from producers and delivers them to consumers. The broker is responsible for routing messages to the correct destination.</p>
+<p>Usually works as follows:</p>
+<ul>
+<li>producer sends message to a named queue/topic, for which there can be one or more consumers</li>
+<li>broker stores message until it is consumed, delivering it to all consumers of the posted topic</li>
+<li>consumer receives message from queue, and processes it</li>
+</ul>
+<p>A producer is one way communication, but can be used for request/response. This is useful for decoupling the sender from the receiver, and for handling high volumes of messages. Message brokers often don't enforce any particular data format, and thus are not opinionated about encoding. However, they do need to be able to route messages to the correct destination, and thus need to be able to read the message headers.</p>
+<p>Several advantages:</p>
+<ul>
+<li><strong>Durability</strong>: messages are stored on disk until they are consumed. This allows the broker to be restarted without losing messages.</li>
+<li><strong>Multiple consumers</strong>: messages can be delivered to multiple consumers. This allows you to scale the number of consumers.</li>
+<li><strong>Asynchronous</strong>: producers and consumers don't need to be online at the same time. This allows you to buffer messages if the consumer is temporarily unavailable.</li>
+<li><strong>Queues</strong>: messages can be buffered in a queue if the consumer is not ready to process them yet. This allows you to decouple producers from consumers.</li>
+</ul>
+<p>Usually one way communication, but can be used for request/response. This is useful for decoupling the sender from the receiver, and for handling high volumes of messages.</p>
+<h3 id="distributed-actor-frameworks">Distributed Actor Frameworks</h3>
+<p><strong>Actor model</strong>: a model of concurrent computation that treats actors as the universal primitives of concurrent computation. In response to a message that it receives, an actor can: make local decisions, create more actors, send more messages, and determine how to respond to the next message received. Actors are essentially state machines that communicate by sending messages to each other.</p>
+<p>The same message passing system is used for communication between actors on the same machine and actors on different machines. This means that the same code can be used for both local and remote communication. There is less of a mismatch between local and remote communication, since they use the same primitives. This is in contrast to RPC, where local and remote communication are fundamentally different.</p>
+<p><strong>Actor frameworks</strong> are libraries that provide an implementation of the actor model. They are often used for building distributed systems, since they provide a way to scale up the number of actors. They are also useful for building systems that need to be highly available, since they provide a way to replicate actors. Still need to worry about forward and backward compatibility. Different frameworks have different approaches to compatibility. For example:</p>
+<ul>
+<li><strong>Akka</strong> uses Java's serialization by default, but can be configured to use protobuf for rolling upgrades.</li>
+<li><strong>Orleans</strong> uses custom encoding by default, and can be configured to use other encodings. Need to set up and shut down clusters when migrating schemas/versioning.</li>
+<li><strong>Erlang OTP</strong> experimental support for mapping Erlang data types to protobuf. Still need to be careful about schema evolution.</li>
+</ul>
+        </div>
+    </main>
+</body>
+</html>

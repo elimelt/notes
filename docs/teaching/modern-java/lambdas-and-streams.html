@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lambdas And Streams</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Lambdas And Streams</h1>
+        <div class="meta">
+            Last modified: 2024-12-08
+        </div>
+        <div class="content">
+            <h1 id="a-soft-introduction-to-java-streams-and-lambdas">A Soft Introduction to Java Streams and Lambdas</h1>
+<h2 id="motivation">Motivation</h2>
+<p>If you've been programming in Java for a while (perhaps you're coming out of the 12x/14x series at UW), you're probably familiar with the regular <em>imperative</em> style of programming using loops and conditionals. There's nothing wrong with this, but often times, you'll find yourself writing a lot of code for simple operations.</p>
+<p>For example, consider the following code snippet:</p>
+<pre><code class="language-java">List&lt;User&gt; getAdmins(List&lt;User&gt; users) {
+    List&lt;User&gt; admins = new ArrayList&lt;&gt;();
+    for (User user : users) {
+        if (user.isAdmin()) {
+            admins.add(user);
+        }
+    }
+    return admins;
+}
+</code></pre>
+<p>At a high level, we iterate over the provided list of users, and filter for those that are admins.</p>
+<p>Perhaps you're also trying to make sure that <em>all</em> users are admins:</p>
+<pre><code class="language-java">boolean allAdmins(List&lt;User&gt; users) {
+    for (User user : users) {
+        if (!user.isAdmin()) {
+            return false;
+        }
+    }
+    return true;
+}
+</code></pre>
+<p>You've probably written similar code snippets hundreds of times. To reiterate, there's nothing wrong with this style of programming, but for a relatively simple operation, you're writing a lot of code.</p>
+<p>What's arguably better is to use a more <em>declarative</em> style of programming. This is where Java Streams and Lambdas come in.</p>
+<h2 id="java-streams">Java Streams</h2>
+<p>Java Streams are in some way similar to Iterators, but with a lot more functionality. They allow you to perform operations on a collection of elements in a more compositional way. For example, consider the following code snippet:</p>
+<pre><code class="language-java">List&lt;User&gt; admins = users.stream()
+    .filter(user -&gt; user.isAdmin())
+    .collect(Collectors.toList());
+
+// note while using collect(Collectors.to*()) is going to work in most cases,
+// when terminating a stream to a list you can also use the toList() method
+List&lt;User&gt; admins = users.stream().filter(User::isAdmin).toList();
+</code></pre>
+<p>There's a lot going on here, I know. Let's break it down:</p>
+<ul>
+<li><code>users.stream()</code>: This converts the list of users into a Stream (<code>java.util.stream.Stream</code>).</li>
+<li><code>user -&gt; user.isAdmin()</code>: This is a Lambda expression. It's a way of passing a function as an argument. In this case, we're passing a function that takes a <code>User</code> object and returns a boolean. Alternatively, you could write this as <code>User::isAdmin</code>, meaning we call the <code>isAdmin</code> method on the <code>User</code> object passed in as an argument.</li>
+<li><code>filter(...)</code>: This is an intermediate operation. It takes a predicate (a function that returns a boolean) and filters out elements that don't satisfy the predicate.</li>
+<li><code>collect(...)</code>: This is a terminal operation. It collects the elements of the Stream into a list.</li>
+</ul>
+<h2 id="lambdas">Lambdas</h2>
+<p>Lambdas are a way of defining functions without having to explicitly define a class or method. They're particularly useful when you want to pass a function as an argument to another function. Here are some different ways you can use lambdas:</p>
+<pre><code class="language-java">// A lambda that takes no arguments and returns void
+Runnable r = () -&gt; System.out.println(&quot;Hello, world!&quot;);
+
+// A lambda that takes two integers and returns an integer
+BiFunction&lt;Integer, Integer, Integer&gt; add = (a, b) -&gt; a + b;
+
+// A lambda that takes a string and returns a string
+Function&lt;String, String&gt; toUpperCase = s -&gt; s.toUpperCase();
+
+// A lambda that takes a string and returns a boolean
+Predicate&lt;String&gt; isEmpty = s -&gt; s.isEmpty();
+</code></pre>
+<p>Luckily, you don't need to remember all of these interfaces. More often than not, you're going to define lambdas without ever assigning them to a variable. In cases where you do need to assign them to a variable, you can use the <code>var</code> keyword.</p>
+<h2 id="common-operations">Common Operations</h2>
+<p>Here are some examples of iterative vs. stream-based operations:</p>
+<h3 id="filtering">Filtering</h3>
+<pre><code class="language-java">// Imperative
+List&lt;User&gt; admins = new ArrayList&lt;&gt;();
+for (User user : users) {
+    if (user.isAdmin()) {
+        admins.add(user);
+    }
+}
+
+// Declarative
+List&lt;User&gt; admins = users.stream()
+    .filter(User::isAdmin)
+    .toList();
+</code></pre>
+<h3 id="mapping">Mapping</h3>
+<pre><code class="language-java">// Imperative
+List&lt;String&gt; names = new ArrayList&lt;&gt;();
+for (User user : users) {
+    names.add(user.getName());
+}
+
+// Declarative
+List&lt;String&gt; names = users.stream().map(User::getName).toList();
+</code></pre>
+<h3 id="all-match">All match</h3>
+<pre><code class="language-java">// Imperative
+boolean allAdmins = true;
+for (User user : users) {
+    if (!user.isAdmin()) {
+        allAdmins = false;
+        break;
+    }
+}
+
+// Declarative
+boolean allAdmins = users.stream().allMatch(User::isAdmin);
+</code></pre>
+<h3 id="any-match">Any match</h3>
+<pre><code class="language-java">// Imperative
+boolean anyAdmins = false;
+for (User user : users) {
+    if (user.isAdmin()) {
+        anyAdmins = true;
+        break;
+    }
+}
+
+// Declarative
+boolean anyAdmins = users.stream().anyMatch(User::isAdmin);
+</code></pre>
+<h3 id="sum">Sum</h3>
+<pre><code class="language-java">// Imperative
+int sum = 0;
+for (int i : numbers) {
+    sum += i;
+}
+
+// Declarative
+int sum = numbers.stream().reduce(0, Integer::sum);
+
+// alternatively, you can use the sum() method
+int sum = numbers.stream().mapToInt(Integer::intValue).sum();
+
+// or Collectors.summingInt()
+int sum = numbers.stream().collect(Collectors.summingInt(Integer::intValue));
+
+</code></pre>
+<h3 id="grouping">Grouping</h3>
+<pre><code class="language-java">// Imperative
+Map&lt;String, List&lt;User&gt;&gt; usersByRole = new HashMap&lt;&gt;();
+for (User user : users) {
+    usersByRole.computeIfAbsent(
+      user.getRole(), k -&gt; new ArrayList&lt;&gt;()
+    ).add(user);
+}
+
+// Declarative
+Map&lt;String, List&lt;User&gt;&gt; usersByRole = users.stream()
+    .collect(Collectors.groupingBy(User::getRole));
+</code></pre>
+        </div>
+    </main>
+</body>
+</html>

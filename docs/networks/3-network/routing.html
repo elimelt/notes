@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routing</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Routing</h1>
+        <div class="meta">
+            Last modified: 2024-03-07
+        </div>
+        <div class="content">
+            <h1 id="_1"></h1>
+<p>Routers are devices within a network that handle forwarding packets out of the network. They use a <strong>routing table</strong> to determine the best path for a packet to reach its destination. The routing table contains information about known networks, including the next hop router to reach them.</p>
+<h2 id="forwarding-table-vs-routing-table">Forwarding Table vs. Routing Table</h2>
+<p><strong>1. Scope:</strong></p>
+<ul>
+<li><strong>Routing Table:</strong> Big picture. Holds information on <strong>all known networks</strong> reachable through the router. Includes destination networks, subnet masks, and the next hop router to reach them.</li>
+<li><strong>Forwarding Table:</strong> Detail-oriented. Contains information about <strong>directly connected devices</strong> on the same network segment. Maps MAC addresses to physical ports for efficient forwarding within the local network.</li>
+</ul>
+<p><strong>2. Information:</strong></p>
+<ul>
+<li><strong>Routing Table:</strong> Stores <strong>network-level information</strong>, including:</li>
+<li>Destination subnet address</li>
+<li>Subnet mask</li>
+<li>Next hop router's IP address</li>
+<li>Metrics (e.g., cost, hop count)</li>
+<li>Additional information (e.g., interface)</li>
+<li><strong>Forwarding Table:</strong> Holds <strong>hardware-level information</strong>, like:</li>
+<li>MAC address of a device</li>
+<li>Corresponding physical port on the router</li>
+</ul>
+<p><strong>3. Dynamic Updates:</strong></p>
+<ul>
+<li><strong>Routing Table:</strong> More dynamic, constantly updated based on routing protocols (e.g., OSFP, BGP) to reflect network changes.</li>
+<li><strong>Forwarding Table:</strong> Static or dynamically updated based on learned MAC addresses of connected devices. Updates are faster than routing table changes.</li>
+</ul>
+<p><strong>4. Size:</strong></p>
+<ul>
+<li><strong>Routing Table:</strong> Generally larger, containing entries for all known networks, even those not directly connected.</li>
+<li><strong>Forwarding Table:</strong> Smaller, only containing entries for devices physically connected to the router's ports.</li>
+</ul>
+<p><strong>5. Function:</strong></p>
+<ul>
+<li><strong>Routing Table:</strong> Used to <strong>make routing decisions</strong> and determine the best path for packets to reach their destination networks.</li>
+<li><strong>Forwarding Table:</strong> Used to <strong>physically forward packets</strong> to the next device on the local network based on their MAC addresses.</li>
+</ul>
+<p><strong>Analogy:</strong> Think of the routing table as a city map showing different neighborhoods and highways. The forwarding table is like a detailed building floor plan within a specific neighborhood, guiding you to specific rooms.</p>
+<h2 id="the-network-as-a-graph">The Network as a Graph</h2>
+<p>Model the internet as a graph of routers (nodes) and links (edges). To simplify, we can model the graph as an <strong>undirected</strong> <strong>weighted</strong> graph, where the weight of an edge represents the cost of sending a packet over that link. In practice, the internet is more accurately modeled as a <em>directed</em> graph, but the undirected model is simpler.</p>
+<p>The basic problem of routing is to find the shortest path between nodes in the graph. One could use <strong>Dijkstra's algorithm</strong> to find paths, and then save them to disk/memory as the routing table. However:</p>
+<ul>
+<li>It does not deal with node or link failures.</li>
+<li>It does not consider the addition of new nodes or links.</li>
+<li>Edge costs cannot change</li>
+<li>It does not scale well to large networks.</li>
+</ul>
+<p>Therefore, routing protocols are typcially distributed and adaptive, running idependently on each router.</p>
+<h2 id="distance-vector-routing-rip">Distance Vector Routing (RIP)</h2>
+<p>The <strong>Routing Information Protocol (RIP)</strong>, is a fundamental algorithm for navigating paths of the internet. It operates by exchanging routing information between neighboring routers, building a distributed understanding of the network topology. It is in the same class of algorithms as <strong>Bellman-Ford</strong>.</p>
+<p><strong>Core Concepts:</strong></p>
+<ul>
+<li><strong>Hop Count:</strong> RIP utilizes a simple metric: the number of hops (routers traversed) to reach a destination network. The route with the <strong>lowest hop count</strong> is considered optimal.</li>
+<li><strong>Routing Table:</strong> Each router maintains a routing table, containing entries for reachable networks, their hop count, and the "next hop" router on the path.</li>
+<li><strong>Periodic Updates:</strong> Routers periodically send updates to their neighbors, advertising their routing table entries (even if nothing has changed).</li>
+<li><strong>Triggered Updates:</strong> Routers send updates immediately whenever they make a change to their local routing table.</li>
+<li><strong>Bellman-Ford Algorithm:</strong> This algorithm, implemented within RIP, iteratively updates routing tables based on received updates, ensuring convergence to a loop-free routing state.</li>
+<li><strong>Failure Detection:</strong> RIP uses a simple mechanism to detect failed links or routers. If a router doesn't receive an update from a neighbor for a certain period, it assumes the neighbor is down. Alternatively, a router could send a control message to its neighbors to check if they are still alive.</li>
+</ul>
+<p><strong>Strengths:</strong></p>
+<ul>
+<li><strong>Simplicity:</strong> RIP's straightforward approach makes it easy to implement and understand.</li>
+<li><strong>Rapid Convergence:</strong> Routing updates propagate quickly, leading to fast adaptation to network changes.</li>
+<li><strong>Scalability:</strong> Works well in smaller networks with limited complexity.</li>
+</ul>
+<p><strong>Weaknesses:</strong></p>
+<ul>
+<li><strong>Limited Scope:</strong> Hop count metric doesn't consider factors like bandwidth or delay, potentially leading to suboptimal paths.</li>
+<li><strong>Counting to Infinity:</strong> Prone to routing loops in complex networks due to the hop count metric's limitations. This can be mitigated with techniques like split horizon (don't send routes to the node that you got it from).</li>
+<li><strong>Slow Convergence in Large Networks:</strong> Frequent updates in large networks can overwhelm routers and slow down convergence.</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<p>Here is a simple implementation of Distance Vector Routing in C:</p>
+<pre><code class="language-c">#define MAX_ROUTES      128     /* maximum size of routing table */
+#define MAX_TTL         120     /* time (in seconds) until route expires */
+
+typedef struct {
+    NodeAddr  Destination;    /* address of destination */
+    NodeAddr  NextHop;        /* address of next hop */
+    int        Cost;          /* distance metric */
+    u_short   TTL;            /* time to live */
+} Route;
+
+int      numRoutes = 0;
+Route    routingTable[MAX_ROUTES];
+
+
+void mergeRoute (Route *new) {
+    int i;
+    for (i = 0; i &lt; numRoutes; ++i) {
+        if (new-&gt;Destination == routingTable[i].Destination) {
+            if (new-&gt;Cost + 1 &lt; routingTable[i].Cost)
+                break; /* found a better route */
+            else if (new-&gt;NextHop == routingTable[i].NextHop)
+                break; /* next hop may have changed */
+            else
+                return; 
+        }
+    }
+    if (i == numRoutes) {
+        if (numRoutes &lt; MAXROUTES)
+            numRoutes++;
+        else
+            return; /* can`t fit this route in table so give up */
+    }
+    routingTable[i] = *new;
+    routingTable[i].TTL = MAX_TTL; /* reset TTL */
+    routingTable[i].Cost++;
+}
+
+void updateRoutingTable (Route *newRoute, int numNewRoutes) {
+    for (int i=0; i &lt; numNewRoutes; ++i)
+        mergeRoute(&amp;newRoute[i]);
+}
+
+</code></pre>
+<p>However, actual RIP operates on UDP port 520 and might look something like this:</p>
+<pre><code>RIP Message:
+    Version
+    Command (request, response, update)
+    Number of entries 
+    RIP Entry (variable size)
+    Address Family Identifier
+    Route Tag
+    IP Address
+    Next Hop IP Address
+    Metric
+</code></pre>
+<p>RIP is a fairly limited and simple implementation of distance vector routing. It assigns a cost of 1 to each hop (effectively calculating the fewest hop path), and it only allows distances of up to 16 hops. Not used in most modern networks.</p>
+<h2 id="link-state-routing">Link State Routing</h2>
+<p>Each node maintains state locally, and then creates a <strong>Link State Packet (LSP)</strong> containing the following information:</p>
+<ul>
+<li>The ID of the node that created the LSP</li>
+<li>A list of directly connected neighbors of that node, with the cost of the link to each one</li>
+<li>A sequence number, incremented each time the LSP is updated</li>
+<li>A time to live for this packet, decremented at each hop</li>
+</ul>
+<p>These packets are <strong>flooded</strong> throughout the network, meaning that each node sends the packet to all of its neighbors.</p>
+<h3 id="reliable-flooding">Reliable Flooding</h3>
+<p>The sequence number and TTL of an <strong>LSP</strong> are used to ensure reliability and prevent loops. Adjacent nodes use ACKs and retransmissions. For non-adajcent nodes, to ensure that the most recent LSP is used, the LSP with the higher sequence number is always picked (if there is an existing LSP stored already). Once an LSP is received, the node stores it and forwards it to all of its neighbors, except the one it received it from.</p>
+<p>New LSPs are generated both at regular intervals, and when an adjacent node goes down. Nodes send their neighbors "hello" packets to demonstrate that they are still alive. If a node doesn't receive a "hello" packet from a neighbor for a certain period, it assumes the neighbor is down and generates a new LSP.</p>
+<p>In practice, the "regular interval" LSPs should be generated very infrequently to reduce overhead on the network. This way, the network can still converge quickly in the event of a failure, but not waste resources when nothing is changing.</p>
+<p>When a node receives an LSP with TTL of 0, it deletes the record from its own database, and then floods the network with this packet so that all the other nodes can delete the LSP from their databases.</p>
+<h3 id="route-calculation">Route Calculation</h3>
+<p>Based on <strong>Dijkstra's algorithm</strong>, but in practice uses <strong>Forward Search</strong>. Each node calculates the shortest path to all other nodes in the network, and then stores this information locally.</p>
+<pre><code class="language-python">M = {s}
+for each n in N - {s}:
+    C(n) = l(s,n)
+while (N != M):
+    M = M + {w} such that C(w) is the minimum for all w in (N-M)
+    for each n in (N-M):
+        C(n) = MIN(C(n), C(w)+l(w,n))
+</code></pre>
+<h4 id="forward-search">Forward Search</h4>
+<p>Uses a <code>Confirmed</code> and a <code>Tentative</code> list, both of which contain entries <code>(Destination, Cost, NextHop)</code>. The algorithm proceeds as follows:</p>
+<ol>
+<li>Initialize the Confirmed list with an entry for myself; this entry has a cost of 0.</li>
+<li>For the node just added to the Confirmed list in the previous step, call it node Next and select its LSP.</li>
+<li>For each neighbor (Neighbor) of Next, calculate the cost (Cost) to reach this Neighbor as the sum of the cost from myself to Next and from Next to Neighbor. If Neighbor is currently on neither the Confirmed nor the Tentative list, then add (Neighbor, Cost, NextHop) to the Tentative list, where NextHop is the direction I go to reach Next.</li>
+<li>If Neighbor is currently on the Tentative list, and the Cost is less than the currently listed cost for Neighbor, then replace the current entry with (Neighbor, Cost, NextHop), where NextHop is the direction I go to reach Next.</li>
+<li>If the Tentative list is empty, stop. Otherwise, pick the entry from the Tentative list with the lowest cost, move it to the Confirmed list, and retu</li>
+</ol>
+<h3 id="open-shortest-path-first-ospf">Open Shortest Path First (OSPF)</h3>
+<p><strong>OSPF</strong> is a more modern and feature-rich link state routing protocol. It adds the following features to basic link state routing:</p>
+<ul>
+<li>Authentication: OSPF can use a password to authenticate LSPs, preventing unauthorized nodes from injecting false routing information.</li>
+<li>Hierarchical routing: partitions the network into <strong>areas</strong>, such that a given router only needs to know about the topology of its own area.</li>
+<li>Load balancing: can assign multiple paths to the same destination, and split traffic between them.</li>
+</ul>
+<p>Of the five OSPF message types, type 1 is the "hello" message, which a router sends to its peers to notify them that it is still alive and connected as described above. The remaining types are used to request, send, and acknowledge the receipt of link-state messages.</p>
+<p>OSPF sends Link State Advertisements (LSAs) instead of LSPs. LSAs contain information about links, including the Link ID, Link Data, and metric. The Link ID is typically the router ID of the router at the far end of the link. The metric represents the cost of the link. TOS (type of service) information allows OSPF to choose different routes based on the TOS field of IP packets.</p>
+<h4 id="metrics">Metrics</h4>
+<p>The ARPANET tested different approaches to link-cost calculation. The original metric measured queued packets on each link, but it didn't consider bandwidth or latency. A later version used delay as a measure of load, taking into account link bandwidth and latency. However, it suffered from instability under heavy load and had a large range of link values. A third approach compressed the metric range, accounted for link type, and smoothed the variation over time.</p>
+<p>In real-world network deployments, metrics change rarely, if at all, and only under the control of a network administrator. Static metrics are the norm, with a common approach being to use a constant multiplied by (1/link_bandwidth).</p>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Cache Coherence</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Distributed Cache Coherence</h1>
+        <div class="meta">
+            Last modified: 2024-05-17
+        </div>
+        <div class="content">
+            <h1 id="distributed-cache-coherence">Distributed Cache Coherence</h1>
+<p>When linearizability is a concern, any duplication of mutable data across multiple nodes must be kept consistent. This is the problem of cache coherence: ensuring that all nodes in a distributed system have the same view of the data.</p>
+<h2 id="distributed-caching-with-leases">Distributed Caching with Leases</h2>
+<p>A <strong>lease</strong> is a time-limited right to do something. In the context of distributed caching, our lease gives us a right to cache some data.</p>
+<p>If a node holding the lease fails, we just wait for the lease to expire. Leases can be renewed by the holder, so long as the node is still up.</p>
+<h3 id="cache-reads">Cache Reads</h3>
+<ol>
+<li>Cache obtains a lease containing the data</li>
+<li>No one can modify the data until the lease either expires or is revoked. Thus, a server/service needs to track who has which data and for how long</li>
+<li>Once the lease expires, the value can then change. The items is no longer cached by anyone, so it can only be copied at the server. All subsequent caches can refetch the new data.</li>
+</ol>
+<p>This approach is both linearizable and fault tolerant, since the lease will eventually expire if the node holding it fails, allowing another node to take over. However, this approach is not very scalable, since the server needs to maintain state for every cached item.</p>
+<p>Clients are also able to cache values, and you can do this by forwarding the lease along with the data to the client.</p>
+<h3 id="cache-updates">Cache Updates</h3>
+<p>Leases allow the server to reclaim a single copy, regardless of whether caches are up or not. A naive approach would be to wait for all copies to timeout any time you want to update.</p>
+<p>An optimized version would be to use a callback, preventing the need for timeouts if no error occurs. When the server receives an update for a cached value, it forwards an invalidation/revoke to all nodes with a copy of the data, and waits for a response from all (or for the lease to timeout), after which it can proceed with the update.</p>
+<p>The key insight however is that in order for your system to be linearizable, you <strong>must</strong> have only one copy of the data while updating.</p>
+<h3 id="lease-timeouts">Lease Timeouts</h3>
+<p>If we use the same timeout value for all leases, then we need to track less state at our server, and this also reduces the total time needed to reclaim all leases. On the other hand, if we use different timeouts, then caches will all ask for a new lease at staggered times, preventing an overwhelming number of requests at once.</p>
+<h2 id="weaknesses-of-linearizable-caches">Weaknesses of Linearizable Caches</h2>
+<ul>
+<li>We need to keep track of a ton of state at a single server, growing linearly with the number of cached items</li>
+<li>While data is updated, nobody can read anything, which can potentially be for a long time leading to high latency</li>
+<li>With more copies, the likelihood of failure, and thus needing to wait for the whole lease time to pass for updates grows</li>
+</ul>
+<h2 id="caching-widely-shared-data">Caching Widely Shared Data</h2>
+<p>It's often okay to use snapshot read consistency, allowing for reads to return stale data. Much of the web follows this model.</p>
+<p>Usually this would look like having many read only caches and a single copy that is writable, for which updates are propagated from to the caches.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="sun-network-file-system-nfs">Sun Network File System (NFS)</h3>
+<ul>
+<li>Protocol for accessing remote shared file system</li>
+<li>Appears like a local directory (via mount in Unix)</li>
+<li>Open, close, read, write are RPCs to a remote server</li>
+<li>Instead of maintaining some implicit state about the position in the file, reads/writes are block oriented such that no state needs to be maintained and the operation is idempotent</li>
+<li>Entirely stateless server, such that if the server crashes, a client just needs to wait until it reboots, after which the operation is resent</li>
+<li>At least once RPC semantics</li>
+<li>No callbacks</li>
+<li>Client applications don't need error handling</li>
+<li>Locally caches file metadata and data, which is eventually consistent</li>
+<li>Each cache entry has a TTL</li>
+<li>Revalidate local copy on next access when TTL expires (3-30 sec)</li>
+<li>Updates sent back to remote file system after delay (3-30 sec)</li>
+<li>Metadata (e.g. directories, file status) uses shorter TTL</li>
+<li>File data uses longer TTL</li>
+<li>This works well when resources aren't shared, i.e. when everyone works in their own directory</li>
+</ul>
+<h3 id="domain-name-system-dns">Domain Name System (DNS)</h3>
+<ul>
+<li>Protocol for translating domain names to IP addresses</li>
+<li>Servers are stateless; at least once semantics to fetch data from name servers</li>
+<li>Hierarchical name resolution</li>
+<li>Allow each domain to manage its own names</li>
+<li>Ask root: what is the IP address of <code>com</code>, then <code>google.com</code>, then <code>www.google.com</code></li>
+<li>Eventually consistent in that updates are propagated among servers</li>
+<li>Clients cache at each level, and updates go directly to the relevant name server.</li>
+<li>Clients only discover changes after TTL expires</li>
+<li>TTLs are set by the domain owner (can vary widely, even allowing infinite TTL)</li>
+<li>CDN servers typically have short TTLs so that they can be updated quickly in the event of a server failure</li>
+</ul>
+<h3 id="caching-terminology">Caching Terminology</h3>
+<ul>
+<li><strong>Write Through</strong>:  Cache holds read-only data</li>
+<li>Write sent to store, and store revokes copies</li>
+<li>Exploits locality for reads</li>
+<li><strong>Write Back</strong>: Cache holds read-write data, i.e. updates happen client side too (like NFS)</li>
+<li>Writes to cache, and cache asks store to revoke copies</li>
+<li>Exploits locality for reads and writes</li>
+</ul>
+<h4 id="write-back-cache-coherence">Write Back Cache Coherence</h4>
+<ul>
+<li>On write:</li>
+<li>Send invalidations to all caches</li>
+<li>Each cache invalidates, responds (possibly with updated data)</li>
+<li>Wait for all invalidations</li>
+<li>Return</li>
+<li>Reads can proceed when there is a local copy</li>
+<li>Requests at server need to be ordered to avoid deadlock</li>
+</ul>
+<p>However, with write back caching, durability becomes an issue since a failure might lose writes.</p>
+<ul>
+<li>Option 1: period distributed checkpoint, restart from checkpoint if any cache fails</li>
+<li>appropriate for long running/background computations</li>
+<li>Option 2: send log of changes to replicated storage</li>
+<li>if cache fails, read its log from storage</li>
+<li>e.g. if primary fails, backup can take over by replaying log</li>
+</ul>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sockets</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Sockets</h1>
+        <div class="meta">
+            Last modified: 2024-01-11
+        </div>
+        <div class="content">
+            <h1 id="socket-reference">Socket Reference</h1>
+<h2 id="creating-a-socket">Creating a Socket</h2>
+<pre><code class="language-c">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+
+/**
+ * @brief Creates a socket.
+ *
+ * @param domain specifies the protocol family to use.
+ *   ex: AF_INET, AF_INET6, AF_UNIX, etc.
+ * @param type The type of the socket.
+ *   ex: SOCK_STREAM, SOCK_DGRAM, SOCK_RAW, etc.
+ * @param protocol The protocol of the socket.
+ *   ex: (IPPROTO_TCP, IPPROTO_UDP, UNSPEC, etc.)
+ *
+ * @return The file descriptor of the socket.
+*/
+int socket(int domain, int type, int protocol);
+</code></pre>
+<pre><code class="language-python">import socket
+# TCP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# UDP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+</code></pre>
+<h2 id="server-side">Server Side</h2>
+<h3 id="binding-a-socket">Binding a Socket</h3>
+<pre><code class="language-c">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+/**
+ *
+ * @brief Assigns the address specified by @p address to the socket
+ *   @p socket.
+ *
+ * @param socket The socket fd to bind.
+ * @param address The sockaddr struct containing the address and
+ *   port to bind to. Usually retrieved from a call to getaddrinfo().
+ * @param addr_len The length of the sockaddr struct.
+ *
+ * @return 0 on success, -1 on failure.
+*/
+int bind(int socket, struct sockaddr *address, int addr_len);
+</code></pre>
+<pre><code class="language-python"># ...
+port = 80
+
+# Bind the socket to an address
+serversock.bind((socket.gethostname(), port))
+</code></pre>
+<h3 id="listening-on-a-socket">Listening on a Socket</h3>
+<pre><code class="language-c">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+/**
+ * @brief Marks the socket @p socket as a passive socket, that is,
+ *   as a socket that will be used to accept incoming connection
+ *   requests using accept().
+ *
+ * @param socket The socket to listen on.
+ * @param backlog The maximum length of the queue of pending
+ *   connections.
+ *
+ * @return 0 on success, -1 on failure.
+*/
+int listen(int socket, int backlog);
+</code></pre>
+<pre><code class="language-python"># ...
+
+backlog = 5
+
+# Listen for connections
+serversock.listen(backlog)
+</code></pre>
+<h3 id="accepting-a-connection">Accepting a Connection</h3>
+<pre><code class="language-c">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+/**
+ * @brief Accepts a connection on the socket @p socket.
+ *
+ * @param socket The socket to accept a connection on.
+ * @param address A pointer to a sockaddr struct that will be
+ *   filled with the address of the peer socket.
+ * @param addr_len A pointer to an int that will be filled with
+ *   the length of the sockaddr struct.
+ *
+ * @return The file descriptor of the new socket, or -1 on failure.
+*/
+int accept(int socket, struct sockaddr *address, int *addr_len);
+</code></pre>
+<pre><code class="language-python"># ...
+
+# Accept a connection
+clientsock, addr = serversock.accept()
+</code></pre>
+<h2 id="client-side">Client Side</h2>
+<h3 id="connecting-to-a-server">Connecting to a Server</h3>
+<pre><code class="language-c">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+/**
+ * @brief Connects the socket @p socket to the address specified
+ *   by @p address.
+ *
+ * @param socket The socket to connect.
+ * @param address The sockaddr struct containing the address and
+ *   port to connect to. Usually retrieved from a call to getaddrinfo().
+ * @param addr_len The length of the sockaddr struct.
+ *
+ * @return 0 on success, -1 on failure.
+*/
+int connect(int socket, struct sockaddr *address, int addr_len);
+</code></pre>
+<pre><code class="language-python">import socket
+
+# create a socket
+clientsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# connect to a server
+clientsock.connect(('http://elimelt.com', port))
+</code></pre>
+<h2 id="sending-and-receiving-data">Sending and Receiving Data</h2>
+<pre><code class="language-c">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+/**
+ * @brief Sends @p len bytes from @p buf on the socket @p socket.
+ *
+ * @param socket The socket to send data on.
+ * @param buf The buffer containing the data to send.
+ * @param len The length of the data to send.
+ * @param flags Flags to modify the behavior of the send.
+ *
+ * @return The number of bytes sent, or -1 on failure.
+*/
+ssize_t send(int socket, const void *buf, size_t len, int flags);
+
+/**
+ * @brief Receives data from the socket @p socket and stores it
+ *   in @p buf.
+ *
+ * @param socket The socket to receive data on.
+ * @param buf The buffer to store the received data in.
+ * @param len The length of the buffer.
+ * @param flags Flags to modify the behavior of the receive.
+ *
+ * @return The number of bytes received, or -1 on failure.
+*/
+ssize_t recv(int socket, void *buf, size_t len, int flags);
+</code></pre>
+<pre><code class="language-python"># ...
+
+# Send data
+clientsock.send('Hello, world!')
+
+# Receive data
+data = clientsock.recv(1024)
+</code></pre>
+<h2 id="closing-a-socket">Closing a Socket</h2>
+<pre><code class="language-c">#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+
+/**
+ * @brief Closes the socket @p socket.
+ *
+ * @param socket The socket to close.
+ *
+ * @return 0 on success, -1 on failure.
+*/
+int close(int socket);
+</code></pre>
+<pre><code class="language-python"># ...
+
+# Close the socket
+clientsock.close()
+</code></pre>
+<h2 id="simple-client">Simple Client</h2>
+<pre><code class="language-c">// from book.systemsapproach.org
+
+#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;netdb.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+#define SERVER_PORT 5432
+#define MAX_LINE 256
+
+int
+main(int argc, char * argv[])
+{
+  FILE *fp;
+  struct hostent *hp;
+  struct sockaddr_in sin;
+  char *host;
+  char buf[MAX_LINE];
+  int s;
+  int len;
+
+  if (argc==2) {
+    host = argv[1];
+  }
+  else {
+    fprintf(stderr, &quot;usage: simplex-talk host\n&quot;);
+    exit(1);
+  }
+
+  /* translate host name into peer's IP address */
+  hp = gethostbyname(host);
+  if (!hp) {
+    fprintf(stderr, &quot;simplex-talk: unknown host: %s\n&quot;, host);
+    exit(1);
+  }
+
+  /* build address data structure */
+  bzero((char *)&amp;sin, sizeof(sin));
+  sin.sin_family = AF_INET;
+  bcopy(hp-&gt;h_addr, (char *)&amp;sin.sin_addr, hp-&gt;h_length);
+  sin.sin_port = htons(SERVER_PORT);
+
+  /* active open */
+  if ((s = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0) {
+    perror(&quot;simplex-talk: socket&quot;);
+    exit(1);
+  }
+  if (connect(s, (struct sockaddr *)&amp;sin, sizeof(sin)) &lt; 0)
+  {
+    perror(&quot;simplex-talk: connect&quot;);
+    close(s);
+    exit(1);
+  }
+  /* main loop: get and send lines of text */
+  while (fgets(buf, sizeof(buf), stdin)) {
+    buf[MAX_LINE-1] = '\0';
+    len = strlen(buf) + 1;
+    send(s, buf, len, 0);
+  }
+}
+</code></pre>
+<pre><code class="language-python">import socket
+import sys
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((sys.argv[1], 5432))
+
+while 1:
+    line = sys.stdin.readline()
+    if not line:
+        break
+    s.send(line)
+s.close()
+</code></pre>
+<h2 id="simple-server">Simple Server</h2>
+<pre><code class="language-c">// from book.systemsapproach.org
+#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;netdb.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+#define SERVER_PORT  5432
+#define MAX_PENDING  5
+#define MAX_LINE     256
+
+int
+main()
+{
+  struct sockaddr_in sin;
+  char buf[MAX_LINE];
+  int buf_len, addr_len;
+  int s, new_s;
+
+  /* build address data structure */
+  bzero((char *)&amp;sin, sizeof(sin));
+  sin.sin_family = AF_INET;
+  sin.sin_addr.s_addr = INADDR_ANY;
+  sin.sin_port = htons(SERVER_PORT);
+
+  /* setup passive open */
+  if ((s = socket(PF_INET, SOCK_STREAM, 0)) &lt; 0) {
+    perror(&quot;simplex-talk: socket&quot;);
+    exit(1);
+  }
+  if ((bind(s, (struct sockaddr *)&amp;sin, sizeof(sin))) &lt; 0) {
+    perror(&quot;simplex-talk: bind&quot;);
+    exit(1);
+  }
+  listen(s, MAX_PENDING);
+
+ /* wait for connection, then receive and print text */
+  while(1) {
+    if ((new_s = accept(s, (struct sockaddr *)&amp;sin, &amp;addr_len)) &lt; 0) {
+      perror(&quot;simplex-talk: accept&quot;);
+      exit(1);
+    }
+    while (buf_len = recv(new_s, buf, sizeof(buf), 0))
+      fputs(buf, stdout);
+    close(new_s);
+  }
+}
+</code></pre>
+<pre><code class="language-python">import socket
+import sys
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((socket.gethostname(), 5432))
+s.listen(5)
+
+while True:
+    clientsock, addr = s.accept()
+    while True:
+        data = clientsock.recv(1024)
+        if not data:
+            break
+        print(data)
+    clientsock.close()
+</code></pre>
+        </div>
+    </main>
+</body>
+</html>

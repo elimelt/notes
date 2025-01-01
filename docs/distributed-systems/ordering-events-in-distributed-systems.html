@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordering Events In Distributed Systems</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Ordering Events In Distributed Systems</h1>
+        <div class="meta">
+            Last modified: 2024-04-07
+        </div>
+        <div class="content">
+            <h1 id="time-clocks-and-the-ordering-of-events-in-a-distributed-system">Time, Clocks, and the Ordering of Events in a Distributed System</h1>
+<p><a href="https://amturing.acm.org/p558-lamport.pdf">reading</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>It would be convenient if we could order events in a distributed system, but it is impossible to do so in a way that is consistent with the order in which they actually occurred. However, we can define a partial ordering of events that is consistent with the order in which they occurred, and can extend this to a total ordering of events that is consistent with the partial ordering.</p>
+<p>A partial ordering of objects is a relation that is reflexive, antisymmetric, and transitive. Conversely, a total ordering is a partial ordering that is also connexive, i.e. for any two objects $a$ and $b$, either $a \leq b$ or $b \leq a$.</p>
+<h2 id="notation">Notation</h2>
+<ul>
+<li>$a \rightarrow b$: Event $a$ happened before event $b$.</li>
+<li>$\to$ is an irreflexive, transitive relation that defines a partial order of events in a distributed system.</li>
+<li>if $a$ is the sending of a message and $b$ is the receipt of that message, then $a \rightarrow b$.</li>
+<li>if $a \rightarrow b$ and $b \rightarrow c$, then $a \rightarrow c$.</li>
+<li>$a \nrightarrow a$.</li>
+<li>$a \nrightarrow b$: Event $a$ did not happen before event $b$.</li>
+<li>$a \Rightarrow b$: Event $a$ happened before or concurrently with event $b$.</li>
+<li>if $a$ is an event in process $P_i$ and $b$ is an event in process $P_j$, then $a \Rightarrow b \iff a \rightarrow C_i\langle a \rangle &lt; C_j\langle b \rangle \lor (C_j\langle b \rangle = C_i\langle a \rangle \land P_i \prec P_j)$, where $\prec$ is an arbitrary total order of processes (e.g. lexicographic order of process identifiers)</li>
+<li>$a \Rightarrow b \implies a \to b$.</li>
+<li>$a \nRightarrow b$: Event $a$ did not happen before or concurrently with event $b$.</li>
+<li>$C_i\langle a \rangle$: The clock value of process $P_i$ when event $a$ occurs.</li>
+<li>$C_i\langle a \rangle &lt; C_j\langle b \rangle$: Event $a$ happened before event $b$.</li>
+<li>$(a \to b) \implies (C_i\langle a \rangle &lt; C_j\langle b \rangle)$.</li>
+</ul>
+<h2 id="clock-condition">Clock Condition</h2>
+<p>If $a$ and $b$ are events in process $P_i$ and $a \to b$, then $C_i\langle a \rangle &lt; C_i\langle b \rangle$.</p>
+<p>If $a$ is the sending of a message and $b$ is the receipt of that message, then $a \to b$ and $C_i\langle a \rangle &lt; C_j\langle b \rangle$.</p>
+<p>To meet the clock condition, we must always increment the clock value of the process when an event occurs. Furthermore, if event $a$ is the sending of a message $m$ containing the clock value $T_m = C_i\langle a \rangle$, then upon receipt of $m$, the receiving process must set its clock value $C_j\langle b \rangle$ to a value greater than $T_m$.</p>
+<h2 id="synchronized-access-to-a-shared-resource">Synchronized Access to a Shared Resource</h2>
+<p>We wish to find an algorithm for granting the resource to a process which satisfies the following three conditions:</p>
+<ul>
+<li>(I) A process which has been granted the resource must release it before it can be granted to another process.</li>
+<li>(II) Different requests for the resource must be granted in the order in which they are made.</li>
+<li>(III) If every process which is granted the resource eventually releases it, then every request is eventually granted.</li>
+</ul>
+<h3 id="assumptions">Assumptions</h3>
+<p>For any two processes $P_i$ and $P_j$, messages sent by $P_i$ are received in the order they were sent by $P_i$. This can be achieved using stop-and-wait or sliding window protocols.</p>
+<p>Further, we assume that all messages are received within a bounded time, i.e. all messages will eventually be received.</p>
+<p>Also note that this protocol requires active participation from all processes. If any one process fails, then the entire system stops, because the algorithm requires all processes to respond to a request before the resource can be granted.</p>
+<h3 id="algorithm">Algorithm</h3>
+<ol>
+<li>To request the resource, a process $P_i$ sends a message $T_m:P_i$ <em>request</em> to all other processes, and puts that message on its request queue, where $T_m$ is the current clock value of $P_i$.</li>
+<li>When process $P_j$ receives $T_m:P_i$ <em>request</em>, it places it on its request queue and sends a <em>reply</em> message to $P_i$ with its current clock value.</li>
+<li>To release the resource, $P_i$ removes $T_m:P_i$ <em>request</em> from its request queue and sends a <em>release</em> message with its current clock value to all other processes.</li>
+<li>When process $P_j$ receives a $P_i$ <em>release</em> message, it removes $T_m:P_i$ <em>request</em> from its request queue.</li>
+<li>$P_i$ is granted the resource when the following conditions are met:</li>
+<li>There is a $T_m:P_i$ <em>request</em> message in its queue ordered by $\Rightarrow$ before any other <em>request</em> messages.</li>
+<li>$P_i$ has received a <em>reply</em> message from all other processes with a clock value greater than $T_m$.</li>
+</ol>
+<h3 id="state-machine-perspective">State Machine Perspective</h3>
+<p>The algorithm can be viewed as a state machine consisting of $C$, the set of commands and $S$, the set of states. The state machine is defined by the following function:</p>
+<p>$$
+e: C \times S \to S
+$$</p>
+<p>Where $e(c, s) = s'$ means that executing the command $c$ in state $s$ results in a transition to state $s'$. In this algorithm, we have state $S$ corresponding to the queue of requests, and commands $C$ corresponding to the request and release messages for any given process.</p>
+<p>$$
+C = { P_i \text{ request}, P_i \text{ release} }
+$$</p>
+<p>Executing $P_i \text{ request}$ in state $s$ results in a transition to state $s'$ where $s'$ is the state with the request message added to the queue. Executing $P_i \text{ release}$ in state $s$ results in a transition to state $s'$ where $s'$ is the state with the request message removed from the queue. Each process $P_i$ is its own state machine, and a process can execute a command time-stamped $T$ only if it has received all messages with time-stamps less than or equal to $T$.</p>
+<h2 id="anomalous-behavior-of-total-ordering">Anomalous Behavior of Total Ordering</h2>
+<p>Consider a nationwide system of nodes. A person issues a request $a$ at node $A$, and after doing so, calls their friend in a different city at node $B$ to issue a request $b$. It is possible with the total ordering of events that $b \to a$, even though $a$ was issued before $b$. This is because the total ordering of events is not consistent with the order in which they actually occurred, but rather with the order in which they were observed. The message that would be able to establish the the actual ordering of events (the call) is external to the system.</p>
+<p>More concretely, let $\mathscr{L}$ be the set of all events, and $L$ be the set of all events in our system.</p>
+<p>$$L \subseteq \mathscr{L}$$</p>
+<p>In the above scenario, we had $a \to_{\mathscr{L}} b$, but $b \nrightarrow_{L} a$. No algorithm based soley on the events in $L$, without knowledge more generally of $\mathscr{L}$ can order $a$ before $b$.</p>
+<p>There are two approaches to fixing this issue:</p>
+<ol>
+<li>Users must manually specify restraints on timestamps, ie the person at $A$ must tell the person at $B$ that $T_a &lt; T_b$. This is not a great solution.</li>
+<li>Construct a system of clocks that satisfy the following condition: if $a \to_{\mathscr{L}} b$, then $C\langle a \rangle &lt; C\langle b \rangle$.</li>
+</ol>
+<h2 id="physical-clocks">Physical Clocks</h2>
+<p>Let $C_i(t)$ be the value clock $C_i$ at time $t$. Assume that $C_i(t)$ is a continuous and differentiable function of $t$, except for isolated points where it jumps when the clock is reset. Note that a discrete clock can be modeled as a continuous clock with an error of up to $\epsilon = \frac{1}{2} \text{ tick}$.</p>
+<p>Then $\frac{dC_i(t)}{dt}$ is the rate at which the clock is running at time $t$. If $\frac{dC_i(t)}{dt} = 1$, then the clock is running at the correct rate. We assume that the following holds:</p>
+<p>$$
+\exists \kappa \ll 1 \text{ such that } \forall i, t: |\frac{dC_i(t)}{dt} - 1| &lt; \kappa
+$$</p>
+<p>And in fact, for typical quartz oscillator clocks, $\kappa \le 10^{-6}$.</p>
+<p>This however isn't enough. For an effective clock system, we also want our clocks to be synchronized such that...</p>
+<p>$$
+\forall i, j, t: |C_i(t) - C_j(t)| &lt; \epsilon
+$$</p>
+<p>...where $\epsilon$ is the maximum error in the clocks. Since physical clocks will never run at <strong>exactly</strong> the same rate, they will tend to drift apart over time. To correct for this, we can use a synchronization algorithm to periodically reset the clocks to a common time.</p>
+<p>Letting $\mu$ be a number such that if event $a$ occurs at physical time $t$, and event $b$ is an event in another process that satisfies $a \to b$, then $b$ occurs later than physical time $t + \mu$. So $\mu$ is the maximum time it takes for a message to be sent from one process to another.</p>
+<p>To avoid anomalies, we must ensure...</p>
+<p>$$
+\forall i, j, t: C_i(t) &lt; C_j(t + \mu), \text{ or, equivalently, } C_i(t + \mu) - C_j(t) &gt; 0
+$$</p>
+<p>And relating this to $\kappa$...</p>
+<p>$$
+\forall i, j, t: C_i(t + \mu) - C_j(t) &gt; (1 - \kappa)\mu
+$$</p>
+<p>And calculating the maximum error in the clocks...</p>
+<p>$$
+\frac{\epsilon}{1 - \kappa} \le \mu
+$$</p>
+<h3 id="clock-synchronization-algorithm">Clock Synchronization Algorithm</h3>
+<p>Importantly, one must always synchronize clocks in the forward direction, i.e. $C_i(t) &lt; C_j(t + \mu)$. If $C_i(t) &gt; C_j(t + \mu)$, then $C_i(t + \mu) - C_j(t) &lt; 0$, which is not allowed.</p>
+<p>Let $m$ be a message sent at time $t$, and received at time $t'$. Let $v_m = t' - t$ be the <strong>total delay</strong> of the message. Although the delay of a message is not known by any given process, we assume the receiver has some lower bound on the delay, $\mu_m$. Define $\zeta_m = v_m - \mu_m$ to be the <strong>unpredictable delay</strong> of the message.</p>
+<p>Now, define the following rules for our physical clocks:</p>
+<ol>
+<li>$\forall i$ if $P_i$ does not receive a message at physical time $t$, then $C_i$ is differentiable at $t$ and $\frac{dC_i(t)}{dt} &gt; 0$.</li>
+<li>If $P_i$ sends a message $,$ at physical time $t$, then $m$ contains a timestamp $T_m = C_i(t)$. Upon receiving a message $m$ at physical time $t'$, $P_j$ sets $C_j(t') = \max(\lim_{\delta \to 0} C_j(t' - \delta), T_m + \mu_m)$.</li>
+</ol>
+        </div>
+    </main>
+</body>
+</html>

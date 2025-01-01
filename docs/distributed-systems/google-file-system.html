@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google File System</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Google File System</h1>
+        <div class="meta">
+            Last modified: 2024-05-21
+        </div>
+        <div class="content">
+            <h1 id="google-file-system-gfs">Google File System (GFS)</h1>
+<p><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf">reading</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>GFS differs from more traditional file systems in a lot of ways. Particularly...</p>
+<ul>
+<li>Fault tolerance/expecting failures as the common case, since it runs on commodity hardware</li>
+<li>Huge (multi-GB) files are the norm</li>
+<li>Read/Append access patterns are common, while updates and random writes are rare. Particularly, the system is optimized for large streaming (sequential) reads and appends.</li>
+</ul>
+<h2 id="design-overview">Design Overview</h2>
+<h3 id="assumptions">Assumptions</h3>
+<ul>
+<li>Built with commodity hardware, and is thus failure prone and needs to constantly monitor, detect, and tolerate failures</li>
+<li>Typically storing a modest number of large files. Anywhere from a few million ~100 MB files, to multi-GB files. The system should be optimized for working with these large files.</li>
+<li>Two types of workloads:</li>
+<li>large streaming reads spanning &gt; 1 MB</li>
+<li>smaller random reads (which are often batched)</li>
+<li>Well defined semantics and easy concurrency control for concurrent appends are essential. A common application of GFS is to be used as a producer-consumer queue</li>
+<li>High sustained bandwidth takes precedence over latency</li>
+</ul>
+<h3 id="interface">Interface</h3>
+<p>Although familiar, GFS is not POSIX compliant. Files are organized hierarchically in directories and identified by path names, supporting <em>create, delete, open, close, read,</em> and <em>write</em>. Additionally, supports <em>snapshot</em> and <em>record append</em>. Snapshot creates a copy of a file or directory tree. Record append allows multiple clients to append data to the same file concurrently while guaranteeing the atomicity of each individual record.</p>
+<h3 id="architecture">Architecture</h3>
+<p>A GFS cluster is composed of a single <em>master</em>, and multiple <em>chunkservers</em>, and is accessed by multiple <em>clients</em>. Each component is typically run on a commodity Linux machine running a user-level server process, and it isn't uncommon to run both a client and chunkserver on the same machine (although this comes at a reliability cost).</p>
+<p>Files are made of fixed-size <em>chunks</em>, identified by an immutable and globally unique 64 bit <em>chunk handle</em> which is assigned by the master at the time of creation. Chunkservers store chunks as Linux files on local disk, and read/write to specified chunk handle and byte ranges. Each chunk is replicated on multiple chunkservers (by default with three replicas, but is configurable).</p>
+<p>The master maintains all filesystem metadata, including the namespace, access control information, file to chunk and chunk to server mappings, etc. The master communicates with chunkservers through a <em>HeartBeat</em>, which is a two-way message that allows the master to monitor and instruct the chunkservers and chunkservers to report their status.</p>
+<p>GFS client libraries are linked in each application. All metadata updates go through the master, but simple data-bearing communication goes directly to the respective chunkserver.There is no need to go through something like the Linux vnode layer, which is a major benefit of not supporting POSIX.</p>
+<p>Neither clients nor chunkservers cache file data, but clients will typically cache metadata. Technically, chunkservers do cache file data in that they use Linux files, and thus have a buffer cache for frequently accessed data in memory, but this is transparent to GFS.</p>
+<h3 id="single-master">Single Master</h3>
+<p>Using a single master architecture vastly simplifies things, since we can use global knowledge of the filesystem at the master for replication and chunk placement. To help this scale, the master's level of involvement in reads/writes needs to be minimized.</p>
+<h4 id="common-case-read">Common Case Read</h4>
+<ol>
+<li>Client translates file name and byte offset to chunk index locally</li>
+<li>Requests chunk handle and replica locations from master</li>
+<li>Client caches the result with the file name and byte offset</li>
+<li>Client chooses replica (often the closest) and reads/writes while their cache entry is still valid</li>
+</ol>
+<p>Note that for almost no extra cost, steps 1 and 2 can be batched for many files/chunks.</p>
+<h3 id="chunk-size">Chunk Size</h3>
+<p>GFS uses 64 MB lazily allocated (to mitigate internal fragmentation) chunks, each of which are stored as a plain Linux file. Using such large chunks has many benefits, including allowing clients to cache plenty of metadata, reducing network overhead/load of metadata acquisition, and allows for in-memory metadata at the master.</p>
+<p>Large chunk sizes also have their disadvantages, including leading to hotspots for chunkservers with many smaller files. One such example is when you have an executable stored in GFS that you want to concurrently read and execute across many hundreds of machines, this leads to a temporary overload of those chunk servers. This was fixed by using a higher replication factor, and staggering starting times. <strong>Extension</strong>: peer to peer sharing (between clients) is a possible solution to hotspots.</p>
+<h3 id="metadata">Metadata</h3>
+<p>There are three main types of metadata, all of which is stored in-memory in the master.</p>
+<ul>
+<li>File and chunk namespaces</li>
+<li>File to chunk mappings</li>
+<li>Location of each chunk's replicas</li>
+</ul>
+<p>The first two are also persisted in an <em>operation log</em> stored on the master's local disk. The last however, is not persisted, and instead on startup/when a new chunkserver joins the cluster, the master requests metadata about the chunks stored locally.</p>
+<h4 id="in-memory-data-structures">In-Memory Data Structures</h4>
+<p>The master stores metadata in memory and goes fast! Additionally, this allows it to quickly scan through its entire state, making things like garbage collection, re-replication on failures, and migration for load balancing possible.</p>
+<p>"b-b-bbbut that's nOt sCaLabLE" - someone right now probably</p>
+<p>In reality, if the metadata were a limiting factor for your system, you would have a MASSIVE amount of data, and would need to be using a very under-specced machine as the master. Each 64 MB chunk only requires ~64 bytes of metadata, and namespace metadata is compressed using prefix compression (which is very effective for filesystems). Therefore, adding even an extra few GB of memory to your master would allow you to store a huge amount of additional metadata.</p>
+<h4 id="chunk-locations">Chunk Locations</h4>
+<p>As stated previously, the master doesn't persist the location of chunks, instead opting to poll chunkservers on startup. This design choice simplifies things greatly, and is a general approach to fault tolerance, in that it would have been an uphill battle trying to maintain a globally consistent and persistent view of the system, since chunkservers can partially fail, and they ultimately know best which chunks they have.</p>
+<h4 id="operation-log">Operation Log</h4>
+<p>The operation log is not only the sole persistent metadata in the system, but also defines the order in which concurrent operations are executed. The log is replicated remotely, and changes are batched and flushed to disk. The log is replayed on startup, but is also kept small by being checkpointed with a memory-serializable compact B-tree structure, making recovery faster. The master can create a checkpoint in a separate background thread, allowing concurrent operations to be executed. Once created, the checkpoint is written to disk both locally and remotely.</p>
+<h3 id="consistency-model">Consistency Model</h3>
+<h4 id="guarantees-by-gfs">Guarantees by GFS</h4>
+<p>File namespace mutations are atomic through being done exclusively at the master with locking. File mutations have looser guarantees, particularly at the level of defined, and undefined regions</p>
+<ul>
+<li>Defined:</li>
+<li>After a data mutation, the file is in a consistent state and the mutation was universally applied without being interrupted</li>
+<li>Undefined:</li>
+<li>All clients will see the same data, but the data may not be consistent with any single mutation (i.e. interleaved)</li>
+<li>Successful concurrent mutations leave a region consistent but undefined, whereas failed concurrent mutations leave it undefined and inconsistent.</li>
+</ul>
+<p>After a sequence of successful mutations, the file is guaranteed to be defined and to contain the data written by the last mutation. GFS achieves this by...</p>
+<ul>
+<li>Applying mutations to chunks in a consistent order across replicas</li>
+<li>Using chunk version numbers to detect stale replicas (due to missed mutations)</li>
+</ul>
+<p>Once a chunk becomes stale, it is no longer returned to the client, and is garbage collected ASAP. Since clients cache chunk metadata, there is a window of time in which a client will read from stale chunks, but this typically presents as reading a premature end of chunk (in the case of append workloads).</p>
+<p>Component failures can lead to corrupted or destroyed data, but this is mitigated by checksumming files. Once a problem is detected, the data is restored from a valid replica if possible. In the (uncommon) case where all replicas are lost before the master can react, the data is unavailable, but corrupted data is never returned.</p>
+<h4 id="implications-for-applications">Implications for Applications</h4>
+<p>Long story short, you should always prefer appends over random writes. Note that GFS has "append at least once" semantics, and can also insert arbitrary padding between appends. It is thus important to use techniques like structuring your data and using unique identifiers for non-idempotent log entries.</p>
+<h2 id="system-interactions">System Interactions</h2>
+<h3 id="lease-and-mutation-order">Lease and Mutation Order</h3>
+<p>A mutation is any change to the contents of a chunk. Each mutation is performed at all replicas. Mutations are carried out as follows:</p>
+<ol>
+<li>Master grants a <em>lease</em> (~60 sec) to one of the replicas, making it the <em>primary</em></li>
+<li>The primary chooses a serial order for all mutations to the chunk</li>
+<li>All replicas execute the mutations in the order defined by the primary</li>
+</ol>
+<p>Leases can be extended, and the extensions are piggybacked through HeartBeat messages. The master can also revoke a lease, although if it loses communication with the primary it only needs to wait for the lease to expire.</p>
+<p>A write can be carried out through the following:</p>
+<ol>
+<li>The client asks the master which chunkserver holds the current lease, and the locations of other replicas. If no lease is held, the master grants one to a replica of its choice</li>
+<li>The master replies with the identity of the primary and location of replicas (secondaries), which is cached by the client</li>
+<li>The client pushes data to all replicas, which is stored by an LRU buffer cache until the data is used or expires</li>
+<li>Once all replicas have acknowledged receiving the data, the client sends a write request to the primary, which identifies the data that the client just pushed. The primary assigns consecutive sequence numbers to all mutations it receives (possibly from other clients as well), and then applies the mutations locally</li>
+<li>The primary forwards the write request to all secondary replica, and the replicas apply the mutations in the same order defined by the primary.</li>
+<li>The secondaries ack that they completed the operation</li>
+<li>The primary replies to the client, and any errors are reported to the client. Errors leave the region in an inconsistent state, but the failed mutation is usually retried multiple times, until eventually falling back to redoing the entire write.</li>
+</ol>
+        </div>
+    </main>
+</body>
+</html>

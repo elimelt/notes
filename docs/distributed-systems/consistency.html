@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consistency</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Consistency</h1>
+        <div class="meta">
+            Last modified: 2024-05-12
+        </div>
+        <div class="content">
+            <h1 id="consistency">Consistency</h1>
+<p><strong>Consistency</strong>: the allowed semantics of operations that mutate a data store/shared object.</p>
+<p>Consistency specifies the interface (as opposed to implementation) for behavior of your system. It is essentially the contract between the programmer and implementer. An <strong>anomaly</strong> is a violation of the consistency semantics of the system</p>
+<h2 id="types-of-consistency">Types of Consistency</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strong Consistency</td>
+<td>The system behaves as if there is a single server. Systems that maintain a single consistent log of operations are often strongly consistent.</td>
+</tr>
+<tr>
+<td>Weak Consistency</td>
+<td>Definitions vary, but basically just <em>not</em> strong consistency.</td>
+</tr>
+<tr>
+<td>Eventual Consistency</td>
+<td>Weak consistency with any anomalies guaranteed to be temporary.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="coordinating-through-a-kv-store">Coordinating through a KV Store</h2>
+<pre><code class="language-python">def Produce(key, lock, command):
+  result = application.execute(command)
+  storage.put(key, result)
+  storage.put(lock, True)
+
+def Consume(key, lock):
+  while storage.get(lock) is False:
+    pass
+  return storage.get(key)
+</code></pre>
+<p>With strong consistency semantics, the above approach works fine. However, with eventual consistency, and particularly for any system without multi-key transactions, we might see the update for <code>storage.get(done)</code> before the update for <code>storage.get(key)</code>, leading to unexpected behavior.</p>
+<h2 id="formalization">Formalization</h2>
+<p><a href="https://lamport.azurewebsites.net/pubs/interprocess.pdf">Read here</a> for more info/theory.</p>
+<p>For a given RPC, the initial request starts at time $t$ and the reply returns at time $t + x$. We cannot be sure what happens during $(t, t + x)$, since the request/reply could be lost and retransmitted, and intermediate coordination sometimes has to take place.</p>
+<p>With only a single server, you don't know precisely when the operation takes place, but we expect it to be some time in $(t, t + x)$. However, weaker consistency models relax this assumption, also sometimes allowing different readers to see different results concurrently.</p>
+<p>We use different models because of the following tradeoffs:</p>
+<ul>
+<li>Performance: Consistency requires coordination, so there is often a tradeoff between the level of consistency and the performance of the system</li>
+<li>Availability: If some client is offline or some network failure occurs, we might be forced to abandon strong consistency</li>
+<li>Programmability: Weaker consistency models are harder to reason about and program with</li>
+</ul>
+<h3 id="lamports-register-semantics">Lamport's Register Semantics</h3>
+<p>Registers hold a single value, and we define operations $r_i, $w(v)$ as the $i$th read, and a write to the register with value $v$. Each operation has some starting time and ending time.</p>
+<ul>
+<li>A read is <strong>safe</strong> if it is not concurrent with any write, and thus obtains the previously written value.</li>
+<li>A read is <strong>regular</strong> if it is either safe, or if concurrent with a write, obtains either the old or new value.</li>
+<li>A read/write is <strong>atomic</strong> if operations are safe, or if reads and writes behave as if they occur in some definite order.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Semantics</th>
+<th>Constraints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>safe</td>
+<td>$r_1 \to v_1$</td>
+</tr>
+<tr>
+<td>regular</td>
+<td>$r_1 \to v_1 \land (r_2 \to v_1 \lor r_2 \to v_2) \land (r_3 \to v_1 \lor r_3 \to v_2)$</td>
+</tr>
+<tr>
+<td>atomic</td>
+<td>$r_1 \to v_1 \land (r_2 \to v_1 \lor r_2 \to v_2) \land (r_3 \to v_1 \lor r_3 \to v_2) \land (r_2 \to v_2 \implies t_3 \to v_2)$</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-plaintext">            r1           r2     r3
+          |----|       |----| |----|
+   w(v1)                w(v2)
+|------|             |---------|
+</code></pre>
+<h2 id="linearizability">Linearizability</h2>
+<p>A <strong>linearizable</strong> system is one in which actions appear to occur in a single global order that is consistent with real time/causal order. Not all systems enforce linearizability.</p>
+<p>To do linearizable reads in Paxos, you need to first verify that the leader is <strong>still</strong> the leader at the time of the read. Otherwise, its possible that some other leader took over and formed a majority without the old leader. This can be done by waiting for the leader to execute some other request, which will only go through if we are indeed still the leader.</p>
+<h3 id="linearizable-sharding-with-paxos">Linearizable Sharding with Paxos</h3>
+<p>For linearizability with shards, we have the following requirements:</p>
+<ul>
+<li>All operations from the same node occur in order</li>
+<li>All operations to the same shard occur in order</li>
+<li>All operations complete between the request send and response receive.</li>
+</ul>
+<p>Parallelism/concurrency of batched requests becomes difficult in a sharded system, since breaking up operations of a batched request into a pipeline completely throws out the original order of the request. We can instead think of systems in terms of a weaker consistency model.</p>
+<h3 id="sequential-consistency">Sequential Consistency</h3>
+<p><strong>Sequential Consistency</strong> is a weaker form of consistency that requires all operations to be executed in some order that is consistent with the order in which they were issued. However, S.C. doesn't always follow real-time order. This is also referred to as <strong>serializability</strong> in the context of transactions.</p>
+<p>Simplistically, we can think of sequential consistency as a system where all operations are executed in some order that is consistent with the order in which they were issued, but not necessarily during their window of request/response timing. This allows stale reads, while still maintaining some order that is consistent with a prefix of the global state of the system.</p>
+<h3 id="snapshot-reads">Snapshot Reads</h3>
+<p>Gives us a consistent view of our global state across some set of views of the system. This requires all operations being serializable, but it is okay if reads return stale data.</p>
+<ul>
+<li>All reads in a transaction must be from the same snapshot</li>
+<li>Client can define how old is too old for their usecase</li>
+</ul>
+<p>To implement this (without sharding) in conjunction with Paxos, we can do the following:</p>
+<ol>
+<li>Primary defines update order in log</li>
+<li>Shadow replicas apply changes in that order</li>
+<li>Each lag primary from some variable amount</li>
+<li>Snapshot reads occur at a single replica</li>
+<li>If a replica crashes during a transaction, restart transaction at another snapshot replica</li>
+</ol>
+<h3 id="causal-consistency">Causal Consistency</h3>
+<ul>
+<li>Causally related reads and writes (ordered by happens before relation) must occur in that order.</li>
+<li>Concurrent writes can be seen in different orders on different nodes</li>
+<li>Note that linearizability imples causality</li>
+</ul>
+<h3 id="processor-consistency">Processor Consistency</h3>
+<ul>
+<li>Writes done by the same process are seen in that order.</li>
+<li>Writes by different processors can be seen in different orders by different readers</li>
+</ul>
+<h3 id="memory-barrierfence">Memory Barrier/Fence</h3>
+<ul>
+<li>Whenever consistency matters, you can insert a "fence" in a point of time that says all preceding operations happen before the fence, and all subsequent operations happen after</li>
+<li>On either side of the fence, order is not enforced</li>
+<li>If every operation is fenced, your system is linearizable</li>
+</ul>
+<p>This is how POSIX files work. Also many mutli-cache systems use fences to enforce consistency.</p>
+        </div>
+    </main>
+</body>
+</html>

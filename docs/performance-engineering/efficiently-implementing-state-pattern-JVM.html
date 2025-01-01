@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efficiently Implementing State Pattern Jvm</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Efficiently Implementing State Pattern Jvm</h1>
+        <div class="meta">
+            Last modified: 2024-12-08
+        </div>
+        <div class="content">
+            <h1 id="jvm-performance-with-state-pattern-optimizations">JVM Performance with State Pattern Optimizations</h1>
+<p>I was reading some interesting code at AWS and came across an implementation of the state pattern written by one of the senior engineers on our team. If you aren't already familiar, read <a href="https://refactoring.guru/design-patterns/state">this</a>. While the problem I would usually reach to the state pattern to solve is one more concerned with logical complexity and structure, (without revealing anything in particular about the code I was reading) I was intrigued by the performance implications of the underlying implementations, especially in a multi-threaded environment.</p>
+<h2 id="the-implementations">The Implementations</h2>
+<ol>
+<li><strong>Optimized State Pattern Using Enums</strong>: In <code>InlineStatePattern</code>, states are represented as enums with direct in-line transitions. State changes are handled by a simple check and assignment operation.</li>
+<li><strong>Generic State Pattern with Lazy Transitions</strong>: In <code>PolymorphicStatePattern</code>, state changes are managed with a generic context using an <code>AtomicReference</code> for thread-safe transitions. Lazy evaluation allows the state to change only if necessary, reducing the overhead in <em>certain cases</em> (emphasis on <em>certain</em>).</li>
+</ol>
+<h2 id="when-might-i-reach-for-either">When might I reach for either?</h2>
+<ol>
+<li><strong>Inline State Pattern</strong>:</li>
+<li>Use when state transitions are simple and predictable.</li>
+<li>
+<p>Ideal for low contention scenarios where synchronization overhead is a concern. For example, in a high-throughput system with little locking overhead, like a cache or a message queue.</p>
+</li>
+<li>
+<p><strong>Generic State Pattern</strong>:</p>
+</li>
+<li>Use when state transitions are complex or require additional logic.</li>
+<li>Ideal for high contention scenarios where synchronization is necessary. For example, in a shared resource or a asynchronous/distributed system. Note that while I'm saying high contention, this is not a hard and fast rule. It's more about the nature of the contention and the nature of the state transitions, e.g. if the state transitions are complex and the contention is low, you might still want to use the generic state patter for the sake of readability maintainability.</li>
+</ol>
+<h3 id="jvm-optimizations-and-overheads">JVM Optimizations and Overheads</h3>
+<ol>
+<li><strong>Enum-Based State Handling (Inlined Transitions)</strong>:</li>
+<li>Enums offer low-level performance wins by making state transitions in-line without additional method calls or object creation. OpenJDK initial</li>
+<li>
+<p>In this setup, each <code>DocumentState</code> enum implements its own <code>handle</code> and <code>nextState</code> methods. Transitioning states here is a simple assignment with little locking overhead, so the JVM can optimize by inlining these transitions at runtime.</p>
+</li>
+<li>
+<p><strong>Generic Interface with <code>AtomicReference</code></strong>:</p>
+</li>
+<li><code>AtomicReference</code> ensures thread safety for transitions, but adds some overhead due to its CAS (Compare-and-Swap) operations, which are costly under high contention.</li>
+<li>With lazy state transition, this implementation could theoretically avoid unnecessary state updates, which may be beneficial under lower contention.</li>
+</ol>
+<h2 id="predictions-and-testing">Predictions and Testing</h2>
+<p>Based on JVM behaviors, here are our predictions:</p>
+<ol>
+<li><strong>Single-threaded Performance</strong>:</li>
+<li>
+<p><code>InlineStatePattern</code> should outperform <code>PolymorphicStatePattern</code> in single-threaded scenarios due to reduced overhead from <code>AtomicReference</code>.</p>
+</li>
+<li>
+<p><strong>Multi-threaded Performance</strong>:</p>
+</li>
+<li>At lower levels of contention, <code>InlineStatePattern</code> should still perform better due to fewer synchronization requirements.</li>
+<li>Under high contention, the <code>AtomicReference</code> CAS operations in <code>PolymorphicStatePattern</code> may actually limit performance due to frequent retries.</li>
+</ol>
+<p>To verify these assumptions, let’s test using the following code blocks. You can add these into the <code>main</code> method to see the results.</p>
+<h3 id="code-blocks-to-test-performance">Code Blocks to Test Performance</h3>
+<ol>
+<li><strong>Single-Threaded Performance Test</strong>:</li>
+</ol>
+<pre><code class="language-java">   Document doc1 = new InlineStatePattern.Document(&quot;Single-threaded Test&quot;);
+   benchmark(&quot;Optimized State Pattern - Single Thread&quot;, 10_000_000, doc1::handleState);
+
+   Document doc2 = new PolymorphicStatePattern.Document(&quot;Single-threaded Test&quot;);
+   benchmark(&quot;Generic State Pattern - Single Thread&quot;, 10_000_000, doc2::handleState);
+</code></pre>
+<p>Here, I predict <code>InlineStatePattern</code> will complete faster, as it avoids the overhead of <code>AtomicReference</code> and CAS operations.</p>
+<pre><code class="language-txt">Inline State Pattern - Single Thread: 201363 µs for 10000000 iterations (0.02 µs/op) - Last result: Published: Single-threaded Test
+Polymorphic State Pattern - Single Thread: 133314 µs for 10000000 iterations (0.01 µs/op) - Last result: Published: Single-threaded Test
+</code></pre>
+<p>As expected, <code>InlineStatePattern</code> outperforms <code>PolymorphicStatePattern</code> in a single-threaded scenario by roughly 50%.</p>
+<ol>
+<li><strong>Multi-Threaded Performance Test with Low Contention:</strong>:</li>
+</ol>
+<pre><code class="language-java">Document sharedDoc1 = new InlineStatePattern.Document(&quot;Multi-thread Test&quot;);
+Thread[] threads1 = new Thread[4];
+for (int i = 0; i &lt; threads1.length; i++) {
+    threads1[i] = new Thread(() -&gt; {
+        benchmark(&quot;Optimized Pattern - Multi-thread Low Contention&quot;, 2_500_000, sharedDoc1::handleState);
+    });
+    threads1[i].start();
+}
+
+Document sharedDoc2 = new PolymorphicStatePattern.Document(&quot;Multi-thread Test&quot;);
+Thread[] threads2 = new Thread[4];
+for (int i = 0; i &lt; threads2.length; i++) {
+    threads2[i] = new Thread(() -&gt; {
+        benchmark(&quot;Generic Pattern - Multi-thread Low Contention&quot;, 2_500_000, sharedDoc2::handleState);
+    });
+    threads2[i].start();
+}
+</code></pre>
+<p>Here, <code>InlineStatePattern</code> should still outperform <code>PolymorphicStatePattern</code>, as the contention is low.</p>
+<pre><code class="language-txt">Polymorphic Pattern - Multi-thread Low Contention: 339159 µs for 2500000 iterations (0.14 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 360859 µs for 2500000 iterations (0.14 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 348844 µs for 2500000 iterations (0.14 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 375313 µs for 2500000 iterations (0.15 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 342431 µs for 2500000 iterations (0.14 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 368308 µs for 2500000 iterations (0.15 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 368001 µs for 2500000 iterations (0.15 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 385776 µs for 2500000 iterations (0.15 µs/op) - Last result: Published: Multi-thread Test
+idata = [339159, 360859, 348844, 375313]
+pdata = [342431, 368308, 368001, 385776]
+</code></pre>
+<p>As you can see however, despite being roughly neck and neck with Poly and Inline having respective averages of <code>356043.75</code> (<code>0.1424175 µs/op</code>) and <code>366129.0</code> (<code>0.1464516 µs/op</code>), the Inline pattern is actually slightly slower in this case. Since I hate being proven wrong, I also wonder if the results would be different if we swapped the order of the tests.</p>
+<pre><code class="language-txt">Polymorphic Pattern - Multi-thread Low Contention: 494816 µs for 2500000 iterations (0.20 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 481862 µs for 2500000 iterations (0.19 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 491883 µs for 2500000 iterations (0.20 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 492075 µs for 2500000 iterations (0.20 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 455870 µs for 2500000 iterations (0.18 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 491346 µs for 2500000 iterations (0.20 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 483745 µs for 2500000 iterations (0.19 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 475941 µs for 2500000 iterations (0.19 µs/op) - Last result: Published: Multi-thread Test
+idata = [494816, 481862, 491883, 492075]
+pdata = [455870, 491346, 483745, 475941]
+</code></pre>
+<p>This time, we have a Poly and Inline average of <code>490159.0</code> (<code>0.1960636 µs/op</code>) and <code>476225.5</code> (<code>0.1904902 µs/op</code>) respectively. Well well well...</p>
+<p>Lets try this one more time, running the tests twice, while also isolating them to their own JVM instances.</p>
+<pre><code class="language-txt">Polymorphic Pattern - Multi-thread Low Contention: 372321 µs for 2500000 iterations (0.15 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 387558 µs for 2500000 iterations (0.16 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 402434 µs for 2500000 iterations (0.16 µs/op) - Last result: Published: Multi-thread Test
+Polymorphic Pattern - Multi-thread Low Contention: 407174 µs for 2500000 iterations (0.16 µs/op) - Last result: Published: Multi-thread Test
+pdata = [372321, 387558, 402434, 407174]
+</code></pre>
+<pre><code class="language-txt">Inline Pattern - Multi-thread Low Contention: 397600 µs for 2500000 iterations (0.16 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 398064 µs for 2500000 iterations (0.16 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 392855 µs for 2500000 iterations (0.16 µs/op) - Last result: Published: Multi-thread Test
+Inline Pattern - Multi-thread Low Contention: 419996 µs for 2500000 iterations (0.17 µs/op) - Last result: Published: Multi-thread Test
+idata = [397600, 398064, 392855, 419996]
+</code></pre>
+<p>So we have a Inline average of <code>402128.75</code> (<code>0.1608515 µs/op</code>) and a Poly average of <code>392371.75</code> (<code>0.1569487 µs/op</code>). So it seems that the Inline pattern is actually slower in this case. <code>AtomicReference</code>s are preetttty pretty good.</p>
+<ol>
+<li><strong>High Contention Test with Increased Threads:</strong></li>
+</ol>
+<pre><code class="language-java">Document highContDoc1 = new InlineStatePattern.Document(&quot;High Contention Test&quot;);
+Document highContDoc2 = new PolymorphicStatePattern.Document(&quot;High Contention Test&quot;);
+
+for (int i = 0; i &lt; 8; i++) {
+    new Thread(() -&gt; {
+        benchmark(&quot;Optimized Pattern - High Contention&quot;, 1_250_000, highContDoc1::handleState);
+    }).start();
+}
+
+for (int i = 0; i &lt; 8; i++) {
+    new Thread(() -&gt; {
+        benchmark(&quot;Generic Pattern - High Contention&quot;, 1_250_000, highContDoc2::handleState);
+    }).start();
+}
+</code></pre>
+<p>With more threads, we expect contention to impact <code>PolymorphicStatePattern</code> more due to frequent CAS retries in AtomicReference.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The low-level optimizations in <code>InlineStatePattern</code> using enums make it ideal for performance-critical, low-contention use cases. <code>PolymorphicStatePattern</code>, with its AtomicReference, offers better safety for concurrent environments but incurs a trade-off in performance due to CAS operations. Testing under these scenarios confirms that the right implementation depends on your application’s specific threading needs.</p>
+        </div>
+    </main>
+</body>
+</html>

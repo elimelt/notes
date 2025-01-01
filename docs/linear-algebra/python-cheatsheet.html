@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Cheatsheet</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Python Cheatsheet</h1>
+        <div class="meta">
+            Last modified: 2024-12-08
+        </div>
+        <div class="content">
+            <h1 id="fundamentals-of-vectors">Fundamentals of Vectors</h1>
+<h2 id="working-with-vectors-in-numpy">Working with Vectors in NumPy</h2>
+<pre><code class="language-py">import numpy as np
+</code></pre>
+<h3 id="creating-vectors">Creating Vectors</h3>
+<pre><code class="language-python"># Row vector
+v_row = np.array([1, 2, 3])
+
+# Column vector
+v_col = np.array([[1], [2], [3]])
+assert v_col = np.transpose(v_row)
+</code></pre>
+<h3 id="vector-operations">Vector Operations</h3>
+<pre><code class="language-python"># Addition
+v1, v2 = np.array([1, 2, 3]), np.array([4, 5, 6])
+v_sum = v1 + v2
+
+# Subtraction
+v_diff = v1 - v2
+
+# Scalar multiplication
+c = 2
+v_scaled = c * v1
+
+# Dot product
+dot_product = np.dot(v1, v2)
+
+# Cross product
+cross_product = np.cross(v1, v2)
+</code></pre>
+<h3 id="vector-norms">Vector Norms</h3>
+<pre><code class="language-python"># L1 norm
+l1_norm = np.linalg.norm(v, ord=1)
+
+# L2 norm
+l2_norm = np.linalg.norm(v, ord=2)
+
+# Infinity norm
+inf_norm = np.linalg.norm(v, ord=np.inf)
+</code></pre>
+<h3 id="useful-functions">Useful Functions</h3>
+<pre><code class="language-python"># Normalize vector
+normalize = lambda v: v / np.linalg.norm(v)
+
+# Angle between vectors (radians)
+angle_rad = lambda v1, v2: np.arccos(np.clip(np.dot(normalize(v1), normalize(v2)), -1.0, 1.0))
+
+# Angle between vectors (degrees)
+angle_deg = lambda v1, v2: np.degrees(angle_rad(v1, v2))
+
+# Projection of v1 onto v2
+projection = lambda v1, v2: np.dot(v1, normalize(v2)) * normalize(v2)
+
+# Rejection of v1 from v2
+rejection = lambda v1, v2: v1 - projection(v1, v2)
+
+# Distance between vectors
+distance = lambda v1, v2: np.linalg.norm(v1 - v2)
+</code></pre>
+<h3 id="visualization-with-matplotlib">Visualization with Matplotlib</h3>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+</code></pre>
+<h4 id="2d-vectors">2D Vectors</h4>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_2d(*vectors, figsize=(10, 10), arrows=True, grid=True, equal_aspect=True):
+    &quot;&quot;&quot;
+    Plot multiple 2D vectors on a Cartesian plane.
+
+    Parameters:
+    -----------
+    *vectors : array-like
+        Variable number of 2D vectors to plot. Each vector should be a 2D point
+        or array-like object with x and y coordinates.
+    figsize : tuple, optional (default=(10, 10))
+        Figure size as (width, height)
+    arrows : bool, optional (default=True)
+        If True, draws vectors as arrows from origin. If False, plots as points/lines.
+    grid : bool, optional (default=True)
+        Whether to show the grid
+    equal_aspect : bool, optional (default=True)
+        Whether to maintain equal aspect ratio for x and y axes
+
+    Returns:
+    --------
+    fig, ax : tuple
+        Matplotlib figure and axis objects
+    &quot;&quot;&quot;
+    # convert all inputs to numpy arrays
+    vectors = [np.array(v, dtype=float) if not isinstance(v, np.ndarray) else v for v in vectors]
+
+    # validate inputs
+    for i, v in enumerate(vectors):
+        if v.shape != (2,):
+            raise ValueError(f&quot;Vector {i} has shape {v.shape}, expected (2,)&quot;)
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    colors = plt.cm.tab10(np.linspace(0, 1, len(vectors)))
+
+    for v, color in zip(vectors, colors):
+        if arrows:
+            ax.quiver(0, 0, v[0], v[1], angles='xy', scale_units='xy', scale=1,
+                     color=color, width=0.005)
+        else:
+            ax.plot([0, v[0]], [0, v[1]], '-o', color=color)
+
+    all_coords = np.vstack(vectors)
+    max_abs_coord = np.max(np.abs(all_coords)) * 1.2  # Add 20% padding
+    ax.set_xlim(-max_abs_coord, max_abs_coord)
+    ax.set_ylim(-max_abs_coord, max_abs_coord)
+    ax.axhline(y=0, color='k', linestyle='-', linewidth=0.5, alpha=0.3)  # x-axis
+    ax.axvline(x=0, color='k', linestyle='-', linewidth=0.5, alpha=0.3)  # y-axis
+
+    if grid:
+        ax.grid(True, linestyle='--', alpha=0.3)
+
+    if equal_aspect:
+        ax.set_aspect('equal')
+
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+
+    return fig, ax
+</code></pre>
+<h4 id="3d-vectors">3D Vectors</h4>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_3d(*vectors):
+    &quot;&quot;&quot;Plot multiple 3D vectors from origin as lines with dots at endpoints.&quot;&quot;&quot;
+    # Convert inputs to numpy arrays
+    vectors = [np.array(v) for v in vectors]
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    for v in vectors:
+        # Plot line from origin to vector endpoint with dot
+        ax.plot([0, v[0]], [0, v[1]], [0, v[2]], '-o')
+
+    # Set equal aspect ratio and add labels
+    ax.set_box_aspect([1,1,1])
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+
+    return fig, ax
+</code></pre>
+<h1 id="matrices">Matrices</h1>
+<h2 id="working-with-matrices-in-numpy">Working with Matrices in NumPy</h2>
+<pre><code class="language-py">import numpy as np
+</code></pre>
+<h3 id="creating-matrices">Creating Matrices</h3>
+<pre><code class="language-python"># 2D array
+A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+# Identity matrix
+I = np.eye(3)
+
+# Zero matrix
+Z = np.zeros((3, 3))
+
+# Ones matrix
+O = np.ones((3, 3))
+
+# Random matrix
+R = np.random.rand(3, 3)
+</code></pre>
+<h3 id="matrix-operations">Matrix Operations</h3>
+<pre><code class="language-python"># Addition
+A1, A2 = np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]])
+A_sum = A1 + A2
+
+# Subtraction
+A_diff = A1 - A2
+
+# Scalar multiplication
+c = 2
+A_scaled = c * A1
+
+# Matrix multiplication
+A_prod = np.dot(A1, A2)
+
+# Transpose
+A_transpose = np.transpose(A)
+
+# Inverse
+A_inv = np.linalg.inv(A)
+
+# Determinant
+det_A = np.linalg.det(A)
+
+# Trace
+trace_A = np.trace(A)
+
+# Rank
+rank_A = np.linalg.matrix_rank(A)
+
+# Eigenvalues and eigenvectors
+eigenvalues, eigenvectors = np.linalg.eig(A)
+
+# Singular value decomposition
+U, S, V = np.linalg.svd(A)
+
+# Matrix norms
+l1_norm = np.linalg.norm(A, ord=1)
+
+l2_norm = np.linalg.norm(A, ord=2)
+
+inf_norm = np.linalg.norm(A, ord=np.inf)
+
+fro_norm = np.linalg.norm(A, ord='fro')
+
+# Matrix power
+A_squared = np.linalg.matrix_power(A, 2)
+</code></pre>
+<h1 id="systems-of-linear-equations">Systems of Linear Equations</h1>
+<h2 id="solving-linear-systems">Solving Linear Systems</h2>
+<h3 id="matrix-inversion-method">Matrix Inversion Method</h3>
+<pre><code class="language-python">A = np.array([[2, 1], [1, 1]])
+b = np.array([3, 2])
+
+x = np.linalg.inv(A).dot(b)
+
+# or, much faster
+
+x = np.linalg.solve(A, b)
+
+print(x)
+</code></pre>
+<h1 id="vector-spaces">Vector Spaces</h1>
+<h2 id="linear-independence-span-basis">Linear Independence, Span, Basis</h2>
+<pre><code class="language-python">
+# check if set of vectors is linearly independent
+is_linearly_independent = lambda *vectors: np.linalg.matrix_rank(np.array(vectors)) == len(vectors[0])
+
+# check if vector is in span of other vectors
+is_in_span = lambda v, *S: np.linalg.matrix_rank(np.array([*S, v])) == np.linalg.matrix_rank(S)
+
+# find basis of a set of vectors
+basis = lambda *vectors: np.array(vectors).T[:, np.linalg.matrix_rank(np.array(vectors)):]
+</code></pre>
+<h1 id="matrix-properties-cont-1">Matrix Properties (cont. 1)</h1>
+<h2 id="dimension-rank-nullity-row-space">Dimension, Rank, Nullity, Row Space</h2>
+<pre><code class="language-python"># dimension of a vector space
+dim = lambda *vectors: np.linalg.matrix_rank(np.array(vectors))
+rank = lambda A: np.linalg.matrix_rank(A)
+nullity = lambda A: A.shape[1] - rank(A)
+</code></pre>
+<h2 id="special-transformations">Special Transformations</h2>
+<pre><code class="language-python"># reflection matrix
+reflect = lambda n: np.eye(len(n)) - 2 * np.outer(n, n) / np.dot(n, n)
+
+# projection matrix
+project = lambda n: np.outer(n, n) / np.dot(n, n)
+
+# rotation matrix
+rotate = lambda theta: np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+
+# scaling matrix
+scale = lambda s: np.diag(s)
+
+# shearing matrix
+shear = lambda s: np.array([[1, s], [0, 1]])
+
+# translation matrix
+translate = lambda t: np.array([[1, 0, t[0]], [0, 1, t[1]], [0, 0, 1]])
+
+# homogenous coordinates
+homogenize = lambda v: np.append(v, 1)
+
+# dehomogenize
+dehomogenize = lambda v: v[:-1] / v[-1]
+
+# affine transformation
+affine = lambda A, t: np.block([[A, t], [0, 0, 1]])
+
+# perspective transformation
+perspective = lambda d: np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1/d]])
+</code></pre>
+<h2 id="orthogonality">Orthogonality</h2>
+<pre><code class="language-python"># check if two vectors are orthogonal
+is_orthogonal = lambda u, v: np.dot(u, v) == 0
+
+# check if set of vectors is orthogonal
+is_orthogonal_set = lambda *vectors: all(np.dot(v1, v2) == 0 for v1, v2 in itertools.combinations(vectors, 2))
+
+# check if set of vectors is orthonormal
+is_orthonormal_set = lambda *vectors: is_orthogonal_set(*vectors) and all(np.linalg.norm(v) == 1 for v in vectors)
+
+# check if matrix is orthogonal
+is_orthogonal_matrix = lambda A: np.allclose(np.dot(A, A.T), np.eye(A.shape[0]))
+
+# check if matrix is orthonormal
+is_orthonormal_matrix = lambda A: is_orthogonal_matrix(A) and np.allclose(np.linalg.det(A), 1)
+</code></pre>
+<h1 id="change-of-basis">Change of Basis</h1>
+<pre><code class="language-python"># change of basis matrix
+change_of_basis = lambda B, C: np.linalg.inv(C) @ B
+</code></pre>
+        </div>
+    </main>
+</body>
+</html>

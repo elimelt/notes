@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch10 Batch Processing</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Ch10 Batch Processing</h1>
+        <div class="meta">
+            Last modified: 2023-12-23
+        </div>
+        <div class="content">
+            <h1 id="chapter-10">Chapter 10</h1>
+<h2 id="batch-processing">Batch Processing</h2>
+<p><strong>Services</strong> (<em>online systems</em>) are design to handle requests from users or other services. Performance is measured in <em>requests per second</em> and <em>response time</em>.</p>
+<p><strong>Batch processing</strong> (<em>offline systems</em>) run scheduled jobs periodically that process accumulated data. Performance is measured in <em>throughput</em>.</p>
+<p><strong>Stream processing</strong> (<em>near-real-time systems</em>) are a hybrid of online and offline systems. Performance is measured in <em>latency</em>, and they usually take in a stream of <em>events</em> and calculate <em>aggregates</em> in real time, as opposed to running calculations on accumulated data.</p>
+<h3 id="batch-processing-with-unix-tools">Batch Processing with Unix Tools</h3>
+<p><strong>Log analysis</strong> is a common batch processing task. Applications append log entries to a file, and a batch job periodically processes the log file and generates a report.</p>
+<pre><code class="language-bash">cat /var/log/&lt;application&gt;/&lt;logfile&gt; |  # read the log file
+    awk '{print $&lt;url_idx&gt;}' |          # extract the 7th field (URL)
+    sort |                              # sort the URLs
+    uniq -c |                           # count the number of occurrences of each URL
+    sort -r -n |                        # sort numerically in descending order
+    head -n 5                           # take the top 5
+ ```
+
+ Equivalently, using Python:
+
+ ```python
+from collections import Counter
+
+with open('/var/log/&lt;application&gt;/&lt;logfile&gt;') as f:
+    urls = [line.split()[&lt;url_idx&gt;] for line in f]
+    for url, count in Counter(urls).most_common(5):
+        print(url, count)
+ ```
+
+However, these two examples differ in that python uses an in-memory hash table, whereas the Unix pipeline uses a disk-based merge sort that can handle data sets larger than memory, and is thus more scalable.
+
+### MapReduce and Distributed Filesystems
+
+**MapReduce** is a programming model for processing large amounts of data in bulk across many machines. It is a batch processing system that runs a user-defined *map* function in parallel over many input *records*, and then runs a user-defined *reduce* function in parallel over the output of the map function.
+
+**Hadoop** is an open source implementation of MapReduce. It is a distributed system that runs on a cluster of machines, and it includes a distributed filesystem called **HDFS** (*Hadoop Distributed Filesystem*).
+
+**HDFS** is designed for storing large files with streaming access patterns, and is optimized for throughput rather than latency. It is based on the *Google File System* (*GFS*), and is similar to *Amazon S3*, although it is not an object store and allows you to run computations on the data stored in it.
+
+Using the Unix pipeline example from above, a (single node) MapReduce job would look like this:
+
+1. Read all input file logs and break into records (lines)
+2. Map: extract the URL from each record and output a key-value pair of `(URL, _)`
+3. Sort all key-value pairs by key
+4. Reduce: count the number of occurrences of each URL
+
+A multi-node MapReduce job would look like this:
+
+1. Read all input file logs and break into records (lines)
+2. Map: extract the URL from each record and output a key-value pair of `(URL, _)`
+3. Shuffle: group all key-value pairs by hashed key and schedule a reduce task for each group written to disk (sorted by url)
+4. Reduce: count the number of occurrences of each URL in the group
+
+This is a single MapReduce job, but often people run a sequence of MapReduce jobs in a pipeline, where the output of one job is the input of the next job. This is called a **workflow**. You can run jobs in sequence using input and output files, or use a scheduler like **Airflow** to manage the workflow.
+
+**Sort-merge joins** Used to combine two sorted lists of records into one sorted list of records. They are used in MapReduce to join the output of the map function before the reduce function.
+
+```python
+# psuedocode to join event and user data by user_id
+# this is JUST PSEUDOCODE, not actual MapReduce code
+
+# user: { user_id, name, date_of_birth, ... }
+map_user_data(user):
+    emit_intermediate(user.user_id, user.date_of_birth)
+
+# event: { user_id, event_type, ... }
+map_events(event):
+    emit_intermediate(event.user_id, event.event_type)
+
+# join: { user_id, date_of_birth, event_type, ... }
+reduce_join(user_id, values):
+    user = values[0]
+    event = values[1]
+    payload = { dob: user.date_of_birth, event: event.event_type }
+    emit(user_id, payload)
+</code></pre>
+<p><strong>Group-by</strong> Used to group records by a key, and is used in MapReduce to group the output of the map function before the reduce function.</p>
+<pre><code class="language-python"># psuedocode to group events by user_id
+# this is JUST PSEUDOCODE, not actual MapReduce code
+
+# event: { user_id, event_type, ... }
+map_events(event):
+    emit_intermediate(event.user_id, event.event_type)
+
+# group: { user_id, [event_type, ...] }
+reduce_group(user_id, values):
+    emit(user_id, values)
+</code></pre>
+<p>Distributing a join acorss multiple machines is difficult in the the presence of skew. If one user has many events, then the reducer that processes that user's events will be slower than the other reducers. To avoid skew, several algorithms exist and are implemented in tools like Pig and Hive.</p>
+<p>Above was an example of a <strong>reduce-side join</strong>, where the join is performed in the reduce function. An alternative is a <strong>map-side join</strong>, where the join is performed in the map function. This is only possible if the join is between two datasets that are partitioned in the same way. For example, if the user data and event data are partitioned by user_id, then the join can be performed in the map function.</p>
+<p>Map-side joins are best when joining a large dataset with a small dataset, because the small dataset can be loaded into memory on each machine. This is called a <strong>broadcast join</strong>. Particularly, a <strong>broadcast hash join</strong> is when the small dataset is hashed in the memory of each machine. This is a "replicated join" in Pig, and a "MapJoin" in Hive. You can also use a disk index instead of a hash table for small datasets that woudn't fit in memory.</p>
+<pre><code class="language-python"># psuedocode to join event and user data by user_id
+# this is JUST PSEUDOCODE, not actual MapReduce code
+
+# user: { user_id, name, date_of_birth, ... }
+users = load_users()
+
+# event: { user_id, event_type, ... }
+map_events(event):
+    user = users[event.user_id]
+    payload = { dob: user.date_of_birth, event: event.event_type }
+    emit(user_id, payload)
+</code></pre>
+<p>A <strong>partitioned hash join</strong> is when you partition your map-side join in such a way that you only need to read a small portion of either dataset into memory. For example, if you partition both datasets by the first digit of the user_id, then you only need to read ~10% of each dataset into memory on any given partition. This requires that each join input is partitioned in the same way. These are known as "bucketed map joins" in Hive.</p>
+<pre><code class="language-python"># psuedocode to join event and user data by user_id
+# this is JUST PSEUDOCODE, not actual MapReduce code
+
+# user: { user_id, name, date_of_birth, ... }
+users_partition = load_users_with(ENV.partition_key)
+
+# event: { user_id, event_type, ... }
+map_events(event):
+    user = users_partition[event.user_id]
+    payload = { dob: user.date_of_birth, event: event.event_type }
+    emit(user_id, payload)
+</code></pre>
+<h3 id="output-of-batch-workflows">Output of Batch Workflows</h3>
+<p><strong>Search indexes</strong> are used to make data searchable. Often, you can use batch processing to build indexes from a datasource. For example, building search indexes for a massive collection of documents would look something like this:</p>
+<ol>
+<li>Extract the text from each document</li>
+<li>Tokenize the text into words</li>
+<li>Remove common words (stop words)</li>
+<li>Build an index from words to documents</li>
+</ol>
+<p>This can be distributed across multiple machines by partitioning the documents by ID, and then building an in-memory index for each partition. Then, you can merge the in-memory indexes into a single index.</p>
+<pre><code class="language-python"># psuedocode to build a search index
+# this is JUST PSEUDOCODE, not actual MapReduce code
+
+# document: { id, text, ... }
+map_document(document):
+    for word in tokenize(document.text):
+        if word not in stop_words:
+            emit_intermediate(word, document.id)
+
+# index: { word, [document_id, ...] }
+reduce_index(word, values):
+    emit(word, values)
+</code></pre>
+<p><strong>Reccomendation systems</strong> are used to reccomend items to users based on their past behavior. For example, you can use batch processing to build a reccomendation system for a feed of posts from other users. To design a system like this, we want reccomendations to be queryable in real time with low latency. Furthermore, the reccomendations should be processed in batches to reduce the load on the database.</p>
+<p>Instead of using a database client to process data in our batch job, we create an immutable store of our data in a distributed filesystem. Then, we can run a batch job to process the data and write the results to a database. This is called <strong>extract-transform-load</strong> (<em>ETL</em>).</p>
+<pre><code class="language-python"># psuedocode to build a reccomendation index
+# Running on a single machine that doesn't handle user requests
+
+# load a partition of the data into memory (without relying on db client)
+inmem_store_partition = load_data_from_db(ENV.partition_key)
+
+# process data of this partition
+index = build_index_with_map_reduce(inmem_store)
+
+# write the patition's index to the filesystem
+write_partition_index_to_fs(ENV.partition_key, index)
+</code></pre>
+<pre><code class="language-python"># psuedocode to query a reccomendation index
+
+def query(user_id):
+    result = offload_query_to_partition(user_id)
+    return result
+</code></pre>
+        </div>
+    </main>
+</body>
+</html>

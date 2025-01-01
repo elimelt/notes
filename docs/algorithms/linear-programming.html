@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Programming</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Linear Programming</h1>
+        <div class="meta">
+            Last modified: 2024-05-25
+        </div>
+        <div class="content">
+            <h1 id="linear-programming">Linear Programming</h1>
+<h2 id="linear-systems">Linear Systems</h2>
+<p>Systems of linear equations (key word being equality) can be solved via gaussian elimination. This is relatively easy, since your solution space ends up being a line, a plane, or a hyperplane in higher dimensions.</p>
+<p>Let $a$ be a column vector in $\mathbb{R}^d$, and $x$ a column vector of $d$ variables. We can represent a system using the <em>inner product</em> of these two vectors:</p>
+<p>$$
+\langle a, x \rangle = a^Tx = a_1x_1 + a_2x_2 + \ldots + a_dx_d = \sum_{i=1}^d a_ix_i
+$$</p>
+<p>A <strong>hyperplane</strong> is the set of points $x$ such that $\langle a, x \rangle = b$ for some $b$. A <strong>handspace</strong> is the set of points on one side of a hyperplace, ${x : \langle a, x \rangle \geq b}$ or ${x : \langle a, x \rangle \leq b}$.</p>
+<p>The intersection of a system of half spaces creates a <strong>polytope</strong>, which is a convex set. A <strong>convex set</strong> is a set where the line segment between any two points in the set is also in the set.</p>
+<h2 id="linear-programs">Linear Programs</h2>
+<p>The goal of a linear program is to optimize some <strong>objective function</strong> subject to a set of constraints, which are also linear functions. For example...</p>
+<p>$$
+\begin{align<em>}
+&amp;max  &amp; 3x_1 - 4x_3\
+&amp;s.t. &amp; x_1 + x_2 \le 5\
+&amp;     &amp; x_3 + x_1 = 4\
+&amp;     &amp; x_3 - x_2 \ge -5\
+&amp;     &amp; x_1, x_2, x_3 \ge 0\
+\end{align</em>}
+$$</p>
+<h2 id="linear-algebra-review">Linear Algebra Review</h2>
+<p>$$
+\langle a, x \rangle = a^Tx = a_1x_1 + a_2x_2 + \ldots + a_dx_d
+$$</p>
+<p>$$
+A = \begin{bmatrix}
+a_1^T \
+a_2^T \
+\vdots \
+a_m^T
+\end{bmatrix} \Rightarrow
+Ax = \begin{pmatrix}
+\langle a_1, x \rangle \
+\langle a_2, x \rangle \
+\vdots \
+\langle a_m, x \rangle
+\end{pmatrix}
+$$</p>
+<p>$$
+Ax \le b \Rightarrow \begin{array}{c}
+\langle a_1, x \rangle \le b_1 \
+\langle a_2, x \rangle \le b_2 \
+\vdots \
+\langle a_m, x \rangle \le b_m
+\end{array}
+$$</p>
+<h2 id="linear-program-standard-form">Linear Program Standard Form</h2>
+<p>We can write any linear program in the <em>standard form</em> below.</p>
+<p>$$
+\begin{array}{cc}
+max &amp; \langle c, x \rangle \
+s.t., &amp; Ax \le b\
+~ &amp; x \ge 0
+\end{array}
+$$</p>
+<p>For example, we can transform the following linear program by turning the minimization problem into a maximization, and turning all equalities into two inequalities.</p>
+<p>$$
+\begin{array}{cc}
+min &amp;   y_1 - 2y_2\
+s.t., &amp; y_1 + 2y_2 = 3\
+~ &amp; y_1 - y_2 \ge 1\
+~ &amp; y_1, y_2 \ge 0\
+\end{array}
+$$</p>
+<p>To turn a min into a max, we just negate the objective function. The same holds for reversing the direction of a $\geq$. We can turn the above linear program into the following:</p>
+<p>$$
+\begin{array}{cc}
+max &amp;   -y_1 + 2y_2\
+s.t., &amp; y_1 + 2y_2 \le 3\
+~ &amp; -(y_1 + 2y_2) \le -3\
+~ &amp; y_1 + y_2 \le 1\
+~ &amp; y_1, y_2 \ge 0\
+\end{array}
+$$</p>
+<p>In LPs where you don't have non-negativity for all variables, you can replace the variables missing this constraint with the difference of two non-negative variables. For example...</p>
+<p>$$
+\begin{array}{cc}
+max &amp;   y_1\
+s.t., &amp; y_1 + y_2 \le 3\
+~ &amp; y_2 \ge 0\
+\end{array}
+$$</p>
+<p>We replace $y_1$ with $z_1 - z_1'$, where $z_1, z_1' \ge 0$. The linear program becomes...</p>
+<p>$$
+\begin{array}{cc}
+max   &amp; z_1 - z_1'\
+s.t., &amp; z_1 - z_1' + y_2 \le 3\
+~     &amp; z_1, z_1', y_2 \ge 0\
+\end{array}
+$$</p>
+<h2 id="applications-of-linear-programming">Applications of Linear Programming.</h2>
+<p>LPs generalize to all sorts of problems, such as 2-person zero-sum games, shortest path, max-flow, matching, multi-commodity flow, MST, min weighted, arborescence, ...</p>
+<p>We can solve linear programs in polynomial time, and they turn out to be useful for approximation algorithms.</p>
+<h2 id="components-of-a-linear-program">Components of a Linear Program</h2>
+<ul>
+<li>Set of variables</li>
+<li>Bounding constraints on variables</li>
+<li>Are they non-negative?</li>
+<li>Objective function</li>
+<li>Is it a minimization or maximization problem?</li>
+<li>LP constrains, but they need to be linear</li>
+<li>Is it an equality or inequality?</li>
+</ul>
+<h2 id="max-flow">Max-Flow</h2>
+<p>Given a graph $G = (V, E)$ with source $s$ and sink $t$, for every edge $e$ we have a variable $x_e$ as the flow on the edge $e$.</p>
+<p>The bounding constraints would be...</p>
+<ul>
+<li>$x_e \ge 0$ for all $e$ (since the flow is non-negative)</li>
+<li>$x_e \le c(e)$ for all $e$ (capacity constraint)</li>
+<li>$\sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e$ for all $v \ne s, t$ (conservation constraint)</li>
+</ul>
+<p>And our objective function would be...</p>
+<ul>
+<li>Maximize $\sum_{e \text{ out of } s} x_e$</li>
+</ul>
+<p>So we have an overall LP of...</p>
+<p>$$
+\begin{array}{ccc}
+max     &amp; \sum_{e \text{ out of } s} x_e &amp; ~\
+s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp; \forall c \ne s, t\
+~       &amp; x_e \le c(e) &amp; \forall e\
+~       &amp; x_e \ge 0 &amp; \forall e
+\end{array}
+$$</p>
+<p>Note that the flow this gives you is not necessarily an integer max-flow.</p>
+<h2 id="min-cost-max-flow">Min-Cost Max-Flow</h2>
+<p>Expanding on the previous example, we can add a cost to each edge $p(e)$ and try to minimize $p(e)$ while achieving some constant flow $f$.</p>
+<p>$$
+\begin{array}{ccc}
+max     &amp; \sum_{e \in E} p(e) \cdot x_e &amp; ~\
+s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp; \forall c \ne s, t\
+~       &amp; \sum_{e \text{ out of } s} x_e = f &amp; ~\
+~       &amp; x_e \le c(e) &amp; \forall e\
+~       &amp; x_e \ge 0 &amp; \forall e
+\end{array}
+$$</p>
+<h2 id="weighted-vertex-cover">Weighted Vertex Cover</h2>
+<p>Given a graph $G = (V, E)$, where each vertex has a cost $c_v$, find the minimum cost vertex cover, i.e. $\min \sum_{v \in S} c_v$</p>
+<p>We have a variable $x_v$ for each $v$, where $x_v = 1$ if $v \in S$ and $x_v = 0$ otherwise. Then we have the constraint that for every edge $(u, v) \in</p>
+<p>$$
+\begin{array}{ccc}
+max     &amp; \sum_{e \in E} p(e) \cdot x_e &amp; ~\
+s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp; \forall c \ne s, t\
+~       &amp; \sum_{e \text{ out of } s} x_e = f &amp; ~\
+~       &amp; x_e \le c(e) &amp; \forall e\
+~       &amp; x_e \ge 0 &amp; \forall e
+\end{array}
+$$</p>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 Concurrency And Threads</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>4 Concurrency And Threads</h1>
+        <div class="meta">
+            Last modified: 2024-02-18
+        </div>
+        <div class="content">
+            <h1 id="chapter-4-concurrency-and-threads">Chapter 4: Concurrency and Threads</h1>
+<h2 id="41-thread-use-cases">4.1 Thread Use Cases</h2>
+<ul>
+<li><strong>Program structure: expressing logically concurrent tasks.</strong> Many applications are naturally concurrent, and using threads lets you naturally model this concurrency in your code.</li>
+<li><strong>Responsiveness: shifting work to run in the background.</strong> You can use threads to move slow or blocking operations to a background thread, so that the main event loop of your application stays responsive to users.</li>
+<li><strong>Performance: exploiting multiple processors.</strong> Do more work in the same amount of time.</li>
+<li><strong>Performance: managing I/O devices.</strong> Idle CPUs are a waste of resources. If one thread is blocked waiting for I/O, another thread can run on the CPU instead.</li>
+</ul>
+<p>Processors are much faster than I/O devices. Latency for disk I/O is measured in milliseconds, which is enough for a CPU to execute millions of instructions. Furthermore, unpredictable latency with I/O like user input or network requests make it nessary to have non-blocking I/O.</p>
+<p>A common pattern in I/O bound applications is to have multiple threads fetching different quality or levels of resources simultaneously. For example, a media player might have one thread fetching the highest quality video, another fetching the highest quality audio, and a third fetching the lowest quality video for previewing.</p>
+<h4 id="threads-vs-processes">Threads vs. Processes</h4>
+<h5 id="some-scenarios">Some scenarios:</h5>
+<ul>
+<li><strong>One thread per process.</strong> One sequence of instructions, executing from beginning to end. Kernel runs those instructions in user mode. The process uses system calls to request privileged operations.</li>
+<li><strong>Many threads per process.</strong> Several concurrent threads, each executing within the restricted rights of the process. A subset of the process's threads running, while rest are suspended. Any thread running in a process can make system calls into the kernel, blocking itself but no other threads. When the processor gets an I/O interrupt, it preempts one of the running threads so the kernel can run the interrupt handler; when the handler finishes, the kernel resumes that thread.</li>
+<li><strong>Many single-threaded processes.</strong> Each process looks like a thread: a separate sequence of instructions, executing sometimes in the kernel and sometimes at user level. Concurrent processes can have concurrent system calls, even parallel on multiprocessor systems.</li>
+<li><strong>Many kernel threads.</strong> The operating system kernel itself implements the thread abstraction for its own use. Runs seperate threads, each of which are running in kernel mode.</li>
+</ul>
+<h2 id="42-thread-abstraction">4.2 Thread Abstraction</h2>
+<ul>
+<li><strong>Single execution sequence.</strong> Each thread has its own set of instructions it is executing.</li>
+<li><strong>Seperately schedulable.</strong> The kernel can run, suspend, and resume each thread independently of the others.</li>
+</ul>
+<h3 id="421-running-suspending-and-resuming-threads">4.2.1 Running, Suspending, and Resuming Threads</h3>
+<p>Threads provide the illusion of infinite processors. OS uses a <em>thread scheduler</em> to switch between threads to run. How threads are interleaved and scheduled should be transparent to the application.</p>
+<h4 id="cooperative-vs-preemptive-multithreading">Cooperative vs. preemptive multithreading</h4>
+<p>Early versions of MacOS used cooperative multithreading, where the kernel would only switch threads when the running thread made a system call relinquishing control. This is a bad idea because a thread can hog the CPU and starve other threads.</p>
+<p>Modern operating systems use preemptive multithreading, where the kernel can preempt a thread at any time, even in the middle of a single instruction.</p>
+<h3 id="422-why-unpredictable-speed">4.2.2 Why "Unpredictable Speed"?</h3>
+<p><strong>Always avoid</strong> reasoning about the relative speed of threads when trying to evaluate the correctness of your code. The speed of threads is unpredictable for many reasons.</p>
+<h2 id="43-posix-thread-api">4.3 POSIX Thread API</h2>
+<table>
+<thead>
+<tr>
+<th>Function Signature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)</code></td>
+<td>Create a new thread.</td>
+</tr>
+<tr>
+<td><code>pthread_join(pthread_t thread, void **retval)</code></td>
+<td>Wait for a thread to finish.</td>
+</tr>
+<tr>
+<td><code>pthread_detach(pthread_t thread)</code></td>
+<td>Detach a thread.</td>
+</tr>
+<tr>
+<td><code>pthread_self()</code></td>
+<td>Get the current thread.</td>
+</tr>
+<tr>
+<td><code>pthread_exit(void *retval)</code></td>
+<td>Terminate the current thread.</td>
+</tr>
+<tr>
+<td><code>pthread_cancel(pthread_t thread)</code></td>
+<td>Cancel a thread.</td>
+</tr>
+</tbody>
+</table>
+<p>Threads enable <strong>asynchronous procedure calls</strong>, which means the function called runs in the background</p>
+<pre><code class="language-c"> #include &lt;stdio.h&gt;
+ #include &quot;thread.h&quot;
+ static void go(int n);
+ #define NTHREADS 10
+ static thread_t threads[NTHREADS];
+
+ int main(int argc, char **argv) {
+    int i;
+    long exitValue;
+    for (i = 0; i &lt; NTHREADS; i++){
+       pthread_create(&amp;(threads[i]), &amp;go, i);
+    }
+
+    for (i = 0; i &lt; NTHREADS; i++){
+        exitValue = pthread_join(threads[i]);
+        printf(&quot;Thread %d returned with %ld\n&quot;,
+        i, exitValue);
+    }
+
+    printf(&quot;Main thread done.\n&quot;);
+    return 0;
+ }
+
+ void go(int n) {
+    printf(&quot;Hello from thread %d\n&quot;, n);
+    pthread_exit(100 + n);
+    // Not reached
+ }
+</code></pre>
+<h3 id="fork-join-parallelism">Fork-Join Parallelism</h3>
+<p>Example program to zero a block of memory using multiple threads. In operating systems, often times need to zero a block of memory (like after a process exits to prevent leaking information). This is a good example of a task that can be parallelized.</p>
+<p>For reference, zeroing 1 GB of memory takes about 50 ms on modern hardware. The overhead of creating a thread however is on the order of 10 microseconds, so it can be worth it to parallelize.</p>
+<pre><code class="language-c"> // To pass two arguments, we need a struct to hold them.
+ typedef struct params {
+    unsigned char *buffer;
+    int length;
+ };
+
+ #define NTHREADS 10
+ void go (struct params *p) {
+    memset(p-&gt;buffer, 0, p-&gt;length);
+ }
+ // Zero a block of memory using multiple threads.
+ void blockzero (unsigned char *p, int length) {
+    int i;
+    thread_t threads[NTHREADS];
+    struct params params[NTHREADS];
+
+    // For simplicity, assumes length is divisible by NTHREADS.
+    assert((length % NTHREADS) == 0);
+
+    for (i = 0; i &lt; NTHREADS; i++) {
+        params[i].buffer = p + i * length/NTHREADS;
+        params[i].length = length/NTHREADS;
+        thread_create_p(&amp;(threads[i]), &amp;go, &amp;params[i]);
+    }
+
+    for (i = 0; i &lt; NTHREADS; i++)
+        thread_join(threads[i]);
+ }
+</code></pre>
+<p>You can also lazily zero out blocks of memory with a background thread that zeros out memory while another process runs. Then, if you need to reuse the memory, you can just call join on the background thread.</p>
+<h2 id="thread-data-structes-and-life-cycle">Thread Data Structes and Life Cycle</h2>
+<p>Important to differentiate between shared and individual state of a thread. Shared state consists of code, global variables, and heap-allocated memory. Individual state consists of the thread's stack, registers, and metadata, all of which is stored in the <strong>thread control block (TCB)</strong> in each thread.</p>
+<h3 id="thread-control-block">Thread Control Block</h3>
+<p>For every thread the OS creates, it creates a TCB to store the thread's individual state. It must store both the state of the computation, and the metadata needed to manage the thread.</p>
+<h4 id="per-thread-computation-state">Per-thread Computation State</h4>
+<p>The thread needs a pointer to the top of its stack, which works the same as a single threaded program's stack (ie one frame per function call). Each frame contains the local variables, parameters, and the return address to jump back to when the function returns. <strong>When a new thread is created, the OS allocates a new stack for it</strong>.</p>
+<p>Additionally, needs to store the processor registers. Some systems just put them on the top of the thread's stack, but others have dedicated space in the TCB.</p>
+<h4 id="how-big-of-a-stack">How big of a stack?</h4>
+<p>Kernel stacks allocated in physical memory, so good to keep small. The max procedure call nesting in kernel code is usually small, so the kernel stacks are usually small. This works solely because of the convention to allocate all large data structures on the heap. Small stacks can cause problems if you allocate large structures locally.</p>
+<p>User level stacks typically allocated in virtual memory, so less constrained. However, multithreaded programs can't grow their stacks indefinitely (except in languages like Go where stacks are automatically grown). Very easy to overflow the stack in multithreaded programs, but POSIX let's you configure stack size. Most implementations try to detect stack overflow with known values at the top and bottom of the stack, but this is not foolproof.</p>
+<h4 id="per-thread-metadata">Per-thread Metadata</h4>
+<p>Things like thread id, scheduling priority, status, etc.</p>
+<p>Also includes thread local variables, which are similar to global variables in that they span multiple function calls. However, they are private to each thread, and are stored in the TCB. For example, <code>errorno</code> is a macro that expands to a thread local variable holding the error code of the last system call. Additionally, many details of the heap allocator are stored in thread local variables to make parallel allocation in the heap easier (ie subdivide the heap into regions, and each thread has a region).</p>
+<h3 id="shared-state">Shared State</h3>
+<p>Program code, statically allocated global variables, dynamicallty allocated heap variables. Note that the kernel doesn't enforce any protection between threads for per-thread state, so it is important know which variables are designed to be shared across threads (global variables, objects on the heap) and which are designed to be private (local/automatic variables).</p>
+<h2 id="thread-life-cycle">Thread Life Cycle</h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Location of TCB</th>
+<th>Location of registers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INIT</td>
+<td>Being created (stack)</td>
+<td>TCB</td>
+</tr>
+<tr>
+<td>READY</td>
+<td>Ready list</td>
+<td>TCB</td>
+</tr>
+<tr>
+<td>RUNNING</td>
+<td>Running list</td>
+<td>CPU</td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>Synchronization variable's waiting list</td>
+<td>TCB</td>
+</tr>
+<tr>
+<td>FINISHED</td>
+<td>Finished list then deleted</td>
+<td>TCB or deleted</td>
+</tr>
+</tbody>
+</table>
+<h3 id="init">INIT</h3>
+<ul>
+<li>Put thread into INIT state and allocate/initialize per-thread data structures.</li>
+<li>Put thread into READY state and add it to the <em>ready list</em> (some sort of queue usually, maybe a priority queue).</li>
+</ul>
+<h3 id="ready">READY</h3>
+<ul>
+<li>Thread is ready to run, but not currently running. TCB is stored in the <em>ready list</em>.</li>
+<li>At any point, the scheduler can copy the thread's register values from its TCP and move it to the RUNNING state.</li>
+</ul>
+<h3 id="running">RUNNING</h3>
+<ul>
+<li>Thread is currently running on a processor.</li>
+<li>Registers are stored in CPU instead of TCB.</li>
+<li>At any point, can be moved to READY state by the scheduler (ie preempted, saves registers to TCB and loads new thread's registers), or by the thread itself (ie voluntarily relinquishes control with thread_yield).</li>
+<li>Note that some OSes (Linux) keep RUNNING threads in the ready list (at the front).</li>
+</ul>
+<h3 id="waiting">WAITING</h3>
+<ul>
+<li>Thread is waiting for some event to occur (ie I/O, thread_join).</li>
+<li>Stored in the <em>wait list</em> (ie queue) for the event it is waiting for (some synchronization variable). When the event occurs, the thread is moved to the READY state.</li>
+</ul>
+<h3 id="finished">FINISHED</h3>
+<ul>
+<li>Thread has finished executing and will never run again.</li>
+<li>Some resources are freed, but the TCB is kept on the <em>finished list</em> so that its exit status can be retrieved if a parent calls thread_join.</li>
+<li>After the parent calls thread_join, the TCB can be fully freed.</li>
+</ul>
+<h4 id="the-idle-thread">The idle thread</h4>
+<p>If a system has k processors, it will ensure that there are exactly k threads in the RUNNING state at all times. If there is nothing to run for a given CPU, the idle thread is run instead. On modern systems, the idle thread is just a loop that calls <code>hlt</code> to put the CPU into a low power state that doesn't execute instructions until an interrupt occurs and the processor is woken up.</p>
+<p>The low-power mode is especially nice for virtualization, because the host operating system can allocate those resources to a different VM while that VM is idle.</p>
+<h4 id="where-is-the-tcb-stored">Where is the TCB stored?</h4>
+<p>On a multiprocessor system, this is a non-trivial implementation issue. x86 has hardware support for fetching the ID of the current processor. In this case, the TCB could be stored in a global array, where the ith entry is the TCB for the thread running on the ith processor.</p>
+<p>For systems without hardware support, you can use the stack pointer (which is always unique to each thread). You can store a pointer to the TCP at the bottom of the thread's stack under the procedure frames, and then use the stack pointer to find the TCB.</p>
+<h2 id="implementing-kernel-threads">Implementing Kernel Threads</h2>
+<pre><code class="language-c"> // func is a pointer to a procedure the thread will run.
+ // arg is the argument to be passed to that procedure.
+ void thread_create(thread_t *thread, void (*func)(int), int arg) {
+   // Allocate TCB and stack
+   TCB *tcb = new TCB();
+   thread-&gt;tcb = tcb;
+   tcb-&gt;stack_size = INITIAL_STACK_SIZE;
+   tcb-&gt;stack = new Stack(INITIAL_STACK_SIZE);
+   // Initialize registers so that when thread is resumed, it will start running at
+   // stub. The stack starts at the top of the allocated region and grows down.
+   tcb-&gt;sp = tcb-&gt;stack + INITIAL_STACK_SIZE;
+   tcb-&gt;pc = stub;
+   // Create a stack frame by pushing stub's arguments and start address
+   // onto the stack: func, arg
+   *(tcb-&gt;sp) = arg;
+   tcb-&gt;sp--;
+   *(tcb-&gt;sp) = func;
+   tcb-&gt;sp--;
+   // Create another stack frame so that thread_switch works correctly.
+   // This routine is explained later in the chapter.
+   thread_dummySwitchFrame(tcb);
+   tcb-&gt;state = READY;
+   readyList.add(tcb); // Put tcb on ready list
+ }
+
+ void stub(void (*func)(int), int arg) {
+   (*func)(arg); // Execute the function func()
+   thread_exit(0); // If func() does not call exit, call it here.
+ }
+</code></pre>
+<p>Creating a thread should run the code within <code>func</code> asynchronously with the calling thread. To create a thread, you must:</p>
+<ol>
+<li><strong>Allocate per-thread state</strong>. Allocate space for the new thread's TCB and stack.</li>
+<li><strong>Initialize per-thread state</strong>. Initialize TCB by setting machine specific registers to what is needed for RUNNING state. Must set up <code>func</code> to return to a stub that also calls <code>thread_exit</code>.</li>
+<li><strong>Put TCB on running list</strong>. Set state to READY and put on running list, enabling it to be scheduled.</li>
+</ol>
+<h3 id="deleting-a-thread">Deleting a thread</h3>
+<p>When a thread calls <code>thread_exit</code>, must remove it from ready lists so it stops being scheduled, and then free the per-thread state.</p>
+<p><strong>NOTE</strong>: a thread cannot free its own resources because if interrupted, it would be a memory leak (since it will never be scheduled again to finish cleanup). Instead, thread changes its state to FINISHED, and then puts itself on the finished list for some <em>other</em> thread to clean it up,</p>
+<h3 id="thread-context-switch">Thread Context Switch</h3>
+<p>When a thread is moved from RUNNING to READY, the OS must save the thread's register values to its TCB, and then load the register values of the next thread to run from its TCB.</p>
+<p>Note that interrupts must be disabled during a context switch (OSSP 47). This is because the if a low priority thread voluntarily yields to a high priority thread, but then gets stuck in the ready list, the high priority thread will be stuck waiting.</p>
+<pre><code class="language-c">// We enter as oldThread, but we return as newThread.
+ // Returns with newThread's registers and stack.
+ void thread_switch(oldThreadTCB, newThreadTCB) {
+   pushad; // Push general register values onto the old stack.
+   oldThreadTCB-&gt;sp = %esp; // Save the old thread's stack pointer.
+   %esp = newThreadTCB-&gt;sp; // Switch to the new stack.
+   popad; // Pop register values from the new stack.
+   return;
+ }
+ void thread_yield() {
+   TCB *chosenTCB, *finishedTCB;
+   // Prevent an interrupt from stopping us in the middle of a switch.
+   disableInterrupts();
+   // Choose another TCB from the ready list.
+   chosenTCB = readyList.getNextThread();
+   if (chosenTCB == NULL) {
+      // Nothing else to run, so go back to running the original thread.
+   } else {
+      // Move running thread onto the ready list.
+      runningThread-&gt;state = ready;
+      readyList.add(runningThread);
+      thread_switch(runningThread, chosenTCB); // Switch to the new thread.
+      runningThread-&gt;state = running;
+   }
+   // Delete any threads on the finished list.
+   while ((finishedTCB = finishedList-&gt;getNextThread()) != NULL) {
+      delete finishedTCB-&gt;stack;
+      delete finishedTCB;
+   }
+   enableInterrupts();
+ }
+ // thread_create must put a dummy frame at the top of its stack:
+ // the return PC and space for pushad to have stored a copy of the registers.
+ // This way, when someone switches to a newly created thread,
+ // the last two lines of thread_switch work correctly.
+ void thread_dummySwitchFrame(newThread) {
+   *(tcb-&gt;sp) = stub; // Return to the beginning of stub.
+   tcb-&gt;sp--;
+   tcb-&gt;sp -= SizeOfPopad;
+ }
+</code></pre>
+<h4 id="seperating-mechanism-from-policy">Seperating mechanism from policy</h4>
+<p>It is useful to seperate the mechanics of performing an action from the rules for deciding when to perform that action. For example, the <code>thread_switch</code> function is a mechanism for switching threads, but the policy for deciding when to switch threads is in the scheduler. This allows different systems to take their own approach to scheduling.</p>
+<p>Another example of this is with virtual memory. The mechanism for translating virtual addresses to physical addresses is in the MMU, but the policy for deciding which pages to keep in memory is in the page replacement algorithm.</p>
+<ul>
+<li><strong>Voluntary Switch</strong>: The thread can call a library function that triggers the switch (ie <code>thread_yield</code>). Similar approach to <code>thread_exit</code> and <code>thread_join</code>.</li>
+<li><strong>Involuntary Switch</strong>: The OS can preempt the thread (interrupt, exception, etc). Interrupt hardware saves state of current thread and then the interrupt handler is invoked (ie timer interrupt, switches to another thread). This also happens for user I/O like keyboard input.</li>
+</ul>
+<h2 id="combining-kernel-threads-and-single-threaded-user-processes">Combining Kernel Threads and Single-Threaded User Processes</h2>
+<h3 id="switching-between-kernel-threads-and-kernel-handlers">Switching between kernel threads and kernel handlers</h3>
+<ul>
+<li><strong>Entering the handler</strong>: Checks if already kernel in eflags register. If it is, just push instruction pointer and eflags (not the stack pointer) onto stack. If not, also push the stack pointer, and change the stack pointer to the interrupt stack.</li>
+<li><strong>Returning from the handler</strong>: Inspect current eflags to see if we are switching back to user mode. If so, pop the stack pointer and eflags, and then return. If not, just pop the instruction pointer and eflags.</li>
+</ul>
+<h2 id="implementing-multi-threaded-processes">Implementing Multi-threaded Processes</h2>
+<h3 id="multithreaded-processes-with-kernel-threads">Multithreaded Processes with Kernel Threads</h3>
+<p>A thread in a process has a user level stack, a kernel interrupt stack, and a kernel TCB. To create a new thread from the user's perspective, the process calls a library function that allocates a user-level stack and then makes a system call to create a new kernel thread and then returns a thread id. The kernel allocates a TCB and kernel stack, and then places the thread on the ready list.</p>
+<p>Thread <code>join</code>, <code>exit</code>, and <code>yield</code> are all system calls that the kernel handles in a similar way, by manipulating the TCBs and the ready list.</p>
+<h3 id="user-level-threads-without-kernel-threads">User-Level Threads without Kernel Threads</h3>
+<p>Added to OS's to support concurrency without any kernel support. Early versions of the JVM used this approach with <em>green threads</em>. The running process essentially implements all of the kernel data structures and scheduling policies in user space, allowing threading operations to be simple procedure calls instead of system calls.</p>
+<p>A limitation is the lack of awareness of the OS's scheduling policies, and the inability to take advantage of multiple processors. For instance, if the process is blocked on I/O, all threads are blocked.</p>
+<h3 id="preemptive-user-level-threads">Preemptive User-Level Threads</h3>
+<p>Similar to <strong>upcalls</strong> or <strong>signals</strong>, but for user-level threads. To preempt some process <strong>P</strong>:</p>
+<ol>
+<li>The user-level thread library makes a system call to register a timer signal handler and signal stack with the kernel.</li>
+<li>When a hardware timer interrupt occurs, the hardware saves P's register state and runs the kernel's handler.</li>
+<li>Instead of restoring P's register state and resuming P where it was interrupted, the kernel's handler copies P's saved registers onto P 's signal stack.</li>
+<li>The kernel resumes execution in P at the registered signal handler on the signal stack.</li>
+<li>The signal handler copies the processor state of the preempted user-level thread from the signal stack to that thread's TCB.</li>
+<li>The signal handler chooses the next thread to run, re-enables the signal handler (the equivalent of re-enabling interrupts), and restores the new thread's state from its TCB into the processor. execution with the state (newly) stored on the signal stack.</li>
+</ol>
+<h3 id="user-level-threads-with-kernel-support">User-Level Threads with Kernel Support</h3>
+<p>Process using $M$ kernel thrreads, each with their own user-level scheduler that schedules $N$ user-level threads. The kernel threads are scheduled by the OS, and the user-level threads are scheduled by the user-level scheduler.</p>
+<p>However, there is still an issue of one of your kernel threads being blocked for the entirety of an I/O operation. Solution:</p>
+<h4 id="scheduler-activations">Scheduler Activations</h4>
+<p>Let the user and kernel level schedulers coordinate with eachother. Involves system call and upcalls (2-way communication), and thus overhead, but doesnt require the kernel to be aware of the user-level threads, and is able to optimize the uncommon case.</p>
+<ul>
+<li>User-level scheduler makes system calls to request or free processors.</li>
+<li>Kernel upcalls user-level scheduler to notify it of events. Examples include:</li>
+<li>Processor becomes available or unavailable.</li>
+<li>Transition to <code>WAITING</code> state (ie for I/O).</li>
+<li>Transition from <code>WAITING</code> to <code>READY</code> state.</li>
+<li>Transition from <code>RUNNING</code> to idle.</li>
+</ul>
+<p><strong>Scheduler Activations</strong> replace kernel threads. It has a seperate stack and CPU context, and it can be scheduled the same as a kernel thread. However, if the kernel interrups it, processor restarts execution in the user-level scheduler. Then the user-level scheduler can decide which user-level thread to run next.</p>
+<h2 id="alternatives-to-threads">Alternatives to Threads</h2>
+<h3 id="asynchronous-io-and-event-driven-programming">Asynchronous I/O and Event-Driven Programming</h3>
+<p>Instead of using threads to manage I/O, you can use asynchronous I/O. This is especially useful for I/O bound applications, where the CPU is idle while waiting for I/O to complete. Instead of blocking on I/O, the program can continue to run and be notified when the I/O is complete.</p>
+<ul>
+<li>Process makes a system call to issue an I/O request</li>
+<li>Call returns immediately, and the process continues to run</li>
+<li>When the I/O is complete, the process is notified by the kernel through one of the following</li>
+<li>calling a signal handler (callback)</li>
+<li>placing the result in a queue in the processes address space</li>
+<li>placing the result in a queue in the kernel's address space and letting the process poll through a system call</li>
+</ul>
+<p>A common design pattern is to have a single thread interleave different I/O bound tasks by waiting for multiple different I/O events. For example, a web server that has 10 active clients might have a single thread that issues a <code>select</code> call to wait for any of the 10 clients to have data ready to read. Then, when the <code>select</code> call returns, the thread can read from the client and it will immediately (non-blocking).</p>
+<h4 id="event-driven-programming">Event-Driven Programming</h4>
+<p>A natural extension of this pattern is to be able to handle requests that involve a sequence of I/O operations. For instance, handling a web request can involve (1) accepting a connection, (2) reading the request, (3) processing the request, (4) locating and reading the requested data on disk or in a database, (5) writing the response back to the client.</p>
+<p><strong>Event-driven programming</strong> using the notion of a <strong>continuation</strong>, a data structure that keeps track of a task's current state and next step.</p>
+<h4 id="event-driven-programming-vs-threads">Event-Driven Programming vs. Threads</h4>
+<p>Very similar in practice. In either case, program blocks until next task can proceed, restores state of the task, executes the next step, and then blocks again. The main difference is whether the state is stored in a continuation and managed by the program, or in a thread and managed by the OS.</p>
+<p>For example, a web server that reads from multiple clients and stores the data in a table of buffers</p>
+<pre><code class="language-c">
+ Hashtable&lt;Buffer*&gt; *hash;
+
+ while(1) {
+   connection = use select() to find a
+                  readable connection ID
+   buffer = hash.remove(connection);
+   got = read(connection, tmpBuf, TMP_SIZE);
+   buffer-&gt;append(tmpBuf, got);
+   buffer = hash.put(connection, buffer);
+ }
+
+ // Thread-per-client
+ Buffer *b;
+ while(1) {
+   got = read(connection, tmpBuf, TMP_SIZE);
+   buffer-&gt;append(tmpBuf, got);
+ }
+</code></pre>
+<h5 id="performance">Performance</h5>
+<p>The common argument for event-driven programming is that it is faster for two reasons:</p>
+<ol>
+<li><strong>No context switch overhead</strong>. Context switches are expensive, and the more threads you have, the more context switches you have. Context switches are also unpredictable, and can cause cache misses and TLB misses.</li>
+<li><strong>No memory overhead</strong>. The thread system itself comes with a non-negligible memory overhead. This is less of a problem with modern systems, but it is still a consideration. For example, allocating 1000 threads with an 8 KB stack size on a machine with 1 GB of memory would require less than 1% of the memory to be allocated to the thread stacks.</li>
+</ol>
+<p>On the other hand, event driven programs by themselves don't take advantage of multiple processors, and in practice are combined with threads. A process with $N$ threads can multiplex tasks seperately using an event-driven model, and then use threads to run those tasks in parallel.</p>
+<p>Furhtermore, the event-driven model can be more complex and harder to reason about, and if there is a reasonable amount of work to be done in the background, it is often easier to use threads.</p>
+<h3 id="data-parallel-programming">Data Parallel Programming</h3>
+<p>Can use SIMD instructions to perform the same operation on multiple pieces of data at the same time. For example, the <code>addps</code> instruction in x86 can add 4 single precision floating point numbers at the same time. This is useful for things like image processing, where you can apply the same operation to every pixel in an image.</p>
+<p>In general, with data parallel programming you specify the operation to be performed on a single piece of data, and then the hardware takes care of applying that operation to multiple pieces of data at the same time.</p>
+<p>This is useful in a wide variety of areas, and is often a source of major optimizations within programs. For instance, SQL databases can take in a query and then identify which parts of the query can be parallelized, leading to a significant speedup. This is also often used in combination with specialized hardware, like GPUs. Multimedia streaming, for example, uses SIMD instructions to decode and encode video.</p>
+<p>A large scale example of this is the MapReduce programming model, which is used by Google and Hadoop. The idea is to split a large dataset into smaller pieces, and then apply a function to each piece in parallel. The results are then combined together.</p>
+        </div>
+    </main>
+</body>
+</html>

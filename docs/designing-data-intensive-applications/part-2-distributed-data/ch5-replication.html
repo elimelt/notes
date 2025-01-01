@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch5 Replication</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Ch5 Replication</h1>
+        <div class="meta">
+            Last modified: 2023-12-31
+        </div>
+        <div class="content">
+            <h1 id="chapter-5">Chapter 5</h1>
+<h2 id="replication">Replication</h2>
+<p><strong>Replication</strong> is the process of keeping a copy of the same data on multiple machines that are connected via a network. Replication is important for a few reasons:</p>
+<ul>
+<li><strong>High Availability</strong>: If one machine goes down, the data can still be served from other machines.</li>
+<li><strong>Latency</strong>: If the data is replicated to multiple machines in different locations, the user can be served from the machine that is closest to them.</li>
+<li><strong>Scalability</strong>: If the load is split between multiple machines, the system can handle more read requests.</li>
+</ul>
+<p>Most distributed data systems that use replication follow one of <strong>single-leader</strong>, <strong>multi-leader</strong>, or <strong>leaderless</strong> replication. The hard part is keeping replicas consistent with each other in the event of updates.</p>
+<h2 id="leaders-and-followers">Leaders and Followers</h2>
+<p>Also known as <strong>master slave</strong> or <strong>active passive</strong> replication, this is the simplest form of replication. One node is designated as the <strong>leader/master/primary</strong> and the rest are <strong>followers/slaves/secondary</strong>. The leader handles all write requests and propagates the changes to the followers. The followers handle all read requests. If the leader goes down, one of the followers is promoted to leader. This is a common setup for relational databases. Followers are read-only, and writes are only sent to the leader.</p>
+<p>Many relational, and some non-relational databases use this setup, as does non-database systems like distributed message-brokers (Kafka, RabbitMQ, etc.).</p>
+<h2 id="synchronous-versus-asynchronous-replication">Synchronous Versus Asynchronous Replication</h2>
+<p>The leader can propagate changes to the followers in two ways: <strong>synchronous</strong> and <strong>asynchronous</strong>. In synchronous replication, the leader waits for a response from the follower before acknowledging the write request. In asynchronous replication, the leader does not wait for a response from the follower before acknowledging the write request.</p>
+<p>With synchronous replication, the leader can guarantee that the followers are up to date. However, if the network is slow or the follower is down, the leader cannot acknowledge the write request. This means that the leader cannot accept any more writes until the follower responds. This can cause a cascading failure if the leader is waiting on multiple followers. This is known as <strong>write availability</strong>.</p>
+<p>If there is a substantial delay between the leader and the follower, the leader may not be able to accept any writes at all. This is known as <strong>write latency</strong>, and is a common problem with synchronous replication. In practice, if you enable synchronous replication in a database, this often means that you have a syngle syncronous follower, and the rest are asynchronous. This is known as <strong>semi-synchronous replication</strong>. If the synchronous follower goes down, the leader elects a new synchronous follower. This guarantees that there is always at least two up to date copies of the data.</p>
+<p>Leader-based replication is often fully asynchronous. This means that the leader does not wait for a response from the follower before acknowledging the write request. This means that the leader can accept writes even if the follower is down. However, this means that the followers may not be up to date. This is known as <strong>replication lag</strong>. If the leader goes down, the follower with the most up to date data is elected as the new leader. This means that the new leader may not have all of the writes that the old leader had. This is known as <strong>read-your-writes consistency</strong> and is a tradeoff that incurs <em>weakened durability</em>. This is a common setup for non-relational databases.</p>
+<h2 id="research-on-replication">Research on Replication</h2>
+<p>Preventing data loss is a hot topic in distributed systems research. There are a few different approaches to this problem, but one example is <strong>Chain Replication</strong>, a variant of syncronous replication, where the leader sends the write to the first follower, which sends it to the second follower, and so on. The leader does not acknowledge the write until all followers have acknowledged it. This is a synchronous replication protocol that guarantees that the followers are up to date. However, it is not fault tolerant. If any follower goes down, the leader cannot accept any more writes. This is a common setup for distributed message brokers.</p>
+<h2 id="setting-up-new-followers">Setting Up New Followers</h2>
+<p>A simple "file copy" might read across inconsistent snapshots of the data. To avoid this, maintain a consistent snapshot of the data by using a consistent snapshot protocol. Follower nodes start from snapshot and request all writes that have happened since the snapshot (using the log sequence number is Postgres and the binlog coordinates in MySQL). The leader keeps a log of all writes, and the followers request all writes since the snapshot. This workflow varies depending on the database.</p>
+<ol>
+<li>take consistent snapshots periodically, and ideally asynchronously</li>
+<li>copy the snapshot to the new follower node</li>
+<li>the follower connects to the leader and requests all writes since the snapshot</li>
+<li>follower processes backlog until it catches up to the leader</li>
+</ol>
+<h2 id="handling-node-outages">Handling Node Outages</h2>
+<p>Goal is to keep the whole system running despite individual failures. Ideally should be able to reboot individual nodes without affecting the whole system.</p>
+<h3 id="follower-failure">Follower Failure</h3>
+<p>If a follower fails, it can be restarted from the log located on its disk. Once the node has processed its log, it then requests any new writes from the leader. This is known as <strong>catch-up recovery</strong>.</p>
+<h3 id="leader-failure">Leader Failure</h3>
+<p>If the leader fails, one of the followers is elected as the new leader during <strong>failover</strong>. This is way harder. It usually consists of the following:</p>
+<ol>
+<li>Determining the leader failed. This can be acieved passively with a timeout or actively with a heartbeat.</li>
+<li>Assigning a new leader. Can be done through an election process, or a designated controller node. Probably a good idea to look for nodes with most up-to-date data.</li>
+<li>Reconfigure to use new leader. Set clients to write to new leader, and set followers to read from new leader.</li>
+</ol>
+<h4 id="common-problems-with-failover">Common problems with failover:</h4>
+<ul>
+<li>With async replication, new leader might not have all writes in log. Some systems just throw these writes away, although this hurts our durability</li>
+<li>Scenarious leading to multiple nodes thinking they are leader (<em>split-brain</em>). If they both accept writes, it is difficult to resolve and may lead to data loss. Can try to detect this and shut one down, but need to be careful not to shut both down.</li>
+<li>Choosing a timeout has tradeoffs. Too short leads to unnecessary failovers, too long leads to longer time to recovery.</li>
+</ul>
+<h2 id="implementation-of-replication-logs">Implementation of Replication Logs</h2>
+<h3 id="statement-based-replication">Statement-based replication</h3>
+<p>Leader logs ever write request (<em>SQL statement</em> in the case of a RDB) and sends log to followers. Each follower parses and executes the statement as if it were initiated by the client.</p>
+<h4 id="problems">Problems:</h4>
+<ul>
+<li>Non-deterministic functions (e.g. <code>NOW()</code>) will return different values on different machines</li>
+<li>Order of operations matters (ie auto incrementing keys)</li>
+<li>Side effects (e.g. triggers) may not be replicated</li>
+</ul>
+<p>Although there are workarounds, usually not used today. MySQL &lt;5.1 used it, and still sometimes does for deterministic functions.</p>
+<h3 id="write-ahead-log-wal-shipping">Write-ahead log (WAL) shipping</h3>
+<p>Append only sequence of bytes that record every write to the database. Leader sends WAL to followers, which apply the writes to their own database to build up the same data structures as the leader. Used by Postgres, Oracle, and more.</p>
+<h4 id="problems_1">Problems:</h4>
+<ul>
+<li>WAL is implementation specific (decided by leader), so followers must be same database as leader</li>
+<li>Couples replication to the storage engine and prevents easy migration and version upgrades</li>
+</ul>
+<p>In particular, WAL prevent us from doing downtime-free upgrades. Without them, we could upgrade all the followers and catch them up, then failover and upgrade the leader. WAL make this impossible in many cases because the leader and follower must both read and write the same WAL format.</p>
+<h3 id="logical-row-based-log-replication">Logical (row-based) log replication</h3>
+<p>Use different formats for storage engine (<em>physical</em>) log and replication (<em>logical</em>) log. For RDB, usually a sequence of records describing writes to rows in database.</p>
+<ul>
+<li>For inserted row, log contains all values</li>
+<li>for deleted row, log contains identifier of row (typically pk, or all values if none)</li>
+<li>for updated row, log contains identifier of row and new values</li>
+</ul>
+<p>With multi-row transactions, log contains entry for all rows, as well as entry for transaction commit (MySQL binlog uses this approach)</p>
+<p>Logical logs decouple the replication from the storage engine, allowing better compatibility between versions. Also allows integrations with external services (e.g. Kafka, Elasticsearch, etc.)</p>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divide And Conquer</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Divide And Conquer</h1>
+        <div class="meta">
+            Last modified: 2024-04-25
+        </div>
+        <div class="content">
+            <h1 id="divide-and-conquer">Divide and Conquer</h1>
+<p>Reduce problem to multiple sub-problems. While in induction, you typically only reduce your problem size by 1, with divide and conquer it is more common to reduce to some constant fraction of your original problem size. After recursively solving each sub-problem, merge the solutions.</p>
+<p><strong>Examples</strong>: Merge-sort, Binary Search, Strassen's Algorithm</p>
+<h2 id="why-balanced-partitioning">Why Balanced Partitioning?</h2>
+<p>With regular induction, split problem into $n - 1$ and $1$, then solve the $n - 1$ and merge the solution with the $1$.</p>
+<p>$$
+T(n) = T(n - 1) + T(1) + n
+$$</p>
+<p>Instead, divide into two problems of size $\frac{n}{2}$</p>
+<p>$$
+2T(\frac{n}{2}) + n = \frac{n^2}{2} + n
+$$</p>
+<h2 id="divide-and-conquer-approach">Divide and Conquer Approach</h2>
+<ul>
+<li>"The more dividing and conquering, the better"</li>
+<li>Overhead grows for each, but for many algorithms, two levels of D&amp;C will be 4 times faster, 3 levels will be almost 8, and so on.</li>
+<li>Best approach is to recurse down to a small problem size, then do the regular iterative brute force algorithm.</li>
+<li>This is the approach behind Quick sort with random splitters.</li>
+</ul>
+<h2 id="finding-the-root-of-a-function">Finding the Root of a Function</h2>
+<p>Given a continuous function $f$ and two points $a, b$ and $b &gt; a$ such that $f(a) \le 0$ and $f(b) \ge 0$.</p>
+<p>Find an approximate root of $f$, ie a point $c$ where there is $r$ s.t. $|r - c| \le \epsilon$ and $f(r) = 0$. Note that this must exist by IVT.</p>
+<h3 id="naive-approach">Naive Approach</h3>
+<p>Divide $[a, b]$ into $n = \frac{b - a}{\epsilon}$ intervals. For each interval, check $f(x) \le 0, f(x + \epsilon) \ge 0$.</p>
+<p>This runs in $O(n) = O(\frac{b - a}{\epsilon})$.</p>
+<h3 id="dc-approach">D&amp;C Approach</h3>
+<pre><code class="language-python">def Bisection(f, a, b, e):
+    if (b - a) &lt; e:
+        return a
+
+    m = (a + b)/2
+    if f(m) &lt; 0:
+        return Bisection(c, b, e)
+    else
+        return Bisection(a, c, e)
+</code></pre>
+<p>Let $n = \frac{a - b}{\epsilon}$ and $c = \frac{a + b}{2}$. SO in each step we reduce by half.</p>
+<p>$$
+T(n) = T(\frac{n}{2}) + O(1) = O(\log(n)) = O(\log \frac{a - b}{\epsilon})
+$$</p>
+<h3 id="correctness">Correctness</h3>
+<p>$P(n)$: $\forall a, b$ s.t. $f(a) \le 0$ and $f(b) \ge 0$, and $\frac{a - b}{\epsilon} = n$, that <code>Bisection</code> returns a value, say $c$, s.t. $\exists r$ s.t. $|r - c| \le \epsilon$</p>
+<p><strong>Base Case.</strong> $P(1)$: By IVT, $\exists r \in [a, b]$ s.t. $f(r) = 0$. We output $a$, and $|a - r| \le |a - b| \le \epsilon$.</p>
+<p><strong>IH:</strong> Assume $P(n)$</p>
+<p><strong>IS:</strong> $P(2n)$</p>
+<p>Given arbitrary $b &gt; a$ s.t. $\frac{|a - b|}{\epsilon} = 2n$ and $f(a) \le 0$, $f(b) \ge 0$, start with $c = \frac{a + b}{2}$.</p>
+<h4 id="case-1-fc-ge-0">Case 1: $f(c) \ge 0$</h4>
+<p>Then we satisfy $P(n)$ for $a, c$ because $\frac{c - a}{\epsilon} = n$, and $f(a) \le 0$, $f(c) \ge 0$.</p>
+<h4 id="case-2-fc-le-0">Case 2: $f(c) \le 0$</h4>
+<p>Then we satisfy $P(n)$ for $c, b$, for the exact same reasoning.</p>
+<h2 id="closest-pair-of-points-geometrically">Closest Pair of Points (geometrically)</h2>
+<p>Given $n$ points and an <em>arbitrary</em> distance function between them, find the closest pair (not just Euclidean distance).</p>
+<h3 id="1-dimensional-version">1 Dimensional Version</h3>
+<p>Given $n$ points on the real line, you can find the closest pair by sorting and then comparing each consecutive pair of points.</p>
+<p><strong>Key point</strong>: Don't need to check <em>every</em> pair. Can instead exploit geometry.</p>
+<h3 id="2-dimensional-version">2 Dimensional Version</h3>
+<p>Given $n$ points in the plane$, find the pair with the smallest Euclidean distance between them.</p>
+<ul>
+<li><em>Divide</em>: draw a vertical line $L$ with $\approx \frac{n}{2}$ points on each side.</li>
+<li><em>Conquer</em>: find closest pair on each side recursively.</li>
+</ul>
+<p>Suppose $\delta$ is the minimum on each side. Then you only need to consider points within $\delta$ of $L$ as the case where our two points lie on opposite sides of $L$.</p>
+<p>Partition each side of $L$ into $\frac{\delta}{2} \times \frac{\delta}{2}$ squares. This guarantees that each square has at most one point, since multiple points in the same square would have to have been the minimum on that side (since the maximum distance within a single square is $\frac{\delta}{\sqrt{2}}$).</p>
+<p>Then, sort the points in the strip $x \in [L - \delta, L + \delta]$ by $y$-coordinate to make $s_1, s_2, \ldots s_i$.</p>
+<p><strong>Claim</strong>: $\forall s_i, s_j$, if $|i - j| &gt; 11$, then $d(s_i, s_j) &gt; \delta$.</p>
+<p><strong>Proof</strong>: There are 4 squares in each row of the strip, each occupying at most on point. We know that any point $p_j$ more than two rows away from $p_i$ must have $d(p_i, p_j) &gt; \delta$.</p>
+<p>There are at most 3 points in the same row as $p_i$, and 8 in the 2 rows above/below. Thus, any point more than $8 + 3 = 11$ points away from $p_i$ will be more than two rows away, and thus have a distance greater than $\delta$.</p>
+<h4 id="implementation">Implementation</h4>
+<pre><code class="language-python"># divide and conquer closest points
+
+def bounding_indices(P, low, high, key=lambda x: x[0]):
+    n = len(P)
+    l, r = 0, n - 1
+
+    while l &lt;= r:
+        mid = (l + r) // 2
+        if low &lt;= key(P[mid]):
+            r = mid - 1
+        else:
+            l = mid + 1
+    smallest_index = l
+
+    l, r = 0, n - 1
+    while l &lt;= r:
+        mid = (l + r) // 2
+        if high &gt;= key(P[mid]):
+            l = mid + 1
+        else:
+            r = mid - 1
+    highest_index = r
+
+    return smallest_index, highest_index
+
+def d(p1, p2):
+  if p1 is None or p2 is None:
+    return float('inf')
+  return ((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2) ** .5
+
+def cp_brute_force(P):
+  n = len(P)
+  ans = P[:2]
+  min_d = d(P[0], P[1])
+  for i in range(n):
+    for j in range(i + 1):
+      if i == j:
+        continue
+      curr_d = d(P[i], P[j])
+      if curr_d &lt; min_d:
+        min_d = curr_d
+        ans = [P[i], P[j]]
+  return ans
+
+def cp_recursive(P):
+  n = len(P)
+  if n &lt; 2:
+    return None, None
+
+  if n &lt;= 10:
+    return cp_brute_force(P)
+
+  l1, l2 = cp_recursive(P[:n//2])
+  r1, r2 = cp_recursive(P[n//2:])
+
+  m1, m2 = (l1, l2) if d(l1, l2) &lt; d(r1, r2) else (r1, r2)
+
+  delta = d(m1, m2)
+  L = (P[n//2][0] + P[n//2 + 1][0]) / 2
+
+  l, h = bounding_indices(P, L - delta, L + delta)
+
+  middle = sorted(P[l:h + 1], key=lambda x: x[1])
+  k = len(middle)
+  for i in range(k):
+    low = max(0, i - 11)
+    high = min(k, i + 11)
+    for j in range(low, high):
+      if i == j:
+        continue
+      curr_dist = d(middle[i], middle[j])
+      if curr_dist  &lt; delta:
+        delta = curr_dist
+        m1, m2 = middle[i], middle[j]
+
+  return m1, m2
+
+def closest_points(P):
+  return cp_recursive(sorted(P, key = lambda x: x[0]))
+
+</code></pre>
+        </div>
+    </main>
+</body>
+</html>

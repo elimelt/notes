@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro Mapreduce Spark</title>
+    <style>
+        :root {
+            --text-color: #2c3e50;
+            --background-color: #ffffff;
+            --accent-color: #3498db;
+            --border-color: #ecf0f1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ecf0f1;
+                --background-color: #2c3e50;
+                --accent-color: #3498db;
+                --border-color: #34495e;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--background-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
+<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
+<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
+<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
+<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
+<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
+<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
+<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
+<a href="/algorithms/practice/4.html">4</a>
+<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
+<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
+<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
+<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
+<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
+<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
+<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
+<a href="/networks/3-network/ARP.html">Arp</a>
+<a href="/algorithms/BFS.html">Bfs</a>
+<a href="/algorithms/patterns/BFS.html">Bfs</a>
+<a href="/networks/3-network/BGP.html">Bgp</a>
+<a href="/distributed-systems/bigtable.html">Bigtable</a>
+<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
+<a href="/networks/5-application/CDNs.html">Cdns</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
+<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
+<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
+<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
+<a href="/distributed-systems/clocks.html">Clocks</a>
+<a href="/ds-backup/clocks.html">Clocks</a>
+<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
+<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
+<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
+<a href="/operating-systems/lecture-notes/components.html">Components</a>
+<a href="/cheatsheets/circuits/components.html">Components</a>
+<a href="/algorithms/connected-components.html">Connected Components</a>
+<a href="/distributed-systems/consistency.html">Consistency</a>
+<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
+<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
+<a href="/algorithms/DAGs.html">Dags</a>
+<a href="/algorithms/DFS.html">Dfs</a>
+<a href="/networks/3-network/DHCP.html">Dhcp</a>
+<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
+<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
+<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
+<a href="/networks/5-application/DNS.html">Dns</a>
+<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
+<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
+<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
+<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
+<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
+<a href="/networks/2-direct-links/errors.html">Errors</a>
+<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
+<a href="/networks/4-transport/flow-control.html">Flow Control</a>
+<a href="/networks/2-direct-links/framing.html">Framing</a>
+<a href="/networks/3-network/global-internet.html">Global Internet</a>
+<a href="/distributed-systems/google-file-system.html">Google File System</a>
+<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
+<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
+<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
+<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
+<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
+<a href="/networks/5-application/HTTP.html">Http</a>
+<a href="/networks/3-network/ICMP.html">Icmp</a>
+<a href="/algorithms/induction.html">Induction</a>
+<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
+<a href="/networks/3-network/internetworking.html">Internetworking</a>
+<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
+<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
+<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
+<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
+<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
+<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
+<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
+<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
+<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
+<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
+<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
+<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
+<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
+<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
+<a href="/algorithms/linear-programming.html">Linear Programming</a>
+<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
+<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
+<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
+<a href="/networks/1-physical/media.html">Media</a>
+<a href="/networks/3-network/motivation.html">Motivation</a>
+<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
+<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
+<a href="/algorithms/network-flows.html">Network Flows</a>
+<a href="/networks/3-network/networking-services.html">Networking Services</a>
+<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
+<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
+<a href="/networks/5-application/overview.html">Overview</a>
+<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
+<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
+<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
+<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
+<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
+<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
+<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
+<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
+<a href="/ds-backup/primary-backup.html">Primary Backup</a>
+<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
+<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
+<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
+<a href="/README.html">Readme</a>
+<a href="/networks/reference.html">Reference</a>
+<a href="/operating-systems/reference.html">Reference</a>
+<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
+<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
+<a href="/networks/3-network/routing.html">Routing</a>
+<a href="/distributed-systems/RPC.html">Rpc</a>
+<a href="/ds-backup/RPC.html">Rpc</a>
+<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
+<a href="/algorithms/runtime.html">Runtime</a>
+<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
+<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
+<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
+<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
+<a href="/distributed-systems/sharding.html">Sharding</a>
+<a href="/scripts/simple.html">Simple</a>
+<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
+<a href="/networks/sockets.html">Sockets</a>
+<a href="/tmp/bench/spec.html">Spec</a>
+<a href="/algorithms/stable-matching.html">Stable Matching</a>
+<a href="/networks/2-direct-links/switching.html">Switching</a>
+<a href="/digital-design/system-verilog.html">System Verilog</a>
+<a href="/networks/4-transport/TCP.html">Tcp</a>
+<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
+<a href="/algorithms/tmp.html">Tmp</a>
+<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
+<a href="/algorithms/tree-intro.html">Tree Intro</a>
+<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
+<a href="/networks/4-transport/UDP.html">Udp</a>
+<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
+<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
+<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
+<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
+<a href="/networks/2-direct-links/wireless.html">Wireless</a>
+    </nav>
+    <main>
+        <h1>Intro Mapreduce Spark</h1>
+        <div class="meta">
+            Last modified: 2024-03-26
+        </div>
+        <div class="content">
+            <h1 id="distributed-computing-for-data-mining">Distributed Computing for Data Mining</h1>
+<p>How can we extract knowledge from large data sets?</p>
+<ul>
+<li><strong>Data mining</strong>: the process of extracting actionable information from (usually) very large datasets.</li>
+<li><strong>Descriptive methods</strong>: Find human-interpretable patterns in data. (e.g. clustering)</li>
+<li><strong>Predictive methods</strong>: Use patterns to predict future data. (e.g. recommendation systems)</li>
+</ul>
+<p>Typically, data is stored on networks of <em>commodity hardware</em> (cheap, off-the-shelf hardware) within data centers. A major challenge with this computing model is the failure of individual machines. One server may survive for ~3 years, but with 10,000 servers, you can expect one to fail every day. With 1M servers, you can expect 1000 failures per day.</p>
+<p>One approach is to replicate data across multiple machines. However, transferring data is expensive and time intensive. A core idea of distributed computing is to move computation to the data, rather than moving data to the computation. Spark/Hadoop address these problems.</p>
+<ul>
+<li><strong>Storage Infrastructure</strong>: A file system, like HDFS (Hadoop Distributed File System)</li>
+<li><strong>Computation Infrastructure</strong>: A computation engine, like Spark</li>
+</ul>
+<p>Distributed file system give you a global namespace. Typical usage patterns include huge files (100s of GBs to TBs), no updates in place (append only logs), and large streaming reads. HDFS is optimized for these patterns.</p>
+<ul>
+<li><strong>Chunk Servers</strong>: Files are split into contiguous blocks, typically 16-64MB. Eacg block is replicated across multiple servers (x2-3), ideally in different racks. This allows for parallel reads and fault tolerance. Chunk servers are also oftentimes compute nodes as well.</li>
+<li><strong>Master Node</strong>: AKA name node in Hadoop HDFS. Stores metadata about where files are stored, might be replicated.</li>
+<li><strong>Client Libraries</strong>: A library that communicates with the master node to read/write data.</li>
+</ul>
+<h2 id="mapreduce">MapReduce</h2>
+<p><strong>MapReduce</strong> is a style of programming that is designed for
+- Easy parallelization
+- Invisible management of hardware/software failures
+- Easy management of very large datasets
+- Very little required memory (since data is read and written to disk)</p>
+<p>There are several implementations of MapReduce, including <strong>Hadoop</strong> and <strong>Spark</strong>.</p>
+<ul>
+<li><strong>Map</strong>: Apply a user-written function to each element of a list, producing a new list.</li>
+<li><strong>Mapper</strong> applies the map function to a single element. Mapny mappers grouped in a <strong>Map task</strong> (the main unit of parallelism).</li>
+<li><strong>Group by key</strong>: Sorts and shuffles the output of the mappers so that all values for a given key are grouped together.</li>
+<li>Output is a list of key to list of value pairs</li>
+<li><strong>Reduce</strong>: Apply a user-written function to each key and its associated list of values, producing a new list.</li>
+</ul>
+<p>It is important that your distribution of keys outputted by the map function is semi-uniform. Skew in keys leads to skew in the workload of reducers associated with those keys.</p>
+<h3 id="example-word-count">Example: Word Count</h3>
+<p>You have a huge text document and you want to count the number of times each word appears (ie analyzing a log file).</p>
+<p><strong>Map</strong>: For each word in the document, output a key-value pair where the key is the word and the value is 1.</p>
+<pre><code class="language-python">def map(doc):
+    for word in doc.split():
+        yield (word, 1)
+</code></pre>
+<p><strong>Group by key</strong>: Sort and shuffle the output of the mappers so that all values for a given key are grouped together.</p>
+<pre><code class="language-python">def group_by_key(pairs):
+    pairs.sort()
+    for key, group in itertools.groupby(pairs, key=lambda x: x[0]):
+        yield (key, [x[1] for x in group])
+</code></pre>
+<p><strong>Reduce</strong>: For each key and its associated list of values, sum the values.</p>
+<pre><code class="language-python">def reduce(key, values):
+    yield (key, sum(values))
+</code></pre>
+<h2 id="spark">Spark</h2>
+<p>The two major limitations of MapReduce are
+- Rigid programming model
+- Performance bottleneck due to disk I/O</p>
+<p><strong>Spark</strong> is a general-purpose cluster computing system that addresses these limitations. It is instead <em>dataflow</em> based, where you define a series of transformations on data, and Spark figures out how to execute them in parallel. It is meant to be a more expressive and efficient than MapReduce. There are higher-level APIs like dataframes and SQL that make it easier to work with data.</p>
+<h3 id="resilient-distributed-datasets-rdds">Resilient Distributed Datasets (RDDs)</h3>
+<p>The core data structure in Spark. They are immutable, distributed collections of objects. You can perform transformations on RDDs to create new RDDs, and Spark will optimize the execution of these transformations.</p>
+<p>They are essentially a partitioned collection of records that can be cached in memory across machines. They are fault-tolerant, meaning if a partition is lost, it can be recomputed from the original source.</p>
+<ul>
+<li><strong>Transformations</strong>: Create a new RDD from an existing one. They are lazy, meaning they don't compute the result right away (eg <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>join</code>, <code>union</code>, <code>intersection</code>, <code>distinct</code>).</li>
+<li><strong>Actions</strong>: Compute a result from an RDD. They trigger the computation of the DAG (eg <code>collect</code>, <code>count</code>, <code>reduce</code>, <code>saveAsTextFile</code>).</li>
+</ul>
+<h4 id="task-scheduling">Task Scheduling</h4>
+<p>Spark supports general DAGs of tasks, where each task is a unit of work that is sent to a worker. The DAG scheduler breaks the computation into stages, where each stage is a set of tasks that can be executed in parallel. The task scheduler then schedules tasks within each stage. Functions are pipelined together when possible, and tasks are scheduled in both a cache aware and partition aware manner.</p>
+<h4 id="libraries">Libraries</h4>
+<ul>
+<li><strong>MLlib</strong>: Scalable machine learning lib</li>
+<li><strong>GraphX</strong>: Graph processing lib</li>
+<li><strong>Spark Streaming</strong>: Real-time stream processing</li>
+<li><strong>Spark SQL</strong>: SQL interface for Spark</li>
+</ul>
+<h2 id="spark-vs-hadoop-mapreduce">Spark vs. Hadoop + MapReduce</h2>
+<ul>
+<li><strong>Performance</strong>: Spark is normally faster, with caveats. Spark requires memory, so the benefits are less pronounced on commodity hardware. MR is better when you are running on compute that is shared with other processes.</li>
+<li><strong>Ease of Use</strong>: Spark is more expressive and easier to use.</li>
+<li><strong>Generality</strong>: Spark is more general, with higher-level APIs.</li>
+</ul>
+        </div>
+    </main>
+</body>
+</html>

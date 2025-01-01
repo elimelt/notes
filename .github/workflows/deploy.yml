@@ -1,16 +1,19 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  # Build job
   build:
-    # Specify runner +  build & upload the static files as an artifact
     runs-on: ubuntu-latest
     steps:
       - name: Upload static files as artifact
         id: deployment
-        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        uses: actions/upload-pages-artifact@v3
         with:
           path: site/
 
-  # Deployment job
   deploy:
     environment:
       name: github-pages

@@ -5,6 +5,9 @@ import shutil
 import markdown
 import logging
 from datetime import datetime
+from urllib.parse import quote
+import re
+from collections import defaultdict
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -17,27 +20,43 @@ class Page:
     path: Path
     content: str
     modified_date: datetime
+    category: Optional[str]
+    tags: List[str]
+    description: Optional[str]
     is_index: bool = False
 
 class SiteGenerator:
     """Generates a static site from a directory of mixed content"""
 
-    MARKDOWN_EXTENSIONS = ['meta', 'toc', 'fenced_code', 'tables']
-    SUPPORTED_CONTENT = {'.md'}  # Expandable for future content types
-    IGNORED_DIRECTORIES = {'.git', '__pycache__', 'node_modules'}
+    MARKDOWN_EXTENSIONS = [
+        'meta',
+        'toc',
+        'fenced_code',
+        'tables',
+        'attr_list',
+        'footnotes',
+        'def_list',
+        'admonition'
+    ]
+    SUPPORTED_CONTENT = {'.md', '.markdown'}
+    IGNORED_DIRECTORIES = {'.git', '__pycache__', 'node_modules', '.github', 'venv', '.venv'}
 
     def __init__(self, input_dir: str, output_dir: str):
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self.markdown_converter = markdown.Markdown(extensions=self.MARKDOWN_EXTENSIONS)
         self.pages: Dict[Path, Page] = {}
+        self.categories: Dict[str, List[Page]] = defaultdict(list)
+        self.tags: Dict[str, List[Page]] = defaultdict(list)
 
     def generate_site(self) -> None:
         """Main method to generate the static site"""
         try:
             self._prepare_output_directory()
             self._process_content()
+            self._organize_content()
             self._copy_assets()
+            self._generate_special_pages()
             self._generate_html_pages()
             logger.info(f"Site generated successfully in {self.output_dir}")
         except Exception as e:
@@ -49,8 +68,12 @@ class SiteGenerator:
         if self.output_dir.exists():
             shutil.rmtree(self.output_dir)
         self.output_dir.mkdir(parents=True)
-        # Set directory permissions to 755 (rwxr-xr-x)
         self.output_dir.chmod(0o755)
+
+        # Create assets directory
+        assets_dir = self.output_dir / 'assets'
+        assets_dir.mkdir(parents=True)
+        assets_dir.chmod(0o755)
 
     def _process_content(self) -> None:
         """Process all content in the input directory"""
@@ -67,31 +90,75 @@ class SiteGenerator:
                     files.append(item)
         return files
 
+    def _extract_metadata(self, file_path: Path) -> dict:
+        """Extract metadata from markdown file"""
+        content = file_path.read_text(encoding='utf-8')
+        self.markdown_converter.reset()
+        self.markdown_converter.convert(content)
+
+        metadata = {}
+        if hasattr(self.markdown_converter, 'Meta'):
+            metadata = {
+                'title': self.markdown_converter.Meta.get('title', [file_path.stem.replace('-', ' ').title()])[0],
+                'category': self.markdown_converter.Meta.get('category', [None])[0],
+                'tags': self.markdown_converter.Meta.get('tags', [''])[0].split(',') if 'tags' in self.markdown_converter.Meta else [],
+                'description': self.markdown_converter.Meta.get('description', [None])[0]
+            }
+        else:
+            metadata = {
+                'title': file_path.stem.replace('-', ' ').title(),
+                'category': None,
+                'tags': [],
+                'description': None
+            }
+
+        return metadata
+
     def _process_markdown(self, file_path: Path) -> None:
         """Process a markdown file into a Page object"""
         try:
             content = file_path.read_text(encoding='utf-8')
+            metadata = self._extract_metadata(file_path)
+
+            # Convert content after metadata extraction
             self.markdown_converter.reset()
             html_content = self.markdown_converter.convert(content)
-
-            # Get title from metadata or filename
-            if hasattr(self.markdown_converter, 'Meta') and 'title' in self.markdown_converter.Meta:
-                title = self.markdown_converter.Meta['title'][0]
-            else:
-                title = file_path.stem.replace('-', ' ').title()
 
             relative_path = file_path.relative_to(self.input_dir)
             is_index = file_path.stem.lower() == 'index'
 
-            self.pages[relative_path] = Page(
-                title=title,
+            # Clean and normalize tags
+            tags = [tag.strip().lower() for tag in metadata['tags'] if tag.strip()]
+
+            page = Page(
+                title=metadata['title'],
                 path=relative_path,
                 content=html_content,
                 modified_date=datetime.fromtimestamp(file_path.stat().st_mtime),
+                category=metadata['category'],
+                tags=tags,
+                description=metadata['description'],
                 is_index=is_index
             )
+
+            self.pages[relative_path] = page
+
+            # Organize by category and tags
+            if page.category:
+                self.categories[page.category].append(page)
+            for tag in page.tags:
+                self.tags[tag].append(page)
+
         except Exception as e:
             logger.error(f"Failed to process {file_path}: {str(e)}")
+
+    def _organize_content(self) -> None:
+        """Organize pages by category and tags"""
+        # Sort pages within categories and tags
+        for category in self.categories:
+            self.categories[category].sort(key=lambda p: p.title)
+        for tag in self.tags:
+            self.tags[tag].sort(key=lambda p: p.title)
 
     def _copy_assets(self) -> None:
         """Copy non-markdown files to output directory"""
@@ -100,24 +167,146 @@ class SiteGenerator:
                 relative_path = file_path.relative_to(self.input_dir)
                 output_path = self.output_dir / relative_path
                 output_path.parent.mkdir(parents=True, exist_ok=True)
-                # Set directory permissions to 755 (rwxr-xr-x)
                 output_path.parent.chmod(0o755)
                 shutil.copy2(file_path, output_path)
-                # Set file permissions to 644 (rw-r--r--)
                 output_path.chmod(0o644)
+
+    def _generate_special_pages(self) -> None:
+        """Generate special pages like category index and tag index"""
+        # Generate categories index
+        if self.categories:
+            categories_content = self._render_categories_index()
+            categories_page = Page(
+                title="Categories",
+                path=Path("categories/index.md"),
+                content=categories_content,
+                modified_date=datetime.now(),
+                category=None,
+                tags=[],
+                description="Index of all categories",
+                is_index=True
+            )
+            self.pages[categories_page.path] = categories_page
+
+        # Generate tags index
+        if self.tags:
+            tags_content = self._render_tags_index()
+            tags_page = Page(
+                title="Tags",
+                path=Path("tags/index.md"),
+                content=tags_content,
+                modified_date=datetime.now(),
+                category=None,
+                tags=[],
+                description="Index of all tags",
+                is_index=True
+            )
+            self.pages[tags_page.path] = tags_page
+
+    def _render_categories_index(self) -> str:
+        """Render the categories index page"""
+        content = "<h2>Categories</h2>\n<ul>"
+        for category, pages in sorted(self.categories.items()):
+            category_url = f"/categories/{quote(category.lower())}.html"
+            content += f'\n<li><a href="{category_url}">{category}</a> ({len(pages)} pages)</li>'
+        content += "</ul>"
+        return content
+
+    def _render_tags_index(self) -> str:
+        """Render the tags index page"""
+        content = "<h2>Tags</h2>\n<ul>"
+        for tag, pages in sorted(self.tags.items()):
+            tag_url = f"/tags/{quote(tag.lower())}.html"
+            content += f'\n<li><a href="{tag_url}">{tag}</a> ({len(pages)} pages)</li>'
+        content += "</ul>"
+        return content
 
     def _generate_html_pages(self) -> None:
         """Generate HTML pages for all processed content"""
+        # Generate regular pages
         for page in self.pages.values():
             output_path = self.output_dir / page.path.with_suffix('.html')
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            # Set directory permissions to 755 (rwxr-xr-x)
             output_path.parent.chmod(0o755)
 
             html_content = self._render_template(page)
             output_path.write_text(html_content, encoding='utf-8')
-            # Set file permissions to 644 (rw-r--r--)
             output_path.chmod(0o644)
+
+        # Generate category pages
+        for category, pages in self.categories.items():
+            self._generate_category_page(category, pages)
+
+        # Generate tag pages
+        for tag, pages in self.tags.items():
+            self._generate_tag_page(tag, pages)
+
+    def _generate_category_page(self, category: str, pages: List[Page]) -> None:
+        """Generate a page for a specific category"""
+        output_path = self.output_dir / 'categories' / f"{category.lower()}.html"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.parent.chmod(0o755)
+
+        content = f"<h2>Category: {category}</h2>\n<ul>"
+        for page in sorted(pages, key=lambda p: p.title):
+            page_url = f"/{page.path.with_suffix('.html')}"
+            content += f'\n<li><a href="{page_url}">{page.title}</a></li>'
+        content += "</ul>"
+
+        page = Page(
+            title=f"Category: {category}",
+            path=Path(f"categories/{category.lower()}.md"),
+            content=content,
+            modified_date=datetime.now(),
+            category=None,
+            tags=[],
+            description=f"Pages in category {category}",
+            is_index=False
+        )
+
+        html_content = self._render_template(page)
+        output_path.write_text(html_content, encoding='utf-8')
+        output_path.chmod(0o644)
+
+    def _generate_tag_page(self, tag: str, pages: List[Page]) -> None:
+        """Generate a page for a specific tag"""
+        output_path = self.output_dir / 'tags' / f"{tag.lower()}.html"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.parent.chmod(0o755)
+
+        content = f"<h2>Tag: {tag}</h2>\n<ul>"
+        for page in sorted(pages, key=lambda p: p.title):
+            page_url = f"/{page.path.with_suffix('.html')}"
+            content += f'\n<li><a href="{page_url}">{page.title}</a></li>'
+        content += "</ul>"
+
+        page = Page(
+            title=f"Tag: {tag}",
+            path=Path(f"tags/{tag.lower()}.md"),
+            content=content,
+            modified_date=datetime.now(),
+            category=None,
+            tags=[],
+            description=f"Pages tagged with {tag}",
+            is_index=False
+        )
+
+        html_content = self._render_template(page)
+        output_path.write_text(html_content, encoding='utf-8')
+        output_path.chmod(0o644)
+
+    def _generate_breadcrumbs(self, page: Page) -> str:
+        """Generate breadcrumb navigation"""
+        parts = []
+        parts.append('<a href="/index.html">Home</a>')
+
+        if page.category:
+            parts.append(f'<a href="/categories/{quote(page.category.lower())}.html">{page.category}</a>')
+
+        if not page.is_index:
+            parts.append(page.title)
+
+        return ' » '.join(parts)
 
     def _generate_navigation(self, current_page: Page) -> str:
         """Generate navigation links"""
@@ -127,17 +316,28 @@ class SiteGenerator:
         if not current_page.is_index:
             nav_items.append('<a href="/index.html">Home</a>')
 
-        # Add other pages
-        for page in sorted(self.pages.values(), key=lambda p: p.title):
-            if not page.is_index:
-                relative_url = f"/{page.path.with_suffix('.html')}"
-                nav_items.append(f'<a href="{relative_url}">{page.title}</a>')
+        # Add categories link
+        if self.categories:
+            nav_items.append('<a href="/categories/index.html">Categories</a>')
+
+        # Add tags link
+        if self.tags:
+            nav_items.append('<a href="/tags/index.html">Tags</a>')
 
         return '\n'.join(nav_items)
 
     def _render_template(self, page: Page) -> str:
         """Render HTML template for a page"""
         navigation = self._generate_navigation(page)
+        breadcrumbs = self._generate_breadcrumbs(page)
+
+        # Generate tags section if page has tags
+        tags_section = ""
+        if page.tags:
+            tags_section = "<div class='tags'>Tags: " + ", ".join(
+                f'<a href="/tags/{quote(tag.lower())}.html">{tag}</a>'
+                for tag in sorted(page.tags)
+            ) + "</div>"
 
         return f'''<!DOCTYPE html>
 <html lang="en">
@@ -145,12 +345,14 @@ class SiteGenerator:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{page.title}</title>
+    {f'<meta name="description" content="{page.description}">' if page.description else ''}
     <style>
         :root {{
             --text-color: #2c3e50;
             --background-color: #ffffff;
             --accent-color: #3498db;
             --border-color: #ecf0f1;
+            --nav-background: rgba(255, 255, 255, 0.9);
         }}
 
         @media (prefers-color-scheme: dark) {{
@@ -159,6 +361,7 @@ class SiteGenerator:
                 --background-color: #2c3e50;
                 --accent-color: #3498db;
                 --border-color: #34495e;
+                --nav-background: rgba(44, 62, 80, 0.9);
             }}
         }}
 
@@ -175,13 +378,15 @@ class SiteGenerator:
         nav {{
             position: sticky;
             top: 0;
-            background: var(--background-color);
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             padding: 1rem 0;
             margin-bottom: 2rem;
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
+            z-index: 1000;
         }}
 
         nav a {{
@@ -196,6 +401,17 @@ class SiteGenerator:
             background-color: var(--border-color);
         }}
 
+        .breadcrumbs {{
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }}
+
+        .breadcrumbs a {{
+            color: var(--accent-color);
+            text-decoration: none;
+        }}
+
         .content {{
             margin-top: 2rem;
         }}
@@ -203,6 +419,7 @@ class SiteGenerator:
         h1, h2, h3, h4, h5, h6 {{
             margin-top: 2rem;
             margin-bottom: 1rem;
+            line-height: 1.3;
         }}
 
         code {{
@@ -210,23 +427,84 @@ class SiteGenerator:
             padding: 0.2rem 0.4rem;
             border-radius: 3px;
             font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }}
+
+        pre {{
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
         }}
 
         pre code {{
-            display: block;
-            padding: 1rem;
-            overflow-x: auto;
+            background: none;
+            padding: 0;
+            border-radius: 0;
         }}
 
         img {{
             max-width: 100%;
             height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
         }}
 
         .meta {{
-            color: #666;
+            color: var(--text-color);
+            opacity: 0.8;
             font-size: 0.9em;
             margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }}
+
+        .tags {{
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }}
+
+        .tags a {{
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }}
+
+        .tags a:hover {{
+            background: var(--accent-color);
+            color: white;
+        }}
+
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }}
+
+        th, td {{
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }}
+
+        th {{
+            background: var(--border-color);
+        }}
+
+        blockquote {{
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
         }}
     </style>
 </head>
@@ -235,13 +513,18 @@ class SiteGenerator:
         {navigation}
     </nav>
     <main>
+        <div class="breadcrumbs">
+            {breadcrumbs}
+        </div>
         <h1>{page.title}</h1>
         <div class="meta">
-            Last modified: {page.modified_date.strftime('%Y-%m-%d')}
+            <span>Last modified: {page.modified_date.strftime('%Y-%m-%d')}</span>
+            {f'<span>Category: <a href="/categories/{quote(page.category.lower())}.html">{page.category}</a></span>' if page.category else ''}
         </div>
         <div class="content">
             {page.content}
         </div>
+        {tags_section}
     </main>
 </body>
 </html>'''
@@ -253,7 +536,11 @@ def main():
     parser = argparse.ArgumentParser(description='Generate a static site from markdown files')
     parser.add_argument('input_dir', help='Input directory containing content')
     parser.add_argument('output_dir', help='Output directory for generated site')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
     args = parser.parse_args()
+
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
 
     try:
         generator = SiteGenerator(args.input_dir, args.output_dir)

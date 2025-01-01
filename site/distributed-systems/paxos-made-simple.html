@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paxos Made Simple</title>
+    
     <style>
         :root {
             --text-color: #2c3e50;
             --background-color: #ffffff;
             --accent-color: #3498db;
             --border-color: #ecf0f1;
+            --nav-background: rgba(255, 255, 255, 0.9);
         }
 
         @media (prefers-color-scheme: dark) {
@@ -18,6 +20,7 @@
                 --background-color: #2c3e50;
                 --accent-color: #3498db;
                 --border-color: #34495e;
+                --nav-background: rgba(44, 62, 80, 0.9);
             }
         }
 
@@ -34,13 +37,15 @@
         nav {
             position: sticky;
             top: 0;
-            background: var(--background-color);
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             padding: 1rem 0;
             margin-bottom: 2rem;
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
+            z-index: 1000;
         }
 
         nav a {
@@ -55,6 +60,17 @@
             background-color: var(--border-color);
         }
 
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
         .content {
             margin-top: 2rem;
         }
@@ -62,6 +78,7 @@
         h1, h2, h3, h4, h5, h6 {
             margin-top: 2rem;
             margin-bottom: 1rem;
+            line-height: 1.3;
         }
 
         code {
@@ -69,181 +86,99 @@
             padding: 0.2rem 0.4rem;
             border-radius: 3px;
             font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
         }
 
         pre code {
-            display: block;
-            padding: 1rem;
-            overflow-x: auto;
+            background: none;
+            padding: 0;
+            border-radius: 0;
         }
 
         img {
             max-width: 100%;
             height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
         }
 
         .meta {
-            color: #666;
+            color: var(--text-color);
+            opacity: 0.8;
             font-size: 0.9em;
             margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
     <nav>
         <a href="/index.html">Home</a>
-<a href="/operating-systems/v1-kernels-and-processes/1-introductions.html">1 Introductions</a>
-<a href="/networks/0-foundation/1-network-components-and-protocols.html">1 Network Components And Protocols</a>
-<a href="/operating-systems/v4-persistent-storage/11-file-systems-overview.html">11 File Systems Overview</a>
-<a href="/operating-systems/v4-persistent-storage/13-files-and-directories.html">13 Files And Directories</a>
-<a href="/networks/0-foundation/2-physical-layer.html">2 Physical Layer</a>
-<a href="/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">2 The Kernel Abstraction</a>
-<a href="/networks/0-foundation/3-performance.html">3 Performance</a>
-<a href="/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">3 The Programming Interface</a>
-<a href="/algorithms/practice/4.html">4</a>
-<a href="/operating-systems/v2-concurrency/4-concurrency-and-threads.html">4 Concurrency And Threads</a>
-<a href="/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">5 Synchronizing Access To Shared Objects</a>
-<a href="/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">7 Multiprocessor Scheduling</a>
-<a href="/operating-systems/v2-concurrency/7-queueing-theory.html">7 Queueing Theory</a>
-<a href="/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">7 Uniprocessor Scheduling</a>
-<a href="/networks/4-transport/ACK-clocking.html">Ack Clocking</a>
-<a href="/algorithms/approximation-algorithms.html">Approximation Algorithms</a>
-<a href="/networks/3-network/ARP.html">Arp</a>
-<a href="/algorithms/BFS.html">Bfs</a>
-<a href="/algorithms/patterns/BFS.html">Bfs</a>
-<a href="/networks/3-network/BGP.html">Bgp</a>
-<a href="/distributed-systems/bigtable.html">Bigtable</a>
-<a href="/algorithms/bipartite-graphs.html">Bipartite Graphs</a>
-<a href="/networks/5-application/CDNs.html">Cdns</a>
-<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">Ch1 Reliable Scalable And Maintainable Applications</a>
-<a href="/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">Ch10 Batch Processing</a>
-<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">Ch2 Data Models And Query Languages</a>
-<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">Ch3 Storage And Retrieval</a>
-<a href="/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">Ch4 Encoding And Evolution</a>
-<a href="/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">Ch5 Replication</a>
-<a href="/linear-algebra/cheatsheet.html">Cheatsheet</a>
-<a href="/distributed-systems/clocks.html">Clocks</a>
-<a href="/ds-backup/clocks.html">Clocks</a>
-<a href="/networks/1-physical/coding-and-modulation.html">Coding And Modulation</a>
-<a href="/teaching/modern-java/collections-and-records.html">Collections And Records</a>
-<a href="/digital-design/combinational-logic.html">Combinational Logic</a>
-<a href="/operating-systems/lecture-notes/components.html">Components</a>
-<a href="/cheatsheets/circuits/components.html">Components</a>
-<a href="/algorithms/connected-components.html">Connected Components</a>
-<a href="/distributed-systems/consistency.html">Consistency</a>
-<a href="/distributed-systems/consistent-global-state.html">Consistent Global State</a>
-<a href="/ds-backup/consistent-global-state.html">Consistent Global State</a>
-<a href="/algorithms/DAGs.html">Dags</a>
-<a href="/algorithms/DFS.html">Dfs</a>
-<a href="/networks/3-network/DHCP.html">Dhcp</a>
-<a href="/distributed-systems/disconnected-operation.html">Disconnected Operation</a>
-<a href="/distributed-systems/distributed-cache-coherence.html">Distributed Cache Coherence</a>
-<a href="/algorithms/divide-and-conquer.html">Divide And Conquer</a>
-<a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide And Conquer</a>
-<a href="/networks/5-application/DNS.html">Dns</a>
-<a href="/algorithms/dynamic-programming.html">Dynamic Programming</a>
-<a href="/distributed-systems/dynamo-db.html">Dynamo Db</a>
-<a href="/performance-engineering/efficiently-implementing-state-pattern-JVM.html">Efficiently Implementing State Pattern Jvm</a>
-<a href="/cheatsheets/circuits/electricity.html">Electricity</a>
-<a href="/linear-algebra/elementry-linear-algebra.html">Elementry Linear Algebra</a>
-<a href="/networks/2-direct-links/errors.html">Errors</a>
-<a href="/operating-systems/lecture-notes/file-systems.html">File Systems</a>
-<a href="/networks/4-transport/flow-control.html">Flow Control</a>
-<a href="/networks/2-direct-links/framing.html">Framing</a>
-<a href="/networks/3-network/global-internet.html">Global Internet</a>
-<a href="/distributed-systems/google-file-system.html">Google File System</a>
-<a href="/cheatsheets/algorithms/graphs.html">Graphs</a>
-<a href="/algorithms/problems/graphs-and-trees.html">Graphs And Trees</a>
-<a href="/algorithms/graphs-intro.html">Graphs Intro</a>
-<a href="/algorithms/greedy-algorithms.html">Greedy Algorithms</a>
-<a href="/operating-systems/lecture-notes/handle-tables.html">Handle Tables</a>
-<a href="/networks/5-application/HTTP.html">Http</a>
-<a href="/networks/3-network/ICMP.html">Icmp</a>
-<a href="/algorithms/induction.html">Induction</a>
-<a href="/networks/0-foundation/information-theory.html">Information Theory</a>
-<a href="/networks/3-network/internetworking.html">Internetworking</a>
-<a href="/cheatsheets/algorithms/intervals.html">Intervals</a>
-<a href="/machine-learning-for-big-data/intro-mapreduce-spark.html">Intro Mapreduce Spark</a>
-<a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">Io Systems Secondary Storage</a>
-<a href="/digital-design/karnaugh-maps.html">Karnaugh Maps</a>
-<a href="/operating-systems/lecture-notes/kernel-abstraction.html">Kernel Abstraction</a>
-<a href="/operating-systems/section-notes/lab-3-questions.html">Lab 3 Questions</a>
-<a href="/teaching/modern-java/lambdas-and-streams.html">Lambdas And Streams</a>
-<a href="/signal-conditioning/lecture-notes/lecture-1.html">Lecture 1</a>
-<a href="/signal-conditioning/lecture-notes/lecture-2.html">Lecture 2</a>
-<a href="/signal-conditioning/lecture-notes/lecture-3.html">Lecture 3</a>
-<a href="/signal-conditioning/lecture-notes/lecture-4.html">Lecture 4</a>
-<a href="/signal-conditioning/lecture-notes/lecture-5.html">Lecture 5</a>
-<a href="/signal-conditioning/lecture-notes/lecture-6.html">Lecture 6</a>
-<a href="/venv/lib/python3.13/site-packages/Markdown-3.7.dist-info/LICENSE.html">License</a>
-<a href="/algorithms/linear-programming.html">Linear Programming</a>
-<a href="/distributed-systems/load-balancing.html">Load Balancing</a>
-<a href="/distributed-systems/managing-critical-state.html">Managing Critical State</a>
-<a href="/ds-backup/managing-critical-state.html">Managing Critical State</a>
-<a href="/networks/1-physical/media.html">Media</a>
-<a href="/networks/3-network/motivation.html">Motivation</a>
-<a href="/networks/2-direct-links/multiple-access.html">Multiple Access</a>
-<a href="/distributed-systems/mutual-exclusion.html">Mutual Exclusion</a>
-<a href="/ds-backup/mutual-exclusion.html">Mutual Exclusion</a>
-<a href="/algorithms/network-flows.html">Network Flows</a>
-<a href="/networks/3-network/networking-services.html">Networking Services</a>
-<a href="/distributed-systems/non-blocking-two-phase-commit.html">Non Blocking Two Phase Commit</a>
-<a href="/distributed-systems/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
-<a href="/ds-backup/ordering-events-in-distributed-systems.html">Ordering Events In Distributed Systems</a>
-<a href="/networks/5-application/overview.html">Overview</a>
-<a href="/operating-systems/lecture-notes/page-faults.html">Page Faults</a>
-<a href="/operating-systems/lecture-notes/paging.html">Paging</a>
-<a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
-<a href="/distributed-systems/paxos-architecture.html">Paxos Architecture</a>
-<a href="/distributed-systems/paxos-intro.html">Paxos Intro</a>
-<a href="/ds-backup/paxos-intro.html">Paxos Intro</a>
-<a href="/distributed-systems/paxos-made-simple.html">Paxos Made Simple</a>
-<a href="/ds-backup/paxos-made-simple.html">Paxos Made Simple</a>
-<a href="/designing-data-intensive-applications/part-2-distributed-data/preface.html">Preface</a>
-<a href="/distributed-systems/primary-backup.html">Primary Backup</a>
-<a href="/ds-backup/primary-backup.html">Primary Backup</a>
-<a href="/operating-systems/lecture-notes/processes.html">Processes</a>
-<a href="/linear-algebra/python-cheatsheet.html">Python Cheatsheet</a>
-<a href="/digital-design/quartus-workflow.html">Quartus Workflow</a>
-<a href="/README.html">Readme</a>
-<a href="/networks/reference.html">Reference</a>
-<a href="/operating-systems/reference.html">Reference</a>
-<a href="/cheatsheets/java-spring-boot/reference.html">Reference</a>
-<a href="/networks/2-direct-links/retransmission.html">Retransmission</a>
-<a href="/networks/3-network/routing.html">Routing</a>
-<a href="/distributed-systems/RPC.html">Rpc</a>
-<a href="/ds-backup/RPC.html">Rpc</a>
-<a href="/cheatsheets/java-spring-boot/running.html">Running</a>
-<a href="/algorithms/runtime.html">Runtime</a>
-<a href="/distributed-systems/scaling-web-services.html">Scaling Web Services</a>
-<a href="/ds-backup/scaling-web-services.html">Scaling Web Services</a>
-<a href="/operating-systems/section-notes/section-1.html">Section 1</a>
-<a href="/digital-design/sequential-logic.html">Sequential Logic</a>
-<a href="/distributed-systems/sharding.html">Sharding</a>
-<a href="/scripts/simple.html">Simple</a>
-<a href="/algorithms/patterns/sliding-window.html">Sliding Window</a>
-<a href="/networks/sockets.html">Sockets</a>
-<a href="/tmp/bench/spec.html">Spec</a>
-<a href="/algorithms/stable-matching.html">Stable Matching</a>
-<a href="/networks/2-direct-links/switching.html">Switching</a>
-<a href="/digital-design/system-verilog.html">System Verilog</a>
-<a href="/networks/4-transport/TCP.html">Tcp</a>
-<a href="/operating-systems/lecture-notes/tlb.html">Tlb</a>
-<a href="/algorithms/tmp.html">Tmp</a>
-<a href="/networks/4-transport/transport-overview.html">Transport Overview</a>
-<a href="/algorithms/tree-intro.html">Tree Intro</a>
-<a href="/distributed-systems/two-phase-commit.html">Two Phase Commit</a>
-<a href="/networks/4-transport/UDP.html">Udp</a>
-<a href="/digital-design/waveform-diagram.html">Waveform Diagram</a>
-<a href="/operating-systems/lecture-notes/windows-memory-management.html">Windows Memory Management</a>
-<a href="/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">Windows Objects Handles Refcounts</a>
-<a href="/operating-systems/lecture-notes/windows-rtz.html">Windows Rtz</a>
-<a href="/networks/2-direct-links/wireless.html">Wireless</a>
     </nav>
     <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Paxos Made Simple
+        </div>
         <h1>Paxos Made Simple</h1>
         <div class="meta">
-            Last modified: 2024-04-24
+            <span>Last modified: 2024-04-24</span>
+            
         </div>
         <div class="content">
             <h1 id="paxos-made-simple">Paxos Made Simple</h1>
@@ -319,6 +254,7 @@ $$</p>
 <p>Once a leader has finished phase 1 for all commands thus far and afterwards, it only needs to complete phase 2 for each subsequent command requested, which is known to be the minimal algorithm for reaching consensus after phase 1.</p>
 <p>To reiterate what was stated previously, in the case where a single leader is not elected, progress is not guaranteed, but safety is.</p>
         </div>
+        
     </main>
 </body>
 </html>

@@ -1,3 +1,10 @@
+---
+title: Fundamentals of Data-Intensive Application Design and Scalability
+category: Software Engineering
+tags: reliability, scalability, maintainability, data systems, performance
+description: This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses various aspects of system design, including handling different types of faults, measuring and managing load, and ensuring long-term system health through good operational practices and simplicity.
+---
+
 # Chapter 1
 ## Reliable, Scalable, and Maintainable Applications
 

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ch5 Replication</title>
-    
+    <title>Replication Strategies in Distributed Data Systems</title>
+    <meta name="description" content="This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -175,12 +175,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Ch5 Replication
+            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Replication Strategies in Distributed Data Systems
         </div>
-        <h1>Ch5 Replication</h1>
+        <h1>Replication Strategies in Distributed Data Systems</h1>
         <div class="meta">
-            <span>Last modified: 2023-12-31</span>
-            
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
         </div>
         <div class="content">
             <h1 id="chapter-5">Chapter 5</h1>
@@ -255,7 +255,7 @@
 <p>With multi-row transactions, log contains entry for all rows, as well as entry for transaction commit (MySQL binlog uses this approach)</p>
 <p>Logical logs decouple the replication from the storage engine, allowing better compatibility between versions. Also allows integrations with external services (e.g. Kafka, Elasticsearch, etc.)</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/data%20replication.html">data replication</a>, <a href="/tags/failover.html">failover</a>, <a href="/tags/leader-follower%20model.html">leader-follower model</a>, <a href="/tags/replication%20logs.html">replication logs</a>, <a href="/tags/synchronous%20vs%20asynchronous.html">synchronous vs asynchronous</a></div>
     </main>
 </body>
 </html>

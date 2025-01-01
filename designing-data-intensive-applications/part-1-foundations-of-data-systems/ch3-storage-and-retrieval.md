@@ -1,4 +1,12 @@
+---
+title: Storage and Retrieval Techniques for Database Systems
+category: Database Systems
+tags: data structures, indexing, oltp vs olap, column-oriented storage
+description: Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.
+---
+
 # Chapter 3
+
 ## Storage and Retrieval
 
 ```bash
@@ -22,6 +30,7 @@ To make reads faster, we can use an **index**. An index is an additional structu
 Map keys to offsets in the data file. This is fast for equality queries, but not for range queries. Store log-structured key-value data like above in binary format, and use a hash index to find the offset of the key in the data file. **Delete** by marking the key as deleted in the data file (sometimes with a "tombstone"), and periodically reindex the data file to remove the deleted keys.
 
 For **crash recovery**:
+
 - reread log file from beginning to end, building hash table indicies in memory (slow, but no additional storage)
 - store snapshots of the hash table indicies to disk periodically (fast, but requires additional storage)
 - use checksums to detect partial corruption of the hash table indicies (fast, but requires additional storage)
@@ -81,21 +90,21 @@ B-trees are good for one-dimensional indexes, but not for **multi-dimensional in
 
 As RAM gets cheaper, it makes more sense to keep data in memory. **In-memory databases** are good for applications that need low latency and high throughput, but make crash recovery more difficult. **Write-ahead logs** are a good way to make crash recovery easier, but can slow down writes. Some databases (e.g. Redis) let you choose between durability and performance, and have "weak durability" by asyncronously writing to disk. Some in-memory databases can even exceed the amount of RAM available by using an eviction policy similar to a cache.
 
-
 ### Transaction Processing or Analytics?
 
 **OLTP** (online transaction processing) is good for real-time stateful workloads, where low latency and high throughput are important. **OLAP** (online analytics processing) is good for async batch processing, where high throughput is important, but latency is not.
 
 #### OTLP:
+
 - transactional databases, relational databases, key-value stores, etc.
 - ACID transactions, concurrency control, indexes, etc.
 - enterprise typically made up of several OLTP systems that require high-availability and low-latency for reads and writes.
 
 #### OLAP:
+
 - data warehouses, batch processing, batch analytics, Hadoop, Spark, etc.
 - read only copy of data, typically loaded and queried in batches
 - typically used for business intelligence, reporting, and data mining. Not as critical to keep up and running 24/7, and queries are able to hog system resources without consequence.
-
 
 Most of the previous indexes are more OTLP focused, whereas "data warehouses" are more OLAP focused, and often use a different schema and index model.
 
@@ -121,7 +130,7 @@ WHERE
  dim_product.category IN ('Fresh fruit', 'Candy')
 GROUP BY
  dim_date.weekday, dim_product.category;
- ```
+```
 
 In transactional databases, storage is "row-oriented", so an entire row needs to be loaded, including columns that aren't used. **column-oriented** storage is better for OLAP, since it only needs to load the columns that are used, which can amount to a lot of space over large datasets. It also allows for better compression, since columns are often similar.
 
@@ -144,5 +153,3 @@ These optimizations are good for reads and make sense in a data-warehouse, but c
 **Data cubes** are a way to precompute aggregations over multiple dimensions. They are good for speeding up queries, but can be expensive to maintain. Essentially a multi-dimensional array, where each cell is an aggregation over a subset of the dimensions. Very expensive to maintain, and inflexible for queries that aren't covered by the precomputed aggregations.
 
 Oftentimes, it makes more sense to store raw data, and then benchmark queries to see which ones are slow, and then precompute aggregations for those queries if they need to be faster.
-
-

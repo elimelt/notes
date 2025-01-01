@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ch4 Encoding And Evolution</title>
-    
+    <title>Encoding, Evolution, and Data Flow in Distributed Systems</title>
+    <meta name="description" content="This document explores various aspects of data encoding and evolution in distributed systems. It covers different serialization formats, schema evolution strategies, and modes of data flow including databases, services, and message passing systems, with a focus on maintaining compatibility as systems change over time.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -175,12 +175,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Ch4 Encoding And Evolution
+            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Encoding, Evolution, and Data Flow in Distributed Systems
         </div>
-        <h1>Ch4 Encoding And Evolution</h1>
+        <h1>Encoding, Evolution, and Data Flow in Distributed Systems</h1>
         <div class="meta">
-            <span>Last modified: 2024-01-18</span>
-            
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
         </div>
         <div class="content">
             <h1 id="chapter-4">Chapter 4</h1>
@@ -191,9 +191,11 @@
 <p><strong>backward compatibility</strong>: new code can read data that was written by old code, meaning new code understands old fields.</p>
 <p><strong>forward compatibility</strong>: old code can read data that was written by new code, meaning old code ignores new fields.</p>
 <h3 id="formats-for-encoding-data">Formats for Encoding Data</h3>
-<p>Programs typically work with at least two different representations of data: 
-- <strong>in-memory data structures</strong> (objects, arrays, hash maps, etc.)
-- <strong>serialized</strong> (encoded) <strong>bytes</strong> (often stored on disk or sent over the network).</p>
+<p>Programs typically work with at least two different representations of data:</p>
+<ul>
+<li><strong>in-memory data structures</strong> (objects, arrays, hash maps, etc.)</li>
+<li><strong>serialized</strong> (encoded) <strong>bytes</strong> (often stored on disk or sent over the network).</li>
+</ul>
 <p><strong>serialization</strong>: the process of translating data structures or object state into a format that can be stored (for example, in a file or memory buffer) or transmitted (for example, across a network connection link) and reconstructed later (possibly in a different computer environment). Also called encoding/marshaling.</p>
 <p><strong>deserialization</strong>: the reverse process of serialization, which is to extract data structures from a series of bytes. Also called decoding/unmarshaling.</p>
 <p>Many built in serialization formats that are included with languages are not performant or space efficient (Java's built in serialization, Python's pickle, etc.). They are also not compatible with other languages. Generally a bad idea to use these formats for long term storage or communication between services.</p>
@@ -281,7 +283,7 @@
 <li><strong>Erlang OTP</strong> experimental support for mapping Erlang data types to protobuf. Still need to be careful about schema evolution.</li>
 </ul>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/compatibility.html">compatibility</a>, <a href="/tags/data%20serialization.html">data serialization</a>, <a href="/tags/encoding%20formats.html">encoding formats</a>, <a href="/tags/message%20passing.html">message passing</a>, <a href="/tags/schema%20evolution.html">schema evolution</a></div>
     </main>
 </body>
 </html>

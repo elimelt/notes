@@ -1,3 +1,10 @@
+---
+title: Replication Strategies in Distributed Data Systems
+category: Distributed Systems
+tags: data replication, leader-follower model, synchronous vs asynchronous, failover, replication logs
+description: This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.
+---
+
 # Chapter 5
 ## Replication
 

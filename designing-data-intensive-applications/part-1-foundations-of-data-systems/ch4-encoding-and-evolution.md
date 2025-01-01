@@ -1,4 +1,12 @@
+---
+title: Encoding, Evolution, and Data Flow in Distributed Systems
+category: Distributed Systems
+tags: data serialization, schema evolution, compatibility, message passing, encoding formats
+description: This document explores various aspects of data encoding and evolution in distributed systems. It covers different serialization formats, schema evolution strategies, and modes of data flow including databases, services, and message passing systems, with a focus on maintaining compatibility as systems change over time.
+---
+
 # Chapter 4
+
 ## Encoding and Evolution
 
 **evolvability**: the ability to evolve as requirements change.
@@ -13,7 +21,8 @@
 
 ### Formats for Encoding Data
 
-Programs typically work with at least two different representations of data: 
+Programs typically work with at least two different representations of data:
+
 - **in-memory data structures** (objects, arrays, hash maps, etc.)
 - **serialized** (encoded) **bytes** (often stored on disk or sent over the network).
 
@@ -35,11 +44,10 @@ Many built in serialization formats that are included with languages are not per
 
 **Avro** Another binary encoding that was made as an alternative to protobuf and thrift for Hadoop. Uses a schema to specify encoding. Has two schema langs: IDL, for human editing, and one similar to JSON, for machine reading. Doesn't use tag numbers or any identifying field info; just lengths and data values. Uses variable length integers to encode lengths. Uses writer/reader schema setup.
 
-
 ### What makes protobuf, thrift and avro good?
 
--  **Compact structure**: data is encoded as a sequence of fields, each of which contains a key (field tag) and a value. The key indicates the field's name and data type. Field tags are used to identify fields from the schema, and variable length integers are used for the field tags.
--  **Schema evolution**: new fields can be added to the schema, but must have a new tag number and either be optional or have a default value. Old code can read data with new fields (ignores new fields), and new code can read data with old fields. Fields can be removed, but only if the field tag is not reused. Fields can be renamed, but only if the field tag is not reused. Fields can be reordered without breaking compatibility.
+- **Compact structure**: data is encoded as a sequence of fields, each of which contains a key (field tag) and a value. The key indicates the field's name and data type. Field tags are used to identify fields from the schema, and variable length integers are used for the field tags.
+- **Schema evolution**: new fields can be added to the schema, but must have a new tag number and either be optional or have a default value. Old code can read data with new fields (ignores new fields), and new code can read data with old fields. Fields can be removed, but only if the field tag is not reused. Fields can be renamed, but only if the field tag is not reused. Fields can be reordered without breaking compatibility.
 
 ### Writer Reader Schema Setup
 
@@ -56,7 +64,6 @@ However, in a database where data is written over a long period of time, you can
 
 In an inter-service communication context, schemas can be negotiated between client and server on connection setup. Using a database of schema versions might be a good idea here.
 
-
 ### Dynamically Generated Schemas
 
 **Situation:** Want to dump database to file on disk using a binary encoding format.
@@ -68,7 +75,6 @@ In an inter-service communication context, schemas can be negotiated between cli
 This kind of dynamic schema generation was a design goal of Avro, and is less so for protobuf and thrift. Static code generation was a design goal of protobuf and thrift, and is less so for Avro. This makes Avro a natural choice in dynamic languages where code gen is frowned upon (and more generally compile steps), although there are also code generation tools for Avro in static languages.
 
 Keeping a database of schema versions is a good idea, and can be used to generate Avro schemas for each version of the schema. This can be used to generate a schema for each version of the database, and then used to encode/decode data from each version of the database.
-
 
 ## Modes of Dataflow
 
@@ -98,15 +104,13 @@ Encoder: client process that sends request to server. Decoder: server process th
 
 I'm not even going to get into **SOAP**.
 
-**RPC** is a design philosophy that builds on the idea of calling a function on a remote server. Tries to provide *location transperency* by abstracting network communication when triggering remote method calls. Many are overly complex, and are not compatible with other languages. **gRPC** is a modern RPC framework that uses protobuf as the interface definition language, and HTTP/2 as the underlying protocol. It is a good choice for internal services, but not for public APIs.
-
+**RPC** is a design philosophy that builds on the idea of calling a function on a remote server. Tries to provide _location transperency_ by abstracting network communication when triggering remote method calls. Many are overly complex, and are not compatible with other languages. **gRPC** is a modern RPC framework that uses protobuf as the interface definition language, and HTTP/2 as the underlying protocol. It is a good choice for internal services, but not for public APIs.
 
 #### Problems with RPC
 
 Network requests are fundamentally different from local function calls. They can fail, be delayed, or be delivered multiple times. This makes designing systems that use RPC more complex, since you need to take into account these failure modes. **Idempotence** is a good way to allow transparent retries, since it means that the same request can be sent multiple times without causing unintended side effects. REST doesn't try to hide the fact that it is a network protocol, and thus is more transparent about failure modes.
 
 Furthermore, the platform lock-in of RPC is a problem. This ties you to a specific language, and makes it difficult to use other languages. This is especially true for public APIs, where you have no control over the client.
-
 
 #### Current Direction of RPC
 
@@ -143,7 +147,6 @@ Several advantages:
 
 Usually one way communication, but can be used for request/response. This is useful for decoupling the sender from the receiver, and for handling high volumes of messages.
 
-
 ### Distributed Actor Frameworks
 
 **Actor model**: a model of concurrent computation that treats actors as the universal primitives of concurrent computation. In response to a message that it receives, an actor can: make local decisions, create more actors, send more messages, and determine how to respond to the next message received. Actors are essentially state machines that communicate by sending messages to each other.
@@ -155,4 +158,3 @@ The same message passing system is used for communication between actors on the 
 - **Akka** uses Java's serialization by default, but can be configured to use protobuf for rolling upgrades.
 - **Orleans** uses custom encoding by default, and can be configured to use other encodings. Need to set up and shut down clusters when migrating schemas/versioning.
 - **Erlang OTP** experimental support for mapping Erlang data types to protobuf. Still need to be careful about schema evolution.
-

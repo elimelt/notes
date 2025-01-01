@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ch3 Storage And Retrieval</title>
-    
+    <title>Storage and Retrieval Techniques for Database Systems</title>
+    <meta name="description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -175,12 +175,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Ch3 Storage And Retrieval
+            <a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Storage and Retrieval Techniques for Database Systems
         </div>
-        <h1>Ch3 Storage And Retrieval</h1>
+        <h1>Storage and Retrieval Techniques for Database Systems</h1>
         <div class="meta">
-            <span>Last modified: 2024-02-10</span>
-            
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/database%20systems.html">Database Systems</a></span>
         </div>
         <div class="content">
             <h1 id="chapter-3">Chapter 3</h1>
@@ -199,10 +199,12 @@ db_get () {
 <p>To make reads faster, we can use an <strong>index</strong>. An index is an additional structure that is derived from the primary data. This is a trade-off between write performance and read performance, since writes now have to update the index as well as the primary data.</p>
 <h3 id="hash-indexes">Hash Indexes</h3>
 <p>Map keys to offsets in the data file. This is fast for equality queries, but not for range queries. Store log-structured key-value data like above in binary format, and use a hash index to find the offset of the key in the data file. <strong>Delete</strong> by marking the key as deleted in the data file (sometimes with a "tombstone"), and periodically reindex the data file to remove the deleted keys.</p>
-<p>For <strong>crash recovery</strong>:
-- reread log file from beginning to end, building hash table indicies in memory (slow, but no additional storage)
-- store snapshots of the hash table indicies to disk periodically (fast, but requires additional storage)
-- use checksums to detect partial corruption of the hash table indicies (fast, but requires additional storage)</p>
+<p>For <strong>crash recovery</strong>:</p>
+<ul>
+<li>reread log file from beginning to end, building hash table indicies in memory (slow, but no additional storage)</li>
+<li>store snapshots of the hash table indicies to disk periodically (fast, but requires additional storage)</li>
+<li>use checksums to detect partial corruption of the hash table indicies (fast, but requires additional storage)</li>
+</ul>
 <p>For concurrency, maintain a single write thread, and multiple read threads. Writes are serialized, but reads can be parallelized.</p>
 <h3 id="sstables-and-lsm-trees">SSTables and LSM-Trees</h3>
 <p><strong>Sorted String Tables</strong> (SSTables) are a way to store key-value data in sorted order. Keep data sectioned based on time range, and search from most to least recent, periodically merging previous sections of data. Should store key value pairs, as well as byte offset metadata. Range queries are fast, and merge operations can be optimized by keeping most recent record and merging ranges at a time. However, both reading and writing are slower than hash indexes.</p>
@@ -254,8 +256,7 @@ db_get () {
 <p><strong>Snowflake schema</strong> is a more complex schema for OLAP. It is similar to a star schema, but the dimension tables are normalized into multiple tables. This can make queries more complex, but can also reduce storage space.</p>
 <p>Warehouses can get huge (petabytes), since records are often events and are kept long term. Columns are often also very wide (100s of columns), since they are often denormalized.</p>
 <h3 id="column-oriented-storage">Column-Oriented Storage</h3>
-<p><code>sql
-SELECT
+<pre><code class="language-sql">SELECT
  dim_date.weekday, dim_product.category,
  SUM(fact_sales.quantity) AS quantity_sold
 FROM fact_sales
@@ -265,7 +266,8 @@ WHERE
  dim_date.year = 2013 AND
  dim_product.category IN ('Fresh fruit', 'Candy')
 GROUP BY
- dim_date.weekday, dim_product.category;</code></p>
+ dim_date.weekday, dim_product.category;
+</code></pre>
 <p>In transactional databases, storage is "row-oriented", so an entire row needs to be loaded, including columns that aren't used. <strong>column-oriented</strong> storage is better for OLAP, since it only needs to load the columns that are used, which can amount to a lot of space over large datasets. It also allows for better compression, since columns are often similar.</p>
 <p>Can be heavily compressed using bitmap indexes, and further by run-length encoding, delta encoding, etc. can also be optimized with vectorized processing (SIMD instructions), where instructions are executed in parallel on multiple values at once (<a href="https://courses.cs.washington.edu/courses/cse333/23au/lectures/27/code/cpp_simd_example.tar.gz">C++ example</a>).</p>
 <h4 id="sort-order-in-column-storage">Sort Order in Column Storage</h4>
@@ -278,7 +280,7 @@ GROUP BY
 <p><strong>Data cubes</strong> are a way to precompute aggregations over multiple dimensions. They are good for speeding up queries, but can be expensive to maintain. Essentially a multi-dimensional array, where each cell is an aggregation over a subset of the dimensions. Very expensive to maintain, and inflexible for queries that aren't covered by the precomputed aggregations.</p>
 <p>Oftentimes, it makes more sense to store raw data, and then benchmark queries to see which ones are slow, and then precompute aggregations for those queries if they need to be faster.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/column-oriented%20storage.html">column-oriented storage</a>, <a href="/tags/data%20structures.html">data structures</a>, <a href="/tags/indexing.html">indexing</a>, <a href="/tags/oltp%20vs%20olap.html">oltp vs olap</a></div>
     </main>
 </body>
 </html>

@@ -172,7 +172,11 @@ class SiteGenerator:
                 output_path.chmod(0o644)
 
     def _generate_special_pages(self) -> None:
-        """Generate special pages like category index and tag index"""
+        """Generate special pages like main index, category index and tag index"""
+        # Generate main index
+        self._generate_main_index()
+
+        # Generate categories and tags pages
         # Generate categories index
         if self.categories:
             categories_content = self._render_categories_index()
@@ -325,6 +329,101 @@ class SiteGenerator:
             nav_items.append('<a href="/tags/index.html">Tags</a>')
 
         return '\n'.join(nav_items)
+
+    def _generate_main_index(self) -> None:
+        """Generate the main index.html page"""
+        # Get recent pages (excluding special pages)
+        regular_pages = [p for p in self.pages.values()
+                        if not (p.is_index or str(p.path).startswith(('categories/', 'tags/')))]
+        recent_pages = sorted(regular_pages,
+                            key=lambda p: p.modified_date,
+                            reverse=True)[:10]  # Show 10 most recent
+
+        # Generate recent posts section
+        recent_content = "<h2>Recent Notes</h2>\n<ul class='recent-posts'>"
+        for page in recent_pages:
+            page_url = f"/{page.path.with_suffix('.html')}"
+            date_str = page.modified_date.strftime('%Y-%m-%d')
+            recent_content += f'''
+                <li>
+                    <a href="{page_url}">{page.title}</a>
+                    <span class="date">{date_str}</span>
+                    {f'<span class="category">{page.category}</span>' if page.category else ''}
+                </li>'''
+        recent_content += "</ul>"
+
+        # Generate categories section
+        categories_content = "<h2>Categories</h2>\n<ul class='categories-list'>"
+        for category, pages in sorted(self.categories.items()):
+            category_url = f"/categories/{quote(category.lower())}.html"
+            categories_content += f'''
+                <li>
+                    <a href="{category_url}">{category}</a>
+                    <span class="count">({len(pages)})</span>
+                </li>'''
+        categories_content += "</ul>"
+
+        # Generate popular tags section (show top 20 most used tags)
+        tag_counts = {tag: len(pages) for tag, pages in self.tags.items()}
+        popular_tags = sorted(tag_counts.items(), key=lambda x: (-x[1], x[0]))[:20]
+
+        tags_content = "<h2>Popular Tags</h2>\n<div class='tags-cloud'>"
+        for tag, count in popular_tags:
+            tag_url = f"/tags/{quote(tag.lower())}.html"
+            tags_content += f'<a href="{tag_url}" class="tag-{min(count, 5)}">{tag} <span>({count})</span></a>'
+        tags_content += "</div>"
+
+        # Calculate some statistics
+        total_notes = len(regular_pages)
+        total_categories = len(self.categories)
+        total_tags = len(self.tags)
+
+        # Create the landing page content
+        content = f"""
+            <div class="landing-stats">
+                <div class="stat-item">
+                    <span class="stat-value">{total_notes}</span>
+                    <span class="stat-label">Notes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">{total_categories}</span>
+                    <span class="stat-label">Categories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">{total_tags}</span>
+                    <span class="stat-label">Tags</span>
+                </div>
+            </div>
+            <div class="landing-grid">
+                <div class="recent-section">
+                    {recent_content}
+                </div>
+                <div class="categories-section">
+                    {categories_content}
+                </div>
+                <div class="tags-section">
+                    {tags_content}
+                </div>
+            </div>
+        """
+
+        # Create the index page
+        index_page = Page(
+            title="My Digital Garden",
+            path=Path("index.md"),
+            content=content,
+            modified_date=datetime.now(),
+            category=None,
+            tags=[],
+            description="A collection of my digital notes and thoughts",
+            is_index=True
+        )
+
+        # Generate the HTML
+        output_path = self.output_dir / 'index.html'
+        html_content = self._render_template(index_page)
+        output_path.write_text(html_content, encoding='utf-8')
+        output_path.chmod(0o644)
 
     def _render_template(self, page: Page) -> str:
         """Render HTML template for a page"""

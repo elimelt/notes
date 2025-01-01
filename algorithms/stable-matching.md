@@ -1,3 +1,10 @@
+---
+title: Stable Matching Algorithms and Proofs in Computer Science
+category: Algorithm Analysis
+tags: matching, stable matching, gale-shapley, proof techniques, complexity analysis, optimization
+description: This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed proofs of correctness, complexity analysis, and discussions on optimal assignments for companies and applicants. The document also explores related problems like the Stable Roommate Problem.
+---
+
 # Stable Matching
 
 Given a list of $n$ companies $c_1, c_2, \ldots, c_n$, and a list of students $s_1, s_2, \ldots, s_n$, each company ranks the students in order of preference, and each student ranks the companies in order of preference.

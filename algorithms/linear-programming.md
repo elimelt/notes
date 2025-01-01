@@ -1,12 +1,7 @@
 ---
 title: Linear Programming Fundamentals and Applications in Optimization
 category: Operations Research
-tags:
-  - Linear Systems
-  - Linear Programs
-  - Optimization
-  - Standard Form
-  - Application Examples
+tags: linear systems, linear programs, optimization
 description: This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key concepts such as hyperplanes, polytopes, and convex sets, and demonstrates how to transform various optimization problems into linear programs. The document also explores practical applications of linear programming in areas like max-flow and weighted vertex cover problems.
 ---
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finding Connected Components in Undirected Graphs Using BFS/DFS</title>
-    
+    <meta name="description" content="Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementation using adjacency lists and demonstrates how to create a data structure that enables O(1) time queries for path existence between vertices.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -183,15 +183,7 @@
             <span>Category: <a href="/categories/algorithms.html">algorithms</a></span>
         </div>
         <div class="content">
-            <ul>
-<li>graph theory</li>
-<li>connected components</li>
-<li>breadth-first search</li>
-<li>depth-first search
-description: Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementation using adjacency lists and demonstrates how to create a data structure that enables O(1) time queries for path existence between vertices.</li>
-</ul>
-<hr />
-<h1 id="connected-components">Connected Components</h1>
+            <h1 id="connected-components">Connected Components</h1>
 <p>Given an undirected graph $G = (V, E)$, you can find partition $V$ into sets of connected components $C_1, C_2, \ldots$ in $O(|V| + |E|)$ using breadth-first search (BFS) or depth-first search (DFS).</p>
 <p>In other words, we can create a data structure from $G$ such that given two vertices $u, v \in V$, we  we answer whether there exists a path from $u \to v$ in $O(1)$ time and $O(|V|)$ space.</p>
 <p>The basic idea is to run a BFS/DFS starting at every vertex, and to assign a label to each vertex we visit during this traversal. We can use an array (if vertices are numbered) or hash map to store the vertex to component set mapping $V \to C_i$</p>
@@ -234,7 +226,7 @@ def component_sets(G):
 <h2 id="strategy-for-unconnected-graph">Strategy for Unconnected Graph</h2>
 <p>In general, if you are solving a graph problem you should first assume your graph is fully connected, and then after you've found a solution for connected graphs, you can run your algorithm on all the connected components of your graph.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/breadth-first%20search.html">breadth-first search</a>, <a href="/tags/connected%20components.html">connected components</a>, <a href="/tags/depth-first%20search.html">depth-first search</a>, <a href="/tags/graph%20theory.html">graph theory</a></div>
     </main>
 </body>
 </html>

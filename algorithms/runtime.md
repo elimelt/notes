@@ -1,11 +1,7 @@
 ---
 title: Measuring Algorithm Efficiency with Asymptotic Notation
 category: Computer Science
-tags:
-  - Algorithm Analysis
-  - Time Complexity
-  - Asymptotic Notation
-  - Efficiency Bounds
+tags: algorithm, time complexity, asymptotic notation, efficiency
 description: This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and provides common efficiency bounds for various function types, emphasizing the importance of polynomial-time algorithms in practical computing.
 ---
 

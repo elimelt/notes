@@ -1,3 +1,15 @@
+---
+title: Greedy Algorithms for Interval Scheduling and Partitioning
+category: Algorithm Analysis
+tags:
+  - Greedy Algorithms
+  - Interval Scheduling
+  - Interval Partitioning
+  - Proof Techniques
+  - Optimization
+description: This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Python implementations, and presents rigorous proofs of correctness using techniques such as "Greedy Stays Ahead" and exchange arguments.
+---
+
  # Greedy Algorithms
 
 Choose the most attractive choice at each step, and hope that this will lead to the optimal solution. Proofs of correctness are particularly important for greedy algorithms.

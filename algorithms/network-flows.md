@@ -1,3 +1,15 @@
+---
+title: Network Flow Algorithms and Applications in Graph Theory
+category: Graph Theory
+tags:
+  - Max Flow Min Cut
+  - Ford-Fulkerson Algorithm
+  - Bipartite Matching
+  - Vertex Cover
+  - Independent Set
+description: Comprehensive overview of network flow algorithms, including Max Flow/Min Cut and Ford-Fulkerson. Covers applications in bipartite matching, vertex cover, and independent set problems. Includes proofs, algorithms, and problem-solving techniques for graph theory concepts.
+---
+
 # Network Flow - Max Flow and Min Cut
 
 ## Max Flow/Min Cut

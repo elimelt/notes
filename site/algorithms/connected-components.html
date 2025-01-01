@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connected Components</title>
+    <title>Finding Connected Components in Undirected Graphs Using BFS/DFS</title>
     
     <style>
         :root {
@@ -170,18 +170,27 @@
 <body>
     <nav>
         <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Connected Components
+            <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">algorithms</a> » Finding Connected Components in Undirected Graphs Using BFS/DFS
         </div>
-        <h1>Connected Components</h1>
+        <h1>Finding Connected Components in Undirected Graphs Using BFS/DFS</h1>
         <div class="meta">
-            <span>Last modified: 2024-04-10</span>
-            
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/algorithms.html">algorithms</a></span>
         </div>
         <div class="content">
-            <h1 id="connected-components">Connected Components</h1>
+            <ul>
+<li>graph theory</li>
+<li>connected components</li>
+<li>breadth-first search</li>
+<li>depth-first search
+description: Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementation using adjacency lists and demonstrates how to create a data structure that enables O(1) time queries for path existence between vertices.</li>
+</ul>
+<hr />
+<h1 id="connected-components">Connected Components</h1>
 <p>Given an undirected graph $G = (V, E)$, you can find partition $V$ into sets of connected components $C_1, C_2, \ldots$ in $O(|V| + |E|)$ using breadth-first search (BFS) or depth-first search (DFS).</p>
 <p>In other words, we can create a data structure from $G$ such that given two vertices $u, v \in V$, we  we answer whether there exists a path from $u \to v$ in $O(1)$ time and $O(|V|)$ space.</p>
 <p>The basic idea is to run a BFS/DFS starting at every vertex, and to assign a label to each vertex we visit during this traversal. We can use an array (if vertices are numbered) or hash map to store the vertex to component set mapping $V \to C_i$</p>

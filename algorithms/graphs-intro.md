@@ -1,3 +1,14 @@
+---
+title: Introduction to Undirected Graphs and Their Properties
+category: Graph Theory
+tags:
+  - graph fundamentals
+  - graph representation
+  - graph properties
+  - data structures
+description: A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves important theorems about degree sums and odd vertices, and compares adjacency matrix and list representations with their respective time and space complexities.
+---
+
 # Graphs Introduction
 
 ## Undirected Graphs

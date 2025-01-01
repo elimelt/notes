@@ -1,3 +1,14 @@
+---
+title: Approximation Algorithms
+category: algorithms
+tags:
+    - approximation
+    - algorithms
+    - vertex cover
+    - set cover
+description: A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.
+---
+
 # Approximation Algorithms
 
 When faced with a problem that can be reduced to some NP-Complete problem, you (most probably) cannot generally solve it in polynomial time. For example:

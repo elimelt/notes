@@ -1,3 +1,14 @@
+---
+title: Dynamic Programming Algorithms and Problem Solutions Guide
+category: algorithms
+tags:
+  - dynamic-programming
+  - optimization
+  - algorithm-analysis
+  - problem-solving
+description: A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems. Includes detailed explanations of problem-solving approaches, correctness proofs, and runtime analysis for each algorithm, with practical Python implementations.
+---
+
 # Dynamic Programming
 
 **Dynamic Programming** is an algorithmic paradigm where you break up a problem into a series of **overlapping** sub-problems, building up solutions to progressively larger subproblems until the original answer is obtained. The key efficiency of DP is to **memoize** the answers to sub problems, often yielding a polynomial time algorithm.

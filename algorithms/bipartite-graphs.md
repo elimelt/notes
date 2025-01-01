@@ -1,3 +1,14 @@
+---
+title: Bipartite Graphs Properties, Proofs, and Detection Algorithm
+category: Graph Theory
+tags:
+  - bipartite graphs
+  - graph coloring
+  - odd cycles
+  - breadth-first search
+description: A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.
+---
+
 # Bipartite Graphs
 
 - **Definition**: An undirected graph $G = (V, E)$ is bipartite if there exists a partition of $V$ into two sets $V_1$ and $V_2$ such that every edge in $E$ has one endpoint in $V_1$ and the other in $V_2$.

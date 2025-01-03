@@ -3,14 +3,8 @@
 # Set error handling
 set -e
 
-# Log file setup
-LOG_DIR="$HOME/repos/notes/logs"
-mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/deploy-$(date +%Y%m%d-%H%M%S).log"
-
-# Function to log messages
 log_message() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
 }
 
 # Function to generate commit message based on git status

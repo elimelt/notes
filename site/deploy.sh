@@ -15,35 +15,8 @@ log_message() {
 
 # Function to generate commit message based on git status
 generate_commit_message() {
-    local message=""
-    local stats=$(git status --porcelain)
-    
-    # Count modified, added, and deleted files
-    local modified=$(echo "$stats" | grep '^ M\|^MM' | wc -l)
-    local added=$(echo "$stats" | grep '^??' | wc -l)
-    local deleted=$(echo "$stats" | grep '^ D' | wc -l)
-    
-    message="Auto-commit: "
-    
-    if [ $modified -gt 0 ]; then
-        message+="$modified files modified"
-    fi
-    
-    if [ $added -gt 0 ]; then
-        if [ $modified -gt 0 ]; then
-            message+=", "
-        fi
-        message+="$added files added"
-    fi
-    
-    if [ $deleted -gt 0 ]; then
-        if [ $modified -gt 0 ] || [ $added -gt 0 ]; then
-            message+=", "
-        fi
-        message+="$deleted files deleted"
-    fi
-    
-    echo "$message"
+    local changes=$(git status --short)
+    echo "Auto: $(echo "$changes" | head -n 3 | sed 's/^/\n- /')"
 }
 
 # Change to the repository directory

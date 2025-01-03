@@ -10,7 +10,7 @@ log_message() {
 # Function to generate commit message based on git status
 generate_commit_message() {
     local changes=$(git status --short)
-    echo "Auto: $(echo "$changes" | head -n 3 | sed 's/^/\n- /')"
+    echo "sync changes: $(echo "$changes" | head -n 3 | sed 's/^/\n- /')"
 }
 
 # Change to the repository directory

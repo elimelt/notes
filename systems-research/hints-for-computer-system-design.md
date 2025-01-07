@@ -1,34 +1,28 @@
-# [source](https://example.com)
+# [source](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/acrobat-17.pdf)
 
-###### Paper Title
+###### Hints for Computer System Design
 
 ---
 
-### What is the Problem?
-
-
-### Summary 
-
-
 ### Key Insights
 
--
--
+#### Caching
 
-### Notable Design Details/Strengths 
+Store $\[f, x, f(x)\]$ tuples in a cache.
 
-- 
-- 
+If $f$ isn't a pure function, invalidate with the following:
 
-### Limitations/Weaknesses 
+$$
+f(x + \Delta) = g(x, \Delta, f(x))
+$$
 
-- 
-- 
+For example, $x$ is an `int[]`, $\Delta$ is a write $(i, v)$, and $f$ is a function `int sum(int[] x)`. Then $g(x, \Delta, f(x))$ is `f(x) + v - x[i]`.
 
-### Summary of Key Results
+Caches should ideally have adaptive sizes.
 
-- 
--
+A classic example is the caching in hardware that uses $\[Fetch, \text{address}, \text{content of address}\]$ tuples. Similarly, virtual memory uses $\[Page, \text{address}, \text{content of address}\]$ tuples.
+
+However, more complicated applications of caching exist. In real-time systems, you're often trying to cache the state of a system given small changes corresponding to events. The key here is to try and invalidate as few entries as possible in response to events.
 
 ### Open Questions
 

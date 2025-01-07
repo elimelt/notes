@@ -183,21 +183,22 @@
             
         </div>
         <div class="content">
-            <h1 id="source"><a href="https://example.com">source</a></h1>
-<h6 id="paper-title">Paper Title</h6>
+            <h1 id="source"><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/acrobat-17.pdf">source</a></h1>
+<h6 id="hints-for-computer-system-design">Hints for Computer System Design</h6>
 <hr />
-<h3 id="what-is-the-problem">What is the Problem?</h3>
-<h3 id="summary">Summary</h3>
 <h3 id="key-insights">Key Insights</h3>
-<h2 id="-">-</h2>
-<h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
-<h2 id="-_1">-</h2>
-<h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
-<h2 id="-_2">-</h2>
-<h3 id="summary-of-key-results">Summary of Key Results</h3>
-<h2 id="-_3">-</h2>
+<h4 id="caching">Caching</h4>
+<p>Store $[f, x, f(x)]$ tuples in a cache.</p>
+<p>If $f$ isn't a pure function, invalidate with the following:</p>
+<p>$$
+f(x + \Delta) = g(x, \Delta, f(x))
+$$</p>
+<p>For example, $x$ is an <code>int[]</code>, $\Delta$ is a write $(i, v)$, and $f$ is a function <code>int sum(int[] x)</code>. Then $g(x, \Delta, f(x))$ is <code>f(x) + v - x[i]</code>.</p>
+<p>Caches should ideally have adaptive sizes.</p>
+<p>A classic example is the caching in hardware that uses $[Fetch, \text{address}, \text{content of address}]$ tuples. Similarly, virtual memory uses $[Page, \text{address}, \text{content of address}]$ tuples.</p>
+<p>However, more complicated applications of caching exist. In real-time systems, you're often trying to cache the state of a system given small changes corresponding to events. The key here is to try and invalidate as few entries as possible in response to events.</p>
 <h3 id="open-questions">Open Questions</h3>
-<h2 id="-_4">-</h2>
+<h2 id="-">-</h2>
         </div>
         
     </main>

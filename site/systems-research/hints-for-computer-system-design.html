@@ -179,7 +179,7 @@
         </div>
         <h1>Hints For Computer System Design</h1>
         <div class="meta">
-            <span>Last modified: 2025-01-06</span>
+            <span>Last modified: 2025-01-08</span>
             
         </div>
         <div class="content">
@@ -197,8 +197,32 @@ $$</p>
 <p>Caches should ideally have adaptive sizes.</p>
 <p>A classic example is the caching in hardware that uses $[Fetch, \text{address}, \text{content of address}]$ tuples. Similarly, virtual memory uses $[Page, \text{address}, \text{content of address}]$ tuples.</p>
 <p>However, more complicated applications of caching exist. In real-time systems, you're often trying to cache the state of a system given small changes corresponding to events. The key here is to try and invalidate as few entries as possible in response to events.</p>
+<h3 id="lecture-review-notes">Lecture Review Notes</h3>
+<h4 id="why-is-system-design-hard">Why is system design hard?</h4>
+<ul>
+<li>external interface isn't well defined <ul>
+<li>requirements aren't clear</li>
+<li>Things are often not well-designed</li>
+</ul>
+</li>
+<li>The measure of success is not very clear<ul>
+<li>Many different ways to interact with a system</li>
+<li>Many systems, even in production, have bugs</li>
+</ul>
+</li>
+</ul>
+<h4 id="throw-one-away">Throw one away</h4>
+<ul>
+<li>Always be prepared to discard your prototype</li>
+<li>Throw ideas at the wall and go with what sticks</li>
+</ul>
 <h3 id="open-questions">Open Questions</h3>
 <h2 id="-">-</h2>
+<h3 id="further-reading">Further Reading</h3>
+<ul>
+<li>MicroLog</li>
+<li>https://github.com/DPDK/dpdk</li>
+</ul>
         </div>
         
     </main>

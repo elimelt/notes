@@ -24,7 +24,30 @@ A classic example is the caching in hardware that uses $\[Fetch, \text{address},
 
 However, more complicated applications of caching exist. In real-time systems, you're often trying to cache the state of a system given small changes corresponding to events. The key here is to try and invalidate as few entries as possible in response to events.
 
+
+### Lecture Review Notes
+
+#### Why is system design hard?
+
+- external interface isn't well defined 
+    - requirements aren't clear
+    - Things are often not well-designed
+- The measure of success is not very clear
+    - Many different ways to interact with a system
+    - Many systems, even in production, have bugs
+
+#### Throw one away
+
+- Always be prepared to discard your prototype
+- Throw ideas at the wall and go with what sticks
+
+
 ### Open Questions
 
 -
 -
+
+### Further Reading
+
+- MicroLog
+- https://github.com/DPDK/dpdk

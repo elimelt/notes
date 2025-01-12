@@ -612,6 +612,10 @@ class SiteGenerator:
             color: white;
         }}
 
+        a {{
+            color: #3391ff;
+        }}
+
         table {{
             width: 100%;
             border-collapse: collapse;

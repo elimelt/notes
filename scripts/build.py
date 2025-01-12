@@ -227,7 +227,7 @@ class SiteGenerator:
 
     def _render_categories_index(self) -> str:
         """Render the categories index page"""
-        content = "<h2>Categories</h2>\n<ul>"
+        content = "<ul>"
         for category, pages in sorted(self.categories.items()):
             category_url = f"/categories/{quote(category.lower())}.html"
             content += f'\n<li><a href="{category_url}">{category}</a> ({len(pages)} pages)</li>'
@@ -236,7 +236,7 @@ class SiteGenerator:
 
     def _render_tags_index(self) -> str:
         """Render the tags index page"""
-        content = "<h2>Tags</h2>\n<ul>"
+        content = "<ul>"
         for tag, pages in sorted(self.tags.items()):
             tag_url = f"/tags/{quote(tag.lower())}.html"
             content += f'\n<li><a href="{tag_url}">{tag}</a> ({len(pages)} pages)</li>'
@@ -365,7 +365,7 @@ class SiteGenerator:
         ]  # Show 10 most recent
 
         # Generate recent posts section
-        recent_content = "<h2>Recent Notes</h2>\n<ul class='recent-posts'>"
+        recent_content = "<h2>Recent</h2>\n<ul class='recent-posts'>"
         for page in recent_pages:
             page_url = f"/{page.path.with_suffix('.html')}"
             date_str = page.modified_date.strftime("%Y-%m-%d")
@@ -392,7 +392,7 @@ class SiteGenerator:
         tag_counts = {tag: len(pages) for tag, pages in self.tags.items()}
         popular_tags = sorted(tag_counts.items(), key=lambda x: (-x[1], x[0]))[:20]
 
-        tags_content = "<h2>Popular Tags</h2>\n<div class='tags-cloud'>"
+        tags_content = "<h2>Featured Tags</h2>\n<div class='tags-cloud'>"
         for tag, count in popular_tags:
             tag_url = f"/tags/{quote(tag.lower())}.html"
             tags_content += f'<a href="{tag_url}" class="tag-{min(count, 5)}">{tag} <span>({count})</span></a>'
@@ -434,7 +434,7 @@ class SiteGenerator:
 
         # Create the index page
         index_page = Page(
-            title="My Notes",
+            title="",
             path=Path("index.md"),
             content=content,
             modified_date=datetime.now(),

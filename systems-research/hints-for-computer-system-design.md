@@ -1,3 +1,11 @@
+---
+title: Hints for Computer System Design
+category: system-design
+tags: systems, scaling, review, paper, caching
+description: A review of the paper "Hints for Computer System Design" by Butler Lampson.
+---
+
+
 # [source](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/acrobat-17.pdf)
 
 ###### Hints for Computer System Design

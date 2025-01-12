@@ -1,3 +1,10 @@
+---
+title: Paper Review Template
+category: research
+tags: meta, template, research, paper, review
+description: A template for reviewing research papers 
+---
+
 # [source](https://example.com)
 
 ###### Paper Title

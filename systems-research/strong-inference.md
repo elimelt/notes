@@ -1,3 +1,11 @@
+---
+title: Strong Inference
+category: research
+tags: meta, research, paper, review
+description: A review of John R. Platt's paper on the principles of strong inference in scientific research.
+---
+
+
 # [source](https://pages.cs.wisc.edu/~markhill/science64_strong_inference.pdf)
 
 #### Strong Inference

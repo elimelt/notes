@@ -1,3 +1,11 @@
+---
+title: How to Read a Paper
+category: research
+tags: meta, research, paper, review
+description: A summary of Keshav's "How to Read a Paper"
+---
+
+
 # [source](https://web.stanford.edu/class/cs114/reading-keshav.pdf)
 
 ###### How to Read a Paper

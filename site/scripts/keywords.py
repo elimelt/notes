@@ -2,12 +2,13 @@ import json
 import string
 import nltk
 
+from nltk.stem import WordNetLemmatizer
 from typing import List
 from pathlib import Path
 from keybert import KeyBERT
 
 nltk.download("stopwords")
-
+nltk.download('wordnet')
 
 class DataReader:
     def __init__(self, root_dir: str = "."):
@@ -83,6 +84,21 @@ def get_kw_path_map(files: List[Path], model: KeyBERT) -> dict:
 
     return keyword_map
 
+def deduplicate(file_to_keywords: dict) -> dict:
+    wnl = WordNetLemmatizer()
+    deduped = {}
+    dedup_count = 0
+    for f, kws in file_to_keywords.items():
+        deduped[f] = []
+        for kw, acc in kws:
+            stem = wnl.lemmatize(kw)
+            if stem != kw:
+                print('stem', stem, 'kw', kw)
+                dedup_count += 1
+            if stem not in deduped[f]:
+                deduped[f].append((stem, acc))
+    print('dedup count', dedup_count)
+    return deduped
 
 def aggregate(file_to_keywords: dict) -> dict:
     keyword_to_files = {}
@@ -110,7 +126,7 @@ if __name__ == "__main__":
     files = reader.read_files()
     model = KeyBERT()
 
-    file_to_kw = get_kw_path_map(files, model)
+    file_to_kw = deduplicate(get_kw_path_map(files, model))
     kw_to_file = aggregate(file_to_kw)
     write_idx_to_json_file(file_to_kw, Path("idx/file_to_keywords.json"))
     write_idx_to_json_file(kw_to_file, Path("idx/keyword_to_files.json"))

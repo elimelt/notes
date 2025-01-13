@@ -47,6 +47,8 @@ class SiteGenerator:
         "__pycache__",
         "node_modules",
         ".github",
+        "nlp.venv",
+        "site",
         "venv",
         ".venv",
     }

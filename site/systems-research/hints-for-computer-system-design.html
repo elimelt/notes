@@ -183,7 +183,7 @@
         </div>
         <h1>Hints for Computer System Design</h1>
         <div class="meta">
-            <span>Last modified: 2025-01-12</span>
+            <span>Last modified: 2025-01-13</span>
             <span>Category: <a href="/categories/system-design.html">system-design</a></span>
         </div>
         <div class="content">
@@ -220,8 +220,76 @@ $$</p>
 <li>Always be prepared to discard your prototype</li>
 <li>Throw ideas at the wall and go with what sticks</li>
 </ul>
-<h3 id="open-questions">Open Questions</h3>
-<h2 id="-">-</h2>
+<h4 id="interface-design">Interface Design</h4>
+<p>Conflicting requirements:
+- Simple
+- Complete
+- Efficient</p>
+<p>In a way it's a lot like PL design; exposing new abstractions, objects and operations, manipulating them, etc.</p>
+<p>KISS; Do one thing at a time and do it well.</p>
+<ul>
+<li>Don't over-promise</li>
+<li>Get it right, but beware the dangers of abstractions (especially performance)</li>
+<li>Make it fast rather than general and complete. You should keep scope small so that it's easy to optimize, and also to compose with other systems/components</li>
+<li>Procedure args let you keep it general but extendable<ul>
+<li>C function pointers, C++ functions</li>
+<li><code>LD_PRELOAD</code> trick: override calls by providing a wrapper that calls the original function, but with some extra functionality</li>
+</ul>
+</li>
+<li>Leave it to the client (check Exokernel paper)<ul>
+<li>Unix pipes</li>
+</ul>
+</li>
+<li>Keep interfaces stable<ul>
+<li>Counterexample LLVM</li>
+</ul>
+</li>
+<li>Keep a place to stand<ul>
+<li>Virtualization!!!</li>
+</ul>
+</li>
+</ul>
+<h4 id="implementation">Implementation</h4>
+<p>Plan to throw one away - learn from prototyping</p>
+<p>Keep secrets - impl details hidden from clients. Can be tradeoff for performance optimizations</p>
+<p>Handle normal and worst cases separately</p>
+<ul>
+<li>Might be OK to crash a few processes if it means the system can recover</li>
+<li>Caches in processors are optimized for common case (principle of locality)</li>
+<li>Paging in virtual memory is optimized for common case (principle of locality)</li>
+</ul>
+<h4 id="efficiency">Efficiency</h4>
+<ul>
+<li>Split resources<ul>
+<li>Faster to allocate a new resource than to wait for one to be freed</li>
+<li>Heterogeneous systems<ul>
+<li>Specialized hardware like FPGA or GPU to run specialized tasks </li>
+<li>E.G. Google's TPU, Microsoft Azure FPGAs</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Use static analysis</li>
+</ul>
+<h4 id="reliability">Reliability</h4>
+<ul>
+<li>Log updates<ul>
+<li>Can recover</li>
+<li>Append only is efficient</li>
+<li>Can be used for replication</li>
+</ul>
+</li>
+<li>Atomic transactions<ul>
+<li>E.G. ACID</li>
+</ul>
+</li>
+</ul>
+<h4 id="takeaways">Takeaways</h4>
+<ul>
+<li>Most successful systems are built with particular themes, many of which are discussed in this paper</li>
+<li>When reading papers, look for what you can apply, and ignore irrelevant details.</li>
+<li>Hints can be added, e.g. approximation vs precision</li>
+</ul>
 <h3 id="further-reading">Further Reading</h3>
 <ul>
 <li>MicroLog</li>

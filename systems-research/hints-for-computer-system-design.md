@@ -49,11 +49,64 @@ However, more complicated applications of caching exist. In real-time systems, y
 - Always be prepared to discard your prototype
 - Throw ideas at the wall and go with what sticks
 
+#### Interface Design
 
-### Open Questions
+Conflicting requirements:
+- Simple
+- Complete
+- Efficient
 
--
--
+In a way it's a lot like PL design; exposing new abstractions, objects and operations, manipulating them, etc.
+
+KISS; Do one thing at a time and do it well.
+
+- Don't over-promise
+- Get it right, but beware the dangers of abstractions (especially performance)
+- Make it fast rather than general and complete. You should keep scope small so that it's easy to optimize, and also to compose with other systems/components
+- Procedure args let you keep it general but extendable
+    - C function pointers, C++ functions
+    - `LD_PRELOAD` trick: override calls by providing a wrapper that calls the original function, but with some extra functionality
+- Leave it to the client (check Exokernel paper)
+    - Unix pipes
+- Keep interfaces stable
+    - Counterexample LLVM
+- Keep a place to stand
+    - Virtualization!!!
+
+#### Implementation
+
+Plan to throw one away - learn from prototyping
+
+Keep secrets - impl details hidden from clients. Can be tradeoff for performance optimizations
+
+Handle normal and worst cases separately
+
+- Might be OK to crash a few processes if it means the system can recover
+- Caches in processors are optimized for common case (principle of locality)
+- Paging in virtual memory is optimized for common case (principle of locality)
+
+#### Efficiency
+
+- Split resources
+    - Faster to allocate a new resource than to wait for one to be freed
+    - Heterogeneous systems
+        - Specialized hardware like FPGA or GPU to run specialized tasks 
+        - E.G. Google's TPU, Microsoft Azure FPGAs
+- Use static analysis
+
+#### Reliability
+- Log updates
+    - Can recover
+    - Append only is efficient
+    - Can be used for replication
+- Atomic transactions
+    - E.G. ACID
+
+#### Takeaways
+
+- Most successful systems are built with particular themes, many of which are discussed in this paper
+- When reading papers, look for what you can apply, and ignore irrelevant details.
+- Hints can be added, e.g. approximation vs precision
 
 ### Further Reading
 

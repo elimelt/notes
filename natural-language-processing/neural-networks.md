@@ -218,3 +218,12 @@ $$
 \frac{\partial L}{\partial b} &= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial d} \cdot \frac{\partial d}{\partial b} = 2c
 \end{align*}
 $$
+
+### Learning details
+
+NN optimization is a non-convex optimization problem, so it requires a few techniques to work well:
+
+- Initialize weights and biases to small random values instead of all zeros
+- Normalize input values to $\mu = 0, \sigma = 1$
+- Dropout: randomly (with probability $p$) set some hidden units to 0, then renormalize other inputs to prevent overfitting
+- Hyperparameters: learning rate, mini-batch size, number of hidden units, number of layers, choice of activation function, etc.

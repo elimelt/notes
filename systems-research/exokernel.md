@@ -17,38 +17,35 @@ The authors were able to realize significant (orders of magnitude) speedups on m
 
 ### Key Insights
 
-- Separating resource protection from resource management allows for more flexible and efficient OS abstractions
-- Low-level hardware interfaces can be safely exposed to applications through secure bindings
-- Library operating systems can implement traditional OS abstractions more efficiently by specializing them for specific applications
-- The "end-to-end argument" applies to OS design - applications know better than the OS how to manage resources for their needs
+- General-purpose abstractions in monolithic kernels can lead to performance overhead
+  - Resource management is next-to-impossible since most resources are completely abstracted. Instead the kernel interface should be as close to hardware as possible, opting to use physical addresses, etc.
+  - Applications will oftentimes be working against built in "features" of the OS, e.g. databases slowed down by filesystems, non-zero-copy networking
+- Applications must frequently defer to the kernel for operations that could be done in user space, incurring context switching overhead
 
 ### Notable Design Details/Strengths 
 
-- Secure bindings provide protection while allowing direct hardware access
-- Visible resource revocation lets applications participate in resource management
-- Download code into kernel (e.g. packet filters) for efficient resource management
-- Library OS approach maintains backward compatibility while enabling customization
-- Simple kernel focused only on protection leads to better performance
+- The interface provided by the kernel should be as close to hardware as possible, so as to directly expose hardware resources to applications in a safe manner
+- Library operating systems can be tailored to specific use cases, avoiding the overhead of general-purpose abstractions usually found in monolithic kernels
+- kernel interface with limited scope leads to better overall design
+  - completeness: optimizing the hell out of what little it does is a lot easier
+  - simplicity: less code to maintain, less code to break
+  - extensibility: easier to add new features via library OSes than to modify the kernel
 
 ### Limitations/Weaknesses 
 
-- Increased complexity for application developers who must now implement OS functionality
-- Potential for fragmentation with many custom library OS implementations
-- May be harder to reason about system-wide properties with distributed control
-- Some hardware may not support secure exposure to applications
+- Compatibility between system-level software and dependencies has been kicked into user space, likely leading to less stability/reliability, or at the very least more work for the application developer and end user
+  - Third party library OSes are very suspect
+  - Unless standards are not only developed but widely adopted for all OS components in user space, this could be a major issue
+- Cross-platform compatibility is not a priority, and additional work would be needed to port all upstream library OSes to a new exokernel to port an application
 
 ### Summary of Key Results
 
-- Basic operations 10-100x faster than traditional OS (Ultrix)
-- Exception handling 5x faster than previous best implementation
-- Application-level virtual memory and IPC 5-40x faster than kernel implementations
-- Demonstrated flexibility through custom schedulers, page tables, and IPC mechanisms
+- Many primitives are 1-2 orders of magnitude faster than Ultraix
+  - Exception handling, virtual memory, IPC, etc. faster than Ultraix, and in some cases faster than SOTA implementations
+  - Primarily due to reduced context switching, low-overhead multiplexing of hardware, and specialized implementations of aforementioned systems in user space
 
 ### Open Questions
 
-- How to balance flexibility vs complexity for application developers?
-- What is the right division of functionality between exokernel and library OS?
-- How does the approach scale to modern hardware/software complexity?
-- Can the security properties be maintained with untrusted library OSes?
-
-The paper presents a compelling case for application-level resource management through careful kernel design. The significant performance improvements and demonstrated flexibility suggest the approach has merit, though questions remain about complexity and security tradeoffs.
+- Why didn't this work out? I was fully bought in by the end of the paper, but they were clearly never adopted.
+- Can this approach be applied to modern, and particularly datacenter, workloads?
+- How can malicious/destructive library OSes be prevented?

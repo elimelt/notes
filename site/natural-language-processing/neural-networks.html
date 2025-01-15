@@ -330,6 +330,14 @@ $$</p>
 \frac{\partial L}{\partial b} &amp;= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial d} \cdot \frac{\partial d}{\partial b} = 2c
 \end{align</em>}
 $$</p>
+<h3 id="learning-details">Learning details</h3>
+<p>NN optimization is a non-convex optimization problem, so it requires a few techniques to work well:</p>
+<ul>
+<li>Initialize weights and biases to small random values instead of all zeros</li>
+<li>Normalize input values to $\mu = 0, \sigma = 1$</li>
+<li>Dropout: randomly (with probability $p$) set some hidden units to 0, then renormalize other inputs to prevent overfitting</li>
+<li>Hyperparameters: learning rate, mini-batch size, number of hidden units, number of layers, choice of activation function, etc.</li>
+</ul>
         </div>
         <div class='tags'>Tags: <a href="/tags/deep%20learning.html">deep learning</a>, <a href="/tags/feedforward.html">feedforward</a>, <a href="/tags/machine%20learning.html">machine learning</a>, <a href="/tags/natural%20language%20processing.html">natural language processing</a>, <a href="/tags/neural%20networks.html">neural networks</a></div>
     </main>

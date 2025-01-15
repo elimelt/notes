@@ -183,7 +183,7 @@
         </div>
         <h1>Exokernel: An Operating System Architecture for Application-Level Resource Management</h1>
         <div class="meta">
-            <span>Last modified: 2025-01-14</span>
+            <span>Last modified: 2025-01-15</span>
             <span>Category: <a href="/categories/systems.html">systems</a></span>
         </div>
         <div class="content">
@@ -194,41 +194,39 @@
 <p>The authors were able to realize significant (orders of magnitude) speedups on most primitive tasks compared to a more mature OS (Ultraix) by focusing almost solely on efficiently multiplexing hardware, and by minimizing the number of required system calls during regular operation.</p>
 <h3 id="key-insights">Key Insights</h3>
 <ul>
-<li>Separating resource protection from resource management allows for more flexible and efficient OS abstractions</li>
-<li>Low-level hardware interfaces can be safely exposed to applications through secure bindings</li>
-<li>Library operating systems can implement traditional OS abstractions more efficiently by specializing them for specific applications</li>
-<li>The "end-to-end argument" applies to OS design - applications know better than the OS how to manage resources for their needs</li>
+<li>General-purpose abstractions in monolithic kernels can lead to performance overhead</li>
+<li>Resource management is next-to-impossible since most resources are completely abstracted. Instead the kernel interface should be as close to hardware as possible, opting to use physical addresses, etc.</li>
+<li>Applications will oftentimes be working against built in "features" of the OS, e.g. databases slowed down by filesystems, non-zero-copy networking</li>
+<li>Applications must frequently defer to the kernel for operations that could be done in user space, incurring context switching overhead</li>
 </ul>
 <h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
 <ul>
-<li>Secure bindings provide protection while allowing direct hardware access</li>
-<li>Visible resource revocation lets applications participate in resource management</li>
-<li>Download code into kernel (e.g. packet filters) for efficient resource management</li>
-<li>Library OS approach maintains backward compatibility while enabling customization</li>
-<li>Simple kernel focused only on protection leads to better performance</li>
+<li>The interface provided by the kernel should be as close to hardware as possible, so as to directly expose hardware resources to applications in a safe manner</li>
+<li>Library operating systems can be tailored to specific use cases, avoiding the overhead of general-purpose abstractions usually found in monolithic kernels</li>
+<li>kernel interface with limited scope leads to better overall design</li>
+<li>completeness: optimizing the hell out of what little it does is a lot easier</li>
+<li>simplicity: less code to maintain, less code to break</li>
+<li>extensibility: easier to add new features via library OSes than to modify the kernel</li>
 </ul>
 <h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
 <ul>
-<li>Increased complexity for application developers who must now implement OS functionality</li>
-<li>Potential for fragmentation with many custom library OS implementations</li>
-<li>May be harder to reason about system-wide properties with distributed control</li>
-<li>Some hardware may not support secure exposure to applications</li>
+<li>Compatibility between system-level software and dependencies has been kicked into user space, likely leading to less stability/reliability, or at the very least more work for the application developer and end user</li>
+<li>Third party library OSes are very suspect</li>
+<li>Unless standards are not only developed but widely adopted for all OS components in user space, this could be a major issue</li>
+<li>Cross-platform compatibility is not a priority, and additional work would be needed to port all upstream library OSes to a new exokernel to port an application</li>
 </ul>
 <h3 id="summary-of-key-results">Summary of Key Results</h3>
 <ul>
-<li>Basic operations 10-100x faster than traditional OS (Ultrix)</li>
-<li>Exception handling 5x faster than previous best implementation</li>
-<li>Application-level virtual memory and IPC 5-40x faster than kernel implementations</li>
-<li>Demonstrated flexibility through custom schedulers, page tables, and IPC mechanisms</li>
+<li>Many primitives are 1-2 orders of magnitude faster than Ultraix</li>
+<li>Exception handling, virtual memory, IPC, etc. faster than Ultraix, and in some cases faster than SOTA implementations</li>
+<li>Primarily due to reduced context switching, low-overhead multiplexing of hardware, and specialized implementations of aforementioned systems in user space</li>
 </ul>
 <h3 id="open-questions">Open Questions</h3>
 <ul>
-<li>How to balance flexibility vs complexity for application developers?</li>
-<li>What is the right division of functionality between exokernel and library OS?</li>
-<li>How does the approach scale to modern hardware/software complexity?</li>
-<li>Can the security properties be maintained with untrusted library OSes?</li>
+<li>Why didn't this work out? I was fully bought in by the end of the paper, but they were clearly never adopted.</li>
+<li>Can this approach be applied to modern, and particularly datacenter, workloads?</li>
+<li>How can malicious/destructive library OSes be prevented?</li>
 </ul>
-<p>The paper presents a compelling case for application-level resource management through careful kernel design. The significant performance improvements and demonstrated flexibility suggest the approach has merit, though questions remain about complexity and security tradeoffs.</p>
         </div>
         <div class='tags'>Tags: <a href="/tags/exokernel.html">exokernel</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/resource%20management.html">resource management</a></div>
     </main>

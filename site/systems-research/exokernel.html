@@ -192,6 +192,8 @@
 <h3 id="summary">Summary</h3>
 <p>The paper covers the exokernel architecture, which aims to minimize the "mechanism" role as much as possible, opting to leave implementations to the client, e.g. to the user's choice of library operating system. The key design choice here is to separate resource protection from management, e.g. to provide secure bindings to access a device, without necessarily understanding the use case.</p>
 <p>The authors were able to realize significant (orders of magnitude) speedups on most primitive tasks compared to a more mature OS (Ultraix) by focusing almost solely on efficiently multiplexing hardware, and by minimizing the number of required system calls during regular operation.</p>
+<h4 id="download-code">Download Code</h4>
+<p>Download code into exokernel from lib os (similar to eBPF today)</p>
 <h3 id="key-insights">Key Insights</h3>
 <ul>
 <li>General-purpose abstractions in monolithic kernels can lead to performance overhead</li>

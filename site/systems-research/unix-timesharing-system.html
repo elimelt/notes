@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tag: graph fundamentals</title>
-    <meta name="description" content="Pages tagged with graph fundamentals">
+    <title>The Unix Timesharing System</title>
+    <meta name="description" content="Paper review/notes from lecture of Unix Timesharing System">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,19 +179,62 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Tag: graph fundamentals
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » The Unix Timesharing System
         </div>
-        <h1>Tag: graph fundamentals</h1>
+        <h1>The Unix Timesharing System</h1>
         <div class="meta">
-            <span>Last modified: 2025-01-16</span>
-            
+            <span>Last modified: 2025-01-15</span>
+            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
         </div>
         <div class="content">
-            <h2>Tag: graph fundamentals</h2>
+            <h1 id="source"><a href="https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf">source</a></h1>
+<h6 id="the-unix-timesharing-system">The Unix Timesharing System</h6>
+<hr />
+<h3 id="what-is-the-problem">What is the Problem?</h3>
+<p>A very unspecific problem. Essentially they were burnt by Multics and wanted to create a simpler and more general system.</p>
+<h3 id="summary">Summary</h3>
+<p>Key design goal is simplicity. Everything is hierarchical. Everything is a file.</p>
+<h4 id="file-system-implementation">File System Implementation</h4>
 <ul>
-<li><a href="/algorithms/graphs-intro.html">Introduction to Undirected Graphs and Their Properties</a></li></ul>
+<li>Tree strucutre</li>
+<li>FS mounted on a file</li>
+<li>Sys table of i-numbers (i-list)</li>
+<li>i-node contains metadata for each file</li>
+<li>path names don't distinguish between files and directories</li>
+<li>mount table for mounted file systems</li>
+<li>buffering is built into kernel and transparent to user<ul>
+<li>write-behind (flushes to disk when buffer is full)</li>
+</ul>
+</li>
+</ul>
+<h4 id="storage-devices">Storage Devices</h4>
+<ul>
+<li>block devices<ul>
+<li>data is stored in fixed-size blocks</li>
+<li>"free list" of blocks for allocation, Linked list of blocks</li>
+<li>hard disks, usb drive, ssd, tape drives</li>
+<li>early versions of ethernet</li>
+</ul>
+</li>
+<li>character devices</li>
+</ul>
+<h4 id="execution">Execution</h4>
+<ul>
+<li><strong>Image</strong> is an execution env (parallel container)</li>
+<li><strong>Process</strong> is an instance/execution of an image<ul>
+<li>Program text write-protected and shared between all instances of that process</li>
+<li>Separate virtual address space for each process</li>
+</ul>
+</li>
+<li>Kernel<ul>
+<li>Mediator for accessing services/hardware/shared resources</li>
+</ul>
+</li>
+</ul>
+<h3 id="key-insights">Key Insights</h3>
+<h2 id="-">-</h2>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/systems.html">systems</a>, <a href="/tags/unix.html">unix</a></div>
     </main>
 </body>
 </html>

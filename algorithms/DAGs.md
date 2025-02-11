@@ -1,11 +1,7 @@
 ---
 title: Topological Ordering and Properties of Directed Acyclic Graphs
 category: algorithms
-tags:
-  - graph theory
-  - topological sorting
-  - directed acyclic graphs
-  - proofs
+tags: graph theory, topological sorting, directed acyclic graphs, proofs
 description: A technical exploration of Directed Acyclic Graphs (DAGs) focusing on their topological ordering properties and fundamental lemmas. The document includes mathematical proofs of key DAG properties and presents a Python implementation of the topological sorting algorithm.
 ---
 

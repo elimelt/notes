@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bigtable, A Distributed Storage System for Structured Data</title>
+    <title>Bigtable, A Distributed Storage System for Structured Data | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/bigtable.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Bigtable, A Distributed Storage System for Structured Data">
+    <meta property="og:description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/bigtable.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Bigtable, A Distributed Storage System for Structured Data">
+    <meta name="twitter:description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="bigtable,distributed storage,google">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Bigtable, A Distributed Storage System for Structured Data", "dateModified": "2025-02-11T16:42:08.249516", "description": "A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.", "articleSection": "Distributed Systems", "keywords": "bigtable,distributed storage,google"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Bigtable, A Distributed Storage System for Structured Data
         </div>
-        <h1>Bigtable, A Distributed Storage System for Structured Data</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="bigtable-a-distributed-storage-system-for-structured-data">Bigtable: A Distributed Storage System for Structured Data</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Bigtable, A Distributed Storage System for Structured Data</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:08.249516">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="bigtable-a-distributed-storage-system-for-structured-data">Bigtable: A Distributed Storage System for Structured Data</h1>
 <p><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/bigtable-osdi06.pdf">Bigtable Paper</a></p>
 <h2 id="introduction">Introduction</h2>
 <p>Bigtable is a widely applicable, scalable, highly performant, and highly available database that is used by many of Google's services including Personalized Search, Google Earth, Google Analytics, and more (as of 2006). It is able to handle various workloads, ranging from throughput-oriented batch processing jobs, to latency sensitive end user applications, and it is able to scale up to petabytes of data across thousands of commodity machines.</p>
@@ -298,8 +328,12 @@
 <p>The data used by both Google Maps (maps.google.com) and Google Earth (earth.google.com) are partially stored in Bigtable. The system uses one table to preprocess data, and another set of tables for serving client data.</p>
 <p>The preprocessing pipeline uses one table to store raw image data (with compression turned off since it is handled manually). During preprocessing, the images are cleaned and consolidated into the final serving data. Each row in the preprocessing table corresponds to a single geographic segment, and rows are named so that adjacent geographic segments are stored near eachother. This preprocessing pipeline relies heavily on MapReduce over Bigtable.</p>
 <p>The serving system uses a single table to index data stored in GFS. Although its relatively small (500 GB), it serves tens of thousands of queries per second, so it is hosted on hundreds of tablet servers to load balance, each containing in-memory column families.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bigtable.html">bigtable</a>, <a href="/tags/distributed%20storage.html">distributed storage</a>, <a href="/tags/google.html">google</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bigtable.html">bigtable</a>, <a href="/tags/distributed%20storage.html">distributed storage</a>, <a href="/tags/google.html">google</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

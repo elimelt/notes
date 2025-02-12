@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glossary of Linear Algebra Concepts</title>
+    <title>Glossary of Linear Algebra Concepts | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/linear-algebra/elementry-linear-algebra.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Glossary of Linear Algebra Concepts">
+    <meta property="og:description" content="Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.">
+    <meta property="og:url" content="https://notes.elimelt.com/linear-algebra/elementry-linear-algebra.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Glossary of Linear Algebra Concepts">
+    <meta name="twitter:description" content="Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Glossary of Linear Algebra Concepts", "dateModified": "2025-02-11T18:50:52.631228", "description": "Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.", "articleSection": "Linear Algebra", "keywords": "gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/linear%20algebra.html">Linear Algebra</a> » Glossary of Linear Algebra Concepts
         </div>
-        <h1>Glossary of Linear Algebra Concepts</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
-        </div>
-        <div class="content">
-            <h1 id="elementary-linear-algebra">Elementary Linear Algebra</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Glossary of Linear Algebra Concepts</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T18:50:52.631228">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
+            </div>
+            <div class="content">
+                <h1 id="elementary-linear-algebra">Elementary Linear Algebra</h1>
 <h2 id="systems-of-equations">Systems of Equations</h2>
 <p>Systems of equations are both fundamental and important to actually understanding linear algebra. With that being said, the two primary introductory courses at the University of Washington, Math 208 and (to a much lesser extent) Applied Math 352, spend a significant amount of time on methods for <em>solving</em> systems of equations, something that I have almost no interest in. For the sake of completeness, I will briefly touch on notation and algorithms, but will try to both confine it to this document, and to focus on takeaways that become more useful later on.</p>
 <h3 id="notation">Notation</h3>
@@ -330,8 +360,12 @@ B = np.random.rand(N, M)
 <pre><code class="language-plaintext">
 </code></pre>
 <p>Matrix multiplication is fundamentally a costly operation, taking $O(n^3)$ time. That being said, libraries like numpy are heavily optimized and can perform matrix multiplication orders of magnitude faster than naive implementations using vectorized operations. In practice you should <strong>never</strong> write your own matrix multiplication.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/gaussian%20elimination.html">gaussian elimination</a>, <a href="/tags/linear%20transformations.html">linear transformations</a>, <a href="/tags/matrix-matrix%20multiplication.html">matrix-matrix multiplication</a>, <a href="/tags/matrix-vector%20multiplication.html">matrix-vector multiplication</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/gaussian%20elimination.html">gaussian elimination</a>, <a href="/tags/linear%20transformations.html">linear transformations</a>, <a href="/tags/matrix-matrix%20multiplication.html">matrix-matrix multiplication</a>, <a href="/tags/matrix-vector%20multiplication.html">matrix-vector multiplication</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

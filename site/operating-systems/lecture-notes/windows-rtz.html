@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hard Lessons Learned: Windows RtlZeroMemory</title>
+    <title>Hard Lessons Learned: Windows RtlZeroMemory | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the "Gary's Sad Story" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/windows-rtz.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Hard Lessons Learned: Windows RtlZeroMemory">
+    <meta property="og:description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the "Gary's Sad Story" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/windows-rtz.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Hard Lessons Learned: Windows RtlZeroMemory">
+    <meta name="twitter:description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the "Gary's Sad Story" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="rtlzeromemory,interrupt handling,windows optimization,operating system development,memory management">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Hard Lessons Learned: Windows RtlZeroMemory", "dateModified": "2025-02-11T20:49:18.402146", "description": "Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the \"Gary's Sad Story\" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.", "articleSection": "Operating Systems", "keywords": "rtlzeromemory,interrupt handling,windows optimization,operating system development,memory management"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Hard Lessons Learned: Windows RtlZeroMemory
         </div>
-        <h1>Hard Lessons Learned: Windows RtlZeroMemory</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="hard-lessons-learned-windows-rtlzeromemory">Hard Lessons Learned: Windows RtlZeroMemory</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Hard Lessons Learned: Windows RtlZeroMemory</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:18.402146">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="hard-lessons-learned-windows-rtlzeromemory">Hard Lessons Learned: Windows RtlZeroMemory</h1>
 <h2 id="zero-memory">Zero Memory</h2>
 <p>Make it faster by picking larger register (same optimization can be done to copy memory).</p>
 <p>In early Windows, they picked the BIGGEST register (floating point)</p>
@@ -210,8 +240,12 @@
 <li>OS develepment is riddled with examples where modifying code one place breaks code elsewhere.</li>
 <li>Unfortunately, bugs in your code are sometimes actually bugs elsewhere, but that won't stop you from being assigned with finding the bug yourself.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/interrupt%20handling.html">interrupt handling</a>, <a href="/tags/memory%20management.html">memory management</a>, <a href="/tags/operating%20system%20development.html">operating system development</a>, <a href="/tags/rtlzeromemory.html">rtlzeromemory</a>, <a href="/tags/windows%20optimization.html">windows optimization</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/interrupt%20handling.html">interrupt handling</a>, <a href="/tags/memory%20management.html">memory management</a>, <a href="/tags/operating%20system%20development.html">operating system development</a>, <a href="/tags/rtlzeromemory.html">rtlzeromemory</a>, <a href="/tags/windows%20optimization.html">windows optimization</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

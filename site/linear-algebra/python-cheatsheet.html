@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Linear Algebra Cheatsheet</title>
+    <title>Python Linear Algebra Cheatsheet | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and systems of equations. It also touches on topics such as orthogonality, basis, and change of basis. The goal is to provide a comprehensive overview of the mathematical foundations of vectors and matrices in the context of visualization.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/linear-algebra/python-cheatsheet.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Python Linear Algebra Cheatsheet">
+    <meta property="og:description" content="Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and systems of equations. It also touches on topics such as orthogonality, basis, and change of basis. The goal is to provide a comprehensive overview of the mathematical foundations of vectors and matrices in the context of visualization.">
+    <meta property="og:url" content="https://notes.elimelt.com/linear-algebra/python-cheatsheet.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Python Linear Algebra Cheatsheet">
+    <meta name="twitter:description" content="Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and systems of equations. It also touches on topics such as orthogonality, basis, and change of basis. The goal is to provide a comprehensive overview of the mathematical foundations of vectors and matrices in the context of visualization.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="linear algebra,matrix theory,vector spaces">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Python Linear Algebra Cheatsheet", "dateModified": "2025-02-11T20:00:58.047140", "description": "Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and systems of equations. It also touches on topics such as orthogonality, basis, and change of basis. The goal is to provide a comprehensive overview of the mathematical foundations of vectors and matrices in the context of visualization.", "articleSection": "Linear Algebra", "keywords": "linear algebra,matrix theory,vector spaces"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/linear%20algebra.html">Linear Algebra</a> » Python Linear Algebra Cheatsheet
         </div>
-        <h1>Python Linear Algebra Cheatsheet</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
-        </div>
-        <div class="content">
-            <h1 id="fundamentals-of-vectors">Fundamentals of Vectors</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Python Linear Algebra Cheatsheet</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:00:58.047140">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
+            </div>
+            <div class="content">
+                <h1 id="fundamentals-of-vectors">Fundamentals of Vectors</h1>
 <h2 id="working-with-vectors-in-numpy">Working with Vectors in NumPy</h2>
 <pre><code class="language-py">import numpy as np
 </code></pre>
@@ -489,8 +519,12 @@ is_orthonormal_matrix = lambda A: is_orthogonal_matrix(A) and np.allclose(np.lin
 <pre><code class="language-python"># change of basis matrix
 change_of_basis = lambda B, C: np.linalg.inv(C) @ B
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/linear%20algebra.html">linear algebra</a>, <a href="/tags/matrix%20theory.html">matrix theory</a>, <a href="/tags/vector%20spaces.html">vector spaces</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/linear%20algebra.html">linear algebra</a>, <a href="/tags/matrix%20theory.html">matrix theory</a>, <a href="/tags/vector%20spaces.html">vector spaces</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

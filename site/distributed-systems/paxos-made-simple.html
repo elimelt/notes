@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paxos Protocol</title>
+    <title>Paxos Protocol | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A protocol for achieving consensus in distributed systems">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/paxos-made-simple.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Paxos Protocol">
+    <meta property="og:description" content="A protocol for achieving consensus in distributed systems">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/paxos-made-simple.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Paxos Protocol">
+    <meta name="twitter:description" content="A protocol for achieving consensus in distributed systems">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="consensus algorithm,distributed systems,fault-tolerant systems">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Paxos Protocol", "dateModified": "2025-02-11T16:42:07.823973", "description": "A protocol for achieving consensus in distributed systems", "articleSection": "Distributed Systems", "keywords": "consensus algorithm,distributed systems,fault-tolerant systems"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Paxos Protocol
         </div>
-        <h1>Paxos Protocol</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="paxos-made-simple">Paxos Made Simple</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Paxos Protocol</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.823973">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="paxos-made-simple">Paxos Made Simple</h1>
 <p><a href="https://lamport.azurewebsites.net/pubs/paxos-simple.pdf">reading</a></p>
 <h2 id="the-consensus-algorithm">The Consensus Algorithm</h2>
 <h3 id="the-problem">The Problem</h3>
@@ -259,8 +289,12 @@ $$</p>
 <p>After doing so, the leader can continue proposing any further commands requested by clients. The leader is allowed to propose command $i + \alpha$ before knowing the chosen command for $i$, meaning it can get up to $\alpha - 1$ commands ahead of itself (in the case where all commands less than $i + \alpha$ were dropped).</p>
 <p>Once a leader has finished phase 1 for all commands thus far and afterwards, it only needs to complete phase 2 for each subsequent command requested, which is known to be the minimal algorithm for reaching consensus after phase 1.</p>
 <p>To reiterate what was stated previously, in the case where a single leader is not elected, progress is not guaranteed, but safety is.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/consensus%20algorithm.html">consensus algorithm</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/fault-tolerant%20systems.html">fault-tolerant systems</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/consensus%20algorithm.html">consensus algorithm</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/fault-tolerant%20systems.html">fault-tolerant systems</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

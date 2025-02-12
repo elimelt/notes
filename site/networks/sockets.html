@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Socket Reference</title>
+    <title>Socket Reference | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/sockets.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Socket Reference">
+    <meta property="og:description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/sockets.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Socket Reference">
+    <meta name="twitter:description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="socket,networking,system programming,c,python">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Socket Reference", "dateModified": "2025-02-11T20:48:41.766556", "description": "This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.", "articleSection": "Networks", "keywords": "socket,networking,system programming,c,python"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Socket Reference
         </div>
-        <h1>Socket Reference</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="socket-reference">Socket Reference</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Socket Reference</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:41.766556">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="socket-reference">Socket Reference</h1>
 <h2 id="creating-a-socket">Creating a Socket</h2>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
@@ -512,8 +542,12 @@ while True:
         print(data)
     clientsock.close()
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/c.html">c</a>, <a href="/tags/networking.html">networking</a>, <a href="/tags/python.html">python</a>, <a href="/tags/socket.html">socket</a>, <a href="/tags/system%20programming.html">system programming</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/c.html">c</a>, <a href="/tags/networking.html">networking</a>, <a href="/tags/python.html">python</a>, <a href="/tags/socket.html">socket</a>, <a href="/tags/system%20programming.html">system programming</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

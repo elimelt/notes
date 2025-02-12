@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bipartite Graphs Properties, Proofs, and Detection Algorithm</title>
+    <title>Bipartite Graphs Properties, Proofs, and Detection Algorithm | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/bipartite-graphs.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Bipartite Graphs Properties, Proofs, and Detection Algorithm">
+    <meta property="og:description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/bipartite-graphs.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Bipartite Graphs Properties, Proofs, and Detection Algorithm">
+    <meta name="twitter:description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="bipartite graphs,graph coloring,odd cycles,breadth-first search">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Bipartite Graphs Properties, Proofs, and Detection Algorithm", "dateModified": "2025-01-01T04:19:16.744742", "description": "A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.", "articleSection": "Graph Theory", "keywords": "bipartite graphs,graph coloring,odd cycles,breadth-first search"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/graph%20theory.html">Graph Theory</a> » Bipartite Graphs Properties, Proofs, and Detection Algorithm
         </div>
-        <h1>Bipartite Graphs Properties, Proofs, and Detection Algorithm</h1>
-        <div class="meta">
-            <span>Last modified: 2025-01-01</span>
-            <span>Category: <a href="/categories/graph%20theory.html">Graph Theory</a></span>
-        </div>
-        <div class="content">
-            <h1 id="bipartite-graphs">Bipartite Graphs</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Bipartite Graphs Properties, Proofs, and Detection Algorithm</h1>
+            <div class="meta">
+                <time datetime="2025-01-01T04:19:16.744742">
+                    Last modified: 2025-01-01
+                </time>
+                <span>Category: <a href="/categories/graph%20theory.html">Graph Theory</a></span>
+            </div>
+            <div class="content">
+                <h1 id="bipartite-graphs">Bipartite Graphs</h1>
 <ul>
 <li><strong>Definition</strong>: An undirected graph $G = (V, E)$ is bipartite if there exists a partition of $V$ into two sets $V_1$ and $V_2$ such that every edge in $E$ has one endpoint in $V_1$ and the other in $V_2$.</li>
 <li><strong>Applications</strong>:</li>
@@ -206,8 +236,12 @@
 <p><strong>Proof</strong>: If an edge joins two nodes of the same layer, then the path from the lowest common ancestor of the two nodes to each node forms an odd length cycle. This must be the case, since any edges between two vertices of the same level connects two paths of the same length back to their LCA of the BFS tree. The length of this cycle is thus $2k + 1$, where $k$ is the length of back to the LCA, and the $1$ comes from the edge between the two nodes in the same level.</p>
 <h2 id="algorithm">Algorithm</h2>
 <p><strong>Problem</strong>: Given a graph $G$, output <code>true</code> if it is bipartite, <code>false</code> otherwise.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bipartite%20graphs.html">bipartite graphs</a>, <a href="/tags/breadth-first%20search.html">breadth-first search</a>, <a href="/tags/graph%20coloring.html">graph coloring</a>, <a href="/tags/odd%20cycles.html">odd cycles</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bipartite%20graphs.html">bipartite graphs</a>, <a href="/tags/breadth-first%20search.html">breadth-first search</a>, <a href="/tags/graph%20coloring.html">graph coloring</a>, <a href="/tags/odd%20cycles.html">odd cycles</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

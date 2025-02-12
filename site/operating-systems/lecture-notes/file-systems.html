@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Systems</title>
+    <title>File Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/file-systems.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="File Systems">
+    <meta property="og:description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/file-systems.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="File Systems">
+    <meta name="twitter:description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="file systems,storage,hierarchical structure,programming interface,system calls">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "File Systems", "dateModified": "2025-02-11T20:48:47.884995", "description": "Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.", "articleSection": "Operating Systems", "keywords": "file systems,storage,hierarchical structure,programming interface,system calls"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » File Systems
         </div>
-        <h1>File Systems</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="file-systems">File Systems</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>File Systems</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:47.884995">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="file-systems">File Systems</h1>
 <p>A file system interacts with storage by reading/writing blocks (sectors) on a per-volume basis. It is basically a thick layer of abstraction over the raw storage device.</p>
 <h2 id="programming-interface">Programming Interface</h2>
 <ul>
@@ -272,8 +302,12 @@
 | Reserved Area   | FAT Area 1      | FAT Area 2      | Data Area       |
 +-----------------+-----------------+-----------------+-----------------+
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/hierarchical%20structure.html">hierarchical structure</a>, <a href="/tags/programming%20interface.html">programming interface</a>, <a href="/tags/storage.html">storage</a>, <a href="/tags/system%20calls.html">system calls</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/hierarchical%20structure.html">hierarchical structure</a>, <a href="/tags/programming%20interface.html">programming interface</a>, <a href="/tags/storage.html">storage</a>, <a href="/tags/system%20calls.html">system calls</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

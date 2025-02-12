@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How the Operating System Handles Page Faults</title>
+    <title>How the Operating System Handles Page Faults | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/page-faults.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How the Operating System Handles Page Faults">
+    <meta property="og:description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/page-faults.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="How the Operating System Handles Page Faults">
+    <meta name="twitter:description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="page fault,virtual memory,page replacement,page table,i/o,process management">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "How the Operating System Handles Page Faults", "dateModified": "2025-02-11T20:49:00.952709", "description": "Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.", "articleSection": "Operating Systems", "keywords": "page fault,virtual memory,page replacement,page table,i/o,process management"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » How the Operating System Handles Page Faults
         </div>
-        <h1>How the Operating System Handles Page Faults</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="page-fautls">Page Fautls</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>How the Operating System Handles Page Faults</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:00.952709">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="page-fautls">Page Fautls</h1>
 <h2 id="how-does-the-os-handle-a-page-fault">How does the OS handle a page fault?</h2>
 <p>On fault, an interrupt causes the CPU to jump to the page fault handler:</p>
 <ul>
@@ -268,8 +298,12 @@ disk)</li>
 </ul>
 </li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/i/o.html">i/o</a>, <a href="/tags/page%20fault.html">page fault</a>, <a href="/tags/page%20replacement.html">page replacement</a>, <a href="/tags/page%20table.html">page table</a>, <a href="/tags/process%20management.html">process management</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/i/o.html">i/o</a>, <a href="/tags/page%20fault.html">page fault</a>, <a href="/tags/page%20replacement.html">page replacement</a>, <a href="/tags/page%20table.html">page table</a>, <a href="/tags/process%20management.html">process management</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

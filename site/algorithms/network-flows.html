@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Flow Algorithms and Applications in Graph Theory</title>
+    <title>Network Flow Algorithms and Applications in Graph Theory | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Comprehensive overview of network flow algorithms, including Max Flow/Min Cut and Ford-Fulkerson. Covers applications in bipartite matching, vertex cover, and independent set problems. Includes proofs, algorithms, and problem-solving techniques for graph theory concepts.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/network-flows.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Network Flow Algorithms and Applications in Graph Theory">
+    <meta property="og:description" content="Comprehensive overview of network flow algorithms, including Max Flow/Min Cut and Ford-Fulkerson. Covers applications in bipartite matching, vertex cover, and independent set problems. Includes proofs, algorithms, and problem-solving techniques for graph theory concepts.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/network-flows.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Network Flow Algorithms and Applications in Graph Theory">
+    <meta name="twitter:description" content="Comprehensive overview of network flow algorithms, including Max Flow/Min Cut and Ford-Fulkerson. Covers applications in bipartite matching, vertex cover, and independent set problems. Includes proofs, algorithms, and problem-solving techniques for graph theory concepts.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="max flow min cut,ford-fulkerson algorithm,bipartite matching,vertex cover,independent set">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Network Flow Algorithms and Applications in Graph Theory", "dateModified": "2025-01-01T04:22:56.060790", "description": "Comprehensive overview of network flow algorithms, including Max Flow/Min Cut and Ford-Fulkerson. Covers applications in bipartite matching, vertex cover, and independent set problems. Includes proofs, algorithms, and problem-solving techniques for graph theory concepts.", "articleSection": "Graph Theory", "keywords": "max flow min cut,ford-fulkerson algorithm,bipartite matching,vertex cover,independent set"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/graph%20theory.html">Graph Theory</a> » Network Flow Algorithms and Applications in Graph Theory
         </div>
-        <h1>Network Flow Algorithms and Applications in Graph Theory</h1>
-        <div class="meta">
-            <span>Last modified: 2025-01-01</span>
-            <span>Category: <a href="/categories/graph%20theory.html">Graph Theory</a></span>
-        </div>
-        <div class="content">
-            <h1 id="network-flow-max-flow-and-min-cut">Network Flow - Max Flow and Min Cut</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Network Flow Algorithms and Applications in Graph Theory</h1>
+            <div class="meta">
+                <time datetime="2025-01-01T04:22:56.060790">
+                    Last modified: 2025-01-01
+                </time>
+                <span>Category: <a href="/categories/graph%20theory.html">Graph Theory</a></span>
+            </div>
+            <div class="content">
+                <h1 id="network-flow-max-flow-and-min-cut">Network Flow - Max Flow and Min Cut</h1>
 <h2 id="max-flowmin-cut">Max Flow/Min Cut</h2>
 <p><strong>Max Flow</strong> and <strong>Min Cut</strong> are two important concepts in graph theory with wide reaching applications. Many problems are reduced to either of them, such as...</p>
 <ul>
@@ -410,8 +440,12 @@ $$</p>
 <li>$|I| \le k$: Since $I$ is an independent set, no two vertices in $I$ are adjacent. Therefore, no two knights placed on cells corresponding to vertices in $I$ would attack each other. Since we defined $k$ as the maximum number of knights that can be placed on the board such that no two knights attack each other, we have $|I| \le k$.</li>
 <li>$|I| \ge k$: Suppose for the sake of contradiction that $|I| &lt; k$.  Then there must exist some set of valid placements $P = (i_1, j_1), \ldots, (i_k, j_k)$ in which we can place knights such that none of the knights attack each other. By construction of $G$, we would therefore have no edges between any of the vertices corresponding to pairs in $P$, and so said vertices would form an independent set, say $I'$. Since $|I| &lt; k$, we have $|I'| &gt; |I|$, which is a contradiction to $I$ being a maximum independent set.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bipartite%20matching.html">bipartite matching</a>, <a href="/tags/ford-fulkerson%20algorithm.html">ford-fulkerson algorithm</a>, <a href="/tags/independent%20set.html">independent set</a>, <a href="/tags/max%20flow%20min%20cut.html">max flow min cut</a>, <a href="/tags/vertex%20cover.html">vertex cover</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bipartite%20matching.html">bipartite matching</a>, <a href="/tags/ford-fulkerson%20algorithm.html">ford-fulkerson algorithm</a>, <a href="/tags/independent%20set.html">independent set</a>, <a href="/tags/max%20flow%20min%20cut.html">max flow min cut</a>, <a href="/tags/vertex%20cover.html">vertex cover</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

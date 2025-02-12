@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combinational Logic</title>
+    <title>Combinational Logic | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/digital-design/combinational-logic.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Combinational Logic">
+    <meta property="og:description" content="Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.">
+    <meta property="og:url" content="https://notes.elimelt.com/digital-design/combinational-logic.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Combinational Logic">
+    <meta name="twitter:description" content="Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="combinational logic,sequential logic,boolean algebra,logic gates,minimization">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Combinational Logic", "dateModified": "2025-02-11T16:42:51.457186", "description": "Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.", "articleSection": "Hardware", "keywords": "combinational logic,sequential logic,boolean algebra,logic gates,minimization"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Combinational Logic
         </div>
-        <h1>Combinational Logic</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
-        </div>
-        <div class="content">
-            <h1 id="combinational-logic">Combinational Logic</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Combinational Logic</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:51.457186">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
+            </div>
+            <div class="content">
+                <h1 id="combinational-logic">Combinational Logic</h1>
 <h2 id="combinational-logic-vs-sequential-logic">Combinational Logic vs. Sequential Logic</h2>
 <ul>
 <li><strong>Combinational Logic</strong>:</li>
@@ -317,8 +347,12 @@ $$</p>
 \overline{A + B} = \overline{A} \cdot \overline{B}
 $$</p>
 <p>In a circuit, the more general rule is that if you have an AND or OR gate with some inverted terminals, to apply demorgans law, you just change the type of gate (ie AND to OR or OR to AND) and invert the inputs (ie change all the points that are inverted to not inverted and vice versa).</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/boolean%20algebra.html">boolean algebra</a>, <a href="/tags/combinational%20logic.html">combinational logic</a>, <a href="/tags/logic%20gates.html">logic gates</a>, <a href="/tags/minimization.html">minimization</a>, <a href="/tags/sequential%20logic.html">sequential logic</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/boolean%20algebra.html">boolean algebra</a>, <a href="/tags/combinational%20logic.html">combinational logic</a>, <a href="/tags/logic%20gates.html">logic gates</a>, <a href="/tags/minimization.html">minimization</a>, <a href="/tags/sequential%20logic.html">sequential logic</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transport Layer Overview</title>
+    <title>Transport Layer Overview | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the transport layer in computer networks, including the key protocols TCP and UDP. Discusses the concepts of datagrams and bytestreams, and how they are used to provide reliable and unreliable data transfer between networked applications.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/4-transport/transport-overview.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Transport Layer Overview">
+    <meta property="og:description" content="Covers the implementation of the transport layer in computer networks, including the key protocols TCP and UDP. Discusses the concepts of datagrams and bytestreams, and how they are used to provide reliable and unreliable data transfer between networked applications.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/4-transport/transport-overview.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Transport Layer Overview">
+    <meta name="twitter:description" content="Covers the implementation of the transport layer in computer networks, including the key protocols TCP and UDP. Discusses the concepts of datagrams and bytestreams, and how they are used to provide reliable and unreliable data transfer between networked applications.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="transport layer,network protocols,tcp,udp,datagrams,bytestreams">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Transport Layer Overview", "dateModified": "2025-02-11T20:48:23.000131", "description": "Covers the implementation of the transport layer in computer networks, including the key protocols TCP and UDP. Discusses the concepts of datagrams and bytestreams, and how they are used to provide reliable and unreliable data transfer between networked applications.", "articleSection": "Networks", "keywords": "transport layer,network protocols,tcp,udp,datagrams,bytestreams"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,26 +197,35 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Transport Layer Overview
         </div>
-        <h1>Transport Layer Overview</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="transport-layer-overview">Transport Layer Overview</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Transport Layer Overview</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:23.000131">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="transport-layer-overview">Transport Layer Overview</h1>
 <p>The transport layer provides end-to-end connectivity accross the network. Segments carry application data, which are carried within packets, which are carried within frames. </p>
 <p>The two main services are <strong>messages (datagram, UDP)</strong> and <strong>bytestreams (streams, TCP)</strong>. Messages are discrete units of data, while bytestreams are continuous streams of data. </p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bytestreams.html">bytestreams</a>, <a href="/tags/datagrams.html">datagrams</a>, <a href="/tags/network%20protocols.html">network protocols</a>, <a href="/tags/tcp.html">tcp</a>, <a href="/tags/transport%20layer.html">transport layer</a>, <a href="/tags/udp.html">udp</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bytestreams.html">bytestreams</a>, <a href="/tags/datagrams.html">datagrams</a>, <a href="/tags/network%20protocols.html">network protocols</a>, <a href="/tags/tcp.html">tcp</a>, <a href="/tags/transport%20layer.html">transport layer</a>, <a href="/tags/udp.html">udp</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

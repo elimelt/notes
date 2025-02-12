@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Framing in Network Protocols</title>
+    <title>Framing in Network Protocols | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/2-direct-links/framing.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Framing in Network Protocols">
+    <meta property="og:description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/2-direct-links/framing.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Framing in Network Protocols">
+    <meta name="twitter:description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="byte-oriented protocols,point-to-point protocol,bisync,ddcmp,ppp,bit-oriented protocols,hdlc,bit stuffing">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Framing in Network Protocols", "dateModified": "2025-02-11T20:46:29.306079", "description": "An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.", "articleSection": "Networks", "keywords": "byte-oriented protocols,point-to-point protocol,bisync,ddcmp,ppp,bit-oriented protocols,hdlc,bit stuffing"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Framing in Network Protocols
         </div>
-        <h1>Framing in Network Protocols</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="byte-oriented-protocols-point-to-point-protocol-ppp">Byte Oriented Protocols, Point-to-point protocol (PPP)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Framing in Network Protocols</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:46:29.306079">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="byte-oriented-protocols-point-to-point-protocol-ppp">Byte Oriented Protocols, Point-to-point protocol (PPP)</h1>
 <h2 id="byte-oriented-framing">Byte-Oriented Framing</h2>
 <ul>
 <li>Oldest approach, viewing frames as collections of bytes.</li>
@@ -268,8 +298,12 @@
 <li>Denoted as STS-Nc for concatenated links.</li>
 <li>Simplifies clock synchronization across carriers' networks.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bisync.html">bisync</a>, <a href="/tags/bit%20stuffing.html">bit stuffing</a>, <a href="/tags/bit-oriented%20protocols.html">bit-oriented protocols</a>, <a href="/tags/byte-oriented%20protocols.html">byte-oriented protocols</a>, <a href="/tags/ddcmp.html">ddcmp</a>, <a href="/tags/hdlc.html">hdlc</a>, <a href="/tags/point-to-point%20protocol.html">point-to-point protocol</a>, <a href="/tags/ppp.html">ppp</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bisync.html">bisync</a>, <a href="/tags/bit%20stuffing.html">bit stuffing</a>, <a href="/tags/bit-oriented%20protocols.html">bit-oriented protocols</a>, <a href="/tags/byte-oriented%20protocols.html">byte-oriented protocols</a>, <a href="/tags/ddcmp.html">ddcmp</a>, <a href="/tags/hdlc.html">hdlc</a>, <a href="/tags/point-to-point%20protocol.html">point-to-point protocol</a>, <a href="/tags/ppp.html">ppp</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

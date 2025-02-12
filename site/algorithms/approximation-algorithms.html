@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approximation Algorithms</title>
+    <title>Approximation Algorithms | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/approximation-algorithms.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Approximation Algorithms">
+    <meta property="og:description" content="A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/approximation-algorithms.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Approximation Algorithms">
+    <meta name="twitter:description" content="A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="approximation,algorithms,vertex cover,set cover">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Approximation Algorithms", "dateModified": "2025-02-11T16:41:49.510067", "description": "A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.", "articleSection": "Algorithms", "keywords": "approximation,algorithms,vertex cover,set cover"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Approximation Algorithms
         </div>
-        <h1>Approximation Algorithms</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="approximation-algorithms">Approximation Algorithms</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Approximation Algorithms</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:41:49.510067">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="approximation-algorithms">Approximation Algorithms</h1>
 <p>When faced with a problem that can be reduced to some NP-Complete problem, you (most probably) cannot generally solve it in polynomial time. For example:</p>
 <ul>
 <li>Set Cover</li>
@@ -217,8 +247,12 @@ $$</p>
 <p><strong>Problem</strong>: Given some number of sets $S_1, S_2, \ldots, S_n$ with $S_i \subseteq U$, choose the minimum number of sets that cover all elements of $U$
 <strong>Algorithm</strong>: While there are remaining elements, choose the set that maximizes the number of new elements covered.</p>
 <p>If the optimal solution has $k$ sets, this algorithm always selects at most $k log(n)$ sets. This is because there is at least a set that covers $\frac{1}{k}$ of the remaining elements, so after $t$ steps we have $ \le n(1 - \frac{1}{k})^t \le n \cdot e^{-\frac{t}{k}}$ remaining elements. Therefore, after $t = k\ln(n)$ steps, we have $&lt; 1$ uncovered element remaining.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/algorithms.html">algorithms</a>, <a href="/tags/approximation.html">approximation</a>, <a href="/tags/set%20cover.html">set cover</a>, <a href="/tags/vertex%20cover.html">vertex cover</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/algorithms.html">algorithms</a>, <a href="/tags/approximation.html">approximation</a>, <a href="/tags/set%20cover.html">set cover</a>, <a href="/tags/vertex%20cover.html">vertex cover</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

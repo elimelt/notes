@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topological Ordering and Properties of Directed Acyclic Graphs</title>
+    <title>Topological Ordering and Properties of Directed Acyclic Graphs | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A technical exploration of Directed Acyclic Graphs (DAGs) focusing on their topological ordering properties and fundamental lemmas. The document includes mathematical proofs of key DAG properties and presents a Python implementation of the topological sorting algorithm.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/DAGs.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Topological Ordering and Properties of Directed Acyclic Graphs">
+    <meta property="og:description" content="A technical exploration of Directed Acyclic Graphs (DAGs) focusing on their topological ordering properties and fundamental lemmas. The document includes mathematical proofs of key DAG properties and presents a Python implementation of the topological sorting algorithm.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/DAGs.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Topological Ordering and Properties of Directed Acyclic Graphs">
+    <meta name="twitter:description" content="A technical exploration of Directed Acyclic Graphs (DAGs) focusing on their topological ordering properties and fundamental lemmas. The document includes mathematical proofs of key DAG properties and presents a Python implementation of the topological sorting algorithm.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="graph theory,topological sorting,directed acyclic graphs,proofs">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Topological Ordering and Properties of Directed Acyclic Graphs", "dateModified": "2025-02-11T16:41:49.575608", "description": "A technical exploration of Directed Acyclic Graphs (DAGs) focusing on their topological ordering properties and fundamental lemmas. The document includes mathematical proofs of key DAG properties and presents a Python implementation of the topological sorting algorithm.", "articleSection": "Algorithms", "keywords": "graph theory,topological sorting,directed acyclic graphs,proofs"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Topological Ordering and Properties of Directed Acyclic Graphs
         </div>
-        <h1>Topological Ordering and Properties of Directed Acyclic Graphs</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="directed-acyclic-graphs-dags">Directed Acyclic Graphs (DAGs)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Topological Ordering and Properties of Directed Acyclic Graphs</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:41:49.575608">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="directed-acyclic-graphs-dags">Directed Acyclic Graphs (DAGs)</h1>
 <p>DAGs are pretty self explanatory, but their use cases are vast.</p>
 <h2 id="topological-orderings">Topological Orderings</h2>
 <p>A <strong>topological ordering</strong> of a directed graph $G = (V, E)$ is a linear ordering of all its vertices such that for every directed edge $(v_i, v_j) \in E$, $v_i$ comes before $v_j$ in the ordering if $v_i &lt; v_j$.</p>
@@ -219,8 +249,12 @@
 
   return order
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/directed%20acyclic%20graphs.html">directed acyclic graphs</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/proofs.html">proofs</a>, <a href="/tags/topological%20sorting.html">topological sorting</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/directed%20acyclic%20graphs.html">directed acyclic graphs</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/proofs.html">proofs</a>, <a href="/tags/topological%20sorting.html">topological sorting</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

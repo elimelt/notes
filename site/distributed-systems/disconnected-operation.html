@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disconnected Operation</title>
+    <title>Disconnected Operation | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the concept of disconnected operation in distributed systems and its implications.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/disconnected-operation.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Disconnected Operation">
+    <meta property="og:description" content="Explains the concept of disconnected operation in distributed systems and its implications.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/disconnected-operation.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Disconnected Operation">
+    <meta name="twitter:description" content="Explains the concept of disconnected operation in distributed systems and its implications.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="disconnected operation,distributed systems,conflict resolution,eventual consistency">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Disconnected Operation", "dateModified": "2025-02-11T16:42:08.189136", "description": "Explains the concept of disconnected operation in distributed systems and its implications.", "articleSection": "Distributed Systems", "keywords": "disconnected operation,distributed systems,conflict resolution,eventual consistency"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Disconnected Operation
         </div>
-        <h1>Disconnected Operation</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="disconnected-operation">Disconnected Operation</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Disconnected Operation</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:08.189136">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="disconnected-operation">Disconnected Operation</h1>
 <p>Always available writes inherently pose a problem in distributed systems. To allow for disconnected operation, we need to be able to write to a local copy of the data, and then synchronize it with the rest of the system when we're back online. Many apps today are built to work with intermittent lack of connectivity, for example, file syncing apps/sourcing control systems. In many of these systems, writes can conflict, and need to be resolved either manually or automatically.</p>
 <h2 id="two-models">Two Models</h2>
 <ul>
@@ -222,8 +252,12 @@
 <li><strong>Last write wins</strong>: The last write is always accepted. This requires some form of timestamp or versioning.</li>
 <li><strong>Operation based</strong>: Changes are represented as operations (add, delete, etc.) and are applied in order. This is how CRDTs work.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/conflict%20resolution.html">conflict resolution</a>, <a href="/tags/disconnected%20operation.html">disconnected operation</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/eventual%20consistency.html">eventual consistency</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/conflict%20resolution.html">conflict resolution</a>, <a href="/tags/disconnected%20operation.html">disconnected operation</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/eventual%20consistency.html">eventual consistency</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

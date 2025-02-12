@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syscall API Reference</title>
+    <title>Syscall API Reference | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Syscall API Reference">
+    <meta property="og:description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Syscall API Reference">
+    <meta name="twitter:description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="operating systems,syscall,process management,i/o operations">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Syscall API Reference", "dateModified": "2025-02-11T20:49:33.966336", "description": "Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.", "articleSection": "Operating Systems", "keywords": "operating systems,syscall,process management,i/o operations"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Syscall API Reference
         </div>
-        <h1>Syscall API Reference</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="chapter-3-the-programming-interface">Chapter 3 - The Programming Interface</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Syscall API Reference</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:33.966336">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="chapter-3-the-programming-interface">Chapter 3 - The Programming Interface</h1>
 <h2 id="syscall-api-reference">Syscall API Reference</h2>
 <h3 id="creating-and-managing-processes">Creating and managing processes</h3>
 <table>
@@ -681,8 +711,12 @@ Server:
 <li>Implement a simple Linux shell in C capable of executing a sequence of programs that communicate through a pipe. For example, if the user types ls | wc, your program should fork off the two programs, which together will calculate the number of files in the directory. For this, you will need to use several of the Linux system calls described in this chapter: fork, exec, open, close, pipe, dup2, and wait. Note: You will to replace stdin and stdout in the child process with the pipe file descriptors; that is the role of dup2.</li>
 <li>Extend the shell implemented above to support foreground and background tasks, as well as job control: suspend, resume, and kill.</li>
 </ol>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/i/o%20operations.html">i/o operations</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/process%20management.html">process management</a>, <a href="/tags/syscall.html">syscall</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/i/o%20operations.html">i/o operations</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/process%20management.html">process management</a>, <a href="/tags/syscall.html">syscall</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

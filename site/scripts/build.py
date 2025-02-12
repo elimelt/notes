@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import json
 from pathlib import Path
 from typing import List, Dict, Optional
 import shutil
@@ -53,7 +54,8 @@ class SiteGenerator:
         ".venv",
     }
 
-    def __init__(self, input_dir: str, output_dir: str):
+    def __init__(self, input_dir: str, output_dir: str, site_domain: str = "https://notes.elimelt.com"):
+        self.site_domain = site_domain
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self.markdown_converter = markdown.Markdown(extensions=self.MARKDOWN_EXTENSIONS)
@@ -454,6 +456,28 @@ class SiteGenerator:
         navigation = self._generate_navigation(page)
         breadcrumbs = self._generate_breadcrumbs(page)
 
+        meta_description = page.description
+        if not meta_description and page.content:
+            # Strip HTML tags and get first 160 characters
+            plain_content = re.sub(r'<[^>]+>', '', page.content)
+            meta_description = plain_content[:160].strip() + '...' if len(plain_content) > 160 else plain_content
+
+        # Generate schema.org JSON-LD
+        schema_json = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": page.title,
+            "dateModified": page.modified_date.isoformat(),
+            "description": meta_description,
+        }
+        if page.category:
+            schema_json["articleSection"] = page.category
+        if page.tags:
+            schema_json["keywords"] = ",".join(page.tags)
+
+        # Generate canonical URL
+        canonical_url = f"{self.site_domain}/{page.path.with_suffix('.html')}"
+
         # Generate tags section if page has tags
         tags_section = ""
         if page.tags:
@@ -471,8 +495,33 @@ class SiteGenerator:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{page.title}</title>
-    {f'<meta name="description" content="{page.description}">' if page.description else ''}
+    <title>{page.title + ' | Elijah\'s Notes' if page.title else 'Elijah\'s Notes'}</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{meta_description if meta_description else ''}">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="{canonical_url}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{page.title}">
+    <meta property="og:description" content="{meta_description if meta_description else ''}">
+    <meta property="og:url" content="{canonical_url}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{page.title}">
+    <meta name="twitter:description" content="{meta_description if meta_description else ''}">
+
+    <!-- Keywords from tags -->
+    {f'<meta name="keywords" content="{",".join(page.tags)}">' if page.tags else ''}
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {json.dumps(schema_json)}
+    </script>
     <style>
         :root {{
             --text-color: #1a1a1a;
@@ -640,26 +689,34 @@ class SiteGenerator:
     </style>
 </head>
 <body>
-    <nav>
-        {navigation}
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            {navigation}
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             {breadcrumbs}
         </div>
-        <h1>{page.title}</h1>
-        <div class="meta">
-            <span>Last modified: {page.modified_date.strftime('%Y-%m-%d')}</span>
-            {f'<span>Category: <a href="/categories/{quote(page.category.lower())}.html">{page.category}</a></span>' if page.category else ''}
-        </div>
-        <div class="content">
-            {page.content}
-        </div>
-        {tags_section}
+    </header>
+    <main role="main">
+        <article>
+            <h1>{page.title}</h1>
+            <div class="meta">
+                <time datetime="{page.modified_date.isoformat()}">
+                    Last modified: {page.modified_date.strftime('%Y-%m-%d')}
+                </time>
+                {f'<span>Category: <a href="/categories/{quote(page.category.lower())}.html">{page.category}</a></span>' if page.category else ''}
+            </div>
+            <div class="content">
+                {page.content}
+            </div>
+            {tags_section}
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; {datetime.now().year} Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>"""
-
 
 def main():
     """CLI entry point"""

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domain Name System (DNS)</title>
+    <title>Domain Name System (DNS) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/5-application/DNS.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Domain Name System (DNS)">
+    <meta property="og:description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/5-application/DNS.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Domain Name System (DNS)">
+    <meta name="twitter:description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="domain name system,name resolution,distributed database,top-level domain,name server">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Domain Name System (DNS)", "dateModified": "2025-02-11T20:48:31.151594", "description": "The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.", "articleSection": "Networks", "keywords": "domain name system,name resolution,distributed database,top-level domain,name server"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Domain Name System (DNS)
         </div>
-        <h1>Domain Name System (DNS)</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="domain-name-system-dns">Domain Name System (DNS)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Domain Name System (DNS)</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:31.151594">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="domain-name-system-dns">Domain Name System (DNS)</h1>
 <h2 id="namespaces">Namespaces</h2>
 <ul>
 <li><strong>Names</strong> are higher-level, human-readable identifiers for resources.</li>
@@ -235,8 +265,12 @@
 <p>DNS uses the User Datagram Protocol (UDP) on port 53 to serve requests. Uses ARQ for reliability. Messages are linked by a 16-bit ID field.</p>
 <p>Servers can be replicated to handle load and reliability. Queries can return multiple records, and the client can choose which one to use.</p>
 <p>Security is a major concern for DNS. DNSSEC is a suite of extensions that add security to the DNS protocol by signing DNS data, but it is not widely adopted.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/distributed%20database.html">distributed database</a>, <a href="/tags/domain%20name%20system.html">domain name system</a>, <a href="/tags/name%20resolution.html">name resolution</a>, <a href="/tags/name%20server.html">name server</a>, <a href="/tags/top-level%20domain.html">top-level domain</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/distributed%20database.html">distributed database</a>, <a href="/tags/domain%20name%20system.html">domain name system</a>, <a href="/tags/name%20resolution.html">name resolution</a>, <a href="/tags/name%20server.html">name server</a>, <a href="/tags/top-level%20domain.html">top-level domain</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

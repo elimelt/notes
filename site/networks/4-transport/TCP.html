@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transmission Control Protocol (TCP)</title>
+    <title>Transmission Control Protocol (TCP) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/4-transport/TCP.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Transmission Control Protocol (TCP)">
+    <meta property="og:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/4-transport/TCP.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Transmission Control Protocol (TCP)">
+    <meta name="twitter:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Transmission Control Protocol (TCP)", "dateModified": "2025-02-11T20:48:15.008380", "description": "The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.", "articleSection": "Networks", "keywords": "connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Transmission Control Protocol (TCP)
         </div>
-        <h1>Transmission Control Protocol (TCP)</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="transmission-control-protocol-tcp">Transmission Control Protocol (TCP)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Transmission Control Protocol (TCP)</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:15.008380">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="transmission-control-protocol-tcp">Transmission Control Protocol (TCP)</h1>
 <h2 id="connection-establishment">Connection Establishment</h2>
 <p>Both sender and receiver must be ready to transfer data, and they need to agree on parameters like max segment size.</p>
 <h3 id="three-way-handshake">Three-Way Handshake</h3>
@@ -336,8 +366,12 @@
 </ul>
 <h3 id="random-early-detection-red">Random Early Detection (RED)</h3>
 <p>Instead of marking pakets, just randomly drop packets to throttle senders. The probablity of dropping a packet increases as the queue fills up.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/adaptive%20timeout.html">adaptive timeout</a>, <a href="/tags/connection%20establishment.html">connection establishment</a>, <a href="/tags/connection%20release.html">connection release</a>, <a href="/tags/initial%20sequence%20number.html">initial sequence number</a>, <a href="/tags/rtt.html">rtt</a>, <a href="/tags/three-way%20handshake.html">three-way handshake</a>, <a href="/tags/time_wait%20state.html">time_wait state</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/adaptive%20timeout.html">adaptive timeout</a>, <a href="/tags/connection%20establishment.html">connection establishment</a>, <a href="/tags/connection%20release.html">connection release</a>, <a href="/tags/initial%20sequence%20number.html">initial sequence number</a>, <a href="/tags/rtt.html">rtt</a>, <a href="/tags/three-way%20handshake.html">three-way handshake</a>, <a href="/tags/time_wait%20state.html">time_wait state</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

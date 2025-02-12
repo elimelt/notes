@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interval Sum Counting Algorithm</title>
+    <title>Interval Sum Counting Algorithm | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="An algorithm for counting the number of interval sums between a given range in an array of intervals.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/practice/4.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Interval Sum Counting Algorithm">
+    <meta property="og:description" content="An algorithm for counting the number of interval sums between a given range in an array of intervals.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/practice/4.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Interval Sum Counting Algorithm">
+    <meta name="twitter:description" content="An algorithm for counting the number of interval sums between a given range in an array of intervals.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="interval sums,binary search,prefix sum,suffix sum">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Sum Counting Algorithm", "dateModified": "2025-02-11T16:41:49.580380", "description": "An algorithm for counting the number of interval sums between a given range in an array of intervals.", "articleSection": "Algorithms", "keywords": "interval sums,binary search,prefix sum,suffix sum"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Interval Sum Counting Algorithm
         </div>
-        <h1>Interval Sum Counting Algorithm</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="problem-set-4">Problem Set 4</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Interval Sum Counting Algorithm</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:41:49.580380">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="problem-set-4">Problem Set 4</h1>
 <h2 id="problem-1">Problem 1</h2>
 <p>$I = [(0, 1), (0, 3), (4, 5), (2, 5)]$</p>
 <p>These intervals are already sorted by finish time.</p>
@@ -381,8 +411,12 @@ def count_interval_sums(A, l, u):
 
   return count_interval_sums_recursive(A, I, l, u, 0, len(A))
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/binary%20search.html">binary search</a>, <a href="/tags/interval%20sums.html">interval sums</a>, <a href="/tags/prefix%20sum.html">prefix sum</a>, <a href="/tags/suffix%20sum.html">suffix sum</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/binary%20search.html">binary search</a>, <a href="/tags/interval%20sums.html">interval sums</a>, <a href="/tags/prefix%20sum.html">prefix sum</a>, <a href="/tags/suffix%20sum.html">suffix sum</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

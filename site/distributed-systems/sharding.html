@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sharding</title>
+    <title>Sharding | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the concept of sharding in distributed systems, its approaches and implications.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/sharding.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Sharding">
+    <meta property="og:description" content="Explains the concept of sharding in distributed systems, its approaches and implications.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/sharding.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Sharding">
+    <meta name="twitter:description" content="Explains the concept of sharding in distributed systems, its approaches and implications.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="sharding,consistent hashing,indirection tables,load balancing,data distribution">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sharding", "dateModified": "2025-02-11T16:42:07.824937", "description": "Explains the concept of sharding in distributed systems, its approaches and implications.", "articleSection": "Distributed Systems", "keywords": "sharding,consistent hashing,indirection tables,load balancing,data distribution"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Sharding
         </div>
-        <h1>Sharding</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="sharding">Sharding</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Sharding</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.824937">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="sharding">Sharding</h1>
 <h2 id="consistent-hashing">Consistent Hashing</h2>
 <p>A classic approach is to maintain a modular space of hashed keys, and use the regions between shards to assign keys. This is known as <strong>consistent hashing</strong>. It works, but has some drawbacks:</p>
 <ul>
@@ -197,8 +227,12 @@
 </ul>
 <h2 id="indirection-tables">Indirection Tables</h2>
 <p>A cooler approach in my opinion. Just put a table of <code>hash(key) -&gt; server address</code> on every client, and assign fewer table entries to buckets with more keys. This way, the load is more evenly distributed. You can then broadcast any changes to the table to every client server.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/consistent%20hashing.html">consistent hashing</a>, <a href="/tags/data%20distribution.html">data distribution</a>, <a href="/tags/indirection%20tables.html">indirection tables</a>, <a href="/tags/load%20balancing.html">load balancing</a>, <a href="/tags/sharding.html">sharding</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/consistent%20hashing.html">consistent hashing</a>, <a href="/tags/data%20distribution.html">data distribution</a>, <a href="/tags/indirection%20tables.html">indirection tables</a>, <a href="/tags/load%20balancing.html">load balancing</a>, <a href="/tags/sharding.html">sharding</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

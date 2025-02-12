@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karnaugh Maps</title>
+    <title>Karnaugh Maps | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Method for simplifying Boolean expressions">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/digital-design/karnaugh-maps.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Karnaugh Maps">
+    <meta property="og:description" content="Method for simplifying Boolean expressions">
+    <meta property="og:url" content="https://notes.elimelt.com/digital-design/karnaugh-maps.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Karnaugh Maps">
+    <meta name="twitter:description" content="Method for simplifying Boolean expressions">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="karnaugh maps,truth tables,graph theory,computer science">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Karnaugh Maps", "dateModified": "2025-02-11T16:42:51.458735", "description": "Method for simplifying Boolean expressions", "articleSection": "Hardware", "keywords": "karnaugh maps,truth tables,graph theory,computer science"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Karnaugh Maps
         </div>
-        <h1>Karnaugh Maps</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
-        </div>
-        <div class="content">
-            <h1 id="karnaugh-maps">Karnaugh Maps</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Karnaugh Maps</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:51.458735">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
+            </div>
+            <div class="content">
+                <h1 id="karnaugh-maps">Karnaugh Maps</h1>
 <p>Goal: Find neighboring subsets of the On set to eliminate variables and simplify expressions.</p>
 <p>A <code>K-map</code> is a method of representing a truth table to help visualize adjacencies into $\le$ 4 dimensions.</p>
 <ol>
@@ -212,8 +242,12 @@
 </li>
 <li><code>always_comb</code>: like <code>always @ (*)</code>, but only triggered when any of the signals change.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/computer%20science.html">computer science</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/karnaugh%20maps.html">karnaugh maps</a>, <a href="/tags/truth%20tables.html">truth tables</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/computer%20science.html">computer science</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/karnaugh%20maps.html">karnaugh maps</a>, <a href="/tags/truth%20tables.html">truth tables</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

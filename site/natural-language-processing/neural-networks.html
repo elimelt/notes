@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedforward Neural Networks</title>
+    <title>Feedforward Neural Networks | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Overview of neural networks (feedforward), particularly in the context of natural language processing.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/natural-language-processing/neural-networks.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Feedforward Neural Networks">
+    <meta property="og:description" content="Overview of neural networks (feedforward), particularly in the context of natural language processing.">
+    <meta property="og:url" content="https://notes.elimelt.com/natural-language-processing/neural-networks.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Feedforward Neural Networks">
+    <meta name="twitter:description" content="Overview of neural networks (feedforward), particularly in the context of natural language processing.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="neural networks,machine learning,natural language processing,deep learning,feedforward">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Feedforward Neural Networks", "dateModified": "2025-02-11T16:44:22.948660", "description": "Overview of neural networks (feedforward), particularly in the context of natural language processing.", "articleSection": "Natural Language Processing", "keywords": "neural networks,machine learning,natural language processing,deep learning,feedforward"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Feedforward Neural Networks
         </div>
-        <h1>Feedforward Neural Networks</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
-        </div>
-        <div class="content">
-            <h1 id="neural-networks">Neural Networks</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Feedforward Neural Networks</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:44:22.948660">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
+            </div>
+            <div class="content">
+                <h1 id="neural-networks">Neural Networks</h1>
 <p>Contrasting with MLR, neural networks are a more flexible model that can learn complex patterns in the data, even without hand-crafted features.</p>
 <h2 id="activation-functions">Activation Functions</h2>
 <p>A single computational unit $z = w \cdot x + b$ is a linear function of the input $x$ with weights $w$ and bias $b$. The output $y$ is a non-linear function of $f(z)$, where $f$ is the activation function (typically one of $\tanh$, $\text{ReLU}$, or $\sigma$).</p>
@@ -338,8 +368,12 @@ $$</p>
 <li>Dropout: randomly (with probability $p$) set some hidden units to 0, then renormalize other inputs to prevent overfitting</li>
 <li>Hyperparameters: learning rate, mini-batch size, number of hidden units, number of layers, choice of activation function, etc.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/deep%20learning.html">deep learning</a>, <a href="/tags/feedforward.html">feedforward</a>, <a href="/tags/machine%20learning.html">machine learning</a>, <a href="/tags/natural%20language%20processing.html">natural language processing</a>, <a href="/tags/neural%20networks.html">neural networks</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/deep%20learning.html">deep learning</a>, <a href="/tags/feedforward.html">feedforward</a>, <a href="/tags/machine%20learning.html">machine learning</a>, <a href="/tags/natural%20language%20processing.html">natural language processing</a>, <a href="/tags/neural%20networks.html">neural networks</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

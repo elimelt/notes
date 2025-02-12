@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What is an Operating System?</title>
+    <title>What is an Operating System? | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/1-introductions.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="What is an Operating System?">
+    <meta property="og:description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/1-introductions.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="What is an Operating System?">
+    <meta name="twitter:description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="operating system,virtualization,resource management,services,reliability,availability,fault tolerance">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "What is an Operating System?", "dateModified": "2025-02-11T20:49:28.129048", "description": "This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.", "articleSection": "Operating Systems", "keywords": "operating system,virtualization,resource management,services,reliability,availability,fault tolerance"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » What is an Operating System?
         </div>
-        <h1>What is an Operating System?</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="introduction">Introduction</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>What is an Operating System?</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:28.129048">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="introduction">Introduction</h1>
 <h2 id="what-is-an-operating-system">What is an Operating System?</h2>
 <p><strong>Referee.</strong> Manages the resources of a computer shared between applications.</p>
 <p><strong>Illusionist.</strong> Makes the computer's resources appear to be dedicated to each application through abstraction.</p>
@@ -361,8 +391,12 @@
 <p>Extensive testing like in other forms of software (unit, integration, fuzzing, fault injection), as well as monitoring and telemetry of real devices. Formal verification would be nice, but is probably not feasible. A microkernel would be a good start, since it would allow me to isolate "trusted" code.</p>
 <h3 id="13-for-the-computer-you-are-currently-using-how-should-the-operating-system-designers-prioritize-among-reliability-security-portability-performance-and-adoption-explain-why">13. For the computer you are currently using, how should the operating system designers prioritize among reliability, security, portability, performance, and adoption? Explain why.</h3>
 <p>As a user of a macbook pro, security, performance, and adoption are extremely important. However, as a developer it would be nice to also have a portable and (less importantly) a reliable system. Something that I think the OS designers were less concerned about is portability (Apple hardware only), but this is also a question of adoption of the Sillicon based chips in Apple's hardware.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/availability.html">availability</a>, <a href="/tags/fault%20tolerance.html">fault tolerance</a>, <a href="/tags/operating%20system.html">operating system</a>, <a href="/tags/reliability.html">reliability</a>, <a href="/tags/resource%20management.html">resource management</a>, <a href="/tags/services.html">services</a>, <a href="/tags/virtualization.html">virtualization</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/availability.html">availability</a>, <a href="/tags/fault%20tolerance.html">fault tolerance</a>, <a href="/tags/operating%20system.html">operating system</a>, <a href="/tags/reliability.html">reliability</a>, <a href="/tags/resource%20management.html">resource management</a>, <a href="/tags/services.html">services</a>, <a href="/tags/virtualization.html">virtualization</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

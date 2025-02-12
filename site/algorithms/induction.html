@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mathematical Induction and Pigeonhole Principle Proofs</title>
+    <title>Mathematical Induction and Pigeonhole Principle Proofs | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/induction.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Mathematical Induction and Pigeonhole Principle Proofs">
+    <meta property="og:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/induction.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Mathematical Induction and Pigeonhole Principle Proofs">
+    <meta name="twitter:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="induction,pigeonhole principle,proof techniques">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Mathematical Induction and Pigeonhole Principle Proofs", "dateModified": "2025-01-01T04:21:35.279242", "description": "This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.", "articleSection": "Mathematics", "keywords": "induction,pigeonhole principle,proof techniques"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/mathematics.html">Mathematics</a> » Mathematical Induction and Pigeonhole Principle Proofs
         </div>
-        <h1>Mathematical Induction and Pigeonhole Principle Proofs</h1>
-        <div class="meta">
-            <span>Last modified: 2025-01-01</span>
-            <span>Category: <a href="/categories/mathematics.html">Mathematics</a></span>
-        </div>
-        <div class="content">
-            <h1 id="induction">Induction</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Mathematical Induction and Pigeonhole Principle Proofs</h1>
+            <div class="meta">
+                <time datetime="2025-01-01T04:21:35.279242">
+                    Last modified: 2025-01-01
+                </time>
+                <span>Category: <a href="/categories/mathematics.html">Mathematics</a></span>
+            </div>
+            <div class="content">
+                <h1 id="induction">Induction</h1>
 <p>Prove...</p>
 <p>$$
 \forall n \in \mathbb{N}, \sum^{n}_{i = 1} i = \frac{n(n + 1)}{2}
@@ -218,8 +248,12 @@ $$</p>
 <p>Finally, if $b_1$ has no balls, throw away an arbitrary ball and call $P(n - 1)$ on $b_2, \ldots, b_n$</p>
 <h3 id="generally">Generally</h3>
 <p>With this type of induction, start with $P(n)$, and reduce to $P(n - 1)$.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/induction.html">induction</a>, <a href="/tags/pigeonhole%20principle.html">pigeonhole principle</a>, <a href="/tags/proof%20techniques.html">proof techniques</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/induction.html">induction</a>, <a href="/tags/pigeonhole%20principle.html">pigeonhole principle</a>, <a href="/tags/proof%20techniques.html">proof techniques</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

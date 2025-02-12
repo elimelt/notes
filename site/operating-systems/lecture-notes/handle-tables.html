@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handle Tables</title>
+    <title>Handle Tables | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of handle tables, which are used to manage the process control block (PCB) in operating systems. Discusses the PCB structure, including the process and CPU state, state queues for scheduling, and the creation of new PCBs. Explores techniques to optimize the creation of new PCBs for improved performance.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/handle-tables.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Handle Tables">
+    <meta property="og:description" content="Covers the implementation of handle tables, which are used to manage the process control block (PCB) in operating systems. Discusses the PCB structure, including the process and CPU state, state queues for scheduling, and the creation of new PCBs. Explores techniques to optimize the creation of new PCBs for improved performance.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/handle-tables.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Handle Tables">
+    <meta name="twitter:description" content="Covers the implementation of handle tables, which are used to manage the process control block (PCB) in operating systems. Discusses the PCB structure, including the process and CPU state, state queues for scheduling, and the creation of new PCBs. Explores techniques to optimize the creation of new PCBs for improved performance.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="handle tables,process control block,context switch,scheduling,state queues">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Handle Tables", "dateModified": "2025-02-11T20:48:51.360505", "description": "Covers the implementation of handle tables, which are used to manage the process control block (PCB) in operating systems. Discusses the PCB structure, including the process and CPU state, state queues for scheduling, and the creation of new PCBs. Explores techniques to optimize the creation of new PCBs for improved performance.", "articleSection": "Operating Systems", "keywords": "handle tables,process control block,context switch,scheduling,state queues"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Handle Tables
         </div>
-        <h1>Handle Tables</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="handle-tables">Handle Tables</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Handle Tables</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:51.360505">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="handle-tables">Handle Tables</h1>
 <p>There is a local handle table for each process, and a global handle table within the kernel.</p>
 <h2 id="process-control-block-pcb">Process Control Block (PCB)</h2>
 <ul>
@@ -217,8 +247,12 @@
 <p>method 1: <code>vfork</code>: </p>
 <p>the older (now uncommon) way to do it. Instead of making a new child address space being a copy, just point to the parent address space from the child. This was an unenforced "promise" that the child wouldn't modify the address space. The child has the same page table and everything.</p>
 <p>method 2: copy on write.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/context%20switch.html">context switch</a>, <a href="/tags/handle%20tables.html">handle tables</a>, <a href="/tags/process%20control%20block.html">process control block</a>, <a href="/tags/scheduling.html">scheduling</a>, <a href="/tags/state%20queues.html">state queues</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/context%20switch.html">context switch</a>, <a href="/tags/handle%20tables.html">handle tables</a>, <a href="/tags/process%20control%20block.html">process control block</a>, <a href="/tags/scheduling.html">scheduling</a>, <a href="/tags/state%20queues.html">state queues</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

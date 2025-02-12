@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Depth First Search Algorithm and Tree Properties</title>
+    <title>Depth First Search Algorithm and Tree Properties | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A technical explanation of Depth First Search (DFS) algorithm and its tree properties, including both recursive and iterative implementations. The document covers key properties of DFS trees, including the ancestor-descendant relationship of non-tree edges, and includes a formal lemma and proof about DFS tree characteristics.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/DFS.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Depth First Search Algorithm and Tree Properties">
+    <meta property="og:description" content="A technical explanation of Depth First Search (DFS) algorithm and its tree properties, including both recursive and iterative implementations. The document covers key properties of DFS trees, including the ancestor-descendant relationship of non-tree edges, and includes a formal lemma and proof about DFS tree characteristics.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/DFS.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Depth First Search Algorithm and Tree Properties">
+    <meta name="twitter:description" content="A technical explanation of Depth First Search (DFS) algorithm and its tree properties, including both recursive and iterative implementations. The document covers key properties of DFS trees, including the ancestor-descendant relationship of non-tree edges, and includes a formal lemma and proof about DFS tree characteristics.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="graph theory,depth first search,spanning trees,graph traversal">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Depth First Search Algorithm and Tree Properties", "dateModified": "2025-02-11T16:41:49.570161", "description": "A technical explanation of Depth First Search (DFS) algorithm and its tree properties, including both recursive and iterative implementations. The document covers key properties of DFS trees, including the ancestor-descendant relationship of non-tree edges, and includes a formal lemma and proof about DFS tree characteristics.", "articleSection": "Algorithms", "keywords": "graph theory,depth first search,spanning trees,graph traversal"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Depth First Search Algorithm and Tree Properties
         </div>
-        <h1>Depth First Search Algorithm and Tree Properties</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="depth-first-search-dfs">Depth First Search (DFS)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Depth First Search Algorithm and Tree Properties</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:41:49.570161">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="depth-first-search-dfs">Depth First Search (DFS)</h1>
 <p>Running DFS on a graph produces a DFS tree (or depth-first spanning-tree). The DFS tree contains all the vertices of the graph and the edges of the DFS tree are a subset of the edges of the original graph.</p>
 <p>Unlike the BFS tree, DFS trees aren't minimum depth, and its levels don't really tell you much. However, the property holds that sub-trees of a DFS tree must not contain any edges connecting them.</p>
 <p><strong>Lemma</strong>: For a DFS tree of graph $G = (V, E)$ $T = (V_t, E_t)$,  $\forall e = (x, y) \in E$, if $e \notin E_t$, then one of $x$ or $y$ is an ancestor of the other in the tree.</p>
@@ -216,8 +246,12 @@ def dfs_iterative(G, src, vis=set(), f=print):
 <h2 id="properties-of-dfs-spanning-trees">Properties of DFS Spanning Trees</h2>
 <p>DFS visits every vertex within the starting vertex's connected component, so you can use it to find all connected components of a graph similar to BFS.</p>
 <p>However, unlike BFS, the DFS tree has the property that every non-tree edge joins a vertex to one of its ancestors/decedents in the tree. We can thus still use DFS to find cycles in a graph.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/depth%20first%20search.html">depth first search</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/graph%20traversal.html">graph traversal</a>, <a href="/tags/spanning%20trees.html">spanning trees</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/depth%20first%20search.html">depth first search</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/graph%20traversal.html">graph traversal</a>, <a href="/tags/spanning%20trees.html">spanning trees</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

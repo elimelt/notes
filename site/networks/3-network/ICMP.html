@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internet Control Message Protocol (ICMP)</title>
+    <title>Internet Control Message Protocol (ICMP) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/3-network/ICMP.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Internet Control Message Protocol (ICMP)">
+    <meta property="og:description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/ICMP.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Internet Control Message Protocol (ICMP)">
+    <meta name="twitter:description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="network protocols,icmp,ping,traceroute,routing,ttl">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Internet Control Message Protocol (ICMP)", "dateModified": "2025-02-11T20:48:36.989899", "description": "Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.", "articleSection": "Networks", "keywords": "network protocols,icmp,ping,traceroute,routing,ttl"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Internet Control Message Protocol (ICMP)
         </div>
-        <h1>Internet Control Message Protocol (ICMP)</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="internet-control-message-protocol-icmp">Internet Control Message Protocol (ICMP)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Internet Control Message Protocol (ICMP)</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:36.989899">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="internet-control-message-protocol-icmp">Internet Control Message Protocol (ICMP)</h1>
 <p>ICMP is a network layer protocol used to report errors and exchange control messages. It is also the basis for tools like <code>ping</code> and <code>traceroute</code>.</p>
 <p>One particularly useful ICMP message is the <strong>ICMP Redirect</strong>, which is used to inform a host that a better route exists for a given destination. When a host receives an ICMP Redirect, it updates its routing table to use the new route.</p>
 <h2 id="traceroute">Traceroute</h2>
@@ -195,8 +225,12 @@
 <p>After each packet, <code>traceroute</code> prints the IP address of the router and the time it took for the packet to reach it. This is repeated until the destination is reached.</p>
 <h2 id="ping">Ping</h2>
 <p><code>ping</code> works by sending ICMP Echo Request messages to the destination, and listening for ICMP Echo Reply messages. When the destination receives an Echo Request, it responds with an Echo Reply. This is repeated until the user stops the command.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/icmp.html">icmp</a>, <a href="/tags/network%20protocols.html">network protocols</a>, <a href="/tags/ping.html">ping</a>, <a href="/tags/routing.html">routing</a>, <a href="/tags/traceroute.html">traceroute</a>, <a href="/tags/ttl.html">ttl</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/icmp.html">icmp</a>, <a href="/tags/network%20protocols.html">network protocols</a>, <a href="/tags/ping.html">ping</a>, <a href="/tags/routing.html">routing</a>, <a href="/tags/traceroute.html">traceroute</a>, <a href="/tags/ttl.html">ttl</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

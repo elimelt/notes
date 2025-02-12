@@ -3,8 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pairing Algorithm</title>
+    <title>Pairing Algorithm | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program
+Given $s$ signups, form pairs for all the students based on the following constraints:
+-...">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/tmp/pairing-algorithm.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Pairing Algorithm">
+    <meta property="og:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program
+Given $s$ signups, form pairs for all the students based on the following constraints:
+-...">
+    <meta property="og:url" content="https://notes.elimelt.com/tmp/pairing-algorithm.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pairing Algorithm">
+    <meta name="twitter:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program
+Given $s$ signups, form pairs for all the students based on the following constraints:
+-...">
+
+    <!-- Keywords from tags -->
     
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Pairing Algorithm", "dateModified": "2024-03-22T16:17:00.468784", "description": "Formalizing the Pairing Algorithm for the SWECC Mock Interview Program\nGiven $s$ signups, form pairs for all the students based on the following constraints:\n-..."}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +203,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » Pairing Algorithm
         </div>
-        <h1>Pairing Algorithm</h1>
-        <div class="meta">
-            <span>Last modified: 2024-03-22</span>
-            
-        </div>
-        <div class="content">
-            <h2 id="formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program">Formalizing the Pairing Algorithm for the SWECC Mock Interview Program</h2>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Pairing Algorithm</h1>
+            <div class="meta">
+                <time datetime="2024-03-22T16:17:00.468784">
+                    Last modified: 2024-03-22
+                </time>
+                
+            </div>
+            <div class="content">
+                <h2 id="formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program">Formalizing the Pairing Algorithm for the SWECC Mock Interview Program</h2>
 <p>Given $s$ signups, form pairs for all the students based on the following constraints:
 - Each student should be paired with exactly one other student. If there are an odd number of students, one student will be left unpaired.
 - A valid pair <strong>must</strong> have at least two 1-hour time slots in common in their availability. The number of common time slots is factored into the score of the pair.
@@ -289,8 +325,12 @@ def next_pair(F_final):
     unpaired.remove(pairs[-1][1])
   return pairs
   ```</p>
-        </div>
-        
+            </div>
+            
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

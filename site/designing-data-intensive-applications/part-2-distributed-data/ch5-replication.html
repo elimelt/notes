@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Replication Strategies in Distributed Data Systems</title>
+    <title>Replication Strategies in Distributed Data Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Replication Strategies in Distributed Data Systems">
+    <meta property="og:description" content="This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.">
+    <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-2-distributed-data/ch5-replication.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Replication Strategies in Distributed Data Systems">
+    <meta name="twitter:description" content="This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="data replication,leader-follower model,synchronous vs asynchronous,failover,replication logs">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Replication Strategies in Distributed Data Systems", "dateModified": "2025-01-01T04:30:23.157407", "description": "This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.", "articleSection": "Distributed Systems", "keywords": "data replication,leader-follower model,synchronous vs asynchronous,failover,replication logs"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Replication Strategies in Distributed Data Systems
         </div>
-        <h1>Replication Strategies in Distributed Data Systems</h1>
-        <div class="meta">
-            <span>Last modified: 2025-01-01</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="chapter-5">Chapter 5</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Replication Strategies in Distributed Data Systems</h1>
+            <div class="meta">
+                <time datetime="2025-01-01T04:30:23.157407">
+                    Last modified: 2025-01-01
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="chapter-5">Chapter 5</h1>
 <h2 id="replication">Replication</h2>
 <p><strong>Replication</strong> is the process of keeping a copy of the same data on multiple machines that are connected via a network. Replication is important for a few reasons:</p>
 <ul>
@@ -258,8 +288,12 @@
 </ul>
 <p>With multi-row transactions, log contains entry for all rows, as well as entry for transaction commit (MySQL binlog uses this approach)</p>
 <p>Logical logs decouple the replication from the storage engine, allowing better compatibility between versions. Also allows integrations with external services (e.g. Kafka, Elasticsearch, etc.)</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/data%20replication.html">data replication</a>, <a href="/tags/failover.html">failover</a>, <a href="/tags/leader-follower%20model.html">leader-follower model</a>, <a href="/tags/replication%20logs.html">replication logs</a>, <a href="/tags/synchronous%20vs%20asynchronous.html">synchronous vs asynchronous</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/data%20replication.html">data replication</a>, <a href="/tags/failover.html">failover</a>, <a href="/tags/leader-follower%20model.html">leader-follower model</a>, <a href="/tags/replication%20logs.html">replication logs</a>, <a href="/tags/synchronous%20vs%20asynchronous.html">synchronous vs asynchronous</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

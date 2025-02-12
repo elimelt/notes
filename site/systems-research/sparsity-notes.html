@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faster Causal Self Attention</title>
+    <title>Faster Causal Self Attention | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/systems-research/sparsity-notes.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Faster Causal Self Attention">
+    <meta property="og:description" content="Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.">
+    <meta property="og:url" content="https://notes.elimelt.com/systems-research/sparsity-notes.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Faster Causal Self Attention">
+    <meta name="twitter:description" content="Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="machine learning,attention mechanism,transformer,sparse attention">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Faster Causal Self Attention", "dateModified": "2025-02-11T20:50:25.566997", "description": "Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.", "articleSection": "Machine Learning", "keywords": "machine learning,attention mechanism,transformer,sparse attention"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning.html">Machine Learning</a> » Faster Causal Self Attention
         </div>
-        <h1>Faster Causal Self Attention</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/machine%20learning.html">Machine Learning</a></span>
-        </div>
-        <div class="content">
-            <h1 id="attention-sparsity-review">Attention Sparsity Review</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Faster Causal Self Attention</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:50:25.566997">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/machine%20learning.html">Machine Learning</a></span>
+            </div>
+            <div class="content">
+                <h1 id="attention-sparsity-review">Attention Sparsity Review</h1>
 <h2 id="faster-causal-self-attention">Faster Causal Self Attention</h2>
 <p>This paper presents an important advancement in making transformer attention mechanisms more efficient for processing long sequences. Here are the key points:</p>
 <ol>
@@ -302,8 +332,12 @@ The key technical achievement is modifying FlashAttention to handle non-triangul
 <li>Could explore non-linear elastic rules</li>
 </ol>
 <p>The paper demonstrates that automatically discovering heterogeneous attention patterns can significantly improve both the efficiency and capabilities of LLMs in handling long contexts, while maintaining model performance.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/attention%20mechanism.html">attention mechanism</a>, <a href="/tags/machine%20learning.html">machine learning</a>, <a href="/tags/sparse%20attention.html">sparse attention</a>, <a href="/tags/transformer.html">transformer</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/attention%20mechanism.html">attention mechanism</a>, <a href="/tags/machine%20learning.html">machine learning</a>, <a href="/tags/sparse%20attention.html">sparse attention</a>, <a href="/tags/transformer.html">transformer</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

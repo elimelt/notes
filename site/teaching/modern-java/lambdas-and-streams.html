@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Soft Introduction to Java Streams and Lambdas</title>
+    <title>A Soft Introduction to Java Streams and Lambdas | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/teaching/modern-java/lambdas-and-streams.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="A Soft Introduction to Java Streams and Lambdas">
+    <meta property="og:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta property="og:url" content="https://notes.elimelt.com/teaching/modern-java/lambdas-and-streams.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="A Soft Introduction to Java Streams and Lambdas">
+    <meta name="twitter:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="java,streams,lambdas,functional programming,declarative programming,collections,filtering,iteration">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "A Soft Introduction to Java Streams and Lambdas", "dateModified": "2025-02-11T20:50:31.716179", "description": "Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.", "articleSection": "Software Engineering", "keywords": "java,streams,lambdas,functional programming,declarative programming,collections,filtering,iteration"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » A Soft Introduction to Java Streams and Lambdas
         </div>
-        <h1>A Soft Introduction to Java Streams and Lambdas</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/software%20engineering.html">Software Engineering</a></span>
-        </div>
-        <div class="content">
-            <h1 id="a-soft-introduction-to-java-streams-and-lambdas">A Soft Introduction to Java Streams and Lambdas</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>A Soft Introduction to Java Streams and Lambdas</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:50:31.716179">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/software%20engineering.html">Software Engineering</a></span>
+            </div>
+            <div class="content">
+                <h1 id="a-soft-introduction-to-java-streams-and-lambdas">A Soft Introduction to Java Streams and Lambdas</h1>
 <h2 id="motivation">Motivation</h2>
 <p>If you've been programming in Java for a while (perhaps you're coming out of the 12x/14x series at UW), you're probably familiar with the regular <em>imperative</em> style of programming using loops and conditionals. There's nothing wrong with this, but often times, you'll find yourself writing a lot of code for simple operations.</p>
 <p>For example, consider the following code snippet:</p>
@@ -328,8 +358,12 @@ for (User user : users) {
 Map&lt;String, List&lt;User&gt;&gt; usersByRole = users.stream()
     .collect(Collectors.groupingBy(User::getRole));
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/collections.html">collections</a>, <a href="/tags/declarative%20programming.html">declarative programming</a>, <a href="/tags/filtering.html">filtering</a>, <a href="/tags/functional%20programming.html">functional programming</a>, <a href="/tags/iteration.html">iteration</a>, <a href="/tags/java.html">java</a>, <a href="/tags/lambdas.html">lambdas</a>, <a href="/tags/streams.html">streams</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/collections.html">collections</a>, <a href="/tags/declarative%20programming.html">declarative programming</a>, <a href="/tags/filtering.html">filtering</a>, <a href="/tags/functional%20programming.html">functional programming</a>, <a href="/tags/iteration.html">iteration</a>, <a href="/tags/java.html">java</a>, <a href="/tags/lambdas.html">lambdas</a>, <a href="/tags/streams.html">streams</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

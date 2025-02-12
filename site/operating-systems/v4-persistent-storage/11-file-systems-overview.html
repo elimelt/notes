@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Systems, Introduction and Overview</title>
+    <title>File Systems, Introduction and Overview | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of file systems, a key component of operating systems that provides a standardized interface for managing nonvolatile storage. Discusses the file system abstraction, including concepts like volumes and links, and how it enables efficient organization and access of data on storage devices.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v4-persistent-storage/11-file-systems-overview.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="File Systems, Introduction and Overview">
+    <meta property="og:description" content="Covers the implementation of file systems, a key component of operating systems that provides a standardized interface for managing nonvolatile storage. Discusses the file system abstraction, including concepts like volumes and links, and how it enables efficient organization and access of data on storage devices.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v4-persistent-storage/11-file-systems-overview.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="File Systems, Introduction and Overview">
+    <meta name="twitter:description" content="Covers the implementation of file systems, a key component of operating systems that provides a standardized interface for managing nonvolatile storage. Discusses the file system abstraction, including concepts like volumes and links, and how it enables efficient organization and access of data on storage devices.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="file systems,nonvolatile storage,metadata,executable files,file streams">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "File Systems, Introduction and Overview", "dateModified": "2025-02-11T20:50:20.859971", "description": "Covers the implementation of file systems, a key component of operating systems that provides a standardized interface for managing nonvolatile storage. Discusses the file system abstraction, including concepts like volumes and links, and how it enables efficient organization and access of data on storage devices.", "articleSection": "Operating Systems", "keywords": "file systems,nonvolatile storage,metadata,executable files,file streams"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » File Systems, Introduction and Overview
         </div>
-        <h1>File Systems, Introduction and Overview</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="file-systems-introduction-and-overview">File Systems: Introduction and Overview</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>File Systems, Introduction and Overview</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:50:20.859971">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="file-systems-introduction-and-overview">File Systems: Introduction and Overview</h1>
 <p>What do we need in a filesystem?</p>
 <ul>
 <li><strong>Reliability</strong></li>
@@ -215,8 +245,12 @@
 <p>The mapping between a name and file is called a <strong>hard link</strong>. File systems that allow multiple hard links aren't a tree, and are instead usually a directed acyclic graph (DAG). A <strong>symbolic link</strong> is a mapping from a name to another file name. These are useful since they allow you to reference files that are stored on other systems/volumes. Some OS's support features managed outside of the file system. Windows has <strong>shortcuts</strong>, which are really just files that Windows recognizes and redirects from. MacOS has <strong>aliases</strong>, which are similar to symbolic links, but also refactor themselves when the target file is moved.</p>
 <h4 id="volumes">Volumes</h4>
 <p>A <strong>volume</strong> is a collection of physical storage resources that form a logical storage device. In the simplest case, a volume is a single disk. However, a disk can be partitioned into multiple volumes, and a single volume can be made of multiple disks.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/executable%20files.html">executable files</a>, <a href="/tags/file%20streams.html">file streams</a>, <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/metadata.html">metadata</a>, <a href="/tags/nonvolatile%20storage.html">nonvolatile storage</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/executable%20files.html">executable files</a>, <a href="/tags/file%20streams.html">file streams</a>, <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/metadata.html">metadata</a>, <a href="/tags/nonvolatile%20storage.html">nonvolatile storage</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

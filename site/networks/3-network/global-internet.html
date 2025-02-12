@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Global Internet</title>
+    <title>The Global Internet | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/3-network/global-internet.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="The Global Internet">
+    <meta property="og:description" content="Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/global-internet.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="The Global Internet">
+    <meta name="twitter:description" content="Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="routing protocols,autonomous systems,inter-domain routing,end-user sites,service providers">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Global Internet", "dateModified": "2025-02-11T20:47:57.199213", "description": "Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.", "articleSection": "Networks", "keywords": "routing protocols,autonomous systems,inter-domain routing,end-user sites,service providers"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » The Global Internet
         </div>
-        <h1>The Global Internet</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="the-global-internet">The Global Internet</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>The Global Internet</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:47:57.199213">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="the-global-internet">The Global Internet</h1>
 <p>It isn't possible to scale to the billions of devices with routing protocols like RIP and OSPF. Both of these would require routers to maintain a complete list of all the networks in the internet, which isn't feasible.</p>
 <p>The modern internet is mainly composed of <em>end-user sites</em> and <em>service providers</em>. The end-user sites are typically collections of devices that are connected to the internet through either a single IP address (NAT in home networks), or switched ethernet in enterprise LAN settings. The service providers are the companies that provide the infrastructure for the internet, and are responsible for routing traffic between end-user sites. Service providers have many high performance routers in metro areas, connected to eachother and other service providers through high-speed links.</p>
 <h2 id="routing-areas">Routing Areas</h2>
@@ -195,8 +225,12 @@
 <h2 id="inter-domain-routing">Inter-Domain Routing</h2>
 <p>The internet is a collection of interconnected ASes, which are independently managed and operated organizations. The routers in an AS are responsible for routing traffic within the AS, and the border routers are responsible for routing traffic between ASes. The protocol used to route traffic between ASes is called <strong>BGP</strong> (Border Gateway Protocol).</p>
 <p>See BGP.md</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/autonomous%20systems.html">autonomous systems</a>, <a href="/tags/end-user%20sites.html">end-user sites</a>, <a href="/tags/inter-domain%20routing.html">inter-domain routing</a>, <a href="/tags/routing%20protocols.html">routing protocols</a>, <a href="/tags/service%20providers.html">service providers</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/autonomous%20systems.html">autonomous systems</a>, <a href="/tags/end-user%20sites.html">end-user sites</a>, <a href="/tags/inter-domain%20routing.html">inter-domain routing</a>, <a href="/tags/routing%20protocols.html">routing protocols</a>, <a href="/tags/service%20providers.html">service providers</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

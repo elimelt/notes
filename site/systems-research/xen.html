@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xen and the Art of Virtualization</title>
+    <title>Xen and the Art of Virtualization | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Paper review of Xen and the Art of Virtualization">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/systems-research/xen.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Xen and the Art of Virtualization">
+    <meta property="og:description" content="Paper review of Xen and the Art of Virtualization">
+    <meta property="og:url" content="https://notes.elimelt.com/systems-research/xen.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Xen and the Art of Virtualization">
+    <meta name="twitter:description" content="Paper review of Xen and the Art of Virtualization">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="virtualization,hypervisor,xen,operating system,systems">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Xen and the Art of Virtualization", "dateModified": "2025-02-11T16:45:28.561514", "description": "Paper review of Xen and the Art of Virtualization", "articleSection": "Systems", "keywords": "virtualization,hypervisor,xen,operating system,systems"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » Xen and the Art of Virtualization
         </div>
-        <h1>Xen and the Art of Virtualization</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/systems.html">Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="source"><a href="https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf">source</a></h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Xen and the Art of Virtualization</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:45:28.561514">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/systems.html">Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="source"><a href="https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf">source</a></h1>
 <h6 id="xen-and-the-art-of-virtualization">Xen and the Art of Virtualization</h6>
 <hr />
 <h3 id="what-is-the-problem">What is the Problem?</h3>
@@ -219,8 +249,12 @@
 <li>Is there a way to automatically/programmatically port guest OSes to be hypervisor-aware? Is there some way we could make implementing a new OS conform to an interface that complies with the hypervisor automatically?</li>
 <li>Has there been any work in detecting "hot spots" for routines that that are called a lot, for which we could automatically register a fast handler in the hypervisor?</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/hypervisor.html">hypervisor</a>, <a href="/tags/operating%20system.html">operating system</a>, <a href="/tags/systems.html">systems</a>, <a href="/tags/virtualization.html">virtualization</a>, <a href="/tags/xen.html">xen</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/hypervisor.html">hypervisor</a>, <a href="/tags/operating%20system.html">operating system</a>, <a href="/tags/systems.html">systems</a>, <a href="/tags/virtualization.html">virtualization</a>, <a href="/tags/xen.html">xen</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

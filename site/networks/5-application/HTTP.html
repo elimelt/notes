@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyper Text Transfer Protocol (HTTP)</title>
+    <title>Hyper Text Transfer Protocol (HTTP) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the Hypertext Transfer Protocol (HTTP), a fundamental protocol for the World Wide Web. Discusses the process of fetching web pages, including the distinction between static and dynamic content, the various HTTP methods, and the status codes used to communicate the result of a request. Examines performance considerations, such as page load time, HTTP/1.0, and techniques for decreasing load times, as well as the role of HTTP caching and proxies.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/5-application/HTTP.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Hyper Text Transfer Protocol (HTTP)">
+    <meta property="og:description" content="Covers the implementation of the Hypertext Transfer Protocol (HTTP), a fundamental protocol for the World Wide Web. Discusses the process of fetching web pages, including the distinction between static and dynamic content, the various HTTP methods, and the status codes used to communicate the result of a request. Examines performance considerations, such as page load time, HTTP/1.0, and techniques for decreasing load times, as well as the role of HTTP caching and proxies.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/5-application/HTTP.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Hyper Text Transfer Protocol (HTTP)">
+    <meta name="twitter:description" content="Covers the implementation of the Hypertext Transfer Protocol (HTTP), a fundamental protocol for the World Wide Web. Discusses the process of fetching web pages, including the distinction between static and dynamic content, the various HTTP methods, and the status codes used to communicate the result of a request. Examines performance considerations, such as page load time, HTTP/1.0, and techniques for decreasing load times, as well as the role of HTTP caching and proxies.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="http,tcp,dns,web pages,static web pages,dynamic web pages,http methods,http status codes">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Hyper Text Transfer Protocol (HTTP)", "dateModified": "2025-02-11T20:48:33.856962", "description": "Covers the implementation of the Hypertext Transfer Protocol (HTTP), a fundamental protocol for the World Wide Web. Discusses the process of fetching web pages, including the distinction between static and dynamic content, the various HTTP methods, and the status codes used to communicate the result of a request. Examines performance considerations, such as page load time, HTTP/1.0, and techniques for decreasing load times, as well as the role of HTTP caching and proxies.", "articleSection": "Networks", "keywords": "http,tcp,dns,web pages,static web pages,dynamic web pages,http methods,http status codes"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Hyper Text Transfer Protocol (HTTP)
         </div>
-        <h1>Hyper Text Transfer Protocol (HTTP)</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="hyper-text-transfer-protocol-http">Hyper Text Transfer Protocol (HTTP)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Hyper Text Transfer Protocol (HTTP)</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:33.856962">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="hyper-text-transfer-protocol-http">Hyper Text Transfer Protocol (HTTP)</h1>
 <p>You can think of a web page as a set of related HTTP transactions. Each transaction consists of a request and a response, which runs on TCP (typically on port 80).</p>
 <h2 id="fetching-a-web-page">Fetching a Web Page</h2>
 <pre><code class="language-plaintext">protocol://host:port/path
@@ -316,8 +346,12 @@
 <li>The proxy returns the resource to the client.</li>
 </ol>
 <p>This places an intermediary between the pool of clients and the server, which can be useful for load balancing, security, and privacy. Has the added benefit of being able to improve physical locality of data to be closer to clients while in the cache. Benefits are limited by secure/dynamic content, and the "long tail" of resources that are rarely accessed.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/dns.html">dns</a>, <a href="/tags/dynamic%20web%20pages.html">dynamic web pages</a>, <a href="/tags/http.html">http</a>, <a href="/tags/http%20methods.html">http methods</a>, <a href="/tags/http%20status%20codes.html">http status codes</a>, <a href="/tags/static%20web%20pages.html">static web pages</a>, <a href="/tags/tcp.html">tcp</a>, <a href="/tags/web%20pages.html">web pages</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/dns.html">dns</a>, <a href="/tags/dynamic%20web%20pages.html">dynamic web pages</a>, <a href="/tags/http.html">http</a>, <a href="/tags/http%20methods.html">http methods</a>, <a href="/tags/http%20status%20codes.html">http status codes</a>, <a href="/tags/static%20web%20pages.html">static web pages</a>, <a href="/tags/tcp.html">tcp</a>, <a href="/tags/web%20pages.html">web pages</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

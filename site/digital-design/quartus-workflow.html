@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developing FPGA Designs with Quartus and ModelSim</title>
+    <title>Developing FPGA Designs with Quartus and ModelSim | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Describes a structured approach to testing and verifying digital circuits using Quartus and ModelSim.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/digital-design/quartus-workflow.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Developing FPGA Designs with Quartus and ModelSim">
+    <meta property="og:description" content="Describes a structured approach to testing and verifying digital circuits using Quartus and ModelSim.">
+    <meta property="og:url" content="https://notes.elimelt.com/digital-design/quartus-workflow.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Developing FPGA Designs with Quartus and ModelSim">
+    <meta name="twitter:description" content="Describes a structured approach to testing and verifying digital circuits using Quartus and ModelSim.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="quartus,modelsim,verilog,testing process,modular design">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Developing FPGA Designs with Quartus and ModelSim", "dateModified": "2025-02-11T16:42:51.458632", "description": "Describes a structured approach to testing and verifying digital circuits using Quartus and ModelSim.", "articleSection": "Hardware", "keywords": "quartus,modelsim,verilog,testing process,modular design"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Developing FPGA Designs with Quartus and ModelSim
         </div>
-        <h1>Developing FPGA Designs with Quartus and ModelSim</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
-        </div>
-        <div class="content">
-            <ul>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Developing FPGA Designs with Quartus and ModelSim</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:51.458632">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
+            </div>
+            <div class="content">
+                <ul>
 <li>Make a copy of a previous lab directory to build off of what you already have (Quartus project file, ModelSim files) while keeping the old design as a reference.</li>
 <li>For each module you need to write:</li>
 <li>Create and populate two new files, one for the module definition and one for that module's test bench.</li>
@@ -198,8 +228,12 @@
 <li>When it complains about a missing *_wave.do file, set up the Wave pane by drag-and dropping signals from the Object pane. Save the waveform setup using File -&gt; "Save Formatting", then perform "do runlab.do" again.</li>
 <li>Check the simulation results, correct errors, and iterate until the module works as intended.This process has two major features: First, it has you test every module before you work on the larger  modules that call this unit. This will significantly simplify the design process. Second, you have a separate <em>_wave.do file for each Verilog file. This keeps a formatted test window for each module, which can help when you discover a fresh bug in a larger design later on. You can always go back and test a submodule by simply editing the runlab.do file to point to the testbench and </em>_wave.do file for the unit you want to test</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/modelsim.html">modelsim</a>, <a href="/tags/modular%20design.html">modular design</a>, <a href="/tags/quartus.html">quartus</a>, <a href="/tags/testing%20process.html">testing process</a>, <a href="/tags/verilog.html">verilog</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/modelsim.html">modelsim</a>, <a href="/tags/modular%20design.html">modular design</a>, <a href="/tags/quartus.html">quartus</a>, <a href="/tags/testing%20process.html">testing process</a>, <a href="/tags/verilog.html">verilog</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divide and Conquer Algorithms</title>
+    <title>Divide and Conquer Algorithms | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/cheatsheets/algorithms/divide-and-conquer.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Divide and Conquer Algorithms">
+    <meta property="og:description" content="A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.">
+    <meta property="og:url" content="https://notes.elimelt.com/cheatsheets/algorithms/divide-and-conquer.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Divide and Conquer Algorithms">
+    <meta name="twitter:description" content="A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="divide and conquer,master theorem,root finding,bisector algorithm,kth smallest element">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Divide and Conquer Algorithms", "dateModified": "2025-02-11T16:41:49.585274", "description": "A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.", "articleSection": "Algorithms", "keywords": "divide and conquer,master theorem,root finding,bisector algorithm,kth smallest element"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Divide and Conquer Algorithms
         </div>
-        <h1>Divide and Conquer Algorithms</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="divide-and-conquer">Divide and Conquer</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Divide and Conquer Algorithms</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:41:49.585274">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="divide-and-conquer">Divide and Conquer</h1>
 <h2 id="master-theorem">Master Theorem</h2>
 <p>Given any recurrence of the form $T(n) = a T(\frac{n}{b}) + c n^k$ for all $n &gt; b$, we have:</p>
 <ul>
@@ -222,8 +252,12 @@
 <li>Else, if $k \le |S_{&lt;}| + |S_{=}|$, return $w$</li>
 <li>Else, recurse on $f(S_{&gt;}, k - |S_{&lt;}| - |S_{=}|)$</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bisector%20algorithm.html">bisector algorithm</a>, <a href="/tags/divide%20and%20conquer.html">divide and conquer</a>, <a href="/tags/kth%20smallest%20element.html">kth smallest element</a>, <a href="/tags/master%20theorem.html">master theorem</a>, <a href="/tags/root%20finding.html">root finding</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bisector%20algorithm.html">bisector algorithm</a>, <a href="/tags/divide%20and%20conquer.html">divide and conquer</a>, <a href="/tags/kth%20smallest%20element.html">kth smallest element</a>, <a href="/tags/master%20theorem.html">master theorem</a>, <a href="/tags/root%20finding.html">root finding</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

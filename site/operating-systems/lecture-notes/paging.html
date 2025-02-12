@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Memory and Paging</title>
+    <title>Virtual Memory and Paging | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/paging.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Virtual Memory and Paging">
+    <meta property="og:description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/paging.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Virtual Memory and Paging">
+    <meta name="twitter:description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="virtual memory,paging,fragmentation,page table,address translation">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Virtual Memory and Paging", "dateModified": "2025-02-11T20:49:03.395139", "description": "Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.", "articleSection": "Operating Systems", "keywords": "virtual memory,paging,fragmentation,page table,address translation"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Virtual Memory and Paging
         </div>
-        <h1>Virtual Memory and Paging</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="virtual-memory-and-paging">Virtual Memory and Paging</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Virtual Memory and Paging</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:03.395139">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="virtual-memory-and-paging">Virtual Memory and Paging</h1>
 <p>Use pages to map virtual memory to physical memory. This prevents <strong>external fragmentation</strong> by dividing memory into fixed-size pages, and <strong>internal fragmentation</strong> by making the units of allocation smaller.</p>
 <h3 id="fragmentation">Fragmentation</h3>
 <ul>
@@ -362,8 +392,12 @@ $$</p>
 <li><strong>Hard page fault</strong>: when a page is not in memory, and the OS must read it from disk/backend storage</li>
 <li><strong>Soft page fault</strong>: when a page is not in memory, but the OS can find it in the page file, and bring it into memory without reading from the backend storage</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/address%20translation.html">address translation</a>, <a href="/tags/fragmentation.html">fragmentation</a>, <a href="/tags/page%20table.html">page table</a>, <a href="/tags/paging.html">paging</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/address%20translation.html">address translation</a>, <a href="/tags/fragmentation.html">fragmentation</a>, <a href="/tags/page%20table.html">page table</a>, <a href="/tags/paging.html">paging</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

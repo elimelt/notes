@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 3 Questions</title>
+    <title>Lab 3 Questions | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and the use of the shell and pipe operator. Includes 10 specific questions related to these technical areas.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/section-notes/lab-3-questions.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Lab 3 Questions">
+    <meta property="og:description" content="Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and the use of the shell and pipe operator. Includes 10 specific questions related to these technical areas.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/section-notes/lab-3-questions.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Lab 3 Questions">
+    <meta name="twitter:description" content="Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and the use of the shell and pipe operator. Includes 10 specific questions related to these technical areas.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="malloc,free,sbrk,heap,memory allocation,process management,shell,pipe operator">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Lab 3 Questions", "dateModified": "2025-02-11T20:49:23.471098", "description": "Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and the use of the shell and pipe operator. Includes 10 specific questions related to these technical areas.", "articleSection": "Operating Systems", "keywords": "malloc,free,sbrk,heap,memory allocation,process management,shell,pipe operator"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Lab 3 Questions
         </div>
-        <h1>Lab 3 Questions</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="lab-3-questions">Lab 3 Questions</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Lab 3 Questions</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:23.471098">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="lab-3-questions">Lab 3 Questions</h1>
 <h2 id="question-1">Question #1</h2>
 <p><em>Q:</em> Why might an application prefer using <code>malloc</code> and <code>free</code> instead of using <code>sbrk</code> directly?</p>
 <p><em>A:</em> Malloc and free are higher-level and don't require the user to think about the details of the heap. Instead of needing to consider the current top of the heap, and how the memory you request is laid out contiguously, malloc and free handle all of that for you. Thus, user programs are able to apply more complex optimizations/strategies for memory allocation like first and best fit, as well as coalescing free blocks to reduce fragmentation, without having to manage the added complexity.</p>
@@ -244,8 +274,12 @@
 <li>struct vpage_info* vpi = va2vpage_info(vr, addr) in trap causes another page fault trap, this time with addr == 24</li>
 <li>infinite loop on above line with addr == 24</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/free.html">free</a>, <a href="/tags/heap.html">heap</a>, <a href="/tags/malloc.html">malloc</a>, <a href="/tags/memory%20allocation.html">memory allocation</a>, <a href="/tags/pipe%20operator.html">pipe operator</a>, <a href="/tags/process%20management.html">process management</a>, <a href="/tags/sbrk.html">sbrk</a>, <a href="/tags/shell.html">shell</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/free.html">free</a>, <a href="/tags/heap.html">heap</a>, <a href="/tags/malloc.html">malloc</a>, <a href="/tags/memory%20allocation.html">memory allocation</a>, <a href="/tags/pipe%20operator.html">pipe operator</a>, <a href="/tags/process%20management.html">process management</a>, <a href="/tags/sbrk.html">sbrk</a>, <a href="/tags/shell.html">shell</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

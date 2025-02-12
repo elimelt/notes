@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divide and Conquer Algorithm Analysis with Implementation Examples</title>
+    <title>Divide and Conquer Algorithm Analysis with Implementation Examples | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A comprehensive examination of divide and conquer algorithmic strategies, focusing on their implementation and analysis. The document covers theoretical foundations with mathematical proofs, practical examples including bisection method and closest pair problem, and includes Python implementations demonstrating these concepts.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/divide-and-conquer.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Divide and Conquer Algorithm Analysis with Implementation Examples">
+    <meta property="og:description" content="A comprehensive examination of divide and conquer algorithmic strategies, focusing on their implementation and analysis. The document covers theoretical foundations with mathematical proofs, practical examples including bisection method and closest pair problem, and includes Python implementations demonstrating these concepts.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/divide-and-conquer.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Divide and Conquer Algorithm Analysis with Implementation Examples">
+    <meta name="twitter:description" content="A comprehensive examination of divide and conquer algorithmic strategies, focusing on their implementation and analysis. The document covers theoretical foundations with mathematical proofs, practical examples including bisection method and closest pair problem, and includes Python implementations demonstrating these concepts.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="divide and conquer,algorithmic complexity,recursive algorithms,computational-geometry">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Divide and Conquer Algorithm Analysis with Implementation Examples", "dateModified": "2025-02-11T18:53:35.000784", "description": "A comprehensive examination of divide and conquer algorithmic strategies, focusing on their implementation and analysis. The document covers theoretical foundations with mathematical proofs, practical examples including bisection method and closest pair problem, and includes Python implementations demonstrating these concepts.", "articleSection": "Algorithms", "keywords": "divide and conquer,algorithmic complexity,recursive algorithms,computational-geometry"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Divide and Conquer Algorithm Analysis with Implementation Examples
         </div>
-        <h1>Divide and Conquer Algorithm Analysis with Implementation Examples</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="divide-and-conquer">Divide and Conquer</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Divide and Conquer Algorithm Analysis with Implementation Examples</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T18:53:35.000784">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="divide-and-conquer">Divide and Conquer</h1>
 <p>Reduce problem to multiple sub-problems. While in induction, you typically only reduce your problem size by 1, with divide and conquer it is more common to reduce to some constant fraction of your original problem size. After recursively solving each sub-problem, merge the solutions.</p>
 <p><strong>Examples</strong>: Merge-sort, Binary Search, Strassen's Algorithm</p>
 <h2 id="why-balanced-partitioning">Why Balanced Partitioning?</h2>
@@ -336,8 +366,12 @@ def closest_points(P):
   return cp_recursive(sorted(P, key = lambda x: x[0]))
 
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/algorithmic%20complexity.html">algorithmic complexity</a>, <a href="/tags/computational-geometry.html">computational-geometry</a>, <a href="/tags/divide%20and%20conquer.html">divide and conquer</a>, <a href="/tags/recursive%20algorithms.html">recursive algorithms</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/algorithmic%20complexity.html">algorithmic complexity</a>, <a href="/tags/computational-geometry.html">computational-geometry</a>, <a href="/tags/divide%20and%20conquer.html">divide and conquer</a>, <a href="/tags/recursive%20algorithms.html">recursive algorithms</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Files and Directories</title>
+    <title>Files and Directories | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v4-persistent-storage/13-files-and-directories.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Files and Directories">
+    <meta property="og:description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v4-persistent-storage/13-files-and-directories.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Files and Directories">
+    <meta name="twitter:description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="directories,index structures,free space maps,locality heuristics,file systems,persistence,performance">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Files and Directories", "dateModified": "2025-02-11T20:49:55.166623", "description": "Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.", "articleSection": "Operating Systems", "keywords": "directories,index structures,free space maps,locality heuristics,file systems,persistence,performance"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Files and Directories
         </div>
-        <h1>Files and Directories</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="chapter-13-files-and-directories">Chapter 13 - Files and Directories</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Files and Directories</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:55.166623">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="chapter-13-files-and-directories">Chapter 13 - Files and Directories</h1>
 <p>Need to achieve the following:</p>
 <ul>
 <li><strong>performance</strong></li>
@@ -260,8 +290,12 @@
 <p><strong>Unix Fast File System (FFS)</strong>: Uses a tree-based multi-level index, and many locality heuristics to achieve good spacial locality. Linux's ext2 and ext3 are based on FFS.</p>
 <p><strong>NTFS</strong>: Uses a tree-based structure that is more flexible than FFS's indexing scheme. Indexes variable sized extents* indead of individual blocks. NTFS is still used in Windows, and its techniques are used in many other modern file systems (ext4, XFS, HFS, HFS+).</p>
 <p><strong>ZFS</strong>: Uses <strong>copy-on-write</strong>, writing new versions of files to free disk space instead of overwriting old versions. This optimizes for reliability and write performance</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/directories.html">directories</a>, <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/free%20space%20maps.html">free space maps</a>, <a href="/tags/index%20structures.html">index structures</a>, <a href="/tags/locality%20heuristics.html">locality heuristics</a>, <a href="/tags/performance.html">performance</a>, <a href="/tags/persistence.html">persistence</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/directories.html">directories</a>, <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/free%20space%20maps.html">free space maps</a>, <a href="/tags/index%20structures.html">index structures</a>, <a href="/tags/locality%20heuristics.html">locality heuristics</a>, <a href="/tags/performance.html">performance</a>, <a href="/tags/persistence.html">persistence</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

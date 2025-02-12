@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clock Synchronization for Distributed Systems</title>
+    <title>Clock Synchronization for Distributed Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This response provides a solution to the problem of clock synchronization in distributed systems using physical clocks. It explains the concept of unpredictable delays and how to synchronize clocks in the forward direction.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/ordering-events-in-distributed-systems.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Clock Synchronization for Distributed Systems">
+    <meta property="og:description" content="This response provides a solution to the problem of clock synchronization in distributed systems using physical clocks. It explains the concept of unpredictable delays and how to synchronize clocks in the forward direction.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/ordering-events-in-distributed-systems.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Clock Synchronization for Distributed Systems">
+    <meta name="twitter:description" content="This response provides a solution to the problem of clock synchronization in distributed systems using physical clocks. It explains the concept of unpredictable delays and how to synchronize clocks in the forward direction.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="distributed systems,clock synchronization,physical clocks">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Clock Synchronization for Distributed Systems", "dateModified": "2025-02-11T16:42:07.879646", "description": "This response provides a solution to the problem of clock synchronization in distributed systems using physical clocks. It explains the concept of unpredictable delays and how to synchronize clocks in the forward direction.", "articleSection": "Distributed Systems", "keywords": "distributed systems,clock synchronization,physical clocks"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Clock Synchronization for Distributed Systems
         </div>
-        <h1>Clock Synchronization for Distributed Systems</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="time-clocks-and-the-ordering-of-events-in-a-distributed-system">Time, Clocks, and the Ordering of Events in a Distributed System</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Clock Synchronization for Distributed Systems</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.879646">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="time-clocks-and-the-ordering-of-events-in-a-distributed-system">Time, Clocks, and the Ordering of Events in a Distributed System</h1>
 <p><a href="https://amturing.acm.org/p558-lamport.pdf">reading</a></p>
 <h2 id="introduction">Introduction</h2>
 <p>It would be convenient if we could order events in a distributed system, but it is impossible to do so in a way that is consistent with the order in which they actually occurred. However, we can define a partial ordering of events that is consistent with the order in which they occurred, and can extend this to a total ordering of events that is consistent with the partial ordering.</p>
@@ -286,8 +316,12 @@ $$</p>
 <li>$\forall i$ if $P_i$ does not receive a message at physical time $t$, then $C_i$ is differentiable at $t$ and $\frac{dC_i(t)}{dt} &gt; 0$.</li>
 <li>If $P_i$ sends a message $,$ at physical time $t$, then $m$ contains a timestamp $T_m = C_i(t)$. Upon receiving a message $m$ at physical time $t'$, $P_j$ sets $C_j(t') = \max(\lim_{\delta \to 0} C_j(t' - \delta), T_m + \mu_m)$.</li>
 </ol>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/clock%20synchronization.html">clock synchronization</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/physical%20clocks.html">physical clocks</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/clock%20synchronization.html">clock synchronization</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/physical%20clocks.html">physical clocks</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

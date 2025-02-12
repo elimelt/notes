@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Phase Commit</title>
+    <title>Two Phase Commit | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the concept of two phase commit in distributed systems and its implications.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/two-phase-commit.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Two Phase Commit">
+    <meta property="og:description" content="Explains the concept of two phase commit in distributed systems and its implications.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/two-phase-commit.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Two Phase Commit">
+    <meta name="twitter:description" content="Explains the concept of two phase commit in distributed systems and its implications.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="two-phase commit,distributed transactions,atomicity,durability,consistency,isolation,deadlock prevention,distributed systems">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Two Phase Commit", "dateModified": "2025-02-11T16:42:08.210547", "description": "Explains the concept of two phase commit in distributed systems and its implications.", "articleSection": "Distributed Systems", "keywords": "two-phase commit,distributed transactions,atomicity,durability,consistency,isolation,deadlock prevention,distributed systems"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Two Phase Commit
         </div>
-        <h1>Two Phase Commit</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="two-phase-commit">Two Phase Commit</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Two Phase Commit</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:08.210547">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="two-phase-commit">Two Phase Commit</h1>
 <h2 id="acid">ACID</h2>
 <p>For updates that span multiple keys, or even multiple updates across different storage systems, we need all-or-nothing semantics so errors can be properly handled. Two-phase commit (2PC) is a protocol that ensures <strong>distributed transactions</strong>, i.e. groups of operations, are atomic, consistent, isolated, and durable (ACID).</p>
 <table>
@@ -268,8 +298,12 @@ Phase 2: release locks
 <li>Commit: commit the transaction</li>
 <li>Abort: abort the transaction</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/atomicity.html">atomicity</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/deadlock%20prevention.html">deadlock prevention</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/distributed%20transactions.html">distributed transactions</a>, <a href="/tags/durability.html">durability</a>, <a href="/tags/isolation.html">isolation</a>, <a href="/tags/two-phase%20commit.html">two-phase commit</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/atomicity.html">atomicity</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/deadlock%20prevention.html">deadlock prevention</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/distributed%20transactions.html">distributed transactions</a>, <a href="/tags/durability.html">durability</a>, <a href="/tags/isolation.html">isolation</a>, <a href="/tags/two-phase%20commit.html">two-phase commit</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

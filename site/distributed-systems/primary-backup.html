@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Primary Backup</title>
+    <title>Primary Backup | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the concept of primary backups in distributed systems, including state machine replication and the view service.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/primary-backup.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Primary Backup">
+    <meta property="og:description" content="Explains the concept of primary backups in distributed systems, including state machine replication and the view service.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/primary-backup.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Primary Backup">
+    <meta name="twitter:description" content="Explains the concept of primary backups in distributed systems, including state machine replication and the view service.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="primary backup,distributed systems,consistency,availability,view service,split brain">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Primary Backup", "dateModified": "2025-02-11T16:42:07.843539", "description": "Explains the concept of primary backups in distributed systems, including state machine replication and the view service.", "articleSection": "Distributed Systems", "keywords": "primary backup,distributed systems,consistency,availability,view service,split brain"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Primary Backup
         </div>
-        <h1>Primary Backup</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="primary-backup">Primary Backup</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Primary Backup</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.843539">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="primary-backup">Primary Backup</h1>
 <p>Consider a highly available stateful service. It is easy to maintain <em>consistency</em> within one node, simply by performing operations in some well-defined (<strong>serializable</strong>) order. However, providing both availability <strong>and</strong> consistency is more of a challenge. One must provide a notion of having a single system, even if a server within the system fails.</p>
 <h2 id="single-node-kv-store">Single Node KV Store</h2>
 <p>Consider an instance of redis with multiple clients reading and writing to it. You can think of this system more abstractly as a state machine, where each client applies an operation that changes the state of the system.</p>
@@ -262,8 +292,12 @@
 <li>Non-primary must reject client requests.</li>
 <li>Every operation must be before or after state transfers (not during).</li>
 </ol>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/availability.html">availability</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/primary%20backup.html">primary backup</a>, <a href="/tags/split%20brain.html">split brain</a>, <a href="/tags/view%20service.html">view service</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/availability.html">availability</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/primary%20backup.html">primary backup</a>, <a href="/tags/split%20brain.html">split brain</a>, <a href="/tags/view%20service.html">view service</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

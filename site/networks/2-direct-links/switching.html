@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Switched Ethernet</title>
+    <title>Switched Ethernet | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/2-direct-links/switching.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Switched Ethernet">
+    <meta property="og:description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/2-direct-links/switching.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Switched Ethernet">
+    <meta name="twitter:description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="ethernet,switching,mac address,forwarding table,bridge">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Switched Ethernet", "dateModified": "2025-02-11T20:47:36.718632", "description": "Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.", "articleSection": "Networks", "keywords": "ethernet,switching,mac address,forwarding table,bridge"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Switched Ethernet
         </div>
-        <h1>Switched Ethernet</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="switching">Switching</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Switched Ethernet</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:47:36.718632">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="switching">Switching</h1>
 <h2 id="switched-ethernet">Switched Ethernet</h2>
 <p><strong>L2 Switches</strong> are used within enterprise and university networks to connect multiple devices on the same network. Historically, they were used as a "<em>bridge</em>" to connect multiple Ethernet segments, but are now typically used in a "<em>point-to-point</em>" configuration.</p>
 <p><strong>Learning Switches</strong> are a type of L2 switch that learns the MAC addresses of devices connected to it. When a device sends a frame to the switch, the switch records the source MAC address and the port into its forwarding table. When a device sends a frame to the switch, the switch looks up the destination MAC address in its forwarding table and forwards the frame to the appropriate port. If the destination MAC address is not in the table, the switch floods the frame to all ports except the one it was received on.</p>
@@ -305,8 +335,12 @@ broadcast(struct message* m)
 <p>SDN (Software Defined Networks) decouples the network control plane from the data plane, allowing routing algorithms to run on software and packet forwarding decisions to be made by bare-metal switches. The standard interface between the control and data planes, known as OpenFlow, enables interoperability between different implementations. This concept of disaggregation has led to the trend of using commodity servers and bare-metal switches in network infrastructure.</p>
 <p>Another important aspect of disaggregation is that a logically centralized control plane can be used to control a distributed network data plane. This allows for scalability and availability, as the two planes can be configured and scaled independently. Cloud providers have embraced this approach, using SDN-based solutions within their datacenters and across their backbone networks.</p>
 <p>The Network Operating System (NOS) is a key enabler for SDN's success. It provides high-level abstractions and a Network Map to simplify network control functionality. The NOS detects changes in the network and the control application implements desired behavior on an abstract graph. By centralizing this logic, a globally optimized solution can be achieved.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bridge.html">bridge</a>, <a href="/tags/ethernet.html">ethernet</a>, <a href="/tags/forwarding%20table.html">forwarding table</a>, <a href="/tags/mac%20address.html">mac address</a>, <a href="/tags/switching.html">switching</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bridge.html">bridge</a>, <a href="/tags/ethernet.html">ethernet</a>, <a href="/tags/forwarding%20table.html">forwarding table</a>, <a href="/tags/mac%20address.html">mac address</a>, <a href="/tags/switching.html">switching</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

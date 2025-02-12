@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Queueing Theory</title>
+    <title>Queueing Theory | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arrival patterns (uniform, bursty, exponential). Discusses how queueing theory can be applied to model and analyze the performance of systems with queuing components, such as computer networks, call centers, and manufacturing processes.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v2-concurrency/7-queueing-theory.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Queueing Theory">
+    <meta property="og:description" content="Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arrival patterns (uniform, bursty, exponential). Discusses how queueing theory can be applied to model and analyze the performance of systems with queuing components, such as computer networks, call centers, and manufacturing processes.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v2-concurrency/7-queueing-theory.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Queueing Theory">
+    <meta name="twitter:description" content="Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arrival patterns (uniform, bursty, exponential). Discusses how queueing theory can be applied to model and analyze the performance of systems with queuing components, such as computer networks, call centers, and manufacturing processes.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="queueing theory,systems,performance analysis">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Queueing Theory", "dateModified": "2025-02-11T20:49:47.785271", "description": "Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arrival patterns (uniform, bursty, exponential). Discusses how queueing theory can be applied to model and analyze the performance of systems with queuing components, such as computer networks, call centers, and manufacturing processes.", "articleSection": "Systems", "keywords": "queueing theory,systems,performance analysis"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » Queueing Theory
         </div>
-        <h1>Queueing Theory</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/systems.html">Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="queueing-theory">Queueing Theory</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Queueing Theory</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:47.785271">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/systems.html">Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="queueing-theory">Queueing Theory</h1>
 <p>Simplifying assumptions:</p>
 <ul>
 <li><strong>Work preserving</strong>: The system will eventually process all requests.</li>
@@ -271,8 +301,12 @@ $$</p>
 R = \frac{S}{1 - U}
 $$</p>
 <p>This shows the exponential relationship between response time and utilization. As utilization increases, response time increases very slowly at first, but then increases rapidly as the system approaches overload.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/performance%20analysis.html">performance analysis</a>, <a href="/tags/queueing%20theory.html">queueing theory</a>, <a href="/tags/systems.html">systems</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/performance%20analysis.html">performance analysis</a>, <a href="/tags/queueing%20theory.html">queueing theory</a>, <a href="/tags/systems.html">systems</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

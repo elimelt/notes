@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I/O Systems and Secondary Storage</title>
+    <title>I/O Systems and Secondary Storage | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="I/O Systems and Secondary Storage">
+    <meta property="og:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="I/O Systems and Secondary Storage">
+    <meta name="twitter:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "I/O Systems and Secondary Storage", "dateModified": "2025-02-11T20:48:53.995638", "description": "Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.", "articleSection": "Operating Systems", "keywords": "i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » I/O Systems and Secondary Storage
         </div>
-        <h1>I/O Systems and Secondary Storage</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="io-systems-and-secondary-storage">I/O Systems and Secondary Storage</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>I/O Systems and Secondary Storage</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:53.995638">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="io-systems-and-secondary-storage">I/O Systems and Secondary Storage</h1>
 <h2 id="io-system-hardware-environment">I/O System Hardware Environment</h2>
 <p>I/O devices are typically either <strong>block devices</strong>, which transfer data in fixed-size blocks, or <strong>character devices</strong>, which transfer data one character at a time in a stream.</p>
 <p><strong>Device controllers</strong> are the hardware (a mini-computer) that connects the CPU to the I/O devices. They are responsible for sending commands to the device, and for receiving and sending data to and from the device.</p>
@@ -287,8 +317,12 @@
 <p>With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $[0, n]$, (ie a contiguous range of blocks to the OS).</p>
 <h3 id="performance-issues">Performance Issues</h3>
 <p>The HDD's performance is affected by its mechanically moving parts. Limiting the amount of seeking and <strong>defragmenting</strong> help, but only to an extent.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/device%20controllers.html">device controllers</a>, <a href="/tags/device%20drivers.html">device drivers</a>, <a href="/tags/dma.html">dma</a>, <a href="/tags/i/o%20systems.html">i/o systems</a>, <a href="/tags/pci%20bus.html">pci bus</a>, <a href="/tags/programmed%20i/o.html">programmed i/o</a>, <a href="/tags/secondary%20storage.html">secondary storage</a>, <a href="/tags/system%20bus.html">system bus</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/device%20controllers.html">device controllers</a>, <a href="/tags/device%20drivers.html">device drivers</a>, <a href="/tags/dma.html">dma</a>, <a href="/tags/i/o%20systems.html">i/o systems</a>, <a href="/tags/pci%20bus.html">pci bus</a>, <a href="/tags/programmed%20i/o.html">programmed i/o</a>, <a href="/tags/secondary%20storage.html">secondary storage</a>, <a href="/tags/system%20bus.html">system bus</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

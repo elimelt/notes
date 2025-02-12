@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exokernel: An Operating System Architecture for Application-Level Resource Management</title>
+    <title>Exokernel: An Operating System Architecture for Application-Level Resource Management | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Paper review for the classic exokernel paper">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/systems-research/exokernel.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Exokernel: An Operating System Architecture for Application-Level Resource Management">
+    <meta property="og:description" content="Paper review for the classic exokernel paper">
+    <meta property="og:url" content="https://notes.elimelt.com/systems-research/exokernel.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Exokernel: An Operating System Architecture for Application-Level Resource Management">
+    <meta name="twitter:description" content="Paper review for the classic exokernel paper">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="operating systems,exokernel,resource management">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Exokernel: An Operating System Architecture for Application-Level Resource Management", "dateModified": "2025-02-11T16:45:28.574284", "description": "Paper review for the classic exokernel paper", "articleSection": "Systems", "keywords": "operating systems,exokernel,resource management"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » Exokernel: An Operating System Architecture for Application-Level Resource Management
         </div>
-        <h1>Exokernel: An Operating System Architecture for Application-Level Resource Management</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/systems.html">Systems</a></span>
-        </div>
-        <div class="content">
-            <h3 id="what-is-the-problem">What is the Problem?</h3>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Exokernel: An Operating System Architecture for Application-Level Resource Management</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:45:28.574284">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/systems.html">Systems</a></span>
+            </div>
+            <div class="content">
+                <h3 id="what-is-the-problem">What is the Problem?</h3>
 <p>Operating systems with monolithic kernels prescribe interfaces of key OS abstractions like virtual memory, filesystem, but with these prescriptions come side-effects, particularly in the realm of performance. Applications cannot modify or optimize these abstractions for their specific needs, forcing them to work within the limitations of a "one-size fits all" implementation, which typically prioritizes generality over performance for any specific application.</p>
 <h3 id="summary">Summary</h3>
 <p>The paper covers the exokernel architecture, which aims to minimize the "mechanism" role as much as possible, opting to leave implementations to the client, e.g. to the user's choice of library operating system. The key design choice here is to separate resource protection from management, e.g. to provide secure bindings to access a device, without necessarily understanding the use case.</p>
@@ -229,8 +259,12 @@
 <li>Can this approach be applied to modern, and particularly datacenter, workloads?</li>
 <li>How can malicious/destructive library OSes be prevented?</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/exokernel.html">exokernel</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/resource%20management.html">resource management</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/exokernel.html">exokernel</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/resource%20management.html">resource management</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

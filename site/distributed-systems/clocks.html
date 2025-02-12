@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clocks</title>
+    <title>Clocks | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/clocks.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Clocks">
+    <meta property="og:description" content="Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/clocks.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Clocks">
+    <meta name="twitter:description" content="Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="clocks,distributed systems,logical clocks,vector clocks,causality,consistency">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Clocks", "dateModified": "2025-02-11T16:42:07.874013", "description": "Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.", "articleSection": "Distributed Systems", "keywords": "clocks,distributed systems,logical clocks,vector clocks,causality,consistency"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Clocks
         </div>
-        <h1>Clocks</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="clocks">Clocks</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Clocks</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.874013">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="clocks">Clocks</h1>
 <p>There are two main approaches to time in a distributed system: <strong>physical clocks</strong> and <strong>virtual (logical) clocks</strong>.</p>
 <h2 id="physical-clocks">Physical Clocks</h2>
 <p>Actual clocks running in most computers drift apart by ~30 ppm due to their temperature sensitivity. Although more accurate clocks (atomic, GPS, etc.) are available, they are expensive and are only <em>maybe</em> present in some data centers.</p>
@@ -285,8 +315,12 @@
   }
 }
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/causality.html">causality</a>, <a href="/tags/clocks.html">clocks</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/logical%20clocks.html">logical clocks</a>, <a href="/tags/vector%20clocks.html">vector clocks</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/causality.html">causality</a>, <a href="/tags/clocks.html">clocks</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/logical%20clocks.html">logical clocks</a>, <a href="/tags/vector%20clocks.html">vector clocks</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

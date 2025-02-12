@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scalable Distributed Data Systems</title>
+    <title>Scalable Distributed Data Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers core concepts in building scalable distributed data systems, including scaling up and out through architectures like shared memory and shared disk, to achieve improved fault tolerance, reduced latency, and increased system capacity. It likely delves into the trade-offs between these approaches and their applications in real-world distributed systems. The focus is on technical details of scalability and its relationship with distributed data systems.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/designing-data-intensive-applications/part-2-distributed-data/preface.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Scalable Distributed Data Systems">
+    <meta property="og:description" content="Covers core concepts in building scalable distributed data systems, including scaling up and out through architectures like shared memory and shared disk, to achieve improved fault tolerance, reduced latency, and increased system capacity. It likely delves into the trade-offs between these approaches and their applications in real-world distributed systems. The focus is on technical details of scalability and its relationship with distributed data systems.">
+    <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-2-distributed-data/preface.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Scalable Distributed Data Systems">
+    <meta name="twitter:description" content="Covers core concepts in building scalable distributed data systems, including scaling up and out through architectures like shared memory and shared disk, to achieve improved fault tolerance, reduced latency, and increased system capacity. It likely delves into the trade-offs between these approaches and their applications in real-world distributed systems. The focus is on technical details of scalability and its relationship with distributed data systems.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="scalable distributed systems,scalability,fault tolerance,latency,shared memory architecture,shared disk architecture">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Scalable Distributed Data Systems", "dateModified": "2025-02-11T19:54:57.584090", "description": "Covers core concepts in building scalable distributed data systems, including scaling up and out through architectures like shared memory and shared disk, to achieve improved fault tolerance, reduced latency, and increased system capacity. It likely delves into the trade-offs between these approaches and their applications in real-world distributed systems. The focus is on technical details of scalability and its relationship with distributed data systems.", "articleSection": "Distributed Systems", "keywords": "scalable distributed systems,scalability,fault tolerance,latency,shared memory architecture,shared disk architecture"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Scalable Distributed Data Systems
         </div>
-        <h1>Scalable Distributed Data Systems</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="preface">Preface</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Scalable Distributed Data Systems</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T19:54:57.584090">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="preface">Preface</h1>
 <h2 id="distributed-data">Distributed Data</h2>
 <p>Moving up a level to data systems that run on multiple machines, we still care about similar things.</p>
 <ul>
@@ -201,8 +231,12 @@
 <h3 id="scaling-out">Scaling Out</h3>
 <p><strong>Shared Nothing Architecture</strong> is a multi machine setup with each machine having its own CPU, memory, and disk. This is the most scalable, but it requires a lot of coordination between machines. Each machine (or VM) is a <strong>node</strong>, and each node is completely independent. Inter-node communication is done over the network through software. </p>
 <p><strong>For the remainder of this part (Part 2), we will be focusing on shared nothing architectures.</strong></p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/fault%20tolerance.html">fault tolerance</a>, <a href="/tags/latency.html">latency</a>, <a href="/tags/scalability.html">scalability</a>, <a href="/tags/scalable%20distributed%20systems.html">scalable distributed systems</a>, <a href="/tags/shared%20disk%20architecture.html">shared disk architecture</a>, <a href="/tags/shared%20memory%20architecture.html">shared memory architecture</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/fault%20tolerance.html">fault tolerance</a>, <a href="/tags/latency.html">latency</a>, <a href="/tags/scalability.html">scalability</a>, <a href="/tags/scalable%20distributed%20systems.html">scalable distributed systems</a>, <a href="/tags/shared%20disk%20architecture.html">shared disk architecture</a>, <a href="/tags/shared%20memory%20architecture.html">shared memory architecture</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

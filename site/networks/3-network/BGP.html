@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Border Gateway Protocol (BGP)</title>
+    <title>Border Gateway Protocol (BGP) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous systems on the internet. Discusses the relationships between different types of autonomous systems, such as stub, multihomed, and transit ASes, and the policy-based routing decisions made by BGP. Provides a high-level overview of the BGP algorithm and its role in managing transit traffic across the global internet infrastructure.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/3-network/BGP.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Border Gateway Protocol (BGP)">
+    <meta property="og:description" content="Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous systems on the internet. Discusses the relationships between different types of autonomous systems, such as stub, multihomed, and transit ASes, and the policy-based routing decisions made by BGP. Provides a high-level overview of the BGP algorithm and its role in managing transit traffic across the global internet infrastructure.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/BGP.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Border Gateway Protocol (BGP)">
+    <meta name="twitter:description" content="Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous systems on the internet. Discusses the relationships between different types of autonomous systems, such as stub, multihomed, and transit ASes, and the policy-based routing decisions made by BGP. Provides a high-level overview of the BGP algorithm and its role in managing transit traffic across the global internet infrastructure.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="autonomous systems,border gateway protocol,routing,transit traffic,stub as,multihomed as,transit as">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Border Gateway Protocol (BGP)", "dateModified": "2025-02-11T20:47:48.085803", "description": "Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous systems on the internet. Discusses the relationships between different types of autonomous systems, such as stub, multihomed, and transit ASes, and the policy-based routing decisions made by BGP. Provides a high-level overview of the BGP algorithm and its role in managing transit traffic across the global internet infrastructure.", "articleSection": "Networks", "keywords": "autonomous systems,border gateway protocol,routing,transit traffic,stub as,multihomed as,transit as"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Border Gateway Protocol (BGP)
         </div>
-        <h1>Border Gateway Protocol (BGP)</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
-        </div>
-        <div class="content">
-            <h1 id="border-gateway-protocol-bgp">Border Gateway Protocol (BGP)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Border Gateway Protocol (BGP)</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:47:48.085803">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            </div>
+            <div class="content">
+                <h1 id="border-gateway-protocol-bgp">Border Gateway Protocol (BGP)</h1>
 <p>You can view the internet as a graph of interconnected Autonomous Systems (ASes). Each AS can act on its own, and is responsible for routing traffic within itself. The routers within an AS are typically connected to eachother through high-speed links, and are connected to other ASes through <em>border routers</em>.</p>
 <p>ASes are able to assume the role of a customer, provider, or peer to other ASes.</p>
 <ul>
@@ -223,8 +253,12 @@
 <li>Peer paths should only be advertised to customers, since you stand to gain nothing from letting peers use the path, and you'd have to pay to use the path for providers</li>
 <li>Provider paths should also only be advertised to customers, since you need to pay to use the path of your provider, and you only make money from customers.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/autonomous%20systems.html">autonomous systems</a>, <a href="/tags/border%20gateway%20protocol.html">border gateway protocol</a>, <a href="/tags/multihomed%20as.html">multihomed as</a>, <a href="/tags/routing.html">routing</a>, <a href="/tags/stub%20as.html">stub as</a>, <a href="/tags/transit%20as.html">transit as</a>, <a href="/tags/transit%20traffic.html">transit traffic</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/autonomous%20systems.html">autonomous systems</a>, <a href="/tags/border%20gateway%20protocol.html">border gateway protocol</a>, <a href="/tags/multihomed%20as.html">multihomed as</a>, <a href="/tags/routing.html">routing</a>, <a href="/tags/stub%20as.html">stub as</a>, <a href="/tags/transit%20as.html">transit as</a>, <a href="/tags/transit%20traffic.html">transit traffic</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Physical Layer</title>
+    <title>The Physical Layer | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Describes the hardware component responsible for transmitting and receiving data in a communication system. It focuses on coding, modulation techniques, noise immunity, and clock recovery to ensure reliable data transfer. Key concepts include message latency, cut-through routing, and the differences between modulation and coding methods.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/networks/0-foundation/2-physical-layer.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="The Physical Layer">
+    <meta property="og:description" content="Describes the hardware component responsible for transmitting and receiving data in a communication system. It focuses on coding, modulation techniques, noise immunity, and clock recovery to ensure reliable data transfer. Key concepts include message latency, cut-through routing, and the differences between modulation and coding methods.">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/0-foundation/2-physical-layer.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="The Physical Layer">
+    <meta name="twitter:description" content="Describes the hardware component responsible for transmitting and receiving data in a communication system. It focuses on coding, modulation techniques, noise immunity, and clock recovery to ensure reliable data transfer. Key concepts include message latency, cut-through routing, and the differences between modulation and coding methods.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="dsp,modulation,coding,noise immunity,clock recovery">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Physical Layer", "dateModified": "2025-02-11T20:02:44.473611", "description": "Describes the hardware component responsible for transmitting and receiving data in a communication system. It focuses on coding, modulation techniques, noise immunity, and clock recovery to ensure reliable data transfer. Key concepts include message latency, cut-through routing, and the differences between modulation and coding methods.", "articleSection": "Hardware", "keywords": "dsp,modulation,coding,noise immunity,clock recovery"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » The Physical Layer
         </div>
-        <h1>The Physical Layer</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
-        </div>
-        <div class="content">
-            <h1 id="the-physical-layer">The Physical Layer</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>The Physical Layer</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:02:44.473611">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
+            </div>
+            <div class="content">
+                <h1 id="the-physical-layer">The Physical Layer</h1>
 <p><strong>Scope</strong>: How signals are used to transfer bits over a link. i.e, how analog signals are converted to digital signals, and vise versa.</p>
 <h2 id="coding-and-modulation">Coding and Modulation</h2>
 <p>A modem (modulator-demodulator) converts digital signals to analog signals, and vise versa.</p>
@@ -260,8 +290,12 @@ P = 50ms, R = 10Mbps, L = 1MB
 L_t = 1MB/10MBps + 50ms = .1s + .05s = .15s
 </code></pre>
 <h3 id="cut-through-routing">Cut Through Routing</h3>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/clock%20recovery.html">clock recovery</a>, <a href="/tags/coding.html">coding</a>, <a href="/tags/dsp.html">dsp</a>, <a href="/tags/modulation.html">modulation</a>, <a href="/tags/noise%20immunity.html">noise immunity</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/clock%20recovery.html">clock recovery</a>, <a href="/tags/coding.html">coding</a>, <a href="/tags/dsp.html">dsp</a>, <a href="/tags/modulation.html">modulation</a>, <a href="/tags/noise%20immunity.html">noise immunity</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

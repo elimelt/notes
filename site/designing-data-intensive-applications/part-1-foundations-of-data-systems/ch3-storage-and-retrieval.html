@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Storage and Retrieval Techniques for Database Systems</title>
+    <title>Storage and Retrieval Techniques for Database Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Storage and Retrieval Techniques for Database Systems">
+    <meta property="og:description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.">
+    <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Storage and Retrieval Techniques for Database Systems">
+    <meta name="twitter:description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="data structures,indexing,oltp vs olap,column-oriented storage">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Storage and Retrieval Techniques for Database Systems", "dateModified": "2025-01-01T04:29:39.285544", "description": "Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.", "articleSection": "Database Systems", "keywords": "data structures,indexing,oltp vs olap,column-oriented storage"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Storage and Retrieval Techniques for Database Systems
         </div>
-        <h1>Storage and Retrieval Techniques for Database Systems</h1>
-        <div class="meta">
-            <span>Last modified: 2025-01-01</span>
-            <span>Category: <a href="/categories/database%20systems.html">Database Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="chapter-3">Chapter 3</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Storage and Retrieval Techniques for Database Systems</h1>
+            <div class="meta">
+                <time datetime="2025-01-01T04:29:39.285544">
+                    Last modified: 2025-01-01
+                </time>
+                <span>Category: <a href="/categories/database%20systems.html">Database Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="chapter-3">Chapter 3</h1>
 <h2 id="storage-and-retrieval">Storage and Retrieval</h2>
 <pre><code class="language-bash">#!/bin/bash
 
@@ -283,8 +313,12 @@ GROUP BY
 <p><strong>Materialized views</strong> are precomputed joins and aggregations. They are good for speeding up queries, but can be expensive to maintain. They are often used in data warehouses, where the data is read-heavy, and the cost of maintaining the materialized views is amortized over many queries.</p>
 <p><strong>Data cubes</strong> are a way to precompute aggregations over multiple dimensions. They are good for speeding up queries, but can be expensive to maintain. Essentially a multi-dimensional array, where each cell is an aggregation over a subset of the dimensions. Very expensive to maintain, and inflexible for queries that aren't covered by the precomputed aggregations.</p>
 <p>Oftentimes, it makes more sense to store raw data, and then benchmark queries to see which ones are slow, and then precompute aggregations for those queries if they need to be faster.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/column-oriented%20storage.html">column-oriented storage</a>, <a href="/tags/data%20structures.html">data structures</a>, <a href="/tags/indexing.html">indexing</a>, <a href="/tags/oltp%20vs%20olap.html">oltp vs olap</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/column-oriented%20storage.html">column-oriented storage</a>, <a href="/tags/data%20structures.html">data structures</a>, <a href="/tags/indexing.html">indexing</a>, <a href="/tags/oltp%20vs%20olap.html">oltp vs olap</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

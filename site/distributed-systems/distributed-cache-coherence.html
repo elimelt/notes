@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linearizable Caches</title>
+    <title>Linearizable Caches | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/distributed-cache-coherence.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Linearizable Caches">
+    <meta property="og:description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/distributed-cache-coherence.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Linearizable Caches">
+    <meta name="twitter:description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="cache coherence,consistency models,distributed systems">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Linearizable Caches", "dateModified": "2025-02-11T16:42:07.824900", "description": "A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.", "articleSection": "Distributed Systems", "keywords": "cache coherence,consistency models,distributed systems"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Linearizable Caches
         </div>
-        <h1>Linearizable Caches</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="distributed-cache-coherence">Distributed Cache Coherence</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Linearizable Caches</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.824900">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="distributed-cache-coherence">Distributed Cache Coherence</h1>
 <p>When linearizability is a concern, any duplication of mutable data across multiple nodes must be kept consistent. This is the problem of cache coherence: ensuring that all nodes in a distributed system have the same view of the data.</p>
 <h2 id="distributed-caching-with-leases">Distributed Caching with Leases</h2>
 <p>A <strong>lease</strong> is a time-limited right to do something. In the context of distributed caching, our lease gives us a right to cache some data.</p>
@@ -274,8 +304,12 @@
 <li>if cache fails, read its log from storage</li>
 <li>e.g. if primary fails, backup can take over by replaying log</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/cache%20coherence.html">cache coherence</a>, <a href="/tags/consistency%20models.html">consistency models</a>, <a href="/tags/distributed%20systems.html">distributed systems</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/cache%20coherence.html">cache coherence</a>, <a href="/tags/consistency%20models.html">consistency models</a>, <a href="/tags/distributed%20systems.html">distributed systems</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

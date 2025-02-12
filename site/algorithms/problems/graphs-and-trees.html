@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphs and Trees</title>
+    <title>Graphs and Trees | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/problems/graphs-and-trees.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Graphs and Trees">
+    <meta property="og:description" content="A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/problems/graphs-and-trees.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Graphs and Trees">
+    <meta name="twitter:description" content="A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="graphs,trees,induction,proof by contradiction,cycle detection">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Graphs and Trees", "dateModified": "2025-02-11T16:41:49.585394", "description": "A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.", "articleSection": "Algorithms", "keywords": "graphs,trees,induction,proof by contradiction,cycle detection"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Graphs and Trees
         </div>
-        <h1>Graphs and Trees</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="graphs-and-trees">Graphs and Trees</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Graphs and Trees</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:41:49.585394">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="graphs-and-trees">Graphs and Trees</h1>
 <h2 id="problem-1">Problem 1</h2>
 <p>Let $G$ be a tree. Use induction to prove that the number of leaves of $G$ is at least the number of vertices of degree at least $3$ in $G$.</p>
 <h4 id="solution">Solution</h4>
@@ -212,8 +242,12 @@
 <p>Since $G$ has no cycles, it is a tree.</p>
 <p>Claim: The sum of the degrees of all vertices in a graph is equal to twice the number of edges.</p>
 <p>Proof: Each edge contributes $1$ to the degree of two vertices, so the sum of the degrees of all vertices is twice the number of edges.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/cycle%20detection.html">cycle detection</a>, <a href="/tags/graphs.html">graphs</a>, <a href="/tags/induction.html">induction</a>, <a href="/tags/proof%20by%20contradiction.html">proof by contradiction</a>, <a href="/tags/trees.html">trees</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/cycle%20detection.html">cycle detection</a>, <a href="/tags/graphs.html">graphs</a>, <a href="/tags/induction.html">induction</a>, <a href="/tags/proof%20by%20contradiction.html">proof by contradiction</a>, <a href="/tags/trees.html">trees</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interval Scheduling/Partitioning</title>
+    <title>Interval Scheduling/Partitioning | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/cheatsheets/algorithms/intervals.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Interval Scheduling/Partitioning">
+    <meta property="og:description" content="A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.">
+    <meta property="og:url" content="https://notes.elimelt.com/cheatsheets/algorithms/intervals.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Interval Scheduling/Partitioning">
+    <meta name="twitter:description" content="A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="greedy algorithms,interval partitioning,scheduling,time complexity">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Scheduling/Partitioning", "dateModified": "2025-02-11T16:41:49.585509", "description": "A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.", "articleSection": "Algorithms", "keywords": "greedy algorithms,interval partitioning,scheduling,time complexity"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Interval Scheduling/Partitioning
         </div>
-        <h1>Interval Scheduling/Partitioning</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="interval-schedulingpartitioning">Interval Scheduling/Partitioning</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Interval Scheduling/Partitioning</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:41:49.585509">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="interval-schedulingpartitioning">Interval Scheduling/Partitioning</h1>
 <h2 id="scheduling-the-max-number-of-intervals">Scheduling the max number of intervals</h2>
 <ul>
 <li><strong>Algorithm:</strong> sort by finish time and select the next compatible interval</li>
@@ -209,8 +239,12 @@
 <li>Let $d$ be the number of sets the greedy algorithm allocates. The $d$th set, $S_d$ is allocated because we had to assign some interval, $I_i$, that was not compatible with any of the $d - 1$ previous sets.</li>
 <li>Since we sorted by start time, all intervals $I_j \in S_1 \cup \ldots \cup S_{d - 1}$ have $s(I_i) \ge s(I_j)$. Thus, we have at least depth $d$ intervals, and so all valid partitions must have $\ge d$ sets.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/greedy%20algorithms.html">greedy algorithms</a>, <a href="/tags/interval%20partitioning.html">interval partitioning</a>, <a href="/tags/scheduling.html">scheduling</a>, <a href="/tags/time%20complexity.html">time complexity</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/greedy%20algorithms.html">greedy algorithms</a>, <a href="/tags/interval%20partitioning.html">interval partitioning</a>, <a href="/tags/scheduling.html">scheduling</a>, <a href="/tags/time%20complexity.html">time complexity</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

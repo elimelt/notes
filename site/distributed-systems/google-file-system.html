@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google File System (GFS) Overview</title>
+    <title>Google File System (GFS) Overview | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/google-file-system.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Google File System (GFS) Overview">
+    <meta property="og:description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/google-file-system.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Google File System (GFS) Overview">
+    <meta name="twitter:description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="cloud storage,distributed systems,google cloud">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Google File System (GFS) Overview", "dateModified": "2025-02-11T16:42:07.809631", "description": "An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.", "articleSection": "Distributed Systems", "keywords": "cloud storage,distributed systems,google cloud"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Google File System (GFS) Overview
         </div>
-        <h1>Google File System (GFS) Overview</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="google-file-system-gfs">Google File System (GFS)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Google File System (GFS) Overview</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.809631">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="google-file-system-gfs">Google File System (GFS)</h1>
 <p><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf">reading</a></p>
 <h2 id="introduction">Introduction</h2>
 <p>GFS differs from more traditional file systems in a lot of ways. Particularly...</p>
@@ -282,8 +312,12 @@
 <li>The secondaries ack that they completed the operation</li>
 <li>The primary replies to the client, and any errors are reported to the client. Errors leave the region in an inconsistent state, but the failed mutation is usually retried multiple times, until eventually falling back to redoing the entire write.</li>
 </ol>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/cloud%20storage.html">cloud storage</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/google%20cloud.html">google cloud</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/cloud%20storage.html">cloud storage</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/google%20cloud.html">google cloud</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

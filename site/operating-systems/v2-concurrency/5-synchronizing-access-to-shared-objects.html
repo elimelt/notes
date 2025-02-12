@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synchronizing Access to Shared Objects</title>
+    <title>Synchronizing Access to Shared Objects | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Synchronizing Access to Shared Objects">
+    <meta property="og:description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Synchronizing Access to Shared Objects">
+    <meta name="twitter:description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="mutual exclusion,locks,thread-safe,bounded queue,atomic operation">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Synchronizing Access to Shared Objects", "dateModified": "2025-02-11T20:49:40.375953", "description": "Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.", "articleSection": "Operating Systems", "keywords": "mutual exclusion,locks,thread-safe,bounded queue,atomic operation"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Synchronizing Access to Shared Objects
         </div>
-        <h1>Synchronizing Access to Shared Objects</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="synchronizing-access-to-shared-objects">Synchronizing Access to Shared Objects</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Synchronizing Access to Shared Objects</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:40.375953">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="synchronizing-access-to-shared-objects">Synchronizing Access to Shared Objects</h1>
 <h2 id="locks-mutual-exclusion">Locks: Mutual Exclusion</h2>
 <p>Locks enable mutual exclusion with two operations: <code>acquire</code> and <code>release</code>.</p>
 <ul>
@@ -449,8 +479,12 @@ void Scheduler::makeReady(TCB *thread) {
  ```</p>
 <h2 id="condition-variables">Condition Variables</h2>
 <p>Condition variables are used to wait for a particular condition to become true. They are used in conjunction with locks to provide a way for a thread to be woken up when a condition becomes true. The condition variable is associated with a lock, and the lock must be held when waiting on the condition variable.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/atomic%20operation.html">atomic operation</a>, <a href="/tags/bounded%20queue.html">bounded queue</a>, <a href="/tags/locks.html">locks</a>, <a href="/tags/mutual%20exclusion.html">mutual exclusion</a>, <a href="/tags/thread-safe.html">thread-safe</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/atomic%20operation.html">atomic operation</a>, <a href="/tags/bounded%20queue.html">bounded queue</a>, <a href="/tags/locks.html">locks</a>, <a href="/tags/mutual%20exclusion.html">mutual exclusion</a>, <a href="/tags/thread-safe.html">thread-safe</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

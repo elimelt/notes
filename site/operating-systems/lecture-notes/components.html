@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Components of an OS</title>
+    <title>Components of an OS | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/components.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Components of an OS">
+    <meta property="og:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/components.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Components of an OS">
+    <meta name="twitter:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Components of an OS", "dateModified": "2025-02-11T20:48:44.915278", "description": "Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's \"THE\" multiprogramming system as an influential early design.", "articleSection": "Operating Systems", "keywords": "process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Components of an OS
         </div>
-        <h1>Components of an OS</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="components-of-an-os">Components of an OS</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Components of an OS</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:48:44.915278">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="components-of-an-os">Components of an OS</h1>
 <h2 id="process-operations">Process Operations</h2>
 <p>OS provides the following kinds of operations:</p>
 <ul>
@@ -281,8 +311,12 @@
 <li>system processes (servers): provide higher level services (file system, networking, scheduling, etc.)</li>
 </ul>
 <p>Probably slower than monolithic kernel because of all the expensive context switches.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/device%20drivers.html">device drivers</a>, <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/i/o.html">i/o</a>, <a href="/tags/memory%20management.html">memory management</a>, <a href="/tags/process%20creation.html">process creation</a>, <a href="/tags/process%20operations.html">process operations</a>, <a href="/tags/process%20synchronization.html">process synchronization</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/device%20drivers.html">device drivers</a>, <a href="/tags/file%20systems.html">file systems</a>, <a href="/tags/i/o.html">i/o</a>, <a href="/tags/memory%20management.html">memory management</a>, <a href="/tags/process%20creation.html">process creation</a>, <a href="/tags/process%20operations.html">process operations</a>, <a href="/tags/process%20synchronization.html">process synchronization</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

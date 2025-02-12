@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Objects Handles and Reference Counts</title>
+    <title>Objects Handles and Reference Counts | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of object handles and reference counting in operating systems, with a focus on the Windows object manager. Discusses the role of the object manager in managing system objects and the use of handles to provide secure access to these objects. Explains the concept of reference counting and how it is used to track the lifetime of objects and prevent premature deallocation.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Objects Handles and Reference Counts">
+    <meta property="og:description" content="Covers the implementation of object handles and reference counting in operating systems, with a focus on the Windows object manager. Discusses the role of the object manager in managing system objects and the use of handles to provide secure access to these objects. Explains the concept of reference counting and how it is used to track the lifetime of objects and prevent premature deallocation.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/windows-objects-handles-refcounts.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Objects Handles and Reference Counts">
+    <meta name="twitter:description" content="Covers the implementation of object handles and reference counting in operating systems, with a focus on the Windows object manager. Discusses the role of the object manager in managing system objects and the use of handles to provide secure access to these objects. Explains the concept of reference counting and how it is used to track the lifetime of objects and prevent premature deallocation.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="object manager,handles,reference counts,windows,c programming,operating systems">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Objects Handles and Reference Counts", "dateModified": "2025-02-11T20:49:15.427021", "description": "Covers the implementation of object handles and reference counting in operating systems, with a focus on the Windows object manager. Discusses the role of the object manager in managing system objects and the use of handles to provide secure access to these objects. Explains the concept of reference counting and how it is used to track the lifetime of objects and prevent premature deallocation.", "articleSection": "Operating Systems", "keywords": "object manager,handles,reference counts,windows,c programming,operating systems"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,28 +197,37 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Objects Handles and Reference Counts
         </div>
-        <h1>Objects Handles and Reference Counts</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="obects-handles-and-reference-counts">Obects Handles and Reference Counts</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Objects Handles and Reference Counts</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:15.427021">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="obects-handles-and-reference-counts">Obects Handles and Reference Counts</h1>
 <h2 id="object-manager">Object Manager</h2>
 <p>Windows was written in C, which doesn't have a notion of "objects". Early Windows had its own <strong>Object Manager</strong>, which was responsible for defining object types, naming objects, handling handles for users etc. </p>
 <p>For example, there were objects for threads, processes, files, semaphores, etc.</p>
 <p>Each object had a <strong>handle count</strong>, the number of handles the user has to the object, and the <strong>ref count</strong>, the number of references to the object within the kernel (which also includes handles).</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/c%20programming.html">c programming</a>, <a href="/tags/handles.html">handles</a>, <a href="/tags/object%20manager.html">object manager</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/reference%20counts.html">reference counts</a>, <a href="/tags/windows.html">windows</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/c%20programming.html">c programming</a>, <a href="/tags/handles.html">handles</a>, <a href="/tags/object%20manager.html">object manager</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/reference%20counts.html">reference counts</a>, <a href="/tags/windows.html">windows</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

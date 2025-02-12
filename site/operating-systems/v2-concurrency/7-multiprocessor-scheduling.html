@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiprocessor Scheduling</title>
+    <title>Multiprocessor Scheduling | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and scheduler activations as methods for efficiently utilizing multiprocessor systems. Examines real-time scheduling considerations for multiprocessor environments.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Multiprocessor Scheduling">
+    <meta property="og:description" content="Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and scheduler activations as methods for efficiently utilizing multiprocessor systems. Examines real-time scheduling considerations for multiprocessor environments.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Multiprocessor Scheduling">
+    <meta name="twitter:description" content="Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and scheduler activations as methods for efficiently utilizing multiprocessor systems. Examines real-time scheduling considerations for multiprocessor environments.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="multiprocessor scheduling,operating systems,cache coherence,affinity scheduling">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Multiprocessor Scheduling", "dateModified": "2025-02-11T20:49:42.477502", "description": "Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and scheduler activations as methods for efficiently utilizing multiprocessor systems. Examines real-time scheduling considerations for multiprocessor environments.", "articleSection": "Operating Systems", "keywords": "multiprocessor scheduling,operating systems,cache coherence,affinity scheduling"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Multiprocessor Scheduling
         </div>
-        <h1>Multiprocessor Scheduling</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="multiprocessor-scheduling">Multiprocessor Scheduling</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Multiprocessor Scheduling</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:42.477502">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="multiprocessor-scheduling">Multiprocessor Scheduling</h1>
 <p>Modern systems usually have multiple processors, each with multiple cores that all have hyperthreading. Scheduling algorithms for multiprocessor systems need to make use of the parallelism that these systems offer.</p>
 <h3 id="scheduling-sequential-applications-on-multiprocessors">Scheduling Sequential Applications on Multiprocessors</h3>
 <p>Consider a server application that needs to process a large number of requests. A simple approach would be to maintain a single MFQ, as well as a lock on it so only one processor can access it at a time. When a request needs to do something like I/O, it can reenter the MFQ and let another request run. However, this approach has a few problems:</p>
@@ -221,8 +251,12 @@
 <li><strong>Earliest Deadline First (EDF)</strong>: The task with the earliest deadline is scheduled next. This is optimal for minimizing the number of missed deadlines for CPU-bound tasks. However, mixed workloads can complicate this, since it might be more efficient to start a task with a later deadline to request I/O, and then start a task with an earlier deadline.</li>
 <li><strong>Priority Donation</strong>: <em>priority inversion</em> can lead to infinite waiting times for lower priority tasks. To avoid this, when a high-priority task is waiting for a lock held by a lower priority task, the higher priority task "dontates" some of its priority to the lower priority task. This allows the low priority task to be scheduled to complete the critical section and release the lock, at which point it will return to its original priority and the processor can be given to the high priority task.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/affinity%20scheduling.html">affinity scheduling</a>, <a href="/tags/cache%20coherence.html">cache coherence</a>, <a href="/tags/multiprocessor%20scheduling.html">multiprocessor scheduling</a>, <a href="/tags/operating%20systems.html">operating systems</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/affinity%20scheduling.html">affinity scheduling</a>, <a href="/tags/cache%20coherence.html">cache coherence</a>, <a href="/tags/multiprocessor%20scheduling.html">multiprocessor scheduling</a>, <a href="/tags/operating%20systems.html">operating systems</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

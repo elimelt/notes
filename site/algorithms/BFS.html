@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breadth First Search Algorithm Implementation and Analysis</title>
+    <title>Breadth First Search Algorithm Implementation and Analysis | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/algorithms/BFS.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Breadth First Search Algorithm Implementation and Analysis">
+    <meta property="og:description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/BFS.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Breadth First Search Algorithm Implementation and Analysis">
+    <meta name="twitter:description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="graph traversal,shortest paths,graph theory,complexity analysis">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Breadth First Search Algorithm Implementation and Analysis", "dateModified": "2025-02-11T18:52:43.110536", "description": "A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.", "articleSection": "Algorithms", "keywords": "graph traversal,shortest paths,graph theory,complexity analysis"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Breadth First Search Algorithm Implementation and Analysis
         </div>
-        <h1>Breadth First Search Algorithm Implementation and Analysis</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-        </div>
-        <div class="content">
-            <h1 id="breadth-first-search">Breadth First Search</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Breadth First Search Algorithm Implementation and Analysis</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T18:52:43.110536">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+            </div>
+            <div class="content">
+                <h1 id="breadth-first-search">Breadth First Search</h1>
 <p>Completely explore the vertices of a graph in order of their distance from the starting node.</p>
 <p>There are three states of a vertex in BFS:
 - <strong>Undiscovered</strong>: The vertex has not been seen yet.
@@ -267,8 +297,12 @@ def level_order_traversal(graph, start):
         for neighbor in graph[vertex]:
             queue.append((neighbor, level + 1))
 </code></pre>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/complexity%20analysis.html">complexity analysis</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/graph%20traversal.html">graph traversal</a>, <a href="/tags/shortest%20paths.html">shortest paths</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/complexity%20analysis.html">complexity analysis</a>, <a href="/tags/graph%20theory.html">graph theory</a>, <a href="/tags/graph%20traversal.html">graph traversal</a>, <a href="/tags/shortest%20paths.html">shortest paths</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

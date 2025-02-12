@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distributed Architectures with Paxos</title>
+    <title>Distributed Architectures with Paxos | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the use of Paxos in distributed systems and its applications">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/paxos-architecture.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Distributed Architectures with Paxos">
+    <meta property="og:description" content="Explains the use of Paxos in distributed systems and its applications">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/paxos-architecture.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Distributed Architectures with Paxos">
+    <meta name="twitter:description" content="Explains the use of Paxos in distributed systems and its applications">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="paxos,distributed architectures,lease server,bigtable,chubby,zookeeper">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Architectures with Paxos", "dateModified": "2025-02-11T16:42:07.796360", "description": "Explains the use of Paxos in distributed systems and its applications", "articleSection": "Distributed Systems", "keywords": "paxos,distributed architectures,lease server,bigtable,chubby,zookeeper"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Distributed Architectures with Paxos
         </div>
-        <h1>Distributed Architectures with Paxos</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="distributed-architectures-with-paxos">Distributed Architectures with Paxos</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Distributed Architectures with Paxos</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.796360">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="distributed-architectures-with-paxos">Distributed Architectures with Paxos</h1>
 <h2 id="overhead-of-simple-architectures">Overhead of Simple Architectures</h2>
 <p>Paxos can make progress so long as a majority of nodes are up. For a Paxos group of size $k$, requires a general overhead of $3(k-1) + 2$ messages.</p>
 <p>Primary-backup (with a single backup) using a view server has an overhead of $4$ messages to forward requests. It can handle any one failure.</p>
@@ -202,8 +232,12 @@
 <li>If the primary doesn't renew the lease (i.e. fails), a lease is granted to the next primary</li>
 </ol>
 <p>This design pattern is used in BigTable, Chubby, and ZooKeeper. It prevents split brain if the clock drift is within epsilon. We also only need to service reads on the primary, including logic for cache invalidation. Additionally, we can use write ahead logging, and instead of explicitly maintaining a backup, just replace the primary by executing the log on a new primary.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/bigtable.html">bigtable</a>, <a href="/tags/chubby.html">chubby</a>, <a href="/tags/distributed%20architectures.html">distributed architectures</a>, <a href="/tags/lease%20server.html">lease server</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/zookeeper.html">zookeeper</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/bigtable.html">bigtable</a>, <a href="/tags/chubby.html">chubby</a>, <a href="/tags/distributed%20architectures.html">distributed architectures</a>, <a href="/tags/lease%20server.html">lease server</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/zookeeper.html">zookeeper</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

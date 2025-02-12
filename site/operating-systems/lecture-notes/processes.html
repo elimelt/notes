@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processes</title>
+    <title>Processes | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/processes.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Processes">
+    <meta property="og:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/processes.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Processes">
+    <meta name="twitter:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="operating systems,processes,address space,cpu state,namespace">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Processes", "dateModified": "2025-02-11T20:49:05.939934", "description": "Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.", "articleSection": "Operating Systems", "keywords": "operating systems,processes,address space,cpu state,namespace"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Processes
         </div>
-        <h1>Processes</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="processes">Processes</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Processes</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:05.939934">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="processes">Processes</h1>
 <h2 id="what-is-a-process">What is a process?</h2>
 <p>The OS's abstraction of a running program. A process is a program in execution.</p>
 <p>Simplest case:</p>
@@ -232,8 +262,12 @@
 <li>Operations that create processes (e.g. <code>fork</code>) returns the pid</li>
 <li>Operations on processes take pid as an argument (e.g. <code>kill</code>)</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/address%20space.html">address space</a>, <a href="/tags/cpu%20state.html">cpu state</a>, <a href="/tags/namespace.html">namespace</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/processes.html">processes</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/address%20space.html">address space</a>, <a href="/tags/cpu%20state.html">cpu state</a>, <a href="/tags/namespace.html">namespace</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/processes.html">processes</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distributed Systems Consistency Models</title>
+    <title>Distributed Systems Consistency Models | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/managing-critical-state.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Distributed Systems Consistency Models">
+    <meta property="og:description" content="This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/managing-critical-state.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Distributed Systems Consistency Models">
+    <meta name="twitter:description" content="This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="consistency models,paxos,linearizability,sequential consistency,snapshot reads,causal consistency,processor consistency,memory barrier/fence">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Systems Consistency Models", "dateModified": "2025-02-11T16:42:07.857501", "description": "This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.", "articleSection": "Distributed Systems", "keywords": "consistency models,paxos,linearizability,sequential consistency,snapshot reads,causal consistency,processor consistency,memory barrier/fence"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Distributed Systems Consistency Models
         </div>
-        <h1>Distributed Systems Consistency Models</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <hr />
+    </header>
+    <main role="main">
+        <article>
+            <h1>Distributed Systems Consistency Models</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.857501">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <hr />
 <p>title: Distributed Consensus Fundamentals
 category: Distributed Systems
 tags: Distributed Systems, Consensus Algorithms
@@ -257,8 +287,12 @@ description: This document covers the fundamentals of distributed consensus algo
 </ul>
 <p>One common performance pitfall with single-leader replication is that a client's perceived latency is proportional to the round-trip time between the client and the leader.</p>
 <h3 id="multi-paxos-detailed-message-flow">Multi-Paxos: Detailed Message Flow</h3>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/causal%20consistency.html">causal consistency</a>, <a href="/tags/consistency%20models.html">consistency models</a>, <a href="/tags/linearizability.html">linearizability</a>, <a href="/tags/memory%20barrier/fence.html">memory barrier/fence</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/processor%20consistency.html">processor consistency</a>, <a href="/tags/sequential%20consistency.html">sequential consistency</a>, <a href="/tags/snapshot%20reads.html">snapshot reads</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/causal%20consistency.html">causal consistency</a>, <a href="/tags/consistency%20models.html">consistency models</a>, <a href="/tags/linearizability.html">linearizability</a>, <a href="/tags/memory%20barrier/fence.html">memory barrier/fence</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/processor%20consistency.html">processor consistency</a>, <a href="/tags/sequential%20consistency.html">sequential consistency</a>, <a href="/tags/snapshot%20reads.html">snapshot reads</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

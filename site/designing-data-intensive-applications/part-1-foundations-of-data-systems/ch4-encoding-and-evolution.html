@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encoding, Evolution, and Data Flow in Distributed Systems</title>
+    <title>Encoding, Evolution, and Data Flow in Distributed Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document explores various aspects of data encoding and evolution in distributed systems. It covers different serialization formats, schema evolution strategies, and modes of data flow including databases, services, and message passing systems, with a focus on maintaining compatibility as systems change over time.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Encoding, Evolution, and Data Flow in Distributed Systems">
+    <meta property="og:description" content="This document explores various aspects of data encoding and evolution in distributed systems. It covers different serialization formats, schema evolution strategies, and modes of data flow including databases, services, and message passing systems, with a focus on maintaining compatibility as systems change over time.">
+    <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch4-encoding-and-evolution.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Encoding, Evolution, and Data Flow in Distributed Systems">
+    <meta name="twitter:description" content="This document explores various aspects of data encoding and evolution in distributed systems. It covers different serialization formats, schema evolution strategies, and modes of data flow including databases, services, and message passing systems, with a focus on maintaining compatibility as systems change over time.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="data serialization,schema evolution,compatibility,message passing,encoding formats">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Encoding, Evolution, and Data Flow in Distributed Systems", "dateModified": "2025-01-01T04:30:02.389794", "description": "This document explores various aspects of data encoding and evolution in distributed systems. It covers different serialization formats, schema evolution strategies, and modes of data flow including databases, services, and message passing systems, with a focus on maintaining compatibility as systems change over time.", "articleSection": "Distributed Systems", "keywords": "data serialization,schema evolution,compatibility,message passing,encoding formats"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Encoding, Evolution, and Data Flow in Distributed Systems
         </div>
-        <h1>Encoding, Evolution, and Data Flow in Distributed Systems</h1>
-        <div class="meta">
-            <span>Last modified: 2025-01-01</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="chapter-4">Chapter 4</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Encoding, Evolution, and Data Flow in Distributed Systems</h1>
+            <div class="meta">
+                <time datetime="2025-01-01T04:30:02.389794">
+                    Last modified: 2025-01-01
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="chapter-4">Chapter 4</h1>
 <h2 id="encoding-and-evolution">Encoding and Evolution</h2>
 <p><strong>evolvability</strong>: the ability to evolve as requirements change.</p>
 <p><strong>schema-on-read</strong>: schema isn't enforced when data is written, only when it is read. it can change over time.</p>
@@ -286,8 +316,12 @@
 <li><strong>Orleans</strong> uses custom encoding by default, and can be configured to use other encodings. Need to set up and shut down clusters when migrating schemas/versioning.</li>
 <li><strong>Erlang OTP</strong> experimental support for mapping Erlang data types to protobuf. Still need to be careful about schema evolution.</li>
 </ul>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/compatibility.html">compatibility</a>, <a href="/tags/data%20serialization.html">data serialization</a>, <a href="/tags/encoding%20formats.html">encoding formats</a>, <a href="/tags/message%20passing.html">message passing</a>, <a href="/tags/schema%20evolution.html">schema evolution</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/compatibility.html">compatibility</a>, <a href="/tags/data%20serialization.html">data serialization</a>, <a href="/tags/encoding%20formats.html">encoding formats</a>, <a href="/tags/message%20passing.html">message passing</a>, <a href="/tags/schema%20evolution.html">schema evolution</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

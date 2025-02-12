@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Translation Lookaside Buffer (TLB)</title>
+    <title>Translation Lookaside Buffer (TLB) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/tlb.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Translation Lookaside Buffer (TLB)">
+    <meta property="og:description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/tlb.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Translation Lookaside Buffer (TLB)">
+    <meta name="twitter:description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="virtual memory,address translation,page table,hardware,mmu">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Translation Lookaside Buffer (TLB)", "dateModified": "2025-02-11T20:49:09.808136", "description": "The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.", "articleSection": "Operating Systems", "keywords": "virtual memory,address translation,page table,hardware,mmu"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Translation Lookaside Buffer (TLB)
         </div>
-        <h1>Translation Lookaside Buffer (TLB)</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Translation Lookaside Buffer (TLB)</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:09.808136">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</h1>
 <p>Translates virtual page numbers to physical page numbers. It is a small, fully associative cache of page table entries implemented in hardware to improve the speed of address translation and decrease the number of memory accesses.</p>
 <h2 id="associative-and-direct-mapping">Associative and Direct Mapping</h2>
 <ul>
@@ -231,8 +261,12 @@
 <p>Forget about doing reads/writes. Instead, map the file into the address space. Any time you write to the address space, it writes to the file. Depending on the OS and cache type (write-through vs write-back), the file may be written to immediately or later. This is a very efficient way to read/write files, and is used in many applications.</p>
 <h4 id="soft-page-faults">Soft Page Faults</h4>
 <p>Fault on a page that are actually in memory, but the PTE was marked as invalid. Resolving soft faults is relatively cheap. This can be used whenever you need to wake up the OS to do something on reference to a page (for instance, a debugger watch point). Windows uses soft faults in its page replacement strategy.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/address%20translation.html">address translation</a>, <a href="/tags/hardware.html">hardware</a>, <a href="/tags/mmu.html">mmu</a>, <a href="/tags/page%20table.html">page table</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/address%20translation.html">address translation</a>, <a href="/tags/hardware.html">hardware</a>, <a href="/tags/mmu.html">mmu</a>, <a href="/tags/page%20table.html">page table</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

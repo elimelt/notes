@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Load Balancing</title>
+    <title>Load Balancing | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains load balancing strategies and their implications on distributed systems.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/load-balancing.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Load Balancing">
+    <meta property="og:description" content="Explains load balancing strategies and their implications on distributed systems.">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/load-balancing.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Load Balancing">
+    <meta name="twitter:description" content="Explains load balancing strategies and their implications on distributed systems.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="load balancing,distributed systems,paxos,sharding,edge caching,queueing,zipf distribution">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Load Balancing", "dateModified": "2025-02-11T16:42:07.810219", "description": "Explains load balancing strategies and their implications on distributed systems.", "articleSection": "Distributed Systems", "keywords": "load balancing,distributed systems,paxos,sharding,edge caching,queueing,zipf distribution"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Load Balancing
         </div>
-        <h1>Load Balancing</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="load-balancing">Load Balancing</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Load Balancing</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T16:42:07.810219">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="load-balancing">Load Balancing</h1>
 <p>In a load balancing systems, we want the following:</p>
 <ol>
 <li>Clients all follow the same assignment</li>
@@ -220,8 +250,12 @@ $$</p>
 <li>Friends on a social network</li>
 </ul>
 <p>We can cope with popular keys using <strong>power of two choices</strong>. Keys can be hashed to multiple (in this case two, but generalizes to $k$) servers, and requests are forwarded to whichever server is under less load.</p>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/edge%20caching.html">edge caching</a>, <a href="/tags/load%20balancing.html">load balancing</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/queueing.html">queueing</a>, <a href="/tags/sharding.html">sharding</a>, <a href="/tags/zipf%20distribution.html">zipf distribution</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/edge%20caching.html">edge caching</a>, <a href="/tags/load%20balancing.html">load balancing</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/queueing.html">queueing</a>, <a href="/tags/sharding.html">sharding</a>, <a href="/tags/zipf%20distribution.html">zipf distribution</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

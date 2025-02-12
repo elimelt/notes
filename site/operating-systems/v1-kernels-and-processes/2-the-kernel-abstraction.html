@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Kernel Abstraction</title>
+    <title>The Kernel Abstraction | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="The Kernel Abstraction">
+    <meta property="og:description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="The Kernel Abstraction">
+    <meta name="twitter:description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.">
+
+    <!-- Keywords from tags -->
+    <meta name="keywords" content="operating systems,kernel,process abstraction,process control block,privileged mode">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Kernel Abstraction", "dateModified": "2025-02-11T20:49:30.713163", "description": "Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.", "articleSection": "Operating Systems", "keywords": "operating systems,kernel,process abstraction,process control block,privileged mode"}
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -172,22 +197,27 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/index.html">Home</a>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
 <a href="/categories/index.html">Categories</a>
 <a href="/tags/index.html">Tags</a>
-    </nav>
-    <main>
-        <div class="breadcrumbs">
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » The Kernel Abstraction
         </div>
-        <h1>The Kernel Abstraction</h1>
-        <div class="meta">
-            <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-        </div>
-        <div class="content">
-            <h1 id="chapter-2-the-kernel-abstraction">Chapter 2 - The Kernel Abstraction</h1>
+    </header>
+    <main role="main">
+        <article>
+            <h1>The Kernel Abstraction</h1>
+            <div class="meta">
+                <time datetime="2025-02-11T20:49:30.713163">
+                    Last modified: 2025-02-11
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="chapter-2-the-kernel-abstraction">Chapter 2 - The Kernel Abstraction</h1>
 <p>"A central role of operating systems is protection - the isolation of potentially misbehaving applications and users so that they do not corrupt other applications or the operating system itself."</p>
 <p><strong>Kernel</strong>: The lowest level of software running on the operating system. It is the first program loaded on boot, and it remains in memory until the system is shut down. It is responsible for all interactions with the hardware, and it is the only program that runs in privileged mode.</p>
 <p><strong>Process</strong>: The execution of an application program with restricted access to the operating system and hardware. Processes are managed by the kernel, and they need to request access to resources from the kernel.</p>
@@ -607,8 +637,12 @@ b. Modifying the hardware to provide consistent behavior for instructions like <
 </li>
 <li>Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.</li>
 </ol>
-        </div>
-        <div class='tags'>Tags: <a href="/tags/kernel.html">kernel</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/privileged%20mode.html">privileged mode</a>, <a href="/tags/process%20abstraction.html">process abstraction</a>, <a href="/tags/process%20control%20block.html">process control block</a></div>
+            </div>
+            <div class='tags'>Tags: <a href="/tags/kernel.html">kernel</a>, <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/privileged%20mode.html">privileged mode</a>, <a href="/tags/process%20abstraction.html">process abstraction</a>, <a href="/tags/process%20control%20block.html">process control block</a></div>
+        </article>
     </main>
+    <footer role="contentinfo">
+        <p>&copy; 2025 Your Site Name. All rights reserved.</p>
+    </footer>
 </body>
 </html>

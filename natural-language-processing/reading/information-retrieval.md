@@ -1,3 +1,10 @@
+---
+title: **Indexing and Retrieval in Information Retrieval (IR)**
+category: Other
+tags: tf-idf, inverted index, precision, recall, interpolated_precision_curve, mean_average_precision, dense_vectors, bert
+description: Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics such as MAP, and dense vector-based approaches using BERT. It also touches on ad hoc retrieval, stop words, and precision/recall trade-offs. The focus is on the technical implementation of IR algorithms.
+---
+
 # Information Retrieval
 
 IR in general is the process of obtaining information based on user queries, and can be applied to pretty much any form of media. Probably the most prevalent form of IR that we use every day is through **search engines**.

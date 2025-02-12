@@ -1,3 +1,10 @@
+---
+title: Scalable Distributed Data Systems
+category: Distributed Systems
+tags: scalable distributed systems, scalability, fault tolerance, latency, shared memory architecture, shared disk architecture
+description: Covers core concepts in building scalable distributed data systems, including scaling up and out through architectures like shared memory and shared disk, to achieve improved fault tolerance, reduced latency, and increased system capacity. It likely delves into the trade-offs between these approaches and their applications in real-world distributed systems. The focus is on technical details of scalability and its relationship with distributed data systems.
+---
+
 # Preface
 ## Distributed Data
 

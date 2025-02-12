@@ -1,3 +1,10 @@
+---
+title: Distributed Computing for Data Mining
+category: Distributed Systems
+tags: data mining, distributed file systems, commodity hardware, MapReduce, Hadoop, Storage Infrastructure, Computation Infrastructure
+description: Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used to process large datasets. It compares the performance of these technologies using a word count example, providing insight into their strengths and weaknesses. The document also discusses the differences between Spark and Hadoop + MapReduce for data mining applications.
+---
+
 # Distributed Computing for Data Mining
 
 How can we extract knowledge from large data sets?

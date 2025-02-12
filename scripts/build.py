@@ -9,7 +9,7 @@ from datetime import datetime
 from urllib.parse import quote
 import re
 from collections import defaultdict
-from jinja2 import Environment, BaseLoader, TemplateNotFound, select_autoescape
+from jinja2 import Environment, BaseLoader, select_autoescape
 from markupsafe import Markup
 
 # Set up logging

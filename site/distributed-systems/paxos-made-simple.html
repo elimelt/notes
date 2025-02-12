@@ -298,18 +298,18 @@
 </ul>
 <h4 id="p1-an-acceptor-must-accept-the-first-proposal-it-receives">P1: An acceptor must accept the first proposal it receives</h4>
 <p>This guarantees that some value is accepted by each node that is proposed to, but it doesn't prevent situations where no proposal is accepted by a majority of acceptors.</p>
-<h4 id="p2-if-a-proposal-with-value-inlinemath6580817730450082275_1-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-inlinemath6580817730450082275_2">P2: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h4>
+<h4 id="p2-if-a-proposal-with-value-inlinemath1996051705321378082_1-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-inlinemath1996051705321378082_2">P2: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h4>
 <p>This guarantees that only a single value is chosen, since unique proposal numbers can be used to decide between accepted values.</p>
-<h5 id="p2a-if-a-proposal-with-value-inlinemath6580817730450082275_3-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-inlinemath6580817730450082275_4">P2a: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h5>
+<h5 id="p2a-if-a-proposal-with-value-inlinemath1996051705321378082_3-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-inlinemath1996051705321378082_4">P2a: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h5>
 <p>This is a stronger version of P2 that ensures previous values are not forgotten/overridden.</p>
 <p>However, P2a contradicts P1, since if a proposer "wakes up" after having been out of commission, it must accept whatever value is proposed first. We thus strengthen even further to...</p>
-<h5 id="p2b-if-a-proposal-with-value-inlinemath6580817730450082275_5-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-inlinemath6580817730450082275_6">P2b: If a proposal with value $v$ is chosen, then every higher-numbered proposal issues by any proposer has value $v$</h5>
+<h5 id="p2b-if-a-proposal-with-value-inlinemath1996051705321378082_5-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-inlinemath1996051705321378082_6">P2b: If a proposal with value $v$ is chosen, then every higher-numbered proposal issues by any proposer has value $v$</h5>
 <p>This shifts the burden of remembering and staying consistent with the chosen value to the proposers instead of the acceptors. We then have...</p>
 <p>$$
 \text{P2b} \to \text{P2a} \to \text{P2}
 $$</p>
 <p>In order to implement P2b, we must further constrain our algorithm's behavior to...</p>
-<h5 id="p2c-for-any-inlinemath6580817730450082275_7-and-inlinemath6580817730450082275_8-if-a-proposal-with-value-inlinemath6580817730450082275_9-and-number-inlinemath6580817730450082275_10-is-issued-there-is-a-set-inlinemath6580817730450082275_11-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-inlinemath6580817730450082275_12-has-accepted-any-proposal-numbered-less-than-inlinemath6580817730450082275_13-or-b-inlinemath6580817730450082275_14-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-inlinemath6580817730450082275_15-accepted-by-the-acceptors-in-inlinemath6580817730450082275_16">P2c: For any $v$ and $n$, if a proposal with value $v$ and number $v$0 is issued, there is a set $v$1 consisting of a majority of acceptors such that either (a) no acceptor in $v$2 has accepted any proposal numbered less than $v$3, or (b) $v$4 is the value of the highest-numbered proposal among all proposals numbered less than $v$5 accepted by the acceptors in $v$6</h5>
+<h5 id="p2c-for-any-inlinemath1996051705321378082_7-and-inlinemath1996051705321378082_8-if-a-proposal-with-value-inlinemath1996051705321378082_9-and-number-inlinemath1996051705321378082_10-is-issued-there-is-a-set-inlinemath1996051705321378082_11-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-inlinemath1996051705321378082_12-has-accepted-any-proposal-numbered-less-than-inlinemath1996051705321378082_13-or-b-inlinemath1996051705321378082_14-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-inlinemath1996051705321378082_15-accepted-by-the-acceptors-in-inlinemath1996051705321378082_16">P2c: For any $v$ and $n$, if a proposal with value $v$ and number $v$0 is issued, there is a set $v$1 consisting of a majority of acceptors such that either (a) no acceptor in $v$2 has accepted any proposal numbered less than $v$3, or (b) $v$4 is the value of the highest-numbered proposal among all proposals numbered less than $v$5 accepted by the acceptors in $v$6</h5>
 <p>To satisfy P2b, we must maintain P2c as an invariant. To make sure this invariant holds, proposers proposing a proposal numbered $v$7 must learn the highest-numbered proposal with a number less than $v$8 that has been accepted by a majority of acceptors, and propose that value if it exists.</p>
 <h4 id="proposition-algorithm">Proposition Algorithm</h4>
 <ol>
@@ -322,7 +322,7 @@ $$</p>
 </ol>
 <h4 id="acceptor-behavior">Acceptor Behavior</h4>
 <p>Acceptors can only receive <em>prepare</em> and <em>accept</em> requests, and can ignore any request without compromising safety (but certainly still sacrificing liveness).</p>
-<h5 id="p1a-an-acceptor-can-accept-a-proposal-numbered-inlinemath6580817730450082275_25-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-inlinemath6580817730450082275_26">P1a: An acceptor can accept a proposal numbered $v$5 iff it has not responded to a <em>prepare</em> request numbered greater than $v$6</h5>
+<h5 id="p1a-an-acceptor-can-accept-a-proposal-numbered-inlinemath1996051705321378082_25-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-inlinemath1996051705321378082_26">P1a: An acceptor can accept a proposal numbered $v$5 iff it has not responded to a <em>prepare</em> request numbered greater than $v$6</h5>
 <p>which implies P1</p>
 <h3 id="phases">Phases</h3>
 <h4 id="phase-1">Phase 1</h4>

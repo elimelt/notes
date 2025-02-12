@@ -54,7 +54,12 @@ class SiteGenerator:
         ".venv",
     }
 
-    def __init__(self, input_dir: str, output_dir: str, site_domain: str = "https://notes.elimelt.com"):
+    def __init__(
+        self,
+        input_dir: str,
+        output_dir: str,
+        site_domain: str = "https://notes.elimelt.com",
+    ):
         self.site_domain = site_domain
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
@@ -114,12 +119,12 @@ class SiteGenerator:
         metadata = {}
         if hasattr(md, "Meta"):
             metadata = {
-                "title": md.Meta.get("title", [file_path.stem.replace("-", " ").title()])[0],
+                "title": md.Meta.get(
+                    "title", [file_path.stem.replace("-", " ").title()]
+                )[0],
                 "category": md.Meta.get("category", [None])[0],
                 "tags": (
-                    md.Meta.get("tags", [""])[0].split(",")
-                    if "tags" in md.Meta
-                    else []
+                    md.Meta.get("tags", [""])[0].split(",") if "tags" in md.Meta else []
                 ),
                 "description": md.Meta.get("description", [None])[0],
             }
@@ -452,17 +457,23 @@ class SiteGenerator:
         output_path.chmod(0o644)
 
     def _render_template(self, page: Page) -> str:
-        """Render HTML template for a page"""
+        """Render HTML template for a page with LaTeX support"""
         navigation = self._generate_navigation(page)
         breadcrumbs = self._generate_breadcrumbs(page)
 
+        # Process LaTeX in content
+        content_with_latex = page.content
+
+        # Add all previous meta tags and SEO content...
         meta_description = page.description
         if not meta_description and page.content:
-            # Strip HTML tags and get first 160 characters
-            plain_content = re.sub(r'<[^>]+>', '', page.content)
-            meta_description = plain_content[:160].strip() + '...' if len(plain_content) > 160 else plain_content
+            plain_content = re.sub(r"<[^>]+>", "", page.content)
+            meta_description = (
+                plain_content[:160].strip() + "..."
+                if len(plain_content) > 160
+                else plain_content
+            )
 
-        # Generate schema.org JSON-LD
         schema_json = {
             "@context": "https://schema.org",
             "@type": "Article",
@@ -475,10 +486,8 @@ class SiteGenerator:
         if page.tags:
             schema_json["keywords"] = ",".join(page.tags)
 
-        # Generate canonical URL
         canonical_url = f"{self.site_domain}/{page.path.with_suffix('.html')}"
 
-        # Generate tags section if page has tags
         tags_section = ""
         if page.tags:
             tags_section = (
@@ -521,6 +530,37 @@ class SiteGenerator:
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
     {json.dumps(schema_json)}
+    </script>
+
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+            crossorigin="anonymous"
+            onload="renderMathInElement(document.body);"></script>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {{
+            renderMathInElement(document.body, {{
+                delimiters: [
+                    {{left: '$$', right: '$$', display: true}},
+                    {{left: '$', right: '$', display: false}},
+                    {{left: '\\(', right: '\\)', display: false}},
+                    {{left: '\\[', right: '\\]', display: true}}
+                ],
+                throwOnError: false
+            }});
+        }});
     </script>
     <style>
         :root {{
@@ -690,6 +730,21 @@ class SiteGenerator:
             color: var(--text-color);
             opacity: 0.8;
         }}
+
+        .katex {{
+            font-size: 1.1em;
+        }}
+        .katex-display {{
+            overflow: auto hidden;
+            padding: 1em 0;
+        }}
+        .katex-display > .katex {{
+            white-space: normal;
+        }}
+        /* Add padding for display math */
+        .katex-display > .katex > .katex-html {{
+            padding: 2px 0;
+        }}
     </style>
 </head>
 <body>
@@ -711,7 +766,7 @@ class SiteGenerator:
                 {f'<span>Category: <a href="/categories/{quote(page.category.lower())}.html">{page.category}</a></span>' if page.category else ''}
             </div>
             <div class="content">
-                {page.content}
+                {content_with_latex}
             </div>
             {tags_section}
         </article>
@@ -721,6 +776,7 @@ class SiteGenerator:
     </footer>
 </body>
 </html>"""
+
 
 def main():
     """CLI entry point"""

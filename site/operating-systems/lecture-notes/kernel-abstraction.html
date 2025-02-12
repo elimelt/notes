@@ -30,6 +30,37 @@
     <script type="application/ld+json">
     {"@context": "https://schema.org", "@type": "Article", "headline": "Hardware Modes", "dateModified": "2025-02-11T20:48:58.415910", "description": "Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the processor switches between privileged kernel mode and restricted user mode to provide protection with restrictions. Explains the use of the EFLAGS register in x86 systems and the status register in MIPS architectures to control and monitor the current hardware mode.", "articleSection": "Operating Systems", "keywords": "hardware modes,kernel mode,user mode,dual mode operation,eflags register,mips status register"}
     </script>
+
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+          crossorigin="anonymous">
+
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
+            crossorigin="anonymous"></script>
+
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+            integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+            crossorigin="anonymous"
+            onload="renderMathInElement(document.body);"></script>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\(', right: '\)', display: false},
+                    {left: '\[', right: '\]', display: true}
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -197,6 +228,21 @@
             border-left: 4px solid var(--accent-color);
             color: var(--text-color);
             opacity: 0.8;
+        }
+
+        .katex {
+            font-size: 1.1em;
+        }
+        .katex-display {
+            overflow: auto hidden;
+            padding: 1em 0;
+        }
+        .katex-display > .katex {
+            white-space: normal;
+        }
+        /* Add padding for display math */
+        .katex-display > .katex > .katex-html {
+            padding: 2px 0;
         }
     </style>
 </head>

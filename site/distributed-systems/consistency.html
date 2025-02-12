@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Systems Consistency Models</title>
+    <meta name="description" content="This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/other.html">other</a> » Distributed Systems Consistency Models
+        </div>
+        <h1>Distributed Systems Consistency Models</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/other.html">other</a></span>
+        </div>
+        <div class="content">
+            <h1 id="consistency">Consistency</h1>
+<p><strong>Consistency</strong>: the allowed semantics of operations that mutate a data store/shared object.</p>
+<p>Consistency specifies the interface (as opposed to implementation) for behavior of your system. It is essentially the contract between the programmer and implementer. An <strong>anomaly</strong> is a violation of the consistency semantics of the system</p>
+<h2 id="types-of-consistency">Types of Consistency</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strong Consistency</td>
+<td>The system behaves as if there is a single server. Systems that maintain a single consistent log of operations are often strongly consistent.</td>
+</tr>
+<tr>
+<td>Weak Consistency</td>
+<td>Definitions vary, but basically just <em>not</em> strong consistency.</td>
+</tr>
+<tr>
+<td>Eventual Consistency</td>
+<td>Weak consistency with any anomalies guaranteed to be temporary.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="coordinating-through-a-kv-store">Coordinating through a KV Store</h2>
+<pre><code class="language-python">def Produce(key, lock, command):
+  result = application.execute(command)
+  storage.put(key, result)
+  storage.put(lock, True)
+
+def Consume(key, lock):
+  while storage.get(lock) is False:
+    pass
+  return storage.get(key)
+</code></pre>
+<p>With strong consistency semantics, the above approach works fine. However, with eventual consistency, and particularly for any system without multi-key transactions, we might see the update for <code>storage.get(done)</code> before the update for <code>storage.get(key)</code>, leading to unexpected behavior.</p>
+<h2 id="formalization">Formalization</h2>
+<p><a href="https://lamport.azurewebsites.net/pubs/interprocess.pdf">Read here</a> for more info/theory.</p>
+<p>For a given RPC, the initial request starts at time $t$ and the reply returns at time $t + x$. We cannot be sure what happens during $(t, t + x)$, since the request/reply could be lost and retransmitted, and intermediate coordination sometimes has to take place.</p>
+<p>With only a single server, you don't know precisely when the operation takes place, but we expect it to be some time in $(t, t + x)$. However, weaker consistency models relax this assumption, also sometimes allowing different readers to see different results concurrently.</p>
+<p>We use different models because of the following tradeoffs:</p>
+<ul>
+<li>Performance: Consistency requires coordination, so there is often a tradeoff between the level of consistency and the performance of the system</li>
+<li>Availability: If some client is offline or some network failure occurs, we might be forced to abandon strong consistency</li>
+<li>Programmability: Weaker consistency models are harder to reason about and program with</li>
+</ul>
+<h3 id="lamports-register-semantics">Lamport's Register Semantics</h3>
+<p>Registers hold a single value, and we define operations $r_i, $w(v)$ as the $i$th read, and a write to the register with value $v$. Each operation has some starting time and ending time.</p>
+<ul>
+<li>A read is <strong>safe</strong> if it is not concurrent with any write, and thus obtains the previously written value.</li>
+<li>A read is <strong>regular</strong> if it is either safe, or if concurrent with a write, obtains either the old or new value.</li>
+<li>A read/write is <strong>atomic</strong> if operations are safe, or if reads and writes behave as if they occur in some definite order.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Semantics</th>
+<th>Constraints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>safe</td>
+<td>$r_1 \to v_1$</td>
+</tr>
+<tr>
+<td>regular</td>
+<td>$r_1 \to v_1 \land (r_2 \to v_1 \lor r_2 \to v_2) \land (r_3 \to v_1 \lor r_3 \to v_2)$</td>
+</tr>
+<tr>
+<td>atomic</td>
+<td>$r_1 \to v_1 \land (r_2 \to v_1 \lor r_2 \to v_2) \land (r_3 \to v_1 \lor r_3 \to v_2) \land (r_2 \to v_2 \implies t_3 \to v_2)$</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-plaintext">            r1           r2     r3
+          |----|       |----| |----|
+   w(v1)                w(v2)
+|------|             |---------|
+</code></pre>
+<h2 id="linearizability">Linearizability</h2>
+<p>A <strong>linearizable</strong> system is one in which actions appear to occur in a single global order that is consistent with real time/causal order. Not all systems enforce linearizability.</p>
+<p>To do linearizable reads in Paxos, you need to first verify that the leader is <strong>still</strong> the leader at the time of the read. Otherwise, its possible that some other leader took over and formed a majority without the old leader. This can be done by waiting for the leader to execute some other request, which will only go through if we are indeed still the leader.</p>
+<h3 id="linearizable-sharding-with-paxos">Linearizable Sharding with Paxos</h3>
+<p>For linearizability with shards, we have the following requirements:</p>
+<ul>
+<li>All operations from the same node occur in order</li>
+<li>All operations to the same shard occur in order</li>
+<li>All operations complete between the request send and response receive.</li>
+</ul>
+<p>Parallelism/concurrency of batched requests becomes difficult in a sharded system, since breaking up operations of a batched request into a pipeline completely throws out the original order of the request. We can instead think of systems in terms of a weaker consistency model.</p>
+<h3 id="sequential-consistency">Sequential Consistency</h3>
+<p><strong>Sequential Consistency</strong> is a weaker form of consistency that requires all operations to be executed in some order that is consistent with the order in which they were issued. However, S.C. doesn't always follow real-time order. This is also referred to as <strong>serializability</strong> in the context of transactions.</p>
+<p>Simplistically, we can think of sequential consistency as a system where all operations are executed in some order that is consistent with the order in which they were issued, but not necessarily during their window of request/response timing. This allows stale reads, while still maintaining some order that is consistent with a prefix of the global state of the system.</p>
+<h3 id="snapshot-reads">Snapshot Reads</h3>
+<p>Gives us a consistent view of our global state across some set of views of the system. This requires all operations being serializable, but it is okay if reads return stale data.</p>
+<ul>
+<li>All reads in a transaction must be from the same snapshot</li>
+<li>Client can define how old is too old for their usecase</li>
+</ul>
+<p>To implement this (without sharding) in conjunction with Paxos, we can do the following:</p>
+<ol>
+<li>Primary defines update order in log</li>
+<li>Shadow replicas apply changes in that order</li>
+<li>Each lag primary from some variable amount</li>
+<li>Snapshot reads occur at a single replica</li>
+<li>If a replica crashes during a transaction, restart transaction at another snapshot replica</li>
+</ol>
+<h3 id="causal-consistency">Causal Consistency</h3>
+<ul>
+<li>Causally related reads and writes (ordered by happens before relation) must occur in that order.</li>
+<li>Concurrent writes can be seen in different orders on different nodes</li>
+<li>Note that linearizability imples causality</li>
+</ul>
+<h3 id="processor-consistency">Processor Consistency</h3>
+<ul>
+<li>Writes done by the same process are seen in that order.</li>
+<li>Writes by different processors can be seen in different orders by different readers</li>
+</ul>
+<h3 id="memory-barrierfence">Memory Barrier/Fence</h3>
+<ul>
+<li>Whenever consistency matters, you can insert a "fence" in a point of time that says all preceding operations happen before the fence, and all subsequent operations happen after</li>
+<li>On either side of the fence, order is not enforced</li>
+<li>If every operation is fenced, your system is linearizable</li>
+</ul>
+<p>This is how POSIX files work. Also many mutli-cache systems use fences to enforce consistency.</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/causal%20consistency.html">causal consistency</a>, <a href="/tags/consistency%20models.html">consistency models</a>, <a href="/tags/linearizability.html">linearizability</a>, <a href="/tags/memory%20barrier/fence.html">memory barrier/fence</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/processor%20consistency.html">processor consistency</a>, <a href="/tags/sequential%20consistency.html">sequential consistency</a>, <a href="/tags/snapshot%20reads.html">snapshot reads</a></div>
+    </main>
+</body>
+</html>

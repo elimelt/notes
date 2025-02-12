@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Media
+        </div>
+        <h1>Media</h1>
+        <div class="meta">
+            <span>Last modified: 2024-02-03</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="media">Media</h1>
+<p><em>Media</em> propagates signals that carry information.</p>
+<h2 id="wires">Wires</h2>
+<h3 id="twisted-pair">Twisted Pair</h3>
+<ul>
+<li>Very common in LANs and phone lines. </li>
+<li>Two insulated copper wires twisted together to reduce radiation/crosstalk, leading to less interference.</li>
+</ul>
+<p>EX: Ethernet, DSL</p>
+<h3 id="coaxial-cable">Coaxial Cable</h3>
+<ul>
+<li>Copper core, surrounded by insulating material, surrounded by braided metal shield, surrounded by protective outer layer of plastic.</li>
+<li>Support higher data rates than twisted pair.</li>
+<li>Longer distances and better shielding.</li>
+<li>More expensive and harder to install than twisted pair. They are pretty inflexible.</li>
+</ul>
+<p>EX: Cable TV, Internet</p>
+<h3 id="fiber">Fiber</h3>
+<ul>
+<li>Long, thin, pure glass strands that carry modulated light.</li>
+<li>Very high data rates and long distances.</li>
+<li>Immune to electromagnetic interference.</li>
+<li>Expensive and hard to install.</li>
+<li>Muli-mode vs. single-mode fiber is just a matter of multiple or single paths for light to travel.</li>
+</ul>
+<p>EX: Internet backbone</p>
+<h2 id="wireless">Wireless</h2>
+<p>Sends signals in all directions through a region of space. Nearby signals can <strong>interfere</strong> with each other, especially if they are on the same frequency; must coordinate use over time and frequency.</p>
+<p>Wifi largely uses unlicensed spectrum, which is free to use but can be crowded. Interference can be a big problem. For example, turning on your microwave can interfere with your wifi.</p>
+<p>Signals can take multiple paths (<strong>multipath</strong>), and are affected by physical barriers. The higher the frequency, the more easily it is absorbed by walls and other obstacles (this is why 5G sucks).</p>
+<h3 id="channel-properties">Channel Properties</h3>
+<ul>
+<li><strong>Bandwidth (Hz)</strong>: The range of frequencies that the channel can carry. Note that bandwidth in this context is not the same as the <em>data-rate</em> of a link.</li>
+<li><strong>Signal Power (Watts)</strong>: The strength of the signal.</li>
+<li><strong>Noise Power (Watts)</strong>: The strength of the noise.</li>
+</ul>
+<h3 id="nyquist-limit">Nyquist Limit</h3>
+<p>The max <strong>symbol-rate</strong> (rate at which symbols are sent) is twice the bandwidth. This would mean maintaining a maximum frequency, and sending a signal for each peak or trough of the wave.</p>
+<p>If there are $V$ signal levels, ignoring noise, the max data rate is $2B \log_2(V)$ bits/sec.</p>
+<h3 id="shannon-capacity">Shannon Capacity</h3>
+<p>The number of levels we can distinguish is limited by the ratio of signal power to noise power. The signal-to-noise ratio (SNR) is the ratio of the signal power to the noise power, and the higher the SNR, the more levels we can distinguish. Usually measured in decibels (dB).</p>
+<p>$$
+SNR_{dB} = 10 \log_{10} \left( \frac{S}{N} \right)
+$$</p>
+<p>Capacity (C) is the max <strong>lossless</strong> data rate over a channel. Don't ask me how to derive this...</p>
+<p>$$
+C = B \log_2 \left( 1 + \frac{S}{N} \right)
+$$</p>
+<p>Note that increasing bandwidth increases the capacity linearly, but increasing SNR increases the capacity logarithmically.</p>
+        </div>
+        
+    </main>
+</body>
+</html>

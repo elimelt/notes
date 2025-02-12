@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedforward Neural Networks</title>
+    <meta name="description" content="Overview of neural networks (feedforward), particularly in the context of natural language processing.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">natural language processing</a> » Feedforward Neural Networks
+        </div>
+        <h1>Feedforward Neural Networks</h1>
+        <div class="meta">
+            <span>Last modified: 2025-01-14</span>
+            <span>Category: <a href="/categories/natural%20language%20processing.html">natural language processing</a></span>
+        </div>
+        <div class="content">
+            <h1 id="neural-networks">Neural Networks</h1>
+<p>Contrasting with MLR, neural networks are a more flexible model that can learn complex patterns in the data, even without hand-crafted features.</p>
+<h2 id="activation-functions">Activation Functions</h2>
+<p>A single computational unit $z = w \cdot x + b$ is a linear function of the input $x$ with weights $w$ and bias $b$. The output $y$ is a non-linear function of $f(z)$, where $f$ is the activation function (typically one of $\tanh$, $\text{ReLU}$, or $\sigma$).</p>
+<p>$$
+y = \sigma(w \cdot x + b) = \frac{1}{1 + e^{-(w \cdot x + b)}}
+$$</p>
+<p>In practice, $\sigma$ is rarely the best choice, and $\tanh$ is similar yet almost always better. $\tanh$ is a scaled version of $\sigma$ that ranges from $-1$ to $1$.</p>
+<p>$$
+y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
+$$</p>
+<p>The simplest activation function is the Rectified Linear Unit (ReLU), which is $0$ for negative inputs and linear for positive inputs.</p>
+<p>$$
+y = \text{ReLU}(w \cdot x + b) = \max(0, w \cdot x + b)
+$$</p>
+<p>A potential upside with ReLU is that it is computationally efficient, and also prevents the vanishing gradient problem, e.g. when the gradient is $\approx 0$, and the network stops learning.</p>
+<h2 id="the-xor-problem">The XOR Problem</h2>
+<p>It can be shown that a single computational unit cannot solve XOR, as it is a non-linear problem. However, a two-layer network can solve XOR, as it can learn to represent the input in a higher-dimensional space where the problem is linearly separable.</p>
+<p>$$
+y = \begin{cases}
+1 &amp; \text{if } w \cdot x + b &gt; 0 \
+0 &amp; \text{otherwise}
+\end{cases}
+$$</p>
+<p>XOR turns out to be a simple example of a problem that is not linearly separable in the input space, since the inputs $(x_1, x_2) = (0, 0)$ and $(1, 1)$ are in the same class, while $(0, 1)$ and $(1, 0)$ are in the other class. It is not possible to draw a straight line that separates the two classes.</p>
+<h2 id="feedforward-neural-networks">Feedforward Neural Networks</h2>
+<p>A feedforward NN is a multi-layer network where the output of each layer is the input to the next layer, all with no cycles. They are sometimes called multilayer perceptrons (MLPs), although this term is technically only applicable to networks with a single step function as their activation function.</p>
+<p>The network has three different types of nodes:</p>
+<h3 id="input-units">Input units</h3>
+<p>vector of input units is $x$. One node for each feature in the input.</p>
+<h3 id="hidden-layers">Hidden layers</h3>
+<p>one or more layers of hidden units, each with a non-linear activation function. In the standard architecture, each node is connected with all nodes in the previous layer. Thus, each hidden unit sums over all input values.</p>
+<p>For a given hidden layer $h$, we combine the weights $w$ and bias $b$ for each computational unit into a weight matrix $W$ and bias vector $b$. Each element $W_{ij}$ of the weight matrix is the weight from the $i$th input unit $x_i$ to the $j$th hidden unit $h_j$.</p>
+<p>Thus, the output for a given hidden layer with activation function $f$ is:</p>
+<p>$$
+h = f(W \cdot x + b)
+$$</p>
+<h4 id="dimensionality">Dimensionality</h4>
+<p>Referring to the input layer as layer $0$, and $n_0$ as the number of input units, we have an input $x \in \mathbb{R}^{n_0}$, e.g. a column vector with dimension $n_0 \times 1$.</p>
+<p>The first hidden layer $h^{(1)}$ has $n_1$ hidden units, so $W \in \mathbb{R}^{n_1 \times n_0}$, and $b \in \mathbb{R}^{n_1}$.</p>
+<p>$$
+h_j = f\left(\sum_{i=1}^{n_0} W_{ji} x_i + b_j\right)
+$$</p>
+<h3 id="output-units">Output units</h3>
+<p>one or more output units, each with a non-linear activation function. The output layer is the final layer of the network, and the output $y$ with $dim(y) = n_{\text{output}}$ is an estimate for the probability distribution of the correct class/output.</p>
+<h4 id="normalization">Normalization</h4>
+<p>In order to get that probability distribution, we normalize the output of the network using the softmax function.</p>
+<p>$$
+y = \text{softmax}(W \cdot h + b)
+$$</p>
+<p>$$
+\text{softmax}(z) = \frac{e^z}{\sum_{i=1}^n e^{z_i}}
+$$</p>
+<h3 id="comparison-with-mlr">Comparison with MLR</h3>
+<p>A NN is like MLR but with with a few differences:
+- many layers, since a deep NN is like layer after layer of MLR classifiers
+- intermediate layers have non-linear activation functions. In fact, without these, the network would just be a linear classifier since the composition of linear functions is still linear
+- instead of feature selection, previous layers build up a representation of the input that is useful for the final layer</p>
+<h3 id="detailsnotation">Details/Notation</h3>
+<ul>
+<li>$*^{[l]}$ denotes a quantity associated with the $l$th layer, e.g. $W^{[l]}$ is the weight matrix for the $l$th layer. Note that these indices are 1-indexed.</li>
+<li>$n_l$ is the number of units in layer $l$.</li>
+<li>$g(.)$ is the activation function, which tends to be $\tanh$ or ReLU for hidden layers, and softmax for the output layer.</li>
+<li>$a^{[l]}$ is the output from layer $l$</li>
+<li>$z^{[l]}$ is the input to the activation function in layer $l$, e.g. $z^{[l]} = W^{[l]} \cdot a^{[l-1]} + b^{[l]}$</li>
+<li>$x = a^{[0]}$ is the input vector</li>
+</ul>
+<h4 id="example-2-layer-nn">Example: 2-layer NN</h4>
+<p>$$
+\begin{align<em>}
+z^{[1]} &amp;= W^{[1]} \cdot a^{[0]} + b^{[1]} \
+a^{[1]} &amp;= g^{[1]}(z^{[1]}) \
+z^{[2]} &amp;= W^{[2]} \cdot a^{[1]} + b^{[2]} \
+a^{[2]} &amp;= g^{[2]}(z^{[2]}) \
+\hat{y} &amp;= a^{[2]}
+\end{align</em>}
+$$</p>
+<h3 id="feedforward-computation">Feedforward Computation</h3>
+<p>$$
+\begin{align*}
+\text{for } l = 1, \ldots, L: \
+z^{[l]} &amp;= W^{[l]} \cdot a^{[l-1]} + b^{[l]} \
+a^{[l]} &amp;= g^{[l]}(z^{[l]})\</p>
+<p>\text{return } \hat{y} = a^{[L]}
+\end{align*}
+$$</p>
+<pre><code class="language-python">def feedforward(x):
+  a = x
+  for l in range(1, L):
+    z = W[l] @ a + b[l]
+    a = g[l](z)
+  return a
+</code></pre>
+<h3 id="replacing-the-bias">Replacing the Bias</h3>
+<p>Often, the bias term is included in the weight matrix, by adding a column of $1$s to the input vector $x$.</p>
+<p>With $a^{[0]}_0 = 1$, we can write $z^{[l]} = W^{[l]} \cdot a^{[l-1]}$.</p>
+<p>$$
+h_j = f\left(\sum_{i=1}^{n_0} W_{ji} x_i\right)
+$$</p>
+<h2 id="ff-networks-for-nlp-classification">FF networks for NLP: Classification</h2>
+<p>Instead of manually designed features, use words as embeddings (e.g. word2vec, GloVe). This constitutes "pre-training", i.e. relying on already computed values/embeddings. One simple method of representing a sentence is to sum the embeddings of the words in the sentence, or to average them.</p>
+<p>To classify many examples at once, pack inputs into a single matrix $X$ where each row $i$ is an input vector $x^{(i)}$. If our input has $d$ features, then $X \in \mathbb{R}^{m \times d}$ where $m$ is the number of examples.</p>
+<p>$W \in \mathbb{R}^{d_h \times d}$ is the weight matrix for the hidden layer, and $b \in \mathbb{R}^{d_h}$ is the bias vector. $Y \in \mathbb{R}^{m \times n_{\text{output}}}$ is the output matrix.</p>
+<p>$$
+\begin{align<em>}
+H &amp;= f(X W^T + b) \
+Z &amp;= H U^T\
+\hat{Y} &amp;= \text{softmax}(Z)
+\end{align</em>}
+$$</p>
+<h2 id="training-neural-nets">Training Neural Nets</h2>
+<p>We want to learn the parameters $W^{[i]}$ and $b^{[i]}$ for each layer $i$ that make $\hat{y}$ as close as possible to the true $y$.</p>
+<h3 id="loss-function">Loss Function</h3>
+<p>Same as the one used for MLR, the cross-entropy loss function.</p>
+<p>For binary classification, the loss function is:
+$$
+L_{\text{CE}}(\hat{y}, y) = - \log p(y | x) = - \left [ y \log \hat{y} + (1 - y) \log (1 - \hat{y}) \right ]
+$$</p>
+<p>For multi-class classification, the loss function is:</p>
+<p>$$
+L_{\text{CE}}(\hat{y}, y) = - \sum_{i=1}^n y_i \log \hat{y}_i = - \log \hat{y}_i \text{ where } y_i = 1
+$$</p>
+<p>$$
+L_{\text{CE}}(\hat{y}, y) = -\log \frac{exp(z_{c})}{\sum_{i=1}^K exp(z_i)}
+$$</p>
+<h3 id="backpropagation">Backpropagation</h3>
+<p>One must pass gradients back through the network to update the weights. This is done using the chain rule. Each node in a computation graph takes an <strong>upstream</strong> gradient and computes its <strong>local</strong> gradient, multiplying the two to get the <strong>downstream</strong> gradient. A node may have multiple local gradients, one for each incoming edge.</p>
+<h4 id="a-very-simple-example">A very simple example</h4>
+<p>Consider the function $L(a, b, c) = c(a + 2b)$. Create a computation graph with nodes $a, b, c$ for the inputs, and $d = 2b, e = a + d, L = ce$ for the intermediate computations.</p>
+<pre><code>(a) ---------------- \
+                      (e) ------------ (L)
+                     /                /
+(b) --------(d)-----    /-------------
+                       /
+(c) -------------------
+</code></pre>
+<p>$$
+\begin{align<em>}
+\frac{\partial L}{\partial c} &amp;= e = a + 2b \
+\frac{\partial L}{\partial a} &amp;= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial a} = c \
+\frac{\partial L}{\partial b} &amp;= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial d} \cdot \frac{\partial d}{\partial b} = 2c
+\end{align</em>}
+$$</p>
+<h3 id="learning-details">Learning details</h3>
+<p>NN optimization is a non-convex optimization problem, so it requires a few techniques to work well:</p>
+<ul>
+<li>Initialize weights and biases to small random values instead of all zeros</li>
+<li>Normalize input values to $\mu = 0, \sigma = 1$</li>
+<li>Dropout: randomly (with probability $p$) set some hidden units to 0, then renormalize other inputs to prevent overfitting</li>
+<li>Hyperparameters: learning rate, mini-batch size, number of hidden units, number of layers, choice of activation function, etc.</li>
+</ul>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/deep%20learning.html">deep learning</a>, <a href="/tags/feedforward.html">feedforward</a>, <a href="/tags/machine%20learning.html">machine learning</a>, <a href="/tags/natural%20language%20processing.html">natural language processing</a>, <a href="/tags/neural%20networks.html">neural networks</a></div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Unix Timesharing System</title>
+    <meta name="description" content="Paper review/notes from lecture of Unix Timesharing System">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » The Unix Timesharing System
+        </div>
+        <h1>The Unix Timesharing System</h1>
+        <div class="meta">
+            <span>Last modified: 2025-01-15</span>
+            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="source"><a href="https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf">source</a></h1>
+<h6 id="the-unix-timesharing-system">The Unix Timesharing System</h6>
+<hr />
+<h3 id="what-is-the-problem">What is the Problem?</h3>
+<p>A very unspecific problem. Essentially they were burnt by Multics and wanted to create a simpler and more general system.</p>
+<h3 id="summary">Summary</h3>
+<p>Key design goal is simplicity. Everything is hierarchical. Everything is a file.</p>
+<h4 id="file-system-implementation">File System Implementation</h4>
+<ul>
+<li>Tree strucutre</li>
+<li>FS mounted on a file</li>
+<li>Sys table of i-numbers (i-list)</li>
+<li>i-node contains metadata for each file</li>
+<li>path names don't distinguish between files and directories</li>
+<li>mount table for mounted file systems</li>
+<li>buffering is built into kernel and transparent to user<ul>
+<li>write-behind (flushes to disk when buffer is full)</li>
+</ul>
+</li>
+</ul>
+<h4 id="storage-devices">Storage Devices</h4>
+<ul>
+<li>block devices<ul>
+<li>data is stored in fixed-size blocks</li>
+<li>"free list" of blocks for allocation, Linked list of blocks</li>
+<li>hard disks, usb drive, ssd, tape drives</li>
+<li>early versions of ethernet</li>
+</ul>
+</li>
+<li>character devices</li>
+</ul>
+<h4 id="execution">Execution</h4>
+<ul>
+<li><strong>Image</strong> is an execution env (parallel container)</li>
+<li><strong>Process</strong> is an instance/execution of an image<ul>
+<li>Program text write-protected and shared between all instances of that process</li>
+<li>Separate virtual address space for each process</li>
+</ul>
+</li>
+<li>Kernel<ul>
+<li>Mediator for accessing services/hardware/shared resources</li>
+</ul>
+</li>
+</ul>
+<h3 id="key-insights">Key Insights</h3>
+<h2 id="-">-</h2>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/systems.html">systems</a>, <a href="/tags/unix.html">unix</a></div>
+    </main>
+</body>
+</html>

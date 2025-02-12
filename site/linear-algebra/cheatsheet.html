@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheatsheet</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Cheatsheet
+        </div>
+        <h1>Cheatsheet</h1>
+        <div class="meta">
+            <span>Last modified: 2024-11-09</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="fundamentals-of-vectors">Fundamentals of Vectors</h1>
+<h2 id="geometric-basics">Geometric Basics</h2>
+<h3 id="definition-and-representation">Definition and Representation</h3>
+<ul>
+<li>A vector is a quantity with both magnitude and direction</li>
+<li>Notation: $\vec{v}$ or $\mathbf{v}$ or $\begin{pmatrix} x \ y \ z \end{pmatrix}$</li>
+<li>Components: $\vec{v} = \langle v_1, v_2, v_3 \rangle$ in 3D space</li>
+</ul>
+<h3 id="geometric-interpretation">Geometric Interpretation</h3>
+<ul>
+<li>Directed line segment from initial point to terminal point</li>
+<li>Length (magnitude): $|\vec{v}| = \sqrt{v_1^2 + v_2^2 + v_3^2}$</li>
+<li>Two vectors are equal if they have same magnitude and direction</li>
+</ul>
+<h3 id="position-vectors">Position Vectors</h3>
+<ul>
+<li>Vector from origin to a point $P(x,y,z)$</li>
+<li>Written as: $\vec{r} = x\mathbf{i} + y\mathbf{j} + z\mathbf{k}$</li>
+</ul>
+<h3 id="direction-vectors">Direction Vectors</h3>
+<ul>
+<li>Unit vector in direction of $\vec{v}$: $\hat{v} = \frac{\vec{v}}{|\vec{v}|}$</li>
+<li>Represents pure direction (magnitude = 1)</li>
+</ul>
+<h3 id="unit-vectors">Unit Vectors</h3>
+<ul>
+<li>Vectors with magnitude 1: $|\vec{u}| = 1$</li>
+<li>Direction cosines: $\cos \alpha = \frac{v_1}{|\vec{v}|}, \cos \beta = \frac{v_2}{|\vec{v}|}, \cos \gamma = \frac{v_3}{|\vec{v}|}$</li>
+</ul>
+<h4 id="standard-basis-vectors">Standard Basis Vectors</h4>
+<table>
+<thead>
+<tr>
+<th>Vector</th>
+<th>Components</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\mathbf{i}$</td>
+<td>$\langle 1,0,0 \rangle$</td>
+<td>Unit vector in x-direction</td>
+</tr>
+<tr>
+<td>$\mathbf{j}$</td>
+<td>$\langle 0,1,0 \rangle$</td>
+<td>Unit vector in y-direction</td>
+</tr>
+<tr>
+<td>$\mathbf{k}$</td>
+<td>$\langle 0,0,1 \rangle$</td>
+<td>Unit vector in z-direction</td>
+</tr>
+</tbody>
+</table>
+<h2 id="basic-vector-operations">Basic Vector Operations</h2>
+<h3 id="addition-and-subtraction">Addition and Subtraction</h3>
+<ul>
+<li>Addition: $\vec{a} + \vec{b} = \langle a_1+b_1, a_2+b_2, a_3+b_3 \rangle$</li>
+<li>Subtraction: $\vec{a} - \vec{b} = \langle a_1-b_1, a_2-b_2, a_3-b_3 \rangle$</li>
+</ul>
+<h4 id="parallelogram-law">Parallelogram Law</h4>
+<ul>
+<li>Sum of vectors forms diagonal of parallelogram</li>
+<li>$\vec{a} + \vec{b} = \vec{d}$ where $\vec{d}$ is diagonal</li>
+</ul>
+<h4 id="triangle-inequality">Triangle Inequality</h4>
+<ul>
+<li>$|\vec{a} + \vec{b}| \leq |\vec{a}| + |\vec{b}|$</li>
+<li>Equality holds if and only if vectors are parallel</li>
+</ul>
+<h3 id="scalar-multiplication">Scalar Multiplication</h3>
+<ul>
+<li>$c\vec{v} = \langle cv_1, cv_2, cv_3 \rangle$</li>
+<li>Properties:</li>
+<li>$c(\vec{a} + \vec{b}) = c\vec{a} + c\vec{b}$</li>
+<li>$(c_1 + c_2)\vec{a} = c_1\vec{a} + c_2\vec{a}$</li>
+<li>$|c\vec{v}| = |c||\vec{v}|$</li>
+</ul>
+<h1 id="systems-of-linear-equations">Systems of Linear Equations</h1>
+<h2 id="matrix-form-ax-b">Matrix Form (Ax = b)</h2>
+<p>$$
+\begin{bmatrix}
+a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \
+a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn}
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \ x_2 \ \vdots \ x_n
+\end{bmatrix} =
+\begin{bmatrix}
+b_1 \ b_2 \ \vdots \ b_m
+\end{bmatrix}
+$$</p>
+<h2 id="solution-types">Solution Types</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Condition</th>
+<th>Geometric Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unique Solution</td>
+<td>$\text{rank}(A) = \text{rank}([A|b]) = n$</td>
+<td>Lines/planes intersect at one point</td>
+</tr>
+<tr>
+<td>Infinite Solutions</td>
+<td>$\text{rank}(A) = \text{rank}([A|b]) &lt; n$</td>
+<td>Lines/planes overlap</td>
+</tr>
+<tr>
+<td>No Solution</td>
+<td>$\text{rank}(A) &lt; \text{rank}([A|b])$</td>
+<td>Lines/planes are parallel</td>
+</tr>
+</tbody>
+</table>
+<h3 id="geometric-interpretation_1">Geometric Interpretation</h3>
+<ul>
+<li>2D: Intersection of lines</li>
+<li>3D: Intersection of planes</li>
+<li>Higher dimensions: Intersection of hyperplanes</li>
+</ul>
+<h2 id="solution-methods">Solution Methods</h2>
+<h3 id="gaussian-elimination">Gaussian Elimination</h3>
+<ol>
+<li>
+<p>Forward Elimination</p>
+</li>
+<li>
+<p>Convert matrix to row echelon form (REF)</p>
+</li>
+<li>Create zeros below diagonal</li>
+</ol>
+<p><code>[1 * * *]
+   [0 1 * *]
+   [0 0 1 *]
+   [0 0 0 1]</code></p>
+<ol>
+<li>Back Substitution</li>
+<li>Solve for variables from bottom up</li>
+<li>$x_n \rightarrow x_{n-1} \rightarrow \cdots \rightarrow x_1$</li>
+</ol>
+<h3 id="gauss-jordan-elimination">Gauss-Jordan Elimination</h3>
+<ul>
+<li>Convert to reduced row echelon form (RREF)</li>
+<li>Create zeros above and below diagonal</li>
+</ul>
+<pre><code>[1 0 0 *]
+[0 1 0 *]
+[0 0 1 *]
+</code></pre>
+<h4 id="key-operations">Key Operations</h4>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Description</th>
+<th>Notation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row Swap</td>
+<td>Swap rows $i$ and $j$</td>
+<td>$R_i \leftrightarrow R_j$</td>
+</tr>
+<tr>
+<td>Scalar Multiplication</td>
+<td>Multiply row $i$ by $c$</td>
+<td>$cR_i$</td>
+</tr>
+<tr>
+<td>Row Addition</td>
+<td>Add multiple of row $i$ to row $j$</td>
+<td>$R_j + cR_i$</td>
+</tr>
+</tbody>
+</table>
+<h1 id="matrices">Matrices</h1>
+<h2 id="types-and-properties">Types and Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Properties</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Square</td>
+<td>$n \times n$ matrix</td>
+<td>- Same number of rows and columns<br>- Can have determinant<br>- May be invertible</td>
+</tr>
+<tr>
+<td>Rectangular</td>
+<td>$m \times n$ matrix</td>
+<td>- Different number of rows and columns<br>- No determinant</td>
+</tr>
+<tr>
+<td>Identity ($I_n$)</td>
+<td>$a_{ij} = \begin{cases} 1 &amp; \text{if } i=j \ 0 &amp; \text{if } i\neq j \end{cases}$</td>
+<td>- Square matrix<br>- 1's on diagonal, 0's elsewhere<br>- $AI = IA = A$</td>
+</tr>
+<tr>
+<td>Zero ($0$)</td>
+<td>All entries are 0</td>
+<td>- Can be any dimension<br>- $A + 0 = A$</td>
+</tr>
+<tr>
+<td>Diagonal</td>
+<td>$a_{ij} = 0$ for $i \neq j$</td>
+<td>- Non-zero elements only on main diagonal</td>
+</tr>
+<tr>
+<td>Triangular</td>
+<td>Upper: $a_{ij} = 0$ for $i &gt; j$<br>Lower: $a_{ij} = 0$ for $i &lt; j$</td>
+<td>- Square matrix<br>- Determinant = product of diagonal entries</td>
+</tr>
+</tbody>
+</table>
+<h2 id="basic-matrix-operations">Basic Matrix Operations</h2>
+<h3 id="addition-and-subtraction_1">Addition and Subtraction</h3>
+<ul>
+<li>Only defined for matrices of same dimensions</li>
+<li>$(A \pm B)<em ij="ij">{ij} = a</em>$} \pm b_{ij</li>
+<li>Commutative: $A + B = B + A$</li>
+<li>Associative: $(A + B) + C = A + (B + C)$</li>
+</ul>
+<h3 id="scalar-multiplication_1">Scalar Multiplication</h3>
+<ul>
+<li>$(cA)<em ij="ij">{ij} = c(a</em>)$</li>
+<li>Distributive: $c(A + B) = cA + cB$</li>
+<li>$(cd)A = c(dA)$</li>
+</ul>
+<h3 id="transpose">Transpose</h3>
+<ul>
+<li>$(A^T)<em ji="ji">{ij} = a</em>$</li>
+<li>$(A^T)^T = A$</li>
+<li>$(A + B)^T = A^T + B^T$</li>
+<li>$(cA)^T = cA^T$</li>
+<li>$(AB)^T = B^T A^T$</li>
+</ul>
+<h2 id="row-echelon-form">Row Echelon Form</h2>
+<p>A matrix is in row echelon form if:</p>
+<ol>
+<li>All zero rows are at the bottom</li>
+<li>Leading coefficient (pivot) of each nonzero row is to the right of pivots above</li>
+<li>All entries below pivots are zero</li>
+</ol>
+<h3 id="reduced-row-echelon-form">Reduced Row Echelon Form</h3>
+<p>Additional conditions for RREF:</p>
+<ol>
+<li>Leading coefficient of each nonzero row is 1</li>
+<li>Each leading 1 is the only nonzero entry in its column</li>
+</ol>
+<h3 id="pivot-positions">Pivot Positions</h3>
+<ul>
+<li>First nonzero element in each row</li>
+<li>Determines rank of matrix</li>
+<li>Maximum number of linearly independent columns</li>
+</ul>
+<h3 id="leading-entries">Leading Entries</h3>
+<p>Properties:</p>
+<ul>
+<li>Always nonzero</li>
+<li>Leftmost nonzero entry in row</li>
+<li>Each leading entry is right of leading entries above it</li>
+</ul>
+<h1 id="vector-spaces">Vector Spaces</h1>
+<h2 id="axioms-of-vector-spaces">Axioms of Vector Spaces</h2>
+<p>Let $V$ be a vector space over field $F$ with vectors $\mathbf{u}, \mathbf{v}, \mathbf{w} \in V$ and scalars $c, d \in F$:</p>
+<ol>
+<li>Closure under addition: $\mathbf{u} + \mathbf{v} \in V$</li>
+<li>Commutativity: $\mathbf{u} + \mathbf{v} = \mathbf{v} + \mathbf{u}$</li>
+<li>Associativity: $(\mathbf{u} + \mathbf{v}) + \mathbf{w} = \mathbf{u} + (\mathbf{v} + \mathbf{w})$</li>
+<li>Additive identity: $\exists \mathbf{0} \in V$ such that $\mathbf{v} + \mathbf{0} = \mathbf{v}$</li>
+<li>Additive inverse: $\exists -\mathbf{v} \in V$ such that $\mathbf{v} + (-\mathbf{v}) = \mathbf{0}$</li>
+<li>Scalar multiplication closure: $c\mathbf{v} \in V$</li>
+<li>Scalar multiplication distributivity: $c(\mathbf{u} + \mathbf{v}) = c\mathbf{u} + c\mathbf{v}$</li>
+<li>Vector distributivity: $(c + d)\mathbf{v} = c\mathbf{v} + d\mathbf{v}$</li>
+<li>Scalar multiplication associativity: $c(d\mathbf{v}) = (cd)\mathbf{v}$</li>
+<li>Scalar multiplication identity: $1\mathbf{v} = \mathbf{v}$</li>
+</ol>
+<h2 id="linear-independence">Linear Independence</h2>
+<h3 id="definition">Definition</h3>
+<p>Vectors ${\mathbf{v}_1, \mathbf{v}_2, ..., \mathbf{v}_n}$ are linearly independent if:
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$
+implies $c_1 = c_2 = ... = c_n = 0$</p>
+<h3 id="tests-and-algorithms">Tests and Algorithms</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Description</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Matrix Test</td>
+<td>Form matrix $A$ with vectors as columns and solve $A\mathbf{x}=\mathbf{0}$</td>
+<td>Independent if only solution is trivial</td>
+</tr>
+<tr>
+<td>Determinant</td>
+<td>For square matrix of vectors</td>
+<td>Independent if det$(A) \neq 0$</td>
+</tr>
+<tr>
+<td>Rank</td>
+<td>Compute rank of matrix $A$</td>
+<td>Independent if rank = number of vectors</td>
+</tr>
+</tbody>
+</table>
+<h2 id="span">Span</h2>
+<h3 id="definition_1">Definition</h3>
+<p>The span of vectors ${\mathbf{v}_1, ..., \mathbf{v}_n}$ is:
+$$\text{span}{\mathbf{v}_1, ..., \mathbf{v}_n} = {c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F}$$</p>
+<h3 id="geometric-interpretation_2">Geometric Interpretation</h3>
+<ul>
+<li>1 vector: line through origin</li>
+<li>2 vectors: plane through origin (if independent)</li>
+<li>3 vectors: 3D space (if independent)</li>
+</ul>
+<h2 id="basis">Basis</h2>
+<p>A basis is a linearly independent set of vectors that spans the vector space.</p>
+<h3 id="standard-basis">Standard Basis</h3>
+<p>For $\mathbb{R}^n$: ${\mathbf{e}_1, \mathbf{e}_2, ..., \mathbf{e}_n}$ where:
+$\mathbf{e}_i = [0, ..., 1, ..., 0]^T$ (1 in $i$th position)</p>
+<h3 id="dimension">Dimension</h3>
+<p>The dimension of a vector space is the number of vectors in any basis.</p>
+<h4 id="basis-theorem">Basis Theorem</h4>
+<p>Every basis of a vector space has the same number of vectors.</p>
+<h4 id="dimension-theorem">Dimension Theorem</h4>
+<p>For finite-dimensional vector space $V$:</p>
+<ul>
+<li>Any linearly independent set can be extended to a basis</li>
+<li>Any spanning set can be reduced to a basis</li>
+<li>$\dim(V_1 + V_2) = \dim(V_1) + \dim(V_2) - \dim(V_1 \cap V_2)$</li>
+</ul>
+<h2 id="subspaces">Subspaces</h2>
+<h3 id="tests-for-subspaces">Tests for Subspaces</h3>
+<p>A subset $W$ of vector space $V$ is a subspace if:</p>
+<ol>
+<li>$\mathbf{0} \in W$</li>
+<li>Closed under addition: $\mathbf{u}, \mathbf{v} \in W \implies \mathbf{u} + \mathbf{v} \in W$</li>
+<li>Closed under scalar multiplication: $c \in F, \mathbf{v} \in W \implies c\mathbf{v} \in W$</li>
+</ol>
+<h3 id="common-subspaces">Common Subspaces</h3>
+<table>
+<thead>
+<tr>
+<th>Subspace</th>
+<th>Definition</th>
+<th>Dimension</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Null Space</td>
+<td>$N(A) = {\mathbf{x}: A\mathbf{x}=\mathbf{0}}$</td>
+<td>$n - \text{rank}(A)$</td>
+</tr>
+<tr>
+<td>Column Space</td>
+<td>$C(A) = {\mathbf{y}: \mathbf{y}=A\mathbf{x}}$</td>
+<td>$\text{rank}(A)$</td>
+</tr>
+<tr>
+<td>Row Space</td>
+<td>$R(A) = C(A^T)$</td>
+<td>$\text{rank}(A)$</td>
+</tr>
+</tbody>
+</table>
+<h1 id="advanced-vector-operations-cont-1">Advanced Vector Operations (cont. 1)</h1>
+<h2 id="dot-product">Dot Product</h2>
+<p>The scalar product of two vectors.</p>
+<h3 id="geometric-definition">Geometric Definition</h3>
+<p>$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$
+where $\theta$ is the angle between vectors</p>
+<h3 id="algebraic-definition">Algebraic Definition</h3>
+<p>For vectors in $\mathbb{R}^n$:
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$</p>
+<h3 id="properties">Properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Formula</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Commutative</td>
+<td>$\vec{a} \cdot \vec{b} = \vec{b} \cdot \vec{a}$</td>
+<td>Order doesn't matter</td>
+</tr>
+<tr>
+<td>Distributive</td>
+<td>$\vec{a} \cdot (\vec{b} + \vec{c}) = \vec{a} \cdot \vec{b} + \vec{a} \cdot \vec{c}$</td>
+<td>Distributes over addition</td>
+</tr>
+<tr>
+<td>Scalar Multiplication</td>
+<td>$(k\vec{a}) \cdot \vec{b} = k(\vec{a} \cdot \vec{b})$</td>
+<td>Scalars can be factored out</td>
+</tr>
+<tr>
+<td>Self-Dot Product</td>
+<td>$\vec{a} \cdot \vec{a} = |\vec{a}|^2$</td>
+<td>Dot product with itself equals magnitude squared</td>
+</tr>
+</tbody>
+</table>
+<h3 id="angle-formula">Angle Formula</h3>
+<p>$$\cos(\theta) = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}||\vec{b}|}$$</p>
+<h3 id="projection-formula">Projection Formula</h3>
+<p>Vector projection of $\vec{a}$ onto $\vec{b}$:
+$$\text{proj}_{\vec{b}}\vec{a} = \frac{\vec{a} \cdot \vec{b}}{|\vec{b}|^2}\vec{b}$$</p>
+<h2 id="cross-product">Cross Product</h2>
+<p>Vector product resulting in a vector perpendicular to both input vectors (3D only).</p>
+<h3 id="right-hand-rule">Right-Hand Rule</h3>
+<ol>
+<li>Point index finger in direction of first vector</li>
+<li>Point middle finger in direction of second vector</li>
+<li>Thumb points in direction of cross product</li>
+</ol>
+<h3 id="properties_1">Properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Formula</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anti-commutative</td>
+<td>$\vec{a} \times \vec{b} = -(\vec{b} \times \vec{a})$</td>
+<td>Order matters</td>
+</tr>
+<tr>
+<td>Distributive</td>
+<td>$\vec{a} \times (\vec{b} + \vec{c}) = \vec{a} \times \vec{b} + \vec{a} \times \vec{c}$</td>
+<td>Distributes over addition</td>
+</tr>
+<tr>
+<td>Magnitude</td>
+<td>$|\vec{a} \times \vec{b}| = |\vec{a}||\vec{b}|\sin(\theta)$</td>
+<td>Area of parallelogram</td>
+</tr>
+<tr>
+<td>Perpendicular</td>
+<td>$\vec{a} \times \vec{b} \perp \vec{a}$ and $\vec{a} \times \vec{b} \perp \vec{b}$</td>
+<td>Result is perpendicular to both vectors</td>
+</tr>
+</tbody>
+</table>
+<h3 id="triple-product">Triple Product</h3>
+<p>Scalar triple product:
+$$\vec{a} \cdot (\vec{b} \times \vec{c}) = \det[\vec{a} \; \vec{b} \; \vec{c}]$$
+Represents volume of parallelepiped</p>
+<h2 id="linear-combinations">Linear Combinations</h2>
+<p>Sum of vectors with scalar coefficients:
+$$c_1\vec{v_1} + c_2\vec{v_2} + ... + c_n\vec{v_n}$$</p>
+<h3 id="geometric-interpretation_3">Geometric Interpretation</h3>
+<ul>
+<li>For two vectors: Points on plane formed by vectors</li>
+<li>For three vectors: Points in space formed by vectors</li>
+<li>Span: Set of all possible linear combinations</li>
+</ul>
+<h1 id="matrix-properties-cont-1">Matrix Properties (cont. 1)</h1>
+<h2 id="rank">Rank</h2>
+<p>The rank of a matrix is the dimension of the vector space spanned by its columns (or rows).</p>
+<h3 id="full-rank">Full Rank</h3>
+<p>A matrix has full rank when:</p>
+<ul>
+<li>For m×n matrix: rank = min(m,n)</li>
+<li>Column rank = Row rank</li>
+<li>For square matrix: rank = n ⟺ matrix is invertible</li>
+</ul>
+<h3 id="rank-theorems">Rank Theorems</h3>
+<table>
+<thead>
+<tr>
+<th>Theorem</th>
+<th>Statement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rank-Nullity</td>
+<td>For m×n matrix A: rank(A) + nullity(A) = n</td>
+</tr>
+<tr>
+<td>Product Rank</td>
+<td>rank(AB) ≤ min(rank(A), rank(B))</td>
+</tr>
+<tr>
+<td>Addition Rank</td>
+<td>rank(A + B) ≤ rank(A) + rank(B)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="trace">Trace</h2>
+<p>The trace of a square matrix is the sum of elements on the main diagonal.
+$$tr(A) = \sum_{i=1}^n a_{ii}$$</p>
+<h3 id="properties_2">Properties</h3>
+<ul>
+<li>tr(A + B) = tr(A) + tr(B)</li>
+<li>tr(cA) = c⋅tr(A)</li>
+<li>tr(AB) = tr(BA)</li>
+<li>tr(A^T) = tr(A)</li>
+<li>For eigenvalues λᵢ: tr(A) = ∑λᵢ</li>
+</ul>
+<h2 id="determinant">Determinant</h2>
+<p>For square matrix A, det(A) or |A| measures the scaling factor of the linear transformation.</p>
+<h3 id="properties_3">Properties</h3>
+<ol>
+<li>det(AB) = det(A)⋅det(B)</li>
+<li>det(A^T) = det(A)</li>
+<li>det(A^{-1}) = \frac{1}{det(A)}</li>
+<li>For triangular matrices: det = product of diagonal entries</li>
+<li>det(cA) = c^n det(A) for n×n matrix</li>
+</ol>
+<h3 id="calculation-methods">Calculation Methods</h3>
+<h4 id="cofactor-expansion">Cofactor Expansion</h4>
+<p>For n×n matrix:
+$$det(A) = \sum_{j=1}^n a_{ij}C_{ij}$$
+where Cᵢⱼ is the (i,j) cofactor</p>
+<h4 id="rowcolumn-expansion">Row/Column Expansion</h4>
+<p>Choose any row/column i:
+$$det(A) = \sum_{j=1}^n (-1)^{i+j} a_{ij}M_{ij}$$
+where Mᵢⱼ is the minor</p>
+<h4 id="triangular-method">Triangular Method</h4>
+<ol>
+<li>Convert to upper triangular using row operations</li>
+<li>Multiply diagonal elements</li>
+<li>Account for row operation signs</li>
+</ol>
+<h3 id="cramers-rule">Cramer's Rule</h3>
+<p>For system Ax = b with det(A) ≠ 0:
+$$x_i = \frac{det(A_i)}{det(A)}$$
+where Aᵢ is A with column i replaced by b</p>
+<h1 id="matrix-operations-cont-1">Matrix Operations (cont. 1)</h1>
+<h2 id="matrix-multiplication">Matrix Multiplication</h2>
+<p>For matrices $A_{m×n}$ and $B_{n×p}$:
+$$(AB)<em k="1">{ij} = \sum</em>$$}^n a_{ik}b_{kj</p>
+<h3 id="properties_4">Properties</h3>
+<ul>
+<li>Distributive: $A(B + C) = AB + AC$</li>
+<li>Associative: $(AB)C = A(BC)$</li>
+<li>Scalar multiplication: $c(AB) = (cA)B = A(cB)$</li>
+<li>Identity: $AI = IA = A$</li>
+<li>Zero matrix: $A0 = 0A = 0$</li>
+</ul>
+<h3 id="non-commutativity">Non-commutativity</h3>
+<ul>
+<li>Generally, $AB \neq BA$</li>
+<li>Exception: If $A$ and $B$ commute, they are called "commuting matrices"</li>
+<li>Special cases where $AB = BA$:</li>
+<li>When $A$ or $B$ is identity matrix</li>
+<li>When $A$ or $B$ is scalar multiple of identity</li>
+<li>When $A$ and $B$ are diagonal matrices</li>
+</ul>
+<h3 id="associativity">Associativity</h3>
+<p>$(AB)C = A(BC)$ always holds for conformable matrices</p>
+<h2 id="inverse">Inverse</h2>
+<p>For square matrix $A$, if $AA^{-1} = A^{-1}A = I$, then $A^{-1}$ is the inverse of $A$</p>
+<h3 id="existence-conditions">Existence Conditions</h3>
+<ul>
+<li>Matrix must be square</li>
+<li>Matrix must be non-singular (determinant ≠ 0)</li>
+<li>rank(A) = n for n×n matrix</li>
+</ul>
+<h3 id="properties_5">Properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Double Inverse</td>
+<td>$(A^{-1})^{-1} = A$</td>
+</tr>
+<tr>
+<td>Product Inverse</td>
+<td>$(AB)^{-1} = B^{-1}A^{-1}$</td>
+</tr>
+<tr>
+<td>Scalar Inverse</td>
+<td>$(cA)^{-1} = \frac{1}{c}A^{-1}$</td>
+</tr>
+<tr>
+<td>Transpose Inverse</td>
+<td>$(A^{-1})^T = (A^T)^{-1}$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="calculation-methods_1">Calculation Methods</h3>
+<h4 id="adjugate-method">Adjugate Method</h4>
+<p>For an n×n matrix:
+$$A^{-1} = \frac{1}{\det(A)}\text{adj}(A)$$
+where adj(A) is the adjugate matrix</p>
+<h4 id="gaussian-elimination_1">Gaussian Elimination</h4>
+<ol>
+<li>Form augmented matrix $[A|I]$</li>
+<li>Convert left side to identity matrix</li>
+<li>Right side becomes $A^{-1}$</li>
+</ol>
+<h3 id="elementary-matrices">Elementary Matrices</h3>
+<ul>
+<li>Result from applying elementary row operations to identity matrix</li>
+<li>Types:</li>
+<li>Row swap: $E_{ij}$</li>
+<li>Row multiplication: $E_i(c)$</li>
+<li>Row addition: $E_{ij}(c)$</li>
+<li>Properties:</li>
+<li>Always invertible</li>
+<li>$(E_1E_2...E_k)A = A'$ where $A'$ is row reduced form</li>
+</ul>
+<h2 id="conjugate-transpose">Conjugate Transpose</h2>
+<p>For matrix $A$:</p>
+<ul>
+<li>Denoted as $A^H$ or $A^*$</li>
+<li>$(a_{ij})^H = \overline{a_{ji}}$</li>
+<li>Properties:</li>
+<li>$(A^H)^H = A$</li>
+<li>$(AB)^H = B^HA^H$</li>
+<li>$(A + B)^H = A^H + B^H$</li>
+<li>For real matrices, $A^H = A^T$</li>
+</ul>
+<h1 id="systems-of-linear-equations-cont-1">Systems of Linear Equations (cont. 1)</h1>
+<h2 id="homogeneous-systems-amathbfx-mathbf0">Homogeneous Systems ($A\mathbf{x} = \mathbf{0}$)</h2>
+<p>A system where all constants are zero: $A\mathbf{x} = \mathbf{0}$</p>
+<h3 id="trivial-solution">Trivial Solution</h3>
+<ul>
+<li>Always has solution $\mathbf{x} = \mathbf{0}$ (zero vector)</li>
+<li>Exists for any coefficient matrix $A$</li>
+</ul>
+<h3 id="nontrivial-solutions">Nontrivial Solutions</h3>
+<ul>
+<li>Exist if and only if $\text{rank}(A) &lt; n$ where $n$ is number of variables</li>
+<li>Equivalent to $\text{det}(A) = 0$ for square matrices</li>
+<li>Number of free variables = $n - \text{rank}(A)$</li>
+</ul>
+<h2 id="consistency-theorems">Consistency Theorems</h2>
+<h3 id="consistent-system-conditions">Consistent System Conditions</h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>System is Consistent When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rank Test</td>
+<td>$\text{rank}(A) = \text{rank}([A|\mathbf{b}])$</td>
+</tr>
+<tr>
+<td>Square Matrix</td>
+<td>$\text{det}(A) \neq 0$</td>
+</tr>
+<tr>
+<td>General</td>
+<td>Solutions exist if $\mathbf{b}$ is in column space of $A$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fredholm-alternative">Fredholm Alternative</h3>
+<p>For system $A\mathbf{x} = \mathbf{b}$, exactly one of these is true:</p>
+<ol>
+<li>System has a solution</li>
+<li>$\mathbf{y}^T A = \mathbf{0}$ has a solution with $\mathbf{y}^T\mathbf{b} \neq 0$</li>
+</ol>
+<h2 id="cramers-rule_1">Cramer's Rule</h2>
+<p>For system $A\mathbf{x} = \mathbf{b}$ where $A$ is $n \times n$ with $\text{det}(A) \neq 0$:
+$$x_i = \frac{\text{det}(A_i)}{\text{det}(A)}$$
+Where $A_i$ is matrix $A$ with column $i$ replaced by $\mathbf{b}$</p>
+<h2 id="matrix-inverse-method">Matrix Inverse Method</h2>
+<p>For square system $A\mathbf{x} = \mathbf{b}$ where $A$ is invertible:
+$$\mathbf{x} = A^{-1}\mathbf{b}$$</p>
+<p>Requirements:</p>
+<ul>
+<li>$A$ must be square</li>
+<li>$\text{det}(A) \neq 0$</li>
+<li>Computationally expensive for large systems</li>
+</ul>
+<h1 id="linear-transformations">Linear Transformations</h1>
+<h2 id="definition_2">Definition</h2>
+<p>A linear transformation $T: V \to W$ is a function between vector spaces that preserves:</p>
+<ol>
+<li>Addition: $T(u + v) = T(u) + T(v)$</li>
+<li>Scalar multiplication: $T(cv) = cT(v)$</li>
+</ol>
+<h2 id="matrix-representation">Matrix Representation</h2>
+<p>Every linear transformation $T: \mathbb{R}^n \to \mathbb{R}^m$ can be represented by a unique $m \times n$ matrix $A$</p>
+<h3 id="standard-matrix">Standard Matrix</h3>
+<p>For transformation $T$, the standard matrix $A$ is formed by:
+$$A = [T(e_1) \; T(e_2) \; \cdots \; T(e_n)]$$
+where $e_i$ are standard basis vectors</p>
+<h2 id="properties_6">Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Definition</th>
+<th>Test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel (Null Space)</td>
+<td>$\text{ker}(T) = {v \in V : T(v) = 0}$</td>
+<td>Solve $Ax = 0$</td>
+</tr>
+<tr>
+<td>Range (Image)</td>
+<td>$\text{range}(T) = {T(v) : v \in V}$</td>
+<td>Span of columns of $A$</td>
+</tr>
+<tr>
+<td>One-to-One (Injective)</td>
+<td>$T(v_1) = T(v_2) \implies v_1 = v_2$</td>
+<td>$\text{ker}(T) = {0}$</td>
+</tr>
+<tr>
+<td>Onto (Surjective)</td>
+<td>$\text{range}(T) = W$</td>
+<td>Columns span $W$</td>
+</tr>
+<tr>
+<td>Isomorphism</td>
+<td>Bijective linear transformation</td>
+<td>One-to-one and onto</td>
+</tr>
+</tbody>
+</table>
+<h2 id="special-transformations">Special Transformations</h2>
+<h3 id="rotation">Rotation</h3>
+<ul>
+<li>2D rotation by angle $\theta$:
+  $$R_\theta = \begin{bmatrix} \cos\theta &amp; -\sin\theta \ \sin\theta &amp; \cos\theta \end{bmatrix}$$</li>
+</ul>
+<h3 id="reflection">Reflection</h3>
+<ul>
+<li>Across x-axis: $\begin{bmatrix} 1 &amp; 0 \ 0 &amp; -1 \end{bmatrix}$</li>
+<li>Across y-axis: $\begin{bmatrix} -1 &amp; 0 \ 0 &amp; 1 \end{bmatrix}$</li>
+</ul>
+<h3 id="projection">Projection</h3>
+<ul>
+<li>Onto x-axis: $\begin{bmatrix} 1 &amp; 0 \ 0 &amp; 0 \end{bmatrix}$</li>
+<li>Onto y-axis: $\begin{bmatrix} 0 &amp; 0 \ 0 &amp; 1 \end{bmatrix}$</li>
+</ul>
+<h3 id="scaling">Scaling</h3>
+<ul>
+<li>Scale by factors $a$ and $b$:
+  $$\begin{bmatrix} a &amp; 0 \ 0 &amp; b \end{bmatrix}$$</li>
+</ul>
+<h3 id="shearing">Shearing</h3>
+<ul>
+<li>Horizontal shear by $k$:
+  $$\begin{bmatrix} 1 &amp; k \ 0 &amp; 1 \end{bmatrix}$$</li>
+<li>Vertical shear by $k$:
+  $$\begin{bmatrix} 1 &amp; 0 \ k &amp; 1 \end{bmatrix}$$</li>
+</ul>
+<h1 id="inner-product-spaces">Inner Product Spaces</h1>
+<h2 id="definition_3">Definition</h2>
+<p>An inner product on a vector space $V$ is a function $\langle \cdot,\cdot \rangle: V \times V \to \mathbb{R}$ (or $\mathbb{C}$)</p>
+<h2 id="properties_7">Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Mathematical Form</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Positive Definiteness</td>
+<td>$\langle x,x \rangle \geq 0$ and $\langle x,x \rangle = 0 \iff x = 0$</td>
+<td>Always non-negative, zero only for zero vector</td>
+</tr>
+<tr>
+<td>Symmetry</td>
+<td>$\langle x,y \rangle = \overline{\langle y,x \rangle}$</td>
+<td>Complex conjugate for complex spaces</td>
+</tr>
+<tr>
+<td>Linearity</td>
+<td>$\langle ax+by,z \rangle = a\langle x,z \rangle + b\langle y,z \rangle$</td>
+<td>Linear in first argument</td>
+</tr>
+</tbody>
+</table>
+<h2 id="norm">Norm</h2>
+<p>The norm induced by inner product: $|x| = \sqrt{\langle x,x \rangle}$</p>
+<h3 id="properties_8">Properties</h3>
+<ul>
+<li>Non-negative: $|x| \geq 0$</li>
+<li>Positive definite: $|x| = 0 \iff x = 0$</li>
+<li>Homogeneous: $|cx| = |c||x|$</li>
+<li>Triangle inequality: $|x + y| \leq |x| + |y|$</li>
+</ul>
+<h3 id="distance-function">Distance Function</h3>
+<p>$$d(x,y) = |x-y| = \sqrt{\langle x-y,x-y \rangle}$$</p>
+<h2 id="orthogonality">Orthogonality</h2>
+<h3 id="orthogonal-vectors">Orthogonal Vectors</h3>
+<p>Two vectors $x,y$ are orthogonal if $\langle x,y \rangle = 0$</p>
+<h3 id="orthogonal-sets">Orthogonal Sets</h3>
+<ul>
+<li>Set of vectors where each pair is orthogonal</li>
+<li>If normalized, called orthonormal set</li>
+<li>Orthonormal basis: orthonormal set that spans space</li>
+</ul>
+<h3 id="orthogonal-matrices">Orthogonal Matrices</h3>
+<p>Matrix $Q$ is orthogonal if $Q^TQ = QQ^T = I$</p>
+<h4 id="properties_9">Properties</h4>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Formula</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inverse</td>
+<td>$Q^{-1} = Q^T$</td>
+<td>Transpose equals inverse</td>
+</tr>
+<tr>
+<td>Determinant</td>
+<td>$\det(Q) = \pm 1$</td>
+<td>Always unit magnitude</td>
+</tr>
+<tr>
+<td>Column/Rows</td>
+<td>$\langle q_i,q_j \rangle = \delta_{ij}$</td>
+<td>Form orthonormal set</td>
+</tr>
+<tr>
+<td>Length Preservation</td>
+<td>$|Qx| = |x|$</td>
+<td>Preserves distances</td>
+</tr>
+</tbody>
+</table>
+<h3 id="orthogonal-complements">Orthogonal Complements</h3>
+<p>For subspace $W$, orthogonal complement $W^⊥$:
+$$W^⊥ = {x \in V : \langle x,w \rangle = 0 \text{ for all } w \in W}$$</p>
+<h3 id="orthogonal-projections">Orthogonal Projections</h3>
+<p>Projection onto subspace $W$:
+$$\text{proj}<em i="1">W(x) = \sum</em>w_i$$
+where ${w_1,\ldots,w_k}$ is basis for $W$}^k \frac{\langle x,w_i \rangle}{|w_i|^2</p>
+<p>For orthonormal basis:
+$$\text{proj}<em i="1">W(x) = \sum</em>^k \langle x,w_i \rangle w_i$$</p>
+<h1 id="special-matrices-cont-1">Special Matrices (cont. 1)</h1>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Definition</th>
+<th>Properties</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symmetric</td>
+<td>$A = A^T$</td>
+<td>- Diagonal elements can be any real number<br>- Elements symmetric across main diagonal<br>- All eigenvalues are real</td>
+<td>$$\begin{bmatrix} 1 &amp; 2 &amp; 3\ 2 &amp; 4 &amp; 5\ 3 &amp; 5 &amp; 6 \end{bmatrix}$$</td>
+</tr>
+<tr>
+<td>Skew-symmetric</td>
+<td>$A = -A^T$</td>
+<td>- Diagonal elements must be zero<br>- $a_{ij} = -a_{ji}$<br>- All eigenvalues are imaginary or zero</td>
+<td>$$\begin{bmatrix} 0 &amp; 2 &amp; -1\ -2 &amp; 0 &amp; 3\ 1 &amp; -3 &amp; 0 \end{bmatrix}$$</td>
+</tr>
+<tr>
+<td>Orthogonal</td>
+<td>$AA^T = A^TA = I$</td>
+<td>- $A^{-1} = A^T$<br>- Columns/rows form orthonormal basis<br>- $\det(A) = \pm 1$<br>- Preserves lengths and angles</td>
+<td>$$\begin{bmatrix} \cos\theta &amp; -\sin\theta\ \sin\theta &amp; \cos\theta \end{bmatrix}$$</td>
+</tr>
+<tr>
+<td>Idempotent</td>
+<td>$A^2 = A$</td>
+<td>- Eigenvalues are only 0 or 1<br>- Trace = rank<br>- Used in projection matrices</td>
+<td>$$\begin{bmatrix} 1 &amp; 0\ 0 &amp; 0 \end{bmatrix}$$</td>
+</tr>
+<tr>
+<td>Nilpotent</td>
+<td>$A^k = 0$ for some $k$</td>
+<td>- All eigenvalues = 0<br>- Trace = 0<br>- $k \leq n$ where $n$ is matrix size</td>
+<td>$$\begin{bmatrix} 0 &amp; 1\ 0 &amp; 0 \end{bmatrix}$$</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="additional-properties">Additional Properties:</h3>
+<ol>
+<li>
+<p><strong>Symmetric Matrices</strong>:</p>
+</li>
+<li>
+<p>All real symmetric matrices are diagonalizable</p>
+</li>
+<li>
+<p>$x^TAx$ is a quadratic form</p>
+</li>
+<li>
+<p><strong>Orthogonal Matrices</strong>:</p>
+</li>
+<li>
+<p>Every column/row has unit length</p>
+</li>
+<li>Any two columns/rows are perpendicular</li>
+<li>
+<p>Preserves inner products: $(Ax)^T(Ay) = x^Ty$</p>
+</li>
+<li>
+<p><strong>Idempotent Matrices</strong>:</p>
+</li>
+<li>
+<p>$I - A$ is also idempotent if $A$ is idempotent</p>
+</li>
+<li>
+<p>Rank = Trace for idempotent matrices</p>
+</li>
+<li>
+<p><strong>Nilpotent Matrices</strong>:</p>
+</li>
+<li>The minimal $k$ for which $A^k = 0$ is called the index of nilpotency</li>
+<li>Characteristic polynomial is $\lambda^n$</li>
+</ol>
+<h1 id="change-of-basis">Change of Basis</h1>
+<h2 id="transition-matrices">Transition Matrices</h2>
+<p>A transition matrix $P$ transforms coordinates from one basis to another:
+$$P_{B←C} = [v_1 \; v_2 \; \cdots \; v_n]$$
+where $v_i$ are the basis vectors of B expressed in basis C</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Formula</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Change from C to B</td>
+<td>$[v]<em B_C="B←C">B = P</em>[v]_C$</td>
+<td>Vector v in basis B</td>
+</tr>
+<tr>
+<td>Change from B to C</td>
+<td>$[v]<em C_B="C←B">C = P</em>[v]_B$</td>
+<td>Vector v in basis C</td>
+</tr>
+<tr>
+<td>Inverse relation</td>
+<td>$P_{C←B} = P_{B←C}^{-1}$</td>
+<td>Matrices are inverses</td>
+</tr>
+</tbody>
+</table>
+<h2 id="similar-matrices">Similar Matrices</h2>
+<p>Two matrices A and B are similar if:
+$$B = P^{-1}AP$$
+where P is an invertible matrix</p>
+<p>Properties:</p>
+<ul>
+<li>Similar matrices have same eigenvalues</li>
+<li>Similar matrices have same determinant</li>
+<li>Similar matrices have same trace</li>
+<li>Similar matrices have same rank</li>
+</ul>
+<h2 id="coordinate-vectors">Coordinate Vectors</h2>
+<p>For a vector $v$ and basis $B = {b_1, b_2, ..., b_n}$:
+$$[v]_B = \begin{bmatrix} c_1 \ c_2 \ \vdots \ c_n \end{bmatrix}$$
+where $v = c_1b_1 + c_2b_2 + ... + c_nb_n$</p>
+<h2 id="orthogonalization">Orthogonalization</h2>
+<h3 id="gram-schmidt-process">Gram-Schmidt Process</h3>
+<p>Converting basis ${v_1, v_2, ..., v_n}$ to orthogonal basis ${u_1, u_2, ..., u_n}$:</p>
+<ol>
+<li>$u_1 = v_1$</li>
+<li>$u_2 = v_2 - \text{proj}_{u_1}(v_2)$</li>
+<li>$u_3 = v_3 - \text{proj}<em u_2="u_2">{u_1}(v_3) - \text{proj}</em>(v_3)$</li>
+</ol>
+<p>General formula:
+$$u_k = v_k - \sum_{i=1}^{k-1} \text{proj}_{u_i}(v_k)$$
+where $\text{proj}_u(v) = \frac{\langle v,u \rangle}{\langle u,u \rangle}u$</p>
+<h3 id="qr-decomposition">QR Decomposition</h3>
+<p>Matrix A can be decomposed as:
+$$A = QR$$
+where:</p>
+<ul>
+<li>Q is orthogonal matrix ($Q^TQ = I$)</li>
+<li>R is upper triangular matrix</li>
+</ul>
+<h2 id="orthonormal-basis">Orthonormal Basis</h2>
+<h3 id="construction">Construction</h3>
+<ol>
+<li>Start with any basis</li>
+<li>Apply Gram-Schmidt process</li>
+<li>Normalize each vector: $e_i = \frac{u_i}{|u_i|}$</li>
+</ol>
+<h3 id="properties_10">Properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Orthogonality</td>
+<td>$\langle e_i,e_j \rangle = 0$ for $i \neq j$</td>
+</tr>
+<tr>
+<td>Normality</td>
+<td>$|e_i| = 1$ for all i</td>
+</tr>
+<tr>
+<td>Transition Matrix</td>
+<td>P is orthogonal ($P^T = P^{-1}$)</td>
+</tr>
+<tr>
+<td>Coordinates</td>
+<td>$[v]_B = [\langle v,e_1 \rangle \; \langle v,e_2 \rangle \; \cdots \; \langle v,e_n \rangle]^T$</td>
+</tr>
+</tbody>
+</table>
+<h1 id="eigenvalues-and-eigenvectors">Eigenvalues and Eigenvectors</h1>
+<h2 id="definitions">Definitions</h2>
+<ul>
+<li><strong>Eigenvalue</strong> ($\lambda$): A scalar value where $A\vec{v} = \lambda\vec{v}$ for some nonzero vector $\vec{v}$</li>
+<li><strong>Eigenvector</strong> ($\vec{v}$): A nonzero vector satisfying $A\vec{v} = \lambda\vec{v}$ for some scalar $\lambda$</li>
+</ul>
+<h2 id="characteristic-equation">Characteristic Equation</h2>
+<p>$$\det(A - \lambda I) = 0$$
+where:</p>
+<ul>
+<li>$A$ is the square matrix</li>
+<li>$\lambda$ is the eigenvalue</li>
+<li>$I$ is the identity matrix</li>
+</ul>
+<h3 id="characteristic-polynomial">Characteristic Polynomial</h3>
+<p>$$p(\lambda) = \det(A - \lambda I)$$</p>
+<ul>
+<li>Degree equals matrix dimension</li>
+<li>Roots are eigenvalues</li>
+</ul>
+<h2 id="properties_11">Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sum</td>
+<td>$\sum \lambda_i = \text{trace}(A)$</td>
+</tr>
+<tr>
+<td>Product</td>
+<td>$\prod \lambda_i = \det(A)$</td>
+</tr>
+<tr>
+<td>Number</td>
+<td>≤ dimension of matrix</td>
+</tr>
+</tbody>
+</table>
+<h3 id="geometric-multiplicity">Geometric Multiplicity</h3>
+<ul>
+<li>Number of linearly independent eigenvectors for a given eigenvalue</li>
+<li>≤ algebraic multiplicity</li>
+<li>= dimension of null space of $(A - \lambda I)$</li>
+</ul>
+<h3 id="algebraic-multiplicity">Algebraic Multiplicity</h3>
+<ul>
+<li>Multiplicity of eigenvalue as root of characteristic polynomial</li>
+<li>≥ geometric multiplicity</li>
+</ul>
+<h3 id="eigenspace">Eigenspace</h3>
+<p>$$E_\lambda = \text{null}(A - \lambda I)$$</p>
+<ul>
+<li>Subspace spanned by eigenvectors for eigenvalue $\lambda$</li>
+<li>Dimension = geometric multiplicity</li>
+</ul>
+<h2 id="diagonalization">Diagonalization</h2>
+<p>$A = PDP^{-1}$ where:</p>
+<ul>
+<li>$D$ is diagonal matrix of eigenvalues</li>
+<li>$P$ is matrix of eigenvectors</li>
+</ul>
+<h3 id="diagonalizability-conditions">Diagonalizability Conditions</h3>
+<p>Matrix $A$ is diagonalizable if and only if:</p>
+<ol>
+<li>Geometric multiplicity = algebraic multiplicity for all eigenvalues</li>
+<li>Sum of dimensions of eigenspaces = matrix dimension</li>
+</ol>
+<h3 id="diagonalization-process">Diagonalization Process</h3>
+<ol>
+<li>Find eigenvalues (solve characteristic equation)</li>
+<li>Find eigenvectors for each eigenvalue</li>
+<li>Form $P$ from eigenvectors as columns</li>
+<li>Form $D$ with eigenvalues on diagonal</li>
+<li>Verify $A = PDP^{-1}$</li>
+</ol>
+<h3 id="similar-matrices_1">Similar Matrices</h3>
+<ul>
+<li>$A$ and $B$ similar if $B = P^{-1}AP$ for invertible $P$</li>
+<li>Similar matrices have same eigenvalues</li>
+<li>Similar matrices have same characteristic polynomial</li>
+</ul>
+<h2 id="special-cases">Special Cases</h2>
+<h3 id="repeated-eigenvalues">Repeated Eigenvalues</h3>
+<ul>
+<li>May have fewer linearly independent eigenvectors</li>
+<li>Need generalized eigenvectors if geometric multiplicity &lt; algebraic multiplicity</li>
+</ul>
+<h3 id="complex-eigenvalues">Complex Eigenvalues</h3>
+<ul>
+<li>Occur in conjugate pairs for real matrices</li>
+<li>Complex eigenvectors also occur in conjugate pairs</li>
+</ul>
+<h2 id="applications">Applications</h2>
+<h3 id="powers-of-matrices">Powers of Matrices</h3>
+<p>$$A^n = PD^nP^{-1}$$</p>
+<ul>
+<li>Simplifies computation of matrix powers</li>
+<li>Useful for recursive sequences</li>
+</ul>
+<h3 id="difference-equations">Difference Equations</h3>
+<p>For system $\vec{x}_{k+1} = A\vec{x}_k$:</p>
+<ul>
+<li>General solution involves eigenvalues and eigenvectors</li>
+<li>Stability determined by $|\lambda| &lt; 1$</li>
+</ul>
+<h3 id="differential-equations">Differential Equations</h3>
+<p>For system $\frac{d\vec{x}}{dt} = A\vec{x}$:</p>
+<ul>
+<li>Solutions of form $\vec{x}(t) = ce^{\lambda t}\vec{v}$</li>
+<li>Stability determined by $\text{Re}(\lambda) &lt; 0$</li>
+</ul>
+<hr />
+<h1 id="important-theorems">Important Theorems</h1>
+<h2 id="fundamental-theorem-of-linear-algebra">Fundamental Theorem of Linear Algebra</h2>
+<p>For a linear transformation $T: V \rightarrow W$ and its matrix $A$:</p>
+<ul>
+<li>$\text{Null}(A) \oplus \text{Row}(A^T) = \mathbb{R}^n$</li>
+<li>$\text{Col}(A) \oplus \text{Null}(A^T) = \mathbb{R}^m$</li>
+<li>$\dim(\text{Null}(A)) + \dim(\text{Col}(A)) = n$</li>
+<li>$\text{rank}(A) + \text{nullity}(A) = n$</li>
+</ul>
+<h2 id="cayley-hamilton-theorem">Cayley-Hamilton Theorem</h2>
+<p>Every square matrix $A$ satisfies its own characteristic equation:
+$$p(A) = 0 \text{ where } p(\lambda) = \det(A - \lambda I)$$</p>
+<h2 id="spectral-theorem">Spectral Theorem</h2>
+<p>For symmetric matrices $A \in \mathbb{R}^{n \times n}$:</p>
+<ul>
+<li>All eigenvalues are real</li>
+<li>Eigenvectors of distinct eigenvalues are orthogonal</li>
+<li>$A = PDP^T$ where:</li>
+<li>$P$ is orthogonal ($P^TP = I$)</li>
+<li>$D$ is diagonal containing eigenvalues</li>
+</ul>
+<h2 id="triangle-inequality_1">Triangle Inequality</h2>
+<p>For vectors $x, y$:
+$$|x + y| \leq |x| + |y|$$</p>
+<h2 id="cauchy-schwarz-inequality">Cauchy-Schwarz Inequality</h2>
+<p>For vectors $x, y$:
+$$|x^Ty| \leq |x||y|$$</p>
+<ul>
+<li>Equality holds if and only if vectors are linearly dependent</li>
+</ul>
+<h2 id="invertible-matrix-theorem">Invertible Matrix Theorem</h2>
+<p>The following statements are equivalent for a square matrix $A$:</p>
+<ol>
+<li>$A$ is invertible</li>
+<li>$\det(A) \neq 0$</li>
+<li>$\text{rank}(A) = n$</li>
+<li>$\text{Null}(A) = {0}$</li>
+<li>Columns are linearly independent</li>
+<li>$Ax = b$ has unique solution for all $b$</li>
+</ol>
+<h2 id="matrix-factorization-theorems">Matrix Factorization Theorems</h2>
+<h3 id="lu-decomposition">LU Decomposition</h3>
+<p>For matrix $A$:
+$$A = LU$$
+where:</p>
+<ul>
+<li>$L$ is lower triangular</li>
+<li>$U$ is upper triangular</li>
+<li>Exists if all leading principal minors are nonzero</li>
+</ul>
+<h3 id="qr-decomposition_1">QR Decomposition</h3>
+<p>For matrix $A$:
+$$A = QR$$
+where:</p>
+<ul>
+<li>$Q$ is orthogonal ($Q^TQ = I$)</li>
+<li>$R$ is upper triangular</li>
+<li>Always exists for full-rank matrices</li>
+</ul>
+<h3 id="cholesky-decomposition">Cholesky Decomposition</h3>
+<p>For symmetric positive definite matrix $A$:
+$$A = LL^T$$
+where:</p>
+<ul>
+<li>$L$ is lower triangular</li>
+<li>$L^T$ is upper triangular</li>
+<li>Elements are real</li>
+</ul>
+<h1 id="advanced-topics">Advanced Topics</h1>
+<h2 id="singular-value-decomposition-svd">Singular Value Decomposition (SVD)</h2>
+<p>Any matrix $A \in \mathbb{R}^{m \times n}$ can be decomposed as $A = U\Sigma V^T$</p>
+<h3 id="singular-values">Singular Values</h3>
+<ul>
+<li>Diagonal entries $\sigma_i$ of $\Sigma$ matrix</li>
+<li>$\sigma_i = \sqrt{\lambda_i(A^TA)}$</li>
+<li>Always real and non-negative</li>
+<li>Ordered: $\sigma_1 \geq \sigma_2 \geq ... \geq \sigma_n \geq 0$</li>
+</ul>
+<h3 id="u-and-v-matrices">U and V Matrices</h3>
+<ul>
+<li>$U$: $m \times m$ orthogonal matrix (left singular vectors)</li>
+<li>$V$: $n \times n$ orthogonal matrix (right singular vectors)</li>
+<li>$\Sigma$: $m \times n$ diagonal matrix with singular values</li>
+</ul>
+<h3 id="applications_1">Applications</h3>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low-rank approximation</td>
+<td>Truncate to $k$ largest singular values</td>
+</tr>
+<tr>
+<td>Image compression</td>
+<td>Reduce dimensionality while preserving structure</td>
+</tr>
+<tr>
+<td>Principal Component Analysis</td>
+<td>Use right singular vectors as principal components</td>
+</tr>
+<tr>
+<td>Pseudoinverse</td>
+<td>$A^+ = V\Sigma^+U^T$</td>
+</tr>
+</tbody>
+</table>
+<h2 id="jordan-canonical-form">Jordan Canonical Form</h2>
+<p>For matrix $A$, exists invertible $P$ such that $P^{-1}AP = J$</p>
+<h3 id="jordan-blocks">Jordan Blocks</h3>
+<p>$$
+J_k(\lambda) = \begin{bmatrix}
+\lambda &amp; 1 &amp; 0 &amp; \cdots &amp; 0 \
+0 &amp; \lambda &amp; 1 &amp; \cdots &amp; 0 \
+\vdots &amp; \vdots &amp; \ddots &amp; \ddots &amp; \vdots \
+0 &amp; 0 &amp; \cdots &amp; \lambda &amp; 1 \
+0 &amp; 0 &amp; \cdots &amp; 0 &amp; \lambda
+\end{bmatrix}
+$$</p>
+<h3 id="generalized-eigenvectors">Generalized Eigenvectors</h3>
+<ul>
+<li>Chain: $(A-\lambda I)^kv_k = 0$</li>
+<li>$v_1$ is regular eigenvector</li>
+<li>$(A-\lambda I)v_{i+1} = v_i$</li>
+</ul>
+<h2 id="positive-definite-matrices">Positive Definite Matrices</h2>
+<p>Symmetric matrix $A$ where $x^TAx &gt; 0$ for all nonzero $x$</p>
+<h3 id="tests-for-positive-definiteness">Tests for Positive Definiteness</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eigenvalue</td>
+<td>All eigenvalues &gt; 0</td>
+</tr>
+<tr>
+<td>Leading Principals</td>
+<td>All leading principal minors &gt; 0</td>
+</tr>
+<tr>
+<td>Cholesky</td>
+<td>Exists unique lower triangular $L$ with $A = LL^T$</td>
+</tr>
+<tr>
+<td>Quadratic Form</td>
+<td>$x^TAx &gt; 0$ for all nonzero $x$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="applications_2">Applications</h3>
+<ul>
+<li>Optimization problems</li>
+<li>Covariance matrices</li>
+<li>Least squares solutions</li>
+<li>Energy functions</li>
+</ul>
+<h2 id="linear-operators">Linear Operators</h2>
+<p>Maps between vector spaces preserving linear structure</p>
+<h3 id="adjoint-operators">Adjoint Operators</h3>
+<ul>
+<li>For operator $T$, adjoint $T^<em>$ satisfies $\langle Tx,y \rangle = \langle x,T^</em>y \rangle$</li>
+<li>Matrix representation: conjugate transpose</li>
+<li>Properties:</li>
+<li>$(T^<em>)^</em> = T$</li>
+<li>$(ST)^<em> = T^</em>S^*$</li>
+<li>$(\alpha T)^<em> = \overline{\alpha}T^</em>$</li>
+</ul>
+<h3 id="self-adjoint-operators">Self-Adjoint Operators</h3>
+<ul>
+<li>$T = T^*$</li>
+<li>Real eigenvalues</li>
+<li>Orthogonal eigenvectors</li>
+<li>Spectral theorem applies</li>
+</ul>
+<h2 id="dual-spaces">Dual Spaces</h2>
+<p>Vector space $V^*$ of linear functionals on $V$</p>
+<h3 id="dual-basis">Dual Basis</h3>
+<ul>
+<li>For basis ${e_i}$ of $V$, dual basis ${e_i^<em>}$ satisfies $e_i^</em>(e_j) = \delta_{ij}$</li>
+<li>Dimension equals original space</li>
+<li>Natural pairing: $\langle f,v \rangle = f(v)$</li>
+</ul>
+<h3 id="dual-maps">Dual Maps</h3>
+<p>For linear map $T: V \to W$, dual map $T^<em>: W^</em> \to V^<em>$
+$$\langle T^</em>f,v \rangle = \langle f,Tv \rangle$$</p>
+<h2 id="tensor-products">Tensor Products</h2>
+<p>$V \otimes W$ is universal space for bilinear maps</p>
+<h3 id="definition_4">Definition</h3>
+<ul>
+<li>Elementary tensors: $v \otimes w$</li>
+<li>Bilinear in components:</li>
+<li>$(av_1 + bv_2) \otimes w = av_1 \otimes w + bv_2 \otimes w$</li>
+<li>$v \otimes (aw_1 + bw_2) = av \otimes w_1 + bv \otimes w_2$</li>
+</ul>
+<h3 id="properties_12">Properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dimension</td>
+<td>$\dim(V \otimes W) = \dim(V)\dim(W)$</td>
+</tr>
+<tr>
+<td>Associativity</td>
+<td>$(U \otimes V) \otimes W \cong U \otimes (V \otimes W)$</td>
+</tr>
+<tr>
+<td>Distributivity</td>
+<td>$(U \oplus V) \otimes W \cong (U \otimes W) \oplus (V \otimes W)$</td>
+</tr>
+<tr>
+<td>Field multiplication</td>
+<td>$(\alpha v) \otimes w = v \otimes (\alpha w) = \alpha(v \otimes w)$</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multilinear-algebra">Multilinear Algebra</h2>
+<h3 id="tensors">Tensors</h3>
+<ul>
+<li>Multilinear maps: $T: V_1 \times ... \times V_k \to W$</li>
+<li>Type $(r,s)$: $r$ contravariant, $s$ covariant indices</li>
+<li>Transformation rules under basis change</li>
+</ul>
+<h3 id="exterior-algebra">Exterior Algebra</h3>
+<ul>
+<li>Antisymmetric tensors</li>
+<li>Wedge product $\wedge$</li>
+<li>Properties:</li>
+<li>Anticommutativity: $v \wedge w = -w \wedge v$</li>
+<li>Associativity: $(u \wedge v) \wedge w = u \wedge (v \wedge w)$</li>
+<li>Distributivity over addition</li>
+<li>$k$-forms and differential forms</li>
+</ul>
+        </div>
+        
+    </main>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consistent Global State in Distributed Systems</title>
+    <meta name="description" content="Explains the concept of maintaining a consistent global state in distributed systems and its implications.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/distributed-systems.html">distributed-systems</a> » Consistent Global State in Distributed Systems
+        </div>
+        <h1>Consistent Global State in Distributed Systems</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/distributed-systems.html">distributed-systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="consistent-global-state-in-distributed-systems">Consistent Global State in Distributed Systems</h1>
+<p><a href="https://courses.cs.washington.edu/courses/csep552/18wi/papers/chapt4.pdf">reading</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>Many problems in distributed computing boil down to being able to maintain a consistent global state, and to run predicates on that state in order to trigger events. The true state of a distributed system is the union of all node's states. However, since nodes don't share memory, the actual state must be meaningful when inferred solely based on messages passed among nodes.</p>
+<p>A global state is said to be <em>inconsistent</em> if it never could have been constructed by an ideal external observer. This paper formalizes this concept into the context of a <strong>Global Predicate Evaluation (GPE)</strong>, which determines if the system satisfies some predicate $\Phi$.</p>
+<h2 id="asynchronous-distributed-systems">Asynchronous Distributed Systems</h2>
+<p>Define a distributed system as a set $P$ of <em>sequential</em> processes $p_1, p_2, \ldots, p_n$, and a network consisting of <em>channels</em> in which unidirectional communication is possible in the space of $P^2$. The network is assumed to be reliable, but may deliver messages out of order, and is taken to be <em>strongly connected</em>, but not necessarily <em>fully connected</em> (i.e. communication may require intermediate message passing).</p>
+<p>It is useful to reason about distributed systems with the weakest possible assumptions, such that results hold for arbitrary systems.</p>
+<h2 id="distributed-computations">Distributed Computations</h2>
+<p>A distributed computation is the execution of a distributed program over a collection of processes, each of which sequentially process a stream of <em>events</em>. Particularly, for two nodes to communicate, a message $m$ is enqueued on a channel via $send(m)$, and the message is dequeued via $receive(m)$. There is an obvious relationship between the happening of event $send(m)$ at process $p$, and the happening of event $receive(m)$ at process $q$, such that we can be sure $send(m)$ happened before $receive(m)$.</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/asynchronous%20distributed%20systems.html">asynchronous distributed systems</a>, <a href="/tags/consistent%20global%20state.html">consistent global state</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/global%20predicate%20evaluation.html">global predicate evaluation</a></div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stable Matching Algorithms and Proofs in Computer Science</title>
+    <meta name="description" content="This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed proofs of correctness, complexity analysis, and discussions on optimal assignments for companies and applicants. The document also explores related problems like the Stable Roommate Problem.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a> » Stable Matching Algorithms and Proofs in Computer Science
+        </div>
+        <h1>Stable Matching Algorithms and Proofs in Computer Science</h1>
+        <div class="meta">
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a></span>
+        </div>
+        <div class="content">
+            <h1 id="stable-matching">Stable Matching</h1>
+<p>Given a list of $n$ companies $c_1, c_2, \ldots, c_n$, and a list of students $s_1, s_2, \ldots, s_n$, each company ranks the students in order of preference, and each student ranks the companies in order of preference.</p>
+<p>Find a <strong>stable matching</strong> between the companies and students, where no company and student would prefer each other over their current match.</p>
+<ul>
+<li><strong>perfect matching</strong>: every company and student is matched with exactly one other company or student.</li>
+<li><strong>stable</strong>: no pairs $(c, s)$ and $(c', s')$ such that $c$ prefers $s'$ over $s$ and $s'$ prefers $c$ over $c'$.</li>
+</ul>
+<p>A stable matching is a perfect and stable matching. In other words, there should be no incentive for any company or student to break up their current match.</p>
+<p>You can confirm a matching is stable by checking all non-existant matches and seeing if they are preferred. So with $n$ pairs, there are $n(n - 1)$ pairs to check to confirm stability.</p>
+<p>Stable matches are guaranteed to exist.</p>
+<h2 id="propose-and-reject-algorithm-gale-shapley">Propose and Reject Algorithm (Gale-Shapley)</h2>
+<pre><code class="language-plaintext">Initialize all companies and students to be free
+
+while some company is free and hanst proposed to all students:
+    c = first such company
+    s = some student c has not yet proposed to
+    if s is free:
+        (c, s) become paired
+    else if s prefers c to current match c':
+        c' becomes free
+        (c, s) become paired
+    else:
+        s rejects c
+
+return the set of pairs
+</code></pre>
+<pre><code class="language-python">def GS(C, S):
+    # C: list of companies
+    # S: list of students
+    n = len(C)
+    free = set(C)
+    matches = {c: None for c in C}
+    while free:
+        c = free.pop()
+        for s in c.prefs:
+            if matches[s] is None:
+                matches[s] = c
+                break
+            elif s.prefs.index(c) &lt; s.prefs.index(matches[s]):
+                free.add(matches[s])
+                matches[s] = c
+                break
+    return matches
+</code></pre>
+<h3 id="properties">Properties</h3>
+<ul>
+<li>Companies propose to students in descreasing order of preference</li>
+<li>Each company proposes to each student at most once</li>
+<li>Once an applicant is matched, never become unmatched, only "traded up"</li>
+</ul>
+<h3 id="proof-of-correctness">Proof of Correctness</h3>
+<p>When designing/analyzing algorithms, need to show the following:</p>
+<ul>
+<li>(1) The algorithm terminates with a reasonable running time</li>
+<li>(2) The algorithm is correct (produces a stable matching)</li>
+</ul>
+<p>(1) Since $n$ companies propose to at most $n$ students, the algorithm runs in $O(n^2)$ time.</p>
+<p>(2) Proof by contradiction</p>
+<p>note: $p \to q$ is equiv to $p \land \neg q \equiv F$</p>
+<h4 id="output-is-always-perfect">Output is always perfect:</h4>
+<p>Suppose there is a company $c_1$ with no match after the algorithm terminates. Therefore, there is also an unmatched applicant.</p>
+<p>$$
+\exists \text{ unmatched company } \leftrightarrow \exists \text{ unmacted person}
+$$</p>
+<p>By observation, in order for a company to be unmatched, it will need to have proposed to and been rejected by every applicant. On the other hand, for an applicant to remain unmatched, it would need to have never been proposed to.</p>
+<p>This means there is an applicant that was never proposed to by the unmatched company, which is a contradiction.</p>
+<h4 id="output-is-a-stable-matching">Output is a stable matching</h4>
+<p>For the sake of contradiction, suppose there exists an unstable pair not matched.</p>
+<p>Let $S$ be the output of the GS algorithm, and $(c, a)$ to be some unstable pair. Since $S$ is perfect, there is an existing pair $(c, a') \in S$. Furthermore, since $S$ is unstable, we have that $c &gt;<em c="c">{a} c'$ and $a' &gt;</em> a$.</p>
+<p>But $c$ must have proposed to and been rejected by $a$. Additionally, $a$ must have traded $c$ for a <em>better</em> company. Yet, $a$ ends up with a less preferred company, which is a contradiction.</p>
+<h2 id="gs-solution-properties">GS Solution Properties</h2>
+<h3 id="company-optimal-assignments">Company Optimal Assignments</h3>
+<ul>
+<li><strong>Valid partner</strong>: A company $c$ is a valid partner of applicant $a$ if there exists a stable matching in which they are matched.</li>
+<li><strong>Best valid partner</strong>: The best valid partner of $c$ is the most preferred valid partner of $c$.</li>
+</ul>
+<p><strong>Claim</strong>: If you run GS, every company receives their BVP. Furthermore, the output of GS is unique.</p>
+<h4 id="proof">Proof</h4>
+<p>Proof by contradiction. Suppose that some company c is not matched with their BVP. Since companies propose in decreasing order of preference, there must exist a company $c$ that was rejected by their best valid partner $BVP(c) = a$.</p>
+<p>Consider the moment when $a$ rejects $c$. Let $S^<em>$ be the </em><em>current</em>* state of the algorithm. Therefore, $a$ is matched to some other company $c'$. </p>
+<p>$$
+a \in valid(c) \to \exists \text{ stable matching } S \text{ such that } (c, a) \in S
+$$</p>
+<p>Say $(c', a') \in S$. If $a &gt;<em c_="c'">{c'} a'$, then $(a, c')$ is unstable for $S$, which is a contradiction to the preceding claim. Therefore, we must have $a' &gt;</em> a$. This also implies that $c'$ is also rejected by $BVP(c')$, since $c'$ proposed in decreasing order of preference, so it must already be rejected by $a'$.</p>
+<p>We can continue the same line of reasoning since $c'$ is also rejected by $BVP(c')$, and so on. This is a contradiction because $c$ is the first company rejected by their BVP.</p>
+<h3 id="applicant-pessimality">Applicant Pessimality</h3>
+<p><strong>Claim</strong>: Each applicant receives their <strong>worst valid partner</strong> (self descriptive).</p>
+<h4 id="proof_1">Proof</h4>
+<p>Let $S^<em>$ be the output of $GS$. For cont. suppose $(c, a) \in S^</em>$, but $c \ne WVP(a)$.</p>
+<p>Say $c' = WVP(a)$. Since $c' \in valid(a)$, $\exists \text{ stable matching } S$ such that $(c', a) \in S$. Further, suppose $(c, a') \in S$. </p>
+<p>If $a &gt;<em c="c">{c} a'$, then $(c, a)$ is unstable for $S$. Therefore, we must have $a' &gt;</em> a$, then by the above prove, $a = BVP(c)$. That is a contradiction because $a'$ is also valid.} a$. If $a' &gt;_{c</p>
+<h3 id="efficient-implementation">Efficient Implementation</h3>
+<p>Can be implemented in $O(n^2)$ time.</p>
+<p>Companies are named $1, ..., n$, and students are named $n + 1, ..., 2n$. Each company has a list of preferences of students, and each student has a list of preferences of companies.</p>
+<p>The key idea is to also maintain an inverse array of the preference index for a matching. </p>
+<pre><code class="language-python">for i in range(n):
+    for j in range(n):
+        inverse[i][pref[i][j]] = j
+</code></pre>
+<h1 id="stable-roommate-problem">Stable Roommate Problem</h1>
+<p>Given a list of $2n$ people, each person ranks the other $2n - 1$ people in order of preference from $1$ to $2n - 1$. Find a stable matching between the people.</p>
+<h2 id="does-a-stable-match-always-include-at-least-one-persons-top-choice">Does a stable match always include at least one person's top choice?</h2>
+<p>No! Consider every possible instance of a stable matching problem with $n = 3$. By brute force, you can find plenty (12) unique examples where no person is matched with their top choice.</p>
+<pre><code class="language-python">from itertools import permutations, product
+
+def is_stable_matching(company_prefs, applicant_prefs, matching):
+    imatching = { v:k for k, v in matching.items() }
+    for company, applicant in matching.items():
+        company_index = company_prefs[company].index(applicant)
+        for other_applicant in company_prefs[company][:company_index]:
+            if applicant_prefs[other_applicant].index(company) &lt; applicant_prefs[other_applicant].index(imatching[other_applicant]):
+                return False
+    return True
+
+def find_stable_matchings(company_prefs, applicant_prefs):
+    matchings = []
+    for perm in permutations(applicant_prefs.keys()):
+        matching = dict(zip(company_prefs.keys(), perm))
+        if is_stable_matching(company_prefs, applicant_prefs, matching):
+            matchings.append(matching)
+    return matchings
+
+
+A1, A2, A3 = 'A1', 'A2', 'A3'
+C1, C2, C3 = 'C1', 'C2', 'C3'
+
+def generate_preferences():
+
+    company_labels = [C1, C2, C3]
+    applicant_labels = [A1, A2, A3]
+
+    cperms = list(permutations(company_labels))
+    aperms = list(permutations(applicant_labels))
+
+    cprod = product(cperms, cperms, cperms)
+    aprod = product(aperms, aperms, aperms)
+
+    c = [ dict(zip(applicant_labels, c)) for c in cprod ]
+    a = [ dict(zip(company_labels, a)) for a in aprod ]
+
+    return c, a
+
+all_c, all_a = generate_preferences()
+
+data = []
+res = []
+for c in all_c:
+  for a in all_a:
+
+    stable_matchings = find_stable_matchings(c, a)
+
+    for matching in stable_matchings:
+      imatching = { v: k for k, v in matching.items() }
+      match_dict = dict(matching)
+      match_dict.update(imatching)
+
+      data.append((c, a, matching))
+      curr = 0
+      for co, pref in c.items():
+        if pref[0] == match_dict[co]:
+          curr += 1
+
+      for ap, pref in a.items():
+        if pref[0] == match_dict[ap]:
+          curr += 1
+
+      res.append(curr)
+
+
+candidates = []
+
+for i in range(len(res)):
+  if res[i] == 0:
+    candidates.append(data[i])
+    print(data[i])
+</code></pre>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/complexity%20analysis.html">complexity analysis</a>, <a href="/tags/gale-shapley.html">gale-shapley</a>, <a href="/tags/matching.html">matching</a>, <a href="/tags/optimization.html">optimization</a>, <a href="/tags/proof%20techniques.html">proof techniques</a>, <a href="/tags/stable%20matching.html">stable matching</a></div>
+    </main>
+</body>
+</html>

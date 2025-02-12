@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow Control</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Flow Control
+        </div>
+        <h1>Flow Control</h1>
+        <div class="meta">
+            <span>Last modified: 2024-02-24</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="flow-control">Flow Control</h1>
+<p>Recall <strong>stop and wait</strong> ARQ. This only allows a single packet to be transmitted at a time. This is inefficient, as the sender is often waiting for the receiver to acknowledge the packet. </p>
+<p>Next recall <strong>sliding window</strong> ARQ. This allows multiple packets to be transmitted at a time. The sender can keep sending packets until the window is full. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. With a window size of $w$, you can send $w$ packets before waiting for an acknowledgement (ie $w$ packets per RTT).</p>
+<h3 id="sliding-window-example">Sliding Window Example</h3>
+<p>Assuming $10$ kb packets, $R = 1$ Mbps, $d = 50$ ms, what window size $w$ do you need to use the network capacity?</p>
+<p>First, knowing RTT = $2d = 100$ ms, we can calculate the maximum throughput using the bandwidth-delay product:</p>
+<p>BD $= R \times d = 1 \times 10^6 \times 0.05 = 50,000$ bits</p>
+<p>so $100000$ bits per RTT can be stored in the network. Therefore, the window size $w$ is:</p>
+<p>$w = \frac{100000}{10000} = 10$</p>
+<h3 id="sliding-window-sender">Sliding Window Sender</h3>
+<p>Sender buffers up to $w$ segments until they are acked. LFS (Last Frame Sent) is the sequence number of the last frame sent. LAR (Last Ack Received) is the sequence number of the last frame acked. The sender can send up to $w$ frames, and the receiver can receive up to $w$ frames, where</p>
+<p>$w &gt; LFS - LAR$</p>
+<h3 id="sliding-window-receiver">Sliding Window Receiver</h3>
+<h4 id="go-back-n-arq">Go-Back-N ARQ</h4>
+<p>In Go-Back-N ARQ, the sender can send multiple packets before waiting for an acknowledgement. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. If a packet is lost, the sender will have to resend all packets from the lost packet onwards.</p>
+<p>The reciever keeps only a single packet buffer for the next segment. (ie keeps LAS = LAST ACK SENT). On receive, if seq number is LAS + 1, then accept, update LAS, and send ACK. Else, discard.</p>
+<p>Uses a single timer to detect lost packets. On timeout, resends buffered packets starting from LAS + 1.</p>
+<h4 id="selective-repeat-arq">Selective Repeat ARQ</h4>
+<p>In Selective Repeat ARQ, the sender can send multiple packets before waiting for an acknowledgement. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. If a packet is lost, the sender will only have to resend the lost packet.</p>
+<p>Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $[LAS + 1, LAS + w]$. If seq number is LAS + 1, then accept, update LAS, and send ACK.</p>
+<p>If it receives something out of order, it will buffer it and send an ACK for the last in-order segment. If it receives a duplicate, it will send an ACK for the last in-order segment.</p>
+<p>Uses a timer for each segment. On timeout, resends the segment.</p>
+<h3 id="sequence-numbers">Sequence Numbers</h3>
+<p>For stop and wait, only need 0/1. For selective repeat, need $w$ numbers for packets, and $w$ numbers for acks of earlier packets. ($2w$ in total). For go-back-n, need $w$ numbers for packets, and 1 number for the ack of the last packet. ($w + 1$ in total).</p>
+        </div>
+        
+    </main>
+</body>
+</html>

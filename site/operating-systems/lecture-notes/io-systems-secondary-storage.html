@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Io Systems Secondary Storage</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Io Systems Secondary Storage
+        </div>
+        <h1>Io Systems Secondary Storage</h1>
+        <div class="meta">
+            <span>Last modified: 2024-02-26</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="io-systems-and-secondary-storage">I/O Systems and Secondary Storage</h1>
+<h2 id="io-system-hardware-environment">I/O System Hardware Environment</h2>
+<p>I/O devices are typically either <strong>block devices</strong>, which transfer data in fixed-size blocks, or <strong>character devices</strong>, which transfer data one character at a time in a stream.</p>
+<p><strong>Device controllers</strong> are the hardware (a mini-computer) that connects the CPU to the I/O devices. They are responsible for sending commands to the device, and for receiving and sending data to and from the device.</p>
+<p>The I/O devices communicate via controller registers/memory-mapped I/O, or direct memory access (DMA).</p>
+<p>Old computers typically had a single bus (the <strong>system bus</strong>) that connects the CPU, memory, and I/O devices. The topology of the computer was similar to old ethernet networks with a single broadcast domain.</p>
+<p>More modern and performant systems have multiple buses. The <strong>PCI</strong> bus is a high-speed backbone that all the other busses branch off of (<strong>memory</strong>, <strong>SCSI</strong>, <strong>USB</strong>, etc.).</p>
+<p>The I/O system needs to be able to handle a wide variety of devices with different data transfer rates, data formats, and control mechanisms.</p>
+<h2 id="io-systems-role-and-structure">I/O System's Role and Structure</h2>
+<p>Needs to provide:</p>
+<ul>
+<li>A uniform interface to many devices, as well as device specific interfaces when necessary.</li>
+<li>Device-system communication and interaction through device drivers.</li>
+<li>Every device is given a unique id so it can be referenced by applications.</li>
+</ul>
+<h3 id="organization">Organization</h3>
+<ul>
+<li><strong>Programmed I/O with polling</strong>: CPU issues an I/O command for the process, and the process busy waits until the I/O is complete. Inefficient because the CPU is tied up waiting for the I/O to complete.</li>
+<li><strong>Interrupt-driven I/O</strong>: CPU issues an I/O command and continues to execute. When the I/O is complete, the device sends an interrupt to the CPU, which then handles the I/O completion. The process may or may not be blocked while waiting for the I/O to complete, but the processor is not tied up waiting for the I/O to complete.</li>
+<li><strong>Direct Memory Access (DMA)</strong>: The DMA module controls exchange of data between I/O module and main memory using physical addresses. The processor requests transfer of a block of data from DMA, and is interrupted when the transfer is complete. This saves the processor from having to handle the data transfer.</li>
+</ul>
+<h2 id="secondary-storage">Secondary Storage</h2>
+<p>Anything outside of <em>primary memory</em> (RAM) is considered <strong>secondary storage</strong>. This includes hard drives, SSDs, and other storage devices. SS doesn't allow direct execution of instructions or data access via load/store instructions, and is instead accessed via I/O operations.</p>
+<p>Secondary storage is...
+- <strong>Non-volatile</strong>: Data is retained even when the power is off.
+- Very slow compared to primary storage.
+- Failure-prone.
+- Giant and relatively cheap compared to primary storage. 2024 numbers:
+    - 2 TB HDD for $73 ($0.04/GB)
+    - 30 TB HDD for $700
+    - 500 GB SSD for $50 ($10/GB)
+    - 100 TB SSD for $40,000</p>
+<h3 id="memory-hierarchy">Memory Hierarchy</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Speed</th>
+<th>Cost</th>
+<th>Size</th>
+<th>Volatility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registers</td>
+<td>Fastest</td>
+<td>Most Expensive</td>
+<td>Smallest</td>
+<td>Volatile</td>
+</tr>
+<tr>
+<td>L1 Cache</td>
+<td>Fast</td>
+<td>Expensive</td>
+<td>Small</td>
+<td>Volatile</td>
+</tr>
+<tr>
+<td>L2 Cache</td>
+<td>Fast</td>
+<td>Less Expensive</td>
+<td>Still not a lot</td>
+<td>Volatile</td>
+</tr>
+<tr>
+<td>Main Memory</td>
+<td>Slower</td>
+<td>Less Expensive</td>
+<td>Larger</td>
+<td>Volatile</td>
+</tr>
+<tr>
+<td>Secondary Storage</td>
+<td>Slow</td>
+<td>Cheap</td>
+<td>Largest</td>
+<td>Non-Volatile</td>
+</tr>
+<tr>
+<td>Tertiary Storage</td>
+<td>Slowest</td>
+<td>Least Expensive</td>
+<td>Largest</td>
+<td>Non-Volatile</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hdds-and-sdds">HDDs and SDDs</h3>
+<p><strong>HDDs</strong> are mechanical devices that store data on spinning disks. They have a read/write head that moves across the disk to read and write data. They are slow, but have a large capacity and are relatively cheap.</p>
+<p><strong>SSDs</strong> are solid-state devices that store data on flash memory. They are much faster than HDDs, but are more expensive. They are also more reliable and consume less power.</p>
+<h3 id="disks-and-the-os">Disks and the OS</h3>
+<p>Disks are messy, slow, error-prone, horrible devices, and its the OS's job to make them look like a nice, clean, fast, reliable, and easy-to-use device.</p>
+<p>The OS typically provides different levels of disk access to different clients, including:
+- <strong>physical block access</strong>: the ability to read and write blocks of data to the disk.
+- <strong>disk logical block access</strong>: the ability to read and write to a disk block number, without needing to know the physical location of the block.
+- <strong>file system</strong>: the ability to read and write files at a specified offset, block, or byte.</p>
+<p>With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $[0, n]$, (ie a contiguous range of blocks to the OS).</p>
+<h3 id="performance-issues">Performance Issues</h3>
+<p>The HDD's performance is affected by its mechanically moving parts. Limiting the amount of seeking and <strong>defragmenting</strong> help, but only to an extent.</p>
+        </div>
+        
+    </main>
+</body>
+</html>

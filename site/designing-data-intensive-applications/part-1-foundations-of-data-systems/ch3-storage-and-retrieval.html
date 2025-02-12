@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage and Retrieval Techniques for Database Systems</title>
+    <meta name="description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Storage and Retrieval Techniques for Database Systems
+        </div>
+        <h1>Storage and Retrieval Techniques for Database Systems</h1>
+        <div class="meta">
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/database%20systems.html">Database Systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="chapter-3">Chapter 3</h1>
+<h2 id="storage-and-retrieval">Storage and Retrieval</h2>
+<pre><code class="language-bash">#!/bin/bash
+
+# instant database
+db_set () {
+ echo &quot;$1,$2&quot; &gt;&gt; database
+}
+db_get () {
+ grep &quot;^$1,&quot; database | sed -e &quot;s/^$1,//&quot; | tail -n 1
+}
+</code></pre>
+<p>The fact that it is a log makes this...sort of performant. Writes are fast O(1), and reads are slow O(n). The log-structured storage engine is a good fit for append-only workloads, such as event sourcing.</p>
+<p>To make reads faster, we can use an <strong>index</strong>. An index is an additional structure that is derived from the primary data. This is a trade-off between write performance and read performance, since writes now have to update the index as well as the primary data.</p>
+<h3 id="hash-indexes">Hash Indexes</h3>
+<p>Map keys to offsets in the data file. This is fast for equality queries, but not for range queries. Store log-structured key-value data like above in binary format, and use a hash index to find the offset of the key in the data file. <strong>Delete</strong> by marking the key as deleted in the data file (sometimes with a "tombstone"), and periodically reindex the data file to remove the deleted keys.</p>
+<p>For <strong>crash recovery</strong>:</p>
+<ul>
+<li>reread log file from beginning to end, building hash table indicies in memory (slow, but no additional storage)</li>
+<li>store snapshots of the hash table indicies to disk periodically (fast, but requires additional storage)</li>
+<li>use checksums to detect partial corruption of the hash table indicies (fast, but requires additional storage)</li>
+</ul>
+<p>For concurrency, maintain a single write thread, and multiple read threads. Writes are serialized, but reads can be parallelized.</p>
+<h3 id="sstables-and-lsm-trees">SSTables and LSM-Trees</h3>
+<p><strong>Sorted String Tables</strong> (SSTables) are a way to store key-value data in sorted order. Keep data sectioned based on time range, and search from most to least recent, periodically merging previous sections of data. Should store key value pairs, as well as byte offset metadata. Range queries are fast, and merge operations can be optimized by keeping most recent record and merging ranges at a time. However, both reading and writing are slower than hash indexes.</p>
+<p>Can use B-Trees to store SSTables on disk, or various balanced binary trees (e.g. AVL, red-black, etc.) to store data in memory. These are called <strong>Log-Structured Merge Trees</strong> (LSM-Trees).</p>
+<p>Below is a simplified version of the algorithm used by LevelDB, which is similar to the one used by Cassandra and HBase (which were inspired by Bigtable):</p>
+<ul>
+<li>When a write comes in, add it to an in-memory balanced tree data structure (memtable).</li>
+<li>When the memtable gets bigger than some threshold, typically a few megabytes, write it out to disk as an SSTable file. While the SSTable is being written out to disk, writes can continue to a new memtable instance.</li>
+<li>On read request, first try memtable, then in the most recent on-disk segment, then in the next-older segment, etc.</li>
+<li>Periodically merge and coalesce segment files.</li>
+</ul>
+<p><strong>Lucene</strong> (used by Elasticsearch and Solr) uses a similar algorithm for its term-dictionary indexes that support full-text search. It uses a <strong>log-structured merge (LSM) tree</strong> to merge segments of the term dictionary. Here, words are the keys, and the values are the list of documents that contain the word (in a "Posting List"). This is kept in SSTables, and merged periodically.</p>
+<h3 id="performance-optimizations">Performance Optimizations</h3>
+<p><strong>Bloom filters</strong> are a way to avoid reading SSTables that don't contain a key. They are a memory-efficient data structure for approximating the contents of a set. Give false positives, but no false negatives. Can be used to avoid reading SSTables that don't contain a key.</p>
+<p><strong>Merge strategies</strong> such as size-tiered, where segments are merged when they reach a certain size, or leveled, where segments are kept in subranges.</p>
+<p>Keeping things append-only is a good way to keep throughput for writes high.</p>
+<h3 id="b-trees-vs-lsm-trees">B-Trees vs LSM-Trees</h3>
+<p>B-trees trade off write speed for read speed. N-ary tree with sorted keys in every node. Increase branch factor for maximal locality and minimal disk seeks.</p>
+<p>LSM-trees trade off read speed for write speed. Writes are sequential, but reads are not. Writes are batched, and reads are parallelized. <strong>Write amplification</strong> (multiple writes to disk for a single DB write) can be a problem on both B-trees and LSM-trees. However, LSM-trees often still have a higher write throughput.</p>
+<p>Compaction can impact LSM-tree read performance, but can be mitigated by keeping a small number of SSTables per level, and by using a merge strategy that does not require reading all SSTables. Still, it can impact high percentiles of read latency.</p>
+<p>With high enough write throughput, it is also important to monitor disk space usage, since compaction can be slow enough that it doesn't keep up with the incoming writes.</p>
+<h3 id="secondary-indexes">Secondary Indexes</h3>
+<p><strong>Secondary indexes</strong> are indexes on non-primary keys. They can be implemented with hash indicies (still bad for range-queries), or with B-trees (good for range queries, but slower writes). They can also be implemented with LSM-trees. Similar to the setup for full-text search (Posting Lists), can use a list of matching records as a value in an index (<strong>inverted index</strong>).</p>
+<h3 id="storing-indexes">Storing Indexes</h3>
+<p>Must choose between storing references, or data directly in the index. Storing references is more space efficient update-friendly, but requires more disk seeks. Storing data directly in the index is more read friendly, but requires more disk space, and makes updates slower.</p>
+<p><strong>Heap files</strong> let you store data referenced in your index and update in place when the new data fits in the space of the old data. Otherwise, you have to move the data to a new location, and update the index (or heap file with redirect pointer). However, this extra indirection can slow down reads.</p>
+<p>Directly storing data in the index <strong>(clustered index)</strong> is good for read-heavy workloads, and storing references is good for write-heavy workloads. InnoDB (MySQL storage engine) uses a clustered index for primary keys, and a secondary index point directly to the primary key (instead of a heap file). SQLServer let you specify one clustered index per table.</p>
+<p>B-trees are good for one-dimensional indexes, but not for <strong>multi-dimensional indexes</strong>. <strong>R-trees</strong> are a good alternative for multi-dimensional indexes, but are more complex.</p>
+<p><strong>Fuzzy indexes</strong> are often used in full-text search. They are good for matching similar words, but not for exact matches. Lucene keeps an in-memory finite state automaton over characters in each key that is similar to a trie, allowing for fuzzy matching to a certain "edit distance".</p>
+<h3 id="keeping-everything-in-memory">Keeping everything in memory</h3>
+<p>As RAM gets cheaper, it makes more sense to keep data in memory. <strong>In-memory databases</strong> are good for applications that need low latency and high throughput, but make crash recovery more difficult. <strong>Write-ahead logs</strong> are a good way to make crash recovery easier, but can slow down writes. Some databases (e.g. Redis) let you choose between durability and performance, and have "weak durability" by asyncronously writing to disk. Some in-memory databases can even exceed the amount of RAM available by using an eviction policy similar to a cache.</p>
+<h3 id="transaction-processing-or-analytics">Transaction Processing or Analytics?</h3>
+<p><strong>OLTP</strong> (online transaction processing) is good for real-time stateful workloads, where low latency and high throughput are important. <strong>OLAP</strong> (online analytics processing) is good for async batch processing, where high throughput is important, but latency is not.</p>
+<h4 id="otlp">OTLP:</h4>
+<ul>
+<li>transactional databases, relational databases, key-value stores, etc.</li>
+<li>ACID transactions, concurrency control, indexes, etc.</li>
+<li>enterprise typically made up of several OLTP systems that require high-availability and low-latency for reads and writes.</li>
+</ul>
+<h4 id="olap">OLAP:</h4>
+<ul>
+<li>data warehouses, batch processing, batch analytics, Hadoop, Spark, etc.</li>
+<li>read only copy of data, typically loaded and queried in batches</li>
+<li>typically used for business intelligence, reporting, and data mining. Not as critical to keep up and running 24/7, and queries are able to hog system resources without consequence.</li>
+</ul>
+<p>Most of the previous indexes are more OTLP focused, whereas "data warehouses" are more OLAP focused, and often use a different schema and index model.</p>
+<h3 id="stars-and-snowflakes-schemas-for-analytics">Stars and Snowflakes: Schemas for Analytics</h3>
+<p><strong>Star schema</strong> is a simple schema for OLAP. It has a single <strong>fact table</strong> containing all the records you want to query, and multiple <strong>dimension tables</strong> that contain the attributes you want to be queriable. The fact table contains foreign keys to the dimension tables.</p>
+<p><strong>Snowflake schema</strong> is a more complex schema for OLAP. It is similar to a star schema, but the dimension tables are normalized into multiple tables. This can make queries more complex, but can also reduce storage space.</p>
+<p>Warehouses can get huge (petabytes), since records are often events and are kept long term. Columns are often also very wide (100s of columns), since they are often denormalized.</p>
+<h3 id="column-oriented-storage">Column-Oriented Storage</h3>
+<pre><code class="language-sql">SELECT
+ dim_date.weekday, dim_product.category,
+ SUM(fact_sales.quantity) AS quantity_sold
+FROM fact_sales
+ JOIN dim_date ON fact_sales.date_key = dim_date.date_key
+ JOIN dim_product ON fact_sales.product_sk = dim_product.product_sk
+WHERE
+ dim_date.year = 2013 AND
+ dim_product.category IN ('Fresh fruit', 'Candy')
+GROUP BY
+ dim_date.weekday, dim_product.category;
+</code></pre>
+<p>In transactional databases, storage is "row-oriented", so an entire row needs to be loaded, including columns that aren't used. <strong>column-oriented</strong> storage is better for OLAP, since it only needs to load the columns that are used, which can amount to a lot of space over large datasets. It also allows for better compression, since columns are often similar.</p>
+<p>Can be heavily compressed using bitmap indexes, and further by run-length encoding, delta encoding, etc. can also be optimized with vectorized processing (SIMD instructions), where instructions are executed in parallel on multiple values at once (<a href="https://courses.cs.washington.edu/courses/cse333/23au/lectures/27/code/cpp_simd_example.tar.gz">C++ example</a>).</p>
+<h4 id="sort-order-in-column-storage">Sort Order in Column Storage</h4>
+<p>Can choose a <strong>sort key</strong> to order rows in a column, and secondary sort key to break ties for a given value. Allows fast range queries, helps optimize compression (like with run length encoding for duplicates), and gives better locality for sequential reads.</p>
+<p>Can even maintain several sort orders for a column, and choose the best one for a given query. This is called a <strong>compound sort key</strong>.</p>
+<h4 id="writing-to-column-oriented-storage">Writing to Column-Oriented Storage</h4>
+<p>These optimizations are good for reads and make sense in a data-warehouse, but can make writes slower because it has to update multiple indexes. This is fine for OLAP, and we can rely on LSM-trees to make writes fast initially, and periodically merge and compact the data.</p>
+<h4 id="aggregation-data-cubes-and-materialized-views">Aggregation: Data Cubes and Materialized Views</h4>
+<p><strong>Materialized views</strong> are precomputed joins and aggregations. They are good for speeding up queries, but can be expensive to maintain. They are often used in data warehouses, where the data is read-heavy, and the cost of maintaining the materialized views is amortized over many queries.</p>
+<p><strong>Data cubes</strong> are a way to precompute aggregations over multiple dimensions. They are good for speeding up queries, but can be expensive to maintain. Essentially a multi-dimensional array, where each cell is an aggregation over a subset of the dimensions. Very expensive to maintain, and inflexible for queries that aren't covered by the precomputed aggregations.</p>
+<p>Oftentimes, it makes more sense to store raw data, and then benchmark queries to see which ones are slow, and then precompute aggregations for those queries if they need to be faster.</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/column-oriented%20storage.html">column-oriented storage</a>, <a href="/tags/data%20structures.html">data structures</a>, <a href="/tags/indexing.html">indexing</a>, <a href="/tags/oltp%20vs%20olap.html">oltp vs olap</a></div>
+    </main>
+</body>
+</html>

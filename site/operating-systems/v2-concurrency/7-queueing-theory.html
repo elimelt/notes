@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 Queueing Theory</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » 7 Queueing Theory
+        </div>
+        <h1>7 Queueing Theory</h1>
+        <div class="meta">
+            <span>Last modified: 2024-03-06</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="queueing-theory">Queueing Theory</h1>
+<p>Simplifying assumptions:</p>
+<ul>
+<li><strong>Work preserving</strong>: The system will eventually process all requests.</li>
+<li><strong>FIFO scheduling</strong>: Requests are processed in the order they arrive.</li>
+</ul>
+<h2 id="definitions">Definitions</h2>
+<ul>
+<li><strong>Server</strong>: Anything that performas tasks, e.g. CPU, disk, network, etc.</li>
+<li><strong>Queueing delay ($W$)</strong>: Time a task spends waiting to be scheduled. In a time slicing system (e.g. CPU), this is the sum of all the time it takes for a request to be completed.</li>
+<li><strong>Tasks queued ($Q$)</strong>: Number of tasks in the queue.</li>
+<li><strong>Service time ($S$)</strong>: Time it takes to complete a task, assuming no waiting.</li>
+<li><strong>Response time ($R$)</strong>: Time it takes for a task to be completed, including queueing and service time.<ul>
+<li>Note that $R = W + S$, and that in order to improve overall response time, we need to reduce either queueing time or service time.</li>
+</ul>
+</li>
+<li><strong>Arrival rate ($\lambda$)</strong>: Number of tasks arriving per unit time.</li>
+<li><strong>Arrival process</strong>: The distribution of the time between task arrivals.</li>
+<li><strong>Service rate ($\mu$)</strong>: Number of tasks completed per unit time. $\mu = 1/S$.</li>
+<li><strong>Utilization ($U$)</strong>: Fraction of time the server is busy.<ul>
+<li>$0 \leq U \leq 1$.</li>
+<li>$U = \lambda / \mu$ if $\lambda &lt; \mu$.</li>
+<li>$U = 1$ if $\lambda \geq \mu$.</li>
+</ul>
+</li>
+<li><strong>Throughput ($X$)</strong>: Number of tasks completed per unit time.<ul>
+<li>$X = U \cdot \mu$.</li>
+<li>X = $\lambda$ if $U &lt; 1$.</li>
+<li>X = $\mu$ if $U = 1$.</li>
+</ul>
+</li>
+<li><strong>Tasks in the system (N)</strong>: Tasks in the system, including those being serviced and those in the queue.<ul>
+<li>$N = Q + U$.</li>
+</ul>
+</li>
+</ul>
+<h2 id="littles-law">Little's Law</h2>
+<p>Defines a very general relationship for any system, and is useful for understanding the relationship between throughput, response time, and the number of tasks in the system.</p>
+<p>$$N = X \cdot R$$</p>
+<p><em>eg. If the throughput is 10 tasks per second, and the average response time is 5 seconds, then there are 50 tasks in the system.</em></p>
+<h3 id="examples">Examples</h3>
+<p>Server than processes requests sequentually. The average arrival and departure rate is 100 requests/sec. The average request completes after 5 ms. What is the average utilization $U$ of the system?</p>
+<p>$$U = X \cdot R = 100 \cdot 0.005 = 0.5$$</p>
+<p><em>Meaning the server is busy 50% of the time.</em></p>
+<p>Web service that takes an average of 100 ms to process a request, and handles 10000 queries per second. What is the average number of requests in the system?</p>
+<p>$$N = X \cdot R = 10000 \cdot 0.1  = 1000 \text{ queries}$$</p>
+<h3 id="response-time-vs-utilization">Response Time vs. Utilization</h3>
+<p>Operating a system with high utilization increases risk of overload. If $\lambda &gt; \mu$, the queue will grow indefinitely, and so will the response time.</p>
+<p>Higher arrival rate $\lambda$ and burstier arrival process will tend to yield longer queue lengths.</p>
+<h4 id="best-case-uniform-arrival">Best Case: Uniform Arrival</h4>
+<ul>
+<li>$\lambda &lt; \mu$: $R = S$. Queues will shrink until they are empty and remain that way.</li>
+<li>$\lambda = \mu$: $R = S$. Queues will remain in a steady state.</li>
+<li>$\lambda &gt; \mu$: $R = \infty$. Queues will grow indefinitely. In practice, this would lead to requests being dropped/system failure.</li>
+</ul>
+<h4 id="worst-case-bursty-arrival">Worst Case: Bursty Arrival</h4>
+<p>When requests arrive in groups (which they often do), the queue will grow and shrink in response to the bursts. This can lead to a higher average queue length and response time. Even if the average arrival rate is less than the service rate, the queue can still grow if the arrival process is bursty.</p>
+<p>For example, consider the following two systems:</p>
+<ul>
+<li>System 1: $\lambda = 1$ request/second, $S = 1$ second service time, uniform arrival.</li>
+<li>System 2: $\lambda = 1$ request/second, $S = 1$ second service time, bursty arrival w/ 10 req every 10 seconds.</li>
+</ul>
+<p>System 1 processes requests as they come in, with a queue length of 0. The average response time over a 10 second period is 1 second.</p>
+<p>$$
+R = \frac{1}{10} \sum_{i=1}^{10} 1 = 1 \text{ seconds}
+$$</p>
+<p>System 2 processes requests in bursts, with a queue length that grows and shrinks. The average response time is...</p>
+<p>$$R = \frac{1}{10} \sum_{i=1}^{10} i = 5.5 \text{ seconds}$$</p>
+<p>Generally, for a system with arrival rate $\lambda = \frac{n}{t}$ which is a bursty arrival process of $n$ requests every $t$ seconds, and a service time of $S$ seconds, the average response time for each request in the burst is...</p>
+<p>$$
+R = \frac{1}{n} \sum_{i=1}^{n} i \cdot S
+$$</p>
+<h4 id="exponential-arrivals">Exponential Arrivals</h4>
+<p>An <strong>exponential distribution</strong> of a continuous random variable has a mean $\lambda^{-1}$, and a variance $\lambda^{-2}$. Its probability density function is...</p>
+<p>$$
+f(x) = \lambda e^{-\lambda x}
+$$</p>
+<p>It is a <em>memoryless</em> distribution, meaning that the probability of an event occurring in the next $t$ seconds is the same as the probability of an event occurring in the next $t + s$ seconds.</p>
+<p>A memoryless distribution is useful because it allows us to model a queue as a finite state machine with states corresponding to the number of tasks in the queue, and transition probablilities $\lambda$ and $\mu$ for transitioning up a state (arrival) and down a state (departure).</p>
+<p>Assuming $\lambda &lt; \mu$, the system is stable and we can calculate the response time $R$ as a function of utilization $U$ and service time $S$:</p>
+<p>$$
+R = \frac{S}{1 - U}
+$$</p>
+<p>This shows the exponential relationship between response time and utilization. As utilization increases, response time increases very slowly at first, but then increases rapidly as the system approaches overload.</p>
+        </div>
+        
+    </main>
+</body>
+</html>

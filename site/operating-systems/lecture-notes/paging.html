@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paging</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Paging
+        </div>
+        <h1>Paging</h1>
+        <div class="meta">
+            <span>Last modified: 2024-02-14</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="virtual-memory-and-paging">Virtual Memory and Paging</h1>
+<p>Use pages to map virtual memory to physical memory. This prevents <strong>external fragmentation</strong> by dividing memory into fixed-size pages, and <strong>internal fragmentation</strong> by making the units of allocation smaller.</p>
+<h3 id="fragmentation">Fragmentation</h3>
+<ul>
+<li><strong>external fragmentation</strong>: when free memory is broken into small pieces, but the memory is not being used because it is not contiguous.</li>
+<li><strong>internal fragmentation</strong>: when a process is allocated more memory than it needs, and the extra memory is not being used.</li>
+</ul>
+<p>Virtual address space is divided into <em>pages</em>, and physical address space is divided into <em>frames</em>. The page table maps pages to frames. The page table is stored in memory, and the page table base register (PTBR) points to the page table. The page table is indexed by the page number, and the value at that index is the frame number.</p>
+<p>From the programmers perspective, memory is a giant contiguous block, completely independent of the physical memory and hardware.</p>
+<h3 id="protection">Protection</h3>
+<p>One processes cannot "name" or address the memory of another process. This provides protection between processes.</p>
+<p>Set the first page to be invalid so that if a process tries to access it (NULL pointer), it will cause an exception.</p>
+<h3 id="address-translation">Address Translation</h3>
+<ul>
+<li>Page table provides layer of indirection</li>
+<li>Virtual address is divided into <strong>virtual page number (vpn)</strong>, which is an index into the page table, and <strong>offset</strong></li>
+<li>The page table entry (PTE) contains the frame number</li>
+<li>The physical address is the frame number concatenated with the offset</li>
+</ul>
+<p>Page tables are managed by the operating system, and are stored in memory. There is one PTE for each page, ie one PTE per VPN. The page table maps VPNs to PFNs. Each process has its own page table, and the PTBR points to the page table.</p>
+<h3 id="shared-frames">Shared Frames</h3>
+<p>Multiple processes can share the same frame. This is useful for shared libraries, and for shared memory between processes. Can also be used when implementing <strong>copy-on-write (COW)</strong> to optimize things like read-only fork, or exec.</p>
+<h3 id="page-table-entries">Page Table Entries</h3>
+<h4 id="more-functionality-to-the-ptes">More functionality to the PTEs:</h4>
+<ul>
+<li>Protection by setting read/write/execute bits</li>
+<li>Page table entry can point to nothing, causing a page fault</li>
+<li>Accounting information for if the PTE is used, dirty bit, reference bit, etc.</li>
+<li><strong>valid bit</strong>: if the page is in memory. set when the page is in memory, cleared when the page is not in memory. Used for page faults.</li>
+<li><strong>referenced bit</strong>: if the page has been referenced before. set when page is read or written to. cleared by the OS but set by the hardware. Used for LRU replacement.</li>
+<li><strong>dirty/modified bit</strong>: page has been modified. set when page is written to. cleared by the OS but set by the hardware. Used for COW.</li>
+<li><strong>protection bits</strong>: read/write/execute permissions</li>
+</ul>
+<p>More out there.</p>
+<h4 id="advantages-of-paging">Advantages of Paging</h4>
+<ul>
+<li>Easy to allocate physical memory. Allocated from a free list (linked usually) of frames. To allocate, remove</li>
+<li>External fragmentation is eliminated. Pages are fixed size, so no fragmentation.</li>
+<li>Leads naturally to virual memory. Pages can be swapped in and out of memory, and don't need to be entirely in physical memory for a program to run.</li>
+</ul>
+<h4 id="disadvantages-of-paging">Disadvantages of Paging</h4>
+<ul>
+<li>Can still have internal fragmentation. If a page is not entirely used, there is wasted space.</li>
+<li>Overhead of managing the page table. Page table is stored in memory, and is accessed for every memory access. This can be mitigated by using a TLB (essentially a cache).</li>
+<li>Memory required to hold a page table can be large. Need one PTE/page, and if the page size is small, the page table can be large. ie 32 bit AS with 4 KB pages = $2^20$ PTEs = $1,048,576$ PTEs = 4 MB (using 4 bytes/page). Solution: page the page table.</li>
+</ul>
+<h3 id="paged-virtual-memory">Paged Virtual Memory</h3>
+<ul>
+<li>The full (used) address space exists on secondary storage (disk) in page-sized blocks</li>
+<li>OS uses main memory as a cache for the disk</li>
+<li>When a page is needed, it is transferred to a free page frame</li>
+<li>If there are no free page frames, the OS must choose a page to evict. If the evicted page is dirty, it must be written to disk. Otherwise, it can just be discarded.</li>
+<li>All transparent to the application/user</li>
+</ul>
+<h3 id="page-faults">Page Faults</h3>
+<ul>
+<li>When a page is evicted, the OS sets the PTE to invalid and records the disk location of the page into a seperate data structure.</li>
+<li>When a process tries to access the now invalid page, an exception is thrown (page fault).<ul>
+<li>After trapping into the kernel on exception, the OS runs the page fault handler</li>
+<li>The OS looks up the page on disk, and reads it into a free frame</li>
+<li>The OS updates the page table to point to the new frame</li>
+<li>The OS restarts the instruction that caused the page fault</li>
+</ul>
+</li>
+</ul>
+<h3 id="demand-paging">Demand Paging</h3>
+<ul>
+<li>Pages are only brought into main memory when they are referenced.<ul>
+<li>only the code/data that is actually used is brought into memory</li>
+</ul>
+</li>
+<li>Few systems try to anticipate what pages will be used, and instead just bring in pages as they are used</li>
+<li>However, not uncommon to cluster pages that are likely to be used together (ie. code and data pages)<ul>
+<li>OS keeps track of pages that come and go together</li>
+<li>bring in all pages in the cluster when one is referenced</li>
+<li>interface may allow programmer or compiler to specify clusters</li>
+</ul>
+</li>
+</ul>
+<h3 id="page-replacement">Page Replacement</h3>
+<ul>
+<li>When you read in a page, you either use an existing free frame, or you evict a page.</li>
+</ul>
+<h4 id="page-replacement-algorithms">Page Replacement Algorithms</h4>
+<ul>
+<li>pick one that won't be used for a while</li>
+<li>pick one that hasn't been modified (so we don't have to write it to disk)</li>
+<li>OS typically keeps a pool of free pages so that allocations don't need to evict.</li>
+<li>OS also tries to keep clean pages around so that they can be evicted without writing to disk.</li>
+</ul>
+<h5 id="beladys-optimal-algorithm">Belady's Optimal Algorithm</h5>
+<ul>
+<li>Replace the page that will not be used for the longest time in the future</li>
+<li>Impossible to implement in practice, but useful for comparing other algorithms</li>
+</ul>
+<h5 id="fifo">FIFO</h5>
+<ul>
+<li>Replace the page that has been in memory the longest</li>
+<li>Simple to implement, but not always the best</li>
+<li>Can cause <strong>Belady's Anomaly</strong>: increasing the number of frames can increase the number of page faults</li>
+</ul>
+<h5 id="lru">LRU</h5>
+<ul>
+<li>Replace the page that has not been used for the longest time</li>
+<li>Requires keeping track of the time of the last reference for each page</li>
+</ul>
+<h5 id="approximate-lru">Approximate LRU</h5>
+<ul>
+<li>Keep counter for each page</li>
+<li>At some regular interval, for each page:<ul>
+<li>if ref bit == 1, increment counter</li>
+<li>if ref bit == 0, zero counter</li>
+<li>zero ref bit</li>
+</ul>
+</li>
+<li>counter contains the number of intervals since the last reference to the page. page with the largest counter is least recently used</li>
+</ul>
+<h5 id="lru-clock">LRU Clock</h5>
+<ul>
+<li>Keep a circular list of pages</li>
+<li>Each page has a reference bit</li>
+<li>When a page is referenced, set the reference bit to 1</li>
+<li>When a page is evicted, if the reference bit is 1, set it to 0 and move to the next page. If the reference bit is 0, evict the page</li>
+<li>Essentially a clock hand that moves around the list, and evicts the page that the hand is pointing to</li>
+<li>Low overhead if plenty of memory</li>
+<li>As memory increases, accuracy decreases. Can use multiple hands to increase accuracy.</li>
+</ul>
+<h3 id="how-do-you-load-a-program">How do you load a program?</h3>
+<ul>
+<li>Create descriptor/process control block (PCB)</li>
+<li>Create page table</li>
+<li>Put address space image on disk in page-sized blocks</li>
+<li>Build page table<ul>
+<li>All PTE valid bits set to 0</li>
+<li>Some data structure stores disk location of each page</li>
+<li>When process starts executing, the OS sets the PTBR to point to the page table</li>
+</ul>
+</li>
+</ul>
+<h3 id="locality">Locality</h3>
+<ul>
+<li><strong>Temporal locality</strong>: if a memory location is accessed, it is likely to be accessed again soon</li>
+<li><strong>Spatial locality</strong>: if a memory location is accessed, it is likely that nearby memory locations will be accessed soon</li>
+</ul>
+<p>Locality means paging can be infrequent, and the OS can bring in multiple pages at once. This assumes that:</p>
+<ul>
+<li>Once you bring in a page, you will use it many times</li>
+<li>On average, you will use the pages you bring in</li>
+</ul>
+<h3 id="local-vs-global-page-replacement">Local vs Global Page Replacement</h3>
+<p>Local page replacement means that each process has its own set of pages that it is replacing. Global page replacement means that the OS can choose any page to replace, regardless of which process it belongs to. Linux uses global page replacement.</p>
+<p>This is typically implemented by keeping a pool of free pages, and when a page is needed, the OS can choose any page to evict. This is useful because it allows the OS to make better decisions about which pages to evict, and can reduce the number of page faults.</p>
+<h4 id="working-set-model">Working Set Model</h4>
+<ul>
+<li>$t$: time</li>
+<li>$w$: working set window (measured in page refs)</li>
+<li>a page is in the working set (WS) only if it was referenced in the
+last w references</li>
+</ul>
+<p>$$
+WS(t,w) = {\text{pages P such that P was referenced in the time
+interval } (t, t-w)}
+$$</p>
+<p>$|WT(t, w)|$ is the number of pages in the working set at time $t$, and varies with time. During a time interval with particularly bad locality, the working set can be very large.</p>
+<ul>
+<li>The working set of a process is the set of pages that the process is currently using</li>
+<li>The working set window is the number of page references that are considered to be in the working set.</li>
+<li>Typically, the working set is the set of pages that have been referenced in the last $n$ references, where $n$ is the working set window.</li>
+</ul>
+<p>The goal is to reduce page faults by keeping the working set in memory. <strong>Thrashing</strong> is when a process is spending more time paging than executing, and keeping the working set in memory can help prevent thrashing.</p>
+<h3 id="hard-vs-soft-page-faults">Hard vs Soft Page Faults</h3>
+<ul>
+<li><strong>Hard page fault</strong>: when a page is not in memory, and the OS must read it from disk/backend storage</li>
+<li><strong>Soft page fault</strong>: when a page is not in memory, but the OS can find it in the page file, and bring it into memory without reading from the backend storage</li>
+</ul>
+        </div>
+        
+    </main>
+</body>
+</html>

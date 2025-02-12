@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Non-Blocking Two Phase Commit</title>
+    <meta name="description" content="Explains the concept of non-blocking two phase commit using Paxos">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/distributed-systems.html">distributed-systems</a> » Non-Blocking Two Phase Commit
+        </div>
+        <h1>Non-Blocking Two Phase Commit</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/distributed-systems.html">distributed-systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="non-blocking-two-phase-commit">Non-Blocking Two Phase Commit</h1>
+<p>Regular 2PC is blocking because we need to wait for <strong>all</strong> nodes to agree that an operation is commit-able. There are massive performance implications to read-only transactions (could fix with snapshot reads) and lock contention. We can fix this by relying on Paxos.</p>
+<p>We make the coordinator as well as each participant a Paxos group with its own shard, and then we can just wait until all groups agree to an operation.</p>
+<h2 id="2pc-on-paxos">2PC on Paxos</h2>
+<ol>
+<li>Client requests multi-key operation at coordinator</li>
+<li>Coordinator logs request</li>
+<li>Coordinator sends prepare</li>
+<li>Participants decide to commit/abort, and log result</li>
+<li>Coordinator sends a commit/abort</li>
+<li>Participants record results</li>
+</ol>
+<h2 id="multi-key-transactions-in-a-kv-store">Multi-Key Transactions in a KV Store</h2>
+<p>Assuming reader-writer locking scheme, and that the application code runs on the client:</p>
+<ul>
+<li>RPCs to storage layer to start/end transactions, and read/write values</li>
+<li>KV store acquires/releases locks and does read/write operations</li>
+<li>Keep KV store simple so application logic is easy to change</li>
+<li>Server can abandon transaction and release locks if needed (e.g. if the client fails)</li>
+</ul>
+<p>The basic approach is to:</p>
+<ul>
+<li>Read and write objects during execution</li>
+<li>Contact the appropriate paxos group leader and acquire any locks</li>
+<li>Client decides to commit and notifies coordinator</li>
+<li>Coordinator contacts all shards and sends <code>prepare</code> message</li>
+<li>Prepare log entry is replicated throughout group</li>
+<li>Group votes to either send <code>ok</code> or <code>abort</code></li>
+<li>If all contacted shards vote <code>ok</code>, coordinator sends <code>commit</code> message</li>
+<li>Each shard replicates <code>commit</code> entry in log</li>
+<li>Leader released locks</li>
+</ul>
+<h2 id="caution-deadlocks">Caution: Deadlocks</h2>
+<p>Deadlocks are very easy to trigger when performing operations across shards. A general solution is to always kill things that need to wait. For instance, with a checking/savings account at a bank:</p>
+<ul>
+<li>Two clients execute the same exact transaction concurrently</li>
+<li>Both get read locks on accounts, so neither can acquire write locks and the transaction stalls</li>
+<li>Two clients, one moves from savings to checking, and the other from checking to savings</li>
+<li>Each gets read lock, neither can get write lock, so transaction stalls</li>
+</ul>
+<p>Deadlocks can be an issue in sharded systems when moving shards across groups.</p>
+<h2 id="googles-bigtable-in-retrospect">Google's Bigtable in Retrospect</h2>
+<p>Jeff Dean of Google said that not supporting distributed transactions was the biggest mistake in the the design of Bigtable. Incremental updates make it a very important feature, so users really wanted them and often tried to implement it themselves on top of Bigtable</p>
+<p>Spanner, Google's multi-datacenter KV store uses 2PC over Paxos, and is one of the backbones of Google's ad service.</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/consistency%20models.html">consistency models</a>, <a href="/tags/distributed%20transactions.html">distributed transactions</a>, <a href="/tags/paxos.html">paxos</a>, <a href="/tags/two-phase%20commit.html">two-phase commit</a></div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tcp</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Tcp
+        </div>
+        <h1>Tcp</h1>
+        <div class="meta">
+            <span>Last modified: 2024-03-04</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="transmission-control-protocol-tcp">Transmission Control Protocol (TCP)</h1>
+<h2 id="connection-establishment">Connection Establishment</h2>
+<p>Both sender and receiver must be ready to transfer data, and they need to agree on parameters like max segment size.</p>
+<h3 id="three-way-handshake">Three-Way Handshake</h3>
+<p>Opens up connection between client and server. Each side probes the other with a fresh <strong>Initial Sequence Number (ISN)</strong>. Sends on a SYNchronize segment, and echos on ACKnowledge segment. This gives us robustness, but requires extra overhead.</p>
+<ul>
+<li>Client sends SYN(x)</li>
+<li>Server replies with SYN(y)ACK(x+1)</li>
+<li>Client replies with ACK(y+1)</li>
+<li>SYNs are retransmitted if lost</li>
+</ul>
+<h3 id="connection-release">Connection Release</h3>
+<p>TCP requires a two-way close. Client and server both finish sending all their data and send a FIN segment. Each FIN closes one direction of the connection.</p>
+<ul>
+<li>Active sends FIN(x), passive ACKs</li>
+<li>Passive sends FIN(y), active ACKs</li>
+<li>FINs are retransmitted if lost</li>
+</ul>
+<h3 id="time_wait-state">TIME_WAIT State</h3>
+<p>Wait a long time afer sending all segments before actually closing (2 x max segment lifetime). This is because the final ACK may be lost, and we need to make sure the other side has received it. Otherwise it might interfere with a new connection.</p>
+<h3 id="timeout-problem">Timeout Problem</h3>
+<p>If you set it too small, you will retransmit too often. If you set it too large, you will wait too long to detect a failure. Setting the timeout of TCP is a difficult problem because RTT varies widely (due to queueing, routing, etc).</p>
+<p>TCP uses <strong>adaptive timeout</strong>. It smooths the estimates and variance of the RTT using a moving average.</p>
+<p>$$SRTT_{N + 1} = (1 - \alpha) \cdot SRTT_N + \alpha \cdot RTT_{N + 1}$$</p>
+<p>$$Svar_{N + 1} = (1 - \beta) \cdot Svar_N + \beta \cdot |RTT_{N + 1} - SRTT_{N + 1}|$$</p>
+<p>Set the timeout to be a multiple of the smoothed RTT, plus a margin for error. Adaptive timeout works well in practice, but it's not perfect. It can be thrown off by a sudden change in RTT, and it can be exploited by an attacker to cause a DoS attack.</p>
+<h2 id="network-congestion">Network Congestion</h2>
+<p>Think about a "traffic jam" in the network. The network is temporarily overloaded and can't handle all the traffic. This can lead to packet loss, increased latency, and decreased throughput. Want to push as close to being congested as possible without actually being congested, which is a high level function of TCP.</p>
+<p>Switches and routers have <em>internal buffers</em> to store packets, which essentially act like a queue for each port. When working normally, queues are able to absorb bursts of traffic. However, if the input rate is persistently higher than the output rate, the queue will eventually fill up and packets will be dropped.</p>
+<p>Congestion is a function of traffic patterns, and it can even occur even when the network isn't at full capacity. We would like it if the throughput increased linearly, or even logarithmically towards the capacity of the network as you increase the load on a system. In practice, there is a sharp dropoff in throughput past a certain point of load where congestion collapse occurs.</p>
+<p>Connection collapse is when packets are dropped/time out, and so the sender retransmits the packets, which only makes the problem worse. This is a positive feedback loop that can lead to a complete breakdown of the network.</p>
+<h2 id="tcp-tahoereno">TCP Tahoe/Reno</h2>
+<p>Has the following extensions/features:</p>
+<ul>
+<li>AIMD</li>
+<li>Fair queuing</li>
+<li>Slow start</li>
+<li>Fast retransmit</li>
+<li>Fast recovery</li>
+</ul>
+<h3 id="bandwidth-allocation">Bandwidth Allocation</h3>
+<h4 id="fairness">Fairness</h4>
+<p>Kind of a weird problem. Just think about it like scheduling threads and processes. You want to give each process a fair share of the CPU, but simply allocating bandwidth equally to each thread in the process is not fair. You want to allocate bandwidth to each connection fairly, but you also want to allocate bandwidth to each user fairly, and you also want to allocate bandwidth to each application fairly.</p>
+<h4 id="equal-per-flow-fairness">Equal per Flow Fairness</h4>
+<p>The <strong>bottleneck</strong> for a flow of traffic is the link that limits its bandwidth. TCP tries to allocate bandwidth fairly to each flow by sharing the bottleneck bandwidth equally among the flows that traverse it.</p>
+<h4 id="max-min-fairness">Max-Min Fairness</h4>
+<p>Intuitively, flows bottlenecked on a link get an equal share of that link. A max-min fair allocation is one that maximizes the minimum bandwidth allocated to any flow. To find it given a network, you can imagine "pouring water" into the network and seeing how much each flow gets. You can then adjust the flow rates to maximize the minimum flow rate.</p>
+<p>When flows start and stop, need to rerun the algorithm to find new allocation.</p>
+<p>TCP needs to allocate bandwidth of a network fairly and efficiently (which are conflicting goals). The network witnesses congestion and provides direct feedback to the transport layer. Then, the transport layer can decrease its sending rate to avoid congestion.</p>
+<p>This is a hard problem. The number of senders is almost never constant, and each customer's load is constantly changing. Also, senders often lack capacity in certain parts of the network, and no one entity has a complete view of the network.</p>
+<p>This is solved by having the senders continuously probe the network and adapt their sending rate based on feedback from the network.</p>
+<ul>
+<li><strong>Open loop</strong>: reverse bandwidth before use</li>
+<li><strong>Closed loop</strong>: measure bandwidth and adjust as you go</li>
+<li>Host vs. network support: who sets and enforces allocations.</li>
+<li>Window vs. rate: allocation based on window size or rate of sending.</li>
+</ul>
+<p>TCP uses closed-loop, host-driven, window-based allocation. The network sends <em>packet-dropped</em> messages as feedback. Note that there is nothing stopping a sender from implementing a more "aggressive" or "greedy" algorithm, but it would be against the spirit of the protocol. There are also different implementations of TCP that have different congestion control algorithms.</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Protocol</th>
+<th>Pros/Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Packet Loss</td>
+<td>TCP NewReno/Cubic (linux)</td>
+<td>Simple, but there is some latency</td>
+</tr>
+<tr>
+<td>Packet delay</td>
+<td>TCP BBR (YouTube)</td>
+<td>Early notifacation, but need to infer congestion</td>
+</tr>
+<tr>
+<td>Explicit congestion notification via router</td>
+<td>TCPs with explicity congestion notification</td>
+<td>Fast, but requires router support</td>
+</tr>
+</tbody>
+</table>
+<h4 id="additive-increase-multiplicative-decrease-aimd">Additive Increase, Multiplicative Decrease (AIMD)</h4>
+<p>A control law hosts use to reach a good allocation. Hosts additively increase rate while network isn't congested, and multiplicitively decrease rate when congestion is detected.</p>
+<p>Let $x$ be the allocated bandwidth to H1, and $y$ be the allocated bandwidth to H2. Assumming a capacity $1$, a fair allocation would be $x = y$, but an efficient allocation would be $x + y = 1$.</p>
+<p>On the plot of x and y, the algorithn is as follows:</p>
+<ul>
+<li>When the network is not congested, increase the rate by a small amount parallel to the "fair" line, (ie increase x and y by an equal amount).</li>
+<li>When the network is congested, decrease the rate by a large amount, corresponding to the line from the current allocation point to the origin.</li>
+</ul>
+<p>This guarantees that the allocation converges to the intersection of the "fair" line and the "efficient" line. Also creates a "sawtooth" pattern of sending rate over time.</p>
+<h3 id="slow-start-with-tcp-additive-increase">Slow Start with TCP (Additive Increase)</h3>
+<p>Sender uses <strong>congestion window (cwnd)</strong> to set its rate (cwnd/RTT), and packet loss as a signal.</p>
+<p>You want to quickly converge to the ideal window size, but you also don't want to cause congestion. Solution is to increase exponentially until you hit a packet loss, then set the window size to half of the current window size. Then, switch to additive increase.</p>
+<ul>
+<li>
+<p><strong>Slow Start Doubling</strong>: First send one packet. Then, on ACK, send two packets. Then, on two ACKs, send four packets. Keep this doubling until you hit a packet loss.</p>
+</li>
+<li>
+<p><strong>Additive Increase</strong>: After slow start, increase the window size by one packet per RTT/ACK.</p>
+</li>
+</ul>
+<h3 id="tcp-tahoe">TCP Tahoe</h3>
+<ul>
+<li>Initial slow-start phase<ul>
+<li>Start with cwnd = 1 (or another small val)</li>
+<li>cwnd += 1 for each ACK</li>
+</ul>
+</li>
+<li>After packet loss, additively increase cwnd<ul>
+<li>cwnd += 1/cwnd for each ACK</li>
+<li>roughly add 1 packet per RTT</li>
+</ul>
+</li>
+<li>Switching threshold<ul>
+<li>Switch to AI when cwnd &gt; ssthresh</li>
+<li>set ssthresh = cwnd / 2 on packet loss</li>
+<li>begin slow start again</li>
+</ul>
+</li>
+</ul>
+<p>Need to go back to cwnd = 1 on packet loss because we lost the ack clock. This is conservative but not very efficient.</p>
+<h3 id="fast-recovery">Fast Recovery</h3>
+<h4 id="infering-packet-loss">Infering Packet Loss</h4>
+<p>Reciever sends duplicate ACKs when it receives out-of-order packets. The sender can infer that the packet was lost and retransmit it. If the reciever is stuck on an out of order packet, the subsequently sent packets will still be buffered, but the duplicate ack indicates where to retransmit on the client side.</p>
+<p>Need to be able to infer loss of packets before timeout actually occurs. TCP uses a <strong>cumulative ACK</strong>, which carries the highest in-order sequence number received. If you receive three duplicate ACKs, you can infer that the packet was lost and retransmit it.</p>
+<p>Sender decreases cwnd by half on packet loss, but it can also retransmit the lost packet immediately. This is called <strong>fast retransmit</strong>.</p>
+<h4 id="inferring-non-loss-from-acks">Inferring Non-Loss from ACKs</h4>
+<p>Each duplicate ACK indicates that a packet was received, but not in order. This means that the network is still capable of transmitting packets, and so the sender can increase its sending rate. This is called <strong>fast recovery</strong>.</p>
+<p>If multiple packets are lost in a row, this will not work and the sender will go back to slow start cwnd = 1.</p>
+<h3 id="tcp-reno-newreno-sack">TCP Reno, NewReno, SACK</h3>
+<ul>
+<li>Reno can repair one loss per RTT. Multiple losses cause timeout</li>
+<li>NewReno repairs multiple losses without timeout</li>
+<li>Selective ACKs (SACK) sends ACK ranges so that sender can retransmit multiple packets at once</li>
+</ul>
+<h3 id="explicit-congestion-notification-ecn">Explicit Congestion Notification (ECN)</h3>
+<ul>
+<li>Commonly used in data centers</li>
+<li>Routers deliver clear signal to hosts when congestion occurs</li>
+<li>Congestion is detected early to prevent packet loss</li>
+<li>Hosts can react to congestion without packet loss, and no retransmission or timeout is needed</li>
+<li>Routers need to support ECN, and they have more work to do.</li>
+<li>Hosts need to support ECN, and they have more work to do.</li>
+</ul>
+<h3 id="random-early-detection-red">Random Early Detection (RED)</h3>
+<p>Instead of marking pakets, just randomly drop packets to throttle senders. The probablity of dropping a packet increases as the queue fills up.</p>
+        </div>
+        
+    </main>
+</body>
+</html>

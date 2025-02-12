@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internetworking</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Internetworking
+        </div>
+        <h1>Internetworking</h1>
+        <div class="meta">
+            <span>Last modified: 2024-05-15</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="internetworking">Internetworking</h1>
+<h2 id="how-netorks-may-differ">How netorks may differ</h2>
+<ul>
+<li>Serive model (datagrams vs virtual circuits)</li>
+<li>Addressing</li>
+<li>QOS (priorities)</li>
+<li>Packet size</li>
+<li>Security (encryption, authentication)</li>
+</ul>
+<p>Internetworking hides the difference with a common prorocol (IP) and a common addressing scheme (IP addresses).</p>
+<h3 id="connecting-datagram-and-virtual-circuit-networks">Connecting Datagram and Virtual Circuit Networks</h3>
+<p>Need to map a destination address to a VC and visa versa. In order to accomplish this, might have to set up a VC between two routers, and then use datagrams to send packets between the routers.</p>
+<pre><code class="language-plaintext">+--------+   802.11   +--------+ &lt;---- MPLS ----&gt; +--------+  Ethernet  +--------+
+|  host  |------------| Router |                  | Router |------------|  host  |
++--------+            +--------+ &lt;--------------&gt; +--------+            +--------+
+ source                            VC network                           destination
+</code></pre>
+<h2 id="ip-addressing">IP Addressing</h2>
+<p>IP is the lowest common denominator of the internet. It allows networks that support entirely different services to communicate. Asks very little of the underlying network, and provides very little in return.</p>
+<ul>
+<li>IPv4 uses 32-bit addresses written in "dotted quad" notation (Four 8-bit numbers separated by dots).</li>
+<li>Ex: <code>255.255.255.0</code></li>
+<li>IPv6 uses 128-bit addresses written in hexadecimal notation.</li>
+<li>Ex: <code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code></li>
+</ul>
+<h3 id="ipv4">IPv4</h3>
+<pre><code class="language-plaintext">
+&lt;--------------------------------------- 32 bits ---------------------------------------&gt;
+
++---------------------+---------------------+---------------------+---------------------+
+| Version |    IHL    |   Dif. Services     |         Total Length (bytes)              |
++---------------------+---------------------+---------------------+---------------------+
+|              Identification               |    | DF | MF |  Fragment Offset (13 bits) |
++---------------------+---------------------+---------------------+---------------------+
+|  Time to Live (TTL) | Protocol (TCP, UDP) |            Header Checksum                |
++---------------------+---------------------+---------------------+---------------------+
+|                               Source IP Address (32 bits)                             |
++---------------------+---------------------+---------------------+---------------------+
+|                            Destination IP Address (32 bits)                           |
++---------------------+---------------------+---------------------+---------------------+
+|                                  Options (0 or more words)                            |
+|                                                                                       |
+|                                        ....                                           |
++---------------------+---------------------+---------------------+---------------------+
+|                                       Payload                                         |
+|                                                                                       |
+|                                        ....                                           |
++---------------------+---------------------+---------------------+---------------------+
+
+</code></pre>
+<h3 id="ip-prefixes">IP Prefixes</h3>
+<ul>
+<li>Addresses allocated in blocks called "prefixes".</li>
+<li>Addresses in an L-bit prefix have the first L bits in common.</li>
+<li>There are $2^{32-L}$ addresses in an L-bit prefix.</li>
+<li>Written in "addr/prefix" notation.</li>
+<li>Ex: <code>128.13.0.0/16</code> is a 16-bit prefix and contains $2^{32-16} = 65536$ addresses.</li>
+<li>Originally, IP addresses were allocated in fixed size blocks to a designated class. Still are, but class is now ignored in favor of CIDR (Classless Inter-Domain Routing).</li>
+<li>Class A: $2^{24}$ addresses</li>
+<li>Class B: $2^{16}$ addresses</li>
+<li>Class C: $2^{8}$ addresses</li>
+</ul>
+<h4 id="example">Example:</h4>
+<p><code>128.13.0.0/16</code></p>
+<pre><code class="language-plaintext">        Network                Host
++----------+----------+----------+----------+
+| 10000000 | 00001101 |   ....   |   ....   |
++----------+----------+----------+----------+
+</code></pre>
+<h2 id="ip-datagram-forwarding">IP Datagram Forwarding</h2>
+<p>When a host wants to send a packet to another host, it first checks if the destination IP address is on the same network (matching subnet). If it is, it can send the packet directly over the link layer (using ARP to get resolve IP address to MAC address). Otherwise, it sends the packet to the <em>default gateway</em>, or <strong>router</strong>.</p>
+<p>The router then forwards the packet to its <strong>next hop</strong> based on the destination IP and the router's routing table.</p>
+<pre><code class="language-python">if (NetworkNum of destination = NetworkNum of one of my interfaces):
+    deliver packet to destination over that interface (using ARP)
+else:
+    if (NetworkNum of destination is in my forwarding table):
+        deliver packet to NextHop router
+    else:
+        deliver packet to default router
+</code></pre>
+<h4 id="longest-prefix-match">Longest Prefix Match</h4>
+<ul>
+<li>For each packet, find the longest prefix that contains the destination address, ie. the most specific match.</li>
+<li>forward the packet to the next hop for that prefix.</li>
+</ul>
+<pre><code class="language-python">for each entry in the forwarding table:
+    if (NetworkNum of destination &amp; Mask) == (NetworkNum of entry &amp; Mask):
+        deliver packet to NextHop router
+</code></pre>
+<ul>
+<li><a href="#internetworking">Internetworking</a></li>
+<li><a href="#how-netorks-may-differ">How netorks may differ</a><ul>
+<li><a href="#connecting-datagram-and-virtual-circuit-networks">Connecting Datagram and Virtual Circuit Networks</a></li>
+</ul>
+</li>
+<li><a href="#ip-addressing">IP Addressing</a><ul>
+<li><a href="#ipv4">IPv4</a></li>
+<li><a href="#ip-prefixes">IP Prefixes</a></li>
+<li><a href="#example:">Example:</a></li>
+</ul>
+</li>
+<li><a href="#ip-datagram-forwarding">IP Datagram Forwarding</a><ul>
+<li><a href="#longest-prefix-match">Longest Prefix Match</a></li>
+</ul>
+</li>
+</ul>
+        </div>
+        
+    </main>
+</body>
+</html>

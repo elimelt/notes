@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spec</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Spec
+        </div>
+        <h1>Spec</h1>
+        <div class="meta">
+            <span>Last modified: 2024-05-11</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="sweccathon-project-spec">SWECCathon Project Spec</h1>
+<h2 id="bench-io-format">Bench I/O format</h2>
+<h3 id="preamble">Preamble</h3>
+<pre><code class="language-lisp">%d(dimension_in), %s(out_key)
+%s(in_key_1), %s(in_key_2), ..., %s(in_key_{dimension_in})
+%s(base_1), %s(base_2), ..., %s(base_{dimension_in})
+%s(max_1), %s(max_2), ..., %s(max_{dimension_in})
+</code></pre>
+<h3 id="data">Data</h3>
+<pre><code class="language-lisp">%d(in_1), %d(in_2), ..., %d(in_{dimension_in}), %d(out)
+%d(in_1), %d(in_2), ..., %d(in_{dimension_in}), %d(out)
+...
+</code></pre>
+<h3 id="input-format">Input format</h3>
+<pre><code class="language-lisp">%d(argc), %s(argv_1), %s(argv_2), ..., %s(argv_{argc})
+%d(argc), %s(argv_1), %s(argv_2), ..., %s(argv_{argc})
+...
+</code></pre>
+<h2 id="comp">Comp</h2>
+<p>Compare any number of <code>.bio</code> files and generate a benchmarking plot.</p>
+<pre><code class="language-bash">comp [options] &lt;file1&gt; &lt;file2&gt; ...
+</code></pre>
+<h3 id="comp-options">Comp Options</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-o</code></td>
+<td><code>str</code></td>
+<td>Output file</td>
+<td>"benchmark.png"</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gen">Gen</h2>
+<p>Generate a <code>.input</code> file</p>
+<pre><code class="language-bash">gen [options]
+</code></pre>
+<h3 id="gen-options">Gen Options</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-d</code></td>
+<td><code>int</code></td>
+<td>Dimension of input vectors (number of input keys)</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>-b</code></td>
+<td><code>int,</code></td>
+<td>(CSV string of int)</td>
+<td>Base values</td>
+</tr>
+<tr>
+<td><code>-m</code></td>
+<td><code>int,</code></td>
+<td>(CSV string of int)</td>
+<td>Max values</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td><code>str</code></td>
+<td>strategy for generating input</td>
+<td>"randint"</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td><code>str</code></td>
+<td>Output file</td>
+<td>"out.bio"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="built-in-strategies">Built-in strategies</h3>
+<p>| Strategy | Description | Compatibility Notes |
+|----------|----------------------|
+| <code>randint</code> | Random integers | requires <code>b</code>, <code>m</code>, compatible with all <code>d</code> |
+| <code>randfloat</code> | Random floats | requires <code>b</code>, <code>m</code>, compatible with all <code>d</code> |
+| <code>randstr</code> | Random strings | requires <code>b</code>, <code>m</code>, compatible with all <code>d</code> |
+| <code>randbool</code> | Random booleans | requires <code>b</code>, <code>m</code>, compatible with all <code>d</code> |
+| <code>drandint</code> | Distinct Random integers | requires <code>b</code>, <code>m</code>, compatible with all <code>d</code> |
+| <code>drandfloat</code> | Distinct Random floats | requires <code>b</code>, <code>m</code>, compatible with all <code>d</code> |
+| <code>drandstr</code> | Distinct Random strings | requires <code>b</code>, <code>m</code>, need <code>d = 2</code> for string length as well |
+| <code>linear</code> | Linear sequence of integers| requires <code>b</code>, <code>m</code>, compatible with all <code>d</code> |</p>
+<h2 id="bench">Bench</h2>
+<p>Benchmark a function with a given input file.</p>
+<pre><code class="language-bash">bench [options] &lt;file&gt;
+</code></pre>
+<h3 id="bench-options">Bench Options</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-d</code></td>
+<td><code>int</code></td>
+<td>Dimension of input vectors (number of input keys)</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td><code>str</code></td>
+<td>Output key</td>
+<td>"Time"</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td><code>str,</code> (CSV string of strings)</td>
+<td>Input keys</td>
+<td>"Size"</td>
+</tr>
+<tr>
+<td><code>-b</code></td>
+<td><code>int,</code> (CSV string of int)</td>
+<td>Base values</td>
+<td>"1"</td>
+</tr>
+<tr>
+<td><code>-m</code></td>
+<td><code>int,</code> (CSV string of int)</td>
+<td>Max values</td>
+<td>"10"</td>
+</tr>
+<tr>
+<td><code>-inc</code></td>
+<td><code>int,</code> (CSV string of int)</td>
+<td>Increment values</td>
+<td>"1"</td>
+</tr>
+<tr>
+<td><code>-o</code></td>
+<td><code>str</code></td>
+<td>Output file</td>
+<td>"out.bio"</td>
+</tr>
+</tbody>
+</table>
+        </div>
+        
+    </main>
+</body>
+</html>

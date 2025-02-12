@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pairing Algorithm</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Pairing Algorithm
+        </div>
+        <h1>Pairing Algorithm</h1>
+        <div class="meta">
+            <span>Last modified: 2024-03-22</span>
+            
+        </div>
+        <div class="content">
+            <h2 id="formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program">Formalizing the Pairing Algorithm for the SWECC Mock Interview Program</h2>
+<p>Given $s$ signups, form pairs for all the students based on the following constraints:
+- Each student should be paired with exactly one other student. If there are an odd number of students, one student will be left unpaired.
+- A valid pair <strong>must</strong> have at least two 1-hour time slots in common in their availability. The number of common time slots is factored into the score of the pair.
+- Each student responds to a form while signing up. The responses are vectorized, and pairings are made based on the similarity of the responses.</p>
+<h3 id="statement-of-the-problem">Statement of the Problem</h3>
+<p>Let $T^{7 \times 24}<em i_j_k="i,j,k">i$ be a bit-matrix of 1-hour time slots in a week for student $i$. The value of $T</em>$ is 1 if student $i$ is available at time slot $(j,k)$, and 0 otherwise.</p>
+<p>$$
+T_i = \begin{bmatrix}
+    t_{1,1} &amp; t_{1,2} &amp; t_{1,3}&amp; \cdots &amp; t_{1,24} \
+    t_{2,1} &amp; t_{2,2} &amp; t_{2,3}&amp; \cdots &amp; t_{2,24} \
+    \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    t_{7,1} &amp; t_{7,2} &amp; t_{7,3}&amp; \cdots &amp; t_{7,24}
+\end{bmatrix}
+$$</p>
+<p>Let $S$ be the set of students, and $A$ be the set of all possible pairings of students in $S$</p>
+<p>$$
+A = { (i, j) \mid (i, j) \in S \times S, i &lt; j }
+$$</p>
+<p>Now, enforcing a strict and repeatable ordering on the students through sorting, we have a mapping from $s_i \in S$ to $T_i$.</p>
+<p>We use this ordering to define a scoring function $f: A \to \mathbb{R}$ that takes a pair of students and returns the number of common time slots in their availability, or $0$ if it is less than $2$. We then create a matrix $F_{time}$ of the scores of all possible pairings.</p>
+<p>$$
+F_{time} = \begin{bmatrix}
+    f(s_1, s_2) &amp; f(s_1, s_3) &amp; \cdots &amp; f(s_1, s_n) \
+    f(s_2, s_1) &amp; f(s_2, s_3) &amp; \cdots &amp; f(s_2, s_n) \
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    f(s_n, s_1) &amp; f(s_n, s_2) &amp; \cdots &amp; f(s_n, s_{n-1})
+\end{bmatrix}
+$$</p>
+<p>Next, we follow a similar pattern using the responses of the students. Let $R_i$ be the vectorized response of student $i$.</p>
+<p>$$
+R_i = \begin{bmatrix}
+    r_{1} \
+    r_{2} \
+    \vdots \
+    r_{dim(R_i)}
+\end{bmatrix}
+$$</p>
+<p>We define a scoring function $g: A \to \mathbb{R}$ as the euclidean distance between the responses of the students. We then create a matrix $F_{response}$ of the scores of all possible pairings.</p>
+<p>$$
+F_{response} = \begin{bmatrix}
+    g(s_1, s_2) &amp; g(s_1, s_3) &amp; \cdots &amp; g(s_1, s_n) \
+    g(s_2, s_1) &amp; g(s_2, s_3) &amp; \cdots &amp; g(s_2, s_n) \
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    g(s_n, s_1) &amp; g(s_n, s_2) &amp; \cdots &amp; g(s_n, s_{n-1})
+\end{bmatrix}
+$$</p>
+<p>Finally, we define a binary matrix $F_{valid}$ of the valid pairings. A valid pairing is one where the students have at least two common time slots in their availability, or rather when $F_{time, i, j} \neq 0$.</p>
+<p>In python, this would look like:</p>
+<pre><code class="language-python"># student_i has availability matrix availabilities[i] and response vector responses[i]
+availabilities = [ ... ] # list of availability matrices. Each matrix is a 7x24 bit-matrix
+responses = [ ... ] # list of response vectors
+
+def f(availability1, availability2):
+    count = 0
+    for i in availability1:
+        for j in availability2:
+            count += np.sum(i &amp; j)
+
+    return count if count &gt;= 2 else 0
+
+def g(response1, response2):
+    return np.linalg.norm(response1 - response2)
+
+F_time = np.zeros((len(students), len(students)))
+F_response = np.zeros((len(students), len(students)))
+F_valid = np.zeros((len(students), len(students)))
+
+for i in range(len(students)):
+    for j in range(len(students)):
+        F_time[i, j] = f(availabilities[i], availabilities[j])
+        F_response[i, j] = g(responses[i], responses[j])
+        F_valid[i, j] = 1 if F_time[i, j] != 0 else 0
+</code></pre>
+<p>Finally, we normalize (min max) F_time and F_response and compute their sum's hadamard product with F_valid to get the final score matrix $F_{final}$.</p>
+<p>$$
+F_{final} = F_{valid} \odot \left( \frac{F_{time} - \min(F_{time})}{\max(F_{time}) - \min(F_{time})} + \frac{F_{response} - \min(F_{response})}{\max(F_{response}) - \min(F_{response})} \right)
+$$</p>
+<pre><code class="language-python">def normalize(matrix):
+    return (matrix - np.min(matrix)) / (np.max(matrix) - np.min(matrix))
+F_final = F_valid * (normalize(F_time) + normalize(F_response))
+</code></pre>
+<p>Finally, using max-min fairness, we repeatedly find the student with the lowest max score for all their pairs, and select that maximal pair. We then update the scores of both students in the pair to be $0$ for all their pairs, and repeat the process until all students are paired.</p>
+<p>```python
+def next_pair(F_final):
+  max_scores = [np.max(F_final[i]) for i in range(len(F_final))]
+  s1, s2 = np.argmin(max_scores), np.argmax(F_final[student])
+  for i in range(len(F_final)):
+    F_final[s1, i] = 0
+    F_final[i, s1] = 0
+    F_final[s2, i] = 0
+    F_final[i, s2] = 0
+  return s1, s2</p>
+<p>def calculate_pairs(F_final):
+  pairs = []
+  unpaired = set(range(len(students)))
+  while len(pairs) &lt; len(students) // 2:
+    pairs.append(next_pair(F_final))
+    unpaired.remove(pairs[-1][0])
+    unpaired.remove(pairs[-1][1])
+  return pairs
+  ```</p>
+        </div>
+        
+    </main>
+</body>
+</html>

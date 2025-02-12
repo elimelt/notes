@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primary Backup</title>
+    <meta name="description" content="Explains the concept of primary backups in distributed systems, including state machine replication and the view service.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/distributed-systems.html">distributed-systems</a> » Primary Backup
+        </div>
+        <h1>Primary Backup</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/distributed-systems.html">distributed-systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="primary-backup">Primary Backup</h1>
+<p>Consider a highly available stateful service. It is easy to maintain <em>consistency</em> within one node, simply by performing operations in some well-defined (<strong>serializable</strong>) order. However, providing both availability <strong>and</strong> consistency is more of a challenge. One must provide a notion of having a single system, even if a server within the system fails.</p>
+<h2 id="single-node-kv-store">Single Node KV Store</h2>
+<p>Consider an instance of redis with multiple clients reading and writing to it. You can think of this system more abstractly as a state machine, where each client applies an operation that changes the state of the system.</p>
+<h3 id="state-machine-replication">State Machine Replication</h3>
+<p>Replicate state machines across multiple servers. If you apply the same set of operations to each server in the same order, their ending states <strong>must</strong> be in the same state. This holds so long as the effect of each operation is deterministic.</p>
+<h4 id="example-virtual-machine-replication">Example: Virtual Machine Replication</h4>
+<p>Take a single VM running a single application. Create $n$ copies of this VM, and feed each instance the exact same inputs (packets, interrupts, instructions). Then, all $n$ VMs will have the same behavior.</p>
+<p>Any time you introduce randomness into a system, you need to ensure that the randomness is deterministic. This mechanism for VM replication assumes you are only using a single core, and all operations are deterministic.</p>
+<h3 id="two-servers-primary-backup">Two Servers (Primary-Backup)</h3>
+<p>At any given time, clients speak to only one server (the <strong>primary</strong>). Data is replicated on primary and backup servers, and if the primary fails, the backup is elected as the new primary.</p>
+<p>The goals of doing this is to increase the availability and reliability of the system in the face of failures.</p>
+<h4 id="basic-operations">Basic Operations</h4>
+<ul>
+<li>Clients send operations (<code>put</code>, <code>get</code>) to the primary.</li>
+<li>Primary decides the order of operations.</li>
+<li>Primary forwards operations to the backup.</li>
+<li>Backup applies operations in the same order as the primary (hot standby), or just saves a log of the operations (cold standby).</li>
+<li>After backup applies the operation, primary replies to the client.</li>
+</ul>
+<h4 id="key-assumptions">Key Assumptions</h4>
+<ul>
+<li>Every replica executes deterministically as a function of inputs.</li>
+<li>If randomness is used, it must be deterministic (use the same seed).</li>
+<li>Replicate single core servers.</li>
+</ul>
+<h4 id="key-challenges">Key Challenges</h4>
+<ul>
+<li>There can only be one primary at a time.<ul>
+<li>Primary, backup, and clients all need to agree on who the primary is.</li>
+<li>State at primary must be consistent with all previous operations.</li>
+</ul>
+</li>
+<li>Needs to operate despite failures of primary or backup.<ul>
+<li>Must handle dropped/duplicated messages and arbitrary delays.</li>
+</ul>
+</li>
+</ul>
+<h3 id="the-view-service">The View Service</h3>
+<p>The <strong>view service</strong> is a server that provides a consistent view of the system. Clients ask the view service for the primary server's address in order to find out where to send operations. Even if the view server incorrectly identifies failure, the system will still be consistent.</p>
+<p>The view server is the only authority on who the primary is. This makes it a single point of failure. The hard part is that we need to be able to guarantee only one primary at a time, while not needing to ping the view server on every operation.</p>
+<p>This system needs to be able to tolerate any individual server failing, while still serving client requests.</p>
+<h4 id="detecting-server-failures">Detecting Server Failures</h4>
+<ul>
+<li>Each server periodically sends an RCP ping ot the view server.</li>
+<li>The view server is dead if its missed $n$ pings in a row, and alive if it has received a single ping.</li>
+</ul>
+<p>When the view server detects a failure, a new <strong>view</strong> (state of the system sent in ping responses) is created.</p>
+<h4 id="primary-failures">Primary Failures</h4>
+<ul>
+<li>View server detects failure through lack of pings (some sort of timeout after missing $n$ pings).</li>
+<li>View server declares new view with backup as new primary, and if any idle servers are available, a new backup as well.<ul>
+<li>Requests eventually time out and check in with view server.</li>
+</ul>
+</li>
+<li>View server sends new view in all subsequent responses.</li>
+<li>New primary hears new view and sends state to new backup</li>
+<li>Backup initializes state and sends acknowledgment to new primary.</li>
+<li>New primary pings current view to view server (after receiving ack).</li>
+<li>Client hears about new view and starts sending operations to new primary. If any operations were lost, client resends them.</li>
+</ul>
+<p>If primary dies with no idle servers available, then the backup becomes the primary and there is no backup.</p>
+<h4 id="managing-servers">Managing Servers</h4>
+<p>Keep a pool of idle servers that can be promoted to backup. If primary dies, create new view with old backup as primary and idle server as backup. If the backup dies, create a new view with idle server as new backup.:</p>
+<h3 id="split-brain">Split Brain</h3>
+<p>In the case where a primary appears to be offline, but is really just partitioned from the view server, the view server may elect a new primary. This leads to a <strong>split brain</strong> scenario, where two primaries are elected.</p>
+<p>The important part is that two servers can <strong>think</strong> they are the primary, but it can <strong>never</strong> be the case that two servers <strong>act</strong> as the primary.</p>
+<h2 id="rules">Rules</h2>
+<ol>
+<li>Primary in view $i + 1$ must have been the backup, or the primary in view $i$ (besides the first view).</li>
+<li>Primary must wait for backup to accept/execute each operation before replying to client (if there is one).</li>
+<li>Backup must accept forwarded requests only if view is correct.</li>
+<li>Non-primary must reject client requests.</li>
+<li>Every operation must be before or after state transfers (not during).</li>
+</ol>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/availability.html">availability</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/primary%20backup.html">primary backup</a>, <a href="/tags/split%20brain.html">split brain</a>, <a href="/tags/view%20service.html">view service</a></div>
+    </main>
+</body>
+</html>

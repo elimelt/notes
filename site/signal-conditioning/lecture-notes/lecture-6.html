@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 6</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Lecture 6
+        </div>
+        <h1>Lecture 6</h1>
+        <div class="meta">
+            <span>Last modified: 2024-02-27</span>
+            
+        </div>
+        <div class="content">
+            <h2 id="capacitors">Capacitors</h2>
+<p>Stores energy in electric field between two plates.</p>
+<p>Passes AC, blocks DC. "High pass filter"</p>
+<p>Capacitance is the ratio of charge to voltage, measured in Farads.
+$$
+C = \frac{Q}{V}
+$$</p>
+<p>The energy stored in a capacitor is
+$$
+E = \frac{1}{2}CV^2
+$$</p>
+<p>$$
+\frac{d}{dt}Q = \frac{d}{dt}CV
+$$</p>
+<p>$$
+I_C = C\frac{dV}{dt}
+$$</p>
+<h2 id="inductors">Inductors</h2>
+<p>Stores energy in magnetic field around a coil of wire due to current flowing through it. Units are Henrys (H).</p>
+<p>Passes DC, blocks AC. "Low pass filter"</p>
+<p>Energy stored in an inductor is
+$$
+E = \frac{1}{2}LI^2
+$$</p>
+<p>$$
+V_L = L\frac{dI}{dt}
+$$</p>
+<h2 id="complex-numbers-review">Complex Numbers Review</h2>
+<p>$$e = 2.71828...$$</p>
+<p>$$
+j \cdot j = -1 \to j = \sqrt{-1}
+$$</p>
+<p>$$
+e^{jq} = \cos(q) + j\sin(q)
+$$</p>
+<h2 id="complex-numbers-for-ac-signals">Complex Numbers for AC Signals</h2>
+<ul>
+<li>Pretend signals are complex during analysis, then take real part at the end.</li>
+<li>Multiplying by real number is scaling (magnitude/amplitude)</li>
+<li>Multiplying by imaginary number is phase shift</li>
+<li>Multiplying by complex number is scaling and phase shift</li>
+</ul>
+<p>EX:</p>
+<p>$$
+cos(2\pi ft + \phi) = e^{j\phi}e^{j2\pi ft}
+$$</p>
+<h2 id="impedance">Impedance</h2>
+<p>The AC version of resistance.</p>
+<p>$$
+Z_{cap} = \frac{1}{j\omega C}
+$$</p>
+<p>$$
+Z_{ind} = j\omega L
+$$</p>
+<p>$$
+Z_{res} = R
+$$</p>
+<h2 id="phasors">Phasors</h2>
+<p>Complex numbers that represent the amplitude and phase of a sinusoidal signal. Can be used to represent AC signals and greatly simplify analysis by </p>
+        </div>
+        
+    </main>
+</body>
+</html>

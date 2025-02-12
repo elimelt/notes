@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divide and Conquer Algorithm Analysis with Implementation Examples</title>
+    <meta name="description" content="A comprehensive examination of divide and conquer algorithmic strategies, focusing on their implementation and analysis. The document covers theoretical foundations with mathematical proofs, practical examples including bisection method and closest pair problem, and includes Python implementations demonstrating these concepts.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">algorithms</a> » Divide and Conquer Algorithm Analysis with Implementation Examples
+        </div>
+        <h1>Divide and Conquer Algorithm Analysis with Implementation Examples</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-03</span>
+            <span>Category: <a href="/categories/algorithms.html">algorithms</a></span>
+        </div>
+        <div class="content">
+            <h1 id="divide-and-conquer">Divide and Conquer</h1>
+<p>Reduce problem to multiple sub-problems. While in induction, you typically only reduce your problem size by 1, with divide and conquer it is more common to reduce to some constant fraction of your original problem size. After recursively solving each sub-problem, merge the solutions.</p>
+<p><strong>Examples</strong>: Merge-sort, Binary Search, Strassen's Algorithm</p>
+<h2 id="why-balanced-partitioning">Why Balanced Partitioning?</h2>
+<p>With regular induction, split problem into $n - 1$ and $1$, then solve the $n - 1$ and merge the solution with the $1$.</p>
+<p>$$
+T(n) = T(n - 1) + T(1) + n
+$$</p>
+<p>Instead, divide into two problems of size $\frac{n}{2}$</p>
+<p>$$
+2T(\frac{n}{2}) + n = \frac{n^2}{2} + n
+$$</p>
+<h2 id="divide-and-conquer-approach">Divide and Conquer Approach</h2>
+<ul>
+<li>"The more dividing and conquering, the better"</li>
+<li>Overhead grows for each, but for many algorithms, two levels of D&amp;C will be 4 times faster, 3 levels will be almost 8, and so on.</li>
+<li>Best approach is to recurse down to a small problem size, then do the regular iterative brute force algorithm.</li>
+<li>This is the approach behind Quick sort with random splitters.</li>
+</ul>
+<h2 id="finding-the-root-of-a-function">Finding the Root of a Function</h2>
+<p>Given a continuous function $f$ and two points $a, b$ and $b &gt; a$ such that $f(a) \le 0$ and $f(b) \ge 0$.</p>
+<p>Find an approximate root of $f$, ie a point $c$ where there is $r$ s.t. $|r - c| \le \epsilon$ and $f(r) = 0$. Note that this must exist by IVT.</p>
+<h3 id="naive-approach">Naive Approach</h3>
+<p>Divide $[a, b]$ into $n = \frac{b - a}{\epsilon}$ intervals. For each interval, check $f(x) \le 0, f(x + \epsilon) \ge 0$.</p>
+<p>This runs in $O(n) = O(\frac{b - a}{\epsilon})$.</p>
+<h3 id="dc-approach">D&amp;C Approach</h3>
+<pre><code class="language-python">def Bisection(f, a, b, e):
+    if (b - a) &lt; e:
+        return a
+
+    m = (a + b)/2
+    if f(m) &lt; 0:
+        return Bisection(c, b, e)
+    else
+        return Bisection(a, c, e)
+</code></pre>
+<p>Let $n = \frac{a - b}{\epsilon}$ and $c = \frac{a + b}{2}$. SO in each step we reduce by half.</p>
+<p>$$
+T(n) = T(\frac{n}{2}) + O(1) = O(\log(n)) = O(\log \frac{a - b}{\epsilon})
+$$</p>
+<h3 id="correctness">Correctness</h3>
+<p>$P(n)$: $\forall a, b$ s.t. $f(a) \le 0$ and $f(b) \ge 0$, and $\frac{a - b}{\epsilon} = n$, that <code>Bisection</code> returns a value, say $c$, s.t. $\exists r$ s.t. $|r - c| \le \epsilon$</p>
+<p><strong>Base Case.</strong> $P(1)$: By IVT, $\exists r \in [a, b]$ s.t. $f(r) = 0$. We output $a$, and $|a - r| \le |a - b| \le \epsilon$.</p>
+<p><strong>IH:</strong> Assume $P(n)$</p>
+<p><strong>IS:</strong> $P(2n)$</p>
+<p>Given arbitrary $b &gt; a$ s.t. $\frac{|a - b|}{\epsilon} = 2n$ and $f(a) \le 0$, $f(b) \ge 0$, start with $c = \frac{a + b}{2}$.</p>
+<h4 id="case-1-fc-ge-0">Case 1: $f(c) \ge 0$</h4>
+<p>Then we satisfy $P(n)$ for $a, c$ because $\frac{c - a}{\epsilon} = n$, and $f(a) \le 0$, $f(c) \ge 0$.</p>
+<h4 id="case-2-fc-le-0">Case 2: $f(c) \le 0$</h4>
+<p>Then we satisfy $P(n)$ for $c, b$, for the exact same reasoning.</p>
+<h2 id="closest-pair-of-points-geometrically">Closest Pair of Points (geometrically)</h2>
+<p>Given $n$ points and an <em>arbitrary</em> distance function between them, find the closest pair (not just Euclidean distance).</p>
+<h3 id="1-dimensional-version">1 Dimensional Version</h3>
+<p>Given $n$ points on the real line, you can find the closest pair by sorting and then comparing each consecutive pair of points.</p>
+<p><strong>Key point</strong>: Don't need to check <em>every</em> pair. Can instead exploit geometry.</p>
+<h3 id="2-dimensional-version">2 Dimensional Version</h3>
+<p>Given $n$ points in the plane$, find the pair with the smallest Euclidean distance between them.</p>
+<ul>
+<li><em>Divide</em>: draw a vertical line $L$ with $\approx \frac{n}{2}$ points on each side.</li>
+<li><em>Conquer</em>: find closest pair on each side recursively.</li>
+</ul>
+<p>Suppose $\delta$ is the minimum on each side. Then you only need to consider points within $\delta$ of $L$ as the case where our two points lie on opposite sides of $L$.</p>
+<p>Partition each side of $L$ into $\frac{\delta}{2} \times \frac{\delta}{2}$ squares. This guarantees that each square has at most one point, since multiple points in the same square would have to have been the minimum on that side (since the maximum distance within a single square is $\frac{\delta}{\sqrt{2}}$).</p>
+<p>Then, sort the points in the strip $x \in [L - \delta, L + \delta]$ by $y$-coordinate to make $s_1, s_2, \ldots s_i$.</p>
+<p><strong>Claim</strong>: $\forall s_i, s_j$, if $|i - j| &gt; 11$, then $d(s_i, s_j) &gt; \delta$.</p>
+<p><strong>Proof</strong>: There are 4 squares in each row of the strip, each occupying at most on point. We know that any point $p_j$ more than two rows away from $p_i$ must have $d(p_i, p_j) &gt; \delta$.</p>
+<p>There are at most 3 points in the same row as $p_i$, and 8 in the 2 rows above/below. Thus, any point more than $8 + 3 = 11$ points away from $p_i$ will be more than two rows away, and thus have a distance greater than $\delta$.</p>
+<h4 id="implementation">Implementation</h4>
+<pre><code class="language-python"># divide and conquer closest points
+
+def bounding_indices(P, low, high, key=lambda x: x[0]):
+    n = len(P)
+    l, r = 0, n - 1
+
+    while l &lt;= r:
+        mid = (l + r) // 2
+        if low &lt;= key(P[mid]):
+            r = mid - 1
+        else:
+            l = mid + 1
+    smallest_index = l
+
+    l, r = 0, n - 1
+    while l &lt;= r:
+        mid = (l + r) // 2
+        if high &gt;= key(P[mid]):
+            l = mid + 1
+        else:
+            r = mid - 1
+    highest_index = r
+
+    return smallest_index, highest_index
+
+def d(p1, p2):
+  if p1 is None or p2 is None:
+    return float('inf')
+  return ((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2) ** .5
+
+def cp_brute_force(P):
+  n = len(P)
+  ans = P[:2]
+  min_d = d(P[0], P[1])
+  for i in range(n):
+    for j in range(i + 1):
+      if i == j:
+        continue
+      curr_d = d(P[i], P[j])
+      if curr_d &lt; min_d:
+        min_d = curr_d
+        ans = [P[i], P[j]]
+  return ans
+
+def cp_recursive(P):
+  n = len(P)
+  if n &lt; 2:
+    return None, None
+
+  if n &lt;= 10:
+    return cp_brute_force(P)
+
+  l1, l2 = cp_recursive(P[:n//2])
+  r1, r2 = cp_recursive(P[n//2:])
+
+  m1, m2 = (l1, l2) if d(l1, l2) &lt; d(r1, r2) else (r1, r2)
+
+  delta = d(m1, m2)
+  L = (P[n//2][0] + P[n//2 + 1][0]) / 2
+
+  l, h = bounding_indices(P, L - delta, L + delta)
+
+  middle = sorted(P[l:h + 1], key=lambda x: x[1])
+  k = len(middle)
+  for i in range(k):
+    low = max(0, i - 11)
+    high = min(k, i + 11)
+    for j in range(low, high):
+      if i == j:
+        continue
+      curr_dist = d(middle[i], middle[j])
+      if curr_dist  &lt; delta:
+        delta = curr_dist
+        m1, m2 = middle[i], middle[j]
+
+  return m1, m2
+
+def closest_points(P):
+  return cp_recursive(sorted(P, key = lambda x: x[0]))
+
+</code></pre>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/algorithmic-complexity.html">algorithmic-complexity</a>, <a href="/tags/computational-geometry.html">computational-geometry</a>, <a href="/tags/divide-and-conquer.html">divide-and-conquer</a>, <a href="/tags/recursive-algorithms.html">recursive-algorithms</a></div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paxos Protocol</title>
+    <meta name="description" content="A protocol for achieving consensus in distributed systems">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/distributed-systems.html">distributed-systems</a> » Paxos Protocol
+        </div>
+        <h1>Paxos Protocol</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/distributed-systems.html">distributed-systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="paxos-made-simple">Paxos Made Simple</h1>
+<p><a href="https://lamport.azurewebsites.net/pubs/paxos-simple.pdf">reading</a></p>
+<h2 id="the-consensus-algorithm">The Consensus Algorithm</h2>
+<h3 id="the-problem">The Problem</h3>
+<p>Consider a set of processes that can propose values. A consensus algorithm ensures that a single value is chosen and agreed upon. For safety, we must have...</p>
+<ul>
+<li>Only proposed values are chosen</li>
+<li>Only a single value is chosen</li>
+<li>Processes only learn values that are actually chosen</li>
+</ul>
+<p>And it assumes an asynchronous, non-byzantine network in which nodes are fail-stop.</p>
+<h3 id="choosing-a-value">Choosing a Value</h3>
+<p>In paxos there are 3 types of agents</p>
+<ul>
+<li><em>proposers</em></li>
+<li><em>acceptors</em></li>
+<li><em>learners</em></li>
+</ul>
+<h4 id="p1-an-acceptor-must-accept-the-first-proposal-it-receives">P1: An acceptor must accept the first proposal it receives</h4>
+<p>This guarantees that some value is accepted by each node that is proposed to, but it doesn't prevent situations where no proposal is accepted by a majority of acceptors.</p>
+<h4 id="p2-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h4>
+<p>This guarantees that only a single value is chosen, since unique proposal numbers can be used to decide between accepted values.</p>
+<h5 id="p2a-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2a: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h5>
+<p>This is a stronger version of P2 that ensures previous values are not forgotten/overridden.</p>
+<p>However, P2a contradicts P1, since if a proposer "wakes up" after having been out of commission, it must accept whatever value is proposed first. We thus strengthen even further to...</p>
+<h5 id="p2b-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-v">P2b: If a proposal with value $v$ is chosen, then every higher-numbered proposal issues by any proposer has value $v$</h5>
+<p>This shifts the burden of remembering and staying consistent with the chosen value to the proposers instead of the acceptors. We then have...</p>
+<p>$$
+\text{P2b} \to \text{P2a} \to \text{P2}
+$$</p>
+<p>In order to implement P2b, we must further constrain our algorithm's behavior to...</p>
+<h5 id="p2c-for-any-v-and-n-if-a-proposal-with-value-v-and-number-n-is-issued-there-is-a-set-s-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-s-has-accepted-any-proposal-numbered-less-than-n-or-b-v-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-n-accepted-by-the-acceptors-in-s">P2c: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, there is a set $S$ consisting of a majority of acceptors such that either (a) no acceptor in $S$ has accepted any proposal numbered less than $n$, or (b) $v$ is the value of the highest-numbered proposal among all proposals numbered less than $n$ accepted by the acceptors in $S$</h5>
+<p>To satisfy P2b, we must maintain P2c as an invariant. To make sure this invariant holds, proposers proposing a proposal numbered $n$ must learn the highest-numbered proposal with a number less than $n$ that has been accepted by a majority of acceptors, and propose that value if it exists.</p>
+<h4 id="proposition-algorithm">Proposition Algorithm</h4>
+<ol>
+<li>A proposer chooses a new proposal number $n$ and sends a <em>prepare</em> request to each member of some set of acceptors, awaiting a response containing:<ul>
+<li>A guarantee that this acceptor will never accept a proposal numbered less than $n$</li>
+<li>The proposal with the highest number less than $n$ that it has accepted, if any.</li>
+</ul>
+</li>
+<li>If the proposer receives the requested responses from a majority of acceptors, it issues an <em>accept</em> request, which is a proposal with number $n$ and value $v$, where $v$ is the value of the highest-numbered proposal among the responses, or a value of the proposer's choice if no proposals in the responses were received.</li>
+</ol>
+<h4 id="acceptor-behavior">Acceptor Behavior</h4>
+<p>Acceptors can only receive <em>prepare</em> and <em>accept</em> requests, and can ignore any request without compromising safety (but certainly still sacrificing liveness).</p>
+<h5 id="p1a-an-acceptor-can-accept-a-proposal-numbered-n-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-n">P1a: An acceptor can accept a proposal numbered $n$ iff it has not responded to a <em>prepare</em> request numbered greater than $n$</h5>
+<p>which implies P1</p>
+<h3 id="phases">Phases</h3>
+<h4 id="phase-1">Phase 1</h4>
+<ul>
+<li>(a) A proposer selects a proposal number $n$ and sends a <em>prepare</em> request with number $n$ to a majority of acceptors.</li>
+<li>(b) If an acceptor receives a <em>prepare</em> request with number $n$ greater than any it has seen, it responds with a promise not to accept any proposal numbered less than $n$ and the highest-numbered proposal (and corresponding value) it has accepted.</li>
+</ul>
+<h4 id="phase-2">Phase 2</h4>
+<ul>
+<li>(a) If the proposer receives responses from a majority of acceptors, it sends an <em>accept</em> request to each acceptor with the proposal number $n$ and the value $v$ of the highest-numbered proposal among the responses, or a value of its choosing if no proposals were received.</li>
+<li>(b) If an acceptor receives an <em>accept</em> request with number $n$ greater than any it has seen, it accepts the proposal and responds to the proposer, unless it has already responded to a <em>prepare</em> request with a number greater than $n$.</li>
+</ul>
+<p>Note that to increase performance, if an acceptor ignores a <em>prepare</em> or <em>accept</em> request because it has already received a <em>prepare</em> request with a higher number, it should notify the proposer with a <em>reject</em> message. This however doesn't change the correctness, and is thus optional.</p>
+<h2 id="learning-a-chosen-value">Learning a Chosen Value</h2>
+<p>One option would be for each acceptor to send a message upon accepting a value to all learners, but this requires a whole lot of message passing. Another option is to maintain a set of <em>distinguished</em> learners, which after hearing of a majority acceptance, notify all other learners of the accepted value. The larger this set of distinguished learners, the more fault-tolerant the system, but also the more communication required.</p>
+<p>Since messages can be dropped, a value can be chosen without any learner finding out. In this case, learners will find out the chosen value only after a new proposal is chosen. Learners can thus determine whether a value was chosen by following the same protocol to issue a new proposal as above.</p>
+<h2 id="progress">Progress</h2>
+<p>It is entirely possible with the above protocol that multiple proposers indefinitely one-up each other between sending their <em>propose</em> and <em>accept</em> requests, such that all proposals are ignored. To prevent this, choose and maintain a single <em>distinguished</em> proposer, which is the only proposer allowed to issue proposals. If the distinguished proposer fails, a new one can be elected by the acceptors.</p>
+<p>By <strong>FLP</strong>, any such leader election system must rely either on randomness, or real-time (i.e. timeouts).</p>
+<h2 id="implementing-a-state-machine">Implementing a State Machine</h2>
+<p>Consider a system of clients that issue requests to execute commands on a cluster of single-threaded application servers. Each application server can be thought of as a deterministic state machine, where the ordering of requests to each server <strong>must</strong> be consistent for them to end up in the same state.</p>
+<p>To guarantee consistent ordering of commands executed within our cluster, we implement a separate instance of Paxos, where the $i$th instance's chosen value determines the $i$th command executed on all application servers.</p>
+<p>During normal operation, a single server is elected to be leader, which acts as the <em>distinguished</em> proposer, and is the only server allowed to issue proposals. Clients then send their requests to this leader, which decides the sequence of commands globally. Any given instance of the protocol might fail, but regardless only one command can ever be chosen as the $i$th command to be executed.</p>
+<p>For cases where some subsequence of commands are not yet determined, i.e. not chosen yet when a new leader takes over, the new leader issues phase 1 for all such instances (including the infinitely many commands greater than the largest command in our current sequence). Any values received in response are then proposed, but if an instance remains unconstrained (i.e. no value has been accepted), the leader can propose no-ops for the gaps in the sequence of commands before the last accepted command. It must do this before ever executing commands that come after these unconstrained slots.</p>
+<p>After doing so, the leader can continue proposing any further commands requested by clients. The leader is allowed to propose command $i + \alpha$ before knowing the chosen command for $i$, meaning it can get up to $\alpha - 1$ commands ahead of itself (in the case where all commands less than $i + \alpha$ were dropped).</p>
+<p>Once a leader has finished phase 1 for all commands thus far and afterwards, it only needs to complete phase 2 for each subsequent command requested, which is known to be the minimal algorithm for reaching consensus after phase 1.</p>
+<p>To reiterate what was stated previously, in the case where a single leader is not elected, progress is not guaranteed, but safety is.</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/consensus%20algorithm.html">consensus algorithm</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/fault-tolerant%20systems.html">fault-tolerant systems</a></div>
+    </main>
+</body>
+</html>

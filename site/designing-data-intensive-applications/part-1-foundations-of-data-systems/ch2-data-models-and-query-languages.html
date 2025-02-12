@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Models and Relationships in Database Systems</title>
+    <meta name="description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusing on how they handle relationships between data. The chapter also covers query languages, data locality, and the concept of MapReduce for data processing.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/database%20design.html">Database Design</a> » Data Models and Relationships in Database Systems
+        </div>
+        <h1>Data Models and Relationships in Database Systems</h1>
+        <div class="meta">
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/database%20design.html">Database Design</a></span>
+        </div>
+        <div class="content">
+            <h1 id="chapter-2">Chapter 2</h1>
+<h2 id="data-models-and-query-languages">Data Models and Query Languages</h2>
+<p><strong>Relational Model</strong> We all know SQL</p>
+<p><strong>Document Model</strong> As well as NoSQL</p>
+<h3 id="mismatch-between-relational-model-and-oop">Mismatch between Relational Model and OOP</h3>
+<p>Awkward translation between objects and relations leads to middleware, oftentimes a <strong>object-relational mapping (ORM)</strong></p>
+<h3 id="relationships">Relationships</h3>
+<p>It is useful to use ids to refer to related data, rather than embedding it. It never changes, and it is often much smaller.</p>
+<p><strong>One-to-many</strong> relationships are by far the most common type of relationship in databases.</p>
+<pre><code class="language-sql">CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    username VARCHAR(200) UNIQUE
+);
+
+CREATE TABLE orders (
+    order_id VARCHAR(255) PRIMARY KEY,
+    user_id INT REFERENCES users (user_id)
+);
+</code></pre>
+<pre><code class="language-json">{
+  &quot;user_id&quot;: 1,
+  &quot;username&quot;: &quot;martin&quot;,
+  &quot;order_ids&quot;: [1, 2]
+}
+</code></pre>
+<p><strong>Many-to-many</strong> relationships are less common, but they do exist.</p>
+<pre><code class="language-sql">CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    username VARCHAR(200) UNIQUE
+);
+
+CREATE TABLE groups (
+    group_id INT PRIMARY KEY,
+    group_name VARCHAR(200) UNIQUE
+);
+
+CREATE TABLE user_groups (
+    user_id INT REFERENCES users (user_id),
+    group_id INT REFERENCES groups (group_id),
+    PRIMARY KEY (user_id, group_id)
+);
+</code></pre>
+<pre><code class="language-json">{
+  &quot;user_id&quot;: 1,
+  &quot;username&quot;: &quot;martin&quot;,
+  &quot;group_ids&quot;: [1, 2]
+}
+</code></pre>
+<p><strong>Many-to-many relationships</strong> are natural in SQL, but awkward in document databases. Often, the best way to deal with many-to-many relationships in a document database is to denormalize some of the data, since joins are limited.</p>
+<pre><code class="language-sql">SELECT * FROM users
+JOIN user_groups USING (user_id)
+JOIN groups USING (group_id)
+WHERE group_name = 'devops';
+</code></pre>
+<pre><code class="language-json">{
+  &quot;user_id&quot;: 1,
+  &quot;username&quot;: &quot;martin&quot;,
+  &quot;groups&quot;: [
+    { &quot;group_id&quot;: 1, &quot;group_name&quot;: &quot;devops&quot; },
+    { &quot;group_id&quot;: 2, &quot;group_name&quot;: &quot;dba&quot; }
+  ]
+}
+</code></pre>
+<p><strong>Network model</strong> is a generalization of the hierarchical model, in which a child record may have several parents. It is a graph of records, connected by links.</p>
+<p><strong>Graph model</strong> is a further generalization, in which edges can have properties as well as vertices.</p>
+<h3 id="choosing-a-data-model">Choosing a data model</h3>
+<p><strong>Schema-on-write</strong> is the traditional approach of defining a relational schema for your data, and then writing data that conforms to the schema. It is good for ensuring data quality, and it is also good for performance. However, it is inflexible.</p>
+<p><strong>Schema-on-read</strong> is the approach of not enforcing a schema ahead of time, but only reading it when you read from the database. It is good for handling data with rapidly changing requirements, and for cases where you need to load data from many different applications.</p>
+<p>Choose whichever model simplifies your application code the most, and matches your access patterns.</p>
+<h3 id="data-locality">Data locality</h3>
+<p>is the collocation of related data items on the same storage device (e.g. disk block, server node, etc.). It is important for performance.</p>
+<p><strong>Locality in query execution</strong> is the collocation of data items that are accessed together in the same query. It is important for performance.</p>
+<p>For document databases, you need to load the entire document, even if you only need a small portion of it. Keep documents small.</p>
+<p><strong>Examples</strong>: Google Spanner uses nested data structures, and it allows secondary indexes on nested fields. MongoDB and Elastic search allow you to index nested fields, but they don't allow secondary indexes on nested fields. Column family databases such as BigTable, HBase, and Cassandra.</p>
+<p>Many relational databases also have XML and JSON data types, which allow you to store documents within a row of a table.</p>
+<h3 id="mapreduce-querying">MapReduce Querying</h3>
+<p><strong>MapReduce</strong> is a programming model for processing large amounts of data in bulk across many machines, popularized by Google. It is a two-step process:</p>
+<ol>
+<li>
+<p>The <strong>map</strong> step takes a document as input and produces an intermediate representation of key-value pairs.</p>
+</li>
+<li>
+<p>The <strong>reduce</strong> step takes the output of the map step, with the same key appearing once for each value, and produces a result. The result can be a single value per key, or an arbitrarily complex data structure.</p>
+</li>
+</ol>
+<p><strong>MapReduce</strong> is a good model for batch processing of data, but it is not suitable for interactive queries or applications that require low latency. Some NoSQL databases have a limited form of MapReduce for reading batches of documents (e.g. MongoDB, CouchDB).</p>
+<pre><code class="language-sql">-- traditional SQL
+SELECT date_trunc('month', observation_timestamp) AS observation_month,
+ sum(num_animals) AS total_animals
+FROM observations
+WHERE family = 'Sharks'
+GROUP BY observation_month;
+</code></pre>
+<pre><code class="language-js">// Map Reduce MongoDB
+db.observations.mapReduce(
+    // collect data
+  function map() {
+    var year = this.observationTimestamp.getFullYear()
+    var month = this.observationTimestamp.getMonth() + 1
+    emit(year + '-' + month, this.numAnimals)
+  }, // aggregate the data
+  function reduce(key, values) {
+    return Array.sum(values)
+  },
+  { // query to select the documents
+    query: { family: 'Sharks' },
+    out: 'monthlySharkReport'
+  }
+)
+</code></pre>
+<pre><code class="language-js">// Aggregation pipeline with MongoDB
+db.observations.aggregate([
+ { $match: { family: &quot;Sharks&quot; } },
+ { $group: {
+ _id: {
+ year: { $year: &quot;$observationTimestamp&quot; },
+ month: { $month: &quot;$observationTimestamp&quot; }
+ },
+ totalAnimals: { $sum: &quot;$numAnimals&quot; }
+ } }
+]);
+</code></pre>
+<h4 id="property-graphs">Property Graphs</h4>
+<p>Each <strong>vertex/node</strong> consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>A set of outgoing edges</li>
+<li>A set of incoming edges</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<p>Each <strong>edge</strong> consists of:</p>
+<ul>
+<li>A unique identifier</li>
+<li>The vertex at which the edge starts (the tail vertex)</li>
+<li>The vertex at which the edge ends (the head vertex)</li>
+<li>A label to describe the kind of relationship between the two vertices</li>
+<li>A collection of properties (key-value pairs)</li>
+</ul>
+<pre><code class="language-sql">-- Conceptual graph model in SQL
+CREATE TABLE vertices (
+ vertex_id integer PRIMARY KEY,
+ properties json
+);
+
+CREATE TABLE edges (
+ edge_id integer PRIMARY KEY,
+ tail_vertex integer REFERENCES vertices (vertex_id),
+ head_vertex integer REFERENCES vertices (vertex_id),
+ label text,
+ properties json
+);
+
+CREATE INDEX edges_tails ON edges (tail_vertex);
+
+CREATE INDEX edges_heads ON edges (head_vertex);
+</code></pre>
+<p>In practice, graph databases are usually implemented differently, because the above model is not very efficient. Specialized query languages are used to traverse the graph in an imperative style.</p>
+<h4 id="triple-stores-and-sparql">Triple-Stores and SPARQL</h4>
+<p>Consists of <strong>three-part statements</strong> of the form <code>(subject, predicate, object)</code>. The subject and object are vertices, and the predicate is an edge.</p>
+<p>```sql</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/data%20modeling.html">data modeling</a>, <a href="/tags/document%20databases.html">document databases</a>, <a href="/tags/graph%20databases.html">graph databases</a>, <a href="/tags/query%20languages.html">query languages</a>, <a href="/tags/relational%20databases.html">relational databases</a></div>
+    </main>
+</body>
+</html>

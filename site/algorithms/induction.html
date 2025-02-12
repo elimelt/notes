@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Induction and Pigeonhole Principle Proofs</title>
+    <meta name="description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/mathematics.html">Mathematics</a> » Mathematical Induction and Pigeonhole Principle Proofs
+        </div>
+        <h1>Mathematical Induction and Pigeonhole Principle Proofs</h1>
+        <div class="meta">
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/mathematics.html">Mathematics</a></span>
+        </div>
+        <div class="content">
+            <h1 id="induction">Induction</h1>
+<p>Prove...</p>
+<p>$$
+\forall n \in \mathbb{N}, \sum^{n}_{i = 1} i = \frac{n(n + 1)}{2}
+$$</p>
+<p>$$
+P(n) = \sum^{n}_{i = 1} i = \frac{n(n + 1)}{2}
+$$</p>
+<h3 id="base-case">Base Case</h3>
+<p>$$
+P(1) = 1 = \frac{1(1 + 2)}{2}
+$$</p>
+<h3 id="ih">IH</h3>
+<p>Assume $P(n)$ for some $n \ge 2$</p>
+<h3 id="is">IS</h3>
+<p>$$
+1 + \ldots + n - 1 + n = \frac{(n - 1)(n)}{2} + n = \frac{n(n + 1)}{2}
+$$</p>
+<h1 id="pigeon-hole-principle">Pigeon Hole Principle</h1>
+<p>Suppose that we put $n + 1$ balls into $n$ bins. Prove that there is a bin with at least $2$ balls.</p>
+<p>$P(n) :=$ <em>For any possible way to put $n + 1$ balls into $n$ bins, there exists a bin with $\ge 2$ balls.</em></p>
+<h2 id="base-case_1">Base Case</h2>
+<p>duh...</p>
+<h2 id="ih_1">IH</h2>
+<p>Assume $P(n - 1)$ holds for some $n \ge 2$</p>
+<h2 id="is_1">IS</h2>
+<p>Suppose we are given $n + 1$ balls <em>arbitrarily</em> placed into $n$ bins, labeled $b_1, \ldots, b_{n}$.</p>
+<p>Consider $b_1$. If $b_1$ has 2 balls in it, we are done. If it has 1 ball, then throw away $b_1$ and call $P(n - 1)$ for $b_2, \ldots, b_{n}, so we are done.</p>
+<p>Finally, if $b_1$ has no balls, throw away an arbitrary ball and call $P(n - 1)$ on $b_2, \ldots, b_n$</p>
+<h3 id="generally">Generally</h3>
+<p>With this type of induction, start with $P(n)$, and reduce to $P(n - 1)$.</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/induction.html">induction</a>, <a href="/tags/pigeonhole%20principle.html">pigeonhole principle</a>, <a href="/tags/proof%20techniques.html">proof techniques</a></div>
+    </main>
+</body>
+</html>

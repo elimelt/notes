@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Phase Commit</title>
+    <meta name="description" content="Explains the concept of two phase commit in distributed systems and its implications.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/distributed-systems.html">distributed-systems</a> » Two Phase Commit
+        </div>
+        <h1>Two Phase Commit</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/distributed-systems.html">distributed-systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="two-phase-commit">Two Phase Commit</h1>
+<h2 id="acid">ACID</h2>
+<p>For updates that span multiple keys, or even multiple updates across different storage systems, we need all-or-nothing semantics so errors can be properly handled. Two-phase commit (2PC) is a protocol that ensures <strong>distributed transactions</strong>, i.e. groups of operations, are atomic, consistent, isolated, and durable (ACID). </p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Atomic</td>
+<td>operations appear to either happen as a group, or not at all</td>
+</tr>
+<tr>
+<td>Durable</td>
+<td>Operations that complete stay completed</td>
+</tr>
+<tr>
+<td>Isolation</td>
+<td>Other transactions don't see the results until of earlier transactions unless they were already committed</td>
+</tr>
+<tr>
+<td>Consistency</td>
+<td>linearizability (or some other consistency model)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="two-phase-locking-2pl-consistency-and-isolation">Two Phase Locking (2PL) - Consistency and Isolation</h2>
+<p>In <strong>2PL</strong>, locks are acquired on all structures touched during the transaction, and are only released upon commit or abort. This provides isolation and consistency for multi-key transactions.</p>
+<pre><code class="language-plaintext">- start transaction -
+Phase 1: acquire locks
+- commit or abort -
+Phase 2: release locks
+</code></pre>
+<h2 id="redo-logging-atomicity-and-durability">Redo Logging - Atomicity and Durability</h2>
+<p>Log all changes to disk, followed by a log commit. If there is a crash before the log commit, abandon the transaction. If it was committed in the log, we can just redo the changes.</p>
+<h2 id="deadlock">Deadlock</h2>
+<p>Deadlock is when two or more transactions are waiting for locks held by each other in a cycle. To solve this you can stop one of the transactions to break the cycle.</p>
+<p>Deadlock prevention is generally a better idea, and you can achieve it by always ordering lock acquisition consistently.</p>
+<h2 id="distributed-transactions">Distributed Transactions</h2>
+<p>From the <em>two generals problem</em>, it is theoretically impossible to agree on performing some action at the same time. Instead, we agree in <strong>virtual time</strong> when an operation happens.</p>
+<h3 id="atomic-commit-protocol-acp">Atomic Commit Protocol (ACP)</h3>
+<ul>
+<li>Every node arrives at the same decision</li>
+<li>Once a node decides, it never changes</li>
+<li>Transaction is committed only if all nodes vote yes</li>
+<li>If all processes vote yes the transaction is usually committed</li>
+<li>If all failures are eventually repaired, the transaction is eventually either committed or aborted</li>
+</ul>
+<h2 id="2pc-in-detail">2PC in Detail</h2>
+<p><strong>2PC</strong> is a blocking protocol, meaning that it makes no progress if some participants are unavailable. It has fault tolerance, but is not highly available, which is a fundamental limit of the protocol.</p>
+<ul>
+<li>For a given transaction a central coordinator sends a prepare</li>
+<li>Participants commit to commit</li>
+<li>Acquires locks, prevent/delay conflicting operations</li>
+<li>Abort if deadlock or if any of the operations cannot be completed</li>
+<li>Central coordinator decides and tells everyone, then releases all locks</li>
+</ul>
+<h3 id="handling-failures">Handling Failures</h3>
+<h4 id="participant-fails-before-sending-response">Participant Fails Before Sending Response</h4>
+<p>You can maintain a timer on the coordinator to retry prepares. If some threshold is reached, just log a no and abort</p>
+<p>If the participant then comes back online, they will need to ask the coordinator for the decision, at which point the coordinator sends an abort to the participant</p>
+<h4 id="participant-fails-before-after-sending-vote">Participant Fails Before After Sending Vote</h4>
+<p>If the participant crashes immediately after sending their response. Then either they come back online before the commit is sent, at which point the protocol continues, or they will need to check their log and request the decision from the coordinator, which will resent the commit and the protocol continues.</p>
+<h4 id="coordinator-fails-before-sending-prepare">Coordinator Fails Before Sending Prepare</h4>
+<p>They would have logged the prepare request, so when they come back online and execute the transaction.</p>
+<h4 id="coordinator-fails-after-sending-prepare">Coordinator Fails After Sending Prepare</h4>
+<p>If the coordinator fails after sending prepares, but before receiving responses, they must have logged the prepared already, and they need to be resent.</p>
+<h3 id="roles">Roles</h3>
+<ul>
+<li>Participants: Nodes that must update data relevant to the transaction</li>
+<li>Coordinator: node responsible for executing the protocol (might also be a participant)</li>
+</ul>
+<h3 id="messages">Messages</h3>
+<ul>
+<li>Prepare: Can you commit the transaction?</li>
+<li>Commit: commit the transaction</li>
+<li>Abort: abort the transaction</li>
+</ul>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/atomicity.html">atomicity</a>, <a href="/tags/consistency.html">consistency</a>, <a href="/tags/deadlock%20prevention.html">deadlock prevention</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/distributed%20transactions.html">distributed transactions</a>, <a href="/tags/durability.html">durability</a>, <a href="/tags/isolation.html">isolation</a>, <a href="/tags/two-phase%20commit.html">two-phase commit</a></div>
+    </main>
+</body>
+</html>

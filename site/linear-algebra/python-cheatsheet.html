@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Cheatsheet</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Python Cheatsheet
+        </div>
+        <h1>Python Cheatsheet</h1>
+        <div class="meta">
+            <span>Last modified: 2024-12-08</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="fundamentals-of-vectors">Fundamentals of Vectors</h1>
+<h2 id="working-with-vectors-in-numpy">Working with Vectors in NumPy</h2>
+<pre><code class="language-py">import numpy as np
+</code></pre>
+<h3 id="creating-vectors">Creating Vectors</h3>
+<pre><code class="language-python"># Row vector
+v_row = np.array([1, 2, 3])
+
+# Column vector
+v_col = np.array([[1], [2], [3]])
+assert v_col = np.transpose(v_row)
+</code></pre>
+<h3 id="vector-operations">Vector Operations</h3>
+<pre><code class="language-python"># Addition
+v1, v2 = np.array([1, 2, 3]), np.array([4, 5, 6])
+v_sum = v1 + v2
+
+# Subtraction
+v_diff = v1 - v2
+
+# Scalar multiplication
+c = 2
+v_scaled = c * v1
+
+# Dot product
+dot_product = np.dot(v1, v2)
+
+# Cross product
+cross_product = np.cross(v1, v2)
+</code></pre>
+<h3 id="vector-norms">Vector Norms</h3>
+<pre><code class="language-python"># L1 norm
+l1_norm = np.linalg.norm(v, ord=1)
+
+# L2 norm
+l2_norm = np.linalg.norm(v, ord=2)
+
+# Infinity norm
+inf_norm = np.linalg.norm(v, ord=np.inf)
+</code></pre>
+<h3 id="useful-functions">Useful Functions</h3>
+<pre><code class="language-python"># Normalize vector
+normalize = lambda v: v / np.linalg.norm(v)
+
+# Angle between vectors (radians)
+angle_rad = lambda v1, v2: np.arccos(np.clip(np.dot(normalize(v1), normalize(v2)), -1.0, 1.0))
+
+# Angle between vectors (degrees)
+angle_deg = lambda v1, v2: np.degrees(angle_rad(v1, v2))
+
+# Projection of v1 onto v2
+projection = lambda v1, v2: np.dot(v1, normalize(v2)) * normalize(v2)
+
+# Rejection of v1 from v2
+rejection = lambda v1, v2: v1 - projection(v1, v2)
+
+# Distance between vectors
+distance = lambda v1, v2: np.linalg.norm(v1 - v2)
+</code></pre>
+<h3 id="visualization-with-matplotlib">Visualization with Matplotlib</h3>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+</code></pre>
+<h4 id="2d-vectors">2D Vectors</h4>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_2d(*vectors, figsize=(10, 10), arrows=True, grid=True, equal_aspect=True):
+    &quot;&quot;&quot;
+    Plot multiple 2D vectors on a Cartesian plane.
+
+    Parameters:
+    -----------
+    *vectors : array-like
+        Variable number of 2D vectors to plot. Each vector should be a 2D point
+        or array-like object with x and y coordinates.
+    figsize : tuple, optional (default=(10, 10))
+        Figure size as (width, height)
+    arrows : bool, optional (default=True)
+        If True, draws vectors as arrows from origin. If False, plots as points/lines.
+    grid : bool, optional (default=True)
+        Whether to show the grid
+    equal_aspect : bool, optional (default=True)
+        Whether to maintain equal aspect ratio for x and y axes
+
+    Returns:
+    --------
+    fig, ax : tuple
+        Matplotlib figure and axis objects
+    &quot;&quot;&quot;
+    # convert all inputs to numpy arrays
+    vectors = [np.array(v, dtype=float) if not isinstance(v, np.ndarray) else v for v in vectors]
+
+    # validate inputs
+    for i, v in enumerate(vectors):
+        if v.shape != (2,):
+            raise ValueError(f&quot;Vector {i} has shape {v.shape}, expected (2,)&quot;)
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    colors = plt.cm.tab10(np.linspace(0, 1, len(vectors)))
+
+    for v, color in zip(vectors, colors):
+        if arrows:
+            ax.quiver(0, 0, v[0], v[1], angles='xy', scale_units='xy', scale=1,
+                     color=color, width=0.005)
+        else:
+            ax.plot([0, v[0]], [0, v[1]], '-o', color=color)
+
+    all_coords = np.vstack(vectors)
+    max_abs_coord = np.max(np.abs(all_coords)) * 1.2  # Add 20% padding
+    ax.set_xlim(-max_abs_coord, max_abs_coord)
+    ax.set_ylim(-max_abs_coord, max_abs_coord)
+    ax.axhline(y=0, color='k', linestyle='-', linewidth=0.5, alpha=0.3)  # x-axis
+    ax.axvline(x=0, color='k', linestyle='-', linewidth=0.5, alpha=0.3)  # y-axis
+
+    if grid:
+        ax.grid(True, linestyle='--', alpha=0.3)
+
+    if equal_aspect:
+        ax.set_aspect('equal')
+
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+
+    return fig, ax
+</code></pre>
+<h4 id="3d-vectors">3D Vectors</h4>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+def plot_3d(*vectors):
+    &quot;&quot;&quot;Plot multiple 3D vectors from origin as lines with dots at endpoints.&quot;&quot;&quot;
+    # Convert inputs to numpy arrays
+    vectors = [np.array(v) for v in vectors]
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    for v in vectors:
+        # Plot line from origin to vector endpoint with dot
+        ax.plot([0, v[0]], [0, v[1]], [0, v[2]], '-o')
+
+    # Set equal aspect ratio and add labels
+    ax.set_box_aspect([1,1,1])
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+
+    return fig, ax
+</code></pre>
+<h1 id="matrices">Matrices</h1>
+<h2 id="working-with-matrices-in-numpy">Working with Matrices in NumPy</h2>
+<pre><code class="language-py">import numpy as np
+</code></pre>
+<h3 id="creating-matrices">Creating Matrices</h3>
+<pre><code class="language-python"># 2D array
+A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+
+# Identity matrix
+I = np.eye(3)
+
+# Zero matrix
+Z = np.zeros((3, 3))
+
+# Ones matrix
+O = np.ones((3, 3))
+
+# Random matrix
+R = np.random.rand(3, 3)
+</code></pre>
+<h3 id="matrix-operations">Matrix Operations</h3>
+<pre><code class="language-python"># Addition
+A1, A2 = np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]])
+A_sum = A1 + A2
+
+# Subtraction
+A_diff = A1 - A2
+
+# Scalar multiplication
+c = 2
+A_scaled = c * A1
+
+# Matrix multiplication
+A_prod = np.dot(A1, A2)
+
+# Transpose
+A_transpose = np.transpose(A)
+
+# Inverse
+A_inv = np.linalg.inv(A)
+
+# Determinant
+det_A = np.linalg.det(A)
+
+# Trace
+trace_A = np.trace(A)
+
+# Rank
+rank_A = np.linalg.matrix_rank(A)
+
+# Eigenvalues and eigenvectors
+eigenvalues, eigenvectors = np.linalg.eig(A)
+
+# Singular value decomposition
+U, S, V = np.linalg.svd(A)
+
+# Matrix norms
+l1_norm = np.linalg.norm(A, ord=1)
+
+l2_norm = np.linalg.norm(A, ord=2)
+
+inf_norm = np.linalg.norm(A, ord=np.inf)
+
+fro_norm = np.linalg.norm(A, ord='fro')
+
+# Matrix power
+A_squared = np.linalg.matrix_power(A, 2)
+</code></pre>
+<h1 id="systems-of-linear-equations">Systems of Linear Equations</h1>
+<h2 id="solving-linear-systems">Solving Linear Systems</h2>
+<h3 id="matrix-inversion-method">Matrix Inversion Method</h3>
+<pre><code class="language-python">A = np.array([[2, 1], [1, 1]])
+b = np.array([3, 2])
+
+x = np.linalg.inv(A).dot(b)
+
+# or, much faster
+
+x = np.linalg.solve(A, b)
+
+print(x)
+</code></pre>
+<h1 id="vector-spaces">Vector Spaces</h1>
+<h2 id="linear-independence-span-basis">Linear Independence, Span, Basis</h2>
+<pre><code class="language-python">
+# check if set of vectors is linearly independent
+is_linearly_independent = lambda *vectors: np.linalg.matrix_rank(np.array(vectors)) == len(vectors[0])
+
+# check if vector is in span of other vectors
+is_in_span = lambda v, *S: np.linalg.matrix_rank(np.array([*S, v])) == np.linalg.matrix_rank(S)
+
+# find basis of a set of vectors
+basis = lambda *vectors: np.array(vectors).T[:, np.linalg.matrix_rank(np.array(vectors)):]
+</code></pre>
+<h1 id="matrix-properties-cont-1">Matrix Properties (cont. 1)</h1>
+<h2 id="dimension-rank-nullity-row-space">Dimension, Rank, Nullity, Row Space</h2>
+<pre><code class="language-python"># dimension of a vector space
+dim = lambda *vectors: np.linalg.matrix_rank(np.array(vectors))
+rank = lambda A: np.linalg.matrix_rank(A)
+nullity = lambda A: A.shape[1] - rank(A)
+</code></pre>
+<h2 id="special-transformations">Special Transformations</h2>
+<pre><code class="language-python"># reflection matrix
+reflect = lambda n: np.eye(len(n)) - 2 * np.outer(n, n) / np.dot(n, n)
+
+# projection matrix
+project = lambda n: np.outer(n, n) / np.dot(n, n)
+
+# rotation matrix
+rotate = lambda theta: np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+
+# scaling matrix
+scale = lambda s: np.diag(s)
+
+# shearing matrix
+shear = lambda s: np.array([[1, s], [0, 1]])
+
+# translation matrix
+translate = lambda t: np.array([[1, 0, t[0]], [0, 1, t[1]], [0, 0, 1]])
+
+# homogenous coordinates
+homogenize = lambda v: np.append(v, 1)
+
+# dehomogenize
+dehomogenize = lambda v: v[:-1] / v[-1]
+
+# affine transformation
+affine = lambda A, t: np.block([[A, t], [0, 0, 1]])
+
+# perspective transformation
+perspective = lambda d: np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1/d]])
+</code></pre>
+<h2 id="orthogonality">Orthogonality</h2>
+<pre><code class="language-python"># check if two vectors are orthogonal
+is_orthogonal = lambda u, v: np.dot(u, v) == 0
+
+# check if set of vectors is orthogonal
+is_orthogonal_set = lambda *vectors: all(np.dot(v1, v2) == 0 for v1, v2 in itertools.combinations(vectors, 2))
+
+# check if set of vectors is orthonormal
+is_orthonormal_set = lambda *vectors: is_orthogonal_set(*vectors) and all(np.linalg.norm(v) == 1 for v in vectors)
+
+# check if matrix is orthogonal
+is_orthogonal_matrix = lambda A: np.allclose(np.dot(A, A.T), np.eye(A.shape[0]))
+
+# check if matrix is orthonormal
+is_orthonormal_matrix = lambda A: is_orthogonal_matrix(A) and np.allclose(np.linalg.det(A), 1)
+</code></pre>
+<h1 id="change-of-basis">Change of Basis</h1>
+<pre><code class="language-python"># change of basis matrix
+change_of_basis = lambda B, C: np.linalg.inv(C) @ B
+</code></pre>
+        </div>
+        
+    </main>
+</body>
+</html>

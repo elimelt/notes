@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Undirected Graphs and Their Properties</title>
+    <meta name="description" content="A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves important theorems about degree sums and odd vertices, and compares adjacency matrix and list representations with their respective time and space complexities.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/graph%20theory.html">Graph Theory</a> » Introduction to Undirected Graphs and Their Properties
+        </div>
+        <h1>Introduction to Undirected Graphs and Their Properties</h1>
+        <div class="meta">
+            <span>Last modified: 2025-01-01</span>
+            <span>Category: <a href="/categories/graph%20theory.html">Graph Theory</a></span>
+        </div>
+        <div class="content">
+            <h1 id="graphs-introduction">Graphs Introduction</h1>
+<h2 id="undirected-graphs">Undirected Graphs</h2>
+<p>An undirected graph is defined by a set of vertices and a set of edges.</p>
+<p>$$
+G = (V, E)
+$$</p>
+<h3 id="terminology">Terminology</h3>
+<ul>
+<li><strong>Connectedness</strong>: A graph is connected if there is a path between every pair of vertices.</li>
+<li><strong>Isolated vertex</strong>: A vertex with no edges.</li>
+<li><strong>Planar graph</strong>: You can draw the graph on a plane such that no two edges cross.</li>
+<li><strong>Degree of vertex</strong>: $deg(v) = $ Number of edges that touch said vertex.</li>
+<li><strong>Connected components</strong>: maximal set of components within a graph. Partition your set of vertices</li>
+<li><strong>Path</strong>: A sequence of distinct vertices s.t. each vertex is connected to the next vertex with an edge. <code>length(path) = # edges</code></li>
+<li><strong>Cycle</strong>: Path of length &gt; 2 that has the same start and end</li>
+<li><strong>Tree</strong>: A connected graph with no cycles.</li>
+</ul>
+<h3 id="degree-sum">Degree Sum</h3>
+<h4 id="claim">Claim</h4>
+<p>In any undirected graph, the number of edges is half the sum of all vertices degrees.</p>
+<p>$$
+\text{edges } = \frac{1}{2} \sum_{v \in V} deg(v)
+$$</p>
+<h4 id="proof">Proof:</h4>
+<p>The sum counts each edge twice.</p>
+<h3 id="odd-degree-vertices">Odd Degree Vertices</h3>
+<h4 id="claim_1">Claim</h4>
+<p>In any undirected graph, the number of odd degree vertices is even.</p>
+<h4 id="proof_1">Proof</h4>
+<p>Adding any two odd numbers results in an even number. Adding an odd and even number is odd. With this in mind, knowing that the sum of all vertex degrees is even,there must be even number of odd degree vertices, because sum of odd number of odd numbers is odd.</p>
+<h3 id="degree-1-vertices">Degree 1 vertices</h3>
+<h4 id="claim_2">Claim</h4>
+<p>Suppose $G$ is an acyclic graph. Then $G$ must have a vertex of degree less than or equal to 1.</p>
+<p>$$
+G = (V, E) \text{ is acyclic} \to \exists v \in V, deg(v) \le 1
+$$</p>
+<h4 id="proof_2">Proof</h4>
+<p>Proof by contradiction.</p>
+<p>Assume $\forall v \in V, d(v) \ge 2$.</p>
+<p>Consider a path from $v_1$ to $v_n$. At $v_i$, we choose the next vertex such that isnt an edge to $v_{i - 1}$, which is possible because $deg(v_i) \ge 2$. The first time we see a repeated vertex $v_j = v_i$, we get a cycle. Since $G$ has finitely many edges, at some point you need to either terminate your traversal, or loop back and repeat a node.</p>
+<h3 id="number-of-edges">Number of edges</h3>
+<p>Let $G = (V, E)$ be a graph with $n = |V|$ vertices and $m = |E|$ edges.</p>
+<p>Claim: $m \le (n \choose 2) = \frac{n(n - 1)}{2} = O(n^2)$</p>
+<p>Proof: Each vertex can be connected to at most $n - 1$ other vertices. Thus, the total number of edges is at most $n(n - 1)/2$.</p>
+<h3 id="sparsity">Sparsity</h3>
+<p>A graph is called sparse if $|E| &lt;&lt; |V|^2$, and dense otherwise. Sparse graphs are common in applications like social networks, the web, planar graphs, etc.</p>
+<p>Technically, $O(n + m) = O(n^2)$, but in practice, $O(n + m) = O(n)$ for sparse graphs.</p>
+<h3 id="storing-graphs">Storing Graphs</h3>
+<h4 id="adjacency-matrix">Adjacency Matrix</h4>
+<p>A matrix $A$ where $A_{ij} = 1$ if there is an edge between $v_i$ and $v_j$, and $0$ otherwise.</p>
+<ul>
+<li>Pro: $O(1)$ time to check if there is an edge between two vertices.</li>
+<li>Con: $O(n^2)$ space.</li>
+<li>Con: $O(n)$ time to find all neighbors of a vertex.</li>
+</ul>
+<p>Good for dense graphs.</p>
+<h4 id="adjacency-list">Adjacency List</h4>
+<p>A list of lists, where each vertex has a list of its neighbors.</p>
+<ul>
+<li>Pro: $O(1)$ time to find all neighbors of a vertex.</li>
+<li>Pro: $O(n + m)$ space.</li>
+<li>Con: $O(n)$ time to check if there is an edge between two vertices.</li>
+</ul>
+<p>Good for sparse graphs.</p>
+<pre><code class="language-python">
+def build_adjacency_list(n: int, edges: List[Tuple[int, int]]) -&gt; List[List[int]]:
+    adj = [[] for _ in range(n)]
+    for u, v in edges:
+        adj[u].append(v)
+        adj[v].append(u)
+    return adj
+
+def build_adjacency_matrix(n: int, edges: List[Tuple[int, int]]) -&gt; List[List[int]]:
+    adj = [[0] * n for _ in range(n)]
+    for u, v in edges:
+        adj[u][v] = 1
+        adj[v][u] = 1
+    return adj
+
+</code></pre>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/data%20structures.html">data structures</a>, <a href="/tags/graph.html">graph</a>, <a href="/tags/graph%20fundamentals.html">graph fundamentals</a>, <a href="/tags/graph%20properties.html">graph properties</a>, <a href="/tags/graph%20representation.html">graph representation</a></div>
+    </main>
+</body>
+</html>

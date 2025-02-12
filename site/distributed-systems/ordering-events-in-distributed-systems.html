@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock Synchronization for Distributed Systems</title>
+    <meta name="description" content="This response provides a solution to the problem of clock synchronization in distributed systems using physical clocks. It explains the concept of unpredictable delays and how to synchronize clocks in the forward direction.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/distributed-systems.html">distributed-systems</a> » Clock Synchronization for Distributed Systems
+        </div>
+        <h1>Clock Synchronization for Distributed Systems</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/distributed-systems.html">distributed-systems</a></span>
+        </div>
+        <div class="content">
+            <h1 id="time-clocks-and-the-ordering-of-events-in-a-distributed-system">Time, Clocks, and the Ordering of Events in a Distributed System</h1>
+<p><a href="https://amturing.acm.org/p558-lamport.pdf">reading</a></p>
+<h2 id="introduction">Introduction</h2>
+<p>It would be convenient if we could order events in a distributed system, but it is impossible to do so in a way that is consistent with the order in which they actually occurred. However, we can define a partial ordering of events that is consistent with the order in which they occurred, and can extend this to a total ordering of events that is consistent with the partial ordering.</p>
+<p>A partial ordering of objects is a relation that is reflexive, antisymmetric, and transitive. Conversely, a total ordering is a partial ordering that is also connexive, i.e. for any two objects $a$ and $b$, either $a \leq b$ or $b \leq a$.</p>
+<h2 id="notation">Notation</h2>
+<ul>
+<li>$a \rightarrow b$: Event $a$ happened before event $b$.</li>
+<li>$\to$ is an irreflexive, transitive relation that defines a partial order of events in a distributed system.</li>
+<li>if $a$ is the sending of a message and $b$ is the receipt of that message, then $a \rightarrow b$.</li>
+<li>if $a \rightarrow b$ and $b \rightarrow c$, then $a \rightarrow c$.</li>
+<li>$a \nrightarrow a$.</li>
+<li>$a \nrightarrow b$: Event $a$ did not happen before event $b$.</li>
+<li>$a \Rightarrow b$: Event $a$ happened before or concurrently with event $b$.</li>
+<li>if $a$ is an event in process $P_i$ and $b$ is an event in process $P_j$, then $a \Rightarrow b \iff a \rightarrow C_i\langle a \rangle &lt; C_j\langle b \rangle \lor (C_j\langle b \rangle = C_i\langle a \rangle \land P_i \prec P_j)$, where $\prec$ is an arbitrary total order of processes (e.g. lexicographic order of process identifiers)</li>
+<li>$a \Rightarrow b \implies a \to b$.</li>
+<li>$a \nRightarrow b$: Event $a$ did not happen before or concurrently with event $b$.</li>
+<li>$C_i\langle a \rangle$: The clock value of process $P_i$ when event $a$ occurs.</li>
+<li>$C_i\langle a \rangle &lt; C_j\langle b \rangle$: Event $a$ happened before event $b$.</li>
+<li>$(a \to b) \implies (C_i\langle a \rangle &lt; C_j\langle b \rangle)$.</li>
+</ul>
+<h2 id="clock-condition">Clock Condition</h2>
+<p>If $a$ and $b$ are events in process $P_i$ and $a \to b$, then $C_i\langle a \rangle &lt; C_i\langle b \rangle$.</p>
+<p>If $a$ is the sending of a message and $b$ is the receipt of that message, then $a \to b$ and $C_i\langle a \rangle &lt; C_j\langle b \rangle$.</p>
+<p>To meet the clock condition, we must always increment the clock value of the process when an event occurs. Furthermore, if event $a$ is the sending of a message $m$ containing the clock value $T_m = C_i\langle a \rangle$, then upon receipt of $m$, the receiving process must set its clock value $C_j\langle b \rangle$ to a value greater than $T_m$.</p>
+<h2 id="synchronized-access-to-a-shared-resource">Synchronized Access to a Shared Resource</h2>
+<p>We wish to find an algorithm for granting the resource to a process which satisfies the following three conditions:</p>
+<ul>
+<li>(I) A process which has been granted the resource must release it before it can be granted to another process.</li>
+<li>(II) Different requests for the resource must be granted in the order in which they are made.</li>
+<li>(III) If every process which is granted the resource eventually releases it, then every request is eventually granted.</li>
+</ul>
+<h3 id="assumptions">Assumptions</h3>
+<p>For any two processes $P_i$ and $P_j$, messages sent by $P_i$ are received in the order they were sent by $P_i$. This can be achieved using stop-and-wait or sliding window protocols.</p>
+<p>Further, we assume that all messages are received within a bounded time, i.e. all messages will eventually be received.</p>
+<p>Also note that this protocol requires active participation from all processes. If any one process fails, then the entire system stops, because the algorithm requires all processes to respond to a request before the resource can be granted.</p>
+<h3 id="algorithm">Algorithm</h3>
+<ol>
+<li>To request the resource, a process $P_i$ sends a message $T_m:P_i$ <em>request</em> to all other processes, and puts that message on its request queue, where $T_m$ is the current clock value of $P_i$.</li>
+<li>When process $P_j$ receives $T_m:P_i$ <em>request</em>, it places it on its request queue and sends a <em>reply</em> message to $P_i$ with its current clock value.</li>
+<li>To release the resource, $P_i$ removes $T_m:P_i$ <em>request</em> from its request queue and sends a <em>release</em> message with its current clock value to all other processes.</li>
+<li>When process $P_j$ receives a $P_i$ <em>release</em> message, it removes $T_m:P_i$ <em>request</em> from its request queue.</li>
+<li>$P_i$ is granted the resource when the following conditions are met:</li>
+<li>There is a $T_m:P_i$ <em>request</em> message in its queue ordered by $\Rightarrow$ before any other <em>request</em> messages.</li>
+<li>$P_i$ has received a <em>reply</em> message from all other processes with a clock value greater than $T_m$.</li>
+</ol>
+<h3 id="state-machine-perspective">State Machine Perspective</h3>
+<p>The algorithm can be viewed as a state machine consisting of $C$, the set of commands and $S$, the set of states. The state machine is defined by the following function:</p>
+<p>$$
+e: C \times S \to S
+$$</p>
+<p>Where $e(c, s) = s'$ means that executing the command $c$ in state $s$ results in a transition to state $s'$. In this algorithm, we have state $S$ corresponding to the queue of requests, and commands $C$ corresponding to the request and release messages for any given process.</p>
+<p>$$
+C = { P_i \text{ request}, P_i \text{ release} }
+$$</p>
+<p>Executing $P_i \text{ request}$ in state $s$ results in a transition to state $s'$ where $s'$ is the state with the request message added to the queue. Executing $P_i \text{ release}$ in state $s$ results in a transition to state $s'$ where $s'$ is the state with the request message removed from the queue. Each process $P_i$ is its own state machine, and a process can execute a command time-stamped $T$ only if it has received all messages with time-stamps less than or equal to $T$.</p>
+<h2 id="anomalous-behavior-of-total-ordering">Anomalous Behavior of Total Ordering</h2>
+<p>Consider a nationwide system of nodes. A person issues a request $a$ at node $A$, and after doing so, calls their friend in a different city at node $B$ to issue a request $b$. It is possible with the total ordering of events that $b \to a$, even though $a$ was issued before $b$. This is because the total ordering of events is not consistent with the order in which they actually occurred, but rather with the order in which they were observed. The message that would be able to establish the the actual ordering of events (the call) is external to the system.</p>
+<p>More concretely, let $\mathscr{L}$ be the set of all events, and $L$ be the set of all events in our system.</p>
+<p>$$L \subseteq \mathscr{L}$$</p>
+<p>In the above scenario, we had $a \to_{\mathscr{L}} b$, but $b \nrightarrow_{L} a$. No algorithm based soley on the events in $L$, without knowledge more generally of $\mathscr{L}$ can order $a$ before $b$.</p>
+<p>There are two approaches to fixing this issue:</p>
+<ol>
+<li>Users must manually specify restraints on timestamps, ie the person at $A$ must tell the person at $B$ that $T_a &lt; T_b$. This is not a great solution.</li>
+<li>Construct a system of clocks that satisfy the following condition: if $a \to_{\mathscr{L}} b$, then $C\langle a \rangle &lt; C\langle b \rangle$.</li>
+</ol>
+<h2 id="physical-clocks">Physical Clocks</h2>
+<p>Let $C_i(t)$ be the value clock $C_i$ at time $t$. Assume that $C_i(t)$ is a continuous and differentiable function of $t$, except for isolated points where it jumps when the clock is reset. Note that a discrete clock can be modeled as a continuous clock with an error of up to $\epsilon = \frac{1}{2} \text{ tick}$.</p>
+<p>Then $\frac{dC_i(t)}{dt}$ is the rate at which the clock is running at time $t$. If $\frac{dC_i(t)}{dt} = 1$, then the clock is running at the correct rate. We assume that the following holds:</p>
+<p>$$
+\exists \kappa \ll 1 \text{ such that } \forall i, t: |\frac{dC_i(t)}{dt} - 1| &lt; \kappa
+$$</p>
+<p>And in fact, for typical quartz oscillator clocks, $\kappa \le 10^{-6}$.</p>
+<p>This however isn't enough. For an effective clock system, we also want our clocks to be synchronized such that...</p>
+<p>$$
+\forall i, j, t: |C_i(t) - C_j(t)| &lt; \epsilon
+$$</p>
+<p>...where $\epsilon$ is the maximum error in the clocks. Since physical clocks will never run at <strong>exactly</strong> the same rate, they will tend to drift apart over time. To correct for this, we can use a synchronization algorithm to periodically reset the clocks to a common time.</p>
+<p>Letting $\mu$ be a number such that if event $a$ occurs at physical time $t$, and event $b$ is an event in another process that satisfies $a \to b$, then $b$ occurs later than physical time $t + \mu$. So $\mu$ is the maximum time it takes for a message to be sent from one process to another.</p>
+<p>To avoid anomalies, we must ensure...</p>
+<p>$$
+\forall i, j, t: C_i(t) &lt; C_j(t + \mu), \text{ or, equivalently, } C_i(t + \mu) - C_j(t) &gt; 0
+$$</p>
+<p>And relating this to $\kappa$...</p>
+<p>$$
+\forall i, j, t: C_i(t + \mu) - C_j(t) &gt; (1 - \kappa)\mu
+$$</p>
+<p>And calculating the maximum error in the clocks...</p>
+<p>$$
+\frac{\epsilon}{1 - \kappa} \le \mu
+$$</p>
+<h3 id="clock-synchronization-algorithm">Clock Synchronization Algorithm</h3>
+<p>Importantly, one must always synchronize clocks in the forward direction, i.e. $C_i(t) &lt; C_j(t + \mu)$. If $C_i(t) &gt; C_j(t + \mu)$, then $C_i(t + \mu) - C_j(t) &lt; 0$, which is not allowed.</p>
+<p>Let $m$ be a message sent at time $t$, and received at time $t'$. Let $v_m = t' - t$ be the <strong>total delay</strong> of the message. Although the delay of a message is not known by any given process, we assume the receiver has some lower bound on the delay, $\mu_m$. Define $\zeta_m = v_m - \mu_m$ to be the <strong>unpredictable delay</strong> of the message.</p>
+<p>Now, define the following rules for our physical clocks:</p>
+<ol>
+<li>$\forall i$ if $P_i$ does not receive a message at physical time $t$, then $C_i$ is differentiable at $t$ and $\frac{dC_i(t)}{dt} &gt; 0$.</li>
+<li>If $P_i$ sends a message $,$ at physical time $t$, then $m$ contains a timestamp $T_m = C_i(t)$. Upon receiving a message $m$ at physical time $t'$, $P_j$ sets $C_j(t') = \max(\lim_{\delta \to 0} C_j(t' - \delta), T_m + \mu_m)$.</li>
+</ol>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/clock%20synchronization.html">clock synchronization</a>, <a href="/tags/distributed%20systems.html">distributed systems</a>, <a href="/tags/physical%20clocks.html">physical clocks</a></div>
+    </main>
+</body>
+</html>

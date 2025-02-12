@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections And Records</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Collections And Records
+        </div>
+        <h1>Collections And Records</h1>
+        <div class="meta">
+            <span>Last modified: 2024-12-08</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="creating-collections-and-data-types-in-modern-java">Creating Collections and Data Types in Modern Java</h1>
+<h2 id="motivation">Motivation</h2>
+<p>Often while testing your code or implementing common algorithms, you'll want to specify an immutable collection of elements. The UW intro series as (as far as I'm aware) doesn't teach you some pretty useful java features that can make this a lot easier.</p>
+<p>Furthermore, java can be a little verbose when it comes to defining new data types to hold structured data. This is where the <code>record</code> keyword comes in.</p>
+<h2 id="arraysaslist">Arrays.asList</h2>
+<p>The most basic way to create a list in Java is to use the <code>Arrays.asList</code> method. This method takes a variable number of arguments and returns a fixed-size list backed by the specified array. This means that you can't add or remove elements from the list, but you can modify the elements themselves.</p>
+<pre><code class="language-java">List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5);
+</code></pre>
+<h2 id="java-9-factory-methods">Java 9+ Factory Methods</h2>
+<p>Java 9 introduced a new way to create immutable collections using factory methods. These methods are available in the <code>List</code>, <code>Set</code>, and <code>Map</code> interfaces. Here are some examples:</p>
+<pre><code class="language-java">List&lt;Integer&gt; list = List.of(1, 2, 3, 4, 5);
+Set&lt;Integer&gt; set = Set.of(1, 2, 3, 4, 5);
+Map&lt;Integer, String&gt; map = Map.of(
+  1, &quot;one&quot;,
+  2, &quot;two&quot;,
+  3, &quot;three&quot;
+);
+</code></pre>
+<h2 id="records">Records</h2>
+<p>Records are a new feature in Java 14 that allow you to define simple data classes with minimal boilerplate. On top of being far more concise than traditional classes, records also provide a <code>toString</code>, <code>equals</code>, and <code>hashCode</code> method by default.</p>
+<pre><code class="language-java">// With classes
+class Point {
+  int x;
+  int y;
+
+  Point(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public String toString() {
+    return String.format(&quot;(%d, %d)&quot;, x, y);
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Point)) return false;
+    Point p = (Point) o;
+    return p.x == x &amp;&amp; p.y == y;
+  }
+
+  public int hashCode() {
+    return Objects.hash(x, y);
+  }
+}
+
+// With records
+record Point(int x, int y) {}
+</code></pre>
+<h2 id="using-this-in-practice">Using this in Practice</h2>
+<p>Say we're implementing a poker game and we want to represent a card. With introductory Java knowledge, you might define a class like this:</p>
+<pre><code class="language-java">enum Suit {
+  HEARTS, DIAMONDS, CLUBS, SPADES
+}
+
+class Card {
+  private final Suit suit;
+  private final int rank;
+
+  Card(Suit suit, int rank) {
+    this.suit = suit;
+    this.rank = rank;
+  }
+
+  public Suit getSuit() {
+    return suit;
+  }
+
+  public int getRank() {
+    return rank;
+  }
+
+  public String toString() {
+    return String.format(&quot;%d of %s&quot;, rank, suit);
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Card)) return false;
+    Card c = (Card) o;
+    return c.suit == suit &amp;&amp; c.rank == rank;
+  }
+
+  public int hashCode() {
+    return Objects.hash(suit, rank);
+  }
+}
+</code></pre>
+<p>With records, you can define the same class in a much more concise way:</p>
+<pre><code class="language-java">enum Suit {
+  HEARTS, DIAMONDS, CLUBS, SPADES
+}
+
+record Card(Suit suit, int rank) {}
+</code></pre>
+<p>We can even add methods to records, like so:</p>
+<pre><code class="language-java">record Card(Suit suit, int rank) implements Comparable&lt;Card&gt; {
+  public int compareTo(Card other) {
+    return Integer.compare(rank, other.rank);
+  }
+}
+</code></pre>
+<p>Now say we wanted to test our new <code>Card</code> object. We could do something like this:</p>
+<pre><code class="language-java">public static void main(String[] args) {
+  var cards = List.of(
+    new Card(Suit.CLUBS, 4),
+    new Card(Suit.DIAMONDS, 3),
+    new Card(Suit.HEARTS, 2),
+    new Card(Suit.SPADES, 5)
+  );
+
+  var expected = List.of(
+    new Card(Suit.HEARTS, 2),
+    new Card(Suit.DIAMONDS, 3),
+    new Card(Suit.CLUBS, 4),
+    new Card(Suit.SPADES, 5)
+  );
+
+  cards.stream()
+    .sorted()
+    .toList();
+
+  assert cards.equals(expected);
+}
+</code></pre>
+        </div>
+        
+    </main>
+</body>
+</html>

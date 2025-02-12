@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1 Network Components And Protocols</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » 1 Network Components And Protocols
+        </div>
+        <h1>1 Network Components And Protocols</h1>
+        <div class="meta">
+            <span>Last modified: 2024-01-11</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="network-components">Network Components</h1>
+<h2 id="parts-of-a-network">Parts of a network</h2>
+<p><strong>Application</strong> (app, user) - The application is the program that is running on the computer. It is the program that is using the network to communicate with other computers. Examples of applications are web browsers, email clients etc.</p>
+<p><strong>Host</strong> (end system, edge device, node) - The host is the computer that is running the application. It is the computer that is using the network to communicate with other computers. Examples of hosts are desktop computers, laptops, mobile phones etc.</p>
+<p><strong>Router</strong> (switch, node, hub) - Device used to relay messages between links. Connects networks together. Examples of routers are home routers/access points, cabel/DSL modems etc.</p>
+<p><strong>Link</strong> (channel) - A connection between nodes. Examples of links are Ethernet cables, fiber optic cables, wireless connections etc.</p>
+<h3 id="types-of-links">Types of links</h3>
+<ul>
+<li><strong>Full-duplex</strong> - Both nodes can send and receive at the same time. <em>Bidirectional</em>. Ex: ethernet</li>
+<li><strong>Half-duplex</strong> - Only one node can send at a time. <em>Bidirectional</em>. Ex: WiFi</li>
+<li><strong>Simplex</strong> - Only one node can send at a time. <em>Unidirectional</em>. Ex: </li>
+</ul>
+<h3 id="wireless-links">Wireless Links</h3>
+<p>Messages are <strong>broadcast</strong>. All nodes in range recieve the message. Often, in graph depictions of a network, only the logical (but not all possible) links are shown.</p>
+<h2 id="network-names-by-scale">Network Names by Scale</h2>
+<p><strong>Personal Area Network</strong> (PAN) - A network that is available in a single person's vicinity.</p>
+<p><em>Examples</em>: Bluetooth, USB, FireWire etc.</p>
+<p><strong>Local Area Network</strong> (LAN) - A network that is available in a single building.</p>
+<p><em>Examples</em>: Ethernet, WiFi etc.</p>
+<p><strong>Metropolitan Area Network</strong> (MAN) - A network that is available in a city.</p>
+<p><em>Examples</em>: cable TV, DSL etc.</p>
+<p><strong>Wide Area Network</strong> (WAN) - A network that is available in a country or geographic location.</p>
+<p><em>Examples</em>: a large ISP, 3G/4G wireless networks etc.</p>
+<p><strong>Internet</strong> - A network that is available globally.</p>
+<p><em>Examples</em>: the Internet.</p>
+<p>When you connect multiple networks, you get an <strong>internetwork</strong>, or <strong>internet</strong>. The Internet (capital I) is the internet we all know and love.</p>
+<h4 id="switched-network">Switched Network</h4>
+<p><strong>Switched networks</strong> forward messages from node-to-node, until they reach their destination. The two most common switched networks are <strong>circuit-switched</strong> (phones) and <strong>packet-switched</strong> (most computer networks) networks.</p>
+<pre><code class="language-txt">    +-- (Host)      --+
+    |                 |
+(Link)                |
+    |                 |  logical
+    +-- (Host)        |    link
+    |                 |
+(Link)                |
+    |                 |
+    +-- (Host)      --+
+</code></pre>
+<p>Packet switched networks (PSN) send data in discrete chunks, called <strong>packets</strong>, or messages. PSNs typically use <strong>store-and-forward</strong> switching, where the entire packet is received and loaded into memory, then forwarded to the next node. This is opposed to a circuit switched network, where a stream of data is sent over a maintained connection.</p>
+<p>Networks use an <em>address</em> to identify the destination of a packet. Packets can be sent from node to node (<em>unicast</em>), but also to all other nodes <em>(broadcast</em>), or to a subset of nodes (<em>multicast</em>).</p>
+<h2 id="network-boundaries">Network Boundaries</h2>
+<pre><code>(Router) --- (Host) --- client
+   |
+(Link)
+   |
+(Router) --- (Host) --- server
+</code></pre>
+<h4 id="what-part-is-the-network">What part is the network?</h4>
+<p>Everything that isn't the application level. Some people do and don't include the host, but in this course we do.</p>
+<h4 id="can-think-of-the-cloud-as-a-generic-network">Can think of "the cloud" as a generic network...</h4>
+<pre><code>   +-- (Host) --- client
+   |
+(Cloud)
+   |
+   +-- (Host) --- server
+</code></pre>
+<h2 id="key-interfaces">Key Interfaces</h2>
+<p>The network is designed to be modular, and there are clearly defined interfaces betweem (1) apps and the network, and (2) the network components themselves.</p>
+<p>This is achieved through <strong>protocols</strong> and <strong>layering</strong>.</p>
+<ul>
+<li>Each instance of a protocol communicates to its peer through the same protocol.</li>
+<li>Each instance of a protocol uses only the services of the layer below it.</li>
+</ul>
+<p><em>"Protocols are horrizontal, and layers are vertical."</em></p>
+<pre><code># define protocols X, Y,
+# where Y is a lower below X
+
+
+   (comm using X)
+X &lt;---------------&gt; X  &lt;- (peers)
+^                   ^
+| &lt;- (Y service) -&gt; |
+|                   |
+Y &lt;---------------&gt; Y  &lt;- (peers)
+    (comm using Y)
+</code></pre>
+<h4 id="examples-of-protocols">Examples of protocols:</h4>
+<p>TCP, UDP, HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP, ARP, ICMP, IP, Ethernet, WiFi, Bluetooth, USB, FireWire, DSL, cable TV, 3G/4G, etc.</p>
+<h4 id="example-of-a-stack">Example of a stack</h4>
+<pre><code> (browser)
+    ||
++--------+
+| HTTP   |
++--------+
+| TCP    |
++--------+
+| IP     |
++--------+
+| 802.11 |
++--------+
+    ||
+    ++==&gt;
+</code></pre>
+<h3 id="encapsulation">Encapsulation</h3>
+<p>Protocol layering is built upon literal encapsulation of data. Each lower level protocol wraps the higher level protocol's data in its own format with extra information. Similar to putting a letter in an envelope, and then sending it to someone in the mail.</p>
+<p>The message "on the wire" for the above stack might look like...</p>
+<pre><code>                    +------+
+                    | HTTP |
+                    +------+
+              +-----+------+
+              | TCP | HTTP |
+              +-----+------+
+         +----+-----+------+
+         | IP | TCP | HTTP |
+         +----+-----+------+
++--------+----+-----+------+
+| 802.11 | IP | TCP | HTTP |
++--------+----+-----+------+
+</code></pre>
+<p>When two nodes communicate, the sender builds up these layers until the data is ready to be transported over the physical medium. Then, once the data is recieved, the reciever peels back the layers until it reaches the application layer.</p>
+<p>It is more involved that this diagram in practice. Trailers and headers of each request segment are needed, and the content is often encrypted or compressed. Furthermore, segmentation and reassembly happens when nodes communicate as well.</p>
+<h3 id="demultiplexing">Demultiplexing</h3>
+<p>When a message is recieved, it needs to be passed through exactly the protocols that use it. This is done using <strong>demultiplexing keys</strong> found in the headers of each protocol. Ex: IP protocol field, TCP port number, etc.</p>
+<h3 id="advantages-of-layering">Advantages of Layering</h3>
+<ul>
+<li><strong>Modularity</strong> - Each layer can be changed without affecting the other layers, so long as the interface remains the same.</li>
+<li><strong>Abstraction</strong> - Each layer can be thought of as a black box. Information hiding can be used to connect different systems that rely on different protocols under the hood.</li>
+<li><strong>Standardization</strong> - Each layer can be standardized, and then implemented by many different vendors.</li>
+</ul>
+<p>For example, when a person submits a request on their home wifi, the router strips the WiFi header and adds an ethernet header to send it to the server.</p>
+<h3 id="disadvantages-of-layering">Disadvantages of Layering</h3>
+<ul>
+<li><strong>Inefficiency</strong> - Each layer adds overhead to the message. This is especially true for small messages, since the amount of overhead relative to the message size is large.</li>
+<li><strong>Hides information</strong> - Each layer hides information from the layer above it. This can make debugging difficult, and limits some applications of the network (like an app that wants to know the network latency, or a network that needs to know about app priorities like QoS).</li>
+</ul>
+<h2 id="osi-layers">OSI Layers</h2>
+<h3 id="application-layer">Application Layer</h3>
+<p>Services that are used with end user applications. Examples: HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP, etc.</p>
+<h3 id="presentation-layer">Presentation Layer</h3>
+<p>Formats the data so it can be understood by the application layer. Also handles encryption and compression. Examples: JPEG, MPEG, ASCII, etc.</p>
+<h3 id="session-layer">Session Layer</h3>
+<p>Manages the connection between two nodes. Examples: NetBIOS, PPTP, etc.</p>
+<h3 id="transport-layer">Transport Layer</h3>
+<p>Responsible for the transport protocol and error handling. Examples: TCP, UDP, etc.</p>
+<h3 id="network-layer">Network Layer</h3>
+<p>Responsible for routing and addressing. Reads the IP address from a packet. Examples: Routers, Layer 3 switches, etc.</p>
+<h3 id="data-link-layer">Data Link Layer</h3>
+<p>Responsible for the physical addressing. Reads the MAC address from a data packet/frame. Examples: Switches, bridges, etc.</p>
+<h3 id="physical-layer">Physical Layer</h3>
+<p>Transfer data on a physical medium. Examples: Hubs, NICS, Cables, etc.</p>
+<h2 id="the-actual-internet-protocol-stack">The actual Internet Protocol Stack</h2>
+<pre><code>+-------------+---------------+
+| Application | SMTP, HTTP,   |
+|             | RTP, DNS      |
++-------------+---------------+
+| Transport   | TCP, UDP      |
++-------------+---------------+
+| Internet    | IP            |
++-------------+---------------+
+| Link        | Ethernet, DSL,|
+|             | 3G/4G, WiFi,  |
++-------------+---------------+
+</code></pre>
+<h2 id="course-reference-model">Course Reference Model</h2>
+<ul>
+<li><strong>Application</strong>: Programs that use network services</li>
+<li><strong>Transport</strong>: Provides end-to-end data delivery</li>
+<li><strong>Network</strong>: Provides data delivery across multiple networks</li>
+<li><strong>Link</strong>: Sends frames over one or more links</li>
+<li><strong>Physical</strong>: Sends bits using physical signals</li>
+</ul>
+        </div>
+        
+    </main>
+</body>
+</html>

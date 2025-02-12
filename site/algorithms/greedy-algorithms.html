@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greedy Algorithms for Interval Scheduling and Partitioning</title>
+    <meta name="description" content="This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Python implementations, and presents rigorous proofs of correctness using techniques such as "Greedy Stays Ahead" and exchange arguments.">
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a> » Greedy Algorithms for Interval Scheduling and Partitioning
+        </div>
+        <h1>Greedy Algorithms for Interval Scheduling and Partitioning</h1>
+        <div class="meta">
+            <span>Last modified: 2025-02-03</span>
+            <span>Category: <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a></span>
+        </div>
+        <div class="content">
+            <h1 id="greedy-algorithms">Greedy Algorithms</h1>
+<p>Choose the most attractive choice at each step, and hope that this will lead to the optimal solution. Proofs of correctness are particularly important for greedy algorithms.</p>
+<h2 id="interval-scheduling">Interval Scheduling</h2>
+<p>Job $j$ starts at $s(j)$ and finishes at $f(j)$. Two jobs are compatible if they don't overlap. The goal is to schedule as many jobs as possible without overlapping.</p>
+<p>Start by sorting the jobs with $f(j)$, and iterate over the jobs in order and choose as many jobs as you can.</p>
+<pre><code class="language-python">def interval_scheduling(jobs):
+  jobs.sort(key=lambda x: x[1])
+  last = 0
+  S = []
+  for job in jobs:
+    if job[0] &gt;= last:
+      S.append(job)
+      last = job[1]
+  return S
+</code></pre>
+<h3 id="greedy-stays-ahead-proof">Greedy Stays Ahead Proof</h3>
+<p>Suppose the above algorithm has chosen jobs $f(i_1) \le f(i_2) \le \ldots \le f(i_k)$, and suppose $f(j_1) \le f(j_2) \le \ldots \le f(j_m)$.</p>
+<p><em>Goal:</em> $m \le k$</p>
+<p><em>Lemma</em>: $\forall r$, $f(i_r) \le f(j_r)$</p>
+<p><em>Proof</em>: Induction, $P(r) := f(i_r) \le f(j_r)$</p>
+<p><em>Base Case</em>: $P(1)$. $i_1$ has the smallest finishing time.</p>
+<p><em>IH</em>: Assume $P(r - 1)$</p>
+<p><em>IS</em>: Goal $P(r)$</p>
+<p>Applying $P(r - 1)$, and using the fact that both sets of jobs chosen are non-overlapping within themselves, we have...</p>
+<p>$$
+f(i_{r - 1}) \le f(j_{r - 1}) \le s(j_r)
+$$</p>
+<p>So $j_r$ is a candidate for $i_r$. However, greedy chose $i_r$, which implies $f(i_r) \le $f(j_r)$. (induction over)</p>
+<p>Now, we want to show that $m \le k$. Suppose for contradiction that $m &gt; k$.</p>
+<p>We know $f(i_k) \le f(j_k) \le s(j_{k + 1})$, so greedy could have executed $j_{k + 1}$ after $i_k$, which is a contradiction.</p>
+<h3 id="exchange-argument">Exchange Argument</h3>
+<p>Make the optimal solution similar to greedy without changing its value.</p>
+<p>This would look like removing $j_1$ from the optimal solution, adding $i_1$ instead. Then this optimal solution still has the same number of jobs, and is thus still optimal, but also shares $i_1$ in common with the greedy solution. Continue this into the general case where the first $k$ jobs are in common, and we can use the previous lemma to show that we can continue this exchange, until the greedy solution becomes the optimal.</p>
+<h2 id="interval-partitioning">Interval Partitioning</h2>
+<p>Given a set of intervals $I$, partition them into the minimum number of sets $S_1, S_2, \ldots, S_k$ such that each $S_i$ contains no overlapping intervals.</p>
+<pre><code class="language-python">def partition_intervals(I: list[tuple[int, int]]):
+  # sort by start time
+  I.sort(key=lambda x: x[0])
+  d = 0
+  S = []
+  for itvl in I:
+    # if some partition works, add itvl to it
+    for i, S_i in enumerate(S):
+      if itvl[0] &gt;= S_i[-1][1]:
+        S[i].append(itvl)
+        break
+    # otherwise, allocate new partition with itvl
+    else:
+      S[d] = [itvl]
+      d += 1
+  return S
+</code></pre>
+<h3 id="proof-of-correctness">Proof of Correctness</h3>
+<p><strong>Observation</strong>: The algorithm never schedules two incompatible lectures in the same classroom.</p>
+<p><strong>Lemma</strong>: The algorithm is optimal.</p>
+<p><strong>Proof</strong>: using structural property</p>
+<p>Let $d$ be the number of classrooms the greedy algorithm uses. Classroom $d$ is then allocated because we needed to schedule a job, $j$, that is incompatible with all $d - 1$ previously allocated classrooms.</p>
+<p>Since we sorted by start time, all these incompatible jobs must have started before $s(j)$, and thus we have $d$ lectures overlapping at time $s(j) + \epsilon$, so our maximum depth is $\ge d$.</p>
+<p>Since we have that the optimal solution must schedule at least depth number of classrooms, we have that the greedy algorithm is optimal.</p>
+        </div>
+        <div class='tags'>Tags: <a href="/tags/algorithms.html">algorithms</a>, <a href="/tags/greedy.html">greedy</a>, <a href="/tags/interval.html">interval</a>, <a href="/tags/partitioning.html">partitioning</a>, <a href="/tags/scheduling.html">scheduling</a></div>
+    </main>
+</body>
+</html>

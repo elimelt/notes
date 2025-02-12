@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tlb</title>
+    
+    <style>
+        :root {
+            --text-color: #1a1a1a;
+            --background-color: #ffffff;
+            --accent-color: #2563eb;
+            --border-color: #e5e7eb;
+            --nav-background: rgba(255, 255, 255, 0.95);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #f3f4f6;
+                --background-color: #1a1a1a;
+                --accent-color: #60a5fa;
+                --border-color: #374151;
+                --nav-background: rgba(26, 26, 26, 0.95);
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 2rem;
+            color: var(--text-color);
+            background: var(--background-color);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: var(--border-color);
+        }
+
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .breadcrumbs a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .content {
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        code {
+            background: var(--border-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        }
+
+        pre {
+            background: var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .meta {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tags {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags a {
+            display: inline-block;
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags a:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        a {
+            color: #3391ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--border-color);
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--accent-color);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+    </nav>
+    <main>
+        <div class="breadcrumbs">
+            <a href="/index.html">Home</a> » Tlb
+        </div>
+        <h1>Tlb</h1>
+        <div class="meta">
+            <span>Last modified: 2024-02-16</span>
+            
+        </div>
+        <div class="content">
+            <h1 id="translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</h1>
+<p>Translates virtual page numbers to physical page numbers. It is a small, fully associative cache of page table entries implemented in hardware to improve the speed of address translation and decrease the number of memory accesses.</p>
+<h2 id="associative-and-direct-mapping">Associative and Direct Mapping</h2>
+<ul>
+<li><strong>Direct Mapping</strong>: Each entry in the TLB corresponds to a unique entry in the page table. This is the simplest and most common implementation of the TLB. It is also the fastest, but it is also the most limited in terms of the number of entries it can hold.</li>
+<li><strong>Fully Associative</strong>: Each entry in the TLB can correspond to any entry in the page table. This is the most flexible, but also the slowest. It means that the TLB must be searched for every memory access.</li>
+<li><strong>N-way Set Associative</strong>: A compromise between the two. The TLB is divided into a number of sets, and each entry in the TLB can correspond to any entry in the page table within its set.</li>
+</ul>
+<h2 id="managing-tlbs">Managing TLBs</h2>
+<ul>
+<li>Address translation mostly handled by TLB<ul>
+<li>Over 99% of address translations are handled by the TLB, but the remaining 1% are handled by the page table.</li>
+<li>In case of a miss, translation is done by the page table and the result is stored in the TLB. Often this results in an eviction.</li>
+</ul>
+</li>
+<li>Hardware (MMU) in x86 systems<ul>
+<li>Knows where oage table is in memory. OS maintains page table, but hardware does the translation and accesses the page table.</li>
+<li>Page table is stored in a hardware-depended format, and the OS must maintain it in this format.</li>
+</ul>
+</li>
+<li>Software loaded TLB (OS)<ul>
+<li>TLB miss is handled like a page fault (trap to OS)</li>
+<li>OS finds the page table entry, loads it into the TLB, and restarts the instruction that caused the miss.</li>
+<li>Must be very fast (20-1000 cycles), so CPU ISA has special instructions to load TLB entries.</li>
+</ul>
+</li>
+</ul>
+<h3 id="context-switching">Context Switching</h3>
+<p>The OS <strong>needs</strong> to ensure TLB and page table are consistent. This is done by invalidating the TLB when the page table changes. When a process is switched, the OS must invalidate/flush the entire TLB, which is a big part of the overhead of context switching (since there will be many TLB misses subsequently). You can also use the PID as part of the TLB lookup to make the TLB "global" (ie. shared between processes). </p>
+<h2 id="functionality-enhanced-by-page-tables">Functionality Enhanced by Page Tables</h2>
+<ul>
+<li><strong>Memory Protection</strong>: Each page table entry has a protection bit that specifies the access rights for the page. This is used to prevent unauthorized access to memory. This has the effect of catching errors at the hardware level, which is much faster than catching them at the software level.</li>
+<li><strong>Shared Memory</strong>: Multiple processes can share the same physical page. This is useful for shared libraries and shared memory, and is also used in copy-on-write optimization.</li>
+</ul>
+<h3 id="loading-shared-libraries">Loading Shared Libraries</h3>
+<ul>
+<li>Shared libraries are loaded into memory by the OS, and the same physical page is mapped into the address space of multiple processes. This is done by the OS, and is transparent to the user.</li>
+<li>It doesn't <em>have</em> to be loaded into the same virtual address, but the OS tries to do this. As a rule of thumb, each library has a preferred virtual address location, which makes loading shared libraries easier.</li>
+<li>Adter a while, might run out of address space to share all libraries. Need to be able to dynamicallly relocate them.</li>
+</ul>
+<h3 id="memory-mapped-files">Memory Mapped Files</h3>
+<p>Forget about doing reads/writes. Instead, map the file into the address space. Any time you write to the address space, it writes to the file. Depending on the OS and cache type (write-through vs write-back), the file may be written to immediately or later. This is a very efficient way to read/write files, and is used in many applications.</p>
+<h4 id="soft-page-faults">Soft Page Faults</h4>
+<p>Fault on a page that are actually in memory, but the PTE was marked as invalid. Resolving soft faults is relatively cheap. This can be used whenever you need to wake up the OS to do something on reference to a page (for instance, a debugger watch point). Windows uses soft faults in its page replacement strategy.</p>
+        </div>
+        
+    </main>
+</body>
+</html>

@@ -79,6 +79,7 @@ BASE_TEMPLATE = '''
                     {left: "$", right: "$", display: false},
                     {left: "\\\\(", right: "\\\\)", display: false}
                 ],
+                preProcess: (math) => math.replace("<em>", "*").replace("</em>", "*"),
                 throwOnError: false
             });
         });

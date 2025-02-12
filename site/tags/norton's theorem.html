@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: norton's theorem", "dateModified": "2025-02-12T12:23:53.027860", "description": "Pages tagged with norton's theorem"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: norton's theorem", "dateModified": "2025-02-12T12:26:23.647024", "description": "Pages tagged with norton's theorem"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -44,6 +44,7 @@
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
                 ],
+                preProcess: (math) => math.replace("<em>", "*").replace("</em>", "*"),
                 throwOnError: false
             });
         });
@@ -271,7 +272,7 @@
         <article>
             <h1>Tag: norton's theorem</h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:23:53.027860">
+                <time datetime="2025-02-12T12:26:23.647024">
                     Last modified: 2025-02-12
                 </time>
             </div>

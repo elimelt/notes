@@ -40,7 +40,7 @@ Find an approximate root of $f$, ie a point $c$ where there is $r$ s.t. $|r - c|
 
 ### Naive Approach
 
-Divide $[a, b]$ into $n = \frac{b - a}{\epsilon}$ intervals. For each interval, check $f(x) \le 0, f(x + \epsilon) \ge 0$.
+Divide $\[a, b\]$ into $n = \frac{b - a}{\epsilon}$ intervals. For each interval, check $f(x) \le 0, f(x + \epsilon) \ge 0$.
 
 This runs in $O(n) = O(\frac{b - a}{\epsilon})$.
 

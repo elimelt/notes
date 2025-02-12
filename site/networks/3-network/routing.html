@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Routing</title>
-    
+    <title>Forwarding Table vs. Routing Table</title>
+    <meta name="description" content="Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP and link state routing protocols like OSPF, including concepts like reliable flooding, route calculation, and metrics. Provides technical details on maximum routing table size and route expiration time.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Routing
+            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Forwarding Table vs. Routing Table
         </div>
-        <h1>Routing</h1>
+        <h1>Forwarding Table vs. Routing Table</h1>
         <div class="meta">
-            <span>Last modified: 2024-03-07</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/networks.html">Networks</a></span>
         </div>
         <div class="content">
             <h1 id="_1"></h1>
@@ -360,7 +360,7 @@ while (N != M):
 <p>The ARPANET tested different approaches to link-cost calculation. The original metric measured queued packets on each link, but it didn't consider bandwidth or latency. A later version used delay as a measure of load, taking into account link bandwidth and latency. However, it suffered from instability under heavy load and had a large range of link values. A third approach compressed the metric range, accounted for link type, and smoothed the variation over time.</p>
 <p>In real-world network deployments, metrics change rarely, if at all, and only under the control of a network administrator. Static metrics are the norm, with a common approach being to use a constant multiplied by (1/link_bandwidth).</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/forwarding%20table.html">forwarding table</a>, <a href="/tags/mac%20address.html">mac address</a>, <a href="/tags/network%20topology.html">network topology</a>, <a href="/tags/routing%20protocols.html">routing protocols</a>, <a href="/tags/routing%20table.html">routing table</a></div>
     </main>
 </body>
 </html>

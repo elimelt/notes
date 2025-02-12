@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Switching</title>
-    
+    <title>Switched Ethernet</title>
+    <meta name="description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Switching
+            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Switched Ethernet
         </div>
-        <h1>Switching</h1>
+        <h1>Switched Ethernet</h1>
         <div class="meta">
-            <span>Last modified: 2024-02-25</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/networks.html">Networks</a></span>
         </div>
         <div class="content">
             <h1 id="switching">Switching</h1>
@@ -306,7 +306,7 @@ broadcast(struct message* m)
 <p>Another important aspect of disaggregation is that a logically centralized control plane can be used to control a distributed network data plane. This allows for scalability and availability, as the two planes can be configured and scaled independently. Cloud providers have embraced this approach, using SDN-based solutions within their datacenters and across their backbone networks.</p>
 <p>The Network Operating System (NOS) is a key enabler for SDN's success. It provides high-level abstractions and a Network Map to simplify network control functionality. The NOS detects changes in the network and the control application implements desired behavior on an abstract graph. By centralizing this logic, a globally optimized solution can be achieved.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/bridge.html">bridge</a>, <a href="/tags/ethernet.html">ethernet</a>, <a href="/tags/forwarding%20table.html">forwarding table</a>, <a href="/tags/mac%20address.html">mac address</a>, <a href="/tags/switching.html">switching</a></div>
     </main>
 </body>
 </html>

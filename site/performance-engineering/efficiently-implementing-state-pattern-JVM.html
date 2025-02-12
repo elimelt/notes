@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Efficiently Implementing State Pattern Jvm</title>
-    
+    <title>JVM Performance with State Pattern Optimizations</title>
+    <meta name="description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and examines JVM-specific optimizations, including the use of atomic references and lazy evaluation. Presents code blocks to test the performance impact of these techniques in a multithreaded environment.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Efficiently Implementing State Pattern Jvm
+            <a href="/index.html">Home</a> » <a href="/categories/performance%20engineering.html">Performance Engineering</a> » JVM Performance with State Pattern Optimizations
         </div>
-        <h1>Efficiently Implementing State Pattern Jvm</h1>
+        <h1>JVM Performance with State Pattern Optimizations</h1>
         <div class="meta">
-            <span>Last modified: 2024-12-08</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/performance%20engineering.html">Performance Engineering</a></span>
         </div>
         <div class="content">
             <h1 id="jvm-performance-with-state-pattern-optimizations">JVM Performance with State Pattern Optimizations</h1>
@@ -331,7 +331,7 @@ for (int i = 0; i &lt; 8; i++) {
 <h2 id="conclusion">Conclusion</h2>
 <p>The low-level optimizations in <code>InlineStatePattern</code> using enums make it ideal for performance-critical, low-contention use cases. <code>PolymorphicStatePattern</code>, with its AtomicReference, offers better safety for concurrent environments but incurs a trade-off in performance due to CAS operations. Testing under these scenarios confirms that the right implementation depends on your application’s specific threading needs.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/atomic%20reference.html">atomic reference</a>, <a href="/tags/jvm.html">jvm</a>, <a href="/tags/lazy%20evaluation.html">lazy evaluation</a>, <a href="/tags/multithreading.html">multithreading</a>, <a href="/tags/performance%20optimization.html">performance optimization</a>, <a href="/tags/state%20pattern.html">state pattern</a></div>
     </main>
 </body>
 </html>

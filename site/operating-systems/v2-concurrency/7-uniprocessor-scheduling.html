@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 Uniprocessor Scheduling</title>
-    
+    <title>Uniprocessor Scheduling</title>
+    <meta name="description" content="Covers the implementation of common uniprocessor scheduling algorithms, including First In, First Out (FIFO), Shortest Job First (SJF), Round Robin (RR), and Multi-level Feedback Queue (MLFQ). Discusses the performance characteristics and tradeoffs of each algorithm, such as bias towards short tasks, overhead of context switching, and handling of mixed workloads. Provides an overview of relevant performance metrics used to evaluate scheduling algorithms.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » 7 Uniprocessor Scheduling
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Uniprocessor Scheduling
         </div>
-        <h1>7 Uniprocessor Scheduling</h1>
+        <h1>Uniprocessor Scheduling</h1>
         <div class="meta">
-            <span>Last modified: 2024-03-04</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
         </div>
         <div class="content">
             <h1 id="uniprocessor-scheduling">Uniprocessor Scheduling</h1>
@@ -313,7 +313,7 @@ $$</p>
 <p>Tasks are initially placed in the highest priority queue. If a task uses its entire time quantum, it is demoted to the next lower priority queue. If a task uses less than its entire time quantum, it is either kept in the same queue or moved up. This is a form of SJF within each queue.</p>
 <p>To prevent starvation and achieve max-min fairness, the scheduler monitors process execution time on the CPU. The scheduler then only schedules processes that have yet to recieve their fair share. If a process already got its fair share of the CPU, it is demoted to a lower priority, and if they've yet to get their fair share, they are promoted to a higher priority.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/operating%20systems.html">operating systems</a>, <a href="/tags/performance%20metrics.html">performance metrics</a>, <a href="/tags/uniprocessor%20scheduling.html">uniprocessor scheduling</a></div>
     </main>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sparsity Notes</title>
-    
+    <title>Faster Causal Self Attention</title>
+    <meta name="description" content="Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Sparsity Notes
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning.html">Machine Learning</a> » Faster Causal Self Attention
         </div>
-        <h1>Sparsity Notes</h1>
+        <h1>Faster Causal Self Attention</h1>
         <div class="meta">
-            <span>Last modified: 2025-01-14</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/machine%20learning.html">Machine Learning</a></span>
         </div>
         <div class="content">
             <h1 id="attention-sparsity-review">Attention Sparsity Review</h1>
@@ -303,7 +303,7 @@ The key technical achievement is modifying FlashAttention to handle non-triangul
 </ol>
 <p>The paper demonstrates that automatically discovering heterogeneous attention patterns can significantly improve both the efficiency and capabilities of LLMs in handling long contexts, while maintaining model performance.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/attention%20mechanism.html">attention mechanism</a>, <a href="/tags/machine%20learning.html">machine learning</a>, <a href="/tags/sparse%20attention.html">sparse attention</a>, <a href="/tags/transformer.html">transformer</a></div>
     </main>
 </body>
 </html>

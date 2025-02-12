@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5 Synchronizing Access To Shared Objects</title>
-    
+    <title>Synchronizing Access to Shared Objects</title>
+    <meta name="description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » 5 Synchronizing Access To Shared Objects
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Synchronizing Access to Shared Objects
         </div>
-        <h1>5 Synchronizing Access To Shared Objects</h1>
+        <h1>Synchronizing Access to Shared Objects</h1>
         <div class="meta">
-            <span>Last modified: 2024-02-25</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
         </div>
         <div class="content">
             <h1 id="synchronizing-access-to-shared-objects">Synchronizing Access to Shared Objects</h1>
@@ -450,7 +450,7 @@ void Scheduler::makeReady(TCB *thread) {
 <h2 id="condition-variables">Condition Variables</h2>
 <p>Condition variables are used to wait for a particular condition to become true. They are used in conjunction with locks to provide a way for a thread to be woken up when a condition becomes true. The condition variable is associated with a lock, and the lock must be held when waiting on the condition variable.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/atomic%20operation.html">atomic operation</a>, <a href="/tags/bounded%20queue.html">bounded queue</a>, <a href="/tags/locks.html">locks</a>, <a href="/tags/mutual%20exclusion.html">mutual exclusion</a>, <a href="/tags/thread-safe.html">thread-safe</a></div>
     </main>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 Multiprocessor Scheduling</title>
-    
+    <title>Multiprocessor Scheduling</title>
+    <meta name="description" content="Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and scheduler activations as methods for efficiently utilizing multiprocessor systems. Examines real-time scheduling considerations for multiprocessor environments.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » 7 Multiprocessor Scheduling
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Multiprocessor Scheduling
         </div>
-        <h1>7 Multiprocessor Scheduling</h1>
+        <h1>Multiprocessor Scheduling</h1>
         <div class="meta">
-            <span>Last modified: 2024-03-05</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
         </div>
         <div class="content">
             <h1 id="multiprocessor-scheduling">Multiprocessor Scheduling</h1>
@@ -222,7 +222,7 @@
 <li><strong>Priority Donation</strong>: <em>priority inversion</em> can lead to infinite waiting times for lower priority tasks. To avoid this, when a high-priority task is waiting for a lock held by a lower priority task, the higher priority task "dontates" some of its priority to the lower priority task. This allows the low priority task to be scheduled to complete the critical section and release the lock, at which point it will return to its original priority and the processor can be given to the high priority task.</li>
 </ul>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/affinity%20scheduling.html">affinity scheduling</a>, <a href="/tags/cache%20coherence.html">cache coherence</a>, <a href="/tags/multiprocessor%20scheduling.html">multiprocessor scheduling</a>, <a href="/tags/operating%20systems.html">operating systems</a></div>
     </main>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tlb</title>
-    
+    <title>Translation Lookaside Buffer (TLB)</title>
+    <meta name="description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Tlb
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Translation Lookaside Buffer (TLB)
         </div>
-        <h1>Tlb</h1>
+        <h1>Translation Lookaside Buffer (TLB)</h1>
         <div class="meta">
-            <span>Last modified: 2024-02-16</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
         </div>
         <div class="content">
             <h1 id="translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</h1>
@@ -232,7 +232,7 @@
 <h4 id="soft-page-faults">Soft Page Faults</h4>
 <p>Fault on a page that are actually in memory, but the PTE was marked as invalid. Resolving soft faults is relatively cheap. This can be used whenever you need to wake up the OS to do something on reference to a page (for instance, a debugger watch point). Windows uses soft faults in its page replacement strategy.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/address%20translation.html">address translation</a>, <a href="/tags/hardware.html">hardware</a>, <a href="/tags/mmu.html">mmu</a>, <a href="/tags/page%20table.html">page table</a>, <a href="/tags/virtual%20memory.html">virtual memory</a></div>
     </main>
 </body>
 </html>

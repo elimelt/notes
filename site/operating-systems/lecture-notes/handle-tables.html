@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Handle Tables</title>
-    
+    <meta name="description" content="Covers the implementation of handle tables, which are used to manage the process control block (PCB) in operating systems. Discusses the PCB structure, including the process and CPU state, state queues for scheduling, and the creation of new PCBs. Explores techniques to optimize the creation of new PCBs for improved performance.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Handle Tables
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Handle Tables
         </div>
         <h1>Handle Tables</h1>
         <div class="meta">
-            <span>Last modified: 2024-02-25</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
         </div>
         <div class="content">
             <h1 id="handle-tables">Handle Tables</h1>
@@ -218,7 +218,7 @@
 <p>the older (now uncommon) way to do it. Instead of making a new child address space being a copy, just point to the parent address space from the child. This was an unenforced "promise" that the child wouldn't modify the address space. The child has the same page table and everything.</p>
 <p>method 2: copy on write.</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/context%20switch.html">context switch</a>, <a href="/tags/handle%20tables.html">handle tables</a>, <a href="/tags/process%20control%20block.html">process control block</a>, <a href="/tags/scheduling.html">scheduling</a>, <a href="/tags/state%20queues.html">state queues</a></div>
     </main>
 </body>
 </html>

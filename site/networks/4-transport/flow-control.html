@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flow Control</title>
-    
+    <meta name="description" content="Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,12 +179,12 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » Flow Control
+            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Flow Control
         </div>
         <h1>Flow Control</h1>
         <div class="meta">
-            <span>Last modified: 2024-02-24</span>
-            
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/networks.html">Networks</a></span>
         </div>
         <div class="content">
             <h1 id="flow-control">Flow Control</h1>
@@ -212,7 +212,7 @@
 <h3 id="sequence-numbers">Sequence Numbers</h3>
 <p>For stop and wait, only need 0/1. For selective repeat, need $w$ numbers for packets, and $w$ numbers for acks of earlier packets. ($2w$ in total). For go-back-n, need $w$ numbers for packets, and 1 number for the ack of the last packet. ($w + 1$ in total).</p>
         </div>
-        
+        <div class='tags'>Tags: <a href="/tags/arq.html">arq</a>, <a href="/tags/bandwidth-delay%20product.html">bandwidth-delay product</a>, <a href="/tags/flow%20control.html">flow control</a>, <a href="/tags/sliding%20window.html">sliding window</a></div>
     </main>
 </body>
 </html>

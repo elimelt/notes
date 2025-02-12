@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Classification with Multinomial Naive Bayes", "dateModified": "2025-02-12T00:38:38.167857", "description": "Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.", "articleSection": "Natural Language Processing", "keywords": "classification,naive bayes,multinomial naive bayes,text classification,bag of words,laplace smoothing"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Classification with Multinomial Naive Bayes", "dateModified": "2025-02-12T10:51:17.206125", "description": "Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.", "articleSection": "Natural Language Processing", "keywords": "classification,naive bayes,multinomial naive bayes,text classification,bag of words,laplace smoothing"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -283,7 +283,7 @@
         <article>
             <h1>Classification with Multinomial Naive Bayes</h1>
             <div class="meta">
-                <time datetime="2025-02-12T00:38:38.167857">
+                <time datetime="2025-02-12T10:51:17.206125">
                     Last modified: 2025-02-12
                 </time>
                 <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
@@ -296,7 +296,10 @@
 <h2 id="multinomial-naive-bayes">Multinomial Naive Bayes</h2>
 <p>Represent text as <strong>bag of words</strong>. For a document $d$ out of all all classes $c \in C$, outputs $\hat{c}$ that maximizes $P(c|d)$.</p>
 <p>$$
-\hat{c} = \arg \max_{c \in C} P(c|d) = \arg \max_{c \in C} \frac{P(d|c)P(c)}{P(d)}
+\begin{align<em>}
+\hat{c} &amp;= \arg \max_{c \in C} P(c|d) \
+  &amp;= \arg \max_{c \in C} \frac{P(d|c)P(c)}{P(d)}
+\end{align</em>}
 $$</p>
 <p>Where $P(d | c)$ is the likelihood, and $P(c)$ is the prior. Or with features $f_1, f_2, \ldots, f_n$:</p>
 <p>$$
@@ -307,7 +310,10 @@ $$</p>
 P(f_1, f_2, \ldots, f_n | c) = \prod_{i=1}^n P(f_i | c)
 $$</p>
 <p>$$
-C_{\text{NB}} = \arg \max_{c \in C} P(c) \prod_{i=1}^n P(w_i | c) = \arg \max_{c \in C} \log P(c) + \sum_{i=1}^n \log P(w_i | c)
+\begin{align<em>}
+C_{\text{NB}} &amp;= \arg \max_{c \in C} P(c) \prod_{i=1}^n P(w_i | c) \
+&amp;= \arg \max_{c \in C} \log P(c) + \sum_{i=1}^n \log P(w_i | c)
+\end{align</em>}
 $$</p>
 <h3 id="training">Training</h3>
 <p>Estimate $P(c)$: the prior probability of each class.</p>

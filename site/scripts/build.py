@@ -787,7 +787,7 @@ class SiteGenerator:
         </article>
     </main>
     <footer role="contentinfo">
-        <p>&copy; {datetime.now().year} Elijah Melton (just kidding no copyright).</p>
+        <p>{datetime.now().year}, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>"""

@@ -265,7 +265,7 @@ An ordering of nodes $v_1, v_2, \ldots, v_n$ so that for every edge $(v_i, v_j)$
 
 \subsection{Root Finding}
 
-Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b) < 0$, there exists a root of $f$ in the interval $\left[ a, b \right]$ by the \textit{intermediate value theorem}. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.
+Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b) < 0$, there exists a root of $f$ in the interval $\lbrack  a, b  \rbrack$ by the \textit{intermediate value theorem}. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.
 
 \begin{itemize}
     \item \textbf{Algorithm}: $Bisect(a, b, \epsilon)$
@@ -282,8 +282,8 @@ Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b
         \item $P(1)$: Output $a + \epsilon$, since the whole interval is at most $\epsilon$. This requires $0$ calls to $f$.
         \item Suppose $P(k)$ and consider an arbitrary $a$, $b$ s.t. $2k\epsilon \le |a - b| \le (2k + 1)\epsilon$.
         \item If $f(a + k\epsilon) = 0$, output $a + k\epsilon$.
-        \item If $f(a)f(a + k\epsilon) < 0$, solve on the interval $\left[ a, a + k\epsilon \right]$. By I.H. this takes at most $\log(k)$ queries of $f$.
-        \item Otherwise, we have $f(b)f(a + k\epsilon) < 0$, since $f(a)f(b) < 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\left[ a + k\epsilon, b \right]$.
+        \item If $f(a)f(a + k\epsilon) < 0$, solve on the interval $\lbrack  a, a + k\epsilon  \rbrack$. By I.H. this takes at most $\log(k)$ queries of $f$.
+        \item Otherwise, we have $f(b)f(a + k\epsilon) < 0$, since $f(a)f(b) < 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\lbrack  a + k\epsilon, b  \rbrack$.
         \item In any case, we used at most $\log(k) + 1 = \log(2k)$ queries to $f$.
     \end{itemize}
 \end{itemize}

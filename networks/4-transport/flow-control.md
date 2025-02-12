@@ -46,7 +46,7 @@ Uses a single timer to detect lost packets. On timeout, resends buffered packets
 
 In Selective Repeat ARQ, the sender can send multiple packets before waiting for an acknowledgement. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. If a packet is lost, the sender will only have to resend the lost packet.
 
-Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $\left[ LAS + 1, LAS + w \right]$. If seq number is LAS + 1, then accept, update LAS, and send ACK.
+Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $\lbrack  LAS + 1, LAS + w  \rbrack$. If seq number is LAS + 1, then accept, update LAS, and send ACK.
 
 If it receives something out of order, it will buffer it and send an ACK for the last in-order segment. If it receives a duplicate, it will send an ACK for the last in-order segment.
 

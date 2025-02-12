@@ -495,7 +495,7 @@ where adj(A) is the adjugate matrix
 
 #### Gaussian Elimination
 
-1. Form augmented matrix $\left[ A|I \right]$
+1. Form augmented matrix $\lbrack  A|I  \rbrack$
 2. Convert left side to identity matrix
 3. Right side becomes $A^{-1}$
 

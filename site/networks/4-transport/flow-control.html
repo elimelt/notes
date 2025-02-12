@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Flow Control", "dateModified": "2025-02-11T21:49:31.540526", "description": "Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.", "articleSection": "Networks", "keywords": "flow control,sliding window,arq,bandwidth-delay product"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Flow Control", "dateModified": "2025-02-11T21:54:13.738854", "description": "Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.", "articleSection": "Networks", "keywords": "flow control,sliding window,arq,bandwidth-delay product"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -276,7 +276,7 @@
         <article>
             <h1>Flow Control</h1>
             <div class="meta">
-                <time datetime="2025-02-11T21:49:31.540526">
+                <time datetime="2025-02-11T21:54:13.738854">
                     Last modified: 2025-02-11
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
@@ -301,7 +301,7 @@
 <p>Uses a single timer to detect lost packets. On timeout, resends buffered packets starting from LAS + 1.</p>
 <h4 id="selective-repeat-arq">Selective Repeat ARQ</h4>
 <p>In Selective Repeat ARQ, the sender can send multiple packets before waiting for an acknowledgement. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. If a packet is lost, the sender will only have to resend the lost packet.</p>
-<p>Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $\left[ LAS + 1, LAS + w \right]$. If seq number is LAS + 1, then accept, update LAS, and send ACK.</p>
+<p>Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $\lbrack  LAS + 1, LAS + w  \rbrack$. If seq number is LAS + 1, then accept, update LAS, and send ACK.</p>
 <p>If it receives something out of order, it will buffer it and send an ACK for the last in-order segment. If it receives a duplicate, it will send an ACK for the last in-order segment.</p>
 <p>Uses a timer for each segment. On timeout, resends the segment.</p>
 <h3 id="sequence-numbers">Sequence Numbers</h3>

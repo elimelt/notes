@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "I/O Systems and Secondary Storage", "dateModified": "2025-02-11T21:49:30.937773", "description": "Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.", "articleSection": "Operating Systems", "keywords": "i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "I/O Systems and Secondary Storage", "dateModified": "2025-02-11T21:54:13.663995", "description": "Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.", "articleSection": "Operating Systems", "keywords": "i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -276,7 +276,7 @@
         <article>
             <h1>I/O Systems and Secondary Storage</h1>
             <div class="meta">
-                <time datetime="2025-02-11T21:49:30.937773">
+                <time datetime="2025-02-11T21:54:13.663995">
                     Last modified: 2025-02-11
                 </time>
                 <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
@@ -379,7 +379,7 @@
 - <strong>physical block access</strong>: the ability to read and write blocks of data to the disk.
 - <strong>disk logical block access</strong>: the ability to read and write to a disk block number, without needing to know the physical location of the block.
 - <strong>file system</strong>: the ability to read and write files at a specified offset, block, or byte.</p>
-<p>With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $\left[ 0, n \right]$, (ie a contiguous range of blocks to the OS).</p>
+<p>With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $\lbrack  0, n  \rbrack$, (ie a contiguous range of blocks to the OS).</p>
 <h3 id="performance-issues">Performance Issues</h3>
 <p>The HDD's performance is affected by its mechanically moving parts. Limiting the amount of seeking and <strong>defragmenting</strong> help, but only to an extent.</p>
             </div>

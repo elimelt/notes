@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Divide and Conquer Algorithms", "dateModified": "2025-02-11T21:49:30.930776", "description": "A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.", "articleSection": "Algorithms", "keywords": "divide and conquer,master theorem,root finding,bisector algorithm,kth smallest element"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Divide and Conquer Algorithms", "dateModified": "2025-02-11T21:54:13.441583", "description": "A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.", "articleSection": "Algorithms", "keywords": "divide and conquer,master theorem,root finding,bisector algorithm,kth smallest element"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -276,7 +276,7 @@
         <article>
             <h1>Divide and Conquer Algorithms</h1>
             <div class="meta">
-                <time datetime="2025-02-11T21:49:30.930776">
+                <time datetime="2025-02-11T21:54:13.441583">
                     Last modified: 2025-02-11
                 </time>
                 <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
@@ -291,7 +291,7 @@
 <li>If $a = b^k$, then $T(n) = \Theta(n^k \log n)$</li>
 </ul>
 <h2 id="root-finding">Root Finding</h2>
-<p>Given a continuous function $f$ and two points $a &lt; b$ such that $f(a) \cdot f(b) &lt; 0$, there exists a root of $f$ in the interval $\left[ a, b \right]$ by the <strong>intermediate value theorem</strong>. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.</p>
+<p>Given a continuous function $f$ and two points $a &lt; b$ such that $f(a) \cdot f(b) &lt; 0$, there exists a root of $f$ in the interval $\lbrack  a, b  \rbrack$ by the <strong>intermediate value theorem</strong>. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.</p>
 <ul>
 <li><strong>Algorithm</strong>: $Bisect(a, b, \epsilon)$</li>
 <li>If $b - a &lt; \epsilon$, $a$ is a suitable approximation</li>
@@ -304,8 +304,8 @@
 <li>$P(1)$: Output $a + \epsilon$, since the whole interval is at most $epsilon$. This requires $0$ calls to $f$.</li>
 <li>Suppose $P(k)$ and consider an arbitrary $a$, $b$ s.t. $2k\epsilon \le |a - b| \le (2k + 1)\epsilon$.</li>
 <li>If $f(a + k\epsilon) = 0$, output $a + k\epsilon$.</li>
-<li>If $f(a)f(a + k\epsilon) &lt; 0$, solve on the interval $\left[ a, a + k\epsilon \right]$. By I.H. this takes at most $\log(k)$ queries of $f$.</li>
-<li>Otherwise, we have $f(b)f(a + k\epsilon) &lt; 0$, since $f(a)f(b) &lt; 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\left[ a + k\epsilon, b \right]$.</li>
+<li>If $f(a)f(a + k\epsilon) &lt; 0$, solve on the interval $\lbrack  a, a + k\epsilon  \rbrack$. By I.H. this takes at most $\log(k)$ queries of $f$.</li>
+<li>Otherwise, we have $f(b)f(a + k\epsilon) &lt; 0$, since $f(a)f(b) &lt; 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\lbrack  a + k\epsilon, b  \rbrack$.</li>
 <li>In any case, we used at most $\log(k) + 1 = $\log(2k)$ queries to $f$.</li>
 </ul>
 <h2 id="kth-smallest-element">kth Smallest Element</h2>

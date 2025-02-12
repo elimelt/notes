@@ -79,7 +79,7 @@ The OS typically provides different levels of disk access to different clients, 
 - **disk logical block access**: the ability to read and write to a disk block number, without needing to know the physical location of the block.
 - **file system**: the ability to read and write files at a specified offset, block, or byte.
 
-With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $\left[ 0, n \right]$, (ie a contiguous range of blocks to the OS).
+With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $\lbrack  0, n  \rbrack$, (ie a contiguous range of blocks to the OS).
 
 ### Performance Issues
 

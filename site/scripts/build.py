@@ -757,8 +757,8 @@ class SiteGenerator:
             display: block;
             max-width: 100%;
             overflow-x: auto;
-            overflow-y: hidden;
             padding: 0.5em 0;
+            min-height: 40px;
         }}
     </style>
 </head>

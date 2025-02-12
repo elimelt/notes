@@ -1,3 +1,10 @@
+---
+title: Coding and Modulation
+category: Hardware
+tags: NRZ, RZ, Clock Recovery, Manchester encoding, Scrambling
+description: Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester encoding, scrambling, ASK, FSK, PSK, channel properties, latency, and bandwidth-delay product. The document covers the design of codes for error detection and correction, types of modulation schemes used for data transmission, and characteristics of communication channels that affect signal quality.
+---
+
 # Coding and Modulation
 
 *How information sent over a link?*

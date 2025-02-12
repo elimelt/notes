@@ -1,3 +1,10 @@
+---
+title: The Physical Layer
+category: Hardware
+tags: dsp, modulation, coding, noise immunity, clock recovery
+description: Describes the hardware component responsible for transmitting and receiving data in a communication system. It focuses on coding, modulation techniques, noise immunity, and clock recovery to ensure reliable data transfer. Key concepts include message latency, cut-through routing, and the differences between modulation and coding methods.
+---
+
 # The Physical Layer
 
 **Scope**: How signals are used to transfer bits over a link. i.e, how analog signals are converted to digital signals, and vise versa.

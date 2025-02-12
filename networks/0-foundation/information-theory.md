@@ -1,3 +1,10 @@
+---
+title: Information Theory in Networks
+category: Networks
+tags: information theory, nyquist limit, shannon capacity, bandwidth, signal, noise
+description: Describes the fundamental concepts of information theory in the context of networks. It covers key channel properties, the Nyquist limit, and Shannon capacity, and discusses the wired and wireless perspectives of information theory.
+---
+
 ## Key Channel Properties
 
 - **Bandwidth (B)**: The range of frequencies that can be transmitted over a channel.

@@ -1,3 +1,10 @@
+---
+title: Network Components and Protocols
+category: Networks
+tags: network components, network protocols, network layers, OSI model, network interfaces, encapsulation, demultiplexing
+description: Describes the components of a network, including hosts, routers, links, and applications. It also covers the concept of network boundaries and interfaces, and the advantages and disadvantages of network layering. The OSI model is introduced, along with the actual Internet Protocol Stack.
+---
+
 # Network Components
 
 ## Parts of a network

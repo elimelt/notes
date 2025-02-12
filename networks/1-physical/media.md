@@ -1,3 +1,10 @@
+---
+title: Media in Networks
+category: Networks
+tags: media, wires, twisted pair, coaxial cable, fiber, wireless, channel properties, nyquist limit, shannon capacity
+description: Fundamental concepts of media in networks, including wired and wireless media, such as twisted pair, coaxial cable, fiber, and wireless. It covers the key channel properties, the Nyquist limit, and Shannon capacity, and discusses the wired and wireless perspectives of media in networks.
+---
+
 # Media
 
 *Media* propagates signals that carry information.

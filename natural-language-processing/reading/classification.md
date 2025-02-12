@@ -43,6 +43,11 @@ C_{\text{NB}} &= \arg \max_{c \in C} P(c) \prod_{i=1}^n P(w_i | c) \\
 \end{aligned}
 $$
 
+$$
+A = B \
+\Rightarrow \log A = \log B
+$$
+
 ### Training
 
 Estimate $P(c)$: the prior probability of each class.

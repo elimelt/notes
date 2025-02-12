@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,12 +24,10 @@
     <meta name="twitter:title" content="">
     <meta name="twitter:description" content="So so many notes">
 
-    <!-- Keywords from tags -->
-    
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "", "dateModified": "2025-02-12T12:00:04.627537", "description": "So so many notes"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "", "dateModified": "2025-02-12T12:05:13.980397", "description": "So so many notes"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -40,228 +39,223 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                  {left: "$$", right: "$$", display: true},
-                  {left: "\[", right: "\]", display: true},
-                  {left: "$", right: "$", display: false},
-                  {left: "\(", right: "\)", display: false}
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\(", right: "\)", display: false}
                 ],
                 throwOnError: false
             });
         });
     </script>
-    <style>
+
+<style>
+    :root {
+        --text-color: #1a1a1a;
+        --background-color: #ffffff;
+        --accent-color: #2563eb;
+        --border-color: #e5e7eb;
+        --nav-background: rgba(255, 255, 255, 0.95);
+    }
+
+    @media (prefers-color-scheme: dark) {
         :root {
-            --text-color: #1a1a1a;
-            --background-color: #ffffff;
-            --accent-color: #2563eb;
-            --border-color: #e5e7eb;
-            --nav-background: rgba(255, 255, 255, 0.95);
+            --text-color: #f3f4f6;
+            --background-color: #1a1a1a;
+            --accent-color: #60a5fa;
+            --border-color: #374151;
+            --nav-background: rgba(26, 26, 26, 0.95);
         }
+    }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --text-color: #f3f4f6;
-                --background-color: #1a1a1a;
-                --accent-color: #60a5fa;
-                --border-color: #374151;
-                --nav-background: rgba(26, 26, 26, 0.95);
-            }
-        }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        line-height: 1.6;
+        max-width: 50rem;
+        margin: 0 auto;
+        padding: 2rem;
+        color: var(--text-color);
+        background: var(--background-color);
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            line-height: 1.6;
-            max-width: 50rem;
-            margin: 0 auto;
-            padding: 2rem;
-            color: var(--text-color);
-            background: var(--background-color);
-        }
+    nav {
+        position: sticky;
+        top: 0;
+        background: var(--nav-background);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        z-index: 1000;
+    }
 
-        nav {
-            position: sticky;
-            top: 0;
-            background: var(--nav-background);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            z-index: 1000;
-        }
+    nav a {
+        color: var(--accent-color);
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
 
-        nav a {
-            color: var(--accent-color);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
+    nav a:hover {
+        background-color: var(--border-color);
+    }
 
-        nav a:hover {
-            background-color: var(--border-color);
-        }
+    .breadcrumbs {
+        margin-bottom: 2rem;
+        color: var(--text-color);
+        opacity: 0.8;
+    }
 
-        .breadcrumbs {
-            margin-bottom: 2rem;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
+    .breadcrumbs a {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
 
-        .breadcrumbs a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
+    .content {
+        margin-top: 2rem;
+    }
 
-        .content {
-            margin-top: 2rem;
-        }
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
 
-        h1, h2, h3, h4, h5, h6 {
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
+    code {
+        background: var(--border-color);
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.9em;
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    }
 
-        code {
-            background: var(--border-color);
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-size: 0.9em;
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-        }
+    pre {
+        background: var(--border-color);
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
 
-        pre {
-            background: var(--border-color);
-            padding: 1rem;
-            border-radius: 4px;
-            overflow-x: auto;
-            margin: 1.5rem 0;
-        }
+    pre code {
+        background: none;
+        padding: 0;
+        border-radius: 0;
+    }
 
-        pre code {
-            background: none;
-            padding: 0;
-            border-radius: 0;
-        }
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin: 1.5rem 0;
+    }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            margin: 1.5rem 0;
-        }
+    .meta {
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.9em;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
 
-        .meta {
-            color: var(--text-color);
-            opacity: 0.8;
-            font-size: 0.9em;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+    .tags {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
 
-        .tags {
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-        }
+    .tags a {
+        display: inline-block;
+        background: var(--border-color);
+        color: var(--text-color);
+        padding: 0.2rem 0.6rem;
+        border-radius: 3px;
+        text-decoration: none;
+        font-size: 0.9em;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
 
-        .tags a {
-            display: inline-block;
-            background: var(--border-color);
-            color: var(--text-color);
-            padding: 0.2rem 0.6rem;
-            border-radius: 3px;
-            text-decoration: none;
-            font-size: 0.9em;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
+    .tags a:hover {
+        background: var(--accent-color);
+        color: white;
+    }
 
-        .tags a:hover {
-            background: var(--accent-color);
-            color: white;
-        }
+    a {
+        color: #3391ff;
+    }
 
-        a {
-            color: #3391ff;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.5rem 0;
-        }
+    th, td {
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+    }
 
-        th, td {
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-        }
+    th {
+        background: var(--border-color);
+    }
 
-        th {
-            background: var(--border-color);
-        }
+    .md-content table td, .md-content table th {
+        background: black;
+    }
 
-        .md-content table td, .md-content table th {
-            background: black;
-        }
+    blockquote {
+        margin: 1.5rem 0;
+        padding-left: 1rem;
+        border-left: 4px solid var(--accent-color);
+        color: var(--text-color);
+        opacity: 0.8;
+    }
 
-        blockquote {
-            margin: 1.5rem 0;
-            padding-left: 1rem;
-            border-left: 4px solid var(--accent-color);
-            color: var(--text-color);
-            opacity: 0.8;
-        }
+    .katex-display {
+        overflow: auto hidden;
+        padding: 1em 0;
+        margin: 0.5em 0;
+    }
 
-        .katex-display {
-            overflow: auto hidden;
-            padding: 1em 0;
-            margin: 0.5em 0;
-        }
+    .katex-display > .katex {
+        white-space: normal;
+    }
 
-        .katex-display > .katex {
-            white-space: normal;
-        }
+    .katex {
+        font-size: 1.1em;
+        display: inline;
+        line-height: 1.2;
+    }
 
-        /* Inline math */
-        .katex {
-            font-size: 1.1em;
-            display: inline;
-            line-height: 1.2;
-        }
+    .katex-html {
+        display: inline-block;
+        vertical-align: middle;
+    }
 
-        /* Ensure inline math aligns with text */
-        .katex-html {
-            display: inline-block;
-            vertical-align: middle;
-        }
+    .katex .strut {
+        display: none;
+    }
 
-        /* Remove extra space around inline math */
-        .katex .strut {
-            display: none;
-        }
+    .katex-display .katex {
+        display: block;
+        text-align: center;
+    }
 
-        /* Preserve display math formatting */
-        .katex-display .katex {
-            display: block;
-            text-align: center;
-        }
-
-        /* Add scroll for overflow in display math */
-        .katex-display > .katex > .katex-html {
-            display: block;
-            max-width: 100%;
-            overflow-x: auto;
-            padding: 0.5em 0;
-            min-height: 40px;
-        }
-    </style>
-</head>
+    .katex-display > .katex > .katex-html {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 0.5em 0;
+        min-height: 40px;
+    }
+</style></head>
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
@@ -274,180 +268,238 @@
     </header>
     <main role="main">
         <article>
-            <h1></h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:00:04.627537">
+                <time datetime="2025-02-12T12:05:13.980397">
                     Last modified: 2025-02-12
                 </time>
-                
             </div>
             <div class="content">
                 
-            <div class="landing-stats">
-                <div class="stat-item">
-                    <span class="stat-value">153</span>
-                    <span class="stat-label">Notes</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">21</span>
-                    <span class="stat-label">Categories</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">602</span>
-                    <span class="stat-label">Tags</span>
-                </div>
+<div class="landing-stats">
+    <div class="stat-item">
+        <span class="stat-value">153</span>
+        <span class="stat-label">Notes</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value">21</span>
+        <span class="stat-label">Categories</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value">602</span>
+        <span class="stat-label">Tags</span>
+    </div>
+</div>
+<div class="landing-grid">
+    <div class="recent-section">
+        <h2>Recent</h2>
+        <ul class="recent-posts">
+            <li>
+                <a href="/natural-language-processing/reading/classification.html">Classification with Multinomial Naive Bayes</a>
+                <span class="date">2025-02-12</span>
+                <span class="category">Natural Language Processing</span>
+            </li>
+            <li>
+                <a href="/natural-language-processing/reading/vector-semantics-and-embeddings.html"></a>
+                <span class="date">2025-02-12</span>
+            </li>
+            <li>
+                <a href="/natural-language-processing/reading/tokenization.html">Tokenization, Segmentation, and Edit Distance</a>
+                <span class="date">2025-02-12</span>
+                <span class="category">Natural Language Processing</span>
+            </li>
+            <li>
+                <a href="/algorithms/divide-and-conquer.html">Divide and Conquer Algorithm Analysis with Implementation Examples</a>
+                <span class="date">2025-02-11</span>
+                <span class="category">Algorithms</span>
+            </li>
+            <li>
+                <a href="/networks/4-transport/flow-control.html">Flow Control</a>
+                <span class="date">2025-02-11</span>
+                <span class="category">Networks</span>
+            </li>
+            <li>
+                <a href="/linear-algebra/cheatsheet.html">Matrix Theory</a>
+                <span class="date">2025-02-11</span>
+                <span class="category">Linear Algebra</span>
+            </li>
+            <li>
+                <a href="/linear-algebra/elementry-linear-algebra.html">Glossary of Linear Algebra Concepts</a>
+                <span class="date">2025-02-11</span>
+                <span class="category">Linear Algebra</span>
+            </li>
+            <li>
+                <a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">I/O Systems and Secondary Storage</a>
+                <span class="date">2025-02-11</span>
+                <span class="category">Operating Systems</span>
+            </li>
+            <li>
+                <a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide and Conquer Algorithms</a>
+                <span class="date">2025-02-11</span>
+                <span class="category">Algorithms</span>
+            </li>
+            <li>
+                <a href="/algorithms/practice/4.html">Interval Sum Counting Algorithm</a>
+                <span class="date">2025-02-11</span>
+                <span class="category">Algorithms</span>
+            </li>
+        </ul>
+    </div>
+    <div class="categories-section">
+        <h2>Categories</h2>
+        <ul class="categories-list">
+            <li>
+                <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a>
+                <span class="count">(2)</span>
+            </li>
+            <li>
+                <a href="/categories/algorithms.html">Algorithms</a>
+                <span class="count">(15)</span>
+            </li>
+            <li>
+                <a href="/categories/computer%20science.html">Computer Science</a>
+                <span class="count">(2)</span>
+            </li>
+            <li>
+                <a href="/categories/database%20systems.html">Database Systems</a>
+                <span class="count">(2)</span>
+            </li>
+            <li>
+                <a href="/categories/distributed%20systems.html">Distributed Systems</a>
+                <span class="count">(26)</span>
+            </li>
+            <li>
+                <a href="/categories/electrical%20engineering.html">Electrical Engineering</a>
+                <span class="count">(2)</span>
+            </li>
+            <li>
+                <a href="/categories/graph%20theory.html">Graph Theory</a>
+                <span class="count">(4)</span>
+            </li>
+            <li>
+                <a href="/categories/hardware.html">Hardware</a>
+                <span class="count">(10)</span>
+            </li>
+            <li>
+                <a href="/categories/linear%20algebra.html">Linear Algebra</a>
+                <span class="count">(3)</span>
+            </li>
+            <li>
+                <a href="/categories/machine%20learning.html">Machine Learning</a>
+                <span class="count">(1)</span>
+            </li>
+            <li>
+                <a href="/categories/mathematics.html">Mathematics</a>
+                <span class="count">(2)</span>
+            </li>
+            <li>
+                <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a>
+                <span class="count">(5)</span>
+            </li>
+            <li>
+                <a href="/categories/networks.html">Networks</a>
+                <span class="count">(29)</span>
+            </li>
+            <li>
+                <a href="/categories/operating%20systems.html">Operating Systems</a>
+                <span class="count">(24)</span>
+            </li>
+            <li>
+                <a href="/categories/operations%20research.html">Operations Research</a>
+                <span class="count">(1)</span>
+            </li>
+            <li>
+                <a href="/categories/performance%20engineering.html">Performance Engineering</a>
+                <span class="count">(1)</span>
+            </li>
+            <li>
+                <a href="/categories/research.html">Research</a>
+                <span class="count">(3)</span>
+            </li>
+            <li>
+                <a href="/categories/software%20engineering.html">Software Engineering</a>
+                <span class="count">(6)</span>
+            </li>
+            <li>
+                <a href="/categories/system%20design.html">System Design</a>
+                <span class="count">(2)</span>
+            </li>
+            <li>
+                <a href="/categories/systems.html">Systems</a>
+                <span class="count">(5)</span>
+            </li>
+            <li>
+                <a href="/categories/teaching.html">Teaching</a>
+                <span class="count">(1)</span>
+            </li>
+        </ul>
+    </div>
+    <div class="tags-section">
+        <h2>Featured Tags</h2>
+        <div class="tags-cloud">
+            <a href="/tags/distributed%20systems.html" class="tag-5">
+                distributed systems <span>(14)</span>
+            </a>
+            <a href="/tags/operating%20systems.html" class="tag-5">
+                operating systems <span>(10)</span>
+            </a>
+            <a href="/tags/paxos.html" class="tag-5">
+                paxos <span>(6)</span>
+            </a>
+            <a href="/tags/systems.html" class="tag-5">
+                systems <span>(6)</span>
+            </a>
+            <a href="/tags/consistency.html" class="tag-5">
+                consistency <span>(5)</span>
+            </a>
+            <a href="/tags/graph%20theory.html" class="tag-5">
+                graph theory <span>(5)</span>
+            </a>
+            <a href="/tags/consistency%20models.html" class="tag-4">
+                consistency models <span>(4)</span>
+            </a>
+            <a href="/tags/file%20systems.html" class="tag-4">
+                file systems <span>(4)</span>
+            </a>
+            <a href="/tags/java.html" class="tag-4">
+                java <span>(4)</span>
+            </a>
+            <a href="/tags/paper.html" class="tag-4">
+                paper <span>(4)</span>
+            </a>
+            <a href="/tags/power.html" class="tag-4">
+                power <span>(4)</span>
+            </a>
+            <a href="/tags/review.html" class="tag-4">
+                review <span>(4)</span>
+            </a>
+            <a href="/tags/routing.html" class="tag-4">
+                routing <span>(4)</span>
+            </a>
+            <a href="/tags/tcp.html" class="tag-4">
+                tcp <span>(4)</span>
+            </a>
+            <a href="/tags/virtual%20memory.html" class="tag-4">
+                virtual memory <span>(4)</span>
+            </a>
+            <a href="/tags/breadth-first%20search.html" class="tag-3">
+                breadth-first search <span>(3)</span>
+            </a>
+            <a href="/tags/collections.html" class="tag-3">
+                collections <span>(3)</span>
+            </a>
+            <a href="/tags/concurrency.html" class="tag-3">
+                concurrency <span>(3)</span>
+            </a>
+            <a href="/tags/data%20structures.html" class="tag-3">
+                data structures <span>(3)</span>
+            </a>
+            <a href="/tags/forwarding%20table.html" class="tag-3">
+                forwarding table <span>(3)</span>
+            </a>
+        </div>
+    </div>
+</div>
             </div>
-            <div class="landing-grid">
-                <div class="recent-section">
-                    <h2>Recent</h2>
-<ul class='recent-posts'>
-                <li>
-                    <a href="/natural-language-processing/reading/classification.html">Classification with Multinomial Naive Bayes</a>
-                    <span class="date">2025-02-12</span>
-                    <span class="category">Natural Language Processing</span>
-                </li>
-                <li>
-                    <a href="/natural-language-processing/reading/vector-semantics-and-embeddings.html"></a>
-                    <span class="date">2025-02-12</span>
-                    
-                </li>
-                <li>
-                    <a href="/natural-language-processing/reading/tokenization.html">Tokenization, Segmentation, and Edit Distance</a>
-                    <span class="date">2025-02-12</span>
-                    <span class="category">Natural Language Processing</span>
-                </li>
-                <li>
-                    <a href="/algorithms/divide-and-conquer.html">Divide and Conquer Algorithm Analysis with Implementation Examples</a>
-                    <span class="date">2025-02-11</span>
-                    <span class="category">Algorithms</span>
-                </li>
-                <li>
-                    <a href="/networks/4-transport/flow-control.html">Flow Control</a>
-                    <span class="date">2025-02-11</span>
-                    <span class="category">Networks</span>
-                </li>
-                <li>
-                    <a href="/linear-algebra/cheatsheet.html">Matrix Theory</a>
-                    <span class="date">2025-02-11</span>
-                    <span class="category">Linear Algebra</span>
-                </li>
-                <li>
-                    <a href="/linear-algebra/elementry-linear-algebra.html">Glossary of Linear Algebra Concepts</a>
-                    <span class="date">2025-02-11</span>
-                    <span class="category">Linear Algebra</span>
-                </li>
-                <li>
-                    <a href="/operating-systems/lecture-notes/io-systems-secondary-storage.html">I/O Systems and Secondary Storage</a>
-                    <span class="date">2025-02-11</span>
-                    <span class="category">Operating Systems</span>
-                </li>
-                <li>
-                    <a href="/cheatsheets/algorithms/divide-and-conquer.html">Divide and Conquer Algorithms</a>
-                    <span class="date">2025-02-11</span>
-                    <span class="category">Algorithms</span>
-                </li>
-                <li>
-                    <a href="/algorithms/practice/4.html">Interval Sum Counting Algorithm</a>
-                    <span class="date">2025-02-11</span>
-                    <span class="category">Algorithms</span>
-                </li></ul>
-                </div>
-                <div class="categories-section">
-                    <h2>Categories</h2>
-<ul class='categories-list'>
-                <li>
-                    <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a>
-                    <span class="count">(2)</span>
-                </li>
-                <li>
-                    <a href="/categories/algorithms.html">Algorithms</a>
-                    <span class="count">(15)</span>
-                </li>
-                <li>
-                    <a href="/categories/computer%20science.html">Computer Science</a>
-                    <span class="count">(2)</span>
-                </li>
-                <li>
-                    <a href="/categories/database%20systems.html">Database Systems</a>
-                    <span class="count">(2)</span>
-                </li>
-                <li>
-                    <a href="/categories/distributed%20systems.html">Distributed Systems</a>
-                    <span class="count">(26)</span>
-                </li>
-                <li>
-                    <a href="/categories/electrical%20engineering.html">Electrical Engineering</a>
-                    <span class="count">(2)</span>
-                </li>
-                <li>
-                    <a href="/categories/graph%20theory.html">Graph Theory</a>
-                    <span class="count">(4)</span>
-                </li>
-                <li>
-                    <a href="/categories/hardware.html">Hardware</a>
-                    <span class="count">(10)</span>
-                </li>
-                <li>
-                    <a href="/categories/linear%20algebra.html">Linear Algebra</a>
-                    <span class="count">(3)</span>
-                </li>
-                <li>
-                    <a href="/categories/machine%20learning.html">Machine Learning</a>
-                    <span class="count">(1)</span>
-                </li>
-                <li>
-                    <a href="/categories/mathematics.html">Mathematics</a>
-                    <span class="count">(2)</span>
-                </li>
-                <li>
-                    <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a>
-                    <span class="count">(5)</span>
-                </li>
-                <li>
-                    <a href="/categories/networks.html">Networks</a>
-                    <span class="count">(29)</span>
-                </li>
-                <li>
-                    <a href="/categories/operating%20systems.html">Operating Systems</a>
-                    <span class="count">(24)</span>
-                </li>
-                <li>
-                    <a href="/categories/operations%20research.html">Operations Research</a>
-                    <span class="count">(1)</span>
-                </li>
-                <li>
-                    <a href="/categories/performance%20engineering.html">Performance Engineering</a>
-                    <span class="count">(1)</span>
-                </li>
-                <li>
-                    <a href="/categories/research.html">Research</a>
-                    <span class="count">(3)</span>
-                </li>
-                <li>
-                    <a href="/categories/software%20engineering.html">Software Engineering</a>
-                    <span class="count">(6)</span>
-                </li>
-                <li>
-                    <a href="/categories/system%20design.html">System Design</a>
-                    <span class="count">(2)</span>
-                </li>
-                <li>
-                    <a href="/categories/systems.html">Systems</a>
-                    <span class="count">(5)</span>
-                </li>
-                <li>
-                    <a href="/categories/teaching.html">Teaching</a>
-                    <span class="count">(1)</span>
-                </li></ul>
-                </div>
-                <div class="tags-section">
-                    <h2>Featured Tags</h2>
-<div class='tags-cloud'><a href="/tags/distributed%20systems.html" class="tag-5">distributed systems <span>(14)</span></a><a href="/tags/operating%20systems.html" class="tag-5">operating systems <span>(10)</span></a><a href="/tags/paxos.html" class="tag-5">paxos <span>(6)</span></a><a href="/tags/systems.html" class="tag-5">systems <span>(6)</span></a><a href="/tags/consistency.html" class="tag-5">consistency <span>(5)</span></a><a href="/tags/graph%20theory.html" class="tag-5">graph theory <span>(5)</span></a><a href="/tags/consistency%20models.html" class="tag-4">consistency models <span>(4)</span></a><a href="/tags/file%20systems.html" class="tag-4">file systems <span>(4)</span></a><a href="/tags/java.html" class="tag-4">java <span>(4)</span></a><a href="/tags/paper.html" class="tag-4">paper <span>(4)</span></a><a href="/tags/power.html" class="tag-4">power <span>(4)</span></a><a href="/tags/review.html" class="tag-4">review <span>(4)</span></a><a href="/tags/routing.html" class="tag-4">routing <span>(4)</span></a><a href="/tags/tcp.html" class="tag-4">tcp <span>(4)</span></a><a href="/tags/virtual%20memory.html" class="tag-4">virtual memory <span>(4)</span></a><a href="/tags/breadth-first%20search.html" class="tag-3">breadth-first search <span>(3)</span></a><a href="/tags/collections.html" class="tag-3">collections <span>(3)</span></a><a href="/tags/concurrency.html" class="tag-3">concurrency <span>(3)</span></a><a href="/tags/data%20structures.html" class="tag-3">data structures <span>(3)</span></a><a href="/tags/forwarding%20table.html" class="tag-3">forwarding table <span>(3)</span></a></div>
-                </div>
-            </div>
-        
-            </div>
-            
         </article>
     </main>
     <footer role="contentinfo">

@@ -1,3 +1,10 @@
+---
+title: Framing in Network Protocols
+category: Networks
+tags: byte-oriented protocols, point-to-point protocol, BISYNC, DDCMP, PPP, bit-oriented protocols, HDLC, bit stuffing
+description: An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.
+---
+
 # Byte Oriented Protocols, Point-to-point protocol (PPP)
 
 ## Byte-Oriented Framing

@@ -1,3 +1,10 @@
+---
+title: Queueing Theory
+category: Systems
+tags: queueing theory, systems, performance analysis
+description: Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arrival patterns (uniform, bursty, exponential). Discusses how queueing theory can be applied to model and analyze the performance of systems with queuing components, such as computer networks, call centers, and manufacturing processes.
+---
+
 # Queueing Theory
 
 Simplifying assumptions:

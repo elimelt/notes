@@ -1,3 +1,10 @@
+---
+title: Electricity
+category: Teaching
+tags: electricity, current, voltage, power, alternating current, direct current, coulomb
+description: Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC). Discusses the unit of electric charge, the Coulomb, and how energy and power are defined in electrical systems. Provides an overview of different circuit types, both constant and time-varying.
+---
+
 # Lecture 2
 
 *Reminders*:

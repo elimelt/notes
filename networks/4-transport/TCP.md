@@ -1,3 +1,10 @@
+---
+title: Transmission Control Protocol (TCP)
+category: Networks
+tags: connection establishment, three-way handshake, connection release, time_wait state, adaptive timeout, rtt, initial sequence number
+description: The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.
+---
+
 # Transmission Control Protocol (TCP)
 
 ## Connection Establishment

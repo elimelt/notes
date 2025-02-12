@@ -1,3 +1,10 @@
+---
+title: The Global Internet
+category: Networks
+tags: routing protocols, autonomous systems, inter-domain routing, end-user sites, service providers
+description: Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.
+---
+
 # The Global Internet
 
 It isn't possible to scale to the billions of devices with routing protocols like RIP and OSPF. Both of these would require routers to maintain a complete list of all the networks in the internet, which isn't feasible.

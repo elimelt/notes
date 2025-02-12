@@ -1,3 +1,10 @@
+---
+title: Automatic Repeat reQuest (ARQ)
+category: Networks
+tags: automatic repeat request, stop-and-wait ARQ, sliding window ARQ, go-back-N ARQ, sequence numbers, timeouts, bandwidth-delay product
+description: Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeouts, sequence numbers, and the limitations of stop-and-wait ARQ. Provides an overview of different ARQ schemes, including sliding window ARQ and go-back-N ARQ, and their trade-offs in terms of bandwidth utilization and robustness to errors.
+---
+
 # Retransmission
 
 Reliability is a key feature of a network, and there are measures in place accross the entire stack to ensure it.

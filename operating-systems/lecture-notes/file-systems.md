@@ -1,3 +1,10 @@
+---
+title: File Systems
+category: Operating Systems
+tags: file systems, storage, hierarchical structure, programming interface, system calls
+description: Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.
+---
+
 # File Systems
 
 A file system interacts with storage by reading/writing blocks (sectors) on a per-volume basis. It is basically a thick layer of abstraction over the raw storage device.

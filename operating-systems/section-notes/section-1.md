@@ -1,3 +1,10 @@
+---
+title: C and GDB Review
+category: Computer Science
+tags: static, extern, pointers, GDB, printf debugging, backtrace, watch
+description: Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.
+---
+
 # Section 1 - C and GDB review
 
 

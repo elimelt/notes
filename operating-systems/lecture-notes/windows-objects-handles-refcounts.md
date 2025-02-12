@@ -1,3 +1,10 @@
+---
+title: Objects Handles and Reference Counts
+category: Operating Systems
+tags: object manager, handles, reference counts, windows, c programming, operating systems
+description: Covers the implementation of object handles and reference counting in operating systems, with a focus on the Windows object manager. Discusses the role of the object manager in managing system objects and the use of handles to provide secure access to these objects. Explains the concept of reference counting and how it is used to track the lifetime of objects and prevent premature deallocation.
+---
+
 # Obects Handles and Reference Counts
 
 ## Object Manager

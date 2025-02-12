@@ -1,3 +1,10 @@
+---
+title: Hardware Modes
+category: Operating Systems
+tags: hardware modes, kernel mode, user mode, dual mode operation, EFLAGS register, MIPS status register
+description: Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the processor switches between privileged kernel mode and restricted user mode to provide protection with restrictions. Explains the use of the EFLAGS register in x86 systems and the status register in MIPS architectures to control and monitor the current hardware mode.
+---
+
 # Lecture 2 -
 
 ## Hardware Modes

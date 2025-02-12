@@ -1,3 +1,10 @@
+---
+title: Files and Directories
+category: Operating Systems
+tags: directories, index structures, free space maps, locality heuristics, file systems, persistence, performance
+description: Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.
+---
+
 # Chapter 13 - Files and Directories
 
 Need to achieve the following:

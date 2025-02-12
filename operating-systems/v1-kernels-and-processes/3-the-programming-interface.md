@@ -1,3 +1,10 @@
+---
+title: Syscall API Reference
+category: Operating Systems
+tags: operating systems, syscall, process management, i/o operations
+description: Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.
+---
+
 # Chapter 3 - The Programming Interface
 
 ## Syscall API Reference

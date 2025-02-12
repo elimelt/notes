@@ -1,3 +1,10 @@
+---
+title: Motivation behind the Network Layer
+category: Networks
+tags: network layer, link layer, hierarchical addressing, IP protocol, congestion control, quality of service, routing, forwarding
+description: Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing and forwarding. Discusses hierarchical addressing, the IP protocol, congestion control, quality of service, and routing as key topics addressed by the network layer to enable reliable and efficient communication across interconnected networks.
+---
+
 # Motivation behind the Network Layer
 
 We can already build networks using the link layer using packet forwarding, but this doesn't scale well. The network layer allows you to connect multiple networks together, allowing for transparent communication between different link layer technologies.

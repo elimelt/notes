@@ -1,3 +1,10 @@
+---
+title: Internetworking
+category: Networks
+tags: internetworking, networks, ip addressing
+description: Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the concepts of IPv4 addressing, IP prefixes, and IP datagram forwarding using the longest prefix match algorithm.
+---
+
 # Internetworking
 
 ## How netorks may differ

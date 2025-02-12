@@ -1,3 +1,10 @@
+---
+title: File Systems, Introduction and Overview
+category: Operating Systems
+tags: file systems, nonvolatile storage, metadata, executable files, file streams
+description: Covers the implementation of file systems, a key component of operating systems that provides a standardized interface for managing nonvolatile storage. Discusses the file system abstraction, including concepts like volumes and links, and how it enables efficient organization and access of data on storage devices.
+---
+
 # File Systems: Introduction and Overview
 
 What do we need in a filesystem?

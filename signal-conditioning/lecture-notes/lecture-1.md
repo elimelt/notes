@@ -1,3 +1,10 @@
+---
+title: C-SWAP: Cost, Size, Weight and Power
+category: Hardware
+tags: cost, size, weight, power, hardware, energy constraints, heat dissipation, sensing, computing, communication
+description: Covers the implementation considerations for hardware systems with respect to cost, size, weight, and power (C-SWAP) constraints. Discusses the trade-offs between these factors and their impact on the design of sensing, computing, and communication components. Provides guidance on optimizing hardware designs to meet energy and thermal requirements.
+---
+
 ## C-SWAP
 
 Cost, Size, Weight and Power

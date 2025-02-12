@@ -1,3 +1,10 @@
+---
+title: Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits
+category: Networks
+tags: store-and-forward packet switching, datagrams, virtual circuits, routing, forwarding table, connection-oriented, connectionless
+description: Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between connectionless datagram and connection-oriented virtual circuit approaches, including their impact on routing, forwarding tables, and connection establishment. Provides an overview of the key concepts and tradeoffs involved in these fundamental networking architectures.
+---
+
 # Networking Services
 
 ## Store-and-Forward Packet Switching

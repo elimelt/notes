@@ -1,3 +1,10 @@
+---
+title: Handle Tables
+category: Operating Systems
+tags: handle tables, process control block, context switch, scheduling, state queues
+description: Covers the implementation of handle tables, which are used to manage the process control block (PCB) in operating systems. Discusses the PCB structure, including the process and CPU state, state queues for scheduling, and the creation of new PCBs. Explores techniques to optimize the creation of new PCBs for improved performance.
+---
+
 # Handle Tables
 
 

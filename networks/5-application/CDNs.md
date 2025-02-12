@@ -1,3 +1,10 @@
+---
+title: Content Delivery Networks (CDNs)
+category: Networks
+tags: content delivery networks, web caching, proxy servers, edge locations, DNS resolution, cache control headers
+description: Covers the implementation of content delivery networks (CDNs) and how they place content closer to clients. Discusses browser caching, proxy caches, and the use of edge locations and DNS resolution to efficiently deliver content. Examines the role of cache control headers in managing content caching and expiration.
+---
+
 # Content Delivery Networks (CDNs)
 
 ## How do you place content near clients?

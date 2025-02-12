@@ -1,3 +1,10 @@
+---
+title: What is an Operating System?
+category: Operating Systems
+tags: operating system, virtualization, resource management, services, reliability, availability, fault tolerance
+description: This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.
+---
+
 # Introduction
 
 ## What is an Operating System?

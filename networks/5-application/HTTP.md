@@ -1,3 +1,10 @@
+---
+title: Hyper Text Transfer Protocol (HTTP)
+category: Networks
+tags: HTTP, TCP, DNS, web pages, static web pages, dynamic web pages, HTTP methods, HTTP status codes
+description: Covers the implementation of the Hypertext Transfer Protocol (HTTP), a fundamental protocol for the World Wide Web. Discusses the process of fetching web pages, including the distinction between static and dynamic content, the various HTTP methods, and the status codes used to communicate the result of a request. Examines performance considerations, such as page load time, HTTP/1.0, and techniques for decreasing load times, as well as the role of HTTP caching and proxies.
+---
+
 # Hyper Text Transfer Protocol (HTTP)
 
 You can think of a web page as a set of related HTTP transactions. Each transaction consists of a request and a response, which runs on TCP (typically on port 80).

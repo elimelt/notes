@@ -1,3 +1,10 @@
+---
+title: Flow Control
+category: Networks
+tags: flow control, sliding window, ARQ, bandwidth-delay product
+description: Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.
+---
+
 # Flow Control
 
 Recall **stop and wait** ARQ. This only allows a single packet to be transmitted at a time. This is inefficient, as the sender is often waiting for the receiver to acknowledge the packet. 

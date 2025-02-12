@@ -1,3 +1,10 @@
+---
+title: Faster Causal Self Attention
+category: Machine Learning
+tags: machine learning, attention mechanism, transformer, sparse attention
+description: Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.
+---
+
 # Attention Sparsity Review
 
 ## Faster Causal Self Attention

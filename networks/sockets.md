@@ -1,3 +1,10 @@
+---
+title: Socket Reference
+category: Networks
+tags: socket, networking, system programming, C, Python
+description: This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.
+---
+
 # Socket Reference
 
 ## Creating a Socket

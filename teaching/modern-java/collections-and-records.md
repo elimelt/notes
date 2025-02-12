@@ -1,3 +1,10 @@
+---
+title: Creating Collections and Data Types in Modern Java
+category: Software Engineering
+tags: java, collections, data structures, immutable, records
+description: Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collections, and the introduction of records in Java 14+. Discusses the motivation and practical applications of these features, highlighting their benefits in terms of conciseness, immutability, and type safety.
+---
+
 # Creating Collections and Data Types in Modern Java
 
 ## Motivation

@@ -1,3 +1,10 @@
+---
+title: I/O Systems and Secondary Storage
+category: Operating Systems
+tags: I/O systems, secondary storage, device controllers, DMA, system bus, PCI bus, programmed I/O, device drivers
+description: Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.
+---
+
 # I/O Systems and Secondary Storage
 
 

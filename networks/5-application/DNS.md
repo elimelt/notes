@@ -1,3 +1,10 @@
+---
+title: Domain Name System (DNS)
+category: Networks
+tags: domain name system, name resolution, distributed database, top-level domain, name server
+description: The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.
+---
+
 # Domain Name System (DNS)
 
 ## Namespaces

@@ -1,3 +1,10 @@
+---
+title: Multiple Access
+category: Networks
+tags: multiplexing, time division multiplexing, frequency division multiplexing, centralized access control, distributed access control
+description: Covers the implementation of multiple access techniques in computer networks, including time division multiplexing (TDM) and frequency division multiplexing (FDM). Discusses centralized and distributed access control methods, such as Carrier Sense Multiple Access (CSMA) with Collision Detection (CSMA/CD) and Binary Exponential Backoff. Provides an overview of Ethernet frame structure and the underlying principles of these networking concepts.
+---
+
 # Multiple Access
 
 ## Multiplexing

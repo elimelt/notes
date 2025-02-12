@@ -1,3 +1,10 @@
+---
+title: Wireless Media and Access Protocols
+category: Networks
+tags: wireless media, hidden terminal problem, exposed terminal problem, MACA, 802.11, CSMA/CA, RTS/CTS
+description: Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Collision Avoidance (MACA) protocol. Discusses the 802.11 (WiFi) standard, including its physical layer, link layer, and centralized MAC used in cellular networks. Explores the challenges of wireless communication and the techniques used to mitigate them.
+---
+
 # Wireless
 
 Wireless media is infinite, and therefore cannot carrier sense. Futhermore, nodes cannot hear the network while sending

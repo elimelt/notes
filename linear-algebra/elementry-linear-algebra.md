@@ -50,7 +50,7 @@ $$
 
 ### Gaussian Elimination
 
-Perform any of the following **elementary row operations** to the augmented matrix $[A|b]$:
+Perform any of the following **elementary row operations** to the augmented matrix $\left[ A|b \right]$:
 
 - Swap two rows
 - Multiply a row by a nonzero scalar

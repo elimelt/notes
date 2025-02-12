@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Sum Counting Algorithm", "dateModified": "2025-02-11T16:41:49.580380", "description": "An algorithm for counting the number of interval sums between a given range in an array of intervals.", "articleSection": "Algorithms", "keywords": "interval sums,binary search,prefix sum,suffix sum"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Sum Counting Algorithm", "dateModified": "2025-02-11T21:49:31.043201", "description": "An algorithm for counting the number of interval sums between a given range in an array of intervals.", "articleSection": "Algorithms", "keywords": "interval sums,binary search,prefix sum,suffix sum"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -276,7 +276,7 @@
         <article>
             <h1>Interval Sum Counting Algorithm</h1>
             <div class="meta">
-                <time datetime="2025-02-11T16:41:49.580380">
+                <time datetime="2025-02-11T21:49:31.043201">
                     Last modified: 2025-02-11
                 </time>
                 <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
@@ -389,21 +389,21 @@ $$</p>
 <h2 id="problem-5">Problem 5</h2>
 <p>Call my algorithm $S(A, l, u)$.</p>
 <h3 id="correctness">Correctness</h3>
-<p><strong>Claim</strong>: Given a list of $n$ numbers $A = a_1, a_n, \ldots a_n$, the number of interval sums in $[l, u]$ is correctly calculated by $S(A, l, u) = R + L + C$, where they are defined as...</p>
+<p><strong>Claim</strong>: Given a list of $n$ numbers $A = a_1, a_n, \ldots a_n$, the number of interval sums in $\left[ l, u \right]$ is correctly calculated by $S(A, l, u) = R + L + C$, where they are defined as...</p>
 <p>$$L = S([a_1, \ldots, a_{\lceil n/2 \rceil - 1}], l, u)$$</p>
-<p>i.e. the number of interval sums in the first half of $A$ $[l, u]$.</p>
+<p>i.e. the number of interval sums in the first half of $A$ $\left[ l, u \right]$.</p>
 <p>$$R = S([a_{\lceil n/2 \rceil}, \ldots, a_n], l, u)$$</p>
-<p>i.e. the number of interval sums in the latter half of $A$ in $[l, u]$.</p>
+<p>i.e. the number of interval sums in the latter half of $A$ in $\left[ l, u \right]$.</p>
 <p>$$C = | {  (i, j) : i \le \lceil n/2 \rceil - 1 \land j \ge \lceil n/2 \rceil \land I(i, j) \in [l, u] } |$$</p>
-<p>i.e the number of interval sums that cross over the midpoint of $A$ and are in $[l, u]$</p>
+<p>i.e the number of interval sums that cross over the midpoint of $A$ and are in $\left[ l, u \right]$</p>
 <p><strong>Proof</strong>: By induction</p>
-<p>Let $P(n)$ be the above claim, i.e. that given $n$ numbers $A$ and a range $[l, u]$, my algorithm returns the number of interval sums on $A$ that are between $[l, u]$ via the following calculation:</p>
+<p>Let $P(n)$ be the above claim, i.e. that given $n$ numbers $A$ and a range $\left[ l, u \right]$, my algorithm returns the number of interval sums on $A$ that are between $\left[ l, u \right]$ via the following calculation:</p>
 <p>$$S(A, l, u) = L + R + C$$</p>
 <p><strong>Base Case</strong>:</p>
 <p>$P(1)$</p>
-<p>Given a single number, there is only one interval sum to consider, i.e. $I(1, 1)$. In this case, the left half of $A$ is empty, and the right half consists of a single element. There are no interval sums that cross over the midpoint, so if $l \le I(1, 1) \le u$, then $L = 1$, and otherwise, $L = 0$. This gives us a final answer of $S(A, l, u) = L + R + C = 0 + R + 0 = R$. There is only one possible interval to consider, and $R$ is set depending on whether it is in $[l, u]$, so this is correct.</p>
+<p>Given a single number, there is only one interval sum to consider, i.e. $I(1, 1)$. In this case, the left half of $A$ is empty, and the right half consists of a single element. There are no interval sums that cross over the midpoint, so if $l \le I(1, 1) \le u$, then $L = 1$, and otherwise, $L = 0$. This gives us a final answer of $S(A, l, u) = L + R + C = 0 + R + 0 = R$. There is only one possible interval to consider, and $R$ is set depending on whether it is in $\left[ l, u \right]$, so this is correct.</p>
 <p>$P(2)$</p>
-<p>Given two numbers $A = a_1, a_2$, we have $3$ intervals to check corresponding to $I(1, 1)$, $I(2, 2)$, and $I(1, 2)$. We have that $L = 1$ if $I(1, 1) \in [l, u]$, and $0$ otherwise, $R = 1$ if $I(2, 2) \in [l, u]$, and $0$ otherwise, and $C = 1$ if $I(1, 2) \in [l, u]$, and $0$ otherwise. Therefore, we check all possible interval sums, and output the sum of $L, R, C$, which corresponds to the number of these interval sums in $[l, u]$.</p>
+<p>Given two numbers $A = a_1, a_2$, we have $3$ intervals to check corresponding to $I(1, 1)$, $I(2, 2)$, and $I(1, 2)$. We have that $L = 1$ if $I(1, 1) \in [l, u]$, and $0$ otherwise, $R = 1$ if $I(2, 2) \in [l, u]$, and $0$ otherwise, and $C = 1$ if $I(1, 2) \in [l, u]$, and $0$ otherwise. Therefore, we check all possible interval sums, and output the sum of $L, R, C$, which corresponds to the number of these interval sums in $\left[ l, u \right]$.</p>
 <p><strong>I.H.</strong>: Suppose $P(1) \land \ldots \land P(\lceil n/2 \rceil) \land \ldots \land P(n - 1)$</p>
 <p><strong>I.S.</strong>:</p>
 <p>Let $A = a_1, a_2, \ldots, a_n$, and $l, u$ be arbitrary numbers such that $l &lt; u$.  Let $m = \lceil n/2 \rceil$, and define $A_1 = a_1, \ldots, a_{m - 1}$, and $A_2 = a_m, \ldots, a_n$.</p>
@@ -413,10 +413,10 @@ $$</p>
 <p>$$L + R = |{ (i, j) : (i, j) \in  M^c \land I(i, j) \in [l, u]}|$$</p>
 <p>since we considered precisely the intervals in each side of $A$, which are exactly the intervals that don't cross the midpoint, and counted the number of such intervals that have $I(i, j) \in [l, u]$.</p>
 <p>To find $|{ (i, j) : (i, j) \in  M \land I(i, j) \in [l, u]}| = C$, we must check each suitable pair $(i, j)$ that has $i &lt; m \le j$. We can first consider each $I(m, j)$ for $j \ge m$, and then find all such $I(i, m - 1)$ for $i \le m - 1$ such that $I(m, j) + I(i, m - 1) \in [l, u]$. Note that we don't need to consider all elements of $M$, since we can skip those that don't have $I(i, j) \in [l, u]$.</p>
-<p>My algorithm does this by first calculating each $I(i, m - 1)$ and sorting them into a list $H$. Then, it iterates through all $I(m, j)$ for $m \le j \le n$, and searches for the lowest and highest index $i_{min}, i_{max}$ in $H$ such that $H_i + I(m, j) \in [l, u]$. We then calculate $C$ by maintaining a running sum of $i_{max} - i_{min} + 1$, ie the number of suitable $i$'s for a given $j$. This is guaranteed to consider each relevant $i &lt; m \le j$, since $H$ is sorted, and so all indices between and including $[i_{min}, i_{max}]$ would also be valid prefixes to the right half of the intervals we are considering, and those outside of $[i_{min}, i_{max}]$ would correspond to an interval sum that is outside $[l, u]$.</p>
+<p>My algorithm does this by first calculating each $I(i, m - 1)$ and sorting them into a list $H$. Then, it iterates through all $I(m, j)$ for $m \le j \le n$, and searches for the lowest and highest index $i_{min}, i_{max}$ in $H$ such that $H_i + I(m, j) \in [l, u]$. We then calculate $C$ by maintaining a running sum of $i_{max} - i_{min} + 1$, ie the number of suitable $i$'s for a given $j$. This is guaranteed to consider each relevant $i &lt; m \le j$, since $H$ is sorted, and so all indices between and including $\left[ i_{min}, i_{max} \right]$ would also be valid prefixes to the right half of the intervals we are considering, and those outside of $\left[ i_{min}, i_{max} \right]$ would correspond to an interval sum that is outside $\left[ l, u \right]$.</p>
 <p>Therefore, we have...</p>
 <p>$$C = |{ (i, j) : (i, j) \in  M \land I(i, j) \in [l, u]}|$$</p>
-<p>And so $S(A, l, u) = L + R + C$ correctly considers all relevant interval sums, counting the number of interval sums between $[l, u]$.</p>
+<p>And so $S(A, l, u) = L + R + C$ correctly considers all relevant interval sums, counting the number of interval sums between $\left[ l, u \right]$.</p>
 <pre><code class="language-python">def count_interval_sums_bruteforce(A, I, l, u, low, high):
   ans = 0
   for i in range(low, high):

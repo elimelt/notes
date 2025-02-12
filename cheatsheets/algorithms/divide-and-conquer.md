@@ -17,7 +17,7 @@ Given any recurrence of the form $T(n) = a T(\frac{n}{b}) + c n^k$ for all $n > 
 
 ## Root Finding
 
-Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b) < 0$, there exists a root of $f$ in the interval $[a, b]$ by the **intermediate value theorem**. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.
+Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b) < 0$, there exists a root of $f$ in the interval $\left[ a, b \right]$ by the **intermediate value theorem**. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.
 
 - **Algorithm**: $Bisect(a, b, \epsilon)$
   - If $b - a < \epsilon$, $a$ is a suitable approximation
@@ -30,8 +30,8 @@ Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b
   - $P(1)$: Output $a + \epsilon$, since the whole interval is at most $epsilon$. This requires $0$ calls to $f$.
   - Suppose $P(k)$ and consider an arbitrary $a$, $b$ s.t. $2k\epsilon \le |a - b| \le (2k + 1)\epsilon$.
   - If $f(a + k\epsilon) = 0$, output $a + k\epsilon$.
-  - If $f(a)f(a + k\epsilon) < 0$, solve on the interval $[a, a + k\epsilon]$. By I.H. this takes at most $\log(k)$ queries of $f$.
-  - Otherwise, we have $f(b)f(a + k\epsilon) < 0$, since $f(a)f(b) < 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $[a + k\epsilon, b]$.
+  - If $f(a)f(a + k\epsilon) < 0$, solve on the interval $\left[ a, a + k\epsilon \right]$. By I.H. this takes at most $\log(k)$ queries of $f$.
+  - Otherwise, we have $f(b)f(a + k\epsilon) < 0$, since $f(a)f(b) < 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\left[ a + k\epsilon, b \right]$.
   - In any case, we used at most $\log(k) + 1 = $\log(2k)$ queries to $f$.
 
 

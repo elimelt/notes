@@ -7,7 +7,7 @@ description: Covers the implementation of flow control mechanisms in computer ne
 
 # Flow Control
 
-Recall **stop and wait** ARQ. This only allows a single packet to be transmitted at a time. This is inefficient, as the sender is often waiting for the receiver to acknowledge the packet. 
+Recall **stop and wait** ARQ. This only allows a single packet to be transmitted at a time. This is inefficient, as the sender is often waiting for the receiver to acknowledge the packet.
 
 Next recall **sliding window** ARQ. This allows multiple packets to be transmitted at a time. The sender can keep sending packets until the window is full. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. With a window size of $w$, you can send $w$ packets before waiting for an acknowledgement (ie $w$ packets per RTT).
 
@@ -46,7 +46,7 @@ Uses a single timer to detect lost packets. On timeout, resends buffered packets
 
 In Selective Repeat ARQ, the sender can send multiple packets before waiting for an acknowledgement. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. If a packet is lost, the sender will only have to resend the lost packet.
 
-Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $[LAS + 1, LAS + w]$. If seq number is LAS + 1, then accept, update LAS, and send ACK.
+Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $\left[ LAS + 1, LAS + w \right]$. If seq number is LAS + 1, then accept, update LAS, and send ACK.
 
 If it receives something out of order, it will buffer it and send an ACK for the last in-order segment. If it receives a duplicate, it will send an ACK for the last in-order segment.
 

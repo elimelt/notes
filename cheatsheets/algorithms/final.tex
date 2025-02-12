@@ -35,13 +35,13 @@
 
  \newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
     \def\independenT#1#2{\mathrel{\setbox0\hbox{$#1#2$}%
-    \copy0\kern-\wd0\mkern4mu\box0}} 
-            
-\newcommand{\noin}{\noindent}    
-\newcommand{\logit}{\textrm{logit}} 
+    \copy0\kern-\wd0\mkern4mu\box0}}
+
+\newcommand{\noin}{\noindent}
+\newcommand{\logit}{\textrm{logit}}
 \newcommand{\var}{\textrm{Var}}
-\newcommand{\cov}{\textrm{Cov}} 
-\newcommand{\corr}{\textrm{Corr}} 
+\newcommand{\cov}{\textrm{Cov}}
+\newcommand{\corr}{\textrm{Corr}}
 \newcommand{\N}{\mathcal{N}}
 \newcommand{\Bern}{\textrm{Bern}}
 \newcommand{\Bin}{\textrm{Bin}}
@@ -112,7 +112,7 @@
 \renewcommand{\labelitemii}{$\bullet$} % Level 2
 \renewcommand{\labelitemiii}{$\bullet$} % Level 3
 \renewcommand{\labelitemiv}{$\bullet$} % Level 4
-  
+
 \section{Graphs}
 
 \subsection{Undirected Graphs}
@@ -171,8 +171,8 @@ For any graph $G = (V, E)$, if two of the following are true, then all three are
 \subsection{Topological Order}
 An ordering of nodes $v_1, v_2, \ldots, v_n$ so that for every edge $(v_i, v_j)$, $i < j$.
 \begin{itemize}
-    \item To find, initialize map of in-degrees for each vertex, and a queue of vertices with in-degree 0. 
-    \item Then, while the queue isn't empty, remove a vertex, adding it to the ordering, and decrement its neighbors in-degree. 
+    \item To find, initialize map of in-degrees for each vertex, and a queue of vertices with in-degree 0.
+    \item Then, while the queue isn't empty, remove a vertex, adding it to the ordering, and decrement its neighbors in-degree.
     \item If any of them become 0, add them to the queue.
 \end{itemize}
 
@@ -265,7 +265,7 @@ An ordering of nodes $v_1, v_2, \ldots, v_n$ so that for every edge $(v_i, v_j)$
 
 \subsection{Root Finding}
 
-Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b) < 0$, there exists a root of $f$ in the interval $[a, b]$ by the \textit{intermediate value theorem}. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.
+Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b) < 0$, there exists a root of $f$ in the interval $\left[ a, b \right]$ by the \textit{intermediate value theorem}. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.
 
 \begin{itemize}
     \item \textbf{Algorithm}: $Bisect(a, b, \epsilon)$
@@ -282,8 +282,8 @@ Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b
         \item $P(1)$: Output $a + \epsilon$, since the whole interval is at most $\epsilon$. This requires $0$ calls to $f$.
         \item Suppose $P(k)$ and consider an arbitrary $a$, $b$ s.t. $2k\epsilon \le |a - b| \le (2k + 1)\epsilon$.
         \item If $f(a + k\epsilon) = 0$, output $a + k\epsilon$.
-        \item If $f(a)f(a + k\epsilon) < 0$, solve on the interval $[a, a + k\epsilon]$. By I.H. this takes at most $\log(k)$ queries of $f$.
-        \item Otherwise, we have $f(b)f(a + k\epsilon) < 0$, since $f(a)f(b) < 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $[a + k\epsilon, b]$.
+        \item If $f(a)f(a + k\epsilon) < 0$, solve on the interval $\left[ a, a + k\epsilon \right]$. By I.H. this takes at most $\log(k)$ queries of $f$.
+        \item Otherwise, we have $f(b)f(a + k\epsilon) < 0$, since $f(a)f(b) < 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\left[ a + k\epsilon, b \right]$.
         \item In any case, we used at most $\log(k) + 1 = \log(2k)$ queries to $f$.
     \end{itemize}
 \end{itemize}

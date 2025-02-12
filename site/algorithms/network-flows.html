@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -336,48 +336,48 @@ def ford_fulkerson(G, s, t, c):
 </code></pre>
 <h3 id="running-time">Running Time</h3>
 <p>Assume that all capacities are integers between $1$ and $C$. Invariantly, every flow value $f(e)$ and every residual capacity $c_f(e)$ remains an integer throughout the algorithm.</p>
-<p><strong>Theorem</strong>: The algorithm terminates after at most $v(f^<em>) &lt; nC$, if $f^</em>$ is an optimal flow.</p>
+<p><strong>Theorem</strong>: The algorithm terminates after at most $v(f^*) < nC$, if $f^*$ is an optimal flow.</p>
 <p>This is because only one vertex ($S$) actually produces flow. Therefore, we have a tight upper bound on $v(f^*)$ of $(n - 1)C$. Each iteration of the algorithm increases the value of the flow by at least $1$ (since flows are integers).</p>
 <p>Since at each iteration, we need to find an augmenting path via DFS, we have an overall runtime of $O(mnC)$, or more generally, $O(mv(f^*))$</p>
 <h2 id="maximum-matching">Maximum Matching</h2>
 <p>Given an undirected graph $G = (V, E)$, find the matching $M \subseteq E$ with largest cardinality. Note that in a matching is a set of edges where each vertex touches at most one edge in $M$.</p>
 <p>In general, you can solve this in polynomial time, but I won't go into detail. Instead, I cover the case where $G$ is bipartite.</p>
 <h3 id="bipartite-maximum-matching">Bipartite Maximum Matching</h3>
-<p>Given an undirected bipartite graph $G = (X \cup Y, E)$, find the maximum matching $M$.</p>
-<p>Add vertices $s, t$, with edges $(s, v)$ of capacity $1$ for $v \in X$, and $(u, t)$ of capacity $1$ for $u \in Y$. All other edges have weight $\infty$. Orient all edges from $s \to t$, i.e. all edges between $X$ and $Y$ have direction $v \to u$.</p>
-<p>Find the maximum flow from $s \to t$. The maximum flow is the maximum matching, and the minimum cut is the minimum vertex cover.</p>
-<p><strong>Proof</strong>: Let $M$ be a matching in $G$, and $f$ be the value of the maximum <strong>integer</strong> flow some $H$ in the constructed graph. We need to prove $|M| = f$.</p>
-<p>$|M| \le f$: We need to find some flow that satisfies the preceding constraint. Since all flows are a candidate for max flow, and the max flow must be $\ge$ any other, showing any flow satisfies it is sufficient.</p>
+<p>Given an undirected bipartite graph $G = (X \cup Y, E)$, find the maximum matching $s$0.</p>
+<p>Add vertices $s$1, with edges $s$2 of capacity $s$3 for $s$4, and $s$5 of capacity $s$6 for $s$7. All other edges have weight $s$8. Orient all edges from $s$9, i.e. all edges between $t$0 and $t$1 have direction $t$2.</p>
+<p>Find the maximum flow from $t$3. The maximum flow is the maximum matching, and the minimum cut is the minimum vertex cover.</p>
+<p><strong>Proof</strong>: Let $t$4 be a matching in $t$5, and $t$6 be the value of the maximum <strong>integer</strong> flow some $t$7 in the constructed graph. We need to prove $t$8.</p>
+<p>$t$9: We need to find some flow that satisfies the preceding constraint. Since all flows are a candidate for max flow, and the max flow must be $G$0 any other, showing any flow satisfies it is sufficient.</p>
 <ul>
-<li>For every edge $(u, v) \in M$, set $f(s \to u) = f(u \to v) = f(v \to t) = 1$, and the rest to $0$.</li>
-<li>The flow is feasible since $f(e) \le c_e = 1 \forall e$, and the conservation of flow holds.</li>
-<li>$v(f) = l = $ total capacity out of $S$.</li>
+<li>For every edge $G$1, set $G$2, and the rest to $G$3.</li>
+<li>The flow is feasible since $G$4, and the conservation of flow holds.</li>
+<li>$G$5 total capacity out of $G$6.</li>
 </ul>
-<p>$f \le |M|$: We need to use $v(f) = k$ to construct a matching $|M| = k$.</p>
+<p>$G$7: We need to use $G$8 to construct a matching $G$9.</p>
 <ul>
-<li>Since all capacities of edges are integers, such an $f$ exists.</li>
-<li>Since $\forall e, c_e = 1$, $\forall e, f(e) \in {0, 1}$. Further, each vertex in $X$ takes at most $1$ unit of flow from $s$, and each vertex in $Y$ can output at most $1$ unit of flow.</li>
-<li>Each path can support up to $1$ unit of flow, and all of them are of the form $s, v_x, v_y, t$, for vertices $v_x \in X, v_y \in Y$. Therefore, with a max flow value $v(f) = k$, we can create a matching $M$, where each edge $(v_i, v_j) \in M$ corresponds to a unique path of our flow.</li>
-<li>So we have a matching with $|M| = k$, meaning $f \le |M|$.</li>
+<li>Since all capacities of edges are integers, such an $s, t$0 exists.</li>
+<li>Since $s, t$1, $s, t$2. Further, each vertex in $s, t$3 takes at most $s, t$4 unit of flow from $s, t$5, and each vertex in $s, t$6 can output at most $s, t$7 unit of flow.</li>
+<li>Each path can support up to $s, t$8 unit of flow, and all of them are of the form $s, t$9, for vertices $s$0. Therefore, with a max flow value $s$1, we can create a matching $s$2, where each edge $s$3 corresponds to a unique path of our flow.</li>
+<li>So we have a matching with $s$4, meaning $s$5.</li>
 </ul>
 <h2 id="foregroundbackground-segmentation">Foreground/Background Segmentation</h2>
-<p>Label each pixel of an image as foreground or background. $V = $ set of pixels, and $E =$ neighboring pixels.</p>
+<p>Label each pixel of an image as foreground or background. $s$6 set of pixels, and $s$7 neighboring pixels.</p>
 <ul>
-<li>$a_i \ge 0$ is the likelihood of pixel $i$ being in the foreground</li>
-<li>$b_i \ge 0$ is the likelihood of pixel $i$ being in the background</li>
+<li>$s$8 is the likelihood of pixel $s$9 being in the foreground</li>
+<li>$t$0 is the likelihood of pixel $t$1 being in the background</li>
 <li>
-<p>$p_{i,j} \ge 0$ is the penalty for labeling one of $i$ and $j$ as foreground and the other as background, i.e. the penalty for boundaries of the the two regions</p>
+<p>$t$2 is the penalty for labeling one of $t$3 and $t$4 as foreground and the other as background, i.e. the penalty for boundaries of the the two regions</p>
 </li>
 <li>
-<p><strong>Accuracy</strong>: If $a_i &gt; b_i$ in isolation, prefer to label $i$ in the foreground.</p>
+<p><strong>Accuracy</strong>: If $t$5 in isolation, prefer to label $t$6 in the foreground.</p>
 </li>
-<li><strong>Smoothness</strong>: If many neighbors of $i$ are labeled foreground, we should be inclined to label $i$ as foreground as well.</li>
+<li><strong>Smoothness</strong>: If many neighbors of $t$7 are labeled foreground, we should be inclined to label $t$8 as foreground as well.</li>
 </ul>
-<p>Find a partition $(A, B)$ that maximizes...</p>
+<p>Find a partition $t$9 that maximizes...</p>
 <p>$$
 \sum_{i \in A} a_i + \sum_{j \in B} b_j - \sum_{(i, j) \in E, i \in A, j \in B} p_{i, j}
 $$</p>
-<p>We proceed to a solution that uses min-cut. Since this is a maximization problem, but min-cut is a minimization problem, we can just multiply our scoring function by $-1$, so we are now trying to minimize...</p>
+<p>We proceed to a solution that uses min-cut. Since this is a maximization problem, but min-cut is a minimization problem, we can just multiply our scoring function by $s$0, so we are now trying to minimize...</p>
 <p>$$
 \sum_{(i, j) \in E, i \in A, j \in B} p_{i, j} - \sum_{i \in A} a_i - \sum_{j \in B} b_j
 $$</p>
@@ -385,121 +385,121 @@ $$</p>
 <p>$$
 \sum_{(i, j) \in E, i \in A, j \in B} p_{i, j} - \sum_{i \in A} a_i - \sum_{j \in B} b_j + \sum_{i \in V} a_i + \sum_{j \in V} b_j
 $$</p>
-<p>Since $V = A \cup B$ and $A \cap B = \emptyset$, it is equivalent to...</p>
+<p>Since $s$1 and $s$2, it is equivalent to...</p>
 <p>$$
 \sum_{(i, j) \in E, i \in A, j \in B} p_{i, j} + \sum_{i \in B} a_i + \sum_{j \in A} b_j
 $$</p>
-<p>Add vertices $s$ and $t$, with an edge weight of $a_i$ between all edges $(s, i)$, and an edge $(j, t)$ with a weight of $b_j$. Then, make all edges $(i, j)$ have a weight $p_{i, j}$. Then the min-cut of this graph would be the minimization of our objective function, giving us the optimal sets $A, B$.</p>
+<p>Add vertices $s$3 and $s$4, with an edge weight of $s$5 between all edges $s$6, and an edge $s$7 with a weight of $s$8. Then, make all edges $s$9 have a weight $t$0. Then the min-cut of this graph would be the minimization of our objective function, giving us the optimal sets $t$1.</p>
 <h2 id="p1-count-disjoint-paths">P1 - Count Disjoint Paths</h2>
-<p>Given an undirected graph $G = (V, E)$ and a set of vertices $S \subseteq V$ and a disjoint set of vertices $T \subseteq V$ , i.e., $S \cap T = \emptyset$. Design a polynomial time algorithm that outputs the maximum number of vertex disjoint paths between vertices of $S$ and $T$ (note that every vertex in $S$ and every vertex in $T$ can be in at most one path).</p>
+<p>Given an undirected graph $t$2 and a set of vertices $t$3 and a disjoint set of vertices $t$4 , i.e., $t$5. Design a polynomial time algorithm that outputs the maximum number of vertex disjoint paths between vertices of $t$6 and $t$7 (note that every vertex in $t$8 and every vertex in $t$9 can be in at most one path).</p>
 <p><strong>Algorithm</strong>:</p>
 <ul>
-<li>Given $G = (V, E)$, and $S, T$</li>
-<li>Construct a directed graph $G'$ with all undirected edges $(u, v) \in E$ corresponding to two directed edges $(u, v), (v, u) \in E$. Additionally, add two vertices $s$, $t$ to $V'$, and an edge $(s, v)$ and $(u, t)$ for all $v \in S$, $u \in T$.</li>
-<li>Run the algorithm from section for the maximum number of vertex disjoint paths in an unweighted directed graph given $s, t$.</li>
+<li>Given $(A, B)$0, and $(A, B)$1</li>
+<li>Construct a directed graph $(A, B)$2 with all undirected edges $(A, B)$3 corresponding to two directed edges $(A, B)$4. Additionally, add two vertices $(A, B)$5, $(A, B)$6 to $(A, B)$7, and an edge $(A, B)$8 and $(A, B)$9 for all $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$0, $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$1.</li>
+<li>Run the algorithm from section for the maximum number of vertex disjoint paths in an unweighted directed graph given $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$2.</li>
 </ul>
 <p><strong>Correctness</strong>:</p>
-<p>Let $G = (V, E)$ be an undirected graph, and $S$, $T$ be disjoint subsets of $V$.</p>
-<p>Since we have an algorithm from section to find the number of vertex disjoint paths from $s$ to $t$ in a directed graph containing vertices $s$, $t$, I will just show that I can construct such a directed graph $G'$ from $G$, and that the number of vertex disjoint paths in $G'$ from $s$ to $t$ is equal to the number of vertex disjoint paths in $G$ from vertices in $S$ to vertices in $T$.</p>
-<p>My algorithm first adds both a forward and backward directed edge for every edge in $E$, since $G$ is undirected and we therefore need to consider paths taking either direction of each directed edge. Note that the vertices of each path considered by the algorithm from section must be disjoint (not counting $s$ and $t$), so only one of these edges will ever be used in a path counted by the algorithm in section, so it is safe to add these additional edges without ever counting additional paths.</p>
-<p>Furthermore, I add two vertices $s$ and $t$ to $V'$, and add a directed edge from $s$ to every vertex in $S$, and a directed edge from every vertex in $T$ to $t$. This is to form a bijection between $A$, the maximal set of vertex disjoint paths I find in $G'$ from $s \to t$, and $B$, the maximal set of vertex disjoint paths that start at a vertex in $S$ and end at a vertex in $T$. In particular, letting $s' \in S$ and $t' \in T$ be arbitrary vertices from their respective sets, we have paths of the following forms:</p>
+<p>Let $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$3 be an undirected graph, and $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$4, $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$5 be disjoint subsets of $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$6.</p>
+<p>Since we have an algorithm from section to find the number of vertex disjoint paths from $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$7 to $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$8 in a directed graph containing vertices $cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)$9, $s$0, I will just show that I can construct such a directed graph $s$1 from $s$2, and that the number of vertex disjoint paths in $s$3 from $s$4 to $s$5 is equal to the number of vertex disjoint paths in $s$6 from vertices in $s$7 to vertices in $s$8.</p>
+<p>My algorithm first adds both a forward and backward directed edge for every edge in $s$9, since $t$0 is undirected and we therefore need to consider paths taking either direction of each directed edge. Note that the vertices of each path considered by the algorithm from section must be disjoint (not counting $t$1 and $t$2), so only one of these edges will ever be used in a path counted by the algorithm in section, so it is safe to add these additional edges without ever counting additional paths.</p>
+<p>Furthermore, I add two vertices $t$3 and $t$4 to $t$5, and add a directed edge from $t$6 to every vertex in $t$7, and a directed edge from every vertex in $t$8 to $t$9. This is to form a bijection between $G_f$0, the maximal set of vertex disjoint paths I find in $G_f$1 from $G_f$2, and $G_f$3, the maximal set of vertex disjoint paths that start at a vertex in $G_f$4 and end at a vertex in $G_f$5. In particular, letting $G_f$6 and $G_f$7 be arbitrary vertices from their respective sets, we have paths of the following forms:</p>
 <ul>
-<li>$a_i = s, s', \ldots, t', t$ for all paths $a_i \in A$</li>
-<li>$b_i = s', \ldots, t'$ for all paths $b_i \in B$</li>
+<li>$G_f$8 for all paths $G_f$9</li>
+<li>$s$0 for all paths $s$1</li>
 </ul>
-<p>All paths in $A$ must have some $s'$ as their second vertex, since the only edges leaving $s$ are those going to vertices in $S$. Similarly, all paths in $A$ must have their second-to-last vertex as some $t'$, since the only edges incident to $t$ are those coming from vertices in $T$.</p>
-<p>By definition of the algorithm from section, paths in $A$ are vertex disjoint not counting $s$ and $t$, and $A$ contains the maximal number of such existing paths, or in other words, there are no additional vertex disjoint paths from $s \to t$ that can be added, nor other ways to choose vertex disjoint paths to end up with a larger set $A$.</p>
-<p>Therefore, by creating the set $B$ by taking each $a \in A$ and removing the starting and ending vertices $s$ and $t$, we also have vertex disjoint paths, since removing elements of disjoint sets will never make them not disjoint. Furthermore, since $A$ is of maximal size, there could not exist any other paths from $s \to t$ that would be vertex disjoint. Therefore, for $B$ to be maximal sized, we must have $|B| = |A|$. To show this more concretely, I will show that $|B| \le |A|$ and $|A| \le |B|$.</p>
+<p>All paths in $s$2 must have some $s$3 as their second vertex, since the only edges leaving $s$4 are those going to vertices in $s$5. Similarly, all paths in $s$6 must have their second-to-last vertex as some $s$7, since the only edges incident to $s$8 are those coming from vertices in $s$9.</p>
+<p>By definition of the algorithm from section, paths in $G_f$0 are vertex disjoint not counting $G_f$1 and $G_f$2, and $G_f$3 contains the maximal number of such existing paths, or in other words, there are no additional vertex disjoint paths from $G_f$4 that can be added, nor other ways to choose vertex disjoint paths to end up with a larger set $G_f$5.</p>
+<p>Therefore, by creating the set $G_f$6 by taking each $G_f$7 and removing the starting and ending vertices $G_f$8 and $G_f$9, we also have vertex disjoint paths, since removing elements of disjoint sets will never make them not disjoint. Furthermore, since $(u, v)$0 is of maximal size, there could not exist any other paths from $(u, v)$1 that would be vertex disjoint. Therefore, for $(u, v)$2 to be maximal sized, we must have $(u, v)$3. To show this more concretely, I will show that $(u, v)$4 and $(u, v)$5.</p>
 <ul>
 <li>
-<p>$|B| \le |A|$: Since $A$ is the maximal set of vertex disjoint paths from $s \to t$, there can be no additional paths that are vertex disjoint with the paths in $A$, nor any greater such sets. Suppose for the sake of contradiction that $|B| &gt; |A|$. Then, we can construct a set $A'$ with $|A'| = |B|$ by adding $s$ to the beginning of each path in $B$, and $t$ to the end of each path in $B$. We are able to do this because we added an edge from $s \to s'$ for $s' \in S$ and $t' \to t$ for $t' \in T$. However, we would then have found a set of vertex disjoint paths from $s \to t$ that is larger than $A$, which is a contradiction to $A$ being maximal.</p>
+<p>$(u, v)$6: Since $(u, v)$7 is the maximal set of vertex disjoint paths from $(u, v)$8, there can be no additional paths that are vertex disjoint with the paths in $(u, v)$9, nor any greater such sets. Suppose for the sake of contradiction that $c$0. Then, we can construct a set $c$1 with $c$2 by adding $c$3 to the beginning of each path in $c$4, and $c$5 to the end of each path in $c$6. We are able to do this because we added an edge from $c$7 for $c$8 and $c$9 for $f(u, v)$0. However, we would then have found a set of vertex disjoint paths from $f(u, v)$1 that is larger than $f(u, v)$2, which is a contradiction to $f(u, v)$3 being maximal.</p>
 </li>
 <li>
-<p>$|A| \le |B|$: Suppose for the sake of contradiction that $|A| &gt; |B|$. Since we defined $B$ as the maximal set of vertex disjoint paths between vertices in $S$ and $T$, we must not be able to find a greater set $B$. However, if $|A| &gt; |B|$, we could construct a set $B'$ as follows: for each path $a \in A$, remove the first and last vertex to make $a'$. Since each $a$ was vertex disjoint, each $a'$ will also be vertex disjoint, and so we've created a set of vertex disjoint paths from vertices in $S$ to vertices in $T$ (since the second and second to last vertices of $a$ must be in $S$ and $T$ respectively). Therefore, $B$ was not maximal, and we have a contradiction.</p>
+<p>$f(u, v)$4: Suppose for the sake of contradiction that $f(u, v)$5. Since we defined $f(u, v)$6 as the maximal set of vertex disjoint paths between vertices in $f(u, v)$7 and $f(u, v)$8, we must not be able to find a greater set $f(u, v)$9. However, if $c - f(u, v)$0, we could construct a set $c - f(u, v)$1 as follows: for each path $c - f(u, v)$2, remove the first and last vertex to make $c - f(u, v)$3. Since each $c - f(u, v)$4 was vertex disjoint, each $c - f(u, v)$5 will also be vertex disjoint, and so we've created a set of vertex disjoint paths from vertices in $c - f(u, v)$6 to vertices in $c - f(u, v)$7 (since the second and second to last vertices of $c - f(u, v)$8 must be in $c - f(u, v)$9 and $1$0 respectively). Therefore, $1$1 was not maximal, and we have a contradiction.</p>
 </li>
 </ul>
-<p><strong>Running Time</strong>: We can construct $G'$ in $O(|V| + |E|)$, since we only need to visit each edge of each vertex in our graph for duplicating/orienting edges, and an additional $O(|S| + |T|) = O(|V|)$ to add $s$, $t$, and edges to vertices in $S$ and $T$. Then, we simply need to run the algorithm from section, which takes $O(|V||E|)$, so our total running time is $O(|V||E|)$, which is polynomial.</p>
+<p><strong>Running Time</strong>: We can construct $1$2 in $1$3, since we only need to visit each edge of each vertex in our graph for duplicating/orienting edges, and an additional $1$4 to add $1$5, $1$6, and edges to vertices in $1$7 and $1$8. Then, we simply need to run the algorithm from section, which takes $1$9, so our total running time is $C$0, which is polynomial.</p>
 <h2 id="p2-number-of-disjoint-paths">P2 - Number of Disjoint Paths</h2>
-<p>Given a directed unweighted graph $G = (V, E)$. Suppose that there are $k$ edge disjoint paths from $s$ to $t$ and there are $k$ edge disjoint paths from $t$ to $u$ for vertices $s, t, u \in V$ . Prove that there are $k$ edge disjoint paths from $s$ to $u$.</p>
+<p>Given a directed unweighted graph $C$1. Suppose that there are $C$2 edge disjoint paths from $C$3 to $C$4 and there are $C$5 edge disjoint paths from $C$6 to $C$7 for vertices $C$8 . Prove that there are $C$9 edge disjoint paths from $f(e)$0 to $f(e)$1.</p>
 <p><strong>Proof</strong>:</p>
-<p>Let $G = (V, E)$ be a directed unweighted graph, and $s, t, u \in V$ be vertices such that there are $k$ edge disjoint paths from $s \to t$ and $k$ edge disjoint paths from $t \to u$. We wish to show that there are $k$ edge disjoint paths from $s \to u$.</p>
-<p>Construct a graph $G'$ by adding vertices $w, x, y, z$ with edges $(w, s), (t, x), (y, t), (u, z)$, each having capacity $k$, and the rest of the edges having capacity $1$. We have a maximum flow of $k$ from $w \to x$, since each added edge can support a flow of up to $k$, and we can send $1$ unit of the $k$ flow going into $s$ through the $k$ edge-disjoint paths from $s$ to $t$, and then all $k$ units of flow going into $t$ through the edge $(t, x)$. Similarly, we have a max flow from $y \to z$ of $k$, since we can send $k$ units of flow from $y$ into $t$, and then $1$ unit of flow from $t$ into $u$ through the $k$ edge disjoint paths from $t$ to $u$, and then all $k$ units of flow from $u$ into $z$. Notice that the conservation of flow holds for all of these vertices, since $s$ receives and outputs $k$ units of flow, as does $t$ and $u$, and the remaining vertices each receive and output $1$ unit of flow.</p>
-<p>Now, in order to show that there are at least $k$ edge disjoint paths from $s \to u$, we need to find a flow that sends $k$ units of flow from $w \to z$, and equivalently, directly from $s \to u$. Since there are at least $k$ edge disjoint paths from $s \to t$, we have at least $k$ edges leaving $s$ and entering $t$, and similarly, we have at least $k$ edges leaving $t$ and entering $u$. Otherwise, we wouldn't have enough outgoing or incoming edges to construct said $k$ edge-disjoint paths, since each path leaving $s$ or $t$ or entering $t$ or $u$ must do so by a unique edge. Therefore, instead of routing $k$ units of flow from $y$ into $t$, and from $t$ into $x$, instead route the $k$ incoming units of flow into $t$ from the $k$ capacity $1$ edges into $t$, and route the $k$ units of flow out of $t$ through the $k$ outgoing edges of capacity $1$ from $t$.</p>
-<p>We therefore have a flow from $w \to z$ of capacity $k$. Since $w$ is only connected to $s$ (with an edge of capacity $k$), and $z$ is only connected to $u$ (with an edge of capacity $k$), and all edges in the middle of said flow have capacity $1$, we must route the $k$ units of flow through $k$ edge disjoint paths from $s$ to $u$, since each such path can only support $1$ unit of flow. Note that the edges in paths between $s$ and $t$, and $t$ and $u$ are not necessarily disjoint, but the edges between $s$ and $u$ that we routed the aforementioned flow through must be disjoint, since that is the only way to route $k$ units of flow through edges all with capacity $1$.</p>
+<p>Let $f(e)$2 be a directed unweighted graph, and $f(e)$3 be vertices such that there are $f(e)$4 edge disjoint paths from $f(e)$5 and $f(e)$6 edge disjoint paths from $f(e)$7. We wish to show that there are $f(e)$8 edge disjoint paths from $f(e)$9.</p>
+<p>Construct a graph $c_f(e)$0 by adding vertices $c_f(e)$1 with edges $c_f(e)$2, each having capacity $c_f(e)$3, and the rest of the edges having capacity $c_f(e)$4. We have a maximum flow of $c_f(e)$5 from $c_f(e)$6, since each added edge can support a flow of up to $c_f(e)$7, and we can send $c_f(e)$8 unit of the $c_f(e)$9 flow going into $v(f^*) < nC$0 through the $v(f^*) < nC$1 edge-disjoint paths from $v(f^*) < nC$2 to $v(f^*) < nC$3, and then all $v(f^*) < nC$4 units of flow going into $v(f^*) < nC$5 through the edge $v(f^*) < nC$6. Similarly, we have a max flow from $v(f^*) < nC$7 of $v(f^*) < nC$8, since we can send $v(f^*) < nC$9 units of flow from $f^*$0 into $f^*$1, and then $f^*$2 unit of flow from $f^*$3 into $f^*$4 through the $f^*$5 edge disjoint paths from $f^*$6 to $f^*$7, and then all $f^*$8 units of flow from $f^*$9 into $S$0. Notice that the conservation of flow holds for all of these vertices, since $S$1 receives and outputs $S$2 units of flow, as does $S$3 and $S$4, and the remaining vertices each receive and output $S$5 unit of flow.</p>
+<p>Now, in order to show that there are at least $S$6 edge disjoint paths from $S$7, we need to find a flow that sends $S$8 units of flow from $S$9, and equivalently, directly from $v(f^*)$0. Since there are at least $v(f^*)$1 edge disjoint paths from $v(f^*)$2, we have at least $v(f^*)$3 edges leaving $v(f^*)$4 and entering $v(f^*)$5, and similarly, we have at least $v(f^*)$6 edges leaving $v(f^*)$7 and entering $v(f^*)$8. Otherwise, we wouldn't have enough outgoing or incoming edges to construct said $v(f^*)$9 edge-disjoint paths, since each path leaving $(n - 1)C$0 or $(n - 1)C$1 or entering $(n - 1)C$2 or $(n - 1)C$3 must do so by a unique edge. Therefore, instead of routing $(n - 1)C$4 units of flow from $(n - 1)C$5 into $(n - 1)C$6, and from $(n - 1)C$7 into $(n - 1)C$8, instead route the $(n - 1)C$9 incoming units of flow into $1$0 from the $1$1 capacity $1$2 edges into $1$3, and route the $1$4 units of flow out of $1$5 through the $1$6 outgoing edges of capacity $1$7 from $1$8.</p>
+<p>We therefore have a flow from $1$9 of capacity $O(mnC)$0. Since $O(mnC)$1 is only connected to $O(mnC)$2 (with an edge of capacity $O(mnC)$3), and $O(mnC)$4 is only connected to $O(mnC)$5 (with an edge of capacity $O(mnC)$6), and all edges in the middle of said flow have capacity $O(mnC)$7, we must route the $O(mnC)$8 units of flow through $O(mnC)$9 edge disjoint paths from $O(mv(f^*))$0 to $O(mv(f^*))$1, since each such path can only support $O(mv(f^*))$2 unit of flow. Note that the edges in paths between $O(mv(f^*))$3 and $O(mv(f^*))$4, and $O(mv(f^*))$5 and $O(mv(f^*))$6 are not necessarily disjoint, but the edges between $O(mv(f^*))$7 and $O(mv(f^*))$8 that we routed the aforementioned flow through must be disjoint, since that is the only way to route $O(mv(f^*))$9 units of flow through edges all with capacity $G = (V, E)$0.</p>
 <h2 id="p3-minimum-vertex-cover-maximum-independent-set-bipartite">P3 - Minimum Vertex Cover, Maximum Independent Set (Bipartite)</h2>
-<p>In this exercise we give a polynomial time algorithm to find the minimum vertex cover and maximum independent set in a bipartite graph $G = (X, Y, E)$.</p>
+<p>In this exercise we give a polynomial time algorithm to find the minimum vertex cover and maximum independent set in a bipartite graph $G = (V, E)$1.</p>
 <h3 id="a-construct-h">(a) Construct H</h3>
-<p>Let $H$ be a directed graph with vertices $X \cup Y$ with each edge $e = (u \to v) \in E$, where $u \in X$ and $v \in Y$ with $c_e = \infty$. Add vertices $s, t$, and edges $e_s = (s \to u)$ $\forall u \in X$, and $e_t = (v \to t)$, $\forall v \in Y$ with $c_{e_s} = c_{e_t} = 1$. Let said edges $e_s$ and $e_t$ form the sets $E_s$ and $E_t$ respectively.</p>
+<p>Let $G = (V, E)$2 be a directed graph with vertices $G = (V, E)$3 with each edge $G = (V, E)$4, where $G = (V, E)$5 and $G = (V, E)$6 with $G = (V, E)$7. Add vertices $G = (V, E)$8, and edges $G = (V, E)$9 $M \subseteq E$0, and $M \subseteq E$1, $M \subseteq E$2 with $M \subseteq E$3. Let said edges $M \subseteq E$4 and $M \subseteq E$5 form the sets $M \subseteq E$6 and $M \subseteq E$7 respectively.</p>
 <h3 id="b-construct-s">(b) Construct S</h3>
-<p>Let $(A, B)$ be a min s-t cut in $H$. I will construct a vertex cover $S \subseteq X \cup Y$ such that $cap(A, B) = |S|$. Define the set $A_X, B_X, A_Y, B_Y$ as $A_X = A \cap X$, $B_X = B \cap X$, $A_Y = A \cap Y$, $B_Y = B \cap Y$ respectively.</p>
+<p>Let $M \subseteq E$8 be a min s-t cut in $M \subseteq E$9. I will construct a vertex cover $M$0 such that $M$1. Define the set $M$2 as $M$3, $M$4, $M$5, $M$6 respectively.</p>
 <p>The following lemmas will become useful:</p>
 <ul>
-<li><em>(1)</em>: the capacity of the min s-t cut of $H$ is upper bounded by $|X|$</li>
-<li>This is because the maximum flow introduced into the system by $s$ is $c_{e_s} = 1$ for each vertex in $X$.</li>
-<li><em>(2)</em>: All $e_s \in E_s, e_t \in E_t$ have capacity $1$ (by construction).</li>
-<li><em>(3)</em>: No edges from $A_X \to B_Y$ exist</li>
-<li>By <em>(1)</em>, we know $cap(A, B)$ is finite. Since all edges $e \notin E_s \cup E_t$ have $c_e = \infty$, such an edge would imply an infinite capacity between $A$ and $B$, which contradicts <em>(1)</em>.</li>
-<li><em>(4)</em>: $cap(A, B) = |B_X| + |A_Y|$ (proven in lecture)</li>
-<li>By <em>(3)</em>, and the fact that $G$ was bipartite and we therefore have no edges between vertices in $Y$, we have that all edges from $A \to B$ must be from $A_Y \to B_X$.</li>
-<li>By <em>(2)</em>, we have that each $v \in X$ and $u \in Y$ are limited by conservation of capacity, since each have a single incoming and outgoing edge in $E_s$ and $E_t$ respectively.</li>
-<li>Therefore, we have $cap(A, B) = |B_X| + |A_Y|$, since there are $|B_X|$ many edges of capacity $1$ into $t$, and $|A_Y|$ many edges of capacity $1$ into $s$.</li>
+<li><em>(1)</em>: the capacity of the min s-t cut of $M$7 is upper bounded by $M$8</li>
+<li>This is because the maximum flow introduced into the system by $M$9 is $G$0 for each vertex in $G$1.</li>
+<li><em>(2)</em>: All $G$2 have capacity $G$3 (by construction).</li>
+<li><em>(3)</em>: No edges from $G$4 exist</li>
+<li>By <em>(1)</em>, we know $G$5 is finite. Since all edges $G$6 have $G$7, such an edge would imply an infinite capacity between $G$8 and $G$9, which contradicts <em>(1)</em>.</li>
+<li><em>(4)</em>: $G = (X \cup Y, E)$0 (proven in lecture)</li>
+<li>By <em>(3)</em>, and the fact that $G = (X \cup Y, E)$1 was bipartite and we therefore have no edges between vertices in $G = (X \cup Y, E)$2, we have that all edges from $G = (X \cup Y, E)$3 must be from $G = (X \cup Y, E)$4.</li>
+<li>By <em>(2)</em>, we have that each $G = (X \cup Y, E)$5 and $G = (X \cup Y, E)$6 are limited by conservation of capacity, since each have a single incoming and outgoing edge in $G = (X \cup Y, E)$7 and $G = (X \cup Y, E)$8 respectively.</li>
+<li>Therefore, we have $G = (X \cup Y, E)$9, since there are $s$00 many edges of capacity $s$01 into $s$02, and $s$03 many edges of capacity $s$04 into $s$05.</li>
 </ul>
-<p>By <em>(3)</em>, all edges of $G$ must fall into sets $E_1$ between $A_X, A_Y$, $E_2$ between $A_Y, B_X$, and $E_3$ between $B_X, B_Y$.</p>
-<p>We can therefore select a vertex cover of $S = B_X \cup A_Y$, since $A_Y$ covers $E_1$ and $E_2$, and $B_X$ covers $E_2$ and $E_3$. By <em>(4)</em>, we have $|S| = |B_X| + |A_Y| = cap(A, B)$. Note that this isn't necessarily the minimum vertex cover, but it is a vertex cover of size $cap(A, B)$.</p>
+<p>By <em>(3)</em>, all edges of $s$06 must fall into sets $s$07 between $s$08, $s$09 between $s$10, and $s$11 between $s$12.</p>
+<p>We can therefore select a vertex cover of $s$13, since $s$14 covers $s$15 and $s$16, and $s$17 covers $s$18 and $s$19. By <em>(4)</em>, we have $s$20. Note that this isn't necessarily the minimum vertex cover, but it is a vertex cover of size $s$21.</p>
 <h3 id="c-construct-a-b">(c) Construct (A, B)</h3>
-<p>Let $S$ be a minimal vertex cover of $G$. I will construct a min s-t cut $(A, B)$ in $H$ such that $|S| = cap(A, B)$.</p>
-<p>Since $S$ is a vertex cover, it must contain at least one vertex from each edge in $E$. Let $S_X = S \cap X$, and $S_Y = S \cap Y$. Since $G$ is bipartite, we have that each edge between $X$ and $Y$ in $G$ contains some vertex in $S$.</p>
-<p>To construct $(A, B)$ with $cap(A, B) = |S|$, we must choose $|S|$ vertices from $S_X$ to route $1$ unit of flow through. We can then choose $|S|$ distinct arbitrary vertices from $S_Y$ which are neighbors of the previously chosen vertices to route the $|S|$ units of flow through.</p>
-<p>We know that $|S| \le |X|$ and $|S| \le |Y|$, since if we were to cover all of either $X$ or $Y$ in $S$, we would have a candidate vertex cover. This argument holds because $G$ is bipartite and therefore only has edges between $X$ and $Y$, and we have an upper bound because $|S|$ is minimal.</p>
-<p>Additionally, without loss of generality (since we could just exchange $X$ for $Y$ in $G$ when constructing $H$), suppose $|S_X| \ge |S_Y|$. We can choose all of $S_X$ to route $|S_X|$ units of flow through, and then additionally for each $u \in S_Y$ we can pick a neighbor of $u$, $v' \notin S_X$ to route an additional $|S_Y|$ units of flow through to each $u$. I claim that such a $v'$ always exists, which I will prove by contradiction.</p>
-<p>Suppose $\exists u \in S_Y$ such that $N(u) \subseteq S_X$. Then we would have already covered all edges $(v', u)$ for $v' \in N(u)$, and so we could remove $u$ from our set cover to make a smaller set cover $S'$. However, $S$ is a minimal set cover, so this is a contradiction.</p>
-<p>Therefore, we can create a set of edges $E_{S_X} = {(u, v) \in E: u \in S_X, v \in Y \setminus S_Y}$, and $E_{S_Y} = {(u, v) \in E: u \in S_Y, v \in X \setminus S_X}$, and since these edges are both vertex disjoint and edge disjoint by construction, we have $|E_{S_Y}| + |E_{S_X}| = |S|$.</p>
-<p>Letting $E_S$ be the set of edges $E_{S_X} \cup E_{S_Y}$ directed from $X \to Y$, we can create an s-t cut by cutting $H$ along all edges in $E_S$, along with edges from $s$ to vertices in $X$ which were not involved with any edge in $E_S$. Note that these two sets of edges we cut disconnect paths which form a partition of paths from $s \to t$, namely those which contain a vertex involved in some $E_S$, and those which don't. Therefore, this is a feasible s-t cut, since all paths from $s$ to $t$ disconnected.</p>
-<p>Taking $(A, B)$ to be the cut described above, we have exactly $|S|$ units of flow leaving $s$, and by extension $A$, and also entering $t$, and by extension $B$. Therefore, $cap(A, B) = |S|$.</p>
+<p>Let $s$22 be a minimal vertex cover of $s$23. I will construct a min s-t cut $s$24 in $s$25 such that $s$26.</p>
+<p>Since $s$27 is a vertex cover, it must contain at least one vertex from each edge in $s$28. Let $s$29, and $s$30. Since $s$31 is bipartite, we have that each edge between $s$32 and $s$33 in $s$34 contains some vertex in $s$35.</p>
+<p>To construct $s$36 with $s$37, we must choose $s$38 vertices from $s$39 to route $s$40 unit of flow through. We can then choose $s$41 distinct arbitrary vertices from $s$42 which are neighbors of the previously chosen vertices to route the $s$43 units of flow through.</p>
+<p>We know that $s$44 and $s$45, since if we were to cover all of either $s$46 or $s$47 in $s$48, we would have a candidate vertex cover. This argument holds because $s$49 is bipartite and therefore only has edges between $s$50 and $s$51, and we have an upper bound because $s$52 is minimal.</p>
+<p>Additionally, without loss of generality (since we could just exchange $s$53 for $s$54 in $s$55 when constructing $s$56), suppose $s$57. We can choose all of $s$58 to route $s$59 units of flow through, and then additionally for each $s$60 we can pick a neighbor of $s$61, $s$62 to route an additional $s$63 units of flow through to each $s$64. I claim that such a $s$65 always exists, which I will prove by contradiction.</p>
+<p>Suppose $s$66 such that $s$67. Then we would have already covered all edges $s$68 for $s$69, and so we could remove $s$70 from our set cover to make a smaller set cover $s$71. However, $s$72 is a minimal set cover, so this is a contradiction.</p>
+<p>Therefore, we can create a set of edges $s$73, and $s$74, and since these edges are both vertex disjoint and edge disjoint by construction, we have $s$75.</p>
+<p>Letting $s$76 be the set of edges $s$77 directed from $s$78, we can create an s-t cut by cutting $s$79 along all edges in $s$80, along with edges from $s$81 to vertices in $s$82 which were not involved with any edge in $s$83. Note that these two sets of edges we cut disconnect paths which form a partition of paths from $s$84, namely those which contain a vertex involved in some $s$85, and those which don't. Therefore, this is a feasible s-t cut, since all paths from $s$86 to $s$87 disconnected.</p>
+<p>Taking $s$88 to be the cut described above, we have exactly $s$89 units of flow leaving $s$90, and by extension $s$91, and also entering $s$92, and by extension $s$93. Therefore, $s$94.</p>
 <p>### (d) Design the algorithm</p>
 <ul>
-<li>Given a bipartite graph $G = (X, Y, E)$</li>
-<li>Construct $H$ as described in (a), but instead of using edges with capacity $\infty$ between $X$ and $Y$, use edges with capacity $n + 1$</li>
-<li>Find the min s-t cut $(A, B)$ in $H$ using ford-fulkerson</li>
-<li>Let $B_X = B \cap X$, $A_Y = A \cap Y$</li>
-<li>Return $S = B_X \cup A_Y$</li>
+<li>Given a bipartite graph $s$95</li>
+<li>Construct $s$96 as described in (a), but instead of using edges with capacity $s$97 between $s$98 and $s$99, use edges with capacity $t$00</li>
+<li>Find the min s-t cut $t$01 in $t$02 using ford-fulkerson</li>
+<li>Let $t$03, $t$04</li>
+<li>Return $t$05</li>
 </ul>
 <p><strong>Correctness</strong>:</p>
-<p>As mentioned in lecture, adjusting the edge capacities that were originally $\infty$ to $n + 1$ works here, since we still have the desired property that no edges could exist between $A_X \to B_Y$, since this would still respect our upper bound of $|X|$ on the capacity of the min s-t cut.</p>
-<p>From (c), we know that given a min s-t cut $(A, B)$, we can construct a vertex $S$ with $|S| = cap(A, B)$. Suppose for the sake of contradiction that $S$ wasn't minimal, i.e. there exists some min vertex cover $S'$ with $|S'| &lt; |S|$. From (b), we know we can construct an s-t cut $(A', B')$ with $cap(A', B') = |S'|$. Then we have $|S'| = cap(A', B') &lt; cap(A, B) = |S|$, and so $cap(A', B') &lt; cap(A, B)$. However, $(A, B)$ could not have been a min s-t cut, which is a contradiction.</p>
-<p>Therefore, we have that for any bipartite graph $G = (X, Y, E)$ and $H$ constructed as described in (a), we can find a min s-t cut $(A, B)$ in $H$, and construct a min vertex cover $S$ of $G$ such that $|S| = cap(A, B)$, simply by taking the elements of $B \cap X$ and $A \cap Y$.
- as $S$ as described in (b) and written in my algorithm.</p>
+<p>As mentioned in lecture, adjusting the edge capacities that were originally $t$06 to $t$07 works here, since we still have the desired property that no edges could exist between $t$08, since this would still respect our upper bound of $t$09 on the capacity of the min s-t cut.</p>
+<p>From (c), we know that given a min s-t cut $t$10, we can construct a vertex $t$11 with $t$12. Suppose for the sake of contradiction that $t$13 wasn't minimal, i.e. there exists some min vertex cover $t$14 with $t$15. From (b), we know we can construct an s-t cut $t$16 with $t$17. Then we have $t$18, and so $t$19. However, $t$20 could not have been a min s-t cut, which is a contradiction.</p>
+<p>Therefore, we have that for any bipartite graph $t$21 and $t$22 constructed as described in (a), we can find a min s-t cut $t$23 in $t$24, and construct a min vertex cover $t$25 of $t$26 such that $t$27, simply by taking the elements of $t$28 and $t$29.
+ as $t$30 as described in (b) and written in my algorithm.</p>
 <p><strong>Running Time</strong></p>
-<p>For a bipartite graph $G = (X, Y, E)$ in adjacency list form with $|X| + |Y| = n$ and $|E| = m$, we can create $H$ in $O(n + m)$, since we only need to add two additional vertices, along with $n$ additional edges between them, also taking into account the extra initialization of edge capacities which would only involve $O(m)$ operations.</p>
-<p>Then, since we have integer capacities, we can run ford-fulkerson on $H$ to find the min s-t cut, which will terminate in at most $nC$ iterations, where $C = n + 1$ here, each iteration taking $O(m)$ time to compute the augmenting path, for a total runtime of $O(mn^2)$.</p>
-<p>Since ford-fulkerson outputs the min cut $(A, B)$, each of which are sets with size $O(n)$, and additionally $X$ and $Y$ are sets with size $O(n)$, assuming an efficient implementation of intersection using a hash set, we can compute $B_X \cap A_Y$ in $O(n)$, and additionally $S$ in $O(n)$. Even with an inefficient implementation using a linear structure, we could perform the intersections in $O(n^2)$, and the union in $O(n)$.</p>
-<p>Therefore, the total runtime is $O(mn^2)$, which is polynomial.</p>
+<p>For a bipartite graph $t$31 in adjacency list form with $t$32 and $t$33, we can create $t$34 in $t$35, since we only need to add two additional vertices, along with $t$36 additional edges between them, also taking into account the extra initialization of edge capacities which would only involve $t$37 operations.</p>
+<p>Then, since we have integer capacities, we can run ford-fulkerson on $t$38 to find the min s-t cut, which will terminate in at most $t$39 iterations, where $t$40 here, each iteration taking $t$41 time to compute the augmenting path, for a total runtime of $t$42.</p>
+<p>Since ford-fulkerson outputs the min cut $t$43, each of which are sets with size $t$44, and additionally $t$45 and $t$46 are sets with size $t$47, assuming an efficient implementation of intersection using a hash set, we can compute $t$48 in $t$49, and additionally $t$50 in $t$51. Even with an inefficient implementation using a linear structure, we could perform the intersections in $t$52, and the union in $t$53.</p>
+<p>Therefore, the total runtime is $t$54, which is polynomial.</p>
 <h2 id="p4-knights">P4 - Knights</h2>
-<p>Given an $n \times n$ chess board where some cells are removed. Design a polynomial time algorithm to find the maximum number of knights that can be placed on this board such that no two knights attack each other.</p>
+<p>Given an $t$55 chess board where some cells are removed. Design a polynomial time algorithm to find the maximum number of knights that can be placed on this board such that no two knights attack each other.</p>
 <p><strong>Algorithm</strong>:</p>
 <ul>
-<li>Given $X$, the set of pairs $(i, j)$ that correspond to the cells that are removed, and $n$ be the size of the chess board.</li>
-<li>Create an undirected graph $G = (V, E)$, where $V$ is $[n]^2 \setminus X$, i.e. the pairs $(i, j)$ that are not removed</li>
-<li>Add edges $((i, j), (i', j'))$ to $G$ such that knights placed on cells $(i, j)$ and $(i', j')$ attack each other. To compute this, for each $(i, j) \in [n]^2$, add edges to all cells $(i', j')$ that are $2$ cells away horizontally and $1$ cell away vertically or $2$ cells away vertically and $1$ cell away horizontally, but that satisfy $(i', j') \in V$. Given such a cell $(i, j)$, the cells to add edges between would be those that satisfy the predicate...<ul>
-<li>$(i', j') \in V \land (|i - i'| = 2 \land |j - j'| = 1 \lor |i - i'| = 1 \land |j - j'| = 2)$</li>
+<li>Given $t$56, the set of pairs $t$57 that correspond to the cells that are removed, and $t$58 be the size of the chess board.</li>
+<li>Create an undirected graph $t$59, where $t$60 is $t$61, i.e. the pairs $t$62 that are not removed</li>
+<li>Add edges $t$63 to $t$64 such that knights placed on cells $t$65 and $t$66 attack each other. To compute this, for each $t$67, add edges to all cells $t$68 that are $t$69 cells away horizontally and $t$70 cell away vertically or $t$71 cells away vertically and $t$72 cell away horizontally, but that satisfy $t$73. Given such a cell $t$74, the cells to add edges between would be those that satisfy the predicate...<ul>
+<li>$t$75</li>
 </ul>
 </li>
-<li>Find the minimum vertex cover $S$ of $G$ using the algorithm from P3.</li>
-<li>Return $|V| - |S|$</li>
+<li>Find the minimum vertex cover $t$76 of $t$77 using the algorithm from P3.</li>
+<li>Return $t$78</li>
 </ul>
 <p><strong>Running Time</strong>:</p>
-<p>To create $G$, we first create our set of vertices $V$, which can be done in $O(n^2)$ (assuming we can check $(i, j) \in X$ in $O(1) by using an $n \times n$ grid of boolean values).</p>
-<p>Next, in order to compute $E$, we once again need to iterate through all $n^2$ cells, and for each cell, we need to check at most $8$ cells that could potentially attack the current cell, only adding an edge between them if we haven't done so before. Checking the $8$ cells is $O(1)$, so it takes a total time of $O(n^2)$ to compute edges.</p>
-<p>Our graph therefore has a size of $|V| \le n^2 = O(n^2)$, and $|E| \le 8n^2 = O(n^2)$.</p>
-<p>We can then find the maximum independent set of $G$ by first calculating the minimum vertex cover $S$ in $O(|V|^2|E|) = O(n^6)$, and then the M.I.S as $I = V \setminus S$. However, since $S \subseteq V$, and we only need to compute the maximum number of placements, we can return $|V| - |S|$ which can be done in constant time.</p>
-<p>Therefore, our total running time is $O(n^6)$, which is polynomial.</p>
+<p>To create $t$79, we first create our set of vertices $t$80, which can be done in $t$81 (assuming we can check $t$82 in $t$83n \times n$ grid of boolean values).</p>
+<p>Next, in order to compute $t$84, we once again need to iterate through all $t$85 cells, and for each cell, we need to check at most $t$86 cells that could potentially attack the current cell, only adding an edge between them if we haven't done so before. Checking the $t$87 cells is $t$88, so it takes a total time of $t$89 to compute edges.</p>
+<p>Our graph therefore has a size of $t$90, and $t$91.</p>
+<p>We can then find the maximum independent set of $t$92 by first calculating the minimum vertex cover $t$93 in $t$94, and then the M.I.S as $t$95. However, since $t$96, and we only need to compute the maximum number of placements, we can return $t$97 which can be done in constant time.</p>
+<p>Therefore, our total running time is $t$98, which is polynomial.</p>
 <p><strong>Proof</strong>:</p>
-<p>Let $n$ be the size of the chess board, and $X$ be the set of pairs $(i, j) \in [n]^2$ that correspond to the cells that are removed. We construct a graph $G = (V, E)$, with $V = (i, j) \in [n]^2 \setminus X$, and $E$ being the set of edges between each pair of vertices that correspond to cells that are $2$ cells away horizontally and $1$ cell away vertically or $2$ cells away vertically and $1$ cell away horizontally.</p>
-<p>By virtue of its construction, $G$ has a vertex for each cell we could place a knight on, since it contains each $(i, j) \in [n]^2$ which wasn't removed. Furthermore, the set of edges corresponds to each pair of cells that would attack each other if knights were placed on them, since the cells that a knight placed in $(i, j)$ would attack are exactly those that are $2$ cells away horizontally and $1$ cell away vertically or $2$ cells away vertically and $1$ cell away horizontally, but that are still within the board and not removed, i.e. pairs $(i', j') \in [n]^2 \setminus X$, or more simply $(i', j') \in V$, and that satisfy either $|i - i'| = 2, |j - j'| = 1$ or $|i - i'| = 1, |j - j'| = 2$.</p>
-<p>Let $I \subseteq V$ be the maximum independent set of $G$, and $k$ be the maximum number of knights that can be placed on the board such that no two knights attack each other. I claim that $|I| = k$, which I will prove by showing that $|I| \le k$ and $|I| \ge k$.</p>
+<p>Let $t$99 be the size of the chess board, and $G$00 be the set of pairs $G$01 that correspond to the cells that are removed. We construct a graph $G$02, with $G$03, and $G$04 being the set of edges between each pair of vertices that correspond to cells that are $G$05 cells away horizontally and $G$06 cell away vertically or $G$07 cells away vertically and $G$08 cell away horizontally.</p>
+<p>By virtue of its construction, $G$09 has a vertex for each cell we could place a knight on, since it contains each $G$10 which wasn't removed. Furthermore, the set of edges corresponds to each pair of cells that would attack each other if knights were placed on them, since the cells that a knight placed in $G$11 would attack are exactly those that are $G$12 cells away horizontally and $G$13 cell away vertically or $G$14 cells away vertically and $G$15 cell away horizontally, but that are still within the board and not removed, i.e. pairs $G$16, or more simply $G$17, and that satisfy either $G$18 or $G$19.</p>
+<p>Let $G$20 be the maximum independent set of $G$21, and $G$22 be the maximum number of knights that can be placed on the board such that no two knights attack each other. I claim that $G$23, which I will prove by showing that $G$24 and $G$25.</p>
 <ul>
-<li>$|I| \le k$: Since $I$ is an independent set, no two vertices in $I$ are adjacent. Therefore, no two knights placed on cells corresponding to vertices in $I$ would attack each other. Since we defined $k$ as the maximum number of knights that can be placed on the board such that no two knights attack each other, we have $|I| \le k$.</li>
-<li>$|I| \ge k$: Suppose for the sake of contradiction that $|I| &lt; k$.  Then there must exist some set of valid placements $P = (i_1, j_1), \ldots, (i_k, j_k)$ in which we can place knights such that none of the knights attack each other. By construction of $G$, we would therefore have no edges between any of the vertices corresponding to pairs in $P$, and so said vertices would form an independent set, say $I'$. Since $|I| &lt; k$, we have $|I'| &gt; |I|$, which is a contradiction to $I$ being a maximum independent set.</li>
+<li>$G$26: Since $G$27 is an independent set, no two vertices in $G$28 are adjacent. Therefore, no two knights placed on cells corresponding to vertices in $G$29 would attack each other. Since we defined $G$30 as the maximum number of knights that can be placed on the board such that no two knights attack each other, we have $G$31.</li>
+<li>$G$32: Suppose for the sake of contradiction that $G$33.  Then there must exist some set of valid placements $G$34 in which we can place knights such that none of the knights attack each other. By construction of $G$35, we would therefore have no edges between any of the vertices corresponding to pairs in $G$36, and so said vertices would form an independent set, say $G$37. Since $G$38, we have $G$39, which is a contradiction to $G$40 being a maximum independent set.</li>
 </ul>
             </div>
             <div class="tags">

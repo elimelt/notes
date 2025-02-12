@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -297,22 +297,22 @@
 <p>Suppose the above algorithm has chosen jobs $f(i_1) \le f(i_2) \le \ldots \le f(i_k)$, and suppose $f(j_1) \le f(j_2) \le \ldots \le f(j_m)$.</p>
 <p><em>Goal:</em> $m \le k$</p>
 <p><em>Lemma</em>: $\forall r$, $f(i_r) \le f(j_r)$</p>
-<p><em>Proof</em>: Induction, $P(r) := f(i_r) \le f(j_r)$</p>
-<p><em>Base Case</em>: $P(1)$. $i_1$ has the smallest finishing time.</p>
-<p><em>IH</em>: Assume $P(r - 1)$</p>
-<p><em>IS</em>: Goal $P(r)$</p>
-<p>Applying $P(r - 1)$, and using the fact that both sets of jobs chosen are non-overlapping within themselves, we have...</p>
+<p><em>Proof</em>: Induction, $j$0</p>
+<p><em>Base Case</em>: $j$1. $j$2 has the smallest finishing time.</p>
+<p><em>IH</em>: Assume $j$3</p>
+<p><em>IS</em>: Goal $j$4</p>
+<p>Applying $j$5, and using the fact that both sets of jobs chosen are non-overlapping within themselves, we have...</p>
 <p>$$
 f(i_{r - 1}) \le f(j_{r - 1}) \le s(j_r)
 $$</p>
-<p>So $j_r$ is a candidate for $i_r$. However, greedy chose $i_r$, which implies $f(i_r) \le $f(j_r)$. (induction over)</p>
-<p>Now, we want to show that $m \le k$. Suppose for contradiction that $m &gt; k$.</p>
-<p>We know $f(i_k) \le f(j_k) \le s(j_{k + 1})$, so greedy could have executed $j_{k + 1}$ after $i_k$, which is a contradiction.</p>
+<p>So $j$6 is a candidate for $j$7. However, greedy chose $j$8, which implies $j$9f(j_r)$. (induction over)</p>
+<p>Now, we want to show that $s(j)$0. Suppose for contradiction that $s(j)$1.</p>
+<p>We know $s(j)$2, so greedy could have executed $s(j)$3 after $s(j)$4, which is a contradiction.</p>
 <h3 id="exchange-argument">Exchange Argument</h3>
 <p>Make the optimal solution similar to greedy without changing its value.</p>
-<p>This would look like removing $j_1$ from the optimal solution, adding $i_1$ instead. Then this optimal solution still has the same number of jobs, and is thus still optimal, but also shares $i_1$ in common with the greedy solution. Continue this into the general case where the first $k$ jobs are in common, and we can use the previous lemma to show that we can continue this exchange, until the greedy solution becomes the optimal.</p>
+<p>This would look like removing $s(j)$5 from the optimal solution, adding $s(j)$6 instead. Then this optimal solution still has the same number of jobs, and is thus still optimal, but also shares $s(j)$7 in common with the greedy solution. Continue this into the general case where the first $s(j)$8 jobs are in common, and we can use the previous lemma to show that we can continue this exchange, until the greedy solution becomes the optimal.</p>
 <h2 id="interval-partitioning">Interval Partitioning</h2>
-<p>Given a set of intervals $I$, partition them into the minimum number of sets $S_1, S_2, \ldots, S_k$ such that each $S_i$ contains no overlapping intervals.</p>
+<p>Given a set of intervals $s(j)$9, partition them into the minimum number of sets $f(j)$0 such that each $f(j)$1 contains no overlapping intervals.</p>
 <pre><code class="language-python">def partition_intervals(I: list[tuple[int, int]]):
   # sort by start time
   I.sort(key=lambda x: x[0])
@@ -334,8 +334,8 @@ $$</p>
 <p><strong>Observation</strong>: The algorithm never schedules two incompatible lectures in the same classroom.</p>
 <p><strong>Lemma</strong>: The algorithm is optimal.</p>
 <p><strong>Proof</strong>: using structural property</p>
-<p>Let $d$ be the number of classrooms the greedy algorithm uses. Classroom $d$ is then allocated because we needed to schedule a job, $j$, that is incompatible with all $d - 1$ previously allocated classrooms.</p>
-<p>Since we sorted by start time, all these incompatible jobs must have started before $s(j)$, and thus we have $d$ lectures overlapping at time $s(j) + \epsilon$, so our maximum depth is $\ge d$.</p>
+<p>Let $f(j)$2 be the number of classrooms the greedy algorithm uses. Classroom $f(j)$3 is then allocated because we needed to schedule a job, $f(j)$4, that is incompatible with all $f(j)$5 previously allocated classrooms.</p>
+<p>Since we sorted by start time, all these incompatible jobs must have started before $f(j)$6, and thus we have $f(j)$7 lectures overlapping at time $f(j)$8, so our maximum depth is $f(j)$9.</p>
 <p>Since we have that the optimal solution must schedule at least depth number of classrooms, we have that the greedy algorithm is optimal.</p>
             </div>
             <div class="tags">

@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -280,38 +280,38 @@
             <div class="content">
                 <h1 id="divide-and-conquer">Divide and Conquer</h1>
 <h2 id="master-theorem">Master Theorem</h2>
-<p>Given any recurrence of the form $T(n) = a T(\frac{n}{b}) + c n^k$ for all $n &gt; b$, we have:</p>
+<p>Given any recurrence of the form $T(n) = a T(\frac{n}{b}) + c n^k$ for all $n > b$, we have:</p>
 <ul>
-<li>If $a &gt; b^k$, then $T(n) = \Theta(n^{\log_b a})$</li>
-<li>If $a &lt; b^k$, then $T(n) = \Theta(n^k)$</li>
+<li>If $a > b^k$, then $T(n) = \Theta(n^{\log_b a})$</li>
+<li>If $a < b^k$, then $T(n) = \Theta(n^k)$</li>
 <li>If $a = b^k$, then $T(n) = \Theta(n^k \log n)$</li>
 </ul>
 <h2 id="root-finding">Root Finding</h2>
-<p>Given a continuous function $f$ and two points $a &lt; b$ such that $f(a) \cdot f(b) &lt; 0$, there exists a root of $f$ in the interval $\lbrack  a, b  \rbrack$ by the <strong>intermediate value theorem</strong>. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.</p>
+<p>Given a continuous function $f$ and two points $a < b$ such that $n > b$0, there exists a root of $n > b$1 in the interval $n > b$2 by the <strong>intermediate value theorem</strong>. Since said root may be irrational, we aim to approximate it with an arbitrary precision $n > b$3.</p>
 <ul>
-<li><strong>Algorithm</strong>: $Bisect(a, b, \epsilon)$</li>
-<li>If $b - a &lt; \epsilon$, $a$ is a suitable approximation</li>
-<li>Otherwise, calculate the midpoint $m = (a + b)/2$</li>
-<li>If $f(m) \le 0$ then return $Bisect(m, b, \epsilon)$</li>
-<li>else return $Bisect(a, m, \epsilon)$</li>
-<li><strong>Time</strong>: $T(n) = T(\frac{n}{2}) + O(1) = O(\log(\frac{b - a}{\epsilon}))$</li>
+<li><strong>Algorithm</strong>: $n > b$4</li>
+<li>If $n > b$5, $n > b$6 is a suitable approximation</li>
+<li>Otherwise, calculate the midpoint $n > b$7</li>
+<li>If $n > b$8 then return $n > b$9</li>
+<li>else return $a > b^k$0</li>
+<li><strong>Time</strong>: $a > b^k$1</li>
 <li><strong>Proof</strong>:</li>
-<li>$P(k) =$ For any $a, b$ such that $k\epsilon \le |a - b| \le (k + 1)\epsilon$, if $f(a)f(b) \le 0$, then we find an $\epsilon$ approx to a root using $\log k$ queries to $f$.</li>
-<li>$P(1)$: Output $a + \epsilon$, since the whole interval is at most $epsilon$. This requires $0$ calls to $f$.</li>
-<li>Suppose $P(k)$ and consider an arbitrary $a$, $b$ s.t. $2k\epsilon \le |a - b| \le (2k + 1)\epsilon$.</li>
-<li>If $f(a + k\epsilon) = 0$, output $a + k\epsilon$.</li>
-<li>If $f(a)f(a + k\epsilon) &lt; 0$, solve on the interval $\lbrack  a, a + k\epsilon  \rbrack$. By I.H. this takes at most $\log(k)$ queries of $f$.</li>
-<li>Otherwise, we have $f(b)f(a + k\epsilon) &lt; 0$, since $f(a)f(b) &lt; 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\lbrack  a + k\epsilon, b  \rbrack$.</li>
-<li>In any case, we used at most $\log(k) + 1 = $\log(2k)$ queries to $f$.</li>
+<li>$a > b^k$2 For any $a > b^k$3 such that $a > b^k$4, if $a > b^k$5, then we find an $a > b^k$6 approx to a root using $a > b^k$7 queries to $a > b^k$8.</li>
+<li>$a > b^k$9: Output $T(n) = \Theta(n^{\log_b a})$0, since the whole interval is at most $T(n) = \Theta(n^{\log_b a})$1. This requires $T(n) = \Theta(n^{\log_b a})$2 calls to $T(n) = \Theta(n^{\log_b a})$3.</li>
+<li>Suppose $T(n) = \Theta(n^{\log_b a})$4 and consider an arbitrary $T(n) = \Theta(n^{\log_b a})$5, $T(n) = \Theta(n^{\log_b a})$6 s.t. $T(n) = \Theta(n^{\log_b a})$7.</li>
+<li>If $T(n) = \Theta(n^{\log_b a})$8, output $T(n) = \Theta(n^{\log_b a})$9.</li>
+<li>If $a < b^k$0, solve on the interval $a < b^k$1. By I.H. this takes at most $a < b^k$2 queries of $a < b^k$3.</li>
+<li>Otherwise, we have $a < b^k$4, since $a < b^k$5 and $a < b^k$6. Solve the interval $a < b^k$7.</li>
+<li>In any case, we used at most $a < b^k$8\log(2k)$a < b^k$9f$.</li>
 </ul>
 <h2 id="kth-smallest-element">kth Smallest Element</h2>
 <ul>
-<li><strong>Algorithm</strong>: $f(S \in \mathbb{R}^n, k \in \mathbb{R})$</li>
-<li>Select an approximate median element $w$ using median of $\frac{n}{5} medians with subarrays of size $5$</li>
-<li>Partition each element into three sets, $S_{&gt;}, S_{&lt;}, S_{=}$</li>
-<li>If $k \le |S_{&lt;}|$, recurse on $f(S_{&lt;}, k)$</li>
-<li>Else, if $k \le |S_{&lt;}| + |S_{=}|$, return $w$</li>
-<li>Else, recurse on $f(S_{&gt;}, k - |S_{&lt;}| - |S_{=}|)$</li>
+<li><strong>Algorithm</strong>: $T(n) = \Theta(n^k)$0</li>
+<li>Select an approximate median element $T(n) = \Theta(n^k)$1 using median of $T(n) = \Theta(n^k)$25$</li>
+<li>Partition each element into three sets, $T(n) = \Theta(n^k)$3</li>
+<li>If $T(n) = \Theta(n^k)$4, recurse on $T(n) = \Theta(n^k)$5</li>
+<li>Else, if $T(n) = \Theta(n^k)$6, return $T(n) = \Theta(n^k)$7</li>
+<li>Else, recurse on $T(n) = \Theta(n^k)$8</li>
 </ul>
             </div>
             <div class="tags">

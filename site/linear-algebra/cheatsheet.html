@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -283,13 +283,13 @@
 <h3 id="definition-and-representation">Definition and Representation</h3>
 <ul>
 <li>A vector is a quantity with both magnitude and direction</li>
-<li>Notation: $\vec{v}$ or $\mathbf{v}$ or $\begin{pmatrix} x \ y \ z \end{pmatrix}$</li>
+<li>Notation: $\vec{v}$ or $\mathbf{v}$ or $\begin{pmatrix} x \\ y \\ z \end{pmatrix}$</li>
 <li>Components: $\vec{v} = \langle v_1, v_2, v_3 \rangle$ in 3D space</li>
 </ul>
 <h3 id="geometric-interpretation">Geometric Interpretation</h3>
 <ul>
 <li>Directed line segment from initial point to terminal point</li>
-<li>Length (magnitude): $|\vec{v}| = \sqrt{v_1^2 + v_2^2 + v_3^2}$</li>
+<li>Length (magnitude): $\|\vec{v}\| = \sqrt{v_1^2 + v_2^2 + v_3^2}$</li>
 <li>Two vectors are equal if they have same magnitude and direction</li>
 </ul>
 <h3 id="position-vectors">Position Vectors</h3>
@@ -299,13 +299,13 @@
 </ul>
 <h3 id="direction-vectors">Direction Vectors</h3>
 <ul>
-<li>Unit vector in direction of $\vec{v}$: $\hat{v} = \frac{\vec{v}}{|\vec{v}|}$</li>
+<li>Unit vector in direction of $\vec{v}$: $\hat{v} = \frac{\vec{v}}{\|\vec{v}\|}$</li>
 <li>Represents pure direction (magnitude = 1)</li>
 </ul>
 <h3 id="unit-vectors">Unit Vectors</h3>
 <ul>
-<li>Vectors with magnitude 1: $|\vec{u}| = 1$</li>
-<li>Direction cosines: $\cos \alpha = \frac{v_1}{|\vec{v}|}, \cos \beta = \frac{v_2}{|\vec{v}|}, \cos \gamma = \frac{v_3}{|\vec{v}|}$</li>
+<li>Vectors with magnitude 1: $\|\vec{u}\| = 1$</li>
+<li>Direction cosines: $\cos \alpha = \frac{v_1}{\|\vec{v}\|}, \cos \beta = \frac{v_2}{\|\vec{v}\|}, \cos \gamma = \frac{v_3}{\|\vec{v}\|}$</li>
 </ul>
 <h4 id="standard-basis-vectors">Standard Basis Vectors</h4>
 <table>
@@ -347,7 +347,7 @@
 </ul>
 <h4 id="triangle-inequality">Triangle Inequality</h4>
 <ul>
-<li>$|\vec{a} + \vec{b}| \leq |\vec{a}| + |\vec{b}|$</li>
+<li>$\|\vec{a} + \vec{b}\| \leq \|\vec{a}\| + \|\vec{b}\|$</li>
 <li>Equality holds if and only if vectors are parallel</li>
 </ul>
 <h3 id="scalar-multiplication">Scalar Multiplication</h3>
@@ -356,22 +356,22 @@
 <li>Properties:</li>
 <li>$c(\vec{a} + \vec{b}) = c\vec{a} + c\vec{b}$</li>
 <li>$(c_1 + c_2)\vec{a} = c_1\vec{a} + c_2\vec{a}$</li>
-<li>$|c\vec{v}| = |c||\vec{v}|$</li>
+<li>$\|c\vec{v}\| = |c|\|\vec{v}\|$</li>
 </ul>
 <h1 id="systems-of-linear-equations">Systems of Linear Equations</h1>
 <h2 id="matrix-form-ax-b">Matrix Form (Ax = b)</h2>
 <p>$$
 \begin{bmatrix}
-a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \
-a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \
-a_{m1} &amp; a_{m2} &amp; \cdots &amp; a_{mn}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
 \end{bmatrix}
 \begin{bmatrix}
-x_1 \ x_2 \ \vdots \ x_n
+x_1 \\ x_2 \\ \vdots \\ x_n
 \end{bmatrix} =
 \begin{bmatrix}
-b_1 \ b_2 \ \vdots \ b_m
+b_1 \\ b_2 \\ \vdots \\ b_m
 \end{bmatrix}
 $$</p>
 <h2 id="solution-types">Solution Types</h2>
@@ -386,17 +386,17 @@ $$</p>
 <tbody>
 <tr>
 <td>Unique Solution</td>
-<td>$\text{rank}(A) = \text{rank}([A|b]) = n$</td>
+<td>$\text{rank}(A) = \text{rank}([A\|b]) = n$</td>
 <td>Lines/planes intersect at one point</td>
 </tr>
 <tr>
 <td>Infinite Solutions</td>
-<td>$\text{rank}(A) = \text{rank}([A|b]) &lt; n$</td>
+<td>$\text{rank}(A) = \text{rank}([A\|b]) < n$</td>
 <td>Lines/planes overlap</td>
 </tr>
 <tr>
 <td>No Solution</td>
-<td>$\text{rank}(A) &lt; \text{rank}([A|b])$</td>
+<td>$\text{rank}(A) < \text{rank}([A\|b])$</td>
 <td>Lines/planes are parallel</td>
 </tr>
 </tbody>
@@ -486,7 +486,7 @@ $$</p>
 </tr>
 <tr>
 <td>Identity ($I_n$)</td>
-<td>$a_{ij} = \begin{cases} 1 &amp; \text{if } i=j \ 0 &amp; \text{if } i\neq j \end{cases}$</td>
+<td>$a_{ij} = \begin{cases} 1 & \text{if } i=j \\ 0 & \text{if } i\neq j \end{cases}$</td>
 <td>- Square matrix<br>- 1's on diagonal, 0's elsewhere<br>- $AI = IA = A$</td>
 </tr>
 <tr>
@@ -501,7 +501,7 @@ $$</p>
 </tr>
 <tr>
 <td>Triangular</td>
-<td>Upper: $a_{ij} = 0$ for $i &gt; j$<br>Lower: $a_{ij} = 0$ for $i &lt; j$</td>
+<td>Upper: $a_{ij} = 0$ for $i > j$<br>Lower: $a_{ij} = 0$ for $i < j$</td>
 <td>- Square matrix<br>- Determinant = product of diagonal entries</td>
 </tr>
 </tbody>
@@ -510,19 +510,19 @@ $$</p>
 <h3 id="addition-and-subtraction_1">Addition and Subtraction</h3>
 <ul>
 <li>Only defined for matrices of same dimensions</li>
-<li>$(A \pm B)<em ij="ij">{ij} = a</em>$} \pm b_{ij</li>
+<li>$(A \pm B)_{ij} = a_{ij} \pm b_{ij}$</li>
 <li>Commutative: $A + B = B + A$</li>
 <li>Associative: $(A + B) + C = A + (B + C)$</li>
 </ul>
 <h3 id="scalar-multiplication_1">Scalar Multiplication</h3>
 <ul>
-<li>$(cA)<em ij="ij">{ij} = c(a</em>)$</li>
+<li>$(cA)_{ij} = c(a_{ij})$</li>
 <li>Distributive: $c(A + B) = cA + cB$</li>
 <li>$(cd)A = c(dA)$</li>
 </ul>
 <h3 id="transpose">Transpose</h3>
 <ul>
-<li>$(A^T)<em ji="ji">{ij} = a</em>$</li>
+<li>$(A^T)_{ij} = a_{ji}$</li>
 <li>$(A^T)^T = A$</li>
 <li>$(A + B)^T = A^T + B^T$</li>
 <li>$(cA)^T = cA^T$</li>
@@ -571,7 +571,7 @@ $$</p>
 </ol>
 <h2 id="linear-independence">Linear Independence</h2>
 <h3 id="definition">Definition</h3>
-<p>Vectors ${\mathbf{v}_1, \mathbf{v}_2, ..., \mathbf{v}_n}$ are linearly independent if:
+<p>Vectors $\{\mathbf{v}_1, \mathbf{v}_2, ..., \mathbf{v}_n\}$ are linearly independent if:
 $$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$
 implies $c_1 = c_2 = ... = c_n = 0$</p>
 <h3 id="tests-and-algorithms">Tests and Algorithms</h3>
@@ -603,8 +603,8 @@ implies $c_1 = c_2 = ... = c_n = 0$</p>
 </table>
 <h2 id="span">Span</h2>
 <h3 id="definition_1">Definition</h3>
-<p>The span of vectors ${\mathbf{v}_1, ..., \mathbf{v}_n}$ is:
-$$\text{span}{\mathbf{v}_1, ..., \mathbf{v}_n} = {c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F}$$</p>
+<p>The span of vectors $\{\mathbf{v}_1, ..., \mathbf{v}_n\}$ is:
+$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$</p>
 <h3 id="geometric-interpretation_2">Geometric Interpretation</h3>
 <ul>
 <li>1 vector: line through origin</li>
@@ -614,7 +614,7 @@ $$\text{span}{\mathbf{v}_1, ..., \mathbf{v}_n} = {c_1\mathbf{v}_1 + ... + c_n\ma
 <h2 id="basis">Basis</h2>
 <p>A basis is a linearly independent set of vectors that spans the vector space.</p>
 <h3 id="standard-basis">Standard Basis</h3>
-<p>For $\mathbb{R}^n$: ${\mathbf{e}_1, \mathbf{e}_2, ..., \mathbf{e}_n}$ where:
+<p>For $\mathbb{R}^n$: $\{\mathbf{e}_1, \mathbf{e}_2, ..., \mathbf{e}_n\}$ where:
 $\mathbf{e}_i = [0, ..., 1, ..., 0]^T$ (1 in $i$th position)</p>
 <h3 id="dimension">Dimension</h3>
 <p>The dimension of a vector space is the number of vectors in any basis.</p>
@@ -647,12 +647,12 @@ $\mathbf{e}_i = [0, ..., 1, ..., 0]^T$ (1 in $i$th position)</p>
 <tbody>
 <tr>
 <td>Null Space</td>
-<td>$N(A) = {\mathbf{x}: A\mathbf{x}=\mathbf{0}}$</td>
+<td>$N(A) = \{\mathbf{x}: A\mathbf{x}=\mathbf{0}\}$</td>
 <td>$n - \text{rank}(A)$</td>
 </tr>
 <tr>
 <td>Column Space</td>
-<td>$C(A) = {\mathbf{y}: \mathbf{y}=A\mathbf{x}}$</td>
+<td>$C(A) = \{\mathbf{y}: \mathbf{y}=A\mathbf{x}\}$</td>
 <td>$\text{rank}(A)$</td>
 </tr>
 <tr>
@@ -698,7 +698,7 @@ $$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$
 </tr>
 <tr>
 <td>Self-Dot Product</td>
-<td>$\vec{a} \cdot \vec{a} = |\vec{a}|^2$</td>
+<td>$\vec{a} \cdot \vec{a} = \|\vec{a}\|^2$</td>
 <td>Dot product with itself equals magnitude squared</td>
 </tr>
 </tbody>
@@ -738,7 +738,7 @@ $$\text{proj}_{\vec{b}}\vec{a} = \frac{\vec{a} \cdot \vec{b}}{|\vec{b}|^2}\vec{b
 </tr>
 <tr>
 <td>Magnitude</td>
-<td>$|\vec{a} \times \vec{b}| = |\vec{a}||\vec{b}|\sin(\theta)$</td>
+<td>$\|\vec{a} \times \vec{b}\| = \|\vec{a}\|\|\vec{b}\|\sin(\theta)$</td>
 <td>Area of parallelogram</td>
 </tr>
 <tr>
@@ -818,11 +818,11 @@ $$tr(A) = \sum_{i=1}^n a_{ii}$$</p>
 <h3 id="calculation-methods">Calculation Methods</h3>
 <h4 id="cofactor-expansion">Cofactor Expansion</h4>
 <p>For n×n matrix:
-$$det(A) = \sum_{j=1}^n a_{ij}C_{ij}$$
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$0
 where Cᵢⱼ is the (i,j) cofactor</p>
 <h4 id="rowcolumn-expansion">Row/Column Expansion</h4>
 <p>Choose any row/column i:
-$$det(A) = \sum_{j=1}^n (-1)^{i+j} a_{ij}M_{ij}$$
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$1
 where Mᵢⱼ is the minor</p>
 <h4 id="triangular-method">Triangular Method</h4>
 <ol>
@@ -832,12 +832,12 @@ where Mᵢⱼ is the minor</p>
 </ol>
 <h3 id="cramers-rule">Cramer's Rule</h3>
 <p>For system Ax = b with det(A) ≠ 0:
-$$x_i = \frac{det(A_i)}{det(A)}$$
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$2
 where Aᵢ is A with column i replaced by b</p>
 <h1 id="matrix-operations-cont-1">Matrix Operations (cont. 1)</h1>
 <h2 id="matrix-multiplication">Matrix Multiplication</h2>
 <p>For matrices $A_{m×n}$ and $B_{n×p}$:
-$$(AB)<em k="1">{ij} = \sum</em>$$}^n a_{ik}b_{kj</p>
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$3</p>
 <h3 id="properties_4">Properties</h3>
 <ul>
 <li>Distributive: $A(B + C) = AB + AC$</li>
@@ -895,7 +895,7 @@ $$(AB)<em k="1">{ij} = \sum</em>$$}^n a_{ik}b_{kj</p>
 <h3 id="calculation-methods_1">Calculation Methods</h3>
 <h4 id="adjugate-method">Adjugate Method</h4>
 <p>For an n×n matrix:
-$$A^{-1} = \frac{1}{\det(A)}\text{adj}(A)$$
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$4
 where adj(A) is the adjugate matrix</p>
 <h4 id="gaussian-elimination_1">Gaussian Elimination</h4>
 <ol>
@@ -926,7 +926,7 @@ where adj(A) is the adjugate matrix</p>
 <li>For real matrices, $A^H = A^T$</li>
 </ul>
 <h1 id="systems-of-linear-equations-cont-1">Systems of Linear Equations (cont. 1)</h1>
-<h2 id="homogeneous-systems-amathbfx-mathbf0">Homogeneous Systems ($A\mathbf{x} = \mathbf{0}$)</h2>
+<h2 id="homogeneous-systems-inlinemath3560874909394323260_205">Homogeneous Systems ($A\mathbf{x} = \mathbf{0}$)</h2>
 <p>A system where all constants are zero: $A\mathbf{x} = \mathbf{0}$</p>
 <h3 id="trivial-solution">Trivial Solution</h3>
 <ul>
@@ -935,7 +935,7 @@ where adj(A) is the adjugate matrix</p>
 </ul>
 <h3 id="nontrivial-solutions">Nontrivial Solutions</h3>
 <ul>
-<li>Exist if and only if $\text{rank}(A) &lt; n$ where $n$ is number of variables</li>
+<li>Exist if and only if $\text{rank}(A) < n$ where $n$ is number of variables</li>
 <li>Equivalent to $\text{det}(A) = 0$ for square matrices</li>
 <li>Number of free variables = $n - \text{rank}(A)$</li>
 </ul>
@@ -951,7 +951,7 @@ where adj(A) is the adjugate matrix</p>
 <tbody>
 <tr>
 <td>Rank Test</td>
-<td>$\text{rank}(A) = \text{rank}([A|\mathbf{b}])$</td>
+<td>$\text{rank}(A) = \text{rank}([A\|\mathbf{b}])$</td>
 </tr>
 <tr>
 <td>Square Matrix</td>
@@ -971,11 +971,11 @@ where adj(A) is the adjugate matrix</p>
 </ol>
 <h2 id="cramers-rule_1">Cramer's Rule</h2>
 <p>For system $A\mathbf{x} = \mathbf{b}$ where $A$ is $n \times n$ with $\text{det}(A) \neq 0$:
-$$x_i = \frac{\text{det}(A_i)}{\text{det}(A)}$$
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$5
 Where $A_i$ is matrix $A$ with column $i$ replaced by $\mathbf{b}$</p>
 <h2 id="matrix-inverse-method">Matrix Inverse Method</h2>
 <p>For square system $A\mathbf{x} = \mathbf{b}$ where $A$ is invertible:
-$$\mathbf{x} = A^{-1}\mathbf{b}$$</p>
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$6</p>
 <p>Requirements:</p>
 <ul>
 <li>$A$ must be square</li>
@@ -993,7 +993,7 @@ $$\mathbf{x} = A^{-1}\mathbf{b}$$</p>
 <p>Every linear transformation $T: \mathbb{R}^n \to \mathbb{R}^m$ can be represented by a unique $m \times n$ matrix $A$</p>
 <h3 id="standard-matrix">Standard Matrix</h3>
 <p>For transformation $T$, the standard matrix $A$ is formed by:
-$$A = [T(e_1) \; T(e_2) \; \cdots \; T(e_n)]$$
+$$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$7
 where $e_i$ are standard basis vectors</p>
 <h2 id="properties_6">Properties</h2>
 <table>
@@ -1007,18 +1007,18 @@ where $e_i$ are standard basis vectors</p>
 <tbody>
 <tr>
 <td>Kernel (Null Space)</td>
-<td>$\text{ker}(T) = {v \in V : T(v) = 0}$</td>
+<td>$\text{ker}(T) = \{v \in V : T(v) = 0\}$</td>
 <td>Solve $Ax = 0$</td>
 </tr>
 <tr>
 <td>Range (Image)</td>
-<td>$\text{range}(T) = {T(v) : v \in V}$</td>
+<td>$\text{range}(T) = \{T(v) : v \in V\}$</td>
 <td>Span of columns of $A$</td>
 </tr>
 <tr>
 <td>One-to-One (Injective)</td>
 <td>$T(v_1) = T(v_2) \implies v_1 = v_2$</td>
-<td>$\text{ker}(T) = {0}$</td>
+<td>$\text{ker}(T) = \{0\}$</td>
 </tr>
 <tr>
 <td>Onto (Surjective)</td>
@@ -1036,29 +1036,29 @@ where $e_i$ are standard basis vectors</p>
 <h3 id="rotation">Rotation</h3>
 <ul>
 <li>2D rotation by angle $\theta$:
-  $$R_\theta = \begin{bmatrix} \cos\theta &amp; -\sin\theta \ \sin\theta &amp; \cos\theta \end{bmatrix}$$</li>
+  $$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$8</li>
 </ul>
 <h3 id="reflection">Reflection</h3>
 <ul>
-<li>Across x-axis: $\begin{bmatrix} 1 &amp; 0 \ 0 &amp; -1 \end{bmatrix}$</li>
-<li>Across y-axis: $\begin{bmatrix} -1 &amp; 0 \ 0 &amp; 1 \end{bmatrix}$</li>
+<li>Across x-axis: $\begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$</li>
+<li>Across y-axis: $\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$</li>
 </ul>
 <h3 id="projection">Projection</h3>
 <ul>
-<li>Onto x-axis: $\begin{bmatrix} 1 &amp; 0 \ 0 &amp; 0 \end{bmatrix}$</li>
-<li>Onto y-axis: $\begin{bmatrix} 0 &amp; 0 \ 0 &amp; 1 \end{bmatrix}$</li>
+<li>Onto x-axis: $\begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}$</li>
+<li>Onto y-axis: $\begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}$</li>
 </ul>
 <h3 id="scaling">Scaling</h3>
 <ul>
 <li>Scale by factors $a$ and $b$:
-  $$\begin{bmatrix} a &amp; 0 \ 0 &amp; b \end{bmatrix}$$</li>
+  $$c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + ... + c_n\mathbf{v}_n = \mathbf{0}$$9</li>
 </ul>
 <h3 id="shearing">Shearing</h3>
 <ul>
 <li>Horizontal shear by $k$:
-  $$\begin{bmatrix} 1 &amp; k \ 0 &amp; 1 \end{bmatrix}$$</li>
+  $$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$0</li>
 <li>Vertical shear by $k$:
-  $$\begin{bmatrix} 1 &amp; 0 \ k &amp; 1 \end{bmatrix}$$</li>
+  $$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$1</li>
 </ul>
 <h1 id="inner-product-spaces">Inner Product Spaces</h1>
 <h2 id="definition_3">Definition</h2>
@@ -1091,16 +1091,16 @@ where $e_i$ are standard basis vectors</p>
 </tbody>
 </table>
 <h2 id="norm">Norm</h2>
-<p>The norm induced by inner product: $|x| = \sqrt{\langle x,x \rangle}$</p>
+<p>The norm induced by inner product: $\|x\| = \sqrt{\langle x,x \rangle}$</p>
 <h3 id="properties_8">Properties</h3>
 <ul>
-<li>Non-negative: $|x| \geq 0$</li>
-<li>Positive definite: $|x| = 0 \iff x = 0$</li>
-<li>Homogeneous: $|cx| = |c||x|$</li>
-<li>Triangle inequality: $|x + y| \leq |x| + |y|$</li>
+<li>Non-negative: $\|x\| \geq 0$</li>
+<li>Positive definite: $\|x\| = 0 \iff x = 0$</li>
+<li>Homogeneous: $\|cx\| = |c|\|x\|$</li>
+<li>Triangle inequality: $\|x + y\| \leq \|x\| + \|y\|$</li>
 </ul>
 <h3 id="distance-function">Distance Function</h3>
-<p>$$d(x,y) = |x-y| = \sqrt{\langle x-y,x-y \rangle}$$</p>
+<p>$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$2</p>
 <h2 id="orthogonality">Orthogonality</h2>
 <h3 id="orthogonal-vectors">Orthogonal Vectors</h3>
 <p>Two vectors $x,y$ are orthogonal if $\langle x,y \rangle = 0$</p>
@@ -1139,20 +1139,20 @@ where $e_i$ are standard basis vectors</p>
 </tr>
 <tr>
 <td>Length Preservation</td>
-<td>$|Qx| = |x|$</td>
+<td>$\|Qx\| = \|x\|$</td>
 <td>Preserves distances</td>
 </tr>
 </tbody>
 </table>
 <h3 id="orthogonal-complements">Orthogonal Complements</h3>
 <p>For subspace $W$, orthogonal complement $W^⊥$:
-$$W^⊥ = {x \in V : \langle x,w \rangle = 0 \text{ for all } w \in W}$$</p>
+$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$3</p>
 <h3 id="orthogonal-projections">Orthogonal Projections</h3>
 <p>Projection onto subspace $W$:
-$$\text{proj}<em i="1">W(x) = \sum</em>w_i$$
-where ${w_1,\ldots,w_k}$ is basis for $W$}^k \frac{\langle x,w_i \rangle}{|w_i|^2</p>
+$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$4
+where $\{w_1,\ldots,w_k\}$ is basis for $W$</p>
 <p>For orthonormal basis:
-$$\text{proj}<em i="1">W(x) = \sum</em>^k \langle x,w_i \rangle w_i$$</p>
+$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$5</p>
 <h1 id="special-matrices-cont-1">Special Matrices (cont. 1)</h1>
 <table>
 <thead>
@@ -1168,31 +1168,31 @@ $$\text{proj}<em i="1">W(x) = \sum</em>^k \langle x,w_i \rangle w_i$$</p>
 <td>Symmetric</td>
 <td>$A = A^T$</td>
 <td>- Diagonal elements can be any real number<br>- Elements symmetric across main diagonal<br>- All eigenvalues are real</td>
-<td>$$\begin{bmatrix} 1 &amp; 2 &amp; 3\ 2 &amp; 4 &amp; 5\ 3 &amp; 5 &amp; 6 \end{bmatrix}$$</td>
+<td>$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$6</td>
 </tr>
 <tr>
 <td>Skew-symmetric</td>
 <td>$A = -A^T$</td>
 <td>- Diagonal elements must be zero<br>- $a_{ij} = -a_{ji}$<br>- All eigenvalues are imaginary or zero</td>
-<td>$$\begin{bmatrix} 0 &amp; 2 &amp; -1\ -2 &amp; 0 &amp; 3\ 1 &amp; -3 &amp; 0 \end{bmatrix}$$</td>
+<td>$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$7</td>
 </tr>
 <tr>
 <td>Orthogonal</td>
 <td>$AA^T = A^TA = I$</td>
 <td>- $A^{-1} = A^T$<br>- Columns/rows form orthonormal basis<br>- $\det(A) = \pm 1$<br>- Preserves lengths and angles</td>
-<td>$$\begin{bmatrix} \cos\theta &amp; -\sin\theta\ \sin\theta &amp; \cos\theta \end{bmatrix}$$</td>
+<td>$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$8</td>
 </tr>
 <tr>
 <td>Idempotent</td>
 <td>$A^2 = A$</td>
 <td>- Eigenvalues are only 0 or 1<br>- Trace = rank<br>- Used in projection matrices</td>
-<td>$$\begin{bmatrix} 1 &amp; 0\ 0 &amp; 0 \end{bmatrix}$$</td>
+<td>$$\text{span}\{\mathbf{v}_1, ..., \mathbf{v}_n\} = \{c_1\mathbf{v}_1 + ... + c_n\mathbf{v}_n : c_i \in F\}$$9</td>
 </tr>
 <tr>
 <td>Nilpotent</td>
 <td>$A^k = 0$ for some $k$</td>
 <td>- All eigenvalues = 0<br>- Trace = 0<br>- $k \leq n$ where $n$ is matrix size</td>
-<td>$$\begin{bmatrix} 0 &amp; 1\ 0 &amp; 0 \end{bmatrix}$$</td>
+<td>$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$0</td>
 </tr>
 </tbody>
 </table>
@@ -1236,7 +1236,7 @@ $$\text{proj}<em i="1">W(x) = \sum</em>^k \langle x,w_i \rangle w_i$$</p>
 <h1 id="change-of-basis">Change of Basis</h1>
 <h2 id="transition-matrices">Transition Matrices</h2>
 <p>A transition matrix $P$ transforms coordinates from one basis to another:
-$$P_{B←C} = [v_1 \; v_2 \; \cdots \; v_n]$$
+$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$1
 where $v_i$ are the basis vectors of B expressed in basis C</p>
 <table>
 <thead>
@@ -1249,12 +1249,12 @@ where $v_i$ are the basis vectors of B expressed in basis C</p>
 <tbody>
 <tr>
 <td>Change from C to B</td>
-<td>$[v]<em B_C="B←C">B = P</em>[v]_C$</td>
+<td>$[v]_B = P_{B←C}[v]_C$</td>
 <td>Vector v in basis B</td>
 </tr>
 <tr>
 <td>Change from B to C</td>
-<td>$[v]<em C_B="C←B">C = P</em>[v]_B$</td>
+<td>$[v]_C = P_{C←B}[v]_B$</td>
 <td>Vector v in basis C</td>
 </tr>
 <tr>
@@ -1266,7 +1266,7 @@ where $v_i$ are the basis vectors of B expressed in basis C</p>
 </table>
 <h2 id="similar-matrices">Similar Matrices</h2>
 <p>Two matrices A and B are similar if:
-$$B = P^{-1}AP$$
+$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$2
 where P is an invertible matrix</p>
 <p>Properties:</p>
 <ul>
@@ -1276,23 +1276,23 @@ where P is an invertible matrix</p>
 <li>Similar matrices have same rank</li>
 </ul>
 <h2 id="coordinate-vectors">Coordinate Vectors</h2>
-<p>For a vector $v$ and basis $B = {b_1, b_2, ..., b_n}$:
-$$[v]_B = \begin{bmatrix} c_1 \ c_2 \ \vdots \ c_n \end{bmatrix}$$
+<p>For a vector $v$ and basis $B = \{b_1, b_2, ..., b_n\}$:
+$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$3
 where $v = c_1b_1 + c_2b_2 + ... + c_nb_n$</p>
 <h2 id="orthogonalization">Orthogonalization</h2>
 <h3 id="gram-schmidt-process">Gram-Schmidt Process</h3>
-<p>Converting basis ${v_1, v_2, ..., v_n}$ to orthogonal basis ${u_1, u_2, ..., u_n}$:</p>
+<p>Converting basis $\{v_1, v_2, ..., v_n\}$ to orthogonal basis $\{u_1, u_2, ..., u_n\}$:</p>
 <ol>
 <li>$u_1 = v_1$</li>
 <li>$u_2 = v_2 - \text{proj}_{u_1}(v_2)$</li>
-<li>$u_3 = v_3 - \text{proj}<em u_2="u_2">{u_1}(v_3) - \text{proj}</em>(v_3)$</li>
+<li>$u_3 = v_3 - \text{proj}_{u_1}(v_3) - \text{proj}_{u_2}(v_3)$</li>
 </ol>
 <p>General formula:
-$$u_k = v_k - \sum_{i=1}^{k-1} \text{proj}_{u_i}(v_k)$$
+$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$4
 where $\text{proj}_u(v) = \frac{\langle v,u \rangle}{\langle u,u \rangle}u$</p>
 <h3 id="qr-decomposition">QR Decomposition</h3>
 <p>Matrix A can be decomposed as:
-$$A = QR$$
+$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$5
 where:</p>
 <ul>
 <li>Q is orthogonal matrix ($Q^TQ = I$)</li>
@@ -1303,7 +1303,7 @@ where:</p>
 <ol>
 <li>Start with any basis</li>
 <li>Apply Gram-Schmidt process</li>
-<li>Normalize each vector: $e_i = \frac{u_i}{|u_i|}$</li>
+<li>Normalize each vector: $e_i = \frac{u_i}{\|u_i\|}$</li>
 </ol>
 <h3 id="properties_10">Properties</h3>
 <table>
@@ -1320,7 +1320,7 @@ where:</p>
 </tr>
 <tr>
 <td>Normality</td>
-<td>$|e_i| = 1$ for all i</td>
+<td>$\|e_i\| = 1$ for all i</td>
 </tr>
 <tr>
 <td>Transition Matrix</td>
@@ -1339,7 +1339,7 @@ where:</p>
 <li><strong>Eigenvector</strong> ($\vec{v}$): A nonzero vector satisfying $A\vec{v} = \lambda\vec{v}$ for some scalar $\lambda$</li>
 </ul>
 <h2 id="characteristic-equation">Characteristic Equation</h2>
-<p>$$\det(A - \lambda I) = 0$$
+<p>$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$6
 where:</p>
 <ul>
 <li>$A$ is the square matrix</li>
@@ -1347,7 +1347,7 @@ where:</p>
 <li>$I$ is the identity matrix</li>
 </ul>
 <h3 id="characteristic-polynomial">Characteristic Polynomial</h3>
-<p>$$p(\lambda) = \det(A - \lambda I)$$</p>
+<p>$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$7</p>
 <ul>
 <li>Degree equals matrix dimension</li>
 <li>Roots are eigenvalues</li>
@@ -1387,7 +1387,7 @@ where:</p>
 <li>≥ geometric multiplicity</li>
 </ul>
 <h3 id="eigenspace">Eigenspace</h3>
-<p>$$E_\lambda = \text{null}(A - \lambda I)$$</p>
+<p>$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$8</p>
 <ul>
 <li>Subspace spanned by eigenvectors for eigenvalue $\lambda$</li>
 <li>Dimension = geometric multiplicity</li>
@@ -1431,7 +1431,7 @@ where:</p>
 </ul>
 <h2 id="applications">Applications</h2>
 <h3 id="powers-of-matrices">Powers of Matrices</h3>
-<p>$$A^n = PD^nP^{-1}$$</p>
+<p>$$\vec{a} \cdot \vec{b} = |\vec{a}||\vec{b}|\cos(\theta)$$9</p>
 <ul>
 <li>Simplifies computation of matrix powers</li>
 <li>Useful for recursive sequences</li>
@@ -1440,13 +1440,13 @@ where:</p>
 <p>For system $\vec{x}_{k+1} = A\vec{x}_k$:</p>
 <ul>
 <li>General solution involves eigenvalues and eigenvectors</li>
-<li>Stability determined by $|\lambda| &lt; 1$</li>
+<li>Stability determined by $|\lambda| < 1$</li>
 </ul>
 <h3 id="differential-equations">Differential Equations</h3>
 <p>For system $\frac{d\vec{x}}{dt} = A\vec{x}$:</p>
 <ul>
 <li>Solutions of form $\vec{x}(t) = ce^{\lambda t}\vec{v}$</li>
-<li>Stability determined by $\text{Re}(\lambda) &lt; 0$</li>
+<li>Stability determined by $\text{Re}(\lambda) < 0$</li>
 </ul>
 <hr />
 <h1 id="important-theorems">Important Theorems</h1>
@@ -1460,7 +1460,7 @@ where:</p>
 </ul>
 <h2 id="cayley-hamilton-theorem">Cayley-Hamilton Theorem</h2>
 <p>Every square matrix $A$ satisfies its own characteristic equation:
-$$p(A) = 0 \text{ where } p(\lambda) = \det(A - \lambda I)$$</p>
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$0</p>
 <h2 id="spectral-theorem">Spectral Theorem</h2>
 <p>For symmetric matrices $A \in \mathbb{R}^{n \times n}$:</p>
 <ul>
@@ -1472,10 +1472,10 @@ $$p(A) = 0 \text{ where } p(\lambda) = \det(A - \lambda I)$$</p>
 </ul>
 <h2 id="triangle-inequality_1">Triangle Inequality</h2>
 <p>For vectors $x, y$:
-$$|x + y| \leq |x| + |y|$$</p>
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$1</p>
 <h2 id="cauchy-schwarz-inequality">Cauchy-Schwarz Inequality</h2>
 <p>For vectors $x, y$:
-$$|x^Ty| \leq |x||y|$$</p>
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$2</p>
 <ul>
 <li>Equality holds if and only if vectors are linearly dependent</li>
 </ul>
@@ -1485,14 +1485,14 @@ $$|x^Ty| \leq |x||y|$$</p>
 <li>$A$ is invertible</li>
 <li>$\det(A) \neq 0$</li>
 <li>$\text{rank}(A) = n$</li>
-<li>$\text{Null}(A) = {0}$</li>
+<li>$\text{Null}(A) = \{0\}$</li>
 <li>Columns are linearly independent</li>
 <li>$Ax = b$ has unique solution for all $b$</li>
 </ol>
 <h2 id="matrix-factorization-theorems">Matrix Factorization Theorems</h2>
 <h3 id="lu-decomposition">LU Decomposition</h3>
 <p>For matrix $A$:
-$$A = LU$$
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$3
 where:</p>
 <ul>
 <li>$L$ is lower triangular</li>
@@ -1501,7 +1501,7 @@ where:</p>
 </ul>
 <h3 id="qr-decomposition_1">QR Decomposition</h3>
 <p>For matrix $A$:
-$$A = QR$$
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$4
 where:</p>
 <ul>
 <li>$Q$ is orthogonal ($Q^TQ = I$)</li>
@@ -1510,7 +1510,7 @@ where:</p>
 </ul>
 <h3 id="cholesky-decomposition">Cholesky Decomposition</h3>
 <p>For symmetric positive definite matrix $A$:
-$$A = LL^T$$
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$5
 where:</p>
 <ul>
 <li>$L$ is lower triangular</li>
@@ -1563,15 +1563,7 @@ where:</p>
 <h2 id="jordan-canonical-form">Jordan Canonical Form</h2>
 <p>For matrix $A$, exists invertible $P$ such that $P^{-1}AP = J$</p>
 <h3 id="jordan-blocks">Jordan Blocks</h3>
-<p>$$
-J_k(\lambda) = \begin{bmatrix}
-\lambda &amp; 1 &amp; 0 &amp; \cdots &amp; 0 \
-0 &amp; \lambda &amp; 1 &amp; \cdots &amp; 0 \
-\vdots &amp; \vdots &amp; \ddots &amp; \ddots &amp; \vdots \
-0 &amp; 0 &amp; \cdots &amp; \lambda &amp; 1 \
-0 &amp; 0 &amp; \cdots &amp; 0 &amp; \lambda
-\end{bmatrix}
-$$</p>
+<p>$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$6</p>
 <h3 id="generalized-eigenvectors">Generalized Eigenvectors</h3>
 <ul>
 <li>Chain: $(A-\lambda I)^kv_k = 0$</li>
@@ -1579,7 +1571,7 @@ $$</p>
 <li>$(A-\lambda I)v_{i+1} = v_i$</li>
 </ul>
 <h2 id="positive-definite-matrices">Positive Definite Matrices</h2>
-<p>Symmetric matrix $A$ where $x^TAx &gt; 0$ for all nonzero $x$</p>
+<p>Symmetric matrix $A$ where $x^TAx > 0$ for all nonzero $x$</p>
 <h3 id="tests-for-positive-definiteness">Tests for Positive Definiteness</h3>
 <table>
 <thead>
@@ -1603,7 +1595,7 @@ $$</p>
 </tr>
 <tr>
 <td>Quadratic Form</td>
-<td>$x^TAx &gt; 0$ for all nonzero $x$</td>
+<td>$x^TAx > 0$ for all nonzero $x$</td>
 </tr>
 </tbody>
 </table>
@@ -1618,12 +1610,12 @@ $$</p>
 <p>Maps between vector spaces preserving linear structure</p>
 <h3 id="adjoint-operators">Adjoint Operators</h3>
 <ul>
-<li>For operator $T$, adjoint $T^<em>$ satisfies $\langle Tx,y \rangle = \langle x,T^</em>y \rangle$</li>
+<li>For operator $T$, adjoint $T^*$ satisfies $\langle Tx,y \rangle = \langle x,T^*y \rangle$</li>
 <li>Matrix representation: conjugate transpose</li>
 <li>Properties:</li>
-<li>$(T^<em>)^</em> = T$</li>
-<li>$(ST)^<em> = T^</em>S^*$</li>
-<li>$(\alpha T)^<em> = \overline{\alpha}T^</em>$</li>
+<li>$(T^*)^* = T$</li>
+<li>$(ST)^* = T^*S^*$</li>
+<li>$(\alpha T)^* = \overline{\alpha}T^*$</li>
 </ul>
 <h3 id="self-adjoint-operators">Self-Adjoint Operators</h3>
 <ul>
@@ -1636,13 +1628,13 @@ $$</p>
 <p>Vector space $V^*$ of linear functionals on $V$</p>
 <h3 id="dual-basis">Dual Basis</h3>
 <ul>
-<li>For basis ${e_i}$ of $V$, dual basis ${e_i^<em>}$ satisfies $e_i^</em>(e_j) = \delta_{ij}$</li>
+<li>For basis $\{e_i\}$ of $V$, dual basis $\{e_i^*\}$ satisfies $e_i^*(e_j) = \delta_{ij}$</li>
 <li>Dimension equals original space</li>
 <li>Natural pairing: $\langle f,v \rangle = f(v)$</li>
 </ul>
 <h3 id="dual-maps">Dual Maps</h3>
-<p>For linear map $T: V \to W$, dual map $T^<em>: W^</em> \to V^<em>$
-$$\langle T^</em>f,v \rangle = \langle f,Tv \rangle$$</p>
+<p>For linear map $T: V \to W$, dual map $T^*: W^* \to V^*$
+$$\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + ... + a_nb_n$$7</p>
 <h2 id="tensor-products">Tensor Products</h2>
 <p>$V \otimes W$ is universal space for bilinear maps</p>
 <h3 id="definition_4">Definition</h3>

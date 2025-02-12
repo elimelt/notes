@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -283,7 +283,7 @@
 <p>Unlike the BFS tree, DFS trees aren't minimum depth, and its levels don't really tell you much. However, the property holds that sub-trees of a DFS tree must not contain any edges connecting them.</p>
 <p><strong>Lemma</strong>: For a DFS tree of graph $G = (V, E)$ $T = (V_t, E_t)$,  $\forall e = (x, y) \in E$, if $e \notin E_t$, then one of $x$ or $y$ is an ancestor of the other in the tree.</p>
 <p><strong>Proof</strong>: Without loss of generality, assume $x$ is discovered first.</p>
-<p>Call $dfs(x)$. At this time, $y$ is still undiscovered. By observation, it is enough to say $y$ will be discovered before finishing $dfs(x)$. This is true because $y$ is a neighbor of $x$, so DFS will eventually visit $y$. If $y$ is still undiscovered when $x$ we visit $x$'s neighbors, it will at least be discovered then.</p>
+<p>Call $dfs(x)$. At this time, $y$ is still undiscovered. By observation, it is enough to say $y$ will be discovered before finishing $T = (V_t, E_t)$0. This is true because $T = (V_t, E_t)$1 is a neighbor of $T = (V_t, E_t)$2, so DFS will eventually visit $T = (V_t, E_t)$3. If $T = (V_t, E_t)$4 is still undiscovered when $T = (V_t, E_t)$5 we visit $T = (V_t, E_t)$6's neighbors, it will at least be discovered then.</p>
 <pre><code class="language-python">
 def dfs_recursive(G, src, vis = set(), f=print):
   if src in vis:

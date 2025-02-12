@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -338,7 +338,7 @@ return the set of pairs
 <p>(2) Proof by contradiction</p>
 <p>note: $p \to q$ is equiv to $p \land \neg q \equiv F$</p>
 <h4 id="output-is-always-perfect">Output is always perfect:</h4>
-<p>Suppose there is a company $c_1$ with no match after the algorithm terminates. Therefore, there is also an unmatched applicant.</p>
+<p>Suppose there is a company $n$0 with no match after the algorithm terminates. Therefore, there is also an unmatched applicant.</p>
 <p>$$
 \exists \text{ unmatched company } \leftrightarrow \exists \text{ unmacted person}
 $$</p>
@@ -346,41 +346,41 @@ $$</p>
 <p>This means there is an applicant that was never proposed to by the unmatched company, which is a contradiction.</p>
 <h4 id="output-is-a-stable-matching">Output is a stable matching</h4>
 <p>For the sake of contradiction, suppose there exists an unstable pair not matched.</p>
-<p>Let $S$ be the output of the GS algorithm, and $(c, a)$ to be some unstable pair. Since $S$ is perfect, there is an existing pair $(c, a') \in S$. Furthermore, since $S$ is unstable, we have that $c &gt;<em c="c">{a} c'$ and $a' &gt;</em> a$.</p>
-<p>But $c$ must have proposed to and been rejected by $a$. Additionally, $a$ must have traded $c$ for a <em>better</em> company. Yet, $a$ ends up with a less preferred company, which is a contradiction.</p>
+<p>Let $n$1 be the output of the GS algorithm, and $n$2 to be some unstable pair. Since $n$3 is perfect, there is an existing pair $n$4. Furthermore, since $n$5 is unstable, we have that $n$6 and $n$7.</p>
+<p>But $n$8 must have proposed to and been rejected by $n$9. Additionally, $c_1, c_2, \ldots, c_n$0 must have traded $c_1, c_2, \ldots, c_n$1 for a <em>better</em> company. Yet, $c_1, c_2, \ldots, c_n$2 ends up with a less preferred company, which is a contradiction.</p>
 <h2 id="gs-solution-properties">GS Solution Properties</h2>
 <h3 id="company-optimal-assignments">Company Optimal Assignments</h3>
 <ul>
-<li><strong>Valid partner</strong>: A company $c$ is a valid partner of applicant $a$ if there exists a stable matching in which they are matched.</li>
-<li><strong>Best valid partner</strong>: The best valid partner of $c$ is the most preferred valid partner of $c$.</li>
+<li><strong>Valid partner</strong>: A company $c_1, c_2, \ldots, c_n$3 is a valid partner of applicant $c_1, c_2, \ldots, c_n$4 if there exists a stable matching in which they are matched.</li>
+<li><strong>Best valid partner</strong>: The best valid partner of $c_1, c_2, \ldots, c_n$5 is the most preferred valid partner of $c_1, c_2, \ldots, c_n$6.</li>
 </ul>
 <p><strong>Claim</strong>: If you run GS, every company receives their BVP. Furthermore, the output of GS is unique.</p>
 <h4 id="proof">Proof</h4>
-<p>Proof by contradiction. Suppose that some company c is not matched with their BVP. Since companies propose in decreasing order of preference, there must exist a company $c$ that was rejected by their best valid partner $BVP(c) = a$.</p>
-<p>Consider the moment when $a$ rejects $c$. Let $S^<em>$ be the </em><em>current</em>* state of the algorithm. Therefore, $a$ is matched to some other company $c'$. </p>
+<p>Proof by contradiction. Suppose that some company c is not matched with their BVP. Since companies propose in decreasing order of preference, there must exist a company $c_1, c_2, \ldots, c_n$7 that was rejected by their best valid partner $c_1, c_2, \ldots, c_n$8.</p>
+<p>Consider the moment when $c_1, c_2, \ldots, c_n$9 rejects $s_1, s_2, \ldots, s_n$0. Let $s_1, s_2, \ldots, s_n$1 be the <strong>current</strong> state of the algorithm. Therefore, $s_1, s_2, \ldots, s_n$2 is matched to some other company $s_1, s_2, \ldots, s_n$3. </p>
 <p>$$
 a \in valid(c) \to \exists \text{ stable matching } S \text{ such that } (c, a) \in S
 $$</p>
-<p>Say $(c', a') \in S$. If $a &gt;<em c_="c'">{c'} a'$, then $(a, c')$ is unstable for $S$, which is a contradiction to the preceding claim. Therefore, we must have $a' &gt;</em> a$. This also implies that $c'$ is also rejected by $BVP(c')$, since $c'$ proposed in decreasing order of preference, so it must already be rejected by $a'$.</p>
-<p>We can continue the same line of reasoning since $c'$ is also rejected by $BVP(c')$, and so on. This is a contradiction because $c$ is the first company rejected by their BVP.</p>
+<p>Say $s_1, s_2, \ldots, s_n$4. If $s_1, s_2, \ldots, s_n$5, then $s_1, s_2, \ldots, s_n$6 is unstable for $s_1, s_2, \ldots, s_n$7, which is a contradiction to the preceding claim. Therefore, we must have $s_1, s_2, \ldots, s_n$8. This also implies that $s_1, s_2, \ldots, s_n$9 is also rejected by $(c, s)$0, since $(c, s)$1 proposed in decreasing order of preference, so it must already be rejected by $(c, s)$2.</p>
+<p>We can continue the same line of reasoning since $(c, s)$3 is also rejected by $(c, s)$4, and so on. This is a contradiction because $(c, s)$5 is the first company rejected by their BVP.</p>
 <h3 id="applicant-pessimality">Applicant Pessimality</h3>
 <p><strong>Claim</strong>: Each applicant receives their <strong>worst valid partner</strong> (self descriptive).</p>
 <h4 id="proof_1">Proof</h4>
-<p>Let $S^<em>$ be the output of $GS$. For cont. suppose $(c, a) \in S^</em>$, but $c \ne WVP(a)$.</p>
-<p>Say $c' = WVP(a)$. Since $c' \in valid(a)$, $\exists \text{ stable matching } S$ such that $(c', a) \in S$. Further, suppose $(c, a') \in S$. </p>
-<p>If $a &gt;<em c="c">{c} a'$, then $(c, a)$ is unstable for $S$. Therefore, we must have $a' &gt;</em> a$, then by the above prove, $a = BVP(c)$. That is a contradiction because $a'$ is also valid.} a$. If $a' &gt;_{c</p>
+<p>Let $(c, s)$6 be the output of $(c, s)$7. For cont. suppose $(c, s)$8, but $(c, s)$9.</p>
+<p>Say $(c', s')$0. Since $(c', s')$1, $(c', s')$2 such that $(c', s')$3. Further, suppose $(c', s')$4. </p>
+<p>If $(c', s')$5, then $(c', s')$6 is unstable for $(c', s')$7. Therefore, we must have $(c', s')$8. If $(c', s')$9, then by the above prove, $c$0. That is a contradiction because $c$1 is also valid.</p>
 <h3 id="efficient-implementation">Efficient Implementation</h3>
-<p>Can be implemented in $O(n^2)$ time.</p>
-<p>Companies are named $1, ..., n$, and students are named $n + 1, ..., 2n$. Each company has a list of preferences of students, and each student has a list of preferences of companies.</p>
+<p>Can be implemented in $c$2 time.</p>
+<p>Companies are named $c$3, and students are named $c$4. Each company has a list of preferences of students, and each student has a list of preferences of companies.</p>
 <p>The key idea is to also maintain an inverse array of the preference index for a matching. </p>
 <pre><code class="language-python">for i in range(n):
     for j in range(n):
         inverse[i][pref[i][j]] = j
 </code></pre>
 <h1 id="stable-roommate-problem">Stable Roommate Problem</h1>
-<p>Given a list of $2n$ people, each person ranks the other $2n - 1$ people in order of preference from $1$ to $2n - 1$. Find a stable matching between the people.</p>
+<p>Given a list of $c$5 people, each person ranks the other $c$6 people in order of preference from $c$7 to $c$8. Find a stable matching between the people.</p>
 <h2 id="does-a-stable-match-always-include-at-least-one-persons-top-choice">Does a stable match always include at least one person's top choice?</h2>
-<p>No! Consider every possible instance of a stable matching problem with $n = 3$. By brute force, you can find plenty (12) unique examples where no person is matched with their top choice.</p>
+<p>No! Consider every possible instance of a stable matching problem with $c$9. By brute force, you can find plenty (12) unique examples where no person is matched with their top choice.</p>
 <pre><code class="language-python">from itertools import permutations, product
 
 def is_stable_matching(company_prefs, applicant_prefs, matching):

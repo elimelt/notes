@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -295,9 +295,9 @@
 <p>One can design codes that are more robust to noise, or that have better clock recovery properties. In general, you map one set of bits to another set of bits, and then send the new bits over the link.</p>
 <p>For example, in 4b/5b, we let $S$ be the set of all possible 4-bit sequences, and let $C$ be the set of all possible 5-bit sequences. Then we can define a code $f: S \to C$:</p>
 <p>$$
-f(0000) = 11110 \
-f(0001) = 01001 \
-f(0010) = 10100 \
+f(0000) = 11110 \\
+f(0001) = 01001 \\
+f(0010) = 10100 \\
 \vdots
 $$</p>
 <p>One can then choose a set $C$ such that there aren't long runs of 1s or 0s, or such that the clock can be recovered easily. Since there are left over symbols in $C$, we can use them to represent control information, such as the start of a frame.</p>

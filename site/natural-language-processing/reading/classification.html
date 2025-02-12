@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -279,16 +279,16 @@
             </div>
             <div class="content">
                 <h1 id="classification">Classification</h1>
-<p>Take an input $x$ and a fixed set of output classes $Y = {y_1, y_2, \ldots, y_M}$ and return a predicted class $y \in Y$.</p>
+<p>Take an input $x$ and a fixed set of output classes $Y = \{y_1, y_2, \ldots, y_M\}$ and return a predicted class $y \in Y$.</p>
 <p>Text classification sometimes uses $c$ for class instead of $y$ as output, and $d$ for document instead of $x$ as input.</p>
-<p>In the supervised situation we have a training set of $N$ documents that have each been hand labeled with a class: ${(d_1, c_1),....,(d_N, c_N)}$. Our goal is to learn a classifier that is capable of mapping from a new document $d$ to its correct class $c \in C$, where $C$ is some set of useful document classes.</p>
+<p>In the supervised situation we have a training set of $N$ documents that have each been hand labeled with a class: $\{(d_1, c_1),....,(d_N, c_N)\}$. Our goal is to learn a classifier that is capable of mapping from a new document $d$ to its correct class $c \in C$, where $C$ is some set of useful document classes.</p>
 <h2 id="multinomial-naive-bayes">Multinomial Naive Bayes</h2>
 <p>Represent text as <strong>bag of words</strong>. For a document $d$ out of all all classes $c \in C$, outputs $\hat{c}$ that maximizes $P(c|d)$.</p>
 <p>$$
-\begin{align<em>}
-\hat{c} &amp;= \arg \max_{c \in C} P(c|d) \
-  &amp;= \arg \max_{c \in C} \frac{P(d|c)P(c)}{P(d)}
-\end{align</em>}
+\begin{align*}
+\hat{c} &= \arg \max_{c \in C} P(c|d) \\
+  &= \arg \max_{c \in C} \frac{P(d|c)P(c)}{P(d)}
+\end{align*}
 $$</p>
 <p>Where $P(d | c)$ is the likelihood, and $P(c)$ is the prior. Or with features $f_1, f_2, \ldots, f_n$:</p>
 <p>$$
@@ -299,10 +299,10 @@ $$</p>
 P(f_1, f_2, \ldots, f_n | c) = \prod_{i=1}^n P(f_i | c)
 $$</p>
 <p>$$
-\begin{align<em>}
-C_{\text{NB}} &amp;= \arg \max_{c \in C} P(c) \prod_{i=1}^n P(w_i | c) \
-&amp;= \arg \max_{c \in C} \log P(c) + \sum_{i=1}^n \log P(w_i | c)
-\end{align</em>}
+\begin{align*}
+C_{\text{NB}} &= \arg \max_{c \in C} P(c) \prod_{i=1}^n P(w_i | c) \\
+&= \arg \max_{c \in C} \log P(c) + \sum_{i=1}^n \log P(w_i | c)
+\end{align*}
 $$</p>
 <h3 id="training">Training</h3>
 <p>Estimate $P(c)$: the prior probability of each class.</p>

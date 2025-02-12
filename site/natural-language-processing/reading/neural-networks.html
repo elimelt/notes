@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -298,8 +298,8 @@ $$</p>
 <p>It can be shown that a single computational unit cannot solve XOR, as it is a non-linear problem. However, a two-layer network can solve XOR, as it can learn to represent the input in a higher-dimensional space where the problem is linearly separable.</p>
 <p>$$
 y = \begin{cases}
-1 &amp; \text{if } w \cdot x + b &gt; 0 \
-0 &amp; \text{otherwise}
+1 & \text{if } w \cdot x + b > 0 \\
+0 & \text{otherwise}
 \end{cases}
 $$</p>
 <p>XOR turns out to be a simple example of a problem that is not linearly separable in the input space, since the inputs $(x_1, x_2) = (0, 0)$ and $(1, 1)$ are in the same class, while $(0, 1)$ and $(1, 0)$ are in the other class. It is not possible to draw a straight line that separates the two classes.</p>
@@ -347,21 +347,22 @@ $$</p>
 </ul>
 <h4 id="example-2-layer-nn">Example: 2-layer NN</h4>
 <p>$$
-\begin{align<em>}
-z^{[1]} &amp;= W^{[1]} \cdot a^{[0]} + b^{[1]} \
-a^{[1]} &amp;= g^{[1]}(z^{[1]}) \
-z^{[2]} &amp;= W^{[2]} \cdot a^{[1]} + b^{[2]} \
-a^{[2]} &amp;= g^{[2]}(z^{[2]}) \
-\hat{y} &amp;= a^{[2]}
-\end{align</em>}
+\begin{align*}
+z^{[1]} &= W^{[1]} \cdot a^{[0]} + b^{[1]} \\
+a^{[1]} &= g^{[1]}(z^{[1]}) \\
+z^{[2]} &= W^{[2]} \cdot a^{[1]} + b^{[2]} \\
+a^{[2]} &= g^{[2]}(z^{[2]}) \\
+\hat{y} &= a^{[2]}
+\end{align*}
 $$</p>
 <h3 id="feedforward-computation">Feedforward Computation</h3>
 <p>$$
 \begin{align*}
-\text{for } l = 1, \ldots, L: \
-z^{[l]} &amp;= W^{[l]} \cdot a^{[l-1]} + b^{[l]} \
-a^{[l]} &amp;= g^{[l]}(z^{[l]})\</p>
-<p>\text{return } \hat{y} = a^{[L]}
+\text{for } l = 1, \ldots, L: \\
+z^{[l]} &= W^{[l]} \cdot a^{[l-1]} + b^{[l]} \\
+a^{[l]} &= g^{[l]}(z^{[l]})\\
+
+\text{return } \hat{y} = a^{[L]}
 \end{align*}
 $$</p>
 <pre><code class="language-python">def feedforward(x):
@@ -375,34 +376,30 @@ $$</p>
 <p>Often, the bias term is included in the weight matrix, by adding a column of $1$s to the input vector $x$.</p>
 <p>With $a^{[0]}_0 = 1$, we can write $z^{[l]} = W^{[l]} \cdot a^{[l-1]}$.</p>
 <p>$$
-h_j = f\left(\sum_{i=1}^{n_0} W_{ji} x_i\right)
-$$</p>
+y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
+$$0</p>
 <h2 id="ff-networks-for-nlp-classification">FF networks for NLP: Classification</h2>
 <p>Instead of manually designed features, use words as embeddings (e.g. word2vec, GloVe). This constitutes "pre-training", i.e. relying on already computed values/embeddings. One simple method of representing a sentence is to sum the embeddings of the words in the sentence, or to average them.</p>
 <p>To classify many examples at once, pack inputs into a single matrix $X$ where each row $i$ is an input vector $x^{(i)}$. If our input has $d$ features, then $X \in \mathbb{R}^{m \times d}$ where $m$ is the number of examples.</p>
 <p>$W \in \mathbb{R}^{d_h \times d}$ is the weight matrix for the hidden layer, and $b \in \mathbb{R}^{d_h}$ is the bias vector. $Y \in \mathbb{R}^{m \times n_{\text{output}}}$ is the output matrix.</p>
 <p>$$
-\begin{align<em>}
-H &amp;= f(X W^T + b) \
-Z &amp;= H U^T\
-\hat{Y} &amp;= \text{softmax}(Z)
-\end{align</em>}
-$$</p>
+y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
+$$1</p>
 <h2 id="training-neural-nets">Training Neural Nets</h2>
 <p>We want to learn the parameters $W^{[i]}$ and $b^{[i]}$ for each layer $i$ that make $\hat{y}$ as close as possible to the true $y$.</p>
 <h3 id="loss-function">Loss Function</h3>
 <p>Same as the one used for MLR, the cross-entropy loss function.</p>
 <p>For binary classification, the loss function is:
 $$
-L_{\text{CE}}(\hat{y}, y) = - \log p(y | x) = - \left [ y \log \hat{y} + (1 - y) \log (1 - \hat{y}) \right ]
-$$</p>
+y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
+$$2</p>
 <p>For multi-class classification, the loss function is:</p>
 <p>$$
-L_{\text{CE}}(\hat{y}, y) = - \sum_{i=1}^n y_i \log \hat{y}_i = - \log \hat{y}_i \text{ where } y_i = 1
-$$</p>
+y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
+$$3</p>
 <p>$$
-L_{\text{CE}}(\hat{y}, y) = -\log \frac{exp(z_{c})}{\sum_{i=1}^K exp(z_i)}
-$$</p>
+y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
+$$4</p>
 <h3 id="backpropagation">Backpropagation</h3>
 <p>One must pass gradients back through the network to update the weights. This is done using the chain rule. Each node in a computation graph takes an <strong>upstream</strong> gradient and computes its <strong>local</strong> gradient, multiplying the two to get the <strong>downstream</strong> gradient. A node may have multiple local gradients, one for each incoming edge.</p>
 <h4 id="a-very-simple-example">A very simple example</h4>
@@ -415,12 +412,8 @@ $$</p>
 (c) -------------------
 </code></pre>
 <p>$$
-\begin{align<em>}
-\frac{\partial L}{\partial c} &amp;= e = a + 2b \
-\frac{\partial L}{\partial a} &amp;= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial a} = c \
-\frac{\partial L}{\partial b} &amp;= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial d} \cdot \frac{\partial d}{\partial b} = 2c
-\end{align</em>}
-$$</p>
+y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
+$$5</p>
 <h3 id="learning-details">Learning details</h3>
 <p>NN optimization is a non-convex optimization problem, so it requires a few techniques to work well:</p>
 <ul>

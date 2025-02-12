@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -303,9 +303,9 @@
 <h2 id="bgp-algorithm">BGP Algorithm</h2>
 <p>Let $AS_i \to AS_j$ be the best path from $AS_i$ to $AS_j$. Then, the BGP routing protocol is defined as follows:</p>
 <ul>
-<li>Customers = $P_c = {P_1^{c}, P_2^{c}, \ldots, P_n^{c}}$</li>
-<li>Providers = $P_{pr} = {P_1^{p}, P_2^{p}, \ldots, P_n^{p}}$</li>
-<li>Peers = $P_{pe}{P_1^{r}, P_2^{r}, \ldots, P_n^{r}}$</li>
+<li>Customers = $P_c = \{P_1^{c}, P_2^{c}, \ldots, P_n^{c}\}$</li>
+<li>Providers = $P_{pr} = \{P_1^{p}, P_2^{p}, \ldots, P_n^{p}\}$</li>
+<li>Peers = $P_{pe}\{P_1^{r}, P_2^{r}, \ldots, P_n^{r}\}$</li>
 </ul>
 <p>Prefer Customer &gt; Peer &gt; Provider, and select the ONE path with the minimum number of AS hops.</p>
 <h3 id="policy-based-routing-summary">Policy-Based Routing Summary</h3>

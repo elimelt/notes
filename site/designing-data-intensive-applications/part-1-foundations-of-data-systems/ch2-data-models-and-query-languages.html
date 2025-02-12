@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -393,10 +393,10 @@ db.observations.aggregate([
  { $match: { family: &quot;Sharks&quot; } },
  { $group: {
  _id: {
- year: { $year: &quot;$observationTimestamp&quot; },
- month: { $month: &quot;$observationTimestamp&quot; }
+ year: { $year: "$observationTimestamp&quot; },
+ month: { $month: "$observationTimestamp&quot; }
  },
- totalAnimals: { $sum: &quot;$numAnimals&quot; }
+ totalAnimals: { $sum: "$numAnimals&quot; }
  } }
 ]);
 </code></pre>

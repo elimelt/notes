@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -320,16 +320,16 @@ $$</p>
 Suppose $L(x) = i$ and $L(y) = j$. Without loss of generality, assume $x$ is explored before $y$.</p>
 <p>Consider the iteration where we process $x$.</p>
 <p>Case 1: $y$ is still undiscovered. Since there is an edge between $x$ and $y$, we will discover $y$ in the next iteration, and so $L(y) = i + 1$.</p>
-<p>Case 2: $y$ is discovered. Then $y$ is already in the queue, somewhere before $x$. We know $L(y) \ge i$ because $x$ was discovered before $y$. Since the levels are non-decreasing, and $L(x) = i$, we have $L(y) \le i + 1$.</p>
-<p>Thus, $|L(x) - L(y)| \le 1$.</p>
+<p>Case 2: $y$ is discovered. Then $y$ is already in the queue, somewhere before $x$. We know $L(y) \ge i$ because $BFS(s)$0 was discovered before $BFS(s)$1. Since the levels are non-decreasing, and $BFS(s)$2, we have $BFS(s)$3.</p>
+<p>Thus, $BFS(s)$4.</p>
 <h3 id="shortest-paths">Shortest paths</h3>
 <p>Claim:</p>
-<p>For every vertex $v \in V$ reachable from $s$, $L(v)$ is the length of the shortest path from $s$ to $v$.</p>
+<p>For every vertex $BFS(s)$5 reachable from $BFS(s)$6, $BFS(s)$7 is the length of the shortest path from $BFS(s)$8 to $BFS(s)$9.</p>
 <p>Proof:</p>
-<p>Let $l(v)$ be the length of the shortest path from $s$ to $v$.</p>
-<p>We have that $L(v) \ge l(v)$, since $L(v)$ is the length of a valid path from $s$ to $v$, so the shortest path must be at least as short.</p>
-<p>Next, we must show that $L(v) \le l(v)$.</p>
-<p>Let $v_0, v_1, \ldots, v_k$ be the shortest path from $s$ to $v$ (with $v_0 = s$).</p>
+<p>Let $v$0 be the length of the shortest path from $v$1 to $v$2.</p>
+<p>We have that $v$3, since $v$4 is the length of a valid path from $v$5 to $v$6, so the shortest path must be at least as short.</p>
+<p>Next, we must show that $v$7.</p>
+<p>Let $v$8 be the shortest path from $v$9 to $s$0 (with $s$1).</p>
 <p>$$
 \forall v \in BFS(G, s), L(v) = \text{length of the shortest path from } s \text{ to } v
 $$</p>

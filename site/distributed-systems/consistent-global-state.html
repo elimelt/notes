@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -287,7 +287,7 @@
 <p>Define a distributed system as a set $P$ of <em>sequential</em> processes $p_1, p_2, \ldots, p_n$, and a network consisting of <em>channels</em> in which unidirectional communication is possible in the space of $P^2$. The network is assumed to be reliable, but may deliver messages out of order, and is taken to be <em>strongly connected</em>, but not necessarily <em>fully connected</em> (i.e. communication may require intermediate message passing).</p>
 <p>It is useful to reason about distributed systems with the weakest possible assumptions, such that results hold for arbitrary systems.</p>
 <h2 id="distributed-computations">Distributed Computations</h2>
-<p>A distributed computation is the execution of a distributed program over a collection of processes, each of which sequentially process a stream of <em>events</em>. Particularly, for two nodes to communicate, a message $m$ is enqueued on a channel via $send(m)$, and the message is dequeued via $receive(m)$. There is an obvious relationship between the happening of event $send(m)$ at process $p$, and the happening of event $receive(m)$ at process $q$, such that we can be sure $send(m)$ happened before $receive(m)$.</p>
+<p>A distributed computation is the execution of a distributed program over a collection of processes, each of which sequentially process a stream of <em>events</em>. Particularly, for two nodes to communicate, a message $m$ is enqueued on a channel via $send(m)$, and the message is dequeued via $receive(m)$. There is an obvious relationship between the happening of event $send(m)$ at process $p$, and the happening of event $receive(m)$ at process $P$0, such that we can be sure $P$1 happened before $P$2.</p>
             </div>
             <div class="tags">
                 Tags:

@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -292,16 +292,16 @@
 <li>$a \nrightarrow a$.</li>
 <li>$a \nrightarrow b$: Event $a$ did not happen before event $b$.</li>
 <li>$a \Rightarrow b$: Event $a$ happened before or concurrently with event $b$.</li>
-<li>if $a$ is an event in process $P_i$ and $b$ is an event in process $P_j$, then $a \Rightarrow b \iff a \rightarrow C_i\langle a \rangle &lt; C_j\langle b \rangle \lor (C_j\langle b \rangle = C_i\langle a \rangle \land P_i \prec P_j)$, where $\prec$ is an arbitrary total order of processes (e.g. lexicographic order of process identifiers)</li>
+<li>if $a$ is an event in process $P_i$ and $b$ is an event in process $P_j$, then $a \Rightarrow b \iff a \rightarrow C_i\langle a \rangle < C_j\langle b \rangle \lor (C_j\langle b \rangle = C_i\langle a \rangle \land P_i \prec P_j)$, where $\prec$ is an arbitrary total order of processes (e.g. lexicographic order of process identifiers)</li>
 <li>$a \Rightarrow b \implies a \to b$.</li>
 <li>$a \nRightarrow b$: Event $a$ did not happen before or concurrently with event $b$.</li>
 <li>$C_i\langle a \rangle$: The clock value of process $P_i$ when event $a$ occurs.</li>
-<li>$C_i\langle a \rangle &lt; C_j\langle b \rangle$: Event $a$ happened before event $b$.</li>
-<li>$(a \to b) \implies (C_i\langle a \rangle &lt; C_j\langle b \rangle)$.</li>
+<li>$C_i\langle a \rangle < C_j\langle b \rangle$: Event $a$ happened before event $b$.</li>
+<li>$(a \to b) \implies (C_i\langle a \rangle < C_j\langle b \rangle)$.</li>
 </ul>
 <h2 id="clock-condition">Clock Condition</h2>
-<p>If $a$ and $b$ are events in process $P_i$ and $a \to b$, then $C_i\langle a \rangle &lt; C_i\langle b \rangle$.</p>
-<p>If $a$ is the sending of a message and $b$ is the receipt of that message, then $a \to b$ and $C_i\langle a \rangle &lt; C_j\langle b \rangle$.</p>
+<p>If $a$ and $b$ are events in process $P_i$ and $a \to b$, then $C_i\langle a \rangle < C_i\langle b \rangle$.</p>
+<p>If $a$ is the sending of a message and $b$ is the receipt of that message, then $a \to b$ and $C_i\langle a \rangle < C_j\langle b \rangle$.</p>
 <p>To meet the clock condition, we must always increment the clock value of the process when an event occurs. Furthermore, if event $a$ is the sending of a message $m$ containing the clock value $T_m = C_i\langle a \rangle$, then upon receipt of $m$, the receiving process must set its clock value $C_j\langle b \rangle$ to a value greater than $T_m$.</p>
 <h2 id="synchronized-access-to-a-shared-resource">Synchronized Access to a Shared Resource</h2>
 <p>We wish to find an algorithm for granting the resource to a process which satisfies the following three conditions:</p>
@@ -322,60 +322,60 @@
 <li>When process $P_j$ receives a $P_i$ <em>release</em> message, it removes $T_m:P_i$ <em>request</em> from its request queue.</li>
 <li>$P_i$ is granted the resource when the following conditions are met:</li>
 <li>There is a $T_m:P_i$ <em>request</em> message in its queue ordered by $\Rightarrow$ before any other <em>request</em> messages.</li>
-<li>$P_i$ has received a <em>reply</em> message from all other processes with a clock value greater than $T_m$.</li>
+<li>$a$0 has received a <em>reply</em> message from all other processes with a clock value greater than $a$1.</li>
 </ol>
 <h3 id="state-machine-perspective">State Machine Perspective</h3>
-<p>The algorithm can be viewed as a state machine consisting of $C$, the set of commands and $S$, the set of states. The state machine is defined by the following function:</p>
+<p>The algorithm can be viewed as a state machine consisting of $a$2, the set of commands and $a$3, the set of states. The state machine is defined by the following function:</p>
 <p>$$
 e: C \times S \to S
 $$</p>
-<p>Where $e(c, s) = s'$ means that executing the command $c$ in state $s$ results in a transition to state $s'$. In this algorithm, we have state $S$ corresponding to the queue of requests, and commands $C$ corresponding to the request and release messages for any given process.</p>
+<p>Where $a$4 means that executing the command $a$5 in state $a$6 results in a transition to state $a$7. In this algorithm, we have state $a$8 corresponding to the queue of requests, and commands $a$9 corresponding to the request and release messages for any given process.</p>
 <p>$$
-C = { P_i \text{ request}, P_i \text{ release} }
+C = \{ P_i \text{ request}, P_i \text{ release} \}
 $$</p>
-<p>Executing $P_i \text{ request}$ in state $s$ results in a transition to state $s'$ where $s'$ is the state with the request message added to the queue. Executing $P_i \text{ release}$ in state $s$ results in a transition to state $s'$ where $s'$ is the state with the request message removed from the queue. Each process $P_i$ is its own state machine, and a process can execute a command time-stamped $T$ only if it has received all messages with time-stamps less than or equal to $T$.</p>
+<p>Executing $b$0 in state $b$1 results in a transition to state $b$2 where $b$3 is the state with the request message added to the queue. Executing $b$4 in state $b$5 results in a transition to state $b$6 where $b$7 is the state with the request message removed from the queue. Each process $b$8 is its own state machine, and a process can execute a command time-stamped $b$9 only if it has received all messages with time-stamps less than or equal to $a \leq b$0.</p>
 <h2 id="anomalous-behavior-of-total-ordering">Anomalous Behavior of Total Ordering</h2>
-<p>Consider a nationwide system of nodes. A person issues a request $a$ at node $A$, and after doing so, calls their friend in a different city at node $B$ to issue a request $b$. It is possible with the total ordering of events that $b \to a$, even though $a$ was issued before $b$. This is because the total ordering of events is not consistent with the order in which they actually occurred, but rather with the order in which they were observed. The message that would be able to establish the the actual ordering of events (the call) is external to the system.</p>
-<p>More concretely, let $\mathscr{L}$ be the set of all events, and $L$ be the set of all events in our system.</p>
+<p>Consider a nationwide system of nodes. A person issues a request $a \leq b$1 at node $a \leq b$2, and after doing so, calls their friend in a different city at node $a \leq b$3 to issue a request $a \leq b$4. It is possible with the total ordering of events that $a \leq b$5, even though $a \leq b$6 was issued before $a \leq b$7. This is because the total ordering of events is not consistent with the order in which they actually occurred, but rather with the order in which they were observed. The message that would be able to establish the the actual ordering of events (the call) is external to the system.</p>
+<p>More concretely, let $a \leq b$8 be the set of all events, and $a \leq b$9 be the set of all events in our system.</p>
 <p>$$L \subseteq \mathscr{L}$$</p>
-<p>In the above scenario, we had $a \to_{\mathscr{L}} b$, but $b \nrightarrow_{L} a$. No algorithm based soley on the events in $L$, without knowledge more generally of $\mathscr{L}$ can order $a$ before $b$.</p>
+<p>In the above scenario, we had $b \leq a$0, but $b \leq a$1. No algorithm based soley on the events in $b \leq a$2, without knowledge more generally of $b \leq a$3 can order $b \leq a$4 before $b \leq a$5.</p>
 <p>There are two approaches to fixing this issue:</p>
 <ol>
-<li>Users must manually specify restraints on timestamps, ie the person at $A$ must tell the person at $B$ that $T_a &lt; T_b$. This is not a great solution.</li>
-<li>Construct a system of clocks that satisfy the following condition: if $a \to_{\mathscr{L}} b$, then $C\langle a \rangle &lt; C\langle b \rangle$.</li>
+<li>Users must manually specify restraints on timestamps, ie the person at $b \leq a$6 must tell the person at $b \leq a$7 that $b \leq a$8. This is not a great solution.</li>
+<li>Construct a system of clocks that satisfy the following condition: if $b \leq a$9, then $a \rightarrow b$0.</li>
 </ol>
 <h2 id="physical-clocks">Physical Clocks</h2>
-<p>Let $C_i(t)$ be the value clock $C_i$ at time $t$. Assume that $C_i(t)$ is a continuous and differentiable function of $t$, except for isolated points where it jumps when the clock is reset. Note that a discrete clock can be modeled as a continuous clock with an error of up to $\epsilon = \frac{1}{2} \text{ tick}$.</p>
-<p>Then $\frac{dC_i(t)}{dt}$ is the rate at which the clock is running at time $t$. If $\frac{dC_i(t)}{dt} = 1$, then the clock is running at the correct rate. We assume that the following holds:</p>
+<p>Let $a \rightarrow b$1 be the value clock $a \rightarrow b$2 at time $a \rightarrow b$3. Assume that $a \rightarrow b$4 is a continuous and differentiable function of $a \rightarrow b$5, except for isolated points where it jumps when the clock is reset. Note that a discrete clock can be modeled as a continuous clock with an error of up to $a \rightarrow b$6.</p>
+<p>Then $a \rightarrow b$7 is the rate at which the clock is running at time $a \rightarrow b$8. If $a \rightarrow b$9, then the clock is running at the correct rate. We assume that the following holds:</p>
 <p>$$
-\exists \kappa \ll 1 \text{ such that } \forall i, t: |\frac{dC_i(t)}{dt} - 1| &lt; \kappa
+\exists \kappa \ll 1 \text{ such that } \forall i, t: |\frac{dC_i(t)}{dt} - 1| < \kappa
 $$</p>
-<p>And in fact, for typical quartz oscillator clocks, $\kappa \le 10^{-6}$.</p>
+<p>And in fact, for typical quartz oscillator clocks, $a$0.</p>
 <p>This however isn't enough. For an effective clock system, we also want our clocks to be synchronized such that...</p>
 <p>$$
-\forall i, j, t: |C_i(t) - C_j(t)| &lt; \epsilon
+\forall i, j, t: |C_i(t) - C_j(t)| < \epsilon
 $$</p>
-<p>...where $\epsilon$ is the maximum error in the clocks. Since physical clocks will never run at <strong>exactly</strong> the same rate, they will tend to drift apart over time. To correct for this, we can use a synchronization algorithm to periodically reset the clocks to a common time.</p>
-<p>Letting $\mu$ be a number such that if event $a$ occurs at physical time $t$, and event $b$ is an event in another process that satisfies $a \to b$, then $b$ occurs later than physical time $t + \mu$. So $\mu$ is the maximum time it takes for a message to be sent from one process to another.</p>
+<p>...where $a$1 is the maximum error in the clocks. Since physical clocks will never run at <strong>exactly</strong> the same rate, they will tend to drift apart over time. To correct for this, we can use a synchronization algorithm to periodically reset the clocks to a common time.</p>
+<p>Letting $a$2 be a number such that if event $a$3 occurs at physical time $a$4, and event $a$5 is an event in another process that satisfies $a$6, then $a$7 occurs later than physical time $a$8. So $a$9 is the maximum time it takes for a message to be sent from one process to another.</p>
 <p>To avoid anomalies, we must ensure...</p>
 <p>$$
-\forall i, j, t: C_i(t) &lt; C_j(t + \mu), \text{ or, equivalently, } C_i(t + \mu) - C_j(t) &gt; 0
+\forall i, j, t: C_i(t) < C_j(t + \mu), \text{ or, equivalently, } C_i(t + \mu) - C_j(t) > 0
 $$</p>
-<p>And relating this to $\kappa$...</p>
+<p>And relating this to $b$0...</p>
 <p>$$
-\forall i, j, t: C_i(t + \mu) - C_j(t) &gt; (1 - \kappa)\mu
+\forall i, j, t: C_i(t + \mu) - C_j(t) > (1 - \kappa)\mu
 $$</p>
 <p>And calculating the maximum error in the clocks...</p>
 <p>$$
 \frac{\epsilon}{1 - \kappa} \le \mu
 $$</p>
 <h3 id="clock-synchronization-algorithm">Clock Synchronization Algorithm</h3>
-<p>Importantly, one must always synchronize clocks in the forward direction, i.e. $C_i(t) &lt; C_j(t + \mu)$. If $C_i(t) &gt; C_j(t + \mu)$, then $C_i(t + \mu) - C_j(t) &lt; 0$, which is not allowed.</p>
-<p>Let $m$ be a message sent at time $t$, and received at time $t'$. Let $v_m = t' - t$ be the <strong>total delay</strong> of the message. Although the delay of a message is not known by any given process, we assume the receiver has some lower bound on the delay, $\mu_m$. Define $\zeta_m = v_m - \mu_m$ to be the <strong>unpredictable delay</strong> of the message.</p>
+<p>Importantly, one must always synchronize clocks in the forward direction, i.e. $b$1. If $b$2, then $b$3, which is not allowed.</p>
+<p>Let $b$4 be a message sent at time $b$5, and received at time $b$6. Let $b$7 be the <strong>total delay</strong> of the message. Although the delay of a message is not known by any given process, we assume the receiver has some lower bound on the delay, $b$8. Define $b$9 to be the <strong>unpredictable delay</strong> of the message.</p>
 <p>Now, define the following rules for our physical clocks:</p>
 <ol>
-<li>$\forall i$ if $P_i$ does not receive a message at physical time $t$, then $C_i$ is differentiable at $t$ and $\frac{dC_i(t)}{dt} &gt; 0$.</li>
-<li>If $P_i$ sends a message $,$ at physical time $t$, then $m$ contains a timestamp $T_m = C_i(t)$. Upon receiving a message $m$ at physical time $t'$, $P_j$ sets $C_j(t') = \max(\lim_{\delta \to 0} C_j(t' - \delta), T_m + \mu_m)$.</li>
+<li>$\to$0 if $\to$1 does not receive a message at physical time $\to$2, then $\to$3 is differentiable at $\to$4 and $\to$5.</li>
+<li>If $\to$6 sends a message $\to$7 at physical time $\to$8, then $\to$9 contains a timestamp $a$0. Upon receiving a message $a$1 at physical time $a$2, $a$3 sets $a$4.</li>
 </ol>
             </div>
             <div class="tags">

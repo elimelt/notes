@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -283,7 +283,7 @@
 <p>Direct current sources are sources that provide a constant voltage or current. Batteries are a common example of a DC voltage source. If you graph the voltage over time, it's a flat line.</p>
 <p>Voltage sources supply the required current to maintain a constant voltage, and current sources supply the required voltage to maintain a constant current.</p>
 <h2 id="ac-sources">AC Sources</h2>
-<p>Alternating current sources provide an oscillating voltage or current over time. The voltage or current will oscillate between the two peek values, the distance between them being referred to as the <strong>peak-to-peak</strong> voltage ($V_{pp}) or current ($I_{pp}$). The frequency of oscillation ($f$) is the number of oscillations per second, and is measured in hertz (Hz), but can also be represented in radians per second ($\omega$). The average value, or mid point between the two peek values, is referred to as the <strong>DC offset</strong> ($V_{dc}). Finally, the phase shift ($\phi$) is the amount of time shift between the voltage and current oscillations.</p>
+<p>Alternating current sources provide an oscillating voltage or current over time. The voltage or current will oscillate between the two peek values, the distance between them being referred to as the <strong>peak-to-peak</strong> voltage ($V_{pp}) or current ($I_{pp}$). The frequency of oscillation ($f$) is the number of oscillations per second, and is measured in hertz (Hz), but can also be represented in radians per second ($\omega$). The average value, or mid point between the two peek values, is referred to as the **DC offset** ($V_{dc}). Finally, the phase shift ($\phi$) is the amount of time shift between the voltage and current oscillations.</p>
 <p>$$
 V(t) = \frac{V_{pp}}{2} \sin(\omega t + \phi) + V_{dc}
 $$</p>
@@ -328,8 +328,8 @@ L_{eq} = \sum_{i=1}^{n} L_i = L_1 + L_2 + \ldots + L_n
 $$</p>
 <h3 id="inductors-in-parallel">Inductors in Parallel</h3>
 <p>$$
-L_{eq} = (\sum_{i=1}^{n} \frac{1}{L_i})^{-1} = (\frac{1}{L_1} + \frac{1}{L_2} + \ldots + \frac{1}{L_n})^{-1}
-$$</p>
+I(t) = \frac{I_{pp}}{2} \sin(\omega t + \phi) + I_{dc}
+$$0</p>
 <p><em>Note: just like resistors!</em></p>
 <h2 id="diodes">Diodes</h2>
 <p>Diodes are one way valves for current, built by sandwiching a p-n (positive-negative) junction between two  semiconductors. Diodes have a built in voltage drop ($\approx 0.7$ V), which can be thought of as a threshold voltage that must be overcome before current can flow through the diode. Diodes are often used to <strong>rectify</strong> AC signals, whereby the negative half of the signal is removed, and the positive half is preserved. There are 2 main regions of operation for a diode:</p>
@@ -364,8 +364,8 @@ $$</p>
 </tbody>
 </table>
 <p>$$
-I_E = I_C + I_B = \beta I_B + I_B = (\beta + 1)I_B
-$$</p>
+I(t) = \frac{I_{pp}}{2} \sin(\omega t + \phi) + I_{dc}
+$$1</p>
 <p>Where $\beta$ is the current gain of the transistor, and is typically around $20$ to $100$.</p>
 <h3 id="npn">NPN</h3>
 <p>Current flows into the collector, and out of the emitter. The base current controls the collector current. If the base current is zero, the collector current is zero, and if the base current is at its maximum, the collector current is at its maximum.</p>
@@ -378,8 +378,8 @@ B --|&lt;
        E  v
 </code></pre>
 <p>$$
-I_c = \beta I_b
-$$</p>
+I(t) = \frac{I_{pp}}{2} \sin(\omega t + \phi) + I_{dc}
+$$2</p>
 <h3 id="pnp">PNP</h3>
 <p>The opposite of NPN. Current flows into the emitter, and out of the collector. The base current controls the collector current, such that if the base current is zero, the</p>
 <pre><code class="language-plaintext">       E
@@ -393,8 +393,8 @@ B --|&lt;
 <h2 id="metal-oxide-semiconductor-field-effect-transistors-mosfets">Metal Oxide Semiconductor Field Effect Transistors (MOSFETs)</h2>
 <p>Has 3 terminals: the gate, drain, and source. They are voltage controlled devices, and are used in pretty much every electronic device. They come in two flavors: N-channel and P-channel, or NMOS and PMOS. The high level function is the same as a BJT, but the way they work is different.</p>
 <p>$$
-I_D = k (V_{GS} - V_{th})^2
-$$</p>
+I(t) = \frac{I_{pp}}{2} \sin(\omega t + \phi) + I_{dc}
+$$3</p>
 <p>Where $k$ is a constant for that specific MOSFET based on its geometry and material, $V_GS$ is the voltage between the gate and source, and $V_{th}$ is the threshold voltage, which is the voltage required to turn the MOSFET on.</p>
 <h3 id="terminals_1">Terminals</h3>
 <table>

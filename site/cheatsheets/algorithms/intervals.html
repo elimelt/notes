@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -287,18 +287,18 @@
 <li><strong>Lemma</strong><ul>
 <li>$P(r)$: For greedy choices $g_1, \ldots, g_n$ and optimal choices $k_1, \ldots, k_m$, $f(g_r) \le f(k_r)$</li>
 <li>$P(1)$: $g_1$ is chosen to have the minimum finish time, so $f(g_1) \le f(k_1)$</li>
-<li>Suppose $P(r)$. Since $f(g_r) \le f(k_r) \le s(k_{r + 1})$, $k_{r + 1}$ is among the candidates considered for $g_{r + 1}$. Of those candidates, it picks the minimum finish time, so $f(g_{r + 1}) \le f(k_{r + 1})$.</li>
+<li>Suppose $P(r)$. Since $f(g_r) \le f(k_r) \le s(k_{r + 1})$, $k_{r + 1}$ is among the candidates considered for $g_1, \ldots, g_n$0. Of those candidates, it picks the minimum finish time, so $g_1, \ldots, g_n$1.</li>
 </ul>
 </li>
-<li>By this lemma, we must have $n \ge m$, since since otherwise $k_{n + 1}$ is in the set of candidates for $g_{n + 1}$.</li>
+<li>By this lemma, we must have $g_1, \ldots, g_n$2, since since otherwise $g_1, \ldots, g_n$3 is in the set of candidates for $g_1, \ldots, g_n$4.</li>
 </ul>
 <h2 id="partitioning-intervals-into-the-minimum-number-of-sets">Partitioning intervals into the minimum number of sets</h2>
 <ul>
 <li><strong>Algorithm</strong>: sort intervals by start time, adding them to <strong>any</strong> compatible set. If no set is compatible, create a new one</li>
 <li><strong>Proof</strong>: exploit structural property</li>
 <li><em>Claim</em>: greedy algorithm is optimal</li>
-<li>Let $d$ be the number of sets the greedy algorithm allocates. The $d$th set, $S_d$ is allocated because we had to assign some interval, $I_i$, that was not compatible with any of the $d - 1$ previous sets.</li>
-<li>Since we sorted by start time, all intervals $I_j \in S_1 \cup \ldots \cup S_{d - 1}$ have $s(I_i) \ge s(I_j)$. Thus, we have at least depth $d$ intervals, and so all valid partitions must have $\ge d$ sets.</li>
+<li>Let $g_1, \ldots, g_n$5 be the number of sets the greedy algorithm allocates. The $g_1, \ldots, g_n$6th set, $g_1, \ldots, g_n$7 is allocated because we had to assign some interval, $g_1, \ldots, g_n$8, that was not compatible with any of the $g_1, \ldots, g_n$9 previous sets.</li>
+<li>Since we sorted by start time, all intervals $k_1, \ldots, k_m$0 have $k_1, \ldots, k_m$1. Thus, we have at least depth $k_1, \ldots, k_m$2 intervals, and so all valid partitions must have $k_1, \ldots, k_m$3 sets.</li>
 </ul>
             </div>
             <div class="tags">

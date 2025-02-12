@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -283,26 +283,26 @@
 <p>Let $G$ be a tree. Use induction to prove that the number of leaves of $G$ is at least the number of vertices of degree at least $3$ in $G$.</p>
 <h4 id="solution">Solution</h4>
 <p>$P(n)$: The number of leaves of any graph $G$ with $n$ vertices is at least the number of vertices of degree at least $3$ in $G$.</p>
-<h4 id="base-case-p1">Base Case: $P(1)$</h4>
-<p>A tree with one vertex has no leaves or vertices of degree at least $3$, so the base case holds.</p>
-<h4 id="ih-assume-pk-holds-for-some-k-ge-1">IH: Assume $P(k)$ holds for some $k \ge 1$.</h4>
-<h4 id="is-we-want-to-show-that-pk-1-holds">IS: We want to show that $P(k + 1)$ holds.</h4>
-<p>Let $G = (V, E)$ be a tree with $|V| = k + 1$.</p>
-<p>Choose some arbitrary leaf $l \in V$, and $(l, p) \in E$. Removing $l$ (and its corresponding edge) from $G$ results in a tree $G' = (V', E')$ with $|V'| = k$. By the IH, $G'$ satisfies $P(k)$.</p>
-<p><strong>Case 1</strong>: $p$ has degree $1$ in $G'$.</p>
-<p>Then $p$ is a leaf in $G'$, and $G'$ has the same number of leaves and vertices with degree 3 as $G$ (since we didn't remove any vertices of degree 3). Thus, $G$ has at least as many leaves as vertices of degree 3.</p>
-<p><strong>Case 2</strong>: $p$ has degree $2$ in $G'$.</p>
-<p>Then $p$ is not a leaf in $G'$, and $G'$ has one fewer leaf than $G$ (since we removed a leaf). However, we also removed a vertex of degree 3 from $G$, so the number of vertices of degree 3 in $G$ is still at least the number of leaves in $G$ (both increased by 1 from $G' \to G$).</p>
-<p><strong>Case 3</strong>: $p$ has degree at least $3$ in $G'$.</p>
-<p>Then $p$ is a vertex of degree at least $3$ in $G$, and $G$ has the same number of vertices of degree greater than or equal to $3$ as $G'$. Since we only add a leaf to $G'$ to get $G$, the number of leaves in $G$ is at least the number of leaves in $G'$, which is at least the number of vertices of degree at least $3$ in $G'$.</p>
-<p>In all cases, $G$ has at least as many leaves as vertices of degree at least $3$, so $P(k + 1)$ holds.</p>
+<h4 id="base-case-inlinemath-7164518863569694456_9">Base Case: $P(1)$</h4>
+<p>A tree with one vertex has no leaves or vertices of degree at least $G$0, so the base case holds.</p>
+<h4 id="ih-assume-inlinemath-7164518863569694456_11-holds-for-some-inlinemath-7164518863569694456_12">IH: Assume $G$1 holds for some $G$2.</h4>
+<h4 id="is-we-want-to-show-that-inlinemath-7164518863569694456_13-holds">IS: We want to show that $G$3 holds.</h4>
+<p>Let $G$4 be a tree with $G$5.</p>
+<p>Choose some arbitrary leaf $G$6, and $G$7. Removing $G$8 (and its corresponding edge) from $G$9 results in a tree $3$0 with $3$1. By the IH, $3$2 satisfies $3$3.</p>
+<p><strong>Case 1</strong>: $3$4 has degree $3$5 in $3$6.</p>
+<p>Then $3$7 is a leaf in $3$8, and $3$9 has the same number of leaves and vertices with degree 3 as $G$0 (since we didn't remove any vertices of degree 3). Thus, $G$1 has at least as many leaves as vertices of degree 3.</p>
+<p><strong>Case 2</strong>: $G$2 has degree $G$3 in $G$4.</p>
+<p>Then $G$5 is not a leaf in $G$6, and $G$7 has one fewer leaf than $G$8 (since we removed a leaf). However, we also removed a vertex of degree 3 from $G$9, so the number of vertices of degree 3 in $P(n)$0 is still at least the number of leaves in $P(n)$1 (both increased by 1 from $P(n)$2).</p>
+<p><strong>Case 3</strong>: $P(n)$3 has degree at least $P(n)$4 in $P(n)$5.</p>
+<p>Then $P(n)$6 is a vertex of degree at least $P(n)$7 in $P(n)$8, and $P(n)$9 has the same number of vertices of degree greater than or equal to $G$0 as $G$1. Since we only add a leaf to $G$2 to get $G$3, the number of leaves in $G$4 is at least the number of leaves in $G$5, which is at least the number of vertices of degree at least $G$6 in $G$7.</p>
+<p>In all cases, $G$8 has at least as many leaves as vertices of degree at least $G$9, so $n$0 holds.</p>
 <h2 id="problem-2">Problem 2</h2>
-<p>Let $G$ be a graph with $n$ vertices and at least $n$ edges. Show that $G$ has a cycle.</p>
+<p>Let $n$1 be a graph with $n$2 vertices and at least $n$3 edges. Show that $n$4 has a cycle.</p>
 <h4 id="solution_1">Solution</h4>
-<p>Let $G$ be a graph with $n$ vertices and at least $n$ edges. Suppose for the sake of contradiction that $G$ has no cycles.</p>
-<p>Since $G$ has no cycles, it is a tree.</p>
+<p>Let $n$5 be a graph with $n$6 vertices and at least $n$7 edges. Suppose for the sake of contradiction that $n$8 has no cycles.</p>
+<p>Since $n$9 has no cycles, it is a tree.</p>
 <p>Claim: The sum of the degrees of all vertices in a graph is equal to twice the number of edges.</p>
-<p>Proof: Each edge contributes $1$ to the degree of two vertices, so the sum of the degrees of all vertices is twice the number of edges.</p>
+<p>Proof: Each edge contributes $3$0 to the degree of two vertices, so the sum of the degrees of all vertices is twice the number of edges.</p>
             </div>
             <div class="tags">
                 Tags:

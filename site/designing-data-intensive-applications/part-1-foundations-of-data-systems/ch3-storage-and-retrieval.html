@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -287,7 +287,7 @@ db_set () {
  echo &quot;$1,$2&quot; &gt;&gt; database
 }
 db_get () {
- grep &quot;^$1,&quot; database | sed -e &quot;s/^$1,//&quot; | tail -n 1
+ grep &quot;^$1," database | sed -e "s/^$1,//&quot; | tail -n 1
 }
 </code></pre>
 <p>The fact that it is a log makes this...sort of performant. Writes are fast O(1), and reads are slow O(n). The log-structured storage engine is a good fit for append-only workloads, such as event sourcing.</p>

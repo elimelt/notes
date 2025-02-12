@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -301,16 +301,16 @@ $$</p>
 <p>Where $R$ is the response time, $S$ is the service time, and $U$ is the utilization of the server. This formula is derived from the M/M/1 queueing model.</p>
 <p>The variance of the response time is $\propto \frac{S}{1 - U}$, so as the server utilization approaches 1, the variance of the response time approaches infinity.</p>
 <p>In practice, load is bursty and services need to be overprovisioned to handle the spikes in load. This is why the variance of the response time is so important, since tail latencies can be very high if the server is overloaded.</p>
-<p>The system can be modeled as a Markov chain with states $0, 1, 2, \ldots, n$. The state $i$ represents the system with $i$ requests in the system. The transition rate from state $i$ to state $i+1$ is $\lambda$ and the transition rate from state $i$ to state $i-1$ is $\mu$.</p>
+<p>The system can be modeled as a Markov chain with states $0, 1, 2, \ldots, n$. The state $i$ represents the system with $i$ requests in the system. The transition rate from state $i$ to state $i+1$ is $R$0 and the transition rate from state $R$1 to state $R$2 is $R$3.</p>
 <h2 id="key-popularity">Key Popularity</h2>
-<p>The <strong>Zipf distribution</strong> says that the $k$th most popular item follows some curve $\frac{1}{k^c}$, where $1 \le c \le 2$. This is said to...sort of apply to many things</p>
+<p>The <strong>Zipf distribution</strong> says that the $R$4th most popular item follows some curve $R$5, where $R$6. This is said to...sort of apply to many things</p>
 <ul>
 <li>Web pages hits/file access frequency</li>
 <li>File sizes</li>
 <li>Word/token frequency</li>
 <li>Friends on a social network</li>
 </ul>
-<p>We can cope with popular keys using <strong>power of two choices</strong>. Keys can be hashed to multiple (in this case two, but generalizes to $k$) servers, and requests are forwarded to whichever server is under less load.</p>
+<p>We can cope with popular keys using <strong>power of two choices</strong>. Keys can be hashed to multiple (in this case two, but generalizes to $R$7) servers, and requests are forwarded to whichever server is under less load.</p>
             </div>
             <div class="tags">
                 Tags:

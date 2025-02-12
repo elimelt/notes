@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -313,7 +313,7 @@
 <li>On receipt of a message, set $T = \max(T, T_m) + 1$.</li>
 </ul>
 <h3 id="vector-clocks">Vector Clocks</h3>
-<p>Note that with the above implementation of a logic clock system, it was not the case that $T(a) < T(b) \to $ $a$ happened before $b$. With vector clocks, we have $T(a) < T(b) \leftrightarrow a$ happened before $b$ by precisely representing transitive causal relationships between events. This is used in practice for eventual and causal consistency (ie Git, Amazon Dynamo, etc.).</p>
+<p>Note that with the above implementation of a logic clock system, it was not the case that $T(a) &lt; T(b) \to $ $a$ happened before $b$. With vector clocks, we have $T(a) &lt; T(b) \leftrightarrow a$ happened before $b$ by precisely representing transitive causal relationships between events. This is used in practice for eventual and causal consistency (ie Git, Amazon Dynamo, etc.).</p>
 <h4 id="algorithm">Algorithm</h4>
 <p>Clock is a vector <code>C</code>, with length = # of nodes in the system</p>
 <ul>

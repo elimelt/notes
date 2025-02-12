@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -281,18 +281,18 @@
                 <h1 id="trees">Trees</h1>
 <h3 id="lemma-acyclic-and-connected">Lemma: acyclic and connected</h3>
 <p>A graph is a tree if and only if it is acyclic and connected.</p>
-<h2 id="claim-every-tree-with-inlinemath4918768988644284718_0-vertices-has-inlinemath4918768988644284718_1-edges">Claim: Every tree with $n$ vertices has $n - 1$ edges.</h2>
+<h2 id="claim-every-tree-with-n-vertices-has-n-1-edges">Claim: Every tree with $n$ vertices has $n - 1$ edges.</h2>
 <p>Proof by induction.</p>
 <p>Base case: $n = 1$. A tree with 1 vertex has 0 edges.</p>
 <p>IH: Suppose every tree with $n - 1$ vertices has $n - 2$ edges ($P(n - 1)$).</p>
 <p>IS: Let $T$ be a tree with $n$ vertices.</p>
-<p>$T$ must have a vertex of degree 1 (since it is by definition acyclic). Remove this vertex and its edge to get a tree $T'$ with $n - 1$0 vertices. By IH, $n - 1$1 has $n - 1$2 edges. Adding back the vertex and edge, we get $n - 1$3 edges.</p>
+<p>$T$ must have a vertex of degree 1 (since it is by definition acyclic). Remove this vertex and its edge to get a tree $T'$ with $n - 1$ vertices. By IH, $T'$ has $n - 2$ edges. Adding back the vertex and edge, we get $n - 1$ edges.</p>
 <h2 id="properties-of-trees">Properties of Trees</h2>
-<p>Any graph $n - 1$4 that satisfies two of the following properties must satisfy the third (and thus be a tree):</p>
+<p>Any graph $G$ that satisfies two of the following properties must satisfy the third (and thus be a tree):</p>
 <ul>
-<li>$n - 1$5 is connected</li>
-<li>$n - 1$6 is acyclic</li>
-<li>$n - 1$7 has $n - 1$8 edges</li>
+<li>$G$ is connected</li>
+<li>$G$ is acyclic</li>
+<li>$G$ has $|V| - 1$ edges</li>
 </ul>
             </div>
             <div class="tags">

@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -285,18 +285,18 @@
 <p>$$
 \langle a, x \rangle = a^Tx = a_1x_1 + a_2x_2 + \ldots + a_dx_d = \sum_{i=1}^d a_ix_i
 $$</p>
-<p>A <strong>hyperplane</strong> is the set of points $x$ such that $\langle a, x \rangle = b$ for some $b$. A <strong>handspace</strong> is the set of points on one side of a hyperplace, $\{x : \langle a, x \rangle \geq b\}$ or $\{x : \langle a, x \rangle \leq b\}$.</p>
+<p>A <strong>hyperplane</strong> is the set of points $x$ such that $\langle a, x \rangle = b$ for some $b$. A <strong>handspace</strong> is the set of points on one side of a hyperplace, ${x : \langle a, x \rangle \geq b}$ or ${x : \langle a, x \rangle \leq b}$.</p>
 <p>The intersection of a system of half spaces creates a <strong>polytope</strong>, which is a convex set. A <strong>convex set</strong> is a set where the line segment between any two points in the set is also in the set.</p>
 <h2 id="linear-programs">Linear Programs</h2>
 <p>The goal of a linear program is to optimize some <strong>objective function</strong> subject to a set of constraints, which are also linear functions. For example...</p>
 <p>$$
-\begin{align*}
-&max  & 3x_1 - 4x_3\\
-&s.t. & x_1 + x_2 \le 5\\
-&     & x_3 + x_1 = 4\\
-&     & x_3 - x_2 \ge -5\\
-&     & x_1, x_2, x_3 \ge 0\\
-\end{align*}
+\begin{align<em>}
+&amp;max  &amp; 3x_1 - 4x_3\
+&amp;s.t. &amp; x_1 + x_2 \le 5\
+&amp;     &amp; x_3 + x_1 = 4\
+&amp;     &amp; x_3 - x_2 \ge -5\
+&amp;     &amp; x_1, x_2, x_3 \ge 0\
+\end{align</em>}
 $$</p>
 <h2 id="linear-algebra-review">Linear Algebra Review</h2>
 <p>$$
@@ -304,23 +304,23 @@ $$</p>
 $$</p>
 <p>$$
 A = \begin{bmatrix}
-a_1^T \\
-a_2^T \\
-\vdots \\
+a_1^T \
+a_2^T \
+\vdots \
 a_m^T
 \end{bmatrix} \Rightarrow
 Ax = \begin{pmatrix}
-\langle a_1, x \rangle \\
-\langle a_2, x \rangle \\
-\vdots \\
+\langle a_1, x \rangle \
+\langle a_2, x \rangle \
+\vdots \
 \langle a_m, x \rangle
 \end{pmatrix}
 $$</p>
 <p>$$
 Ax \le b \Rightarrow \begin{array}{c}
-\langle a_1, x \rangle \le b_1 \\
-\langle a_2, x \rangle \le b_2 \\
-\vdots \\
+\langle a_1, x \rangle \le b_1 \
+\langle a_2, x \rangle \le b_2 \
+\vdots \
 \langle a_m, x \rangle \le b_m
 \end{array}
 $$</p>
@@ -328,44 +328,44 @@ $$</p>
 <p>We can write any linear program in the <em>standard form</em> below.</p>
 <p>$$
 \begin{array}{cc}
-max & \langle c, x \rangle \\
-s.t., & Ax \le b\\
-~ & x \ge 0
+max &amp; \langle c, x \rangle \
+s.t., &amp; Ax \le b\
+~ &amp; x \ge 0
 \end{array}
 $$</p>
 <p>For example, we can transform the following linear program by turning the minimization problem into a maximization, and turning all equalities into two inequalities.</p>
 <p>$$
 \begin{array}{cc}
-min &   y_1 - 2y_2\\
-s.t., & y_1 + 2y_2 = 3\\
-~ & y_1 - y_2 \ge 1\\
-~ & y_1, y_2 \ge 0\\
+min &amp;   y_1 - 2y_2\
+s.t., &amp; y_1 + 2y_2 = 3\
+~ &amp; y_1 - y_2 \ge 1\
+~ &amp; y_1, y_2 \ge 0\
 \end{array}
 $$</p>
 <p>To turn a min into a max, we just negate the objective function. The same holds for reversing the direction of a $\geq$. We can turn the above linear program into the following:</p>
 <p>$$
 \begin{array}{cc}
-max &   -y_1 + 2y_2\\
-s.t., & y_1 + 2y_2 \le 3\\
-~ & -(y_1 + 2y_2) \le -3\\
-~ & y_1 + y_2 \le 1\\
-~ & y_1, y_2 \ge 0\\
+max &amp;   -y_1 + 2y_2\
+s.t., &amp; y_1 + 2y_2 \le 3\
+~ &amp; -(y_1 + 2y_2) \le -3\
+~ &amp; y_1 + y_2 \le 1\
+~ &amp; y_1, y_2 \ge 0\
 \end{array}
 $$</p>
 <p>In LPs where you don't have non-negativity for all variables, you can replace the variables missing this constraint with the difference of two non-negative variables. For example...</p>
 <p>$$
 \begin{array}{cc}
-max &   y_1\\
-s.t., & y_1 + y_2 \le 3\\
-~ & y_2 \ge 0\\
+max &amp;   y_1\
+s.t., &amp; y_1 + y_2 \le 3\
+~ &amp; y_2 \ge 0\
 \end{array}
 $$</p>
 <p>We replace $y_1$ with $z_1 - z_1'$, where $z_1, z_1' \ge 0$. The linear program becomes...</p>
 <p>$$
 \begin{array}{cc}
-max   & z_1 - z_1'\\
-s.t., & z_1 - z_1' + y_2 \le 3\\
-~     & z_1, z_1', y_2 \ge 0\\
+max   &amp; z_1 - z_1'\
+s.t., &amp; z_1 - z_1' + y_2 \le 3\
+~     &amp; z_1, z_1', y_2 \ge 0\
 \end{array}
 $$</p>
 <h2 id="applications-of-linear-programming">Applications of Linear Programming.</h2>
@@ -395,38 +395,37 @@ $$</p>
 </ul>
 <p>So we have an overall LP of...</p>
 <p>$$
-\begin{align*}
-&max  & 3x_1 - 4x_3\\
-&s.t. & x_1 + x_2 \le 5\\
-&     & x_3 + x_1 = 4\\
-&     & x_3 - x_2 \ge -5\\
-&     & x_1, x_2, x_3 \ge 0\\
-\end{align*}
-$$0</p>
+\begin{array}{ccc}
+max     &amp; \sum_{e \text{ out of } s} x_e &amp; ~\
+s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp; \forall c \ne s, t\
+~       &amp; x_e \le c(e) &amp; \forall e\
+~       &amp; x_e \ge 0 &amp; \forall e
+\end{array}
+$$</p>
 <p>Note that the flow this gives you is not necessarily an integer max-flow.</p>
 <h2 id="min-cost-max-flow">Min-Cost Max-Flow</h2>
 <p>Expanding on the previous example, we can add a cost to each edge $p(e)$ and try to minimize $p(e)$ while achieving some constant flow $f$.</p>
 <p>$$
-\begin{align*}
-&max  & 3x_1 - 4x_3\\
-&s.t. & x_1 + x_2 \le 5\\
-&     & x_3 + x_1 = 4\\
-&     & x_3 - x_2 \ge -5\\
-&     & x_1, x_2, x_3 \ge 0\\
-\end{align*}
-$$1</p>
+\begin{array}{ccc}
+max     &amp; \sum_{e \in E} p(e) \cdot x_e &amp; ~\
+s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp; \forall c \ne s, t\
+~       &amp; \sum_{e \text{ out of } s} x_e = f &amp; ~\
+~       &amp; x_e \le c(e) &amp; \forall e\
+~       &amp; x_e \ge 0 &amp; \forall e
+\end{array}
+$$</p>
 <h2 id="weighted-vertex-cover">Weighted Vertex Cover</h2>
 <p>Given a graph $G = (V, E)$, where each vertex has a cost $c_v$, find the minimum cost vertex cover, i.e. $\min \sum_{v \in S} c_v$</p>
 <p>We have a variable $x_v$ for each $v$, where $x_v = 1$ if $v \in S$ and $x_v = 0$ otherwise. Then we have the constraint that for every edge $(u, v) \in</p>
 <p>$$
-\begin{align*}
-&max  & 3x_1 - 4x_3\\
-&s.t. & x_1 + x_2 \le 5\\
-&     & x_3 + x_1 = 4\\
-&     & x_3 - x_2 \ge -5\\
-&     & x_1, x_2, x_3 \ge 0\\
-\end{align*}
-$$2</p>
+\begin{array}{ccc}
+max     &amp; \sum_{e \in E} p(e) \cdot x_e &amp; ~\
+s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp; \forall c \ne s, t\
+~       &amp; \sum_{e \text{ out of } s} x_e = f &amp; ~\
+~       &amp; x_e \le c(e) &amp; \forall e\
+~       &amp; x_e \ge 0 &amp; \forall e
+\end{array}
+$$</p>
             </div>
             <div class="tags">
                 Tags:

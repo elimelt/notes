@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -438,8 +438,8 @@
 last w references</li>
 </ul>
 <p>$$
-WS(t,w) = \{\text{pages P such that P was referenced in the time
-interval } (t, t-w)\}
+WS(t,w) = {\text{pages P such that P was referenced in the time
+interval } (t, t-w)}
 $$</p>
 <p>$|WT(t, w)|$ is the number of pages in the working set at time $t$, and varies with time. During a time interval with particularly bad locality, the working set can be very large.</p>
 <ul>

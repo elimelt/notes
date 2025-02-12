@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -306,40 +306,40 @@
 <h3 id="term-weighting-tf-idf">Term weighting (tf-idf)</h3>
 <p>Using raw word counts isn't very effective. We instead compute a <strong>term weight</strong> for each document word (e.g. <strong>tf-idf</strong> or <strong>BM25</strong>). For tf-idf (term frequency-inverse document frequency), we compute the term frequency (tf) and inverse document frequency (idf) for each term in each document. The tf is the number of times a term appears in a document, and the idf is the log of the total number of documents divided by the number of documents containing the term. The tf-idf score is then the product of these two values.</p>
 <p>$$
-\text{tf}_{t, d} = \begin{cases}
-    1 + \log_{10} \text{count}(t, d) & \text{if count}(t, d) > 0 \\
-    0 & \text{otherwise}
+\text{tf}<em 10="10">{t, d} = \begin{cases}
+    1 + \log</em>(t, d) &gt; 0 \
+    0 &amp; \text{otherwise}
 \end{cases}
-$$</p>
+$$} \text{count}(t, d) &amp; \text{if count</p>
 <p>For intuition behind using $log$, if $w_1$ appears $100$ times in a document, and $w_2$ only once, it doesn't mean that $w_1$ is $100$ times more important. Note that alternative definitions of tf exist, e.g. $\log_{10}(1 + \text{count}(t, d))$.</p>
 <p>On the other hand, the <strong>document frequency</strong> is the number of documents containing a term. The idf is then defined as:</p>
 <p>$$
-\text{idf}_t = \log_{10} \left( \frac{N}{\text{df}_t} \right)
-$$</p>
+\text{idf}<em 10="10">t = \log</em> \right)
+$$} \left( \frac{N}{\text{df}_t</p>
 <p>where $N$ is the total number of documents in the collection. Therefore, for a word that is contained in <strong>every</strong> document, we'd have an $idf$ of 0. The tf-idf score is then:</p>
 <p>$$
-\text{tf-idf}_{t, d} = \text{tf}_{t, d} \times \text{idf}_t = \begin{cases}
-    (1 + \log_{10} \text{count}(t, d)) \times \log_{10} \left( \frac{N}{\text{df}_t} \right) & \text{if count}(t, d) > 0 \\
-    0 & \text{otherwise}
+\text{tf-idf}<em d="d" t_="t,">{t, d} = \text{tf}</em>} \times \text{idf<em 10="10">t = \begin{cases}
+    (1 + \log</em>(t, d) &gt; 0 \
+    0 &amp; \text{otherwise}
 \end{cases}
-$$</p>
+$$} \text{count}(t, d)) \times \log_{10} \left( \frac{N}{\text{df}_t} \right) &amp; \text{if count</p>
 <h3 id="document-scoring">Document scoring</h3>
 <p>We can then score a document $d$ by the cosine of its vector $v_d$ with the query vector $v_q$:</p>
 <p>$$
-\text{score}(q, d) = cos(v_q, v_d) = \frac{v_q \cdot v_d}{\|v_q\| \|v_d\|}
+\text{score}(q, d) = cos(v_q, v_d) = \frac{v_q \cdot v_d}{|v_q| |v_d|}
 $$</p>
 <p>Alternatively, you can think of the cosine as the dot product of the document and query unit vectors, e.g.:</p>
 <p>$$
-\text{score}(q, d) = cos(v_q, v_d) = \frac{v_t}{\|v_q\|} \cdot \frac{v_d}{\|v_d\|}
+\text{score}(q, d) = cos(v_q, v_d) = \frac{v_t}{|v_q|} \cdot \frac{v_d}{|v_d|}
 $$</p>
 <p>Then, plugging in the tf-idf scores:</p>
 <p>$$
-\text{score}(q, d) = \sum_{t \in q} \frac{\text{tf-idf}_{t, q}}{\sqrt{\sum_{q_i \in q} \text{tf-idf}^2(q_i, q)}} \times \frac{\text{tf-idf}_{t, d}}{\sqrt{\sum_{d_i \in d} \text{tf-idf}^2(d_i, d)}}
-$$</p>
+\text{score}(q, d) = \sum_{t \in q} \frac{\text{tf-idf}<em _in="\in" q="q" q_i="q_i">{t, q}}{\sqrt{\sum</em>} \text{tf-idf}^2(q_i, q)}} \times \frac{\text{tf-idf<em _in="\in" d="d" d_i="d_i">{t, d}}{\sqrt{\sum</em>
+$$} \text{tf-idf}^2(d_i, d)}</p>
 <p>Many variations exist, particularly ones that drop terms in order to reduce computation required. A notable variant is <strong>BM25</strong>, which introduces parameters $k$ to adjust balance between $tf$ and $idf$, and $b$ which controls the importance of document length normalization.</p>
 <p>$$
-\text{score}(q, d) = \sum_{t \in q} \log \left( \frac{N}{\text{df}_t} \right) \cdot \frac{tf_{t, d}}{k(1 - b + b \cdot \frac{|d|}{|d_{avg}|}) + tf_{t, d}}
-$$</p>
+\text{score}(q, d) = \sum_{t \in q} \log \left( \frac{N}{\text{df}<em d="d" t_="t,">t} \right) \cdot \frac{tf</em>
+$$}}{k(1 - b + b \cdot \frac{|d|}{|d_{avg}|}) + tf_{t, d}</p>
 <p>Where $d_{avg}$ is the average document length in the collection. When $k = 0$, BM25 reverts to no use of term frequency, just like a binary selection of terms in the query (plus idf). A large $k$ results in raw term frequency (plus idf). $b$ ranges from $1$ (scaling by document length) to $0$ (no scaling). Reasonable defaults for these parameters are $k = [1.2, 2.0]$ and $b = 0.75$.</p>
 <h4 id="quick-aside-stop-words">Quick aside: stop words</h4>
 <p>Stop words are common words that would traditionally be removed from the text before indexing, since they don't add much information. However, tf-idf already does a good job of downweighting common words, so stop words are less important in modern systems, an are often included in the index to make search for phrases easier.</p>
@@ -373,17 +373,17 @@ $$</p>
 $$</p>
 <p>Where $\text{Precision}_{r}(d)$ is the precision measured at the rank $r$ where document $d$ was retrieved. For an ensemble of queries $Q$, we average the AP over all queries to get the MAP:</p>
 <p>$$
-\text{idf}_t = \log_{10} \left( \frac{N}{\text{df}_t} \right)
-$$0</p>
+\text{MAP} = \frac{1}{|Q|} \sum_{q \in Q} \text{AP}(q)
+$$</p>
 <h2 id="ir-with-dense-vectors">IR with Dense Vectors</h2>
 <p>tf-idf and BM25 both kind of suck in a way (read vocabulary mismatch problem). Instead, we need to handle synonyms by using dense vectors (as opposed to sparse ones like word counts). This is implemented today via encoders like BERT.</p>
 <p>The general approach is to present both the query and the document to a single encoder, allowing the transformer self-attention to see all tokens of both the query and the document, thus also building a representation that is sensitive to the meanings in both. Then, a linear layer can be put on top of the [CLS] token to predict the similarity score for the query and document.</p>
 <p>$$
-\text{idf}_t = \log_{10} \left( \frac{N}{\text{df}_t} \right)
-$$1</p>
+z = BERT(q;[SEP];d)[CLS]
+$$</p>
 <p>$$
-\text{idf}_t = \log_{10} \left( \frac{N}{\text{df}_t} \right)
-$$2</p>
+\text{score}(q, d) = \text{softmax}(U(z))
+$$</p>
 <p>Note: BERT was trained using <code>[CLS] sen A [SEP] sen B [SEP]</code>. <code>[SEP]</code> is used to help the model distinguish between the two sentences. <code>[CLS]</code> is used to represent the entire sentence.</p>
             </div>
             <div class="tags">

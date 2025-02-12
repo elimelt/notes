@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -298,7 +298,7 @@ $$</p>
 <li>This is the approach behind Quick sort with random splitters.</li>
 </ul>
 <h2 id="finding-the-root-of-a-function">Finding the Root of a Function</h2>
-<p>Given a continuous function $f$ and two points $a, b$ and $b > a$ such that $f(a) \le 0$ and $f(b) \ge 0$.</p>
+<p>Given a continuous function $f$ and two points $a, b$ and $b &gt; a$ such that $f(a) \le 0$ and $f(b) \ge 0$.</p>
 <p>Find an approximate root of $f$, ie a point $c$ where there is $r$ s.t. $|r - c| \le \epsilon$ and $f(r) = 0$. Note that this must exist by IVT.</p>
 <h3 id="naive-approach">Naive Approach</h3>
 <p>Divide $\lbrack a, b\rbrack$ into $n = \frac{b - a}{\epsilon}$ intervals. For each interval, check $f(x) \le 0, f(x + \epsilon) \ge 0$.</p>
@@ -319,32 +319,32 @@ $$</p>
 T(n) = T(\frac{n}{2}) + O(1) = O(\log(n)) = O(\log \frac{a - b}{\epsilon})
 $$</p>
 <h3 id="correctness">Correctness</h3>
-<p>$P(n)$: $\forall a, b$ s.t. $f(a) \le 0$ and $f(b) \ge 0$, and $\frac{a - b}{\epsilon} = n$, that <code>Bisection</code> returns a value, say $c$, s.t. $n - 1$0 s.t. $n - 1$1</p>
-<p><strong>Base Case.</strong> $n - 1$2: By IVT, $n - 1$3 s.t. $n - 1$4. We output $n - 1$5, and $n - 1$6.</p>
-<p><strong>IH:</strong> Assume $n - 1$7</p>
-<p><strong>IS:</strong> $n - 1$8</p>
-<p>Given arbitrary $n - 1$9 s.t. $1$0 and $1$1, $1$2, start with $1$3.</p>
-<h4 id="case-1-inlinemath6525047786653932261_44">Case 1: $1$4</h4>
-<p>Then we satisfy $1$5 for $1$6 because $1$7, and $1$8, $1$9.</p>
-<h4 id="case-2-inlinemath6525047786653932261_50">Case 2: $n - 1$0</h4>
-<p>Then we satisfy $n - 1$1 for $n - 1$2, for the exact same reasoning.</p>
+<p>$P(n)$: $\forall a, b$ s.t. $f(a) \le 0$ and $f(b) \ge 0$, and $\frac{a - b}{\epsilon} = n$, that <code>Bisection</code> returns a value, say $c$, s.t. $\exists r$ s.t. $|r - c| \le \epsilon$</p>
+<p><strong>Base Case.</strong> $P(1)$: By IVT, $\exists r \in [a, b]$ s.t. $f(r) = 0$. We output $a$, and $|a - r| \le |a - b| \le \epsilon$.</p>
+<p><strong>IH:</strong> Assume $P(n)$</p>
+<p><strong>IS:</strong> $P(2n)$</p>
+<p>Given arbitrary $b &gt; a$ s.t. $\frac{|a - b|}{\epsilon} = 2n$ and $f(a) \le 0$, $f(b) \ge 0$, start with $c = \frac{a + b}{2}$.</p>
+<h4 id="case-1-fc-ge-0">Case 1: $f(c) \ge 0$</h4>
+<p>Then we satisfy $P(n)$ for $a, c$ because $\frac{c - a}{\epsilon} = n$, and $f(a) \le 0$, $f(c) \ge 0$.</p>
+<h4 id="case-2-fc-le-0">Case 2: $f(c) \le 0$</h4>
+<p>Then we satisfy $P(n)$ for $c, b$, for the exact same reasoning.</p>
 <h2 id="closest-pair-of-points-geometrically">Closest Pair of Points (geometrically)</h2>
-<p>Given $n - 1$3 points and an <em>arbitrary</em> distance function between them, find the closest pair (not just Euclidean distance).</p>
+<p>Given $n$ points and an <em>arbitrary</em> distance function between them, find the closest pair (not just Euclidean distance).</p>
 <h3 id="1-dimensional-version">1 Dimensional Version</h3>
-<p>Given $n - 1$4 points on the real line, you can find the closest pair by sorting and then comparing each consecutive pair of points.</p>
+<p>Given $n$ points on the real line, you can find the closest pair by sorting and then comparing each consecutive pair of points.</p>
 <p><strong>Key point</strong>: Don't need to check <em>every</em> pair. Can instead exploit geometry.</p>
 <h3 id="2-dimensional-version">2 Dimensional Version</h3>
-<p>Given $n - 1$5 points in the plane$, find the pair with the smallest Euclidean distance between them.</p>
+<p>Given $n$ points in the plane$, find the pair with the smallest Euclidean distance between them.</p>
 <ul>
-<li><em>Divide</em>: draw a vertical line $n - 1$6 with $n - 1$7 points on each side.</li>
+<li><em>Divide</em>: draw a vertical line $L$ with $\approx \frac{n}{2}$ points on each side.</li>
 <li><em>Conquer</em>: find closest pair on each side recursively.</li>
 </ul>
-<p>Suppose $n - 1$8 is the minimum on each side. Then you only need to consider points within $n - 1$9 of $1$0 as the case where our two points lie on opposite sides of $1$1.</p>
-<p>Partition each side of $1$2 into $1$3 squares. This guarantees that each square has at most one point, since multiple points in the same square would have to have been the minimum on that side (since the maximum distance within a single square is $1$4).</p>
-<p>Then, sort the points in the strip $1$5 by $1$6-coordinate to make $1$7.</p>
-<p><strong>Claim</strong>: $1$8, if $1$9, then $\frac{n}{2}$0.</p>
-<p><strong>Proof</strong>: There are 4 squares in each row of the strip, each occupying at most on point. We know that any point $\frac{n}{2}$1 more than two rows away from $\frac{n}{2}$2 must have $\frac{n}{2}$3.</p>
-<p>There are at most 3 points in the same row as $\frac{n}{2}$4, and 8 in the 2 rows above/below. Thus, any point more than $\frac{n}{2}$5 points away from $\frac{n}{2}$6 will be more than two rows away, and thus have a distance greater than $\frac{n}{2}$7.</p>
+<p>Suppose $\delta$ is the minimum on each side. Then you only need to consider points within $\delta$ of $L$ as the case where our two points lie on opposite sides of $L$.</p>
+<p>Partition each side of $L$ into $\frac{\delta}{2} \times \frac{\delta}{2}$ squares. This guarantees that each square has at most one point, since multiple points in the same square would have to have been the minimum on that side (since the maximum distance within a single square is $\frac{\delta}{\sqrt{2}}$).</p>
+<p>Then, sort the points in the strip $x \in [L - \delta, L + \delta]$ by $y$-coordinate to make $s_1, s_2, \ldots s_i$.</p>
+<p><strong>Claim</strong>: $\forall s_i, s_j$, if $|i - j| &gt; 11$, then $d(s_i, s_j) &gt; \delta$.</p>
+<p><strong>Proof</strong>: There are 4 squares in each row of the strip, each occupying at most on point. We know that any point $p_j$ more than two rows away from $p_i$ must have $d(p_i, p_j) &gt; \delta$.</p>
+<p>There are at most 3 points in the same row as $p_i$, and 8 in the 2 rows above/below. Thus, any point more than $8 + 3 = 11$ points away from $p_i$ will be more than two rows away, and thus have a distance greater than $\delta$.</p>
 <h4 id="implementation">Implementation</h4>
 <pre><code class="language-python"># divide and conquer closest points
 

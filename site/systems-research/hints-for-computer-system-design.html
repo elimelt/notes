@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -283,14 +283,14 @@
 <hr />
 <h3 id="key-insights">Key Insights</h3>
 <h4 id="caching">Caching</h4>
-<p>Store $\[f, x, f(x)\]$ tuples in a cache.</p>
+<p>Store $[f, x, f(x)]$ tuples in a cache.</p>
 <p>If $f$ isn't a pure function, invalidate with the following:</p>
 <p>$$
 f(x + \Delta) = g(x, \Delta, f(x))
 $$</p>
 <p>For example, $x$ is an <code>int[]</code>, $\Delta$ is a write $(i, v)$, and $f$ is a function <code>int sum(int[] x)</code>. Then $g(x, \Delta, f(x))$ is <code>f(x) + v - x[i]</code>.</p>
 <p>Caches should ideally have adaptive sizes.</p>
-<p>A classic example is the caching in hardware that uses $\[Fetch, \text{address}, \text{content of address}\]$ tuples. Similarly, virtual memory uses $\[Page, \text{address}, \text{content of address}\]$ tuples.</p>
+<p>A classic example is the caching in hardware that uses $[Fetch, \text{address}, \text{content of address}]$ tuples. Similarly, virtual memory uses $[Page, \text{address}, \text{content of address}]$ tuples.</p>
 <p>However, more complicated applications of caching exist. In real-time systems, you're often trying to cache the state of a system given small changes corresponding to events. The key here is to try and invalidate as few entries as possible in response to events.</p>
 <h3 id="lecture-review-notes">Lecture Review Notes</h3>
 <h4 id="why-is-system-design-hard">Why is system design hard?</h4>

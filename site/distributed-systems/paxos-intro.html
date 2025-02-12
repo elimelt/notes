@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -299,7 +299,7 @@ Acceptor:
 <ul>
 <li>Proposer selects a proposal number $n$ and sends <code>Prepare(n)</code> to all (or a majority) of acceptors.</li>
 <li>Acceptors respond with <code>Promise(n, n', v')</code> where $n'$ is the highest proposal number it has accepted, and $v'$ is the value associated with that proposal number.</li>
-<li>If $n > n'$, the acceptor promises not to accept any proposal with a number less than $n$.</li>
+<li>If $n &gt; n'$, the acceptor promises not to accept any proposal with a number less than $n$.</li>
 <li>Proposer must wait for a majority of responses before proceeding.</li>
 </ul>
 <h3 id="phase-2-accept">Phase 2: Accept</h3>

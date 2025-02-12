@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -324,19 +324,19 @@ def send(frame):
 <h4 id="math-behind-binary-exponential-backoff">Math behind Binary Exponential Backoff</h4>
 <ul>
 <li>Let $k$ be the number of retransmission attempts.</li>
-<li>Let $2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $0 be the waiting time for the k-th retransmission attempt.</li>
-<li>Let $2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $1 be a fixed discrete time interval.</li>
+<li>Let $W_k$ be the waiting time for the k-th retransmission attempt.</li>
+<li>Let $q$ be a fixed discrete time interval.</li>
 </ul>
-<p>$2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $2</p>
-<p>Now, calculate the expected value $2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $3:</p>
-<p>$2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $4</p>
-<p>Since $2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $5 is uniform $2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $6, it is equal to $2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $7.</p>
-<p>$2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $8</p>
-<p>$2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $9 (sum of first $ bytes, and a maximum network length of $0 natural numbers)</p>
-<p>$ bytes, and a maximum network length of $1</p>
+<p>$W_k = q \cdot \text{randchoice}([0, 2^k - 1])$</p>
+<p>Now, calculate the expected value $E[W_k]$:</p>
+<p>$E[W_k] = \sum_{i=0}^{2^k - 1} i \cdot q \cdot P(W_k = i \cdot q)$</p>
+<p>Since $P(W_k = i \cdot q)$ is uniform $\forall i \in [0, 2^k - 1]$, it is equal to $2^{-k}$.</p>
+<p>$E[W_k] = q \cdot 2^{-k} \cdot \sum_{i=0}^{2^k - 1} i$</p>
+<p>$ \sum_{i=0}^{2^k - 1} i = (2^k - 1) \cdot \frac{2^k}{2}$ (sum of first $n$ natural numbers)</p>
+<p>$E[W_k] = q \cdot 2^{-k} \cdot ( (2^k - 1) \cdot 2^{k - 1} )$</p>
 <p>Simplify further:</p>
-<p>$ bytes, and a maximum network length of $2</p>
-<p>Therefore, the expected value of the binary exponential backoff for a fixed discrete time interval $ bytes, and a maximum network length of $3 is $ bytes, and a maximum network length of $4.</p>
+<p>$E[W_k] = q \cdot ( (2^k - 1) / 4 )$</p>
+<p>Therefore, the expected value of the binary exponential backoff for a fixed discrete time interval $q$ is $E[W_k] = \frac{q}{4} \cdot (2^k - 1)$.</p>
 <h3 id="ethernet">Ethernet</h3>
 <p>Classis Ethernet (IEEE 802.3), popular in the 80s and 90s. 10 Mbpd over shared coaxial cable. Multiple Access with 1-peristence CSMA/CD with BEB". Modern ethernet is based on switches, avoiding the need for CSMA/CD.</p>
 <h4 id="ethernet-frames">Ethernet Frames</h4>

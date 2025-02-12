@@ -9,8 +9,7 @@ from datetime import datetime
 from urllib.parse import quote
 import re
 from collections import defaultdict
-from jinja2 import Environment, BaseLoader, select_autoescape
-from markupsafe import Markup
+from jinja2 import Environment, BaseLoader, TemplateNotFound, select_autoescape
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -75,10 +74,10 @@ BASE_TEMPLATE = '''
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
-                    {left: "\\\[", right: "\\\]", display: true},
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\\\[", right: "\\\\]", display: true},
                     {left: "$", right: "$", display: false},
-                    {left: "\\\(", right: "\\\)", display: false}
+                    {left: "\\\\(", right: "\\\\)", display: false}
                 ],
                 throwOnError: false
             });
@@ -482,54 +481,6 @@ class SiteGenerator:
             and item.is_file()
         ]
 
-    def _protect_latex(self, content: str) -> str:
-        """Protect LaTeX content from markdown processing"""
-        # Generate a unique token for each type of LaTeX content
-        tokens = {
-            'display': f'DISPLAYMATH{hash(content)}',
-            'inline': f'INLINEMATH{hash(content)}',
-            'env': f'LATEXENV{hash(content)}'
-        }
-        self._latex_tokens = {}  # Store for restoration
-
-        # Protect display math ($...$)
-        content = re.sub(
-            r'(\$\$.*?\$\$)',
-            lambda m: self._store_latex(m.group(1), tokens['display']),
-            content,
-            flags=re.DOTALL
-        )
-
-        # Protect inline math ($...$)
-        content = re.sub(
-            r'(\$.*?\$)',
-            lambda m: self._store_latex(m.group(1), tokens['inline']),
-            content
-        )
-
-        # Protect LaTeX environments (\begin...\end)
-        content = re.sub(
-            r'(\\begin\{.*?\}.*?\\end\{.*?\})',
-            lambda m: self._store_latex(m.group(1), tokens['env']),
-            content,
-            flags=re.DOTALL
-        )
-
-        return content
-
-    def _store_latex(self, content: str, token_prefix: str) -> str:
-        """Store LaTeX content and return a unique token"""
-        token = f'{token_prefix}_{len(self._latex_tokens)}'
-        self._latex_tokens[token] = content
-        return token
-
-    def _restore_latex(self, content: str) -> str:
-        """Restore LaTeX content after markdown processing"""
-        # Restore all LaTeX content from tokens
-        for token, latex in self._latex_tokens.items():
-            content = content.replace(token, latex)
-        return content
-
     def _extract_metadata(self, file_path: Path, content: str) -> dict:
         """Extract metadata from markdown file"""
         md = markdown.Markdown(extensions=self.MARKDOWN_EXTENSIONS)
@@ -555,11 +506,7 @@ class SiteGenerator:
         try:
             content = file_path.read_text(encoding="utf-8")
             metadata = self._extract_metadata(file_path, content)
-            # Protect LaTeX content before markdown conversion
-            content = self._protect_latex(content)
             html_content = self.markdown_converter.convert(content)
-            # Restore LaTeX content after conversion
-            html_content = self._restore_latex(html_content)
 
             relative_path = file_path.relative_to(self.input_dir)
             is_index = file_path.stem.lower() == "index"
@@ -637,7 +584,7 @@ class SiteGenerator:
 
         return {
             "title": page.title,
-            "content": Markup(page.content),
+            "content": page.content,
             "modified_date": page.modified_date,
             "category": page.category,
             "tags": page.tags,

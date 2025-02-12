@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -323,7 +323,7 @@ $$</p>
 <p>Claim: $m \le (n \choose 2) = \frac{n(n - 1)}{2} = O(n^2)$</p>
 <p>Proof: Each vertex can be connected to at most $n - 1$ other vertices. Thus, the total number of edges is at most $n(n - 1)/2$.</p>
 <h3 id="sparsity">Sparsity</h3>
-<p>A graph is called sparse if $|E| << |V|^2$, and dense otherwise. Sparse graphs are common in applications like social networks, the web, planar graphs, etc.</p>
+<p>A graph is called sparse if $|E| &lt;&lt; |V|^2$, and dense otherwise. Sparse graphs are common in applications like social networks, the web, planar graphs, etc.</p>
 <p>Technically, $O(n + m) = O(n^2)$, but in practice, $O(n + m) = O(n)$ for sparse graphs.</p>
 <h3 id="storing-graphs">Storing Graphs</h3>
 <h4 id="adjacency-matrix">Adjacency Matrix</h4>
@@ -331,15 +331,15 @@ $$</p>
 <ul>
 <li>Pro: $O(1)$ time to check if there is an edge between two vertices.</li>
 <li>Con: $O(n^2)$ space.</li>
-<li>Con: $deg(v) = $0 time to find all neighbors of a vertex.</li>
+<li>Con: $O(n)$ time to find all neighbors of a vertex.</li>
 </ul>
 <p>Good for dense graphs.</p>
 <h4 id="adjacency-list">Adjacency List</h4>
 <p>A list of lists, where each vertex has a list of its neighbors.</p>
 <ul>
-<li>Pro: $deg(v) = $1 time to find all neighbors of a vertex.</li>
-<li>Pro: $deg(v) = $2 space.</li>
-<li>Con: $deg(v) = $3 time to check if there is an edge between two vertices.</li>
+<li>Pro: $O(1)$ time to find all neighbors of a vertex.</li>
+<li>Pro: $O(n + m)$ space.</li>
+<li>Con: $O(n)$ time to check if there is an edge between two vertices.</li>
 </ul>
 <p>Good for sparse graphs.</p>
 <pre><code class="language-python">

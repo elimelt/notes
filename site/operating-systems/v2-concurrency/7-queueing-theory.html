@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -299,13 +299,13 @@
 <li><strong>Service rate ($\mu$)</strong>: Number of tasks completed per unit time. $\mu = 1/S$.</li>
 <li><strong>Utilization ($U$)</strong>: Fraction of time the server is busy.<ul>
 <li>$0 \leq U \leq 1$.</li>
-<li>$U = \lambda / \mu$ if $\lambda < \mu$.</li>
+<li>$U = \lambda / \mu$ if $\lambda &lt; \mu$.</li>
 <li>$U = 1$ if $\lambda \geq \mu$.</li>
 </ul>
 </li>
 <li><strong>Throughput ($X$)</strong>: Number of tasks completed per unit time.<ul>
 <li>$X = U \cdot \mu$.</li>
-<li>X = $\lambda$ if $U < 1$.</li>
+<li>X = $\lambda$ if $U &lt; 1$.</li>
 <li>X = $\mu$ if $U = 1$.</li>
 </ul>
 </li>
@@ -325,13 +325,13 @@
 <p>Web service that takes an average of 100 ms to process a request, and handles 10000 queries per second. What is the average number of requests in the system?</p>
 <p>$$N = X \cdot R = 10000 \cdot 0.1  = 1000 \text{ queries}$$</p>
 <h3 id="response-time-vs-utilization">Response Time vs. Utilization</h3>
-<p>Operating a system with high utilization increases risk of overload. If $\lambda > \mu$, the queue will grow indefinitely, and so will the response time.</p>
+<p>Operating a system with high utilization increases risk of overload. If $\lambda &gt; \mu$, the queue will grow indefinitely, and so will the response time.</p>
 <p>Higher arrival rate $\lambda$ and burstier arrival process will tend to yield longer queue lengths.</p>
 <h4 id="best-case-uniform-arrival">Best Case: Uniform Arrival</h4>
 <ul>
-<li>$\lambda < \mu$: $R = S$. Queues will shrink until they are empty and remain that way.</li>
+<li>$\lambda &lt; \mu$: $R = S$. Queues will shrink until they are empty and remain that way.</li>
 <li>$\lambda = \mu$: $R = S$. Queues will remain in a steady state.</li>
-<li>$\lambda > \mu$: $R = \infty$. Queues will grow indefinitely. In practice, this would lead to requests being dropped/system failure.</li>
+<li>$\lambda &gt; \mu$: $R = \infty$. Queues will grow indefinitely. In practice, this would lead to requests being dropped/system failure.</li>
 </ul>
 <h4 id="worst-case-bursty-arrival">Worst Case: Bursty Arrival</h4>
 <p>When requests arrive in groups (which they often do), the queue will grow and shrink in response to the bursts. This can lead to a higher average queue length and response time. Even if the average arrival rate is less than the service rate, the queue can still grow if the arrival process is bursty.</p>
@@ -357,7 +357,7 @@ f(x) = \lambda e^{-\lambda x}
 $$</p>
 <p>It is a <em>memoryless</em> distribution, meaning that the probability of an event occurring in the next $t$ seconds is the same as the probability of an event occurring in the next $t + s$ seconds.</p>
 <p>A memoryless distribution is useful because it allows us to model a queue as a finite state machine with states corresponding to the number of tasks in the queue, and transition probablilities $\lambda$ and $\mu$ for transitioning up a state (arrival) and down a state (departure).</p>
-<p>Assuming $\lambda < \mu$, the system is stable and we can calculate the response time $R$ as a function of utilization $U$ and service time $S$:</p>
+<p>Assuming $\lambda &lt; \mu$, the system is stable and we can calculate the response time $R$ as a function of utilization $U$ and service time $S$:</p>
 <p>$$
 R = \frac{S}{1 - U}
 $$</p>

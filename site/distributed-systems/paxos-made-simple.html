@@ -40,7 +40,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -298,42 +298,42 @@
 </ul>
 <h4 id="p1-an-acceptor-must-accept-the-first-proposal-it-receives">P1: An acceptor must accept the first proposal it receives</h4>
 <p>This guarantees that some value is accepted by each node that is proposed to, but it doesn't prevent situations where no proposal is accepted by a majority of acceptors.</p>
-<h4 id="p2-if-a-proposal-with-value-inlinemath1996051705321378082_1-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-inlinemath1996051705321378082_2">P2: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h4>
+<h4 id="p2-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h4>
 <p>This guarantees that only a single value is chosen, since unique proposal numbers can be used to decide between accepted values.</p>
-<h5 id="p2a-if-a-proposal-with-value-inlinemath1996051705321378082_3-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-inlinemath1996051705321378082_4">P2a: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h5>
+<h5 id="p2a-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2a: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h5>
 <p>This is a stronger version of P2 that ensures previous values are not forgotten/overridden.</p>
 <p>However, P2a contradicts P1, since if a proposer "wakes up" after having been out of commission, it must accept whatever value is proposed first. We thus strengthen even further to...</p>
-<h5 id="p2b-if-a-proposal-with-value-inlinemath1996051705321378082_5-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-inlinemath1996051705321378082_6">P2b: If a proposal with value $v$ is chosen, then every higher-numbered proposal issues by any proposer has value $v$</h5>
+<h5 id="p2b-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-v">P2b: If a proposal with value $v$ is chosen, then every higher-numbered proposal issues by any proposer has value $v$</h5>
 <p>This shifts the burden of remembering and staying consistent with the chosen value to the proposers instead of the acceptors. We then have...</p>
 <p>$$
 \text{P2b} \to \text{P2a} \to \text{P2}
 $$</p>
 <p>In order to implement P2b, we must further constrain our algorithm's behavior to...</p>
-<h5 id="p2c-for-any-inlinemath1996051705321378082_7-and-inlinemath1996051705321378082_8-if-a-proposal-with-value-inlinemath1996051705321378082_9-and-number-inlinemath1996051705321378082_10-is-issued-there-is-a-set-inlinemath1996051705321378082_11-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-inlinemath1996051705321378082_12-has-accepted-any-proposal-numbered-less-than-inlinemath1996051705321378082_13-or-b-inlinemath1996051705321378082_14-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-inlinemath1996051705321378082_15-accepted-by-the-acceptors-in-inlinemath1996051705321378082_16">P2c: For any $v$ and $n$, if a proposal with value $v$ and number $v$0 is issued, there is a set $v$1 consisting of a majority of acceptors such that either (a) no acceptor in $v$2 has accepted any proposal numbered less than $v$3, or (b) $v$4 is the value of the highest-numbered proposal among all proposals numbered less than $v$5 accepted by the acceptors in $v$6</h5>
-<p>To satisfy P2b, we must maintain P2c as an invariant. To make sure this invariant holds, proposers proposing a proposal numbered $v$7 must learn the highest-numbered proposal with a number less than $v$8 that has been accepted by a majority of acceptors, and propose that value if it exists.</p>
+<h5 id="p2c-for-any-v-and-n-if-a-proposal-with-value-v-and-number-n-is-issued-there-is-a-set-s-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-s-has-accepted-any-proposal-numbered-less-than-n-or-b-v-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-n-accepted-by-the-acceptors-in-s">P2c: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, there is a set $S$ consisting of a majority of acceptors such that either (a) no acceptor in $S$ has accepted any proposal numbered less than $n$, or (b) $v$ is the value of the highest-numbered proposal among all proposals numbered less than $n$ accepted by the acceptors in $S$</h5>
+<p>To satisfy P2b, we must maintain P2c as an invariant. To make sure this invariant holds, proposers proposing a proposal numbered $n$ must learn the highest-numbered proposal with a number less than $n$ that has been accepted by a majority of acceptors, and propose that value if it exists.</p>
 <h4 id="proposition-algorithm">Proposition Algorithm</h4>
 <ol>
-<li>A proposer chooses a new proposal number $v$9 and sends a <em>prepare</em> request to each member of some set of acceptors, awaiting a response containing:<ul>
-<li>A guarantee that this acceptor will never accept a proposal numbered less than $v$0</li>
-<li>The proposal with the highest number less than $v$1 that it has accepted, if any.</li>
+<li>A proposer chooses a new proposal number $n$ and sends a <em>prepare</em> request to each member of some set of acceptors, awaiting a response containing:<ul>
+<li>A guarantee that this acceptor will never accept a proposal numbered less than $n$</li>
+<li>The proposal with the highest number less than $n$ that it has accepted, if any.</li>
 </ul>
 </li>
-<li>If the proposer receives the requested responses from a majority of acceptors, it issues an <em>accept</em> request, which is a proposal with number $v$2 and value $v$3, where $v$4 is the value of the highest-numbered proposal among the responses, or a value of the proposer's choice if no proposals in the responses were received.</li>
+<li>If the proposer receives the requested responses from a majority of acceptors, it issues an <em>accept</em> request, which is a proposal with number $n$ and value $v$, where $v$ is the value of the highest-numbered proposal among the responses, or a value of the proposer's choice if no proposals in the responses were received.</li>
 </ol>
 <h4 id="acceptor-behavior">Acceptor Behavior</h4>
 <p>Acceptors can only receive <em>prepare</em> and <em>accept</em> requests, and can ignore any request without compromising safety (but certainly still sacrificing liveness).</p>
-<h5 id="p1a-an-acceptor-can-accept-a-proposal-numbered-inlinemath1996051705321378082_25-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-inlinemath1996051705321378082_26">P1a: An acceptor can accept a proposal numbered $v$5 iff it has not responded to a <em>prepare</em> request numbered greater than $v$6</h5>
+<h5 id="p1a-an-acceptor-can-accept-a-proposal-numbered-n-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-n">P1a: An acceptor can accept a proposal numbered $n$ iff it has not responded to a <em>prepare</em> request numbered greater than $n$</h5>
 <p>which implies P1</p>
 <h3 id="phases">Phases</h3>
 <h4 id="phase-1">Phase 1</h4>
 <ul>
-<li>(a) A proposer selects a proposal number $v$7 and sends a <em>prepare</em> request with number $v$8 to a majority of acceptors.</li>
-<li>(b) If an acceptor receives a <em>prepare</em> request with number $v$9 greater than any it has seen, it responds with a promise not to accept any proposal numbered less than $v$0 and the highest-numbered proposal (and corresponding value) it has accepted.</li>
+<li>(a) A proposer selects a proposal number $n$ and sends a <em>prepare</em> request with number $n$ to a majority of acceptors.</li>
+<li>(b) If an acceptor receives a <em>prepare</em> request with number $n$ greater than any it has seen, it responds with a promise not to accept any proposal numbered less than $n$ and the highest-numbered proposal (and corresponding value) it has accepted.</li>
 </ul>
 <h4 id="phase-2">Phase 2</h4>
 <ul>
-<li>(a) If the proposer receives responses from a majority of acceptors, it sends an <em>accept</em> request to each acceptor with the proposal number $v$1 and the value $v$2 of the highest-numbered proposal among the responses, or a value of its choosing if no proposals were received.</li>
-<li>(b) If an acceptor receives an <em>accept</em> request with number $v$3 greater than any it has seen, it accepts the proposal and responds to the proposer, unless it has already responded to a <em>prepare</em> request with a number greater than $v$4.</li>
+<li>(a) If the proposer receives responses from a majority of acceptors, it sends an <em>accept</em> request to each acceptor with the proposal number $n$ and the value $v$ of the highest-numbered proposal among the responses, or a value of its choosing if no proposals were received.</li>
+<li>(b) If an acceptor receives an <em>accept</em> request with number $n$ greater than any it has seen, it accepts the proposal and responds to the proposer, unless it has already responded to a <em>prepare</em> request with a number greater than $n$.</li>
 </ul>
 <p>Note that to increase performance, if an acceptor ignores a <em>prepare</em> or <em>accept</em> request because it has already received a <em>prepare</em> request with a higher number, it should notify the proposer with a <em>reject</em> message. This however doesn't change the correctness, and is thus optional.</p>
 <h2 id="learning-a-chosen-value">Learning a Chosen Value</h2>
@@ -344,10 +344,10 @@ $$</p>
 <p>By <strong>FLP</strong>, any such leader election system must rely either on randomness, or real-time (i.e. timeouts).</p>
 <h2 id="implementing-a-state-machine">Implementing a State Machine</h2>
 <p>Consider a system of clients that issue requests to execute commands on a cluster of single-threaded application servers. Each application server can be thought of as a deterministic state machine, where the ordering of requests to each server <strong>must</strong> be consistent for them to end up in the same state.</p>
-<p>To guarantee consistent ordering of commands executed within our cluster, we implement a separate instance of Paxos, where the $v$5th instance's chosen value determines the $v$6th command executed on all application servers.</p>
-<p>During normal operation, a single server is elected to be leader, which acts as the <em>distinguished</em> proposer, and is the only server allowed to issue proposals. Clients then send their requests to this leader, which decides the sequence of commands globally. Any given instance of the protocol might fail, but regardless only one command can ever be chosen as the $v$7th command to be executed.</p>
+<p>To guarantee consistent ordering of commands executed within our cluster, we implement a separate instance of Paxos, where the $i$th instance's chosen value determines the $i$th command executed on all application servers.</p>
+<p>During normal operation, a single server is elected to be leader, which acts as the <em>distinguished</em> proposer, and is the only server allowed to issue proposals. Clients then send their requests to this leader, which decides the sequence of commands globally. Any given instance of the protocol might fail, but regardless only one command can ever be chosen as the $i$th command to be executed.</p>
 <p>For cases where some subsequence of commands are not yet determined, i.e. not chosen yet when a new leader takes over, the new leader issues phase 1 for all such instances (including the infinitely many commands greater than the largest command in our current sequence). Any values received in response are then proposed, but if an instance remains unconstrained (i.e. no value has been accepted), the leader can propose no-ops for the gaps in the sequence of commands before the last accepted command. It must do this before ever executing commands that come after these unconstrained slots.</p>
-<p>After doing so, the leader can continue proposing any further commands requested by clients. The leader is allowed to propose command $v$8 before knowing the chosen command for $v$9, meaning it can get up to $v$0 commands ahead of itself (in the case where all commands less than $v$1 were dropped).</p>
+<p>After doing so, the leader can continue proposing any further commands requested by clients. The leader is allowed to propose command $i + \alpha$ before knowing the chosen command for $i$, meaning it can get up to $\alpha - 1$ commands ahead of itself (in the case where all commands less than $i + \alpha$ were dropped).</p>
 <p>Once a leader has finished phase 1 for all commands thus far and afterwards, it only needs to complete phase 2 for each subsequent command requested, which is known to be the minimal algorithm for reaching consensus after phase 1.</p>
 <p>To reiterate what was stated previously, in the case where a single leader is not elected, progress is not guaranteed, but safety is.</p>
             </div>

@@ -45,7 +45,7 @@ Given $s$ signups, form pairs for all the students based on the following constr
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
@@ -288,45 +288,45 @@ Given $s$ signups, form pairs for all the students based on the following constr
 - A valid pair <strong>must</strong> have at least two 1-hour time slots in common in their availability. The number of common time slots is factored into the score of the pair.
 - Each student responds to a form while signing up. The responses are vectorized, and pairings are made based on the similarity of the responses.</p>
 <h3 id="statement-of-the-problem">Statement of the Problem</h3>
-<p>Let $T^{7 \times 24}_i$ be a bit-matrix of 1-hour time slots in a week for student $i$. The value of $T_{i,j,k}$ is 1 if student $i$ is available at time slot $(j,k)$, and 0 otherwise.</p>
+<p>Let $T^{7 \times 24}<em i_j_k="i,j,k">i$ be a bit-matrix of 1-hour time slots in a week for student $i$. The value of $T</em>$ is 1 if student $i$ is available at time slot $(j,k)$, and 0 otherwise.</p>
 <p>$$
 T_i = \begin{bmatrix}
-    t_{1,1} & t_{1,2} & t_{1,3}& \cdots & t_{1,24} \\
-    t_{2,1} & t_{2,2} & t_{2,3}& \cdots & t_{2,24} \\
-    \vdots & \vdots & \vdots & \ddots & \vdots \\
-    t_{7,1} & t_{7,2} & t_{7,3}& \cdots & t_{7,24}
+    t_{1,1} &amp; t_{1,2} &amp; t_{1,3}&amp; \cdots &amp; t_{1,24} \
+    t_{2,1} &amp; t_{2,2} &amp; t_{2,3}&amp; \cdots &amp; t_{2,24} \
+    \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    t_{7,1} &amp; t_{7,2} &amp; t_{7,3}&amp; \cdots &amp; t_{7,24}
 \end{bmatrix}
 $$</p>
 <p>Let $S$ be the set of students, and $A$ be the set of all possible pairings of students in $S$</p>
 <p>$$
-A = \{ (i, j) \mid (i, j) \in S \times S, i < j \}
+A = { (i, j) \mid (i, j) \in S \times S, i &lt; j }
 $$</p>
 <p>Now, enforcing a strict and repeatable ordering on the students through sorting, we have a mapping from $s_i \in S$ to $T_i$.</p>
 <p>We use this ordering to define a scoring function $f: A \to \mathbb{R}$ that takes a pair of students and returns the number of common time slots in their availability, or $0$ if it is less than $2$. We then create a matrix $F_{time}$ of the scores of all possible pairings.</p>
 <p>$$
 F_{time} = \begin{bmatrix}
-    f(s_1, s_2) & f(s_1, s_3) & \cdots & f(s_1, s_n) \\
-    f(s_2, s_1) & f(s_2, s_3) & \cdots & f(s_2, s_n) \\
-    \vdots & \vdots & \ddots & \vdots \\
-    f(s_n, s_1) & f(s_n, s_2) & \cdots & f(s_n, s_{n-1})
+    f(s_1, s_2) &amp; f(s_1, s_3) &amp; \cdots &amp; f(s_1, s_n) \
+    f(s_2, s_1) &amp; f(s_2, s_3) &amp; \cdots &amp; f(s_2, s_n) \
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    f(s_n, s_1) &amp; f(s_n, s_2) &amp; \cdots &amp; f(s_n, s_{n-1})
 \end{bmatrix}
 $$</p>
 <p>Next, we follow a similar pattern using the responses of the students. Let $R_i$ be the vectorized response of student $i$.</p>
 <p>$$
 R_i = \begin{bmatrix}
-    r_{1} \\
-    r_{2} \\
-    \vdots \\
+    r_{1} \
+    r_{2} \
+    \vdots \
     r_{dim(R_i)}
 \end{bmatrix}
 $$</p>
 <p>We define a scoring function $g: A \to \mathbb{R}$ as the euclidean distance between the responses of the students. We then create a matrix $F_{response}$ of the scores of all possible pairings.</p>
 <p>$$
 F_{response} = \begin{bmatrix}
-    g(s_1, s_2) & g(s_1, s_3) & \cdots & g(s_1, s_n) \\
-    g(s_2, s_1) & g(s_2, s_3) & \cdots & g(s_2, s_n) \\
-    \vdots & \vdots & \ddots & \vdots \\
-    g(s_n, s_1) & g(s_n, s_2) & \cdots & g(s_n, s_{n-1})
+    g(s_1, s_2) &amp; g(s_1, s_3) &amp; \cdots &amp; g(s_1, s_n) \
+    g(s_2, s_1) &amp; g(s_2, s_3) &amp; \cdots &amp; g(s_2, s_n) \
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    g(s_n, s_1) &amp; g(s_n, s_2) &amp; \cdots &amp; g(s_n, s_{n-1})
 \end{bmatrix}
 $$</p>
 <p>Finally, we define a binary matrix $F_{valid}$ of the valid pairings. A valid pairing is one where the students have at least two common time slots in their availability, or rather when $F_{time, i, j} \neq 0$.</p>

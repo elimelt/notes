@@ -179,19 +179,19 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » <a href="/categories/systems.html">systems</a> » Xen and the Art of Virtualization
+            <a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » Xen and the Art of Virtualization
         </div>
         <h1>Xen and the Art of Virtualization</h1>
         <div class="meta">
-            <span>Last modified: 2025-01-26</span>
-            <span>Category: <a href="/categories/systems.html">systems</a></span>
+            <span>Last modified: 2025-02-11</span>
+            <span>Category: <a href="/categories/systems.html">Systems</a></span>
         </div>
         <div class="content">
             <h1 id="source"><a href="https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf">source</a></h1>
 <h6 id="xen-and-the-art-of-virtualization">Xen and the Art of Virtualization</h6>
 <hr />
 <h3 id="what-is-the-problem">What is the Problem?</h3>
-<p>Full virtualization, where you completely emulate the underlying hardware of a machine to run a guest OS, is not a very good solution. In particular, it is much slower due to overhead, and it doesn't guest OSes to access hardware features from the host OS. </p>
+<p>Full virtualization, where you completely emulate the underlying hardware of a machine to run a guest OS, is not a very good solution. In particular, it is much slower due to overhead, and it doesn't guest OSes to access hardware features from the host OS.</p>
 <h3 id="summary">Summary</h3>
 <p>Xen is a hypervisor that allows multiple OSes to run on the same hardware through <strong>paravirtualization</strong>. This means that the guest OSes are modified to be aware of the hypervisor, and they can make calls to the hypervisor to access hardware features. It implements efficient mechanisms for memory management, scheduling, event delivery, and I/O that exist in the hypervisor, which are then used to delegate resources to the guest OSes. To this end, it achieves many performance improvements over traditional full virtualization systems on their port <strong>XenoLinux</strong>.</p>
 <h3 id="key-insights">Key Insights</h3>

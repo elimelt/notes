@@ -1,3 +1,10 @@
+---
+title: Non-Blocking Two Phase Commit
+category: distributed-systems
+tags: paxos, two-phase commit, distributed transactions, consistency models
+description: Explains the concept of non-blocking two phase commit using Paxos
+---
+
 # Non-Blocking Two Phase Commit
 
 Regular 2PC is blocking because we need to wait for **all** nodes to agree that an operation is commit-able. There are massive performance implications to read-only transactions (could fix with snapshot reads) and lock contention. We can fix this by relying on Paxos.

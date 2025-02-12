@@ -1,3 +1,10 @@
+---
+title: Distributed Consensus Fundamentals
+category: other
+tags: Distributed Systems, Consensus Algorithms
+description: This document covers the fundamentals of distributed consensus algorithms, including leader election, replicated state machines, reliable datastores, and coordination services.
+---
+
 # Managing Critical State
 [reading](https://sre.google/sre-book/managing-critical-state/)
 

@@ -724,6 +724,13 @@ class SiteGenerator:
             padding: 1em 0;
             margin: 0.5em 0;
         }}
+
+        @media (min-width: 768px) {{
+            .katex-display {{
+                padding: 2em 0;
+            }}
+        }}
+
         .katex-display > .katex {{
             white-space: normal;
         }}

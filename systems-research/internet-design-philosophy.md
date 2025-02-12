@@ -1,6 +1,6 @@
 ---
 title: Design Philosophy of DARPA Internet Protocols
-category: Networking
+category: Networks
 tags: internet, design, systems
 description: A summary of the design philosophy of the DARPA internet protocols.
 ---

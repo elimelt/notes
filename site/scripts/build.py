@@ -713,7 +713,7 @@ class SiteGenerator:
         </article>
     </main>
     <footer role="contentinfo">
-        <p>&copy; {datetime.now().year} Your Site Name. All rights reserved.</p>
+        <p>&copy; {datetime.now().year} Elijah Melton (just kidding no copyright).</p>
     </footer>
 </body>
 </html>"""

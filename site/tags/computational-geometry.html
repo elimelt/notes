@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: computational-geometry", "dateModified": "2025-02-11T21:21:33.708324", "description": "Pages tagged with computational-geometry"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: computational-geometry", "dateModified": "2025-02-11T21:27:41.677310", "description": "Pages tagged with computational-geometry"}
     </script>
 
     <!-- KaTeX CSS -->
@@ -51,9 +51,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
+                const content = document.querySelector('.content');
+                if (content) {
+                    content.innerHTML = content.innerHTML.replace(/\$<([^>]+)>\$/g, (match, p1) => {
+                        return `$${p1}$`;
+                    });
+                }
+
+
                 delimiters: [
                     {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: true},
+                    {left: '$', right: '$', display: false},
                     {left: '\(', right: '\)', display: false},
                     {left: '\[', right: '\]', display: true}
                 ],
@@ -230,19 +238,46 @@
             opacity: 0.8;
         }
 
-        .katex {
-            font-size: 1.1em;
-        }
         .katex-display {
             overflow: auto hidden;
             padding: 1em 0;
+            margin: 0.5em 0;
         }
         .katex-display > .katex {
             white-space: normal;
         }
-        /* Add padding for display math */
+
+        /* Inline math */
+        .katex {
+            font-size: 1.1em;
+            display: inline;
+            line-height: 1.2;
+        }
+
+        /* Ensure inline math aligns with text */
+        .katex-html {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Remove extra space around inline math */
+        .katex .strut {
+            display: none;
+        }
+
+        /* Preserve display math formatting */
+        .katex-display .katex {
+            display: block;
+            text-align: center;
+        }
+
+        /* Add scroll for overflow in display math */
         .katex-display > .katex > .katex-html {
-            padding: 2px 0;
+            display: block;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.5em 0;
         }
     </style>
 </head>
@@ -261,7 +296,7 @@
         <article>
             <h1>Tag: computational-geometry</h1>
             <div class="meta">
-                <time datetime="2025-02-11T21:21:33.708324">
+                <time datetime="2025-02-11T21:27:41.677310">
                     Last modified: 2025-02-11
                 </time>
                 

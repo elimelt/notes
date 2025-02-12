@@ -31,39 +31,19 @@
     {"@context": "https://schema.org", "@type": "Article", "headline": "Address Resolution Protocol (ARP)", "dateModified": "2025-02-11T20:47:44.910288", "description": "Covers the Address Resolution Protocol (ARP), a discovery protocol used to map network layer addresses (such as IP addresses) to data link layer addresses (such as MAC addresses). Describes the ARP table, which stores the mapping between IP and MAC addresses, and the ARP request and reply process used to dynamically update this table. Discusses the key steps involved in the ARP request and reply mechanism, which allows hosts to determine the MAC address corresponding to a given IP address on the local network.", "articleSection": "Networks", "keywords": "address resolution protocol,arp,discovery protocol,arp table,arp request,arp reply"}
     </script>
 
-    <!-- KaTeX CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
-          integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
-          crossorigin="anonymous">
-
-    <!-- The loading of KaTeX is deferred to speed up page rendering -->
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
-            integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8"
-            crossorigin="anonymous"></script>
-
-    <!-- To automatically render math in text elements, include the auto-render extension: -->
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
-            integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
-            crossorigin="anonymous"
-            onload="renderMathInElement(document.body);"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
 
     <!-- Configure KaTeX auto-render -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
-                const content = document.querySelector('.content');
-                if (content) {
-                    content.innerHTML = content.innerHTML.replace(/\$<([^>]+)>\$/g, (match, p1) => {
-                        return `$${p1}$`;
-                    });
-                }
-
-
                 delimiters: [
-                    {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: false},
-                    {left: '\(', right: '\)', display: false},
-                    {left: '\[', right: '\]', display: true}
+                  {left: "$$", right: "$$", display: true},
+                  {left: "\[", right: "\]", display: true},
+                  {left: "$", right: "$", display: false},
+                  {left: "\(", right: "\)", display: false}
                 ],
                 throwOnError: false
             });

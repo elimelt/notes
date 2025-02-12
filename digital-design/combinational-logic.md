@@ -1,3 +1,10 @@
+---
+title: Combinational Logic
+category: hardware
+tags: combinational logic, sequential logic, boolean algebra, logic gates, minimization
+description: Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.
+---
+
 # Combinational Logic
 
 ## Combinational Logic vs. Sequential Logic

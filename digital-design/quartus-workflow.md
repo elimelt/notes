@@ -1,3 +1,10 @@
+---
+title: Developing FPGA Designs with Quartus and ModelSim
+category: hardware
+tags: Quartus, ModelSim, Verilog, testing process, modular design
+description: Describes a structured approach to testing and verifying digital circuits using Quartus and ModelSim.
+---
+
 
 - Make a copy of a previous lab directory to build off of what you already have (Quartus project file, ModelSim files) while keeping the old design as a reference.
 - For each module you need to write:

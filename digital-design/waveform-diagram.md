@@ -1,3 +1,10 @@
+---
+title: Waveform Diagrams
+category: hardware
+tags: waveform diagrams, bit vectors, bus, circuit timing behavior
+description: Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.
+---
+
 # Waveform Diagrams
 
 Group bits of values into a **bus** or a **bit vector**. You can view the state of your system as slices of a waveform for each bit, corresponding to a number.

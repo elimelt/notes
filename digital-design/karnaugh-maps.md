@@ -1,3 +1,10 @@
+---
+title: Karnaugh Maps
+category: hardware
+tags: karnaugh maps, truth tables, graph theory, computer science
+description: Method for simplifying Boolean expressions
+---
+
 # Karnaugh Maps
 
 Goal: Find neighboring subsets of the On set to eliminate variables and simplify expressions.

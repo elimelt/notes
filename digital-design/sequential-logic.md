@@ -1,3 +1,10 @@
+---
+title: Sequential Logic (SL)
+category: hardware
+tags: sequential logic, digital systems, finite state machines, flip-flops, clock signals
+description: Explains the concept of sequential logic in digital systems and its applications.
+---
+
 # Sequential Logic (SL)
 
 Whereas in *combinational logic*, you have outputs which are direct functions of their inputs, with sequential logic the presence of *feedback* gives circuits the ability to store state. This is the basis for memory and computation in digital systems.

@@ -114,25 +114,25 @@ A NN is like MLR but with with a few differences:
 #### Example: 2-layer NN
 
 $$
-\begin{align*}
+\begin{aligned}
 z^{[1]} &= W^{[1]} \cdot a^{[0]} + b^{[1]} \\
 a^{[1]} &= g^{[1]}(z^{[1]}) \\
 z^{[2]} &= W^{[2]} \cdot a^{[1]} + b^{[2]} \\
 a^{[2]} &= g^{[2]}(z^{[2]}) \\
 \hat{y} &= a^{[2]}
-\end{align*}
+\end{aligned}
 $$
 
 ### Feedforward Computation
 
 $$
-\begin{align*}
+\begin{aligned}
 \text{for } l = 1, \ldots, L: \\
 z^{[l]} &= W^{[l]} \cdot a^{[l-1]} + b^{[l]} \\
 a^{[l]} &= g^{[l]}(z^{[l]})\\
 
 \text{return } \hat{y} = a^{[L]}
-\end{align*}
+\end{aligned}
 $$
 
 ```python
@@ -163,11 +163,11 @@ To classify many examples at once, pack inputs into a single matrix $X$ where ea
 $W \in \mathbb{R}^{d_h \times d}$ is the weight matrix for the hidden layer, and $b \in \mathbb{R}^{d_h}$ is the bias vector. $Y \in \mathbb{R}^{m \times n_{\text{output}}}$ is the output matrix.
 
 $$
-\begin{align*}
+\begin{aligned}
 H &= f(X W^T + b) \\
 Z &= H U^T\\
 \hat{Y} &= \text{softmax}(Z)
-\end{align*}
+\end{aligned}
 $$
 
 ## Training Neural Nets
@@ -212,11 +212,11 @@ Consider the function $L(a, b, c) = c(a + 2b)$. Create a computation graph with 
 ```
 
 $$
-\begin{align*}
+\begin{aligned}
 \frac{\partial L}{\partial c} &= e = a + 2b \\
 \frac{\partial L}{\partial a} &= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial a} = c \\
 \frac{\partial L}{\partial b} &= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial d} \cdot \frac{\partial d}{\partial b} = 2c
-\end{align*}
+\end{aligned}
 $$
 
 ### Learning details

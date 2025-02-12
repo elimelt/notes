@@ -18,10 +18,10 @@ In the supervised situation we have a training set of $N$ documents that have ea
 Represent text as **bag of words**. For a document $d$ out of all all classes $c \in C$, outputs $\hat{c}$ that maximizes $P(c|d)$.
 
 $$
-\begin{align}
+\begin{aligned}
 \hat{c} &= \arg \max_{c \in C} P(c|d) \\
   &= \arg \max_{c \in C} \frac{P(d|c)P(c)}{P(d)}
-\end{align}
+\end{aligned}
 $$
 
 Where $P(d | c)$ is the likelihood, and $P(c)$ is the prior. Or with features $f_1, f_2, \ldots, f_n$:
@@ -37,10 +37,10 @@ P(f_1, f_2, \ldots, f_n | c) = \prod_{i=1}^n P(f_i | c)
 $$
 
 $$
-\begin{align*}
+\begin{aligned}
 C_{\text{NB}} &= \arg \max_{c \in C} P(c) \prod_{i=1}^n P(w_i | c) \\
 &= \arg \max_{c \in C} \log P(c) + \sum_{i=1}^n \log P(w_i | c)
-\end{align*}
+\end{aligned}
 $$
 
 ### Training

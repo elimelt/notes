@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Feedforward Neural Networks", "dateModified": "2025-02-11T16:44:22.948660", "description": "Overview of neural networks (feedforward), particularly in the context of natural language processing.", "articleSection": "Natural Language Processing", "keywords": "neural networks,machine learning,natural language processing,deep learning,feedforward"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Feedforward Neural Networks", "dateModified": "2025-02-12T12:36:09.186768", "description": "Overview of neural networks (feedforward), particularly in the context of natural language processing.", "articleSection": "Natural Language Processing", "keywords": "neural networks,machine learning,natural language processing,deep learning,feedforward"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -42,9 +42,9 @@
                 ignoredTags: ["script", "noscript", "style", "textarea", "em"],
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
-                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\[", right: "\]", display: true},
                     {left: "$", right: "$", display: false},
-                    {left: "\\(", right: "\\)", display: false}
+                    {left: "\(", right: "\)", display: false}
                 ],
                 throwOnError: false
             });
@@ -273,8 +273,8 @@
         <article>
             <h1>Feedforward Neural Networks</h1>
             <div class="meta">
-                <time datetime="2025-02-11T16:44:22.948660">
-                    Last modified: 2025-02-11
+                <time datetime="2025-02-12T12:36:09.186768">
+                    Last modified: 2025-02-12
                 </time>
                 <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
             </div>
@@ -348,22 +348,22 @@ $$</p>
 </ul>
 <h4 id="example-2-layer-nn">Example: 2-layer NN</h4>
 <p>$$
-\begin{align<em>}
+\begin{aligned}
 z^{[1]} &amp;= W^{[1]} \cdot a^{[0]} + b^{[1]} \
 a^{[1]} &amp;= g^{[1]}(z^{[1]}) \
 z^{[2]} &amp;= W^{[2]} \cdot a^{[1]} + b^{[2]} \
 a^{[2]} &amp;= g^{[2]}(z^{[2]}) \
 \hat{y} &amp;= a^{[2]}
-\end{align</em>}
+\end{aligned}
 $$</p>
 <h3 id="feedforward-computation">Feedforward Computation</h3>
 <p>$$
-\begin{align*}
+\begin{aligned}
 \text{for } l = 1, \ldots, L: \
 z^{[l]} &amp;= W^{[l]} \cdot a^{[l-1]} + b^{[l]} \
 a^{[l]} &amp;= g^{[l]}(z^{[l]})\</p>
 <p>\text{return } \hat{y} = a^{[L]}
-\end{align*}
+\end{aligned}
 $$</p>
 <pre><code class="language-python">def feedforward(x):
   a = x
@@ -383,11 +383,11 @@ $$</p>
 <p>To classify many examples at once, pack inputs into a single matrix $X$ where each row $i$ is an input vector $x^{(i)}$. If our input has $d$ features, then $X \in \mathbb{R}^{m \times d}$ where $m$ is the number of examples.</p>
 <p>$W \in \mathbb{R}^{d_h \times d}$ is the weight matrix for the hidden layer, and $b \in \mathbb{R}^{d_h}$ is the bias vector. $Y \in \mathbb{R}^{m \times n_{\text{output}}}$ is the output matrix.</p>
 <p>$$
-\begin{align<em>}
+\begin{aligned}
 H &amp;= f(X W^T + b) \
 Z &amp;= H U^T\
 \hat{Y} &amp;= \text{softmax}(Z)
-\end{align</em>}
+\end{aligned}
 $$</p>
 <h2 id="training-neural-nets">Training Neural Nets</h2>
 <p>We want to learn the parameters $W^{[i]}$ and $b^{[i]}$ for each layer $i$ that make $\hat{y}$ as close as possible to the true $y$.</p>
@@ -416,11 +416,11 @@ $$</p>
 (c) -------------------
 </code></pre>
 <p>$$
-\begin{align<em>}
+\begin{aligned}
 \frac{\partial L}{\partial c} &amp;= e = a + 2b \
 \frac{\partial L}{\partial a} &amp;= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial a} = c \
 \frac{\partial L}{\partial b} &amp;= \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial d} \cdot \frac{\partial d}{\partial b} = 2c
-\end{align</em>}
+\end{aligned}
 $$</p>
 <h3 id="learning-details">Learning details</h3>
 <p>NN optimization is a non-convex optimization problem, so it requires a few techniques to work well:</p>

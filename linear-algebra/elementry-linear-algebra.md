@@ -14,18 +14,18 @@ Systems of equations are both fundamental and important to actually understandin
 ### Notation
 
 $$
-\begin{align*}
+\begin{aligned}
 a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &= b_1 \\
 a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n &= b_2 \\
 &\vdots \\
 a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n &= b_m
-\end{align*}
+\end{aligned}
 $$
 
 Or equivalently, in matrix form $Ax = b$.
 
 $$
-\begin{align*}
+\begin{aligned}
 \begin{bmatrix}
 a_{11} & a_{12} & \cdots & a_{1n} \\
 a_{21} & a_{22} & \cdots & a_{2n} \\
@@ -45,7 +45,7 @@ b_2 \\
 \vdots \\
 b_m
 \end{bmatrix}
-\end{align*}
+\end{aligned}
 $$
 
 ### Gaussian Elimination
@@ -60,7 +60,7 @@ Perform any of the following **elementary row operations** to the augmented matr
 
 
 $$
-\begin{align*}
+\begin{aligned}
 A &=
 \begin{bmatrix}
 a_{11} & a_{12} & a_{13} & a_{14} \\
@@ -76,7 +76,7 @@ B &=
 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 1
 \end{bmatrix}
-\end{align*}
+\end{aligned}
 $$
 
 As you perform row operations, you also act on $b$ to keep the system equivalent. Once you have the matrix in row echelon form, you can solve the system by back substitution, or by continuing to row reduce to reduced row echelon form, where the solution is immediately apparent.
@@ -96,11 +96,11 @@ Solving systems of equations is pretty boring, but the emergent structure of a s
 The span of a set of vectors is the set of all possible linear combinations of those vectors. The span of a set of vectors is a **subspace** of the vector space. The span of a set of vectors is the **null space** of the matrix whose columns are those vectors.
 
 $$
-\begin{align*}
+\begin{aligned}
 \text{span}\left\{ \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \end{bmatrix} \right\} &= \mathbb{R}^2 \\
 \text{span}\left\{ \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \end{bmatrix}, \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right\} &= \mathbb{R}^2 \\
 \text{span}\left\{ \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \end{bmatrix}, \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right\} &= \text{span}\left\{ \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \end{bmatrix} \right\}
-\end{align*}
+\end{aligned}
 $$
 
 For a set of $n$ vectors in $\mathbb{R}^n$ to span $\mathbb{R}^n$, the vectors must be linearly independent. This is a necessary and sufficient condition for a set of vectors to be a **basis** for $\mathbb{R}^n$. You can perform additional reasoning to determine the rules for spanning sets, and implications on linear independence. For instance, a set of less than $n$ vectors in $\mathbb{R}^n$ cannot span $\mathbb{R}^n$, and a set of more than $n$ vectors in $\mathbb{R}^n$ must be linearly dependent.
@@ -115,26 +115,26 @@ For a function to be linear, it must satisfy two properties:
 A linear transformation is a function $T: \mathbb{R}^n \to \mathbb{R}^m$ that satisfies these properties. The **kernel** of a linear transformation is the set of vectors that are mapped to the zero vector, e.g. $T(x) = 0$, or $Ax = 0$ for a matrix $A$ that represents the transformation. The kernel is a subspace of the domain. The **range** of a linear transformation is the set of all possible outputs, and is a subspace of the codomain.
 
 $$
-\begin{align*}
+\begin{aligned}
 T: \mathbb{R}^2 &\to \mathbb{R}^2 \\
 T\left( \begin{bmatrix} x \\ y \end{bmatrix} \right) &= \begin{bmatrix} x \\ 0 \end{bmatrix}
-\end{align*}
+\end{aligned}
 $$
 
 $$
-\begin{align*}
+\begin{aligned}
 \text{ker}(T) &= \text{span}\left\{ \begin{bmatrix} 0 \\ 1 \end{bmatrix} \right\} \\
 \text{range}(T) &= \text{span}\left\{ \begin{bmatrix} 1 \\ 0 \end{bmatrix} \right\}
-\end{align*}
+\end{aligned}
 $$
 
 #### Matrix-Vector Multiplication
 
 $$
-\begin{align*}
+\begin{aligned}
 A\begin{bmatrix} x \\ y \end{bmatrix} &= x\begin{bmatrix} a_{11} \\ a_{21} \end{bmatrix} + y\begin{bmatrix} a_{12} \\ a_{22} \end{bmatrix} \\
 &= \begin{bmatrix} a_{11}x + a_{12}y \\ a_{21}x + a_{22}y \end{bmatrix}
-\end{align*}
+\end{aligned}
 $$
 
 Matrix-vector multiplication is a linear transformation. The columns of the matrix are the images of the basis vectors, and the result is the image of the input vector. The kernel of the transformation is the null space of the matrix, and the range is the column space of the matrix.
@@ -144,10 +144,10 @@ Visually, you can picture transforming the basis vectors/unit square of the doma
 #### Matrix-Matrix Multiplication
 
 $$
-\begin{align*}
+\begin{aligned}
 AB &= A\begin{bmatrix} b_1 & b_2 & \cdots & b_n \end{bmatrix} \\
 &= \begin{bmatrix} Ab_1 & Ab_2 & \cdots & Ab_n \end{bmatrix}
-\end{align*}
+\end{aligned}
 $$
 
 The algorithm here is to multiply the matrix on the right by each column of the matrix on the left. The result is a matrix whose columns are the images of the columns of the matrix on the right. This is a linear transformation, and the kernel of the transformation is the null space of the matrix on the right, and the range is the column space of the matrix on the left.q

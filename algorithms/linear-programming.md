@@ -26,13 +26,13 @@ The intersection of a system of half spaces creates a **polytope**, which is a c
 The goal of a linear program is to optimize some **objective function** subject to a set of constraints, which are also linear functions. For example...
 
 $$
-\begin{aligned}
+\begin{align}
 &max  & 3x_1 - 4x_3\\
 &s.t. & x_1 + x_2 \le 5\\
 &     & x_3 + x_1 = 4\\
 &     & x_3 - x_2 \ge -5\\
 &     & x_1, x_2, x_3 \ge 0\\
-\end{aligned}
+\end{align}
 $$
 
 

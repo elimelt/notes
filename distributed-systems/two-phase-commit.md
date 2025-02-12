@@ -1,3 +1,10 @@
+---
+title: Two Phase Commit
+category: distributed-systems
+tags: two-phase commit, distributed transactions, atomicity, durability, consistency, isolation, deadlock prevention, distributed systems
+description: Explains the concept of two phase commit in distributed systems and its implications.
+---
+
 # Two Phase Commit
 
 ## ACID

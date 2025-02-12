@@ -1,3 +1,10 @@
+---
+title: Distributed Architectures with Paxos
+category: distributed-systems
+tags: paxos, distributed architectures, lease server, bigtable, chubby, zookeeper
+description: Explains the use of Paxos in distributed systems and its applications
+---
+
 # Distributed Architectures with Paxos
 
 ## Overhead of Simple Architectures

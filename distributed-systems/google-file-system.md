@@ -1,3 +1,10 @@
+---
+title: Google File System (GFS) Overview
+category: distributed-systems
+tags: Cloud Storage, Distributed Systems, Google Cloud
+description: An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.
+---
+
 # Google File System (GFS)
 
 [reading](https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf)

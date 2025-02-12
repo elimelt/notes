@@ -1,3 +1,10 @@
+---
+title: Sharding
+category: distributed-systems
+tags: sharding, consistent hashing, indirection tables, load balancing, data distribution
+description: Explains the concept of sharding in distributed systems, its approaches and implications.
+---
+
 # Sharding
 
 ## Consistent Hashing

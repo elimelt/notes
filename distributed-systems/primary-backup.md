@@ -1,3 +1,10 @@
+---
+title: Primary Backup
+category: distributed-systems
+tags: primary backup, distributed systems, consistency, availability, view service, split brain
+description: Explains the concept of primary backups in distributed systems, including state machine replication and the view service.
+---
+
 # Primary Backup
 
 Consider a highly available stateful service. It is easy to maintain *consistency* within one node, simply by performing operations in some well-defined (**serializable**) order. However, providing both availability **and** consistency is more of a challenge. One must provide a notion of having a single system, even if a server within the system fails.

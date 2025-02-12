@@ -1,3 +1,10 @@
+---
+title: Distributed Systems Consistency Models
+category: other
+tags: Consistency Models,Paxos,Linearizability,Sequential Consistency,Snapshot Reads,Causal Consistency,Processor Consistency,Memory Barrier/Fence
+description: This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.
+---
+
 # Consistency
 
 **Consistency**: the allowed semantics of operations that mutate a data store/shared object.

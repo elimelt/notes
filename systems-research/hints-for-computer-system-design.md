@@ -1,6 +1,6 @@
 ---
 title: Hints for Computer System Design
-category: system-design
+category: System Design
 tags: systems, scaling, review, paper, caching
 description: A review of the paper "Hints for Computer System Design" by Butler Lampson.
 ---
@@ -37,7 +37,7 @@ However, more complicated applications of caching exist. In real-time systems, y
 
 #### Why is system design hard?
 
-- external interface isn't well defined 
+- external interface isn't well defined
     - requirements aren't clear
     - Things are often not well-designed
 - The measure of success is not very clear
@@ -90,7 +90,7 @@ Handle normal and worst cases separately
 - Split resources
     - Faster to allocate a new resource than to wait for one to be freed
     - Heterogeneous systems
-        - Specialized hardware like FPGA or GPU to run specialized tasks 
+        - Specialized hardware like FPGA or GPU to run specialized tasks
         - E.G. Google's TPU, Microsoft Azure FPGAs
 - Use static analysis
 

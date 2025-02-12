@@ -1,6 +1,6 @@
 ---
 title: Exokernel: An Operating System Architecture for Application-Level Resource Management
-category: systems
+category: Systems
 tags: operating systems, exokernel, resource management
 description: Paper review for the classic exokernel paper
 ---
@@ -9,7 +9,7 @@ description: Paper review for the classic exokernel paper
 
 Operating systems with monolithic kernels prescribe interfaces of key OS abstractions like virtual memory, filesystem, but with these prescriptions come side-effects, particularly in the realm of performance. Applications cannot modify or optimize these abstractions for their specific needs, forcing them to work within the limitations of a "one-size fits all" implementation, which typically prioritizes generality over performance for any specific application.
 
-### Summary 
+### Summary
 
 The paper covers the exokernel architecture, which aims to minimize the "mechanism" role as much as possible, opting to leave implementations to the client, e.g. to the user's choice of library operating system. The key design choice here is to separate resource protection from management, e.g. to provide secure bindings to access a device, without necessarily understanding the use case.
 
@@ -26,7 +26,7 @@ Download code into exokernel from lib os (similar to eBPF today)
   - Applications will oftentimes be working against built in "features" of the OS, e.g. databases slowed down by filesystems, non-zero-copy networking
 - Applications must frequently defer to the kernel for operations that could be done in user space, incurring context switching overhead
 
-### Notable Design Details/Strengths 
+### Notable Design Details/Strengths
 
 - The interface provided by the kernel should be as close to hardware as possible, so as to directly expose hardware resources to applications in a safe manner
 - Library operating systems can be tailored to specific use cases, avoiding the overhead of general-purpose abstractions usually found in monolithic kernels
@@ -35,7 +35,7 @@ Download code into exokernel from lib os (similar to eBPF today)
   - simplicity: less code to maintain, less code to break
   - extensibility: easier to add new features via library OSes than to modify the kernel
 
-### Limitations/Weaknesses 
+### Limitations/Weaknesses
 
 - Compatibility between system-level software and dependencies has been kicked into user space, likely leading to less stability/reliability, or at the very least more work for the application developer and end user
   - Third party library OSes are very suspect

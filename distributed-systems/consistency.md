@@ -1,6 +1,6 @@
 ---
 title: Distributed Systems Consistency Models
-category: other
+category: Distributed Systems
 tags: Consistency Models,Paxos,Linearizability,Sequential Consistency,Snapshot Reads,Causal Consistency,Processor Consistency,Memory Barrier/Fence
 description: This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.
 ---
@@ -13,7 +13,7 @@ Consistency specifies the interface (as opposed to implementation) for behavior 
 
 ## Types of Consistency
 
-| Type                 | Description                               | 
+| Type                 | Description                               |
 |----------------------|-------------------------------------------|
 | Strong Consistency   | The system behaves as if there is a single server. Systems that maintain a single consistent log of operations are often strongly consistent. |
 | Weak Consistency     | Definitions vary, but basically just *not* strong consistency.  |

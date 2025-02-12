@@ -1,6 +1,6 @@
 ---
 title: Waveform Diagrams
-category: hardware
+category: Hardware
 tags: waveform diagrams, bit vectors, bus, circuit timing behavior
 description: Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.
 ---
@@ -49,10 +49,10 @@ Create emulated inputs for all of the FPGA's physical connections.
 module MUX2_tb ();
     logic SEL, I, J; // simulated inputs
     logic V; // net for reading output
-    
+
     // instance of module we want to test ("device under test")
     MUX2 dut (.V(V), .SEL(SEL), .I(I), .J(J));
-    
+
     initial // build stimulus (test vectors)
     begin // start of "block" of code
       {SEL, I, J} = 3'b100; #10; // t=0: S=1, I=0, J=0 -> V=0

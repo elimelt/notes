@@ -1,6 +1,6 @@
 ---
 title: Linearizable Caches
-category: distributed-systems
+category: Distributed Systems
 tags: Cache Coherence, Consistency Models, Distributed Systems
 description: A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.
 ---

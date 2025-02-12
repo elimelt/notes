@@ -1,6 +1,6 @@
 ---
 title: Karnaugh Maps
-category: hardware
+category: Hardware
 tags: karnaugh maps, truth tables, graph theory, computer science
 description: Method for simplifying Boolean expressions
 ---

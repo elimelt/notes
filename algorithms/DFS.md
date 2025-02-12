@@ -1,6 +1,6 @@
 ---
 title: Depth First Search Algorithm and Tree Properties
-category: algorithms
+category: Algorithms
 tags: graph theory, depth first search, spanning trees, graph traversal
 description: A technical explanation of Depth First Search (DFS) algorithm and its tree properties, including both recursive and iterative implementations. The document covers key properties of DFS trees, including the ancestor-descendant relationship of non-tree edges, and includes a formal lemma and proof about DFS tree characteristics.
 ---

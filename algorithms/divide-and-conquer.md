@@ -1,6 +1,6 @@
 ---
 title: Divide and Conquer Algorithm Analysis with Implementation Examples
-category: algorithms
+category: Algorithms
 tags: divide-and-conquer, algorithmic-complexity, recursive-algorithms, computational-geometry
 description: A comprehensive examination of divide and conquer algorithmic strategies, focusing on their implementation and analysis. The document covers theoretical foundations with mathematical proofs, practical examples including bisection method and closest pair problem, and includes Python implementations demonstrating these concepts.
 ---

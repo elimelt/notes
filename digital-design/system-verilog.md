@@ -1,6 +1,6 @@
 ---
 title: SystemVerilog
-category: hardware
+category: Hardware
 tags: system-verilog, hardware, digital electronics, programming languages for hardware
 description: Programming language for describing hardware behavior, including modules, primitives, execution, and structural representation
 ---
@@ -50,7 +50,7 @@ In pure hardware, there is no notion of initialization. Wires can naturally pick
 module AOI (F, A, B, C, D);
     output logic F;                     // each variable
     input logic A, B, C, D;             // is 1-bit (logic)
-    
+
     assign F = ~((A & B) | (C & D));    // continuous assignment
 endmodule
 // end of SystemVerilog code
@@ -80,7 +80,7 @@ module AOI (F, A, B, C, D);
     output logic F;
     input logic A, B, C, D;
     logic AB, CD, O; // now necessary
-    
+
     // and is the module name. a1 is the instance name
     // AB, A, B are port connections
     and a1(AB, A, B);

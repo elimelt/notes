@@ -1,6 +1,6 @@
 ---
 title: Spring Boot Annotations
-category: software-engineering
+category: Software Engineering
 tags: spring-boot, annotations, java, configuration
 description: A documentation on the Spring Boot annotations used for configuration, auto-configuration, component scanning, and more.
 ---

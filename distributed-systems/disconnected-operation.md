@@ -1,6 +1,6 @@
 ---
 title: Disconnected Operation
-category: distributed-systems
+category: Distributed Systems
 tags: disconnected operation, distributed systems, conflict resolution, eventual consistency
 description: Explains the concept of disconnected operation in distributed systems and its implications.
 ---

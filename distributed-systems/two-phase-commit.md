@@ -1,6 +1,6 @@
 ---
 title: Two Phase Commit
-category: distributed-systems
+category: Distributed Systems
 tags: two-phase commit, distributed transactions, atomicity, durability, consistency, isolation, deadlock prevention, distributed systems
 description: Explains the concept of two phase commit in distributed systems and its implications.
 ---
@@ -9,7 +9,7 @@ description: Explains the concept of two phase commit in distributed systems and
 
 ## ACID
 
-For updates that span multiple keys, or even multiple updates across different storage systems, we need all-or-nothing semantics so errors can be properly handled. Two-phase commit (2PC) is a protocol that ensures **distributed transactions**, i.e. groups of operations, are atomic, consistent, isolated, and durable (ACID). 
+For updates that span multiple keys, or even multiple updates across different storage systems, we need all-or-nothing semantics so errors can be properly handled. Two-phase commit (2PC) is a protocol that ensures **distributed transactions**, i.e. groups of operations, are atomic, consistent, isolated, and durable (ACID).
 
 | Term | Description |
 |--------|--------------------------------|

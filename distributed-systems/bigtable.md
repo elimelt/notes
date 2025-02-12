@@ -1,6 +1,6 @@
 ---
 title: Bigtable, A Distributed Storage System for Structured Data
-category: distributed-systems
+category: Distributed Systems
 tags: Bigtable, Distributed Storage, Google
 description: A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.
 ---

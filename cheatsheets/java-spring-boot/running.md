@@ -1,6 +1,6 @@
 ---
 title: Spring Boot Quickstart Guide
-category: software-engineering
+category: Software Engineering
 tags: spring boot, quick start, spring web, rest repositories
 description: A step-by-step guide to creating a Spring Boot application with Rest Repositories
 ---

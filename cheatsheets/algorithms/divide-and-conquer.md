@@ -1,6 +1,6 @@
 ---
 title: Divide and Conquer Algorithms
-category: algorithms
+category: Algorithms
 tags: divide and conquer, master theorem, root finding, bisector algorithm, kth smallest element
 description: A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.
 ---

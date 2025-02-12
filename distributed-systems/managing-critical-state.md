@@ -1,12 +1,12 @@
 ---
 title: Distributed Systems Consistency Models
-category: distributed-systems
+category: Distributed Systems
 tags: Consistency Models,Paxos,Linearizability,Sequential Consistency,Snapshot Reads,Causal Consistency,Processor Consistency,Memory Barrier/Fence
 description: This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.
 ---
 ---
 title: Distributed Consensus Fundamentals
-category: distributed-systems
+category: Distributed Systems
 tags: Distributed Systems, Consensus Algorithms
 description: This document covers the fundamentals of distributed consensus algorithms, including leader election, replicated state machines, reliable datastores, and coordination services.
 ---

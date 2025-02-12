@@ -1,6 +1,6 @@
 ---
 title: Sliding Window Pattern
-category: algorithms
+category: Algorithms
 tags: sliding window, fixed size window, dynamic size window, streaming algorithms, array problems, contiguous subarray, linear data structure
 description: A technical exploration of the sliding window pattern in algorithms, focusing on its applications and variations.
 ---
@@ -40,7 +40,7 @@ Some problems will require you to `map` (as in apply a function to each element 
 Dynamic size windows often involve more complicated logic within each iteration, since at any given step you need to decide whether to expand or contract the window, on top of how to update the window state for each case.
 
 A typical algorithm might look like this:
-- 
+-
 
 
 ## Practice Problems

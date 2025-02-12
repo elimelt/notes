@@ -1,6 +1,6 @@
 ---
 title: Electronic Components
-category: hardware
+category: Hardware
 tags: Transistors, Op-Amps, Filters, Amplifiers, Comparators
 description: A comprehensive overview of electronic components used in electronics devices, including Transistors, Op-Amps, Filters, Amplifiers, and Comparators.
 ---
@@ -9,7 +9,7 @@ description: A comprehensive overview of electronic components used in electroni
 
 ## DC Sources
 
-Direct current sources are sources that provide a constant voltage or current. Batteries are a common example of a DC voltage source. If you graph the voltage over time, it's a flat line. 
+Direct current sources are sources that provide a constant voltage or current. Batteries are a common example of a DC voltage source. If you graph the voltage over time, it's a flat line.
 
 Voltage sources supply the required current to maintain a constant voltage, and current sources supply the required voltage to maintain a constant current.
 

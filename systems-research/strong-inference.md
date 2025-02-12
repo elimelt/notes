@@ -1,6 +1,6 @@
 ---
 title: Strong Inference
-category: research
+category: Research
 tags: meta, research, paper, review
 description: A review of John R. Platt's paper on the principles of strong inference in scientific research.
 ---
@@ -15,7 +15,7 @@ description: A review of John R. Platt's paper on the principles of strong infer
 
 ### What is the Problem?
 
-The process of doing research has become less standardized in some fields, especially when compared to the more structured approach of fields like molecular bio and high-energy physics. 
+The process of doing research has become less standardized in some fields, especially when compared to the more structured approach of fields like molecular bio and high-energy physics.
 
 When a formal scientific method isn't adhered to, especially when formulating hypotheses, the process can become less efficient and less effective, leading to fewer discoveries and slower progress over time.
 
@@ -37,7 +37,7 @@ Strong inference is essentially to carry out this process at every vertex of the
 - **Systematically**, explicitly, and *regularly* follow this process, from hypothesis generation to experimentation to analysis.
 - Ask yourself the two questions: "How would we know this hypothesis is wrong?" and "What hypothesis does this experiment disprove?"
 
-### Notable Design Details/Strengths 
+### Notable Design Details/Strengths
 
 - Deviations from strong inference only really manifest themselves as useless delays in the research process. Many scientists do a lot of busywork for no reason, which could be avoided had they spent more time formulating hypotheses.
 - Strong inference is strongly dependent on the actual induction being done when formulating hypotheses. This **needs** to be logically sound.

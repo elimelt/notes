@@ -1,8 +1,8 @@
 ---
 title: Xen and the Art of Virtualization
-category: systems
+category: Systems
 tags: virtualization, hypervisor, xen, operating system, systems
-description: Paper review of Xen and the Art of Virtualization 
+description: Paper review of Xen and the Art of Virtualization
 ---
 
 # [source](https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf)
@@ -13,9 +13,9 @@ description: Paper review of Xen and the Art of Virtualization
 
 ### What is the Problem?
 
-Full virtualization, where you completely emulate the underlying hardware of a machine to run a guest OS, is not a very good solution. In particular, it is much slower due to overhead, and it doesn't guest OSes to access hardware features from the host OS. 
+Full virtualization, where you completely emulate the underlying hardware of a machine to run a guest OS, is not a very good solution. In particular, it is much slower due to overhead, and it doesn't guest OSes to access hardware features from the host OS.
 
-### Summary 
+### Summary
 
 Xen is a hypervisor that allows multiple OSes to run on the same hardware through **paravirtualization**. This means that the guest OSes are modified to be aware of the hypervisor, and they can make calls to the hypervisor to access hardware features. It implements efficient mechanisms for memory management, scheduling, event delivery, and I/O that exist in the hypervisor, which are then used to delegate resources to the guest OSes. To this end, it achieves many performance improvements over traditional full virtualization systems on their port **XenoLinux**.
 
@@ -24,12 +24,12 @@ Xen is a hypervisor that allows multiple OSes to run on the same hardware throug
 - Guest OSes benefit from being hypervisor-aware, both for correctness (clocks, paging), and performance (fast handlers).
 - Paravirtualization provides huge performance improvements over full virtualization, but requires modifying the guest OSes. Xen was still able to minimize the amount of source code that needed to be changed by using a simple and clean interface that can easily be ported to new OSes.
 
-### Notable Design Details/Strengths 
+### Notable Design Details/Strengths
 
 - Requires minimal changes to the guest OSes; only need to "port" new guest OSes, which involves modifying the OS to be aware of the hypervisor
 - Very low overhead in terms of latency and throughput for most operations, since emulation is not needed in many cases
 
-### Limitations/Weaknesses 
+### Limitations/Weaknesses
 
 - Guest OSes still need to be modified, making adoption more difficult for new OSes
 - Doesn't support SMP on guest OSes, meaning some workloads are still far more efficient on native hardware

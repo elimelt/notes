@@ -1,6 +1,6 @@
 ---
 title: Development of the Domain Name System
-category: systems
+category: Systems
 tags: dns, domain-name-system, networking, systems
 description: Paper review of the paper Development of the Domain Name System
 ---
@@ -15,7 +15,7 @@ description: Paper review of the paper Development of the Domain Name System
 
 The original solution for naming was to share single file `HOSTS.TXT` that contained all the hostnames and their corresponding IP addresses. This originally worked fine, since the number of hosts was proportional to the number of timesharing systems. However, as the internet evolved to consist of many networks, each with many hosts, this solution became unscalable. Instead, a distributed database was needed to store the mappings of hostnames to IP addresses. This paper describes the development of the Domain Name System (DNS) to solve this problem.
 
-### Summary 
+### Summary
 
 #### Design Requirements
 
@@ -78,12 +78,12 @@ Root servers must be highly available and distributed geographically.
 - Seeing as how the internet is distributed in nature, a distributed database/namespace management system was inevitable. The predecessor, `HOSTS.TXT`, simply couldn't scale with the growth of the internet, both in terms of complexity and size.
 - DNS was designed around very general requirements for functionality, but also struck a balance between flexibility and simplicity in order to be widely adoptive and performant.
 
-### Notable Design Details/Strengths 
+### Notable Design Details/Strengths
 
 - Using a hierarchical structure gave a very powerful way to model namespaces after organizations, while also giving very natural ways to distribute and manage data, ultimately proving to be an extremely effective interface for the problem at hand.
 - Caching being such a central part of the design made it possible to achieve good performance and availability, while remaining simple in terms of policy and implementation. In particular, negative caching is a very general but effective optimization.
 
-### Limitations/Weaknesses 
+### Limitations/Weaknesses
 
 - Decentralized management can lead to inconsistencies in cached answers, difficulty in pushing updates through the system in real-time, accountability issues, etc.
 - The system doesn't expose versioning metadata,nor any way of tuning runtime performance, which could be useful for some applications/organizations with specific needs.

@@ -1,6 +1,6 @@
 ---
 title: Electric Circuit Analysis
-category: electrical-engineering
+category: Electrical Engineering
 tags: Electrical Engineering,Circuits,Ohms Law,Kirchoffs Laws,Impedance,AC Circuits,DC Circuits,Power,Energy
 description: In-depth analysis of electric circuits, including short and open circuits, Ohm's law, Kirchoff's laws, impedance, power, and energy. A comprehensive guide for electrical engineers and students.
 ---
@@ -11,11 +11,11 @@ description: In-depth analysis of electric circuits, including short and open ci
 
 Electricity, being the flow of electrons, is similar to many other types of flow. For prosperity, engineers use **conventional current**, a bad theory made long ago that positive charges flow from high potential to low potential. In reality, electrons are negatively charged and flow from low potentials to high potentials.
 
-**Potential**? What's that? It's the energy per unit charge at a point in space. It's measured in volts, and is the driving force behind the flow of electricity. From this point on I'll refer to potential as voltage, like a true engineer. 
+**Potential**? What's that? It's the energy per unit charge at a point in space. It's measured in volts, and is the driving force behind the flow of electricity. From this point on I'll refer to potential as voltage, like a true engineer.
 
 If you're smooth brained like me, it helps to think of it as similar to potential energy of balls on a track, but for electrons. A higher voltage means the electron has a long way to fall. This model only takes you so far, but it helps as a mental model for characterizing the behavior of electricity.
 
-If potential is the driving factor behind the flow of electricity (like gravity), then **current** is the magnitude of the flow itself (like throughput). It's measured in amperes (A, Amp), which is a compound unit of charge per unit time. 
+If potential is the driving factor behind the flow of electricity (like gravity), then **current** is the magnitude of the flow itself (like throughput). It's measured in amperes (A, Amp), which is a compound unit of charge per unit time.
 
 Finally, **resistance** is the opposition to the flow of electricity. It's measured in ohms ($\Omega$), and can be thought of as anything that drops the voltage (like a hill or friction for potential energy) when current flows through it.
 
@@ -86,7 +86,7 @@ $$V(t) = V_m \cos(\omega t + \phi) = V_m \cos(\phi) + jV_m \sin(\phi)$$
 
 $$ = V_m \angle \phi = V_m e^{j\phi}$$
 
-## Series vs. Parallel 
+## Series vs. Parallel
 
 ### Series
 

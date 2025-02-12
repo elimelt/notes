@@ -1,6 +1,6 @@
 ---
 title: Non-Blocking Two Phase Commit
-category: distributed-systems
+category: Distributed Systems
 tags: paxos, two-phase commit, distributed transactions, consistency models
 description: Explains the concept of non-blocking two phase commit using Paxos
 ---

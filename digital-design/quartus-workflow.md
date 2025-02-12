@@ -1,6 +1,6 @@
 ---
 title: Developing FPGA Designs with Quartus and ModelSim
-category: hardware
+category: Hardware
 tags: Quartus, ModelSim, Verilog, testing process, modular design
 description: Describes a structured approach to testing and verifying digital circuits using Quartus and ModelSim.
 ---

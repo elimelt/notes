@@ -1,8 +1,8 @@
 ---
 title: Design Philosophy of DARPA Internet Protocols
-category: networking
+category: Networking
 tags: internet, design, systems
-description: A summary of the design philosophy of the DARPA internet protocols. 
+description: A summary of the design philosophy of the DARPA internet protocols.
 ---
 
 # [source](http://ccr.sigcomm.org/archive/1995/jan95/ccr-9501-clark.pdf)
@@ -14,7 +14,7 @@ description: A summary of the design philosophy of the DARPA internet protocols.
 ### What is the Problem?
 
 
-### Summary 
+### Summary
 
 **Fundamental Goal**: develop effective technique for **multiplexed** utilization of **interconnected** networks.
 
@@ -68,7 +68,7 @@ Secondary Goals:
 - IP: provides a common interface for all networks
 - TCP/UDP: provides a common interface for all applications
 
-Abstraction hides details of lower layer, allowing whatever you want to happen at the lower level while the application remains unaware. 
+Abstraction hides details of lower layer, allowing whatever you want to happen at the lower level while the application remains unaware.
 
 Unfortunately, can also lead to some problems
 - Can't use hints directly from lower level for optimizations

@@ -1,6 +1,6 @@
 ---
 title: Clocks
-category: distributed-systems
+category: Distributed Systems
 tags: clocks, distributed systems, logical clocks, vector clocks, causality, consistency
 description: Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.
 ---

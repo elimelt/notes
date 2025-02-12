@@ -1,6 +1,6 @@
 ---
 title: Feedforward Neural Networks
-category: natural language processing
+category: Natural Language Processing
 tags: neural networks, machine learning, natural language processing, deep learning, feedforward
 description: Overview of neural networks (feedforward), particularly in the context of natural language processing.
 source: https://web.stanford.edu/~jurafsky/slp3/7.pdf

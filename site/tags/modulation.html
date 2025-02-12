@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media in Networks</title>
-    <meta name="description" content="Fundamental concepts of media in networks, including wired and wireless media, such as twisted pair, coaxial cable, fiber, and wireless. It covers the key channel properties, the Nyquist limit, and Shannon capacity, and discusses the wired and wireless perspectives of media in networks.">
+    <title>Tag: modulation</title>
+    <meta name="description" content="Pages tagged with modulation">
     <style>
         :root {
             --text-color: #1a1a1a;
@@ -179,65 +179,19 @@
     </nav>
     <main>
         <div class="breadcrumbs">
-            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Media in Networks
+            <a href="/index.html">Home</a> » Tag: modulation
         </div>
-        <h1>Media in Networks</h1>
+        <h1>Tag: modulation</h1>
         <div class="meta">
             <span>Last modified: 2025-02-11</span>
-            <span>Category: <a href="/categories/networks.html">Networks</a></span>
+            
         </div>
         <div class="content">
-            <h1 id="media">Media</h1>
-<p><em>Media</em> propagates signals that carry information.</p>
-<h2 id="wires">Wires</h2>
-<h3 id="twisted-pair">Twisted Pair</h3>
+            <h2>Tag: modulation</h2>
 <ul>
-<li>Very common in LANs and phone lines. </li>
-<li>Two insulated copper wires twisted together to reduce radiation/crosstalk, leading to less interference.</li>
-</ul>
-<p>EX: Ethernet, DSL</p>
-<h3 id="coaxial-cable">Coaxial Cable</h3>
-<ul>
-<li>Copper core, surrounded by insulating material, surrounded by braided metal shield, surrounded by protective outer layer of plastic.</li>
-<li>Support higher data rates than twisted pair.</li>
-<li>Longer distances and better shielding.</li>
-<li>More expensive and harder to install than twisted pair. They are pretty inflexible.</li>
-</ul>
-<p>EX: Cable TV, Internet</p>
-<h3 id="fiber">Fiber</h3>
-<ul>
-<li>Long, thin, pure glass strands that carry modulated light.</li>
-<li>Very high data rates and long distances.</li>
-<li>Immune to electromagnetic interference.</li>
-<li>Expensive and hard to install.</li>
-<li>Muli-mode vs. single-mode fiber is just a matter of multiple or single paths for light to travel.</li>
-</ul>
-<p>EX: Internet backbone</p>
-<h2 id="wireless">Wireless</h2>
-<p>Sends signals in all directions through a region of space. Nearby signals can <strong>interfere</strong> with each other, especially if they are on the same frequency; must coordinate use over time and frequency.</p>
-<p>Wifi largely uses unlicensed spectrum, which is free to use but can be crowded. Interference can be a big problem. For example, turning on your microwave can interfere with your wifi.</p>
-<p>Signals can take multiple paths (<strong>multipath</strong>), and are affected by physical barriers. The higher the frequency, the more easily it is absorbed by walls and other obstacles (this is why 5G sucks).</p>
-<h3 id="channel-properties">Channel Properties</h3>
-<ul>
-<li><strong>Bandwidth (Hz)</strong>: The range of frequencies that the channel can carry. Note that bandwidth in this context is not the same as the <em>data-rate</em> of a link.</li>
-<li><strong>Signal Power (Watts)</strong>: The strength of the signal.</li>
-<li><strong>Noise Power (Watts)</strong>: The strength of the noise.</li>
-</ul>
-<h3 id="nyquist-limit">Nyquist Limit</h3>
-<p>The max <strong>symbol-rate</strong> (rate at which symbols are sent) is twice the bandwidth. This would mean maintaining a maximum frequency, and sending a signal for each peak or trough of the wave.</p>
-<p>If there are $V$ signal levels, ignoring noise, the max data rate is $2B \log_2(V)$ bits/sec.</p>
-<h3 id="shannon-capacity">Shannon Capacity</h3>
-<p>The number of levels we can distinguish is limited by the ratio of signal power to noise power. The signal-to-noise ratio (SNR) is the ratio of the signal power to the noise power, and the higher the SNR, the more levels we can distinguish. Usually measured in decibels (dB).</p>
-<p>$$
-SNR_{dB} = 10 \log_{10} \left( \frac{S}{N} \right)
-$$</p>
-<p>Capacity (C) is the max <strong>lossless</strong> data rate over a channel. Don't ask me how to derive this...</p>
-<p>$$
-C = B \log_2 \left( 1 + \frac{S}{N} \right)
-$$</p>
-<p>Note that increasing bandwidth increases the capacity linearly, but increasing SNR increases the capacity logarithmically.</p>
+<li><a href="/networks/0-foundation/2-physical-layer.html">The Physical Layer</a></li></ul>
         </div>
-        <div class='tags'>Tags: <a href="/tags/channel%20properties.html">channel properties</a>, <a href="/tags/coaxial%20cable.html">coaxial cable</a>, <a href="/tags/fiber.html">fiber</a>, <a href="/tags/media.html">media</a>, <a href="/tags/nyquist%20limit.html">nyquist limit</a>, <a href="/tags/shannon%20capacity.html">shannon capacity</a>, <a href="/tags/twisted%20pair.html">twisted pair</a>, <a href="/tags/wireless.html">wireless</a>, <a href="/tags/wires.html">wires</a></div>
+        
     </main>
 </body>
 </html>

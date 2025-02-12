@@ -1,8 +1,8 @@
 ---
-title:
-category:
-tags:
-description:
+title: Tokenization, Segmentation, and Edit Distance
+category: Natural Language Processing
+tags: tokenization, segmentation, edit distance, bpe, nltk, tr, regex, byte-pair encoding
+description: Overview of tokenization techniques in Natural Language Processing (NLP), including Unix tools, regex, Byte-Pair Encoding (BPE), and edit distance.
 ---
 
 # Tokenization

@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: device drivers", "dateModified": "2025-02-12T12:26:23.534909", "description": "Pages tagged with device drivers"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: device drivers", "dateModified": "2025-02-12T12:29:19.255115", "description": "Pages tagged with device drivers"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -40,11 +40,11 @@
             renderMathInElement(document.body, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
-                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\[", right: "\]", display: true},
                     {left: "$", right: "$", display: false},
-                    {left: "\\(", right: "\\)", display: false}
+                    {left: "\(", right: "\)", display: false}
                 ],
-                preProcess: (math) => math.replace("<em>", "*").replace("</em>", "*"),
+                ignoredTags: ["script", "noscript", "style", "textarea", "em"],
                 throwOnError: false
             });
         });
@@ -272,7 +272,7 @@
         <article>
             <h1>Tag: device drivers</h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:26:23.534909">
+                <time datetime="2025-02-12T12:29:19.255115">
                     Last modified: 2025-02-12
                 </time>
             </div>

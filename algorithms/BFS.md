@@ -1,7 +1,7 @@
 ---
 title: Breadth First Search Algorithm Implementation and Analysis
 category: Algorithms
-tags: graph-traversal, shortest-paths, graph-theory, complexity-analysis
+tags: graph traversal, shortest paths, graph theory, complexity analysis
 description: A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.
 ---
 # Breadth First Search

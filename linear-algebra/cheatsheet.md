@@ -1,3 +1,10 @@
+---
+title: Matrix Theory
+category: Linear Algebra
+tags: linear algebra, vector spaces, operators, dual spaces, tensor products
+description: Covers fundamental concepts in linear algebra and matrix theory, including vector spaces, basic operations, systems of linear equations, matrices, eigenvalues and eigenvectors, and advanced topics such as singular value decomposition, Jordan canonical form, and tensor products. It also explores properties of matrices, linear transformations, and inner product spaces, with a focus on geometric interpretations and algebraic definitions. The document concludes with various important theorems and applications in linear algebra, including matrix factorization, eigenvalue theory, and differential equations.
+---
+
 # Fundamentals of Vectors
 
 ## Geometric Basics

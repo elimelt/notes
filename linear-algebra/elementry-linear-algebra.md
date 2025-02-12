@@ -1,3 +1,10 @@
+---
+title: Glossary of Linear Algebra Concepts
+category: Linear Algebra
+tags: Gaussian Elimination, Matrix-Vector Multiplication, Linear Transformations, Matrix-Matrix Multiplication
+description: Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.
+---
+
 # Elementary Linear Algebra
 
 ## Systems of Equations

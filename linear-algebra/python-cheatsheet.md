@@ -1,3 +1,10 @@
+---
+title: ## Matrix and Vector Algebra Fundamentals
+category: Other
+tags: linear algebra, matrix theory, vector spaces
+description: Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and systems of equations. It also touches on topics such as orthogonality, basis, and change of basis. The goal is to provide a comprehensive overview of the mathematical foundations of vectors and matrices in the context of visualization.
+---
+
 # Fundamentals of Vectors
 
 ## Working with Vectors in NumPy

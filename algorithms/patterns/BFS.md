@@ -1,10 +1,4 @@
 ---
-title: Spring Boot Quickstart Guide
-category: Software Engineering
-tags: spring boot, quick start, spring web, rest repositories
-description: A step-by-step guide to creating a Spring Boot application with Rest Repositories
----
----
 title: Breadth First Search Pattern
 category: Algorithms
 tags: breadth-first search, graph algorithms, graph traversal, shortest path

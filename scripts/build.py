@@ -73,7 +73,6 @@ BASE_TEMPLATE = '''
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
-                ignoredTags: ["script", "noscript", "style", "textarea", "em"],
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},

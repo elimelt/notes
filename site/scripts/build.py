@@ -9,7 +9,7 @@ from datetime import datetime
 from urllib.parse import quote
 import re
 from collections import defaultdict
-from jinja2 import Environment, BaseLoader, select_autoescape
+from jinja2 import Environment, BaseLoader, TemplateNotFound, select_autoescape
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -75,9 +75,9 @@ BASE_TEMPLATE = '''
             renderMathInElement(document.body, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
-                    {left: "\\[", right: "\\]", display: true},
+                    {left: "\[", right: "\]", display: true},
                     {left: "$", right: "$", display: false},
-                    {left: "\\(", right: "\\)", display: false}
+                    {left: "\(", right: "\)", display: false}
                 ],
                 throwOnError: false
             });

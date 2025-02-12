@@ -1,3 +1,10 @@
+---
+title: Clocks
+category: distributed-systems
+tags: clocks, distributed systems, logical clocks, vector clocks, causality, consistency
+description: Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.
+---
+
 # Clocks
 
 There are two main approaches to time in a distributed system: **physical clocks** and **virtual (logical) clocks**.

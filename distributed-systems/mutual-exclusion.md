@@ -1,3 +1,10 @@
+---
+title: Distributed Mutual Exclusion
+category: distributed-systems
+tags: distributed systems, mutual exclusion, locking, ordering, consistency
+description: Explains a distributed mutual exclusion algorithm using timestamps and sequence numbers.
+---
+
 # Distributed Mutual Exclusion
 
 We want the same old mutual exclusion via locking, but in a distributed system. The trick is to keep a consistent ordering of locking events on every node in the system.

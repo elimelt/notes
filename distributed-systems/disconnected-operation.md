@@ -1,3 +1,10 @@
+---
+title: Disconnected Operation
+category: distributed-systems
+tags: disconnected operation, distributed systems, conflict resolution, eventual consistency
+description: Explains the concept of disconnected operation in distributed systems and its implications.
+---
+
 # Disconnected Operation
 
 Always available writes inherently pose a problem in distributed systems. To allow for disconnected operation, we need to be able to write to a local copy of the data, and then synchronize it with the rest of the system when we're back online. Many apps today are built to work with intermittent lack of connectivity, for example, file syncing apps/sourcing control systems. In many of these systems, writes can conflict, and need to be resolved either manually or automatically.

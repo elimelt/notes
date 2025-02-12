@@ -1,3 +1,10 @@
+---
+title: Paxos Introduction
+category: distributed-systems
+tags: paxos, consensus algorithm, distributed systems, asynchronous systems, state machine replication
+description: Explains the Paxos consensus algorithm for ensuring consistency in a distributed system.
+---
+
 # Paxos Introduction
 
 ## FLP Impossibility Result

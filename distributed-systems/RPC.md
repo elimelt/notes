@@ -1,3 +1,10 @@
+---
+title: Remote Procedure Call (RPC)
+category: distributed-systems
+tags: Distributed Systems, Communication, Concurrency
+description: A discussion on the challenges of message passing in a distributed system, including the two generals problem.
+---
+
 # Look Into
 
 - Remote Direct Memory Access (RDMA)

@@ -1,3 +1,10 @@
+---
+title: Electronic Components
+category: hardware
+tags: Transistors, Op-Amps, Filters, Amplifiers, Comparators
+description: A comprehensive overview of electronic components used in electronics devices, including Transistors, Op-Amps, Filters, Amplifiers, and Comparators.
+---
+
 # Component Dictionary
 
 ## DC Sources

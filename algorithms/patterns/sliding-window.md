@@ -1,3 +1,10 @@
+---
+title: Sliding Window Pattern
+category: algorithms
+tags: sliding window, fixed size window, dynamic size window, streaming algorithms, array problems, contiguous subarray, linear data structure
+description: A technical exploration of the sliding window pattern in algorithms, focusing on its applications and variations.
+---
+
 # Sliding Window
 
 Sliding window is a useful pattern when you need to maintain a contiguous subarray of elements within a linear data structure. Problems typically fall into one of two categories:

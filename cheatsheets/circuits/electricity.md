@@ -1,3 +1,10 @@
+---
+title: Electric Circuit Analysis
+category: electrical-engineering
+tags: Electrical Engineering,Circuits,Ohms Law,Kirchoffs Laws,Impedance,AC Circuits,DC Circuits,Power,Energy
+description: In-depth analysis of electric circuits, including short and open circuits, Ohm's law, Kirchoff's laws, impedance, power, and energy. A comprehensive guide for electrical engineers and students.
+---
+
 # Electricity Basics
 
 ## Flow of Electricity

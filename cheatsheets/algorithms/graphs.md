@@ -1,3 +1,10 @@
+---
+title: Graph Theory
+category: algorithms
+tags: Graphs, Trees, DFS, BFS, Topological Sort, Minimum Spanning Tree, Disjoint Sets
+description: A comprehensive overview of graph theory, including concepts such as nodes, edges, trees, and minimum spanning trees, as well as algorithms like depth-first search and breadth-first search.
+---
+
 # Graphs
 
 ## Undirected Graphs

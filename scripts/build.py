@@ -679,6 +679,10 @@ class SiteGenerator:
             background: var(--border-color);
         }}
 
+        .md-content table td, .md-content table th {{
+            background: black;
+        }}
+
         blockquote {{
             margin: 1.5rem 0;
             padding-left: 1rem;

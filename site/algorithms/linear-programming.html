@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Linear Programming Fundamentals and Applications in Optimization", "dateModified": "2025-02-12T12:50:19.939230", "description": "This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key concepts such as hyperplanes, polytopes, and convex sets, and demonstrates how to transform various optimization problems into linear programs. The document also explores practical applications of linear programming in areas like max-flow and weighted vertex cover problems.", "articleSection": "Operations Research", "keywords": "linear systems,linear programs,optimization"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Linear Programming Fundamentals and Applications in Optimization", "dateModified": "2025-02-12T12:52:07.373603", "description": "This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key concepts such as hyperplanes, polytopes, and convex sets, and demonstrates how to transform various optimization problems into linear programs. The document also explores practical applications of linear programming in areas like max-flow and weighted vertex cover problems.", "articleSection": "Operations Research", "keywords": "linear systems,linear programs,optimization"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -45,6 +45,17 @@
                     {left: "$", right: "$", display: false},
                     {left: "\(", right: "\)", display: false}
                 ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    console.log("Post-processing: " + math);
+                    return math;
+                },
                 throwOnError: false
             });
         });
@@ -272,7 +283,7 @@
         <article>
             <h1>Linear Programming Fundamentals and Applications in Optimization</h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:50:19.939230">
+                <time datetime="2025-02-12T12:52:07.373603">
                     Last modified: 2025-02-12
                 </time>
                 <span>Category: <a href="/categories/operations%20research.html">Operations Research</a></span>
@@ -290,13 +301,13 @@ $$</p>
 <h2 id="linear-programs">Linear Programs</h2>
 <p>The goal of a linear program is to optimize some <strong>objective function</strong> subject to a set of constraints, which are also linear functions. For example...</p>
 <p>$$
-\begin{align}
+\begin{aligned}
 &amp;max  &amp; 3x_1 - 4x_3\
 &amp;s.t. &amp; x_1 + x_2 \le 5\
 &amp;     &amp; x_3 + x_1 = 4\
 &amp;     &amp; x_3 - x_2 \ge -5\
 &amp;     &amp; x_1, x_2, x_3 \ge 0\
-\end{align}
+\end{aligned}
 $$</p>
 <h2 id="linear-algebra-review">Linear Algebra Review</h2>
 <p>$$

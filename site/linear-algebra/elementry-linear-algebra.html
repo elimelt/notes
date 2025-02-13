@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Glossary of Linear Algebra Concepts", "dateModified": "2025-02-12T12:50:19.939364", "description": "Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.", "articleSection": "Linear Algebra", "keywords": "gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Glossary of Linear Algebra Concepts", "dateModified": "2025-02-12T12:52:07.373507", "description": "Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.", "articleSection": "Linear Algebra", "keywords": "gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -45,6 +45,17 @@
                     {left: "$", right: "$", display: false},
                     {left: "\(", right: "\)", display: false}
                 ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    console.log("Post-processing: " + math);
+                    return math;
+                },
                 throwOnError: false
             });
         });
@@ -272,7 +283,7 @@
         <article>
             <h1>Glossary of Linear Algebra Concepts</h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:50:19.939364">
+                <time datetime="2025-02-12T12:52:07.373507">
                     Last modified: 2025-02-12
                 </time>
                 <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
@@ -283,16 +294,16 @@
 <p>Systems of equations are both fundamental and important to actually understanding linear algebra. With that being said, the two primary introductory courses at the University of Washington, Math 208 and (to a much lesser extent) Applied Math 352, spend a significant amount of time on methods for <em>solving</em> systems of equations, something that I have almost no interest in. For the sake of completeness, I will briefly touch on notation and algorithms, but will try to both confine it to this document, and to focus on takeaways that become more useful later on.</p>
 <h3 id="notation">Notation</h3>
 <p>$$
-\begin{align}
+\begin{aligned}
 a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n &amp;= b_1 \
 a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n &amp;= b_2 \
 &amp;\vdots \
 a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n &amp;= b_m
-\end{align}
+\end{aligned}
 $$</p>
 <p>Or equivalently, in matrix form $Ax = b$.</p>
 <p>$$
-\begin{align}
+\begin{aligned}
 \begin{bmatrix}
 a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \
 a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \
@@ -312,7 +323,7 @@ b_2 \
 \vdots \
 b_m
 \end{bmatrix}
-\end{align}
+\end{aligned}
 $$</p>
 <h3 id="gaussian-elimination">Gaussian Elimination</h3>
 <p>Perform any of the following <strong>elementary row operations</strong> to the augmented matrix $\lbrack  A|b  \rbrack$:</p>
@@ -323,7 +334,7 @@ $$</p>
 </ul>
 <p>The aim of the algorithm is to get the matrix into either <strong>row echelon form</strong> or <strong>reduced row echelon form</strong>. The former is a matrix where the first nonzero element in each row is 1, and the first nonzero element in each row is to the right of the first nonzero element in the row above it. The latter is a matrix where the first nonzero element in each row is 1, and the first nonzero element in each row is the only nonzero element in its column. For example, below $A$ is in row echelon form, and $B$ is in reduced row echelon form.</p>
 <p>$$
-\begin{align}
+\begin{aligned}
 A &amp;=
 \begin{bmatrix}
 a_{11} &amp; a_{12} &amp; a_{13} &amp; a_{14} \
@@ -339,7 +350,7 @@ B &amp;=
 0 &amp; 0 &amp; 1 &amp; 0 \
 0 &amp; 0 &amp; 0 &amp; 1
 \end{bmatrix}
-\end{align}
+\end{aligned}
 $$</p>
 <p>As you perform row operations, you also act on $b$ to keep the system equivalent. Once you have the matrix in row echelon form, you can solve the system by back substitution, or by continuing to row reduce to reduced row echelon form, where the solution is immediately apparent.</p>
 <h3 id="takeaways">Takeaways</h3>
@@ -353,11 +364,11 @@ $$</p>
 <h4 id="span">Span</h4>
 <p>The span of a set of vectors is the set of all possible linear combinations of those vectors. The span of a set of vectors is a <strong>subspace</strong> of the vector space. The span of a set of vectors is the <strong>null space</strong> of the matrix whose columns are those vectors.</p>
 <p>$$
-\begin{align}
+\begin{aligned}
 \text{span}\left{ \begin{bmatrix} 1 \ 0 \end{bmatrix}, \begin{bmatrix} 0 \ 1 \end{bmatrix} \right} &amp;= \mathbb{R}^2 \
 \text{span}\left{ \begin{bmatrix} 1 \ 0 \end{bmatrix}, \begin{bmatrix} 0 \ 1 \end{bmatrix}, \begin{bmatrix} 1 \ 1 \end{bmatrix} \right} &amp;= \mathbb{R}^2 \
 \text{span}\left{ \begin{bmatrix} 1 \ 0 \end{bmatrix}, \begin{bmatrix} 0 \ 1 \end{bmatrix}, \begin{bmatrix} 1 \ 1 \end{bmatrix} \right} &amp;= \text{span}\left{ \begin{bmatrix} 1 \ 0 \end{bmatrix}, \begin{bmatrix} 0 \ 1 \end{bmatrix} \right}
-\end{align}
+\end{aligned}
 $$</p>
 <p>For a set of $n$ vectors in $\mathbb{R}^n$ to span $\mathbb{R}^n$, the vectors must be linearly independent. This is a necessary and sufficient condition for a set of vectors to be a <strong>basis</strong> for $\mathbb{R}^n$. You can perform additional reasoning to determine the rules for spanning sets, and implications on linear independence. For instance, a set of less than $n$ vectors in $\mathbb{R}^n$ cannot span $\mathbb{R}^n$, and a set of more than $n$ vectors in $\mathbb{R}^n$ must be linearly dependent.</p>
 <h4 id="linear-transformations">Linear Transformations</h4>
@@ -368,32 +379,32 @@ $$</p>
 </ul>
 <p>A linear transformation is a function $T: \mathbb{R}^n \to \mathbb{R}^m$ that satisfies these properties. The <strong>kernel</strong> of a linear transformation is the set of vectors that are mapped to the zero vector, e.g. $T(x) = 0$, or $Ax = 0$ for a matrix $A$ that represents the transformation. The kernel is a subspace of the domain. The <strong>range</strong> of a linear transformation is the set of all possible outputs, and is a subspace of the codomain.</p>
 <p>$$
-\begin{align}
+\begin{aligned}
 T: \mathbb{R}^2 &amp;\to \mathbb{R}^2 \
 T\left( \begin{bmatrix} x \ y \end{bmatrix} \right) &amp;= \begin{bmatrix} x \ 0 \end{bmatrix}
-\end{align}
+\end{aligned}
 $$</p>
 <p>$$
-\begin{align}
+\begin{aligned}
 \text{ker}(T) &amp;= \text{span}\left{ \begin{bmatrix} 0 \ 1 \end{bmatrix} \right} \
 \text{range}(T) &amp;= \text{span}\left{ \begin{bmatrix} 1 \ 0 \end{bmatrix} \right}
-\end{align}
+\end{aligned}
 $$</p>
 <h4 id="matrix-vector-multiplication">Matrix-Vector Multiplication</h4>
 <p>$$
-\begin{align}
+\begin{aligned}
 A\begin{bmatrix} x \ y \end{bmatrix} &amp;= x\begin{bmatrix} a_{11} \ a_{21} \end{bmatrix} + y\begin{bmatrix} a_{12} \ a_{22} \end{bmatrix} \
 &amp;= \begin{bmatrix} a_{11}x + a_{12}y \ a_{21}x + a_{22}y \end{bmatrix}
-\end{align}
+\end{aligned}
 $$</p>
 <p>Matrix-vector multiplication is a linear transformation. The columns of the matrix are the images of the basis vectors, and the result is the image of the input vector. The kernel of the transformation is the null space of the matrix, and the range is the column space of the matrix.</p>
 <p>Visually, you can picture transforming the basis vectors/unit square of the domain into the basis vectors/unit square of the codomain. The matrix is the transformation matrix, and the columns are the images of the basis vectors. The result is the image of the input vector.</p>
 <h4 id="matrix-matrix-multiplication">Matrix-Matrix Multiplication</h4>
 <p>$$
-\begin{align}
+\begin{aligned}
 AB &amp;= A\begin{bmatrix} b_1 &amp; b_2 &amp; \cdots &amp; b_n \end{bmatrix} \
 &amp;= \begin{bmatrix} Ab_1 &amp; Ab_2 &amp; \cdots &amp; Ab_n \end{bmatrix}
-\end{align}
+\end{aligned}
 $$</p>
 <p>The algorithm here is to multiply the matrix on the right by each column of the matrix on the left. The result is a matrix whose columns are the images of the columns of the matrix on the right. This is a linear transformation, and the kernel of the transformation is the null space of the matrix on the right, and the range is the column space of the matrix on the left.q</p>
 <pre><code class="language-python">import numpy as np

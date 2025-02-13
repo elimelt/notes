@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: bisync", "dateModified": "2025-02-12T12:50:23.331666", "description": "Pages tagged with bisync"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: bisync", "dateModified": "2025-02-12T18:00:05.690831", "description": "Pages tagged with bisync"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -44,6 +44,17 @@
                     {left: "$", right: "$", display: false},
                     {left: "\(", right: "\)", display: false}
                 ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    console.log("Post-processing: " + math);
+                    return math;
+                },
                 throwOnError: false
             });
         });
@@ -271,7 +282,7 @@
         <article>
             <h1>Tag: bisync</h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:50:23.331666">
+                <time datetime="2025-02-12T18:00:05.690831">
                     Last modified: 2025-02-12
                 </time>
             </div>

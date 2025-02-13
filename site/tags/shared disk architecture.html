@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: shared disk architecture", "dateModified": "2025-02-12T12:50:23.289806", "description": "Pages tagged with shared disk architecture"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: shared disk architecture", "dateModified": "2025-02-12T18:00:05.591372", "description": "Pages tagged with shared disk architecture"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -44,6 +44,17 @@
                     {left: "$", right: "$", display: false},
                     {left: "\(", right: "\)", display: false}
                 ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    console.log("Post-processing: " + math);
+                    return math;
+                },
                 throwOnError: false
             });
         });
@@ -271,7 +282,7 @@
         <article>
             <h1>Tag: shared disk architecture</h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:50:23.289806">
+                <time datetime="2025-02-12T18:00:05.591372">
                     Last modified: 2025-02-12
                 </time>
             </div>

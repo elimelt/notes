@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tags", "dateModified": "2025-02-12T12:50:23.225894", "description": "Index of all tags"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tags", "dateModified": "2025-02-12T18:00:05.369882", "description": "Index of all tags"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -44,6 +44,17 @@
                     {left: "$", right: "$", display: false},
                     {left: "\(", right: "\)", display: false}
                 ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    console.log("Post-processing: " + math);
+                    return math;
+                },
                 throwOnError: false
             });
         });
@@ -270,7 +281,7 @@
         <article>
             <h1>Tags</h1>
             <div class="meta">
-                <time datetime="2025-02-12T12:50:23.225894">
+                <time datetime="2025-02-12T18:00:05.369882">
                     Last modified: 2025-02-12
                 </time>
             </div>
@@ -571,7 +582,7 @@
 <li><a href="/tags/java.html">java</a> (4 pages)</li>
 <li><a href="/tags/jvm.html">jvm</a> (1 pages)</li>
 <li><a href="/tags/karnaugh%20maps.html">karnaugh maps</a> (1 pages)</li>
-<li><a href="/tags/kernel.html">kernel</a> (1 pages)</li>
+<li><a href="/tags/kernel.html">kernel</a> (2 pages)</li>
 <li><a href="/tags/kernel%20mode.html">kernel mode</a> (1 pages)</li>
 <li><a href="/tags/kernels.html">kernels</a> (1 pages)</li>
 <li><a href="/tags/key-value%20store.html">key-value store</a> (1 pages)</li>
@@ -631,6 +642,7 @@
 <li><a href="/tags/modified%20no-write.html">modified no-write</a> (1 pages)</li>
 <li><a href="/tags/modular%20design.html">modular design</a> (1 pages)</li>
 <li><a href="/tags/modulation.html">modulation</a> (1 pages)</li>
+<li><a href="/tags/multicore.html">multicore</a> (1 pages)</li>
 <li><a href="/tags/multihomed%20as.html">multihomed as</a> (1 pages)</li>
 <li><a href="/tags/multinomial%20logistic%20regression.html">multinomial logistic regression</a> (1 pages)</li>
 <li><a href="/tags/multinomial%20naive%20bayes.html">multinomial naive bayes</a> (1 pages)</li>
@@ -670,9 +682,11 @@
 <li><a href="/tags/operating%20system.html">operating system</a> (2 pages)</li>
 <li><a href="/tags/operating%20system%20development.html">operating system development</a> (1 pages)</li>
 <li><a href="/tags/operating%20systems.html">operating systems</a> (10 pages)</li>
+<li><a href="/tags/operating-system.html">operating-system</a> (1 pages)</li>
 <li><a href="/tags/operators.html">operators</a> (1 pages)</li>
 <li><a href="/tags/optimization.html">optimization</a> (3 pages)</li>
 <li><a href="/tags/ordering.html">ordering</a> (1 pages)</li>
+<li><a href="/tags/os.html">os</a> (1 pages)</li>
 <li><a href="/tags/osi%20model.html">osi model</a> (1 pages)</li>
 <li><a href="/tags/overhead.html">overhead</a> (1 pages)</li>
 <li><a href="/tags/page%20fault.html">page fault</a> (1 pages)</li>
@@ -814,7 +828,7 @@
 <li><a href="/tags/system%20design.html">system design</a> (1 pages)</li>
 <li><a href="/tags/system%20programming.html">system programming</a> (1 pages)</li>
 <li><a href="/tags/system-verilog.html">system-verilog</a> (1 pages)</li>
-<li><a href="/tags/systems.html">systems</a> (6 pages)</li>
+<li><a href="/tags/systems.html">systems</a> (7 pages)</li>
 <li><a href="/tags/systems%20approach.html">systems approach</a> (1 pages)</li>
 <li><a href="/tags/tcp.html">tcp</a> (4 pages)</li>
 <li><a href="/tags/template.html">template</a> (1 pages)</li>

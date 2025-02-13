@@ -79,6 +79,17 @@ BASE_TEMPLATE = '''
                     {left: "$", right: "$", display: false},
                     {left: "\\(", right: "\\)", display: false}
                 ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\\n").map((line) => {
+                        if (line.endsWith("\\\\")) {
+                            return line + "\\\\";
+                        }
+                        return line;
+                    }).join("\\n");
+                    console.log("Post-processing: " + math);
+                    return math;
+                },
                 throwOnError: false
             });
         });

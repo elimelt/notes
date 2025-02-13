@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Multikernel, A new OS architecture for scalable multicore systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/systems-research/barrelfish.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="The Multikernel, A new OS architecture for scalable multicore systems">
+    <meta property="og:description" content="A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.">
+    <meta property="og:url" content="https://notes.elimelt.com/systems-research/barrelfish.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="The Multikernel, A new OS architecture for scalable multicore systems">
+    <meta name="twitter:description" content="A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.">
+
+    <meta name="keywords" content="os,operating-system,systems,multicore,kernel">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Multikernel, A new OS architecture for scalable multicore systems", "dateModified": "2025-02-12T16:02:10.187703", "description": "A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.", "articleSection": "Systems", "keywords": "os,operating-system,systems,multicore,kernel"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\(", right: "\)", display: false}
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    console.log("Post-processing: " + math);
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+
+<style>
+    :root {
+        --text-color: #1a1a1a;
+        --background-color: #ffffff;
+        --accent-color: #2563eb;
+        --border-color: #e5e7eb;
+        --nav-background: rgba(255, 255, 255, 0.95);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --text-color: #f3f4f6;
+            --background-color: #1a1a1a;
+            --accent-color: #60a5fa;
+            --border-color: #374151;
+            --nav-background: rgba(26, 26, 26, 0.95);
+        }
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        line-height: 1.6;
+        max-width: 50rem;
+        margin: 0 auto;
+        padding: 2rem;
+        color: var(--text-color);
+        background: var(--background-color);
+    }
+
+    nav {
+        position: sticky;
+        top: 0;
+        background: var(--nav-background);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        z-index: 1000;
+    }
+
+    nav a {
+        color: var(--accent-color);
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    nav a:hover {
+        background-color: var(--border-color);
+    }
+
+    .breadcrumbs {
+        margin-bottom: 2rem;
+        color: var(--text-color);
+        opacity: 0.8;
+    }
+
+    .breadcrumbs a {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+
+    .content {
+        margin-top: 2rem;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+
+    code {
+        background: var(--border-color);
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.9em;
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    }
+
+    pre {
+        background: var(--border-color);
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 1.5rem 0;
+    }
+
+    pre code {
+        background: none;
+        padding: 0;
+        border-radius: 0;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin: 1.5rem 0;
+    }
+
+    .meta {
+        color: var(--text-color);
+        opacity: 0.8;
+        font-size: 0.9em;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .tags {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .tags a {
+        display: inline-block;
+        background: var(--border-color);
+        color: var(--text-color);
+        padding: 0.2rem 0.6rem;
+        border-radius: 3px;
+        text-decoration: none;
+        font-size: 0.9em;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .tags a:hover {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    a {
+        color: #3391ff;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+    }
+
+    th, td {
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+    }
+
+    th {
+        background: var(--border-color);
+    }
+
+    .md-content table td, .md-content table th {
+        background: black;
+    }
+
+    blockquote {
+        margin: 1.5rem 0;
+        padding-left: 1rem;
+        border-left: 4px solid var(--accent-color);
+        color: var(--text-color);
+        opacity: 0.8;
+    }
+
+    .katex-display {
+        overflow: auto hidden;
+        padding: 1em 0;
+        margin: 0.5em 0;
+    }
+
+    .katex-display > .katex {
+        white-space: normal;
+    }
+
+    .katex {
+        font-size: 1.1em;
+        display: inline;
+        line-height: 1.2;
+    }
+
+    .katex-html {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .katex .strut {
+        display: none;
+    }
+
+    .katex-display .katex {
+        display: block;
+        text-align: center;
+    }
+
+    .katex-display > .katex > .katex-html {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 0.5em 0;
+        min-height: 40px;
+    }
+</style></head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » The Multikernel, A new OS architecture for scalable multicore systems
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>The Multikernel, A new OS architecture for scalable multicore systems</h1>
+            <div class="meta">
+                <time datetime="2025-02-12T16:02:10.187703">
+                    Last modified: 2025-02-12
+                </time>
+                <span>Category: <a href="/categories/systems.html">Systems</a></span>
+            </div>
+            <div class="content">
+                <h1 id="source"><a href="https://people.inf.ethz.ch/troscoe/pubs/sosp09-barrelfish.pdf">source</a></h1>
+<h6 id="the-multikernel-a-new-os-architecture-for-scalable-multicore-systems">The Multikernel: A new OS architecture for scalable multicore systems</h6>
+<hr />
+<h3 id="what-is-the-problem">What is the Problem?</h3>
+<p>Scaling to varying loads and demands on multicore systems is difficult with traditional OS architectures. Optimizations tend to be specific to not only a particular workload, but also a particular choice of hardware.</p>
+<p>In particular, traditional kernels are littered with shared state (e.g. global data structures in shared memory) that can lead to bottlenecks and unforeseen interactions between components. Modern systems being multicore makes this a real problem for scalability that adapts to all varieties of workloads.</p>
+<h3 id="summary">Summary</h3>
+<p>The authors proposed a new OS architecture, the Multikernel, that treats the OS as a distributed system. The key idea is to use message passing for all inter-core communication. It turns out that message passing is a better model for hardware (networked, heterogeneous) than sequentially updating shared state, and it allows for natural pipelining as well.</p>
+<h3 id="key-insights">Key Insights</h3>
+<ul>
+<li>Systems, and even individual cores within a machine, are extremely diverse. It is therefore hard to write optimizations that work on all of them.</li>
+<li>Even on current, cache coherent systems, the hardware is designed to facilitate message passing (e.g. cache coherence protocols).</li>
+<li>Message passing has less overhead than shared memory. Shared state tends to cause cores to wait on cache misses, stalling the pipeline. Message passing on the other hand can be implemented with async RPCs, and is even still faster with synchronous RPCs in some cases.</li>
+<li>Cache coherence overhead typically grows with the number of cores, even becoming a bottleneck at ~80 cores. Modern programmable cores (e.g. NICs, GPUs) are not cache coherent, so there is precedent for non-coherent systems.</li>
+</ul>
+<h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
+<ul>
+<li>Make all inter-core communication explicit</li>
+<li>Make OS structure hardware-neutral</li>
+<li>View state as replicated instead of shared</li>
+</ul>
+<h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
+<h2 id="-">-</h2>
+<h3 id="summary-of-key-results">Summary of Key Results</h3>
+<h2 id="-_1">-</h2>
+<h3 id="open-questions">Open Questions</h3>
+<h2 id="-_2">-</h2>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/kernel.html">kernel</a>
+                <a href="/tags/multicore.html">multicore</a>
+                <a href="/tags/operating-system.html">operating-system</a>
+                <a href="/tags/os.html">os</a>
+                <a href="/tags/systems.html">systems</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

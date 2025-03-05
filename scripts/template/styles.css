@@ -269,7 +269,7 @@ article {
   max-width: 70ch;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 5rem;
+  padding: 0 .5rem;
 
   /* Base font settings */
   font-family: 'Merriweather', Georgia, serif;

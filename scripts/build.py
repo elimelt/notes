@@ -5,18 +5,23 @@ from typing import List, Dict, Optional, Any
 import shutil
 import markdown
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import quote
 import re
 from collections import defaultdict
 from jinja2 import Environment, BaseLoader, TemplateNotFound, select_autoescape
-from template.html import BASE_TEMPLATE, INDEX_TEMPLATE, STYLES_TEMPLATE
+from template.html import BASE_TEMPLATE, INDEX_TEMPLATE
+from template.css import STYLES_TEMPLATE
+from template.js import TAXONOMY_JS
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
+
+
 @dataclass
 class Page:
     """Represents a page in the static site"""
+
     title: str
     path: Path
     content: str
@@ -25,6 +30,7 @@ class Page:
     tags: List[str]
     description: Optional[str]
     is_index: bool = False
+
 
 class JinjaTemplateLoader(BaseLoader):
     def __init__(self, templates):
@@ -40,13 +46,25 @@ class SiteGenerator:
     """Generates a static site from a directory of mixed content"""
 
     MARKDOWN_EXTENSIONS = [
-        "meta", "toc", "fenced_code", "tables",
-        "attr_list", "footnotes", "def_list", "admonition",
+        "meta",
+        "toc",
+        "fenced_code",
+        "tables",
+        "attr_list",
+        "footnotes",
+        "def_list",
+        "admonition",
     ]
     SUPPORTED_CONTENT = {".md", ".markdown"}
     IGNORED_DIRECTORIES = {
-        ".git", "__pycache__", "node_modules", ".github",
-        "nlp.venv", "site", "venv", ".venv",
+        ".git",
+        "__pycache__",
+        "node_modules",
+        ".github",
+        "nlp.venv",
+        "site",
+        "venv",
+        ".venv",
     }
 
     def __init__(
@@ -67,19 +85,19 @@ class SiteGenerator:
     def _setup_jinja(self):
         """Initialize Jinja2 environment with templates"""
         templates = {
-            'base': BASE_TEMPLATE,
-            'index': INDEX_TEMPLATE,
-            'styles': STYLES_TEMPLATE,
+            "base": BASE_TEMPLATE,
+            "index": INDEX_TEMPLATE,
+            "styles": STYLES_TEMPLATE,
         }
 
         self.jinja_env = Environment(
             loader=JinjaTemplateLoader(templates),
-            autoescape=select_autoescape(['html', 'xml']),
+            autoescape=select_autoescape(["html", "xml"]),
             trim_blocks=True,
-            lstrip_blocks=True
+            lstrip_blocks=True,
         )
 
-        self.jinja_env.filters['urlencode'] = quote
+        self.jinja_env.filters["urlencode"] = quote
 
     def generate_site(self) -> None:
         """Main method to generate the static site"""
@@ -109,7 +127,8 @@ class SiteGenerator:
     def _walk_directory(self, directory: Path) -> List[Path]:
         """Walk through directory while respecting ignored paths"""
         return [
-            item for item in directory.rglob("*")
+            item
+            for item in directory.rglob("*")
             if not any(ignored in item.parts for ignored in self.IGNORED_DIRECTORIES)
             and item.is_file()
         ]
@@ -128,9 +147,13 @@ class SiteGenerator:
             }
 
         return {
-            "title": md.Meta.get("title", [file_path.stem.replace("-", " ").title()])[0],
+            "title": md.Meta.get("title", [file_path.stem.replace("-", " ").title()])[
+                0
+            ],
             "category": md.Meta.get("category", [None])[0],
-            "tags": md.Meta.get("tags", [""])[0].split(",") if "tags" in md.Meta else [],
+            "tags": (
+                md.Meta.get("tags", [""])[0].split(",") if "tags" in md.Meta else []
+            ),
             "description": md.Meta.get("description", [None])[0],
         }
 
@@ -226,7 +249,7 @@ class SiteGenerator:
             "canonical_url": canonical_url,
             "navigation": self._generate_navigation(page),
             "breadcrumbs": self._generate_breadcrumbs(page),
-            "current_year": datetime.now().year
+            "current_year": datetime.now().year,
         }
 
     def _generate_navigation(self, current_page: Page) -> str:
@@ -249,7 +272,7 @@ class SiteGenerator:
         if page.category:
             parts.append(
                 f'<a href="/categories/{quote(page.category.lower())}.html">'
-                f'{page.category}</a>'
+                f"{page.category}</a>"
             )
         if not page.is_index:
             parts.append(page.title)
@@ -261,14 +284,31 @@ class SiteGenerator:
         self._generate_main_index()
         self._generate_taxonomy_pages()
 
+
     def _generate_taxonomy_pages(self) -> None:
-        """Generate category and tag index pages"""
+        """Generate category and tag index pages with enhanced markup for better UX"""
         # Generate categories index
         if self.categories:
-            content = "<ul>"
+            # Create structured content with CSS classes for JavaScript enhancement
+            content = """
+            <div class="taxonomy-container">
+                <ul class="original-taxonomy-list" style="display:none;">
+            """
             for category, pages in sorted(self.categories.items()):
                 content += f'\n<li><a href="/categories/{quote(category.lower())}.html">{category}</a> ({len(pages)} pages)</li>'
-            content += "</ul>"
+            content += """
+                </ul>
+                <noscript>
+                    <ul>
+            """
+            for category, pages in sorted(self.categories.items()):
+                content += f'\n<li><a href="/categories/{quote(category.lower())}.html">{category}</a> ({len(pages)} pages)</li>'
+            content += """
+                    </ul>
+                </noscript>
+            </div>
+            <script src="/js/taxonomy.js" defer></script>
+            """
 
             categories_page = Page(
                 title="Categories",
@@ -277,17 +317,33 @@ class SiteGenerator:
                 modified_date=datetime.now(),
                 category=None,
                 tags=[],
-                description="Index of all categories",
+                description="Browse all content categories",
                 is_index=True,
             )
             self.pages[categories_page.path] = categories_page
 
         # Generate tags index
         if self.tags:
-            content = "<ul>"
+            # Create structured content with CSS classes for JavaScript enhancement
+            content = """
+            <div class="taxonomy-container">
+                <ul class="original-taxonomy-list" style="display:none;">
+            """
             for tag, pages in sorted(self.tags.items()):
                 content += f'\n<li><a href="/tags/{quote(tag.lower())}.html">{tag}</a> ({len(pages)} pages)</li>'
-            content += "</ul>"
+            content += """
+                </ul>
+                <noscript>
+                    <ul>
+            """
+            for tag, pages in sorted(self.tags.items()):
+                content += f'\n<li><a href="/tags/{quote(tag.lower())}.html">{tag}</a> ({len(pages)} pages)</li>'
+            content += """
+                    </ul>
+                </noscript>
+            </div>
+            <script src="/js/taxonomy.js" defer></script>
+            """
 
             tags_page = Page(
                 title="Tags",
@@ -296,21 +352,37 @@ class SiteGenerator:
                 modified_date=datetime.now(),
                 category=None,
                 tags=[],
-                description="Index of all tags",
+                description="Browse all content tags",
                 is_index=True,
             )
             self.pages[tags_page.path] = tags_page
 
+        # Also ensure the JS file is included in the output
+        self._ensure_taxonomy_js()
+
+    def _ensure_taxonomy_js(self) -> None:
+        """Ensures the taxonomy JavaScript file is added to the output directory"""
+        js_dir = self.output_dir / "js"
+        js_dir.mkdir(exist_ok=True)
+
+        # Path to the taxonomy.js file
+        taxonomy_js_path = js_dir / "taxonomy.js"
+
+        # Only write the file if it doesn't exist or is older than this build
+        if not taxonomy_js_path.exists() or datetime.fromtimestamp(taxonomy_js_path.stat().st_mtime) < datetime.now() - timedelta(minutes=5):
+            with open(taxonomy_js_path, "w") as f:
+                f.write(TAXONOMY_JS)
+                print(f"Generated {taxonomy_js_path}")
+
     def _generate_main_index(self) -> None:
         """Generate the main index.html page"""
         regular_pages = [
-            p for p in self.pages.values()
+            p
+            for p in self.pages.values()
             if not (p.is_index or str(p.path).startswith(("categories/", "tags/")))
         ]
         recent_pages = sorted(
-            regular_pages,
-            key=lambda p: p.modified_date,
-            reverse=True
+            regular_pages, key=lambda p: p.modified_date, reverse=True
         )[:10]
 
         tag_counts = {tag: len(pages) for tag, pages in self.tags.items()}
@@ -320,14 +392,14 @@ class SiteGenerator:
             "stats": {
                 "notes": len(regular_pages),
                 "categories": len(self.categories),
-                "tags": len(self.tags)
+                "tags": len(self.tags),
             },
             "recent_pages": [
                 {
                     "url": f"/{page.path.with_suffix('.html')}",
                     "title": page.title,
                     "date": page.modified_date.strftime("%Y-%m-%d"),
-                    "category": page.category
+                    "category": page.category,
                 }
                 for page in recent_pages
             ],
@@ -335,7 +407,7 @@ class SiteGenerator:
                 {
                     "url": f"/categories/{quote(category.lower())}.html",
                     "name": category,
-                    "count": len(pages)
+                    "count": len(pages),
                 }
                 for category, pages in sorted(self.categories.items())
             ],
@@ -344,13 +416,13 @@ class SiteGenerator:
                     "url": f"/tags/{quote(tag.lower())}.html",
                     "name": tag,
                     "count": count,
-                    "size_class": min(count, 5)
+                    "size_class": min(count, 5),
                 }
                 for tag, count in popular_tags
-            ]
+            ],
         }
 
-        content = self.jinja_env.get_template('index').render(**context)
+        content = self.jinja_env.get_template("index").render(**context)
         index_page = Page(
             title="",
             path=Path("index.md"),
@@ -363,7 +435,7 @@ class SiteGenerator:
         )
 
         output_path = self.output_dir / "index.html"
-        html_content = self.jinja_env.get_template('base').render(
+        html_content = self.jinja_env.get_template("base").render(
             **self._get_page_context(index_page)
         )
         output_path.write_text(html_content, encoding="utf-8")
@@ -388,7 +460,7 @@ class SiteGenerator:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.parent.chmod(0o755)
 
-        html_content = self.jinja_env.get_template('base').render(
+        html_content = self.jinja_env.get_template("base").render(
             **self._get_page_context(page)
         )
         output_path.write_text(html_content, encoding="utf-8")
@@ -417,7 +489,7 @@ class SiteGenerator:
             is_index=False,
         )
 
-        html_content = self.jinja_env.get_template('base').render(
+        html_content = self.jinja_env.get_template("base").render(
             **self._get_page_context(page)
         )
         output_path.write_text(html_content, encoding="utf-8")
@@ -446,7 +518,7 @@ class SiteGenerator:
             is_index=False,
         )
 
-        html_content = self.jinja_env.get_template('base').render(
+        html_content = self.jinja_env.get_template("base").render(
             **self._get_page_context(page)
         )
         output_path.write_text(html_content, encoding="utf-8")

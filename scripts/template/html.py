@@ -1,0 +1,895 @@
+CONTENT_STYLES = '''
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+/* Base Typography Settings */
+.content {
+    /* Layout and spacing */
+    margin-top: 2rem;
+    max-width: 70ch;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1.5rem;
+
+    /* Base font settings */
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    line-height: 1.75;
+    font-weight: 400;
+
+    /* Color and contrast */
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #fff;
+
+    /* Text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+
+    /* Better spacing */
+    letter-spacing: 0.01em;
+    word-spacing: 0.05em;
+
+    /* Hyphenation for better text flow */
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+}
+
+/* Heading Typography */
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.content h1 {
+    font-size: clamp(1.75rem, 1.3rem + 2.25vw, 2.5rem);
+    letter-spacing: -0.02em;
+}
+
+.content h2 {
+    font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+    letter-spacing: -0.015em;
+}
+
+.content h3 {
+    font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+    letter-spacing: -0.01em;
+}
+
+/* Paragraph spacing */
+.content p {
+    margin-bottom: 1.5rem;
+}
+
+.content p + p {
+    text-indent: 0.5rem; /* Optional: slight indent for paragraphs after other paragraphs */
+}
+
+/* Links with advanced styling */
+.content a {
+    color: #0366d6;
+    text-decoration: none;
+    background-image: linear-gradient(transparent calc(100% - 2px), currentColor 2px);
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.3s ease-in-out;
+}
+
+.content a:hover {
+    background-size: 100% 100%;
+}
+
+/* Lists with improved spacing */
+.content ul, .content ol {
+    padding-left: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.content li {
+    margin-bottom: 0.5rem;
+}
+
+/* Blockquotes with elegant styling */
+.content blockquote {
+    margin: 2rem 0;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.02);
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.75);
+}
+
+.content blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* Code blocks */
+.content pre, .content code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    background-color: rgba(0, 0, 0, 0.04);
+    border-radius: 3px;
+}
+
+.content code {
+    padding: 0.2em 0.4em;
+}
+
+.content pre {
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+/* Images */
+.content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+    margin: 2rem auto;
+}
+
+/* Tables */
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.95em;
+}
+
+.content th, .content td {
+    padding: 0.75rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.content th {
+    background-color: rgba(0, 0, 0, 0.03);
+    font-weight: 600;
+    text-align: left;
+}
+
+/* Figure and captions */
+.content figure {
+    margin: 2rem 0;
+}
+
+.content figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.6);
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Advanced features for better reading */
+@media (min-width: 768px) {
+    .content {
+        /* Better paragraph rhythm using CSS Grid */
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0rem;
+
+        /* Drop cap for first paragraph */
+    }
+
+    .content p:first-of-type::first-letter {
+        float: left;
+        font-size: 3.5em;
+        line-height: 0.8;
+        padding-right: 0.1em;
+        font-weight: 700;
+    }
+
+    /* Improve reading with advanced CSS columns for certain elements */
+    .content .two-column {
+        column-count: 2;
+        column-gap: 2.5rem;
+        column-rule: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .content {
+        color: rgba(255, 255, 255, 0.87);
+        background-color: #1a1a1a;
+    }
+
+    .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .content a {
+        color: #58a6ff;
+    }
+
+    .content blockquote {
+        border-left-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .content pre, .content code {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .content th, .content td {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .content th {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+}
+
+/* High contrast mode for accessibility */
+@media (forced-colors: active) {
+    .content a {
+        background-image: none;
+        text-decoration: underline;
+    }
+}
+
+/* Print styles for better printing experience */
+@media print {
+    .content {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000;
+    }
+
+    .content a {
+        text-decoration: underline;
+        color: #000;
+        background-image: none;
+    }
+
+    .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+        page-break-after: avoid;
+    }
+
+    .content p, .content blockquote, .content ul, .content ol {
+        orphans: 3;
+        widows: 3;
+    }
+}
+
+/* Advanced font features */
+.content {
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'pnum' 1, 'tnum' 0, 'onum' 1, 'lnum' 0, 'dlig' 0;
+}
+
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'pnum' 1, 'tnum' 0, 'onum' 0, 'lnum' 1, 'dlig' 1;
+}
+
+/* Selection styling */
+.content ::selection {
+    background-color: rgba(0, 102, 204, 0.2);
+    text-shadow: none;
+}
+'''
+
+BASE_TEMPLATE = '''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}{% if title %} | {% endif %}Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ meta_description }}">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ meta_description }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ title }}">
+    <meta name="twitter:description" content="{{ meta_description }}">
+
+    {% if tags %}
+    <meta name="keywords" content="{{ tags|join(',') }}">
+    {% endif %}
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {{ schema_json|safe }}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\\n").map((line) => {
+                        if (line.endsWith("\\\\")) {
+                            return line + "\\\\";
+                        }
+                        return line;
+                    }).join("\\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    {% include 'styles' %}
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            {{ navigation|safe }}
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            {{ breadcrumbs|safe }}
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            {% if title %}
+            <h1>{{ title }}</h1>
+            {% endif %}
+            <div class="meta">
+                <time datetime="{{ modified_date.isoformat() }}">
+                    Last modified: {{ modified_date.strftime('%Y-%m-%d') }}
+                </time>
+                {% if category %}
+                <span>Category: <a href="/categories/{{ category|lower|urlencode }}.html">{{ category }}</a></span>
+                {% endif %}
+            </div>
+            <div class="content">
+                {{ content|safe }}
+            </div>
+            {% if tags %}
+            <div class="tags">
+                Tags:
+                {% for tag in tags|sort %}
+                <a href="/tags/{{ tag|lower|urlencode }}.html">{{ tag }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>{{ current_year }}, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>
+'''
+
+INDEX_TEMPLATE = '''
+<div class="landing-stats">
+    <div class="stat-item">
+        <span class="stat-value">{{ stats.notes }}</span>
+        <span class="stat-label">Notes</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value">{{ stats.categories }}</span>
+        <span class="stat-label">Categories</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value">{{ stats.tags }}</span>
+        <span class="stat-label">Tags</span>
+    </div>
+</div>
+<div class="landing-grid">
+    <div class="recent-section">
+        <h2>Recent</h2>
+        <ul class="recent-posts">
+        {% for page in recent_pages %}
+            <li>
+                <a href="{{ page.url }}">{{ page.title }}</a>
+                <span class="date">{{ page.date }}</span>
+                {% if page.category %}
+                <span class="category">{{ page.category }}</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="categories-section">
+        <h2>Categories</h2>
+        <ul class="categories-list">
+        {% for category in categories %}
+            <li>
+                <a href="{{ category.url }}">{{ category.name }}</a>
+                <span class="count">({{ category.count }})</span>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="tags-section">
+        <h2>Featured Tags</h2>
+        <div class="tags-cloud">
+        {% for tag in popular_tags %}
+            <a href="{{ tag.url }}" class="tag-{{ tag.size_class }}">
+                {{ tag.name }} <span>({{ tag.count }})</span>
+            </a>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+'''
+
+STYLES_TEMPLATE = '''
+<style>
+    :root {
+    --text-color: #1a1a1a;
+    --background-color: #ffffff;
+    --accent-color: #2563eb;
+    --accent-light: rgba(37, 99, 235, 0.1);
+    --border-color: #e5e7eb;
+    --nav-background: rgba(255, 255, 255, 0.95);
+    --code-background: #f3f4f6;
+    --transition-speed: 0.2s;
+    --content-width: 50rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #f3f4f6;
+        --background-color: #1a1a1a;
+        --accent-color: #60a5fa;
+        --accent-light: rgba(96, 165, 250, 0.1);
+        --border-color: #374151;
+        --nav-background: rgba(26, 26, 26, 0.95);
+        --code-background: #2d3748;
+    }
+}
+
+/* Reset and base styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: var(--spacing-md);
+    color: var(--text-color);
+    background: var(--background-color);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 768px) {
+    body {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* Improved navigation */
+nav {
+    position: sticky;
+    top: 0;
+    background: var(--nav-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    padding: var(--spacing-md) 0;
+    margin: calc(-1 * var(--spacing-md));
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    z-index: 1000;
+    width: calc(100% + var(--spacing-md) * 2);
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+    nav {
+        margin: calc(-1 * var(--spacing-lg));
+        width: calc(100% + var(--spacing-lg) * 2);
+        padding-left: var(--spacing-lg);
+        padding-right: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
+}
+
+nav a {
+    color: var(--accent-color);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+    font-weight: 500;
+}
+
+nav a:hover, nav a:focus {
+    background-color: var(--accent-light);
+    outline: none;
+}
+
+nav a:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Improved breadcrumbs */
+.breadcrumbs {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.breadcrumbs a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumbs span:not(:last-child)::after {
+    content: "/";
+    margin-left: 0.5rem;
+    opacity: 0.5;
+}
+
+/* Article styles */
+article {
+    margin-bottom: var(--spacing-xl);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Meta information styling */
+.meta {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Improved code blocks */
+code {
+    background: var(--code-background);
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9em;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+pre {
+    background: var(--code-background);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--spacing-lg) 0;
+    box-shadow: var(--shadow-sm);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Improved links */
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Improved image handling */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: var(--spacing-lg) 0;
+    display: block;
+    box-shadow: var(--shadow-md);
+}
+
+/* Table improvements */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--spacing-lg) 0;
+    overflow-x: auto;
+    display: block;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+    table {
+        display: table;
+    }
+}
+
+th, td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+th {
+    background: var(--border-color);
+    font-weight: 600;
+}
+
+/* Tags styling */
+.tags {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.tags a {
+    display: inline-block;
+    background: var(--border-color);
+    color: var(--text-color);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: 0.9em;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.tags a:hover {
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+}
+
+/* Footer improvements */
+footer {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Blockquote styling */
+blockquote {
+    margin: var(--spacing-lg) 0;
+    padding-left: var(--spacing-md);
+    border-left: 4px solid var(--accent-color);
+    color: var(--text-color);
+    opacity: 0.9;
+    font-style: italic;
+}
+
+/* Improved KaTeX rendering */
+.katex-display {
+    overflow: auto hidden;
+    padding: var(--spacing-md) 0;
+    margin: var(--spacing-md) 0;
+    background: var(--accent-light);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.katex-display > .katex {
+    white-space: normal;
+}
+
+.katex {
+    font-size: 1.1em;
+    line-height: 1.2;
+}
+
+.katex-display .katex {
+    display: block;
+    text-align: center;
+}
+
+.katex-display > .katex > .katex-html {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0.5em 0;
+    min-height: 40px;
+}
+
+/* Index page styling */
+.landing-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    justify-content: space-around;
+}
+
+.stat-item {
+    text-align: center;
+    padding: var(--spacing-md);
+    background: var(--accent-light);
+    border-radius: var(--radius-md);
+    flex: 1;
+    min-width: 100px;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.landing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+    .landing-grid {
+        grid-template-columns: 3fr 1fr;
+    }
+
+    .recent-section {
+        grid-column: 1 / 2;
+    }
+
+    .categories-section, .tags-section {
+        grid-column: 2 / 3;
+    }
+}
+
+.recent-posts, .categories-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-posts li, .categories-list li {
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.recent-posts li:last-child, .categories-list li:last-child {
+    border-bottom: none;
+}
+
+.recent-posts .date, .recent-posts .category, .categories-list .count {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-left: var(--spacing-sm);
+}
+
+.tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.tags-cloud a {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--border-color);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.tags-cloud a:hover {
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+}
+
+.tag-size-1 { font-size: 0.8rem; }
+.tag-size-2 { font-size: 0.9rem; }
+.tag-size-3 { font-size: 1rem; }
+.tag-size-4 { font-size: 1.1rem; }
+.tag-size-5 { font-size: 1.2rem; }
+
+/* Focus styles for accessibility */
+*:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    nav, .breadcrumbs, .tags, footer {
+        display: none;
+    }
+
+    body {
+        max-width: none;
+        padding: 0;
+        color: black;
+        background: white;
+    }
+
+    a {
+        color: black;
+        text-decoration: underline;
+    }
+
+    .content {
+        max-width: 100%;
+    }
+}
+</style>
+'''

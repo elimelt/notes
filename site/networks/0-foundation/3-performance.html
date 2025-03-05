@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Soft Introduction to Java Streams and Lambdas | Elijah's Notes</title>
+    <title>Performance | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta name="description" content="Covers the implementation of performance characteristics in computer networks, including bandwidth, throughput, latency, and delay. Discusses the key factors that influence network performance and how to measure and optimize these metrics.">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -15,20 +15,20 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="A Soft Introduction to Java Streams and Lambdas">
-    <meta property="og:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta property="og:title" content="Performance">
+    <meta property="og:description" content="Covers the implementation of performance characteristics in computer networks, including bandwidth, throughput, latency, and delay. Discusses the key factors that influence network performance and how to measure and optimize these metrics.">
     <meta property="og:url" content="https://notes.elimelt.com/networks/0-foundation/3-performance.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="A Soft Introduction to Java Streams and Lambdas">
-    <meta name="twitter:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta name="twitter:title" content="Performance">
+    <meta name="twitter:description" content="Covers the implementation of performance characteristics in computer networks, including bandwidth, throughput, latency, and delay. Discusses the key factors that influence network performance and how to measure and optimize these metrics.">
 
-    <meta name="keywords" content="java,streams,lambdas,functional programming,declarative programming,collections,filtering,iteration">
+    <meta name="keywords" content="bandwidth,throughput,latency,delay,networks">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "A Soft Introduction to Java Streams and Lambdas", "dateModified": "2025-02-11T20:50:31.738749", "description": "Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.", "articleSection": "Software Engineering", "keywords": "java,streams,lambdas,functional programming,declarative programming,collections,filtering,iteration"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Performance", "dateModified": "2025-03-05T13:02:53.520549", "description": "Covers the implementation of performance characteristics in computer networks, including bandwidth, throughput, latency, and delay. Discusses the key factors that influence network performance and how to measure and optimize these metrics.", "articleSection": "Networks", "keywords": "bandwidth,throughput,latency,delay,networks"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -68,39 +68,30 @@
 <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » A Soft Introduction to Java Streams and Lambdas
+            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Performance
         </div>
     </header>
     <main role="main">
         <article>
-            <h1>A Soft Introduction to Java Streams and Lambdas</h1>
+            <h1>Performance</h1>
             <div class="meta">
-                <time datetime="2025-02-11T20:50:31.738749">
-                    Last modified: 2025-02-11
+                <time datetime="2025-03-05T13:02:53.520549">
+                    Last modified: 2025-03-05
                 </time>
-                <span>Category: <a href="/categories/software%20engineering.html">Software Engineering</a></span>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
             <div class=markdown-content content>
-                <hr />
-<p>title: Performance
-category: Networks
-tags: bandwidth, throughput, latency, delay, networks
-description: Covers the implementation of performance characteristics in computer networks, including bandwidth, throughput, latency, and delay. Discusses the key factors that influence network performance and how to measure and optimize these metrics.</p>
-<hr />
-<h1 id="performance">Performance</h1>
+                <h1 id="performance">Performance</h1>
 <p>Measured in <strong>bandwidth</strong> (or <em>throughput</em>) and <strong>latency</strong> (or <em>delay</em>).</p>
 <p><strong>Bandwidth:</strong> the number of bits per second</p>
             </div>
             <div class="tags">
                 Tags:
-                <a href="/tags/collections.html">collections</a>
-                <a href="/tags/declarative%20programming.html">declarative programming</a>
-                <a href="/tags/filtering.html">filtering</a>
-                <a href="/tags/functional%20programming.html">functional programming</a>
-                <a href="/tags/iteration.html">iteration</a>
-                <a href="/tags/java.html">java</a>
-                <a href="/tags/lambdas.html">lambdas</a>
-                <a href="/tags/streams.html">streams</a>
+                <a href="/tags/bandwidth.html">bandwidth</a>
+                <a href="/tags/delay.html">delay</a>
+                <a href="/tags/latency.html">latency</a>
+                <a href="/tags/networks.html">networks</a>
+                <a href="/tags/throughput.html">throughput</a>
             </div>
         </article>
     </main>

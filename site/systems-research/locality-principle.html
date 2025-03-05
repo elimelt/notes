@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Locality Principle", "dateModified": "2025-03-05T03:27:53.408846", "description": "A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.", "articleSection": "Systems", "keywords": "os,operating-system,systems,multicore,kernel"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Locality Principle", "dateModified": "2025-03-05T06:50:54.254342", "description": "A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.", "articleSection": "Systems", "keywords": "os,operating-system,systems,multicore,kernel"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -75,7 +75,7 @@
         <article>
             <h1>The Locality Principle</h1>
             <div class="meta">
-                <time datetime="2025-03-05T03:27:53.408846">
+                <time datetime="2025-03-05T06:50:54.254342">
                     Last modified: 2025-03-05
                 </time>
                 <span>Category: <a href="/categories/systems.html">Systems</a></span>
@@ -84,17 +84,34 @@
                 <h6 id="paper-title"><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/asplos2016.pdf">Paper Title</a></h6>
 <hr />
 <h3 id="what-is-the-problem">What is the Problem?</h3>
+<p>Early implementations of virtual memory were plagued by poor performance due to thrashing, when the system spends more time swapping pages in and out of memory than executing the actual program. This is caused by a larger "working set" than the available physical memory, leading to repeated page faults and throughput collapse.</p>
 <h3 id="summary">Summary</h3>
+<p>The author details the history of virtual memory and the development and evolution of the working set model for managing memory. While studying this, the author discovered a natural pattern in the behavior of modern workloads: working sets tend to be related by some measure of locality. This property is generally applicable and can therefore be exploited to improve the performance of many systems.</p>
 <h3 id="key-insights">Key Insights</h3>
-<h2 id="-">-</h2>
+<ul>
+<li>Systems, particularly those that interact with some external storage, naturally exhibit patterns in locality that can be exploited to improve performance.</li>
+<li>When working sets grow too large, one way to cope is to queue up requests and and control admission to the working set.</li>
+</ul>
 <h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
-<h2 id="-_1">-</h2>
+<ul>
+<li>The working set model ($W(t,T)$) abstractly defines a process's memory needs as the set of pages referenced in the time interval of length T preceding time t, giving a good theoretical basis for understanding memory behavior.</li>
+<li>The feedback control mechanism for limiting multiprogramming level prevents thrashing by refusing to activate programs whose working sets wouldn't fit in available memory.</li>
+</ul>
 <h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
-<h2 id="-_2">-</h2>
+<ul>
+<li>The original working set model requires a fixed $T$ (essentially an LRU cache of size $T$), which is not always ideal for all workloads.</li>
+<li>Some workloads differ in nature from the traditional working set model, e.g. a job running over a massive file that is read sequentially.</li>
+</ul>
 <h3 id="summary-of-key-results">Summary of Key Results</h3>
-<h2 id="-_3">-</h2>
+<ul>
+<li>Virtual memory became a viable and relatively predictable technology.</li>
+<li>The locality principle has been successfully applied to many many domains and systems/</li>
+</ul>
 <h3 id="open-questions">Open Questions</h3>
-<h2 id="-_4">-</h2>
+<ul>
+<li>Can malicious actors exploit systems that design for the common case of locality, somehow executing a DOS attack?</li>
+<li>Is designing a system for high throughput sequential reads directly at odds with designing for locality? Or can the two be targeted simultaneously?</li>
+</ul>
             </div>
             <div class="tags">
                 Tags:

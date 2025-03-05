@@ -5,9 +5,7 @@ tags: dns, domain-name-system, networking, systems
 description: Paper review of the paper Development of the Domain Name System
 ---
 
-# [source](https://courses.cs.washington.edu/courses/cse551/09sp/papers/dns.pdf)
-
-###### Development of the Domain Name System
+###### [Development of the Domain Name System](https://courses.cs.washington.edu/courses/cse551/09sp/papers/dns.pdf)
 
 ---
 

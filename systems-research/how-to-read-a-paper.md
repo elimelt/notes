@@ -6,9 +6,7 @@ description: A summary of Keshav's "How to Read a Paper"
 ---
 
 
-# [source](https://web.stanford.edu/class/cs114/reading-keshav.pdf)
-
-###### How to Read a Paper
+###### [How to Read a Paper](https://web.stanford.edu/class/cs114/reading-keshav.pdf)
 
 ---
 

@@ -5,9 +5,7 @@ tags: virtualization, hypervisor, xen, operating system, systems
 description: Paper review of Xen and the Art of Virtualization
 ---
 
-# [source](https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf)
-
-###### Xen and the Art of Virtualization
+###### [Xen and the Art of Virtualization](https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf)
 
 ---
 

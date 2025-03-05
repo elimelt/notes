@@ -5,9 +5,7 @@ tags: os, operating-system, systems, multicore, kernel
 description: A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.
 ---
 
-# [source](https://people.inf.ethz.ch/troscoe/pubs/sosp09-barrelfish.pdf)
-
-###### The Multikernel: A new OS architecture for scalable multicore systems
+###### [The Multikernel: A new OS architecture for scalable multicore systems](https://people.inf.ethz.ch/troscoe/pubs/sosp09-barrelfish.pdf)
 
 ---
 

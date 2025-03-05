@@ -5,9 +5,7 @@ tags: system design, end-to-end, design, networking
 description: Paper review of "End-to-End Arguments in System Design" by Saltzer, Reed, and Clark
 ---
 
-# [source](https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf)
-
-###### End-to-End Arguments in System Design
+###### [End-to-End Arguments in System Design](https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf)
 
 ---
 

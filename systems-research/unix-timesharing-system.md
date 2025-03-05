@@ -5,9 +5,7 @@ tags: unix, systems, operating systems
 description: Paper review/notes from lecture of Unix Timesharing System
 ---
 
-# [source](https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf)
-
-###### The Unix Timesharing System
+###### [The Unix Timesharing System](https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf)
 
 ---
 

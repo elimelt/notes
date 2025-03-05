@@ -6,9 +6,7 @@ description: A review of the paper "Hints for Computer System Design" by Butler 
 ---
 
 
-# [source](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/acrobat-17.pdf)
-
-###### Hints for Computer System Design
+###### [Hints for Computer System Design](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/acrobat-17.pdf)
 
 ---
 

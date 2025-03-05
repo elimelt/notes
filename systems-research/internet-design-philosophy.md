@@ -5,9 +5,7 @@ tags: internet, design, systems
 description: A summary of the design philosophy of the DARPA internet protocols.
 ---
 
-# [source](http://ccr.sigcomm.org/archive/1995/jan95/ccr-9501-clark.pdf)
-
-###### Design Philosophy of the DARPA Internet Protocols
+###### [Design Philosophy of the DARPA Internet Protocols](http://ccr.sigcomm.org/archive/1995/jan95/ccr-9501-clark.pdf)
 
 ---
 

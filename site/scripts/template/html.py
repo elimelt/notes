@@ -323,7 +323,6 @@ BASE_TEMPLATE = '''
                     {left: "$$", right: "$$", display: true},
                     {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
-                    {left: "\\(", right: "\\)", display: false}
                 ],
                 preProcess: (math) => {
                     console.log("Pre-processing: " + math);

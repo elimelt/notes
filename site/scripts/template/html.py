@@ -120,6 +120,17 @@ INDEX_TEMPLATE = """
     </div>
 </div>
 <div class="landing-grid">
+    <div class="categories-section">
+        <h2>Categories</h2>
+        <ul class="categories-list">
+        {% for category in categories %}
+            <li>
+                <a href="{{ category.url }}">{{ category.name }}</a>
+                <span class="count">({{ category.count }})</span>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
     <div class="recent-section">
         <h2>Recent</h2>
         <ul class="recent-posts">
@@ -130,17 +141,6 @@ INDEX_TEMPLATE = """
                 {% if page.category %}
                 <span class="category">{{ page.category }}</span>
                 {% endif %}
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
-    <div class="categories-section">
-        <h2>Categories</h2>
-        <ul class="categories-list">
-        {% for category in categories %}
-            <li>
-                <a href="{{ category.url }}">{{ category.name }}</a>
-                <span class="count">({{ category.count }})</span>
             </li>
         {% endfor %}
         </ul>

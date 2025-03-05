@@ -30,6 +30,7 @@ class Page:
     tags: List[str]
     description: Optional[str]
     is_index: bool = False
+    css_classes: List[str] = None
 
 
 class JinjaTemplateLoader(BaseLoader):
@@ -177,6 +178,7 @@ class SiteGenerator:
                 tags=tags,
                 description=metadata["description"],
                 is_index=is_index,
+                css_classes=['.markdown-content'],
             )
 
             self.pages[relative_path] = page
@@ -235,6 +237,8 @@ class SiteGenerator:
             schema_json["articleSection"] = page.category
         if page.tags:
             schema_json["keywords"] = ",".join(page.tags)
+        if page.css_classes:
+            schema_json["cssSelector"] = page.css_classes
 
         canonical_url = f"{self.site_domain}/{page.path.with_suffix('.html')}"
 

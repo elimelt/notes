@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Hard Lessons Learned: Windows RtlZeroMemory", "dateModified": "2025-02-11T20:49:18.402146", "description": "Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the \"Gary's Sad Story\" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.", "articleSection": "Operating Systems", "keywords": "rtlzeromemory,interrupt handling,windows optimization,operating system development,memory management", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Hard Lessons Learned: Windows RtlZeroMemory", "dateModified": "2025-02-11T20:49:18.402146", "description": "Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the \"Gary's Sad Story\" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.", "articleSection": "Operating Systems", "keywords": "rtlzeromemory,interrupt handling,windows optimization,operating system development,memory management"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="hard-lessons-learned-windows-rtlzeromemory">Hard Lessons Learned: Windows RtlZeroMemory</h1>
 <h2 id="zero-memory">Zero Memory</h2>
 <p>Make it faster by picking larger register (same optimization can be done to copy memory).</p>

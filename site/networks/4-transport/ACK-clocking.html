@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Ack Clock", "dateModified": "2025-02-11T20:48:12.244702", "description": "Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receiver where the receiver's ability to process incoming data can become a bottleneck, leading to buffer buildup and reduced throughput. Describes the sliding window ACK clock approach as a solution to this issue, which aims to pace the transmission of data to match the receiver's processing capacity.", "articleSection": "Networks", "keywords": "sliding window,ack clocking,tcp,network congestion control", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Ack Clock", "dateModified": "2025-02-11T20:48:12.244702", "description": "Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receiver where the receiver's ability to process incoming data can become a bottleneck, leading to buffer buildup and reduced throughput. Describes the sliding window ACK clock approach as a solution to this issue, which aims to pace the transmission of data to match the receiver's processing capacity.", "articleSection": "Networks", "keywords": "sliding window,ack clocking,tcp,network congestion control"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="ack-clocking">ACK Clocking</h1>
 <h2 id="sliding-window-ack-clock">Sliding Window Ack CLock</h2>
 <p>Each in-order ACK advances the sliding window and lets a new segment enter the network. This prevents queuing buildups at slow links, and thus congestion. Segments are buffered and spread out on slow links.</p>

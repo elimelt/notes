@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Global Internet", "dateModified": "2025-02-11T20:47:57.199213", "description": "Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.", "articleSection": "Networks", "keywords": "routing protocols,autonomous systems,inter-domain routing,end-user sites,service providers", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Global Internet", "dateModified": "2025-02-11T20:47:57.199213", "description": "Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.", "articleSection": "Networks", "keywords": "routing protocols,autonomous systems,inter-domain routing,end-user sites,service providers"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="the-global-internet">The Global Internet</h1>
 <p>It isn't possible to scale to the billions of devices with routing protocols like RIP and OSPF. Both of these would require routers to maintain a complete list of all the networks in the internet, which isn't feasible.</p>
 <p>The modern internet is mainly composed of <em>end-user sites</em> and <em>service providers</em>. The end-user sites are typically collections of devices that are connected to the internet through either a single IP address (NAT in home networks), or switched ethernet in enterprise LAN settings. The service providers are the companies that provide the infrastructure for the internet, and are responsible for routing traffic between end-user sites. Service providers have many high performance routers in metro areas, connected to eachother and other service providers through high-speed links.</p>

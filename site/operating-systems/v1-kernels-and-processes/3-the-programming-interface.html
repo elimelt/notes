@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Syscall API Reference", "dateModified": "2025-02-11T20:49:33.966336", "description": "Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.", "articleSection": "Operating Systems", "keywords": "operating systems,syscall,process management,i/o operations", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Syscall API Reference", "dateModified": "2025-02-11T20:49:33.966336", "description": "Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.", "articleSection": "Operating Systems", "keywords": "operating systems,syscall,process management,i/o operations"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="chapter-3-the-programming-interface">Chapter 3 - The Programming Interface</h1>
 <h2 id="syscall-api-reference">Syscall API Reference</h2>
 <h3 id="creating-and-managing-processes">Creating and managing processes</h3>

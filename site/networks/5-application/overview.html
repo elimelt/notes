@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Application Layer Overview", "dateModified": "2025-02-11T20:48:36.547396", "description": "Covers the implementation of the application layer, the topmost layer of the TCP/IP network model. Discusses the role of protocols like TCP and UDP in providing reliability, flow control, and overhead management at the application level. Examines the key concepts and design considerations for application layer functionality.", "articleSection": "Networks", "keywords": "tcp,udp,application layer,reliability,flow control,overhead", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Application Layer Overview", "dateModified": "2025-02-11T20:48:36.547396", "description": "Covers the implementation of the application layer, the topmost layer of the TCP/IP network model. Discusses the role of protocols like TCP and UDP in providing reliability, flow control, and overhead management at the application level. Examines the key concepts and design considerations for application layer functionality.", "articleSection": "Networks", "keywords": "tcp,udp,application layer,reliability,flow control,overhead"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="application-layer-overview">Application Layer Overview</h1>
 <p>Applications built upon TCP have the benefit of being able to transfer arbitrary length data. Also provides reliability and flow control. However, some applications may not require these features and may be better suited to use UDP. Some applications even need to use UDP because they can't handle the overhead of TCP (like skype or online gaming).</p>
             </div>

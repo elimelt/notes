@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Karnaugh Maps", "dateModified": "2025-02-11T16:42:51.458735", "description": "Method for simplifying Boolean expressions", "articleSection": "Hardware", "keywords": "karnaugh maps,truth tables,graph theory,computer science", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Karnaugh Maps", "dateModified": "2025-02-11T16:42:51.458735", "description": "Method for simplifying Boolean expressions", "articleSection": "Hardware", "keywords": "karnaugh maps,truth tables,graph theory,computer science"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="karnaugh-maps">Karnaugh Maps</h1>
 <p>Goal: Find neighboring subsets of the On set to eliminate variables and simplify expressions.</p>
 <p>A <code>K-map</code> is a method of representing a truth table to help visualize adjacencies into $\le$ 4 dimensions.</p>

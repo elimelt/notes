@@ -84,7 +84,7 @@ BASE_TEMPLATE = """
                 <span>Category: <a href="/categories/{{ category|lower|urlencode }}.html">{{ category }}</a></span>
                 {% endif %}
             </div>
-            <div class="content">
+            <div class={{ css_selector }}>
                 {{ content|safe }}
             </div>
             {% if tags %}

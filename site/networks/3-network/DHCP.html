@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Host Configuration Protocol (DHCP)", "dateModified": "2025-02-11T20:47:50.428679", "description": "Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network configuration parameters to devices on a network. Describes the key components of a DHCP system, including the DHCP server, DHCP client, and DHCP relay, and their respective roles in the IP address assignment process using the User Datagram Protocol (UDP).", "articleSection": "Networks", "keywords": "networks,dhcp,udp,ip address", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Host Configuration Protocol (DHCP)", "dateModified": "2025-02-11T20:47:50.428679", "description": "Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network configuration parameters to devices on a network. Describes the key components of a DHCP system, including the DHCP server, DHCP client, and DHCP relay, and their respective roles in the IP address assignment process using the User Datagram Protocol (UDP).", "articleSection": "Networks", "keywords": "networks,dhcp,udp,ip address"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="dynamic-host-configuration-protocol-dhcp">Dynamic Host Configuration Protocol (DHCP)</h1>
 <p><strong>DHCP</strong> is the protocol used to assign IP addresses within a given network. Unlike MAC addresses, IPs are not hard-coded or unique to a device, and can be reassigned to different devices over time. This gives the network much needed flexibility, but also requires a way to manage the assignment of IPs. This is where DHCP comes in.</p>
 <p>DHCP sits on top of the <strong>UDP</strong> protocol, and uses <strong>port 67</strong> for the server, and <strong>port 68</strong> for the client.</p>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Divide and Conquer Algorithms", "dateModified": "2025-02-11T21:54:13.441583", "description": "A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.", "articleSection": "Algorithms", "keywords": "divide and conquer,master theorem,root finding,bisector algorithm,kth smallest element", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Divide and Conquer Algorithms", "dateModified": "2025-02-11T21:54:13.441583", "description": "A technical exploration of Divide and Conquer algorithms focusing on the Master Theorem, Root Finding, and kth Smallest Element problems.", "articleSection": "Algorithms", "keywords": "divide and conquer,master theorem,root finding,bisector algorithm,kth smallest element"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="divide-and-conquer">Divide and Conquer</h1>
 <h2 id="master-theorem">Master Theorem</h2>
 <p>Given any recurrence of the form $T(n) = a T(\frac{n}{b}) + c n^k$ for all $n &gt; b$, we have:</p>

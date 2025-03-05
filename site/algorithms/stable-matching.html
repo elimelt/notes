@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Stable Matching Algorithms and Proofs in Computer Science", "dateModified": "2025-01-01T04:24:02.934617", "description": "This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed proofs of correctness, complexity analysis, and discussions on optimal assignments for companies and applicants. The document also explores related problems like the Stable Roommate Problem.", "articleSection": "Algorithm Analysis", "keywords": "matching,stable matching,gale-shapley,proof techniques,complexity analysis,optimization", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Stable Matching Algorithms and Proofs in Computer Science", "dateModified": "2025-01-01T04:24:02.934617", "description": "This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed proofs of correctness, complexity analysis, and discussions on optimal assignments for companies and applicants. The document also explores related problems like the Stable Roommate Problem.", "articleSection": "Algorithm Analysis", "keywords": "matching,stable matching,gale-shapley,proof techniques,complexity analysis,optimization"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="stable-matching">Stable Matching</h1>
 <p>Given a list of $n$ companies $c_1, c_2, \ldots, c_n$, and a list of students $s_1, s_2, \ldots, s_n$, each company ranks the students in order of preference, and each student ranks the companies in order of preference.</p>
 <p>Find a <strong>stable matching</strong> between the companies and students, where no company and student would prefer each other over their current match.</p>

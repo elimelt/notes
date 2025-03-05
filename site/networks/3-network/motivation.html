@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Motivation behind the Network Layer", "dateModified": "2025-02-11T20:48:02.162658", "description": "Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing and forwarding. Discusses hierarchical addressing, the IP protocol, congestion control, quality of service, and routing as key topics addressed by the network layer to enable reliable and efficient communication across interconnected networks.", "articleSection": "Networks", "keywords": "network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Motivation behind the Network Layer", "dateModified": "2025-02-11T20:48:02.162658", "description": "Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing and forwarding. Discusses hierarchical addressing, the IP protocol, congestion control, quality of service, and routing as key topics addressed by the network layer to enable reliable and efficient communication across interconnected networks.", "articleSection": "Networks", "keywords": "network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="motivation-behind-the-network-layer">Motivation behind the Network Layer</h1>
 <p>We can already build networks using the link layer using packet forwarding, but this doesn't scale well. The network layer allows you to connect multiple networks together, allowing for transparent communication between different link layer technologies.</p>
 <h2 id="shortcomings-of-the-link-layer">Shortcomings of the Link Layer</h2>

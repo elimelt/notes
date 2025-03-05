@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Faster Causal Self Attention", "dateModified": "2025-02-11T20:50:25.566997", "description": "Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.", "articleSection": "Machine Learning", "keywords": "machine learning,attention mechanism,transformer,sparse attention", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Faster Causal Self Attention", "dateModified": "2025-02-11T20:50:25.566997", "description": "Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.", "articleSection": "Machine Learning", "keywords": "machine learning,attention mechanism,transformer,sparse attention"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/machine%20learning.html">Machine Learning</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="attention-sparsity-review">Attention Sparsity Review</h1>
 <h2 id="faster-causal-self-attention">Faster Causal Self Attention</h2>
 <p>This paper presents an important advancement in making transformer attention mechanisms more efficient for processing long sequences. Here are the key points:</p>

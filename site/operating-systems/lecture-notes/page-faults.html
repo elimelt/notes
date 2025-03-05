@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "How the Operating System Handles Page Faults", "dateModified": "2025-02-11T20:49:00.952709", "description": "Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.", "articleSection": "Operating Systems", "keywords": "page fault,virtual memory,page replacement,page table,i/o,process management", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "How the Operating System Handles Page Faults", "dateModified": "2025-02-11T20:49:00.952709", "description": "Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.", "articleSection": "Operating Systems", "keywords": "page fault,virtual memory,page replacement,page table,i/o,process management"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="page-fautls">Page Fautls</h1>
 <h2 id="how-does-the-os-handle-a-page-fault">How does the OS handle a page fault?</h2>
 <p>On fault, an interrupt causes the CPU to jump to the page fault handler:</p>

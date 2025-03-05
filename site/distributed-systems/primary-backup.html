@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Primary Backup", "dateModified": "2025-02-11T16:42:07.843539", "description": "Explains the concept of primary backups in distributed systems, including state machine replication and the view service.", "articleSection": "Distributed Systems", "keywords": "primary backup,distributed systems,consistency,availability,view service,split brain", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Primary Backup", "dateModified": "2025-02-11T16:42:07.843539", "description": "Explains the concept of primary backups in distributed systems, including state machine replication and the view service.", "articleSection": "Distributed Systems", "keywords": "primary backup,distributed systems,consistency,availability,view service,split brain"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="primary-backup">Primary Backup</h1>
 <p>Consider a highly available stateful service. It is easy to maintain <em>consistency</em> within one node, simply by performing operations in some well-defined (<strong>serializable</strong>) order. However, providing both availability <strong>and</strong> consistency is more of a challenge. One must provide a notion of having a single system, even if a server within the system fails.</p>
 <h2 id="single-node-kv-store">Single Node KV Store</h2>

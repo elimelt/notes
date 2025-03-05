@@ -231,14 +231,12 @@ class SiteGenerator:
             "@type": "Article",
             "headline": page.title,
             "dateModified": page.modified_date.isoformat(),
-            "description": meta_description,
+            "description": meta_description
         }
         if page.category:
             schema_json["articleSection"] = page.category
         if page.tags:
             schema_json["keywords"] = ",".join(page.tags)
-        if page.css_classes:
-            schema_json["cssSelector"] = page.css_classes
 
         canonical_url = f"{self.site_domain}/{page.path.with_suffix('.html')}"
 
@@ -254,6 +252,7 @@ class SiteGenerator:
             "navigation": self._generate_navigation(page),
             "breadcrumbs": self._generate_breadcrumbs(page),
             "current_year": datetime.now().year,
+            "css_selector": " ".join(page.css_classes) if page.css_classes else "content",
         }
 
     def _generate_navigation(self, current_page: Page) -> str:

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Linearizable Caches", "dateModified": "2025-02-11T16:42:07.824900", "description": "A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.", "articleSection": "Distributed Systems", "keywords": "cache coherence,consistency models,distributed systems", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Linearizable Caches", "dateModified": "2025-02-11T16:42:07.824900", "description": "A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.", "articleSection": "Distributed Systems", "keywords": "cache coherence,consistency models,distributed systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="distributed-cache-coherence">Distributed Cache Coherence</h1>
 <p>When linearizability is a concern, any duplication of mutable data across multiple nodes must be kept consistent. This is the problem of cache coherence: ensuring that all nodes in a distributed system have the same view of the data.</p>
 <h2 id="distributed-caching-with-leases">Distributed Caching with Leases</h2>

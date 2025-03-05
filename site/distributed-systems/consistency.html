@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Systems Consistency Models", "dateModified": "2025-02-11T16:42:08.196612", "description": "This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.", "articleSection": "Distributed Systems", "keywords": "consistency models,paxos,linearizability,sequential consistency,snapshot reads,causal consistency,processor consistency,memory barrier/fence", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Systems Consistency Models", "dateModified": "2025-02-11T16:42:08.196612", "description": "This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.", "articleSection": "Distributed Systems", "keywords": "consistency models,paxos,linearizability,sequential consistency,snapshot reads,causal consistency,processor consistency,memory barrier/fence"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="consistency">Consistency</h1>
 <p><strong>Consistency</strong>: the allowed semantics of operations that mutate a data store/shared object.</p>
 <p>Consistency specifies the interface (as opposed to implementation) for behavior of your system. It is essentially the contract between the programmer and implementer. An <strong>anomaly</strong> is a violation of the consistency semantics of the system</p>

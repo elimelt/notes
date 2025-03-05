@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Indexing and Information Retrieval", "dateModified": "2025-02-11T20:01:21.027963", "description": "Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics such as MAP, and dense vector-based approaches using BERT. It also touches on ad hoc retrieval, stop words, and precision/recall trade-offs. The focus is on the technical implementation of IR algorithms.", "articleSection": "Natural Language Processing", "keywords": "tf-idf,inverted index,precision,recall,interpolated_precision_curve,mean_average_precision,dense_vectors,bert", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Indexing and Information Retrieval", "dateModified": "2025-02-11T20:01:21.027963", "description": "Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics such as MAP, and dense vector-based approaches using BERT. It also touches on ad hoc retrieval, stop words, and precision/recall trade-offs. The focus is on the technical implementation of IR algorithms.", "articleSection": "Natural Language Processing", "keywords": "tf-idf,inverted index,precision,recall,interpolated_precision_curve,mean_average_precision,dense_vectors,bert"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="information-retrieval">Information Retrieval</h1>
 <p>IR in general is the process of obtaining information based on user queries, and can be applied to pretty much any form of media. Probably the most prevalent form of IR that we use every day is through <strong>search engines</strong>.</p>
 <h2 id="ad-hoc-retrieval">Ad Hoc Retrieval</h2>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tokenization, Segmentation, and Edit Distance", "dateModified": "2025-02-12T00:59:15.625957", "description": "Overview of tokenization techniques in Natural Language Processing (NLP), including Unix tools, regex, Byte-Pair Encoding (BPE), and edit distance.", "articleSection": "Natural Language Processing", "keywords": "tokenization,segmentation,edit distance,bpe,nltk,tr,regex,byte-pair encoding", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tokenization, Segmentation, and Edit Distance", "dateModified": "2025-02-12T00:59:15.625957", "description": "Overview of tokenization techniques in Natural Language Processing (NLP), including Unix tools, regex, Byte-Pair Encoding (BPE), and edit distance.", "articleSection": "Natural Language Processing", "keywords": "tokenization,segmentation,edit distance,bpe,nltk,tr,regex,byte-pair encoding"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="tokenization">Tokenization</h1>
 <h2 id="old-school-unix">Old-School Unix</h2>
 <pre><code class="language-bash"># output all words in a file, one per line

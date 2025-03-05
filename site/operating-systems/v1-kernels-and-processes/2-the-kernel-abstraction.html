@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Kernel Abstraction", "dateModified": "2025-02-11T20:49:30.713163", "description": "Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.", "articleSection": "Operating Systems", "keywords": "operating systems,kernel,process abstraction,process control block,privileged mode", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Kernel Abstraction", "dateModified": "2025-02-11T20:49:30.713163", "description": "Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.", "articleSection": "Operating Systems", "keywords": "operating systems,kernel,process abstraction,process control block,privileged mode"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="chapter-2-the-kernel-abstraction">Chapter 2 - The Kernel Abstraction</h1>
 <p>"A central role of operating systems is protection - the isolation of potentially misbehaving applications and users so that they do not corrupt other applications or the operating system itself."</p>
 <p><strong>Kernel</strong>: The lowest level of software running on the operating system. It is the first program loaded on boot, and it remains in memory until the system is shut down. It is responsible for all interactions with the hardware, and it is the only program that runs in privileged mode.</p>

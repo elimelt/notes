@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Two Phase Commit", "dateModified": "2025-02-11T16:42:08.210547", "description": "Explains the concept of two phase commit in distributed systems and its implications.", "articleSection": "Distributed Systems", "keywords": "two-phase commit,distributed transactions,atomicity,durability,consistency,isolation,deadlock prevention,distributed systems", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Two Phase Commit", "dateModified": "2025-02-11T16:42:08.210547", "description": "Explains the concept of two phase commit in distributed systems and its implications.", "articleSection": "Distributed Systems", "keywords": "two-phase commit,distributed transactions,atomicity,durability,consistency,isolation,deadlock prevention,distributed systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="two-phase-commit">Two Phase Commit</h1>
 <h2 id="acid">ACID</h2>
 <p>For updates that span multiple keys, or even multiple updates across different storage systems, we need all-or-nothing semantics so errors can be properly handled. Two-phase commit (2PC) is a protocol that ensures <strong>distributed transactions</strong>, i.e. groups of operations, are atomic, consistent, isolated, and durable (ACID).</p>

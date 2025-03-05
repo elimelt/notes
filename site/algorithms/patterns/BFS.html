@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Breadth First Search Pattern", "dateModified": "2025-02-11T18:55:39.670545", "description": "A technical exploration of the Breadth First Search algorithm, focusing on its key properties and applications in graph problems.", "articleSection": "Algorithms", "keywords": "breadth-first search,graph algorithms,graph traversal,shortest path", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Breadth First Search Pattern", "dateModified": "2025-02-11T18:55:39.670545", "description": "A technical exploration of the Breadth First Search algorithm, focusing on its key properties and applications in graph problems.", "articleSection": "Algorithms", "keywords": "breadth-first search,graph algorithms,graph traversal,shortest path"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="breadth-first-search">Breadth First Search</h1>
 <p>BFS is an extremely versatile algorithm that comes up a lot in graph problems. The key property of BFS is that it explores vertices in order of the length of their shortest path from the starting vertex. Any time you're dealing with an unwieghted graph and need to find the shortest path between two vertices, BFS is a good place to start. Its usefulness doesn't end there though; BFS can be used to find connected components, detect cycles, and more.</p>
 <p>You can think of BFS as producing level-wise sets of vertices in a graph.</p>

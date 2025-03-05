@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Concurrency and Threads", "dateModified": "2025-02-11T20:49:37.723118", "description": "Covers the implementation of kernel-level threads, including thread abstraction, life cycle, and data structures. Discusses use cases for threads, such as improving CPU utilization and enabling parallel processing. Examines POSIX thread API and alternatives to threads, including asynchronous I/O and event-driven programming.", "articleSection": "Operating Systems", "keywords": "concurrency,threads,operating systems,i/o devices,cpu utilization,parallel processing", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Concurrency and Threads", "dateModified": "2025-02-11T20:49:37.723118", "description": "Covers the implementation of kernel-level threads, including thread abstraction, life cycle, and data structures. Discusses use cases for threads, such as improving CPU utilization and enabling parallel processing. Examines POSIX thread API and alternatives to threads, including asynchronous I/O and event-driven programming.", "articleSection": "Operating Systems", "keywords": "concurrency,threads,operating systems,i/o devices,cpu utilization,parallel processing"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="chapter-4-concurrency-and-threads">Chapter 4: Concurrency and Threads</h1>
 <h2 id="41-thread-use-cases">4.1 Thread Use Cases</h2>
 <ul>

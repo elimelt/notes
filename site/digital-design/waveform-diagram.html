@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-02-11T16:42:51.535440", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-02-11T16:42:51.535440", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="waveform-diagrams">Waveform Diagrams</h1>
 <p>Group bits of values into a <strong>bus</strong> or a <strong>bit vector</strong>. You can view the state of your system as slices of a waveform for each bit, corresponding to a number.</p>
 <h2 id="circuit-timing-behavior">Circuit Timing Behavior</h2>

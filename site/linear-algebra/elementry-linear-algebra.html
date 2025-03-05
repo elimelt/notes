@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Glossary of Linear Algebra Concepts", "dateModified": "2025-02-12T12:52:07.373507", "description": "Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.", "articleSection": "Linear Algebra", "keywords": "gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Glossary of Linear Algebra Concepts", "dateModified": "2025-02-12T12:52:07.373507", "description": "Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.", "articleSection": "Linear Algebra", "keywords": "gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="elementary-linear-algebra">Elementary Linear Algebra</h1>
 <h2 id="systems-of-equations">Systems of Equations</h2>
 <p>Systems of equations are both fundamental and important to actually understanding linear algebra. With that being said, the two primary introductory courses at the University of Washington, Math 208 and (to a much lesser extent) Applied Math 352, spend a significant amount of time on methods for <em>solving</em> systems of equations, something that I have almost no interest in. For the sake of completeness, I will briefly touch on notation and algorithms, but will try to both confine it to this document, and to focus on takeaways that become more useful later on.</p>

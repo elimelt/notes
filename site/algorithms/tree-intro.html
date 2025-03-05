@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tree Properties and Proof of Edge Count", "dateModified": "2025-01-01T04:24:54.251235", "description": "This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.", "articleSection": "Graph Theory", "keywords": "trees,acyclic graphs,connected graphs,induction proofs,graph properties", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tree Properties and Proof of Edge Count", "dateModified": "2025-01-01T04:24:54.251235", "description": "This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.", "articleSection": "Graph Theory", "keywords": "trees,acyclic graphs,connected graphs,induction proofs,graph properties"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/graph%20theory.html">Graph Theory</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="trees">Trees</h1>
 <h3 id="lemma-acyclic-and-connected">Lemma: acyclic and connected</h3>
 <p>A graph is a tree if and only if it is acyclic and connected.</p>

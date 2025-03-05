@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Multiple Access", "dateModified": "2025-02-11T20:47:30.469911", "description": "Covers the implementation of multiple access techniques in computer networks, including time division multiplexing (TDM) and frequency division multiplexing (FDM). Discusses centralized and distributed access control methods, such as Carrier Sense Multiple Access (CSMA) with Collision Detection (CSMA/CD) and Binary Exponential Backoff. Provides an overview of Ethernet frame structure and the underlying principles of these networking concepts.", "articleSection": "Networks", "keywords": "multiplexing,time division multiplexing,frequency division multiplexing,centralized access control,distributed access control", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Multiple Access", "dateModified": "2025-02-11T20:47:30.469911", "description": "Covers the implementation of multiple access techniques in computer networks, including time division multiplexing (TDM) and frequency division multiplexing (FDM). Discusses centralized and distributed access control methods, such as Carrier Sense Multiple Access (CSMA) with Collision Detection (CSMA/CD) and Binary Exponential Backoff. Provides an overview of Ethernet frame structure and the underlying principles of these networking concepts.", "articleSection": "Networks", "keywords": "multiplexing,time division multiplexing,frequency division multiplexing,centralized access control,distributed access control"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="multiple-access">Multiple Access</h1>
 <h2 id="multiplexing">Multiplexing</h2>
 <p><strong>Multiplexing</strong> is the networking concept of sharing a resource among multiple clients. Network traffic is generally bursty, to the point that two concurrent users each using 1 Mbps of bandwidth might only need 1.5 Mbps of bandwidth to share. Multiplexing allows for this sharing.</p>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Replication Strategies in Distributed Data Systems", "dateModified": "2025-01-01T04:30:23.157407", "description": "This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.", "articleSection": "Distributed Systems", "keywords": "data replication,leader-follower model,synchronous vs asynchronous,failover,replication logs", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Replication Strategies in Distributed Data Systems", "dateModified": "2025-01-01T04:30:23.157407", "description": "This document explores various replication strategies in distributed data systems, focusing on leader-follower models, synchronous and asynchronous replication, and handling node failures. It also discusses different implementations of replication logs and their implications for system consistency and durability.", "articleSection": "Distributed Systems", "keywords": "data replication,leader-follower model,synchronous vs asynchronous,failover,replication logs"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="chapter-5">Chapter 5</h1>
 <h2 id="replication">Replication</h2>
 <p><strong>Replication</strong> is the process of keeping a copy of the same data on multiple machines that are connected via a network. Replication is important for a few reasons:</p>

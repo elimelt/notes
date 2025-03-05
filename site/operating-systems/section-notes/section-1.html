@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "C and GDB Review", "dateModified": "2025-02-11T20:49:25.904824", "description": "Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.", "articleSection": "Computer Science", "keywords": "static,extern,pointers,gdb,printf debugging,backtrace,watch", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "C and GDB Review", "dateModified": "2025-02-11T20:49:25.904824", "description": "Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.", "articleSection": "Computer Science", "keywords": "static,extern,pointers,gdb,printf debugging,backtrace,watch"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/computer%20science.html">Computer Science</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="section-1-c-and-gdb-review">Section 1 - C and GDB review</h1>
 <h2 id="c-review">C Review</h2>
 <p><strong>static</strong>: has different meanings</p>

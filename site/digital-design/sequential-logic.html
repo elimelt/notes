@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Sequential Logic (SL)", "dateModified": "2025-02-11T16:42:51.458671", "description": "Explains the concept of sequential logic in digital systems and its applications.", "articleSection": "Hardware", "keywords": "sequential logic,digital systems,finite state machines,flip-flops,clock signals", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sequential Logic (SL)", "dateModified": "2025-02-11T16:42:51.458671", "description": "Explains the concept of sequential logic in digital systems and its applications.", "articleSection": "Hardware", "keywords": "sequential logic,digital systems,finite state machines,flip-flops,clock signals"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="sequential-logic-sl">Sequential Logic (SL)</h1>
 <p>Whereas in <em>combinational logic</em>, you have outputs which are direct functions of their inputs, with sequential logic the presence of <em>feedback</em> gives circuits the ability to store state. This is the basis for memory and computation in digital systems.</p>
 <p>This helps control the flow of information through blocks of combinational logic, usually synchronizing with a clock signal. One of the major use cases of sequential logic is in <strong>Finite State Machines (FSM)</strong>. Without SL, the output of a combinational circuit would change instantly with every change in input, which can lead to unpredictable behavior within intermediate states, leading to unexpected outputs.</p>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Clocks", "dateModified": "2025-02-11T16:42:07.874013", "description": "Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.", "articleSection": "Distributed Systems", "keywords": "clocks,distributed systems,logical clocks,vector clocks,causality,consistency", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Clocks", "dateModified": "2025-02-11T16:42:07.874013", "description": "Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.", "articleSection": "Distributed Systems", "keywords": "clocks,distributed systems,logical clocks,vector clocks,causality,consistency"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="clocks">Clocks</h1>
 <p>There are two main approaches to time in a distributed system: <strong>physical clocks</strong> and <strong>virtual (logical) clocks</strong>.</p>
 <h2 id="physical-clocks">Physical Clocks</h2>

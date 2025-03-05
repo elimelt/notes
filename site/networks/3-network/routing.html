@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Forwarding Table vs. Routing Table", "dateModified": "2025-02-11T20:48:08.476199", "description": "Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP and link state routing protocols like OSPF, including concepts like reliable flooding, route calculation, and metrics. Provides technical details on maximum routing table size and route expiration time.", "articleSection": "Networks", "keywords": "routing table,forwarding table,mac address,routing protocols,network topology", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Forwarding Table vs. Routing Table", "dateModified": "2025-02-11T20:48:08.476199", "description": "Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP and link state routing protocols like OSPF, including concepts like reliable flooding, route calculation, and metrics. Provides technical details on maximum routing table size and route expiration time.", "articleSection": "Networks", "keywords": "routing table,forwarding table,mac address,routing protocols,network topology"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="_1"></h1>
 <p>Routers are devices within a network that handle forwarding packets out of the network. They use a <strong>routing table</strong> to determine the best path for a packet to reach its destination. The routing table contains information about known networks, including the next hop router to reach them.</p>
 <h2 id="forwarding-table-vs-routing-table">Forwarding Table vs. Routing Table</h2>

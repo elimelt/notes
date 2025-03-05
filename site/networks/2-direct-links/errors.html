@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Error Detection and Correction", "dateModified": "2025-02-11T20:46:07.723098", "description": "An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, internet checksum, and cyclic redundancy check (CRC). The document explains the algorithms for these techniques, including the sender and receiver-side operations. It also discusses the distinction between error detection and error correction capabilities. The content focuses on the technical concepts and implementation details of these network error handling mechanisms.", "articleSection": "Networks", "keywords": "error detection,error correction,redundancy,codewords,probability", "cssSelector": [".markdown-content"]}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Error Detection and Correction", "dateModified": "2025-02-11T20:46:07.723098", "description": "An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, internet checksum, and cyclic redundancy check (CRC). The document explains the algorithms for these techniques, including the sender and receiver-side operations. It also discusses the distinction between error detection and error correction capabilities. The content focuses on the technical concepts and implementation details of these network error handling mechanisms.", "articleSection": "Networks", "keywords": "error detection,error correction,redundancy,codewords,probability"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -515,7 +515,7 @@
         /* Drop cap for first paragraph */
     }
 
-    .content p:first-of-type::first-letter {
+    .markdown-content p:first-of-type::first-letter {
         float: left;
         font-size: 3.5em;
         line-height: 0.8;
@@ -1086,7 +1086,7 @@ blockquote {
                 </time>
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
             </div>
-            <div class="content">
+            <div class=.markdown-content>
                 <h1 id="error-detection-and-correction">Error Detection and Correction</h1>
 <p>Some bits will inevitably be recieved in error. Noise may flip the bits recieved over the network. We need to be able to...</p>
 <ul>

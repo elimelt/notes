@@ -5,12 +5,7 @@ tags: meta, research, paper, review
 description: A review of John R. Platt's paper on the principles of strong inference in scientific research.
 ---
 
-
-# [source](https://pages.cs.wisc.edu/~markhill/science64_strong_inference.pdf)
-
-#### Strong Inference
-##### Certain systematic methods of scientific thinking may produce much more rapid progress than others.
-
+##### [Strong Inference: Certain systematic methods of scientific thinking may produce much more rapid progress than others.](https://pages.cs.wisc.edu/~markhill/science64_strong_inference.pdf)
 ---
 
 ### What is the Problem?

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Klee Paper Review", "dateModified": "2025-03-05T13:05:15.818459", "description": "Review of the paper \"KLEE, Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs\"", "articleSection": "Systems", "keywords": "klee,symbolic execution,testing,verification,systems,software engineering,correctness,program analysis"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Klee Paper Review", "dateModified": "2025-03-05T13:06:19.506406", "description": "Review of the paper \"KLEE, Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs\"", "articleSection": "Systems", "keywords": "klee,symbolic execution,testing,verification,systems,software engineering,correctness,program analysis"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -75,7 +75,7 @@
         <article>
             <h1>Klee Paper Review</h1>
             <div class="meta">
-                <time datetime="2025-03-05T13:05:15.818459">
+                <time datetime="2025-03-05T13:06:19.506406">
                     Last modified: 2025-03-05
                 </time>
                 <span>Category: <a href="/categories/systems.html">Systems</a></span>
@@ -85,7 +85,7 @@
 <hr />
 <h5 id="source-code"><a href="https://klee.github.io/">source code</a></h5>
 <h3 id="what-is-the-problem">What is the Problem?</h3>
-<p>Testing large and complex programs is difficult. Writing manual tests is extremely time consuming and often still misses many edge cases. Traditional automated testing frameworks see limited success in reaching high coverage, mainly due in part to the unsemantic nature of randomization. While other symbolic execution tools exist, many are limited in their ability to handle enviornmental dependencies, such as file I/O, network I/O, and system calls, which contribute significantly to the state space of system programs.</p>
+<p>Testing large and complex programs is difficult. Writing manual tests is extremely time consuming and often still misses many edge cases. Traditional automated testing frameworks see limited success in reaching high coverage, mainly due in part to the unsemantic nature of randomization. While other symbolic execution tools exist, many are limited in their ability to handle environmental dependencies, such as file I/O, network I/O, and system calls, which contribute significantly to the state space of system programs.</p>
 <h3 id="summary">Summary</h3>
 <p>Klee is a symbolic execution tool that automatically explores the state space of a program by maintaining a set of constraints on symbolic inputs, and any downstream operations that are performed on those inputs. Klee transparently optimizes these constraints, while also internally managing the programs "execution" state so as to be able to "fork" at branches in the program without rerunning all previous operations. The authors used Klee to test a variety of programs, both by generating test cases with coverage reports, as a bug finding tool, and as a verification tool.</p>
 <h3 id="key-insights">Key Insights</h3>
@@ -96,7 +96,7 @@
 <h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
 <ul>
 <li>Implementing the execution state within the symbolic execution engine allows for efficient forking and backtracking, while also allowing for object-level copy-on-write semantics that vastly reduce overhead.</li>
-<li>You are able to symbolically execute enviornmental dependencies by providing a model of the enviornment to Klee, which allows for testing of programs symbolicly, similar to how you'd use mocks in unit testing.</li>
+<li>You are able to symbolically execute environmental dependencies by providing a model of the environment to Klee, which allows for testing of programs symbolically, similar to how you'd use mocks in unit testing.</li>
 </ul>
 <h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
 <ul>

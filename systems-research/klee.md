@@ -12,7 +12,7 @@ description: Review of the paper "KLEE, Unassisted and Automatic Generation of H
 
 ### What is the Problem?
 
-Testing large and complex programs is difficult. Writing manual tests is extremely time consuming and often still misses many edge cases. Traditional automated testing frameworks see limited success in reaching high coverage, mainly due in part to the unsemantic nature of randomization. While other symbolic execution tools exist, many are limited in their ability to handle enviornmental dependencies, such as file I/O, network I/O, and system calls, which contribute significantly to the state space of system programs.
+Testing large and complex programs is difficult. Writing manual tests is extremely time consuming and often still misses many edge cases. Traditional automated testing frameworks see limited success in reaching high coverage, mainly due in part to the unsemantic nature of randomization. While other symbolic execution tools exist, many are limited in their ability to handle environmental dependencies, such as file I/O, network I/O, and system calls, which contribute significantly to the state space of system programs.
 
 ### Summary
 
@@ -26,7 +26,7 @@ Klee is a symbolic execution tool that automatically explores the state space of
 ### Notable Design Details/Strengths
 
 - Implementing the execution state within the symbolic execution engine allows for efficient forking and backtracking, while also allowing for object-level copy-on-write semantics that vastly reduce overhead.
-- You are able to symbolically execute enviornmental dependencies by providing a model of the enviornment to Klee, which allows for testing of programs symbolicly, similar to how you'd use mocks in unit testing.
+- You are able to symbolically execute environmental dependencies by providing a model of the environment to Klee, which allows for testing of programs symbolically, similar to how you'd use mocks in unit testing.
 
 ### Limitations/Weaknesses
 

@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "", "dateModified": "2025-03-05T04:39:43.075461", "description": "So so many notes"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "", "dateModified": "2025-03-05T05:22:49.882318", "description": "So so many notes"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -949,11 +949,7 @@ blockquote {
 .stat-item {
     text-align: center;
     padding: var(--spacing-md);
-    background: var(--accent-light);
-    border-radius: var(--radius-md);
     flex: 1;
-    min-width: 100px;
-    box-shadow: var(--shadow-sm);
 }
 
 .stat-value {
@@ -968,23 +964,116 @@ blockquote {
     opacity: 0.8;
 }
 
+/* Base styles for all screen sizes */
 .landing-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
+    margin: 0 auto;
+    padding: 1rem;
+    max-width: 1200px;
 }
 
+/* Stats section styling */
+.stats-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    padding: .5rem;
+    text-align: center;
+    width: 30%;
+}
+
+.stat-number {
+    color: #4a88cf;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+
+h2 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+/* Recent posts list */
+.recent-posts, .categories-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-posts li {
+    border-bottom: 1px solid #333;
+    padding: 0.75rem 0;
+}
+
+.recent-posts li:last-child {
+    border-bottom: none;
+}
+
+.date, .category {
+    color: #888;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+}
+
+.category {
+    background-color: #3a5e8c;
+    border-radius: 3px;
+    color: #fff;
+    padding: 2px 6px;
+}
+
+/* Tags cloud */
+.tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tags-cloud a {
+    background-color: #3a5e8c;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
+}
+
+/* MOBILE LAYOUT (default) */
+.content-area, .sidebar-area {
+    width: 100%;
+}
+
+/* DESKTOP LAYOUT */
 @media (min-width: 768px) {
     .landing-grid {
-        grid-template-columns: 3fr 1fr;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .stats-section {
+        width: 100%;
+    }
+
+    .content-area {
+        flex: 2;
+        margin-right: 1.5rem;
+    }
+
+    .sidebar-area {
+        flex: 1;
     }
 
     .recent-section {
-        grid-column: 1 / 2;
-    }
-
-    .categories-section, .tags-section {
-        grid-column: 2 / 3;
+        height: 100%;
     }
 }
 
@@ -1064,6 +1153,30 @@ blockquote {
     }
 }
 
+/* Directories styling */
+.top-level-links {
+    border-left: 4px solid #4a88cf; /* Blue accent border */
+    padding-left: 1rem;
+}
+
+.top-level-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+}
+
+.top-level-links-list li {
+    margin-bottom: 0.5rem;
+}
+
+.top-level-links-list a {
+    display: block;
+    padding: 0.5rem;
+}
+
 </style></head>
 <body>
     <header>
@@ -1078,234 +1191,317 @@ blockquote {
     <main role="main">
         <article>
             <div class="meta">
-                <time datetime="2025-03-05T04:39:43.075461">
+                <time datetime="2025-03-05T05:22:49.882318">
                     Last modified: 2025-03-05
                 </time>
             </div>
             <div class=content>
                 
-<div class="landing-stats">
-    <div class="stat-item">
-        <span class="stat-value">156</span>
-        <span class="stat-label">Notes</span>
-    </div>
-    <div class="stat-item">
-        <span class="stat-value">21</span>
-        <span class="stat-label">Categories</span>
-    </div>
-    <div class="stat-item">
-        <span class="stat-value">612</span>
-        <span class="stat-label">Tags</span>
-    </div>
-</div>
+<!-- Main container for the grid layout -->
 <div class="landing-grid">
-    <div class="categories-section">
-        <h2>Categories</h2>
-        <ul class="categories-list">
-            <li>
-                <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a>
-                <span class="count">(2)</span>
-            </li>
-            <li>
-                <a href="/categories/algorithms.html">Algorithms</a>
-                <span class="count">(15)</span>
-            </li>
-            <li>
-                <a href="/categories/computer%20science.html">Computer Science</a>
-                <span class="count">(2)</span>
-            </li>
-            <li>
-                <a href="/categories/database%20systems.html">Database Systems</a>
-                <span class="count">(2)</span>
-            </li>
-            <li>
-                <a href="/categories/distributed%20systems.html">Distributed Systems</a>
-                <span class="count">(26)</span>
-            </li>
-            <li>
-                <a href="/categories/electrical%20engineering.html">Electrical Engineering</a>
-                <span class="count">(2)</span>
-            </li>
-            <li>
-                <a href="/categories/graph%20theory.html">Graph Theory</a>
-                <span class="count">(4)</span>
-            </li>
-            <li>
-                <a href="/categories/hardware.html">Hardware</a>
-                <span class="count">(10)</span>
-            </li>
-            <li>
-                <a href="/categories/linear%20algebra.html">Linear Algebra</a>
-                <span class="count">(3)</span>
-            </li>
-            <li>
-                <a href="/categories/machine%20learning.html">Machine Learning</a>
-                <span class="count">(1)</span>
-            </li>
-            <li>
-                <a href="/categories/mathematics.html">Mathematics</a>
-                <span class="count">(2)</span>
-            </li>
-            <li>
-                <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a>
-                <span class="count">(5)</span>
-            </li>
-            <li>
-                <a href="/categories/networks.html">Networks</a>
-                <span class="count">(29)</span>
-            </li>
-            <li>
-                <a href="/categories/operating%20systems.html">Operating Systems</a>
-                <span class="count">(24)</span>
-            </li>
-            <li>
-                <a href="/categories/operations%20research.html">Operations Research</a>
-                <span class="count">(1)</span>
-            </li>
-            <li>
-                <a href="/categories/performance%20engineering.html">Performance Engineering</a>
-                <span class="count">(1)</span>
-            </li>
-            <li>
-                <a href="/categories/research.html">Research</a>
-                <span class="count">(3)</span>
-            </li>
-            <li>
-                <a href="/categories/software%20engineering.html">Software Engineering</a>
-                <span class="count">(6)</span>
-            </li>
-            <li>
-                <a href="/categories/system%20design.html">System Design</a>
-                <span class="count">(2)</span>
-            </li>
-            <li>
-                <a href="/categories/systems.html">Systems</a>
-                <span class="count">(8)</span>
-            </li>
-            <li>
-                <a href="/categories/teaching.html">Teaching</a>
-                <span class="count">(1)</span>
-            </li>
-        </ul>
+    <!-- Stats section at the top -->
+    <div class="stats-section">
+        <div class="stat-item">
+            <div class="stat-number">156</div>
+            <div class="stat-label">Notes</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">21</div>
+            <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">612</div>
+            <div class="stat-label">Tags</div>
+        </div>
     </div>
-    <div class="recent-section">
-        <h2>Recent</h2>
-        <ul class="recent-posts">
+
+    <!-- Main content area -->
+    <div class="content-area">
+        <!-- Categories section -->
+        <div class="categories-section">
+            <h2>Categories</h2>
+            <ul class="categories-list">
+                <li>
+                    <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a>
+                    <span class="count">(2)</span>
+                </li>
+                <li>
+                    <a href="/categories/algorithms.html">Algorithms</a>
+                    <span class="count">(15)</span>
+                </li>
+                <li>
+                    <a href="/categories/computer%20science.html">Computer Science</a>
+                    <span class="count">(2)</span>
+                </li>
+                <li>
+                    <a href="/categories/database%20systems.html">Database Systems</a>
+                    <span class="count">(2)</span>
+                </li>
+                <li>
+                    <a href="/categories/distributed%20systems.html">Distributed Systems</a>
+                    <span class="count">(26)</span>
+                </li>
+                <li>
+                    <a href="/categories/electrical%20engineering.html">Electrical Engineering</a>
+                    <span class="count">(2)</span>
+                </li>
+                <li>
+                    <a href="/categories/graph%20theory.html">Graph Theory</a>
+                    <span class="count">(4)</span>
+                </li>
+                <li>
+                    <a href="/categories/hardware.html">Hardware</a>
+                    <span class="count">(10)</span>
+                </li>
+                <li>
+                    <a href="/categories/linear%20algebra.html">Linear Algebra</a>
+                    <span class="count">(3)</span>
+                </li>
+                <li>
+                    <a href="/categories/machine%20learning.html">Machine Learning</a>
+                    <span class="count">(1)</span>
+                </li>
+                <li>
+                    <a href="/categories/mathematics.html">Mathematics</a>
+                    <span class="count">(2)</span>
+                </li>
+                <li>
+                    <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a>
+                    <span class="count">(5)</span>
+                </li>
+                <li>
+                    <a href="/categories/networks.html">Networks</a>
+                    <span class="count">(29)</span>
+                </li>
+                <li>
+                    <a href="/categories/operating%20systems.html">Operating Systems</a>
+                    <span class="count">(24)</span>
+                </li>
+                <li>
+                    <a href="/categories/operations%20research.html">Operations Research</a>
+                    <span class="count">(1)</span>
+                </li>
+                <li>
+                    <a href="/categories/performance%20engineering.html">Performance Engineering</a>
+                    <span class="count">(1)</span>
+                </li>
+                <li>
+                    <a href="/categories/research.html">Research</a>
+                    <span class="count">(3)</span>
+                </li>
+                <li>
+                    <a href="/categories/software%20engineering.html">Software Engineering</a>
+                    <span class="count">(6)</span>
+                </li>
+                <li>
+                    <a href="/categories/system%20design.html">System Design</a>
+                    <span class="count">(2)</span>
+                </li>
+                <li>
+                    <a href="/categories/systems.html">Systems</a>
+                    <span class="count">(8)</span>
+                </li>
+                <li>
+                    <a href="/categories/teaching.html">Teaching</a>
+                    <span class="count">(1)</span>
+                </li>
+            </ul>
+        </div>
+        <div class="top-level-links">
+          <h2>Directories</h2>
+          <ul class="top-level-links-list">
             <li>
-                <a href="/systems-research/barrelfish.html">The Multikernel, A new OS architecture for scalable multicore systems</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Systems</span>
+              <a href="/distributed-systems/index.html">distributed-systems</a>
             </li>
             <li>
-                <a href="/systems-research/xen.html">Xen and the Art of Virtualization</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Systems</span>
+              <a href="/idx/index.html">idx</a>
             </li>
             <li>
-                <a href="/systems-research/unix-timesharing-system.html">The Unix Timesharing System</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Operating Systems</span>
+              <a href="/digital-design/index.html">digital-design</a>
             </li>
             <li>
-                <a href="/systems-research/paper-review-template.html">Paper Review Template</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Research</span>
+              <a href="/papers/index.html">papers</a>
             </li>
             <li>
-                <a href="/systems-research/locality-principle.html">The Locality Principle</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Systems</span>
+              <a href="/open-source-log/index.html">open-source-log</a>
             </li>
             <li>
-                <a href="/systems-research/internet-design-philosophy.html">Design Philosophy of DARPA Internet Protocols</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Networks</span>
+              <a href="/natural-language-processing/index.html">natural-language-processing</a>
             </li>
             <li>
-                <a href="/systems-research/how-to-read-a-paper.html">How to Read a Paper</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Research</span>
+              <a href="/systems-research/index.html">systems-research</a>
             </li>
             <li>
-                <a href="/systems-research/hints-for-computer-system-design.html">Hints for Computer System Design</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">System Design</span>
+              <a href="/signal-conditioning/index.html">signal-conditioning</a>
             </li>
             <li>
-                <a href="/systems-research/end-to-end-arguments-in-sys-design.html">End-to-End Arguments in System Design</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">System Design</span>
+              <a href="/algorithms/index.html">algorithms</a>
             </li>
             <li>
-                <a href="/systems-research/development-of-the-dns.html">Development of the Domain Name System</a>
-                <span class="date">2025-03-05</span>
-                <span class="category">Systems</span>
+              <a href="/solutions/index.html">solutions</a>
             </li>
-        </ul>
+            <li>
+              <a href="/performance-engineering/index.html">performance-engineering</a>
+            </li>
+            <li>
+              <a href="/networks/index.html">networks</a>
+            </li>
+            <li>
+              <a href="/teaching/index.html">teaching</a>
+            </li>
+            <li>
+              <a href="/scripts/index.html">scripts</a>
+            </li>
+            <li>
+              <a href="/machine-learning-for-big-data/index.html">machine-learning-for-big-data</a>
+            </li>
+            <li>
+              <a href="/linear-algebra/index.html">linear-algebra</a>
+            </li>
+            <li>
+              <a href="/cheatsheets/index.html">cheatsheets</a>
+            </li>
+            <li>
+              <a href="/.vscode/index.html">.vscode</a>
+            </li>
+            <li>
+              <a href="/operating-systems/index.html">operating-systems</a>
+            </li>
+            <li>
+              <a href="/tmp/index.html">tmp</a>
+            </li>
+            <li>
+              <a href="/designing-data-intensive-applications/index.html">designing-data-intensive-applications</a>
+            </li>
+          </ul>
+        </div>
     </div>
-    <div class="tags-section">
-        <h2>Featured Tags</h2>
-        <div class="tags-cloud">
-            <a href="/tags/distributed%20systems.html" class="tag-5">
-                distributed systems <span>(14)</span>
-            </a>
-            <a href="/tags/operating%20systems.html" class="tag-5">
-                operating systems <span>(10)</span>
-            </a>
-            <a href="/tags/systems.html" class="tag-5">
-                systems <span>(9)</span>
-            </a>
-            <a href="/tags/paxos.html" class="tag-5">
-                paxos <span>(6)</span>
-            </a>
-            <a href="/tags/consistency.html" class="tag-5">
-                consistency <span>(5)</span>
-            </a>
-            <a href="/tags/graph%20theory.html" class="tag-5">
-                graph theory <span>(5)</span>
-            </a>
-            <a href="/tags/consistency%20models.html" class="tag-4">
-                consistency models <span>(4)</span>
-            </a>
-            <a href="/tags/file%20systems.html" class="tag-4">
-                file systems <span>(4)</span>
-            </a>
-            <a href="/tags/java.html" class="tag-4">
-                java <span>(4)</span>
-            </a>
-            <a href="/tags/paper.html" class="tag-4">
-                paper <span>(4)</span>
-            </a>
-            <a href="/tags/power.html" class="tag-4">
-                power <span>(4)</span>
-            </a>
-            <a href="/tags/review.html" class="tag-4">
-                review <span>(4)</span>
-            </a>
-            <a href="/tags/routing.html" class="tag-4">
-                routing <span>(4)</span>
-            </a>
-            <a href="/tags/tcp.html" class="tag-4">
-                tcp <span>(4)</span>
-            </a>
-            <a href="/tags/virtual%20memory.html" class="tag-4">
-                virtual memory <span>(4)</span>
-            </a>
-            <a href="/tags/breadth-first%20search.html" class="tag-3">
-                breadth-first search <span>(3)</span>
-            </a>
-            <a href="/tags/collections.html" class="tag-3">
-                collections <span>(3)</span>
-            </a>
-            <a href="/tags/concurrency.html" class="tag-3">
-                concurrency <span>(3)</span>
-            </a>
-            <a href="/tags/data%20structures.html" class="tag-3">
-                data structures <span>(3)</span>
-            </a>
-            <a href="/tags/forwarding%20table.html" class="tag-3">
-                forwarding table <span>(3)</span>
-            </a>
+
+    <!-- Sidebar area -->
+    <div class="sidebar-area">
+
+        <!-- Recent posts section -->
+        <div class="recent-section">
+            <h2>Recent</h2>
+            <ul class="recent-posts">
+                <li>
+                    <a href="/systems-research/barrelfish.html">The Multikernel, A new OS architecture for scalable multicore systems</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Systems</span>
+                </li>
+                <li>
+                    <a href="/systems-research/xen.html">Xen and the Art of Virtualization</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Systems</span>
+                </li>
+                <li>
+                    <a href="/systems-research/unix-timesharing-system.html">The Unix Timesharing System</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Operating Systems</span>
+                </li>
+                <li>
+                    <a href="/systems-research/paper-review-template.html">Paper Review Template</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Research</span>
+                </li>
+                <li>
+                    <a href="/systems-research/locality-principle.html">The Locality Principle</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Systems</span>
+                </li>
+                <li>
+                    <a href="/systems-research/internet-design-philosophy.html">Design Philosophy of DARPA Internet Protocols</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Networks</span>
+                </li>
+                <li>
+                    <a href="/systems-research/how-to-read-a-paper.html">How to Read a Paper</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Research</span>
+                </li>
+                <li>
+                    <a href="/systems-research/hints-for-computer-system-design.html">Hints for Computer System Design</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">System Design</span>
+                </li>
+                <li>
+                    <a href="/systems-research/end-to-end-arguments-in-sys-design.html">End-to-End Arguments in System Design</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">System Design</span>
+                </li>
+                <li>
+                    <a href="/systems-research/development-of-the-dns.html">Development of the Domain Name System</a>
+                    <span class="date">2025-03-05</span>
+                    <span class="category">Systems</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tags section -->
+        <div class="tags-section">
+            <h2>Featured Tags</h2>
+            <div class="tags-cloud">
+                <a href="/tags/distributed%20systems.html" class="tag-5">
+                    distributed systems <span>(14)</span>
+                </a>
+                <a href="/tags/operating%20systems.html" class="tag-5">
+                    operating systems <span>(10)</span>
+                </a>
+                <a href="/tags/systems.html" class="tag-5">
+                    systems <span>(9)</span>
+                </a>
+                <a href="/tags/paxos.html" class="tag-5">
+                    paxos <span>(6)</span>
+                </a>
+                <a href="/tags/consistency.html" class="tag-5">
+                    consistency <span>(5)</span>
+                </a>
+                <a href="/tags/graph%20theory.html" class="tag-5">
+                    graph theory <span>(5)</span>
+                </a>
+                <a href="/tags/consistency%20models.html" class="tag-4">
+                    consistency models <span>(4)</span>
+                </a>
+                <a href="/tags/file%20systems.html" class="tag-4">
+                    file systems <span>(4)</span>
+                </a>
+                <a href="/tags/java.html" class="tag-4">
+                    java <span>(4)</span>
+                </a>
+                <a href="/tags/paper.html" class="tag-4">
+                    paper <span>(4)</span>
+                </a>
+                <a href="/tags/power.html" class="tag-4">
+                    power <span>(4)</span>
+                </a>
+                <a href="/tags/review.html" class="tag-4">
+                    review <span>(4)</span>
+                </a>
+                <a href="/tags/routing.html" class="tag-4">
+                    routing <span>(4)</span>
+                </a>
+                <a href="/tags/tcp.html" class="tag-4">
+                    tcp <span>(4)</span>
+                </a>
+                <a href="/tags/virtual%20memory.html" class="tag-4">
+                    virtual memory <span>(4)</span>
+                </a>
+                <a href="/tags/breadth-first%20search.html" class="tag-3">
+                    breadth-first search <span>(3)</span>
+                </a>
+                <a href="/tags/collections.html" class="tag-3">
+                    collections <span>(3)</span>
+                </a>
+                <a href="/tags/concurrency.html" class="tag-3">
+                    concurrency <span>(3)</span>
+                </a>
+                <a href="/tags/data%20structures.html" class="tag-3">
+                    data structures <span>(3)</span>
+                </a>
+                <a href="/tags/forwarding%20table.html" class="tag-3">
+                    forwarding table <span>(3)</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>

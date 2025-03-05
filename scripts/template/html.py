@@ -105,54 +105,79 @@ BASE_TEMPLATE = """
 """
 
 INDEX_TEMPLATE = """
-<div class="landing-stats">
-    <div class="stat-item">
-        <span class="stat-value">{{ stats.notes }}</span>
-        <span class="stat-label">Notes</span>
-    </div>
-    <div class="stat-item">
-        <span class="stat-value">{{ stats.categories }}</span>
-        <span class="stat-label">Categories</span>
-    </div>
-    <div class="stat-item">
-        <span class="stat-value">{{ stats.tags }}</span>
-        <span class="stat-label">Tags</span>
-    </div>
-</div>
+<!-- Main container for the grid layout -->
 <div class="landing-grid">
-    <div class="categories-section">
-        <h2>Categories</h2>
-        <ul class="categories-list">
-        {% for category in categories %}
-            <li>
-                <a href="{{ category.url }}">{{ category.name }}</a>
-                <span class="count">({{ category.count }})</span>
-            </li>
-        {% endfor %}
-        </ul>
+    <!-- Stats section at the top -->
+    <div class="stats-section">
+        <div class="stat-item">
+            <div class="stat-number">156</div>
+            <div class="stat-label">Notes</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">21</div>
+            <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">612</div>
+            <div class="stat-label">Tags</div>
+        </div>
     </div>
-    <div class="recent-section">
-        <h2>Recent</h2>
-        <ul class="recent-posts">
-        {% for page in recent_pages %}
+
+    <!-- Main content area -->
+    <div class="content-area">
+        <!-- Categories section -->
+        <div class="categories-section">
+            <h2>Categories</h2>
+            <ul class="categories-list">
+                {% for category in categories %}
+                <li>
+                    <a href="{{ category.url }}">{{ category.name }}</a>
+                    <span class="count">({{ category.count }})</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="top-level-links">
+          <h2>Directories</h2>
+          <ul class="top-level-links-list">
+            {% for link in top_level_dirs %}
             <li>
-                <a href="{{ page.url }}">{{ page.title }}</a>
-                <span class="date">{{ page.date }}</span>
-                {% if page.category %}
-                <span class="category">{{ page.category }}</span>
-                {% endif %}
+              <a href="{{ link.url }}">{{ link.name }}</a>
             </li>
-        {% endfor %}
-        </ul>
+            {% endfor %}
+          </ul>
+        </div>
     </div>
-    <div class="tags-section">
-        <h2>Featured Tags</h2>
-        <div class="tags-cloud">
-        {% for tag in popular_tags %}
-            <a href="{{ tag.url }}" class="tag-{{ tag.size_class }}">
-                {{ tag.name }} <span>({{ tag.count }})</span>
-            </a>
-        {% endfor %}
+
+    <!-- Sidebar area -->
+    <div class="sidebar-area">
+
+        <!-- Recent posts section -->
+        <div class="recent-section">
+            <h2>Recent</h2>
+            <ul class="recent-posts">
+                {% for page in recent_pages %}
+                <li>
+                    <a href="{{ page.url }}">{{ page.title }}</a>
+                    <span class="date">{{ page.date }}</span>
+                    {% if page.category %}
+                    <span class="category">{{ page.category }}</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Tags section -->
+        <div class="tags-section">
+            <h2>Featured Tags</h2>
+            <div class="tags-cloud">
+                {% for tag in popular_tags %}
+                <a href="{{ tag.url }}" class="tag-{{ tag.size_class }}">
+                    {{ tag.name }} <span>({{ tag.count }})</span>
+                </a>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

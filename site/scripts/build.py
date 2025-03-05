@@ -423,6 +423,14 @@ class SiteGenerator:
                 }
                 for tag, count in popular_tags
             ],
+            "top_level_dirs": [
+                {
+                    "name": dir.name,
+                    "url": f"/{dir.name}/index.html",
+                }
+                for dir in self.input_dir.iterdir()
+                if dir.is_dir() and dir.name not in self.IGNORED_DIRECTORIES
+            ],
         }
 
         content = self.jinja_env.get_template("index").render(**context)

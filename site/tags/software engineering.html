@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: software engineering", "dateModified": "2025-03-05T04:39:43.168630", "description": "Pages tagged with software engineering"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: software engineering", "dateModified": "2025-03-05T05:22:49.975141", "description": "Pages tagged with software engineering"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -949,11 +949,7 @@ blockquote {
 .stat-item {
     text-align: center;
     padding: var(--spacing-md);
-    background: var(--accent-light);
-    border-radius: var(--radius-md);
     flex: 1;
-    min-width: 100px;
-    box-shadow: var(--shadow-sm);
 }
 
 .stat-value {
@@ -968,23 +964,116 @@ blockquote {
     opacity: 0.8;
 }
 
+/* Base styles for all screen sizes */
 .landing-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
+    margin: 0 auto;
+    padding: 1rem;
+    max-width: 1200px;
 }
 
+/* Stats section styling */
+.stats-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    padding: .5rem;
+    text-align: center;
+    width: 30%;
+}
+
+.stat-number {
+    color: #4a88cf;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+
+h2 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+/* Recent posts list */
+.recent-posts, .categories-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-posts li {
+    border-bottom: 1px solid #333;
+    padding: 0.75rem 0;
+}
+
+.recent-posts li:last-child {
+    border-bottom: none;
+}
+
+.date, .category {
+    color: #888;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+}
+
+.category {
+    background-color: #3a5e8c;
+    border-radius: 3px;
+    color: #fff;
+    padding: 2px 6px;
+}
+
+/* Tags cloud */
+.tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tags-cloud a {
+    background-color: #3a5e8c;
+    border-radius: 3px;
+    color: #fff;
+    display: inline-block;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
+}
+
+/* MOBILE LAYOUT (default) */
+.content-area, .sidebar-area {
+    width: 100%;
+}
+
+/* DESKTOP LAYOUT */
 @media (min-width: 768px) {
     .landing-grid {
-        grid-template-columns: 3fr 1fr;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .stats-section {
+        width: 100%;
+    }
+
+    .content-area {
+        flex: 2;
+        margin-right: 1.5rem;
+    }
+
+    .sidebar-area {
+        flex: 1;
     }
 
     .recent-section {
-        grid-column: 1 / 2;
-    }
-
-    .categories-section, .tags-section {
-        grid-column: 2 / 3;
+        height: 100%;
     }
 }
 
@@ -1064,6 +1153,30 @@ blockquote {
     }
 }
 
+/* Directories styling */
+.top-level-links {
+    border-left: 4px solid #4a88cf; /* Blue accent border */
+    padding-left: 1rem;
+}
+
+.top-level-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+}
+
+.top-level-links-list li {
+    margin-bottom: 0.5rem;
+}
+
+.top-level-links-list a {
+    display: block;
+    padding: 0.5rem;
+}
+
 </style></head>
 <body>
     <header>
@@ -1080,7 +1193,7 @@ blockquote {
         <article>
             <h1>Tag: software engineering</h1>
             <div class="meta">
-                <time datetime="2025-03-05T04:39:43.168630">
+                <time datetime="2025-03-05T05:22:49.975141">
                     Last modified: 2025-03-05
                 </time>
             </div>

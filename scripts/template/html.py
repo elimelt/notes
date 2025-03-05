@@ -1,3 +1,280 @@
+TAXONOMY_STYLES = '''
+/* Taxonomy Pages Enhancement - Add this to your existing CSS */
+
+/* Taxonomy List Container */
+.taxonomy-container {
+    margin: var(--spacing-lg) 0;
+}
+
+/* Alphabet Jump Navigation */
+.alphabet-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: var(--spacing-lg);
+    position: sticky;
+    top: 60px; /* Adjust based on your nav height */
+    background: var(--background-color);
+    padding: var(--spacing-sm) 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.alphabet-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-sm);
+    background: var(--border-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all var(--transition-speed);
+}
+
+.alphabet-nav a:hover, .alphabet-nav a:focus {
+    background: var(--accent-color);
+    color: white;
+}
+
+.alphabet-nav a.empty {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.alphabet-nav a.empty:hover {
+    background: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Alphabet Section */
+.alphabet-section {
+    margin-bottom: var(--spacing-lg);
+    scroll-margin-top: 120px; /* Ensures the section isn't hidden behind sticky elements */
+}
+
+.alphabet-section h2 {
+    font-size: 1.8rem;
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Enhanced List Styling */
+.taxonomy-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.taxonomy-list li {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    background: var(--accent-light);
+    transition: all var(--transition-speed);
+}
+
+.taxonomy-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.taxonomy-list a {
+    flex: 1;
+    display: block;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.taxonomy-list .count {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.1rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Search Box */
+.taxonomy-search {
+    margin-bottom: var(--spacing-lg);
+    width: 100%;
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-container input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--background-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all var(--transition-speed);
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+.search-icon {
+    position: absolute;
+    right: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color);
+    opacity: 0.5;
+}
+
+/* No Results Message */
+.no-results {
+    padding: var(--spacing-lg);
+    text-align: center;
+    background: var(--border-color);
+    border-radius: var(--radius-md);
+    margin: var(--spacing-lg) 0;
+}
+
+/* Tag Cloud for Tags Page */
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-lg) 0;
+}
+
+.tag-cloud a {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    background: var(--border-color);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+    margin-bottom: var(--spacing-sm);
+}
+
+.tag-cloud a:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Tag sizes based on frequency */
+.tag-xs { font-size: 0.8rem; }
+.tag-sm { font-size: 0.9rem; }
+.tag-md { font-size: 1rem; }
+.tag-lg { font-size: 1.2rem; }
+.tag-xl { font-size: 1.5rem; }
+
+/* Category Summary Cards */
+.category-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+    margin: var(--spacing-lg) 0;
+}
+
+.category-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    transition: all var(--transition-speed);
+    background: var(--background-color);
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-color);
+}
+
+.category-card h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+.category-card .page-count {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.category-card .sample-pages {
+    margin-top: var(--spacing-sm);
+    font-size: 0.9rem;
+}
+
+.category-card .sample-pages a {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.category-card .view-all {
+    display: block;
+    text-align: right;
+    margin-top: var(--spacing-sm);
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .taxonomy-list {
+        grid-template-columns: 1fr;
+    }
+
+    .alphabet-nav {
+        gap: 0.3rem;
+    }
+
+    .alphabet-nav a {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.9rem;
+    }
+
+    .category-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .taxonomy-list li {
+        background: rgba(96, 165, 250, 0.1);
+    }
+
+    .category-card {
+        background: var(--background-color);
+    }
+}
+
+/* Animation for items appearing when filtering */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.taxonomy-list li {
+    animation: fadeIn 0.3s ease-out;
+}
+'''
+
 CONTENT_STYLES = '''
 /* Google Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap');
@@ -890,5 +1167,7 @@ blockquote {
         max-width: 100%;
     }
 }
+
+''' + TAXONOMY_STYLES + CONTENT_STYLES + '''
 </style>
 '''

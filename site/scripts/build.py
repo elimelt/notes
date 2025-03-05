@@ -178,7 +178,7 @@ class SiteGenerator:
                 tags=tags,
                 description=metadata["description"],
                 is_index=is_index,
-                css_classes=['.markdown-content', '.content'],
+                css_classes=['markdown-content', 'content'],
             )
 
             self.pages[relative_path] = page

@@ -526,7 +526,6 @@ footer {
 
 .stat-item {
   text-align: center;
-  padding: var(--spacing-md);
   flex: 1;
 }
 

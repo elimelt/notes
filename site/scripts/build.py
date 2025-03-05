@@ -88,7 +88,6 @@ class SiteGenerator:
         templates = {
             "base": BASE_TEMPLATE,
             "index": INDEX_TEMPLATE,
-            "styles": STYLES_TEMPLATE,
         }
 
         self.jinja_env = Environment(
@@ -362,6 +361,21 @@ class SiteGenerator:
 
         # Also ensure the JS file is included in the output
         self._ensure_taxonomy_js()
+        self._ensure_css()
+
+    def _ensure_css(self) -> None:
+        """Ensures the styles.css file is added to the output directory"""
+        css_dir = self.output_dir / "css"
+        css_dir.mkdir(exist_ok=True)
+
+        # Path to the styles.css file
+        styles_path = css_dir / "styles.css"
+
+        # Only write the file if it doesn't exist or is older than this build
+        if not styles_path.exists() or datetime.fromtimestamp(styles_path.stat().st_mtime) < datetime.now() - timedelta(minutes=5):
+            with open(styles_path, "w") as f:
+                f.write(STYLES_TEMPLATE)
+                print(f"Generated {styles_path}")
 
     def _ensure_taxonomy_js(self) -> None:
         """Ensures the taxonomy JavaScript file is added to the output directory"""

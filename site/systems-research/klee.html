@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Klee Paper Review", "dateModified": "2025-02-19T11:17:28.631134", "description": "Review of the paper \"KLEE, Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs\"", "articleSection": "Systems", "keywords": "klee,symbolic execution,testing,verification,systems,software engineering,correctness,program analysis"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Klee Paper Review", "dateModified": "2025-03-05T13:05:15.818459", "description": "Review of the paper \"KLEE, Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs\"", "articleSection": "Systems", "keywords": "klee,symbolic execution,testing,verification,systems,software engineering,correctness,program analysis"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -75,16 +75,15 @@
         <article>
             <h1>Klee Paper Review</h1>
             <div class="meta">
-                <time datetime="2025-02-19T11:17:28.631134">
-                    Last modified: 2025-02-19
+                <time datetime="2025-03-05T13:05:15.818459">
+                    Last modified: 2025-03-05
                 </time>
                 <span>Category: <a href="/categories/systems.html">Systems</a></span>
             </div>
             <div class=markdown-content content>
-                <h4 id="source"><a href="https://llvm.org/pubs/2008-12-OSDI-KLEE.pdf">source</a></h4>
-<h4 id="visit"><a href="https://klee.github.io/">visit</a></h4>
-<h6 id="klee-unassisted-and-automatic-generation-of-high-coverage-tests-for-complex-systems-programs">KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs</h6>
+                <h6 id="klee-unassisted-and-automatic-generation-of-high-coverage-tests-for-complex-systems-programs"><a href="https://llvm.org/pubs/2008-12-OSDI-KLEE.pdf">KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs</a></h6>
 <hr />
+<h5 id="source-code"><a href="https://klee.github.io/">source code</a></h5>
 <h3 id="what-is-the-problem">What is the Problem?</h3>
 <p>Testing large and complex programs is difficult. Writing manual tests is extremely time consuming and often still misses many edge cases. Traditional automated testing frameworks see limited success in reaching high coverage, mainly due in part to the unsemantic nature of randomization. While other symbolic execution tools exist, many are limited in their ability to handle enviornmental dependencies, such as file I/O, network I/O, and system calls, which contribute significantly to the state space of system programs.</p>
 <h3 id="summary">Summary</h3>

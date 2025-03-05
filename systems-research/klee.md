@@ -5,11 +5,10 @@ tags: klee, symbolic execution, testing, verification, systems, software enginee
 description: Review of the paper "KLEE, Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs"
 ---
 
-#### [source](https://llvm.org/pubs/2008-12-OSDI-KLEE.pdf)
-#### [visit](https://klee.github.io/)
-###### KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs
+###### [KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs](https://llvm.org/pubs/2008-12-OSDI-KLEE.pdf)
 
 ---
+##### [source code](https://klee.github.io/)
 
 ### What is the Problem?
 

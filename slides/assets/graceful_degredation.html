@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400">
+  <!-- Background -->
+  <rect width="500" height="400" fill="#fff" stroke="#000" stroke-width="2"/>
+  
+  <!-- Title -->
+  <text x="150" y="30" font-family="Arial" font-size="18" font-weight="bold" fill="#000">Graceful Degradation</text>
+  
+  <!-- Normal Operation -->
+  <rect x="50" y="70" width="400" height="140" rx="10" ry="10" fill="#f5f5f5" stroke="#000" stroke-width="2"/>
+  <text x="180" y="90" font-family="Arial" font-size="16" font-weight="bold" fill="#000">Normal Operation</text>
+  
+  <!-- Normal Components -->
+  <rect x="80" y="110" width="80" height="40" rx="5" ry="5" fill="#2ecc71" stroke="#000" stroke-width="2"/>
+  <text x="94" y="135" font-family="Arial" font-size="12" fill="#000">Search</text>
+  
+  <rect x="190" y="110" width="80" height="40" rx="5" ry="5" fill="#2ecc71" stroke="#000" stroke-width="2"/>
+  <text x="197" y="135" font-family="Arial" font-size="12" fill="#000">Recommendations</text>
+  
+  <rect x="300" y="110" width="80" height="40" rx="5" ry="5" fill="#2ecc71" stroke="#000" stroke-width="2"/>
+  <text x="313" y="135" font-family="Arial" font-size="12" fill="#000">Images</text>
+  
+  <!-- User Experience -->
+  <rect x="120" y="160" width="260" height="30" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
+  <text x="195" y="180" font-family="Arial" font-size="12" fill="#fff">Full Functionality</text>
+  
+  <!-- Degraded Operation -->
+  <rect x="50" y="230" width="400" height="140" rx="10" ry="10" fill="#f5f5f5" stroke="#000" stroke-width="2"/>
+  <text x="170" y="250" font-family="Arial" font-size="16" font-weight="bold" fill="#000">Degraded Operation</text>
+  
+  <!-- Degraded Components -->
+  <rect x="80" y="270" width="80" height="40" rx="5" ry="5" fill="#2ecc71" stroke="#000" stroke-width="2"/>
+  <text x="94" y="295" font-family="Arial" font-size="12" fill="#000">Search</text>
+  
+  <rect x="190" y="270" width="80" height="40" rx="5" ry="5" fill="#e74c3c" stroke="#000" stroke-width="2"/>
+  <text x="197" y="295" font-family="Arial" font-size="12" fill="#000">Recommendations</text>
+  <line x1="180" y1="260" x2="280" y2="320" stroke="#e74c3c" stroke-width="2"/>
+  <line x1="180" y1="320" x2="280" y2="260" stroke="#e74c3c" stroke-width="2"/>
+  
+  <rect x="300" y="270" width="80" height="40" rx="5" ry="5" fill="#f39c12" stroke="#000" stroke-width="2"/>
+  <text x="313" y="295" font-family="Arial" font-size="12" fill="#000">Images</text>
+  <text x="300" y="320" font-family="Arial" font-size="10" fill="#f39c12">Low Resolution</text>
+  
+  <!-- User Experience -->
+  <rect x="120" y="320" width="260" height="30" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
+  <text x="130" y="340" font-family="Arial" font-size="12" fill="#fff">Core Functionality Preserved</text>
+  
+  <!-- Arrows Between States -->
+  <path d="M250,210 L250,230" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="255" y="220" font-family="Arial" font-size="12" fill="#000">System Stress</text>
+  
+  <path d="M200,230 L200,210" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="150" y="220" font-family="Arial" font-size="12" fill="#000">Recovery</text>
+  
+  <!-- Legend -->
+  <rect x="380" y="350" width="15" height="15" fill="#2ecc71" stroke="#000" stroke-width="1"/>
+  <text x="400" y="363" font-family="Arial" font-size="12" fill="#000">Normal</text>
+  
+  <rect x="380" y="370" width="15" height="15" fill="#f39c12" stroke="#000" stroke-width="1"/>
+  <text x="400" y="383" font-family="Arial" font-size="12" fill="#000">Reduced</text>
+  
+  <rect x="380" y="390" width="15" height="15" fill="#e74c3c" stroke="#000" stroke-width="1"/>
+  <text x="400" y="403" font-family="Arial" font-size="12" fill="#000">Disabled</text>
+  
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+    </marker>
+  </defs>
+</svg>

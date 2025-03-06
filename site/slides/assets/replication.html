@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300">
+  <!-- Background -->
+  <rect width="500" height="300" fill="#fff" stroke="#000" stroke-width="2"/>
+  
+  <!-- Primary Database -->
+  <rect x="200" y="50" width="120" height="70" rx="5" ry="5" fill="#e74c3c" stroke="#000" stroke-width="2"/>
+  <text x="220" y="85" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">Primary</text>
+  <text x="220" y="105" font-family="Arial" font-size="12" fill="#fff">Master DB</text>
+  
+  <!-- Replicas -->
+  <rect x="50" y="180" width="120" height="70" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
+  <text x="80" y="215" font-family="Arial" font-size="14" fill="#fff">Replica 1</text>
+  <text x="85" y="235" font-family="Arial" font-size="12" fill="#fff">Read-Only</text>
+  
+  <rect x="200" y="180" width="120" height="70" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
+  <text x="230" y="215" font-family="Arial" font-size="14" fill="#fff">Replica 2</text>
+  <text x="235" y="235" font-family="Arial" font-size="12" fill="#fff">Read-Only</text>
+  
+  <rect x="350" y="180" width="120" height="70" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
+  <text x="380" y="215" font-family="Arial" font-size="14" fill="#fff">Replica 3</text>
+  <text x="385" y="235" font-family="Arial" font-size="12" fill="#fff">Read-Only</text>
+  
+  <!-- Replication Arrows -->
+  <path d="M220,120 L120,180" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M260,120 L260,180" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M300,120 L400,180" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Labels -->
+  <text x="150" y="150" font-family="Arial" font-size="12" fill="#2ecc71">Replication</text>
+  <text x="265" y="150" font-family="Arial" font-size="12" fill="#2ecc71">Replication</text>
+  <text x="380" y="150" font-family="Arial" font-size="12" fill="#2ecc71">Replication</text>
+  
+  <!-- Write Operation -->
+  <path d="M260,20 L260,50" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="265" y="35" font-family="Arial" font-size="12" fill="#e74c3c">Write</text>
+  
+  <!-- Read Operations -->
+  <path d="M80,170 L80,140" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5" marker-start="url(#arrowhead-inv)"/>
+  <text x="50" y="150" font-family="Arial" font-size="12" fill="#3498db">Read</text>
+  
+  <path d="M260,170 L260,140" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5" marker-start="url(#arrowhead-inv)"/>
+  <text x="265" y="150" font-family="Arial" font-size="12" fill="#3498db">Read</text>
+  
+  <path d="M410,170 L410,140" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5" marker-start="url(#arrowhead-inv)"/>
+  <text x="415" y="150" font-family="Arial" font-size="12" fill="#3498db">Read</text>
+  
+  <!-- Arrowhead markers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+    </marker>
+    <marker id="arrowhead-inv" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="10 0, 0 3.5, 10 7" fill="#3498db"/>
+    </marker>
+  </defs>
+</svg>

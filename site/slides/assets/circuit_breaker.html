@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400">
+  <!-- Background -->
+  <rect width="500" height="400" fill="#fff" stroke="#000" stroke-width="2"/>
+  
+  <!-- Title -->
+  <text x="130" y="30" font-family="Arial" font-size="18" font-weight="bold" fill="#000">Circuit Breaker Pattern</text>
+  
+  <!-- Client -->
+  <rect x="50" y="180" width="80" height="40" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
+  <text x="70" y="205" font-family="Arial" font-size="14" fill="#fff">Client</text>
+  
+  <!-- Circuit Breaker -->
+  <rect x="200" y="80" width="100" height="240" rx="10" ry="10" fill="#f39c12" stroke="#000" stroke-width="2"/>
+  <text x="215" y="110" font-family="Arial" font-size="14" font-weight="bold" fill="#000">Circuit</text>
+  <text x="215" y="130" font-family="Arial" font-size="14" font-weight="bold" fill="#000">Breaker</text>
+  
+  <!-- States -->
+  <circle cx="250" cy="170" r="25" fill="#2ecc71" stroke="#000" stroke-width="2"/>
+  <text x="230" y="175" font-family="Arial" font-size="12" fill="#000">Closed</text>
+  
+  <circle cx="250" cy="250" r="25" fill="#e74c3c" stroke="#000" stroke-width="2"/>
+  <text x="230" y="255" font-family="Arial" font-size="12" fill="#000">Open</text>
+  
+  <circle cx="250" cy="330" r="25" fill="#f1c40f" stroke="#000" stroke-width="2"/>
+  <text x="230" y="335" font-family="Arial" font-size="12" fill="#000">Half-Open</text>
+  
+  <!-- Service -->
+  <rect x="370" y="180" width="80" height="40" rx="5" ry="5" fill="#9b59b6" stroke="#000" stroke-width="2"/>
+  <text x="385" y="205" font-family="Arial" font-size="14" fill="#fff">Service</text>
+  
+  <!-- Connections -->
+  <path d="M130,200 L200,200" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="140" y="190" font-family="Arial" font-size="12" fill="#000">Request</text>
+  
+  <!-- Closed State Flow -->
+  <path d="M300,170 L370,180" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="310" y="160" font-family="Arial" font-size="10" fill="#2ecc71">Forwards Requests</text>
+  
+  <!-- Open State Flow -->
+  <path d="M300,250 L370,230" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,5"/>
+  <line x1="350" y1="220" x2="370" y2="240" stroke="#e74c3c" stroke-width="2"/>
+  <line x1="350" y1="240" x2="370" y2="220" stroke="#e74c3c" stroke-width="2"/>
+  <text x="310" y="270" font-family="Arial" font-size="10" fill="#e74c3c">Blocks Requests</text>
+  
+  <!-- Half-Open State Flow -->
+  <path d="M300,330 L370,220" stroke="#f1c40f" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <text x="310" y="350" font-family="Arial" font-size="10" fill="#f1c40f">Tests with Limited Requests</text>
+  
+  <!-- State Transitions -->
+  <path d="M250,195 L250,225" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="255" y="215" font-family="Arial" font-size="10" fill="#000">Failure Threshold</text>
+  
+  <path d="M225,250 L225,330" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="185" y="290" font-family="Arial" font-size="10" fill="#000">Timeout Period</text>
+  
+  <path d="M275,330 L275,250" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="280" y="290" font-family="Arial" font-size="10" fill="#000">Continued Failures</text>
+  
+  <path d="M275,170 L330,170 L330,330 L275,330" stroke="#000" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="335" y="320" font-family="Arial" font-size="10" fill="#000">Success</text>
+  
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
+    </marker>
+  </defs>
+</svg>

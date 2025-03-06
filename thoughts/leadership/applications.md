@@ -17,8 +17,8 @@ Are you passionate about software engineering and helping others succeed in thei
 |------|-------|
 | March 21st | Applications Open |
 | April 21st | Applications Close |
-| April 22nd - May 1st | Interviews |
-| May 7th | Offers Extended |
+| April 22nd - May 8st | Interviews |
+| May 10th | Offers Extended |
 | May 14th | Officer Team Announced |
 
 ### Roles

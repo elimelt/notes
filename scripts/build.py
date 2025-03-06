@@ -577,3 +577,27 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # create temp directory
+    import tempfile
+    import os
+    import subprocess
+
+    # compile presentation directory with marp
+    input_dir = 'slides/'
+    output_dir = 'site/slides/'
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    for root, dirs, files in os.walk(input_dir):
+        for file in files:
+            if file.endswith('.md'):
+                input_file = os.path.join(root, file)
+                output_file = os.path.join(output_dir, os.path.relpath(root, input_dir), file[:-3] + '.html')
+                os.makedirs(os.path.dirname(output_file), exist_ok=True)
+                subprocess.run(['npx', '@marp-team/marp-cli', '--html', input_file, '-o', output_file])
+
+    # copy slides/assets to site/slides/assets
+    shutil.copytree('slides/assets', 'site/slides/assets', dirs_exist_ok=True)
+    print('Generated slides in site/slides')
+

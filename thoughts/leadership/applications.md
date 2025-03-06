@@ -1,5 +1,5 @@
 ---
-title: SWECC Officer Applications
+title: SWECC Leadership Applications 2025-2026
 category: Announcement
 tags: swecc, leadership, application
 description: Applications for the 2025-2026 SWECC officer team are now open! Apply by April 21st.

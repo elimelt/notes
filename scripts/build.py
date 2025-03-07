@@ -601,3 +601,6 @@ if __name__ == "__main__":
     shutil.copytree('slides/assets', 'site/slides/assets', dirs_exist_ok=True)
     print('Generated slides in site/slides')
 
+    # copy sitemap and robots.txt
+    shutil.copy('sitemap.xml', 'site/sitemap.xml')
+    shutil.copy('robots.txt', 'site/robots.txt')

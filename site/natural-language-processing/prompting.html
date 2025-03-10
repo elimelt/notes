@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompting Language Models | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="All about prompting language models.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/natural-language-processing/prompting.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Prompting Language Models">
+    <meta property="og:description" content="All about prompting language models.">
+    <meta property="og:url" content="https://notes.elimelt.com/natural-language-processing/prompting.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Prompting Language Models">
+    <meta name="twitter:description" content="All about prompting language models.">
+
+    <meta name="keywords" content="language-models,prompting,nlp,llm">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Prompting Language Models", "dateModified": "2025-03-10T02:57:01.037854", "description": "All about prompting language models.", "articleSection": "Natural Language Processing", "keywords": "language-models,prompting,nlp,llm"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href=/css/styles.css>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Prompting Language Models
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Prompting Language Models</h1>
+            <div class="meta">
+                <time datetime="2025-03-10T02:57:01.037854">
+                    Last modified: 2025-03-10
+                </time>
+                <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
+            </div>
+            <div class=markdown-content content>
+                <h2 id="basic-concepts">Basic Concepts</h2>
+<ul>
+<li><strong>Recency Effect</strong>: Place critical instructions at the end of your prompt where they'll have the strongest impact.</li>
+<li><strong>Output Formatting</strong>: Signal your expected response format through examples or explicit instructions. This doesn't work as well for chat-based models, since they're designed outside of the scope of basic auto-completion.</li>
+<li><strong>Persona Invocation</strong>: Direct the model to adopt a specific expertise or perspective.</li>
+<li><strong>Few-Shot Learning</strong>: Demonstrate desired outputs through examples before asking for a new response.</li>
+</ul>
+<pre><code class="language-python">prompt = lambda persona, context, query: \
+f&quot;&quot;&quot;&lt;Persona&gt;
+{persona}
+&lt;/Persona&gt;
+
+&lt;Context&gt;
+{context}
+&lt;/Context&gt;
+
+&lt;Query&gt;
+{query}
+&lt;/Query&gt;
+
+&lt;Response&gt;
+&quot;&quot;&quot;
+</code></pre>
+<h2 id="retrieval-augmented-generation">Retrieval Augmented Generation</h2>
+<p>Enhance model responses by providing relevant external information:</p>
+<ul>
+<li>Retrieve pertinent documents or data based on the query.</li>
+<li>Incorporate this context into the prompt to ground the model's response in factual information.</li>
+</ul>
+<pre><code class="language-python">def rag_prompt(
+  query, retrieved_contexts=[],
+  instruction=&quot;Answer based on the provided context.&quot;
+):
+    context_section = &quot;\n\n&quot;.join([
+      f&quot;Context {i+1}:\n{context}&quot;
+      for i, context in enumerate(retrieved_contexts)
+    ])
+
+    return f&quot;&quot;&quot;Retrieved Information:
+    {context_section}
+
+    Question: {query}
+
+    {instruction}&quot;&quot;&quot;
+</code></pre>
+<h2 id="chain-of-thought">Chain of Thought</h2>
+<p>Guide the model through complex reasoning:</p>
+<ul>
+<li>Break down problems into logical steps.</li>
+<li>Encourage methodical thinking by requesting explicit reasoning.</li>
+</ul>
+<pre><code class="language-python">def chain_of_thought_prompt(problem, steps_required=True):
+    return f&quot;&quot;&quot;Problem: {problem}
+
+{'Please think through this step-by-step and explain your reasoning for each step.' if steps_required else 'Solve this problem by showing your work.'}&quot;&quot;&quot;
+</code></pre>
+<h2 id="self-ask">Self-Ask</h2>
+<p>Enable recursive problem-solving:</p>
+<ul>
+<li>Instruct the model to decompose complex problems by asking itself sub-questions.</li>
+<li>Allow it to answer these questions sequentially to build toward a complete solution.</li>
+</ul>
+<pre><code class="language-python">def self_ask_prompt(question, allow_search_queries=True):
+    return f&quot;&quot;&quot;Question: {question}
+
+To solve this problem, I'll break it down into smaller questions and answer them one by one.
+
+{'''If you need to search for specific information, format search queries as [SEARCH: your query].''' if allow_search_queries else ''}
+
+Let me think through this carefully:&quot;&quot;&quot;
+</code></pre>
+<h2 id="self-improvement">Self Improvement</h2>
+<p>Create a feedback loop for prompt optimization:</p>
+<ul>
+<li>Use the model to evaluate the effectiveness of existing prompts.</li>
+<li>Incorporate this critique as context for generating improved versions.</li>
+</ul>
+<pre><code class="language-python">def self_improvement_prompt(original_prompt, model_output, goal):
+    return f&quot;&quot;&quot;Original Prompt:
+\&quot;{original_prompt}\&quot;
+
+Output Received:
+\&quot;{model_output}\&quot;
+
+Desired Goal:
+\&quot;{goal}\&quot;
+
+What are the weaknesses of the original prompt? How could it be improved to better achieve the desired goal?
+
+After analyzing the weaknesses, provide an improved version of the prompt.&quot;&quot;&quot;
+</code></pre>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/language-models.html">language-models</a>
+                <a href="/tags/llm.html">llm</a>
+                <a href="/tags/nlp.html">nlp</a>
+                <a href="/tags/prompting.html">prompting</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

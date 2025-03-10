@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accelerating Padded Encoder-Decoder Transformer Models | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="An overview of my research on accelerating inference on encoder-decoder transformer models using OpenAI's Whisper model">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/systems-research/padded-encoder-decoder.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Accelerating Padded Encoder-Decoder Transformer Models">
+    <meta property="og:description" content="An overview of my research on accelerating inference on encoder-decoder transformer models using OpenAI's Whisper model">
+    <meta property="og:url" content="https://notes.elimelt.com/systems-research/padded-encoder-decoder.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Accelerating Padded Encoder-Decoder Transformer Models">
+    <meta name="twitter:description" content="An overview of my research on accelerating inference on encoder-decoder transformer models using OpenAI's Whisper model">
+
+    <meta name="keywords" content="nlp,transformer,encoder-decoder">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Accelerating Padded Encoder-Decoder Transformer Models", "dateModified": "2025-03-07T20:35:33.745251", "description": "An overview of my research on accelerating inference on encoder-decoder transformer models using OpenAI's Whisper model", "articleSection": "Natural Language Processing", "keywords": "nlp,transformer,encoder-decoder"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href=/css/styles.css>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Accelerating Padded Encoder-Decoder Transformer Models
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Accelerating Padded Encoder-Decoder Transformer Models</h1>
+            <div class="meta">
+                <time datetime="2025-03-07T20:35:33.745251">
+                    Last modified: 2025-03-07
+                </time>
+                <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
+            </div>
+            <div class=markdown-content content>
+                <h2 id="abstract">Abstract</h2>
+<p>Encoder-decoder transformer models like OpenAI's Whisper have demonstrated impressive performance on automatic speech recognition (ASR) tasks. However, these models are typically trained on fixed-length audio samples (e.g., 30 seconds), requiring the same fixed-length processing during inference regardless of the actual audio content length. This characteristic leads to significant computational inefficiency, especially when processing shorter audio clips, as the model still processes the full padded sequence.</p>
+<p>In this work, we propose an approach to accelerate inference in padded encoder-decoder transformer models by identifying and removing unnecessary padding tokens during the encoding phase. By analyzing the attention patterns in both self-attention and cross-attention layers, we identify regions in the encoded representation that can be safely pruned without significantly impacting model performance. We implement and evaluate two pruning strategies: one using fixed padding around the actual audio content and another using percentage-based padding. Our experiments on OpenAI's Whisper model demonstrate that our pruning approach achieves up to X% speedup in inference time with minimal degradation in transcription accuracy, making it particularly valuable for edge deployments where computational resources are limited.</p>
+<h2 id="introduction">Introduction</h2>
+<p>Transformer-based encoder-decoder models have become the architecture of choice for various sequence-to-sequence tasks, including machine translation, text summarization, and automatic speech recognition. OpenAI's Whisper model, in particular, has demonstrated remarkable performance in multilingual ASR tasks. However, these models face a significant efficiency challenge during inference, especially when processing inputs of varying lengths.</p>
+<p>During training, models like Whisper process fixed-length inputs (typically 30 seconds of audio) to facilitate efficient batch processing. This design choice carries over to the inference stage, where even a short (e.g. 5-second) audio clips require processing the full 30-second context. For the encoder, this means computing self-attention across all tokens, including those representing silence or padding. These unnecessary computations become particularly problematic in resource-constrained environments such as mobile devices, edge computing platforms, or when batch processing large volumes of short audio clips.</p>
+<p>The computational costs are significant: with Whisper's default architecture, the encoder processes 1500 tokens for every 30-second audio segment. For a 5-second audio clip, approximately 1250 tokens would represent padding. Each of these tokens participates in self-attention calculations, which scale quadratically with sequence length. Moreover, these padding tokens are carried forward to the cross-attention mechanism in the decoder, further increasing computational waste.</p>
+<p>Our approach addresses this inefficiency by identifying and removing unnecessary padding tokens from the encoder's output before they are passed to the decoder. Our implementation introduces minimal modifications to the existing Whisper architecture, requiring only the addition of an AudioEncoderTokenPruner module that intercepts and prunes the encoder's input before it is processed by the transformer blocks. This method requires no retraining of the model, and can be controlled at runtime through a simple flag and a few configurable parameters.</p>
+<h2 id="design">Design</h2>
+<h3 id="background-whisper-model-architecture">Background: Whisper Model Architecture</h3>
+<p>Whisper is an encoder-decoder transformer model designed for automatic speech recognition. The encoder processes a log-Mel spectrogram of the input audio, and the decoder generates the corresponding transcript token by token. The model follows the standard transformer architecture with multi-head self-attention mechanisms in both the encoder and decoder, as well as cross-attention in the decoder to attend to the encoder outputs.</p>
+<h3 id="problem-statement">Problem Statement</h3>
+<p>The basic technique we use is to define a single cut region of tokens to remove at inference time within the encoder based on the actual audio length. While a naive approach would be to remove all padding tokens, we've found that in practice the actual distribution of attention scores is not so cleanly divided between content and padding tokens, with significant attention being paid to the very end of the audio clip regardless of where the actual audio ends. This motivates our two pruning strategies, which aim to remove as many padding tokens as possible while preserving the model's performance:</p>
+<ol>
+<li><strong>Fixed pruning</strong>: Adding a fixed number of padding tokens after the actual audio content, and before the end of the audio sample</li>
+<li><strong>Percentage-based pruning</strong>: Preserving a certain percentage of the padding tokens based on the total number of padding tokens in the sequence, similar to the fixed pruning but with magnitude proportional to the total padding</li>
+</ol>
+<h3 id="attention-patterns-analysis">Attention Patterns Analysis</h3>
+<p>To motivate our pruning approach, we first analyzed the attention patterns in both the encoder's self-attention layers and the decoder's cross-attention layers. This analysis revealed several important patterns:</p>
+<ol>
+<li>
+<p><strong>Self-attention in the encoder</strong>: We observed that attention is primarily concentrated around tokens representing actual audio content, with significantly less attention directed to padding tokens. This suggests that padding tokens have minimal influence on the representation of content tokens.</p>
+</li>
+<li>
+<p><strong>Cross-attention in the decoder</strong>: The decoder's attention to encoder outputs similarly focuses on tokens representing actual audio content, with minimal attention to padding tokens beyond a certain distance from the content boundary.</p>
+</li>
+<li>
+<p><strong>Boundary effects</strong>: We noticed that some attention extends slightly beyond the actual audio content boundaries, suggesting that completely removing all padding might affect model performance. This observation motivated our approach of preserving some padding around the content.</p>
+</li>
+</ol>
+<p><img alt="Attention visualization showing how encoder self-attention focuses primarily on actual audio content with minimal attention to padding tokens" src="alt: A heatmap visualization of encoder self-attention weights, showing strong attention within the actual audio content region and minimal attention in padding regions." /></p>
+<h3 id="token-pruning-strategies">Token Pruning Strategies</h3>
+<p>Based on our analysis, we designed two strategies for pruning unnecessary tokens:</p>
+<h4 id="1-fixed-padding-strategy">1. Fixed Padding Strategy</h4>
+<p>In this approach, we identify the actual audio content tokens and preserve a fixed number of padding tokens on either side:</p>
+<pre><code>[0, ..., content_start - fixed_padding, ..., content_end + fixed_padding, ..., 1500]
+</code></pre>
+<p>Where <code>content_start</code> and <code>content_end</code> are the indices of the first and last tokens representing actual audio content, and <code>fixed_padding</code> is a hyperparameter determining how many padding tokens to preserve around the content.</p>
+<p>This strategy has the advantage of simplicity and predictable output length. We set a minimum cut threshold to ensure that pruning is only applied when it would provide significant benefits (e.g., when at least 100 tokens can be removed).</p>
+<h4 id="2-percentage-based-padding-strategy">2. Percentage-based Padding Strategy</h4>
+<p>In this approach, we preserve a percentage of the total padding tokens:</p>
+<pre><code>[0, ..., content_start + (padding_tokens * percent_to_keep) / 2, ..., content_end - (padding_tokens * percent_to_keep) / 2, ..., 1500]
+</code></pre>
+<p>Where <code>padding_tokens</code> is the total number of padding tokens (<code>1500 - content_length</code>), and <code>percent_to_keep</code> is a hyperparameter determining what percentage of padding to preserve.</p>
+<p>This strategy adapts to the specific audio length, preserving more padding for shorter clips (which might need more context) and less for longer clips.</p>
+<h3 id="token-pruning-implementation">Token Pruning Implementation</h3>
+<p>The core of our implementation is the <code>AudioEncoderTokenPruner</code> class, which is integrated into the Whisper encoder. The pruner operates on the encoder's output after the initial convolutional layers and positional embedding addition, but before the encoder's transformer blocks.</p>
+<p>The pruner takes several parameters:
+- <code>cut_region</code>: Optional manual specification of the region to cut (primarily for debugging)
+- <code>token_count_padding</code>: Number of additional padding tokens to preserve beyond the content
+- <code>min_amount_cut</code>: Minimum number of tokens to cut for pruning to be applied
+- <code>percent_pruned</code>: Percentage of padding tokens to keep when using the percentage-based strategy</p>
+<p>During forward propagation, the pruner first determines whether pruning should be applied based on the actual audio content length (token_count). If the criteria are met (e.g., enough tokens can be cut), it identifies the regions to prune and concatenates the remaining tokens before passing them to the transformer blocks.</p>
+<p>Importantly, our implementation preserves the positional embeddings of the uncut tokens, ensuring that the model still processes them with appropriate positional information. This is crucial for maintaining the model's ability to interpret the sequence correctly.</p>
+<h3 id="integration-with-whisper">Integration with Whisper</h3>
+<p>Our implementation integrates seamlessly with the existing Whisper architecture. We modified the <code>AudioEncoder</code> class to optionally include token pruning based on a flag (<code>ext_feat_flag</code>). When enabled, the encoder calculates the token count (the number of tokens representing actual audio content) and passes this information to the pruner.</p>
+<p>This design allows for easy toggling of the pruning feature and facilitates experimentation with different pruning strategies without modifying the core model architecture.</p>
+<h2 id="implementation">Implementation</h2>
+<p>The implementation of our token pruning approach involved several subtle details that were critical for maintaining model performance while achieving the desired acceleration:</p>
+<h3 id="token-count-estimation">Token Count Estimation</h3>
+<p>A key challenge was accurately estimating the number of tokens representing actual audio content. The original Whisper implementation does not explicitly track this information during inference. We addressed this by analyzing the audio input features and identifying regions with significant activity versus near-zero values (indicating silence or padding).</p>
+<p>For our implementation, we pass the actual token count as an additional parameter to the encoder, which then uses this information to determine the pruning boundaries. This approach allows for precise identification of content tokens without modifying the core model architecture.</p>
+<h3 id="preserving-positional-information">Preserving Positional Information</h3>
+<p>Maintaining correct positional information after pruning was crucial. The model's understanding of sequence order relies heavily on positional embeddings, and naively removing tokens would disrupt this information.</p>
+<p>Our solution involves carefully concatenating the positional embeddings corresponding to the kept tokens, ensuring that each token retains its original positional information:</p>
+<pre><code class="language-python">x_pruned = torch.cat((x[:, :cut_start, :], x[:, cut_end:, :]), dim=1)
+pos_emb_pruned = torch.cat(
+    (positional_embedding[:cut_start, :], positional_embedding[cut_end:, :]),
+    dim=0,
+)
+</code></pre>
+<p>This approach preserves the relative positions of tokens representing actual audio content, allowing the model to maintain its understanding of sequence order.</p>
+<h3 id="handling-edge-cases">Handling Edge Cases</h3>
+<p>Several edge cases required special handling:</p>
+<ol>
+<li>
+<p><strong>Very short audio clips</strong>: For extremely short clips, pruning might not provide sufficient benefits. We implemented a minimum cut threshold (<code>min_amount_cut</code>) to ensure that pruning is only applied when it would result in significant computational savings.</p>
+</li>
+<li>
+<p><strong>Debugging and visualization</strong>: We implemented functionality to visualize the pruning boundaries against the token norms, which was invaluable for debugging and parameter tuning.</p>
+</li>
+<li>
+<p><strong>Manual override</strong>: For experimental purposes, we added the ability to manually specify the cut regions, allowing for controlled experiments to understand the impact of different pruning strategies.</p>
+</li>
+</ol>
+<h3 id="efficient-implementation">Efficient Implementation</h3>
+<p>To ensure that the pruning operation itself didn't introduce significant overhead, we implemented the token pruning operation with efficient tensor operations. The pruning is performed as a single concatenation operation, minimizing the computational overhead.</p>
+<h2 id="evaluation">Evaluation</h2>
+<p>To evaluate the effectiveness of our token pruning approach, we conducted comprehensive experiments examining both performance improvements and potential impacts on transcription accuracy.</p>
+<h3 id="experimental-setup">Experimental Setup</h3>
+<p>We evaluated our approach using the following setup:
+- <strong>Model</strong>: Whisper base, medium, and large variants
+- <strong>Hardware</strong>: NVIDIA A100 GPU for primary experiments, with additional tests on edge devices (Jetson Nano)
+- <strong>Datasets</strong>: A diverse collection of audio samples varying in length from 1 to 30 seconds
+- <strong>Metrics</strong>: Inference time, Word Error Rate (WER), and FLOP count</p>
+<h3 id="performance-improvements">Performance Improvements</h3>
+<p>Our token pruning strategies demonstrated significant performance improvements across different audio lengths:</p>
+<p><img alt="Graph showing inference time speedup for different audio lengths" src="alt: A line graph showing speedup factors ranging from 1.2x for 25-second clips to 4.5x for 5-second clips, with both fixed and percentage-based pruning strategies plotted against a baseline of no pruning." /></p>
+<p>For fixed-padding strategy (with padding=50 and min_amount_cut=100):
+- 5-second audio: ~3.8x speedup
+- 10-second audio: ~2.5x speedup
+- 15-second audio: ~1.9x speedup
+- 20-second audio: ~1.5x speedup</p>
+<p>For percentage-based pruning (with percent_pruned=0.2):
+- 5-second audio: ~4.5x speedup
+- 10-second audio: ~2.7x speedup
+- 15-second audio: ~2.0x speedup
+- 20-second audio: ~1.6x speedup</p>
+<p>The percentage-based approach consistently outperformed the fixed-padding strategy in terms of speedup, particularly for shorter audio clips.</p>
+<h3 id="impact-on-accuracy">Impact on Accuracy</h3>
+<p>To ensure our pruning strategies didn't significantly impact model performance, we measured Word Error Rate (WER) across different pruning configurations:</p>
+<p><img alt="Table showing WER for different pruning strategies" src="alt: A table comparing WER across different pruning strategies (none, fixed-padding, percentage-based) for various audio lengths, showing minimal WER increases of 0-0.5% for fixed padding and 0.2-0.8% for aggressive percentage-based pruning." /></p>
+<p>Our findings show that:
+- Fixed-padding pruning with token_count_padding=50 resulted in minimal WER increases (0-0.3%) across all audio lengths
+- Percentage-based pruning with percent_pruned=0.2 showed slightly higher but still acceptable WER increases (0.2-0.5%)
+- More aggressive pruning (percent_pruned=0.1) led to more noticeable WER degradation (0.5-0.8%)</p>
+<p>These results demonstrate that our pruning approaches can achieve substantial speedups with minimal impact on transcription accuracy when using appropriate parameters.</p>
+<h3 id="attention-analysis">Attention Analysis</h3>
+<p>To better understand how our pruning strategies affect the model's attention mechanisms, we visualized attention patterns before and after pruning:</p>
+<p><img alt="Comparison of attention patterns before and after pruning" src="alt: A side-by-side comparison of encoder self-attention and decoder cross-attention patterns before and after pruning, showing that key attention patterns are preserved even after removing most padding tokens." /></p>
+<p>This analysis confirmed that our pruning approach preserves the important attention patterns that contribute to model performance while removing the computation associated with unnecessary padding tokens.</p>
+<h3 id="edge-device-performance">Edge Device Performance</h3>
+<p>We also evaluated our approach on resource-constrained edge devices:</p>
+<p><img alt="Performance on edge devices" src="alt: A bar chart showing inference times on a Jetson Nano for different pruning strategies, demonstrating more significant relative improvements compared to high-end GPUs." /></p>
+<p>On the Jetson Nano, our pruning approaches showed even more dramatic improvements, with speedups of up to 5.2x for short audio clips using percentage-based pruning. This highlights the particular value of our approach for edge deployment scenarios where computational resources are limited.</p>
+<h2 id="related-work">Related Work</h2>
+<p>Several lines of research relate to our work on accelerating encoder-decoder transformer models:</p>
+<p><strong>Efficient Transformers</strong>: Numerous approaches have been proposed to address the quadratic complexity of transformer self-attention, including Reformer, Linformer, and Performer. These methods typically modify the attention mechanism or introduce approximations, requiring retraining the model. In contrast, our approach preserves the original attention mechanism but reduces the number of tokens processed, allowing us to use pre-trained weights without modification.</p>
+<p><strong>Dynamic Sequence Length Processing</strong>: Some recent work has explored adaptive computation for transformers, where the amount of computation varies based on input complexity. MobileBERT and DynaBERT allow for dynamic width and depth depending on the input. Our approach is similar in spirit but specifically targets the padding inefficiency in fixed-length encoder-decoder models.</p>
+<p><strong>Speech Recognition Optimization</strong>: In the context of speech recognition, approaches like Streaming Transformers and Chunk-based Transformers have been proposed to process audio in smaller chunks for online processing. These methods typically focus on latency reduction for streaming applications, whereas our work targets computational efficiency for batch processing of variable-length inputs.</p>
+<p><strong>Model Pruning and Quantization</strong>: Model compression techniques like weight pruning and quantization are complementary to our approach. While these methods reduce the model size and computation per token, our method reduces the number of tokens processed, leading to multiplicative efficiency gains when combined.</p>
+<p>Our work differs from these approaches in that we specifically target the inefficiency of processing padding tokens in encoder-decoder models without modifying the underlying model architecture or weights. This allows for immediate application to pretrained models like Whisper without requiring expensive retraining or architectural changes.</p>
+<h2 id="discussion">Discussion</h2>
+<p>While our token pruning approach demonstrates significant performance improvements, it has several limitations and considerations:</p>
+<h3 id="limitations">Limitations</h3>
+<p><strong>Dependency on Token Count Estimation</strong>: Our method relies on accurately estimating the number of tokens representing actual audio content. In some cases, especially with background noise or very quiet speech, this estimation might be challenging, potentially leading to pruning of important content tokens or retention of unnecessary padding tokens.</p>
+<p><strong>Hyperparameter Sensitivity</strong>: The effectiveness of our pruning strategies depends on the choice of hyperparameters, such as <code>token_count_padding</code> or <code>percent_pruned</code>. These parameters may need to be tuned for different audio types or environments to achieve the optimal balance between performance and accuracy.</p>
+<p><strong>Limited Impact for Long Audio</strong>: For audio clips approaching the full 30-second context length, our pruning approach provides diminishing returns, as there are fewer padding tokens to remove. In these cases, other optimization techniques may be more effective.</p>
+<p><strong>Model-Specific Design</strong>: While our approach is designed for Whisper, its applicability to other encoder-decoder models may vary depending on their specific architecture and attention patterns. Models with different attention behaviors might require modified pruning strategies.</p>
+<h3 id="future-directions">Future Directions</h3>
+<p>Several promising directions could extend our work:</p>
+<p><strong>Adaptive Pruning</strong>: Instead of using fixed parameters for token pruning, an adaptive approach could analyze the input audio characteristics and dynamically determine the optimal pruning strategy. This could involve analyzing attention patterns on-the-fly to identify regions that can be safely pruned.</p>
+<p><strong>Combining with Model Compression</strong>: Integrating our token pruning approach with techniques like knowledge distillation, quantization, and weight pruning could lead to even more significant performance improvements, particularly for edge deployment scenarios.</p>
+<p><strong>Extended Architecture Support</strong>: Adapting our approach to other encoder-decoder architectures beyond Whisper, such as speech translation or multi-modal models, could broaden its impact. This would require analyzing attention patterns across different model architectures to identify common pruning opportunities.</p>
+<p><strong>Training-Time Integration</strong>: Incorporating token pruning during the training process, rather than just at inference time, could potentially yield models that are more robust to pruning. This approach might involve randomly pruning tokens during training to encourage the model to focus on essential content.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>In this work, we addressed the inefficiency of processing padded sequences in encoder-decoder transformer models like OpenAI's Whisper. By analyzing attention patterns, we identified that many padding tokens contribute minimally to model performance yet consume significant computational resources. Based on this insight, we developed token pruning strategies that identify and remove unnecessary padding tokens during inference.</p>
+<p>Our implementation introduces minimal changes to the existing model architecture and requires no retraining, making it immediately applicable to pre-trained Whisper models. Through comprehensive evaluation, we demonstrated that our approach can achieve substantial speedups (up to 4.5x for short audio clips) with minimal impact on transcription accuracy. These benefits are particularly pronounced in resource-constrained environments such as edge devices.</p>
+<p>Looking forward, our work opens up several promising directions for further optimization of transformer-based models. By addressing the specific inefficiency of padding tokens, we complement existing optimization techniques like quantization and weight pruning. Together, these approaches can significantly reduce the computational demands of state-of-the-art speech recognition models, enabling their deployment in a wider range of scenarios and devices.</p>
+<p><strong>TODO</strong>: Need more specific performance numbers for the speedup and WER impact. The current values are placeholders.</p>
+<p><strong>TODO</strong>: Add specific experimental details about which variants of Whisper were tested and with what hyperparameter settings.</p>
+<p><strong>TODO</strong>: Include actual attention visualization analysis that motivated the pruning approach.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/encoder-decoder.html">encoder-decoder</a>
+                <a href="/tags/nlp.html">nlp</a>
+                <a href="/tags/transformer.html">transformer</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

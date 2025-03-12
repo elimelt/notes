@@ -577,14 +577,6 @@ footer {
       row-gap: 0rem;
   }
 
-  .markdown-content p:first-of-type::first-letter {
-      float: left;
-      font-size: 3.5em;
-      line-height: 0.8;
-      padding-right: 0.1em;
-      font-weight: 700;
-  }
-
   /* Improve reading with advanced CSS columns for certain elements */
   .content .two-column {
       column-count: 2;

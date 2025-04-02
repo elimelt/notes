@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="How to write a fast kernel?
+Matrix Transpose Kernel
+Basic way with Torch
+import torch
+
+num_rows = num_cols = 8192
+a = torch.randn(num_rows, num_cols)
+
+res = a.t...">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/how-to-write-a-fast-kernel.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="How to write a fast kernel?
+Matrix Transpose Kernel
+Basic way with Torch
+import torch
+
+num_rows = num_cols = 8192
+a = torch.randn(num_rows, num_cols)
+
+res = a.t...">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/how-to-write-a-fast-kernel.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="">
+    <meta name="twitter:description" content="How to write a fast kernel?
+Matrix Transpose Kernel
+Basic way with Torch
+import torch
+
+num_rows = num_cols = 8192
+a = torch.randn(num_rows, num_cols)
+
+res = a.t...">
+
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "", "dateModified": "2025-04-02T11:16:35.920910", "description": "How to write a fast kernel?\nMatrix Transpose Kernel\nBasic way with Torch\nimport torch\n\nnum_rows = num_cols = 8192\na = torch.randn(num_rows, num_cols)\n\nres = a.t..."}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href=/css/styles.css>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » 
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <div class="meta">
+                <time datetime="2025-04-02T11:16:35.920910">
+                    Last modified: 2025-04-02
+                </time>
+            </div>
+            <div class=markdown-content content>
+                <h1 id="how-to-write-a-fast-kernel">How to write a fast kernel?</h1>
+<h2 id="matrix-transpose-kernel">Matrix Transpose Kernel</h2>
+<h3 id="basic-way-with-torch">Basic way with Torch</h3>
+<pre><code class="language-py">import torch
+
+num_rows = num_cols = 8192
+a = torch.randn(num_rows, num_cols)
+
+res = a.t().contiguous()
+
+start = torch.cuda.Event(enable_timing=True)
+end = torch.cuda.Event(enable_timing=True)
+
+start.record()
+
+for i in range(100):
+    res = a.t().contiguous()
+
+end.record()
+torch.cuda.synchronize()
+
+elapsed_time = start.elapsed_time(end)
+time_per_iter = elapsed_time / 100
+
+print(f&quot;Elapsed time: {elapsed_time} ms&quot;)
+print(f&quot;Time per iteration: {time_per_iter} ms&quot;)
+</code></pre>
+<h3 id="how-can-we-optimize">How can we optimize?</h3>
+<p>Row-based partitioning in a CUDA kernel? But arrays can be very long. We can't load all the data into the shared memory. So, we need to partition the data into smaller chunks per-thread (since we have at most 1024 threads per block).</p>
+<h3 id="cuda-kernel">CUDA Kernel</h3>
+<pre><code class="language-cpp">#include &lt;torch/extension.h&gt;
+#include &lt;stdio.h&gt;
+
+__global__ void transpose(float* input, float* output, int num_rows, int num_cols) {
+    int row = blockIdx.x;
+    int col_start = threadIdx.x * (num_cols / blockDim.x);
+    int col_end = col_start + (num_cols / blockDim.x);
+
+    for (int col = col_start; col &lt; col_end; ++col) {
+        if (col &lt; num_cols) {
+            output[col * num_rows + row] = input[row * num_cols + col];
+        }
+    }
+}
+
+</code></pre>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

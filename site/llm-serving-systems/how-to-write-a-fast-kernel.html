@@ -51,7 +51,7 @@ res = a.t...">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "", "dateModified": "2025-04-02T11:16:35.920910", "description": "How to write a fast kernel?\nMatrix Transpose Kernel\nBasic way with Torch\nimport torch\n\nnum_rows = num_cols = 8192\na = torch.randn(num_rows, num_cols)\n\nres = a.t..."}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "", "dateModified": "2025-04-02T11:20:51.634725", "description": "How to write a fast kernel?\nMatrix Transpose Kernel\nBasic way with Torch\nimport torch\n\nnum_rows = num_cols = 8192\na = torch.randn(num_rows, num_cols)\n\nres = a.t..."}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -97,7 +97,7 @@ res = a.t...">
     <main role="main">
         <article>
             <div class="meta">
-                <time datetime="2025-04-02T11:16:35.920910">
+                <time datetime="2025-04-02T11:20:51.634725">
                     Last modified: 2025-04-02
                 </time>
             </div>
@@ -148,6 +148,11 @@ __global__ void transpose(float* input, float* output, int num_rows, int num_col
 }
 
 </code></pre>
+<h2 id="coallesced-memory-access">Coallesced Memory Access</h2>
+<ul>
+<li>Inside one warp, if memory accesses are coalesced, then the memory access is fast because it can be batched</li>
+<li>Data can then be retrieved in a single memory transaction</li>
+</ul>
             </div>
         </article>
     </main>

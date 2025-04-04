@@ -60,3 +60,9 @@ __global__ void transpose(float* input, float* output, int num_rows, int num_col
 }
 
 ```
+
+
+## Coallesced Memory Access
+
+- Inside one warp, if memory accesses are coalesced, then the memory access is fast because it can be batched
+- Data can then be retrieved in a single memory transaction

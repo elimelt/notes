@@ -1,228 +1,216 @@
 <!--
-Overview of system design interviews
+How to Get a Return Offer
  -->
 
 <!-- backgroundColor: #121212 -->
 <!-- color: #fff -->
 <!-- style: normal -->
 
-# Internship Success: How to Get a Return Offer
-*A guide to making the most of your software engineering internship*
+# How to Get a Return Offer
+*A non-exhaustive guide to making the most of your internship*
+
+[wiki entry](https://wiki.swecc.org/member-resources/succeeding-at-your-internship/0-overview/)
 
 ---
 
 # Overview
 
-- First internship can be intimidating
-- This guide covers:
-  - Before you start
-  - Onboarding
-  - Planning your project
-  - Getting feedback
-  - Hitting your stride
-  - Wrapping up
+- Before you start
+- Onboarding
+- Planning your project
+- Getting feedback
+- Hitting your stride
+- Wrapping up
 
 ---
 
 # Before You Start
 
 ## Gather Information
-- Make a list of technologies you'll encounter
-- Research the company's tech stack
-- Reach out to your manager/mentor (if connected)
-
-## Identify Gaps
-- Prioritize learning new languages/frameworks
-- Focus on concepts you're unfamiliar with
-- Don't try to learn everything at once
-
-## Prepare
-- Read documentation about core technologies
-- Build small projects with new languages
-- Research the domain you'll be working in
+- List technologies you'll encounter
+- Research company's tech stack
+- Connect with your manager/mentor
 
 ---
 
-# Onboarding Like a Pro
+# Before You Start
 
-## Day 1
+## Identify Gaps
+- Focus on new languages/frameworks
+- Target unfamiliar concepts
+- Don't try to learn everything
+
+---
+
+# Before You Start
+
+## Prepare
+- Read core documentation
+- Build small practice projects
+- Research the domain
+
+---
+
+# Onboarding: Day 1
+
 - Meet your team and manager
-- Set up your development environment
-- Familiarize yourself with company tools
-- Review onboarding materials
+- Set up development environment
+- Learn company tools
 - Take detailed notes
 
-## Week 1
-- Explore the codebase (focus on your area)
-- Shadow someone on a complete task
-- Submit a small change to the codebase
-- Attend team meetings and ask questions
-- Schedule one-on-ones with teammates
-- Understand your evaluation criteria
+---
+
+# Onboarding: Week 1
+
+- Explore the codebase
+- Shadow an experienced teammate
+- Submit a small change
+- Schedule one-on-ones
 
 ---
 
 # Planning Your Project
 
-## Communication is Key
-- Check in regularly with your mentor
-- Don't go heads-down for too long
-- Ask questions early and often
-
-## Seek Alignment
-- Understand what success looks like for different stakeholders
-- Get everyone on the same page early
-
-## Start with the Big Picture
-- Why does this project matter?
-- Who will use what you're building?
-- How does it fit into the broader system?
-- What are the non-negotiable requirements?
+## Communication
+- Regular check-ins with mentor
+- Don't disappear for days
+- Ask questions early
 
 ---
 
-# Planning Your Project (cont.)
+# Planning Your Project
+
+## Alignment & Big Picture
+- Define success criteria
+- Understand stakeholder needs
+- Know why your project matters
+- Identify constraints
+
+---
+
+# Planning Your Project
 
 ## Break It Down
-- Divide your project into manageable chunks
-- Identify dependencies between tasks
+- Create manageable chunks
+- Identify dependencies
 - Get help with estimations
 
-## Document Your Decisions
-- What you decided and why
-- Alternatives you considered
-- Open questions and concerns
+---
 
-## Be Realistic About Scope
-- Internships are short
-- Better to deliver something small and complete
-- Communicate early if deadlines are at risk
+# Planning Your Project
+
+## Document & Scope
+- Record decisions and alternatives
+- List open questions
+- Be realistic about timelines
+- Small and complete > large and unfinished
 
 ---
 
 # Getting Feedback
 
-## Be Clear About Your Goals
-- Tell your mentor/manager if you want a return offer
-- This helps them give targeted feedback
-
-## Start Early, Ask Often
-- Begin asking for feedback by week 2
-- Ask at least once a week
-- Show how you're applying previous feedback
-
-## Ask Specific Questions
-- "How am I doing?" is too vague
-- "Could you give me feedback on how I presented my design?"
-- "Is this approach to debugging efficient?"
+## Be Proactive
+- State your goals clearly
+- Ask for feedback by week 2
+- Weekly feedback check-ins
 
 ---
 
-# Getting Feedback (cont.)
+# Getting Feedback
 
-## Elicit Constructive Criticism
+## Ask Better Questions
+- Be specific in your requests
+- "How was my design presentation?"
+- "Is there a better debugging approach?"
+
+---
+
+# Getting Feedback
+
+## Handle Criticism Well
 - Self-evaluate first
-- Reassure them you want actionable feedback
-- Ask comparison questions
-- Look for patterns in feedback
+- Don't get defensive
+- Thank people for honesty
+- Ask for clarification
 
-## Don't Take It Personally
-- Focus on what you can learn
-- Thank people for their honesty
-- Ask clarifying questions
+---
+
+# Getting Feedback
 
 ## Apply Feedback Visibly
-- Show you value their input
-- Don't make people repeat themselves
-- Build trust through improvement
+- Show you're listening
+- Implement suggestions quickly
+- Don't repeat mistakes
+- Reference feedback in your work
 
 ---
 
 # Hitting Your Stride
 
-## Signs You're in a Good Rhythm
+## Signs of Good Progress
 - Solid project understanding
 - Codebase familiarity
-- Workflow fluency
-- Troubleshooting abilities
-- Independence
+- Independent problem-solving
+- Efficient workflow
+
+---
+
+# Hitting Your Stride
 
 ## Maintain Momentum
-- Create structure in your day
+- Structure your day
 - Minimize context switching
-- Identify bottlenecks and blockers
-- Have multiple tasks to work on
+- Identify and resolve blockers
+- Work on multiple tasks
 
 ---
 
-# Hitting Your Stride (cont.)
+# Hitting Your Stride
 
-## Track Your Work
-- Keep a log of completed tasks
-- Document what you're working on
-- Note upcoming tasks
-
-## Make the Most of Your Experience
-- Look beyond your project
-- Seek learning opportunities
+## Beyond Your Project
+- Attend tech talks
+- Explore other teams' work
 - Build your network
-- Utilize your benefits
+- Use all available resources
 
 ---
 
-# Wrapping Up Your Internship
+# Wrapping Up
 
-## Plan Your Transition (2-3 weeks before end date)
-- Review project status with mentor/manager
-- Identify must-complete vs. handoff tasks
-- Clarify expectations for final weeks
-
-## Update All Task Tracking
-- Current status of all tasks
-- Details on in-progress work
-- Documentation of blockers
+## Plan Your Transition
+- Review status with manager (2-3 weeks before end)
+- Prioritize remaining tasks
+- Create handoff plan
 
 ---
 
-# Wrapping Up (cont.)
+# Wrapping Up
 
-## Create Permanent Documentation
+## Documentation
 - Update design docs
-- Create/update READMEs and runbooks
-- Document deployment and monitoring
-- Include troubleshooting guides
-
-## Prepare Handoff Documentation
-- Overview of your work
-- Current status and remaining tasks
-- Known issues and blockers
-- Future improvements
+- Create/update READMEs
+- Document deployment process
+- Prepare troubleshooting guides
 
 ---
 
-# Wrapping Up (cont.)
+# Wrapping Up
 
-## Deliver a Final Presentation
-- Keep it concise
+## Final Steps
+- Deliver concise presentation
 - Focus on business impact
-- Highlight what you learned
-- Acknowledge helpers
-- Prepare for questions
-
-## Request Recommendations
-- Ask for LinkedIn recommendations
-- Connect with teammates and other interns
+- Highlight your learnings
+- Request recommendations
 
 ---
 
 # Key Takeaways
 
-- Communication is crucial for success
-- Seek feedback early and often
-- Break down your project into manageable pieces
-- Document your work thoroughly
-- Build relationships beyond your immediate team
-- End strong with proper handoff
+- Communicate proactively
+- Seek and apply feedback
+- Break down complex work
+- Document thoroughly
+- End with a strong handoff
 
 ---
 

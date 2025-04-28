@@ -228,7 +228,7 @@ class SiteGenerator:
                 links_html = "\n".join(
                     f'<li><a href="{item.name.replace('.md', '.html')}">{item.name}</a></li>'
                     for item in file_path.iterdir()
-                    if item.is_file() and item.suffix in self.SUPPORTED_CONTENT
+                    if item.is_file()
                 )
                 if links_html:
                     self._generate_dir_index(file_path / "index.html", links_html)

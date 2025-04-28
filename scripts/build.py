@@ -224,6 +224,7 @@ class SiteGenerator:
                 if file_path.suffix in {".md", ".markdown"}:
                     self._process_markdown(file_path)
             elif file_path.is_dir() and file_path.name not in self.IGNORED_DIRECTORIES:
+                print(f"Processing directory: {file_path}")
                 # Generate an index.html for directories
                 links_html = "\n".join(
                     f'<li><a href="{file_path.name}/{item.name}">{item.name}</a></li>'

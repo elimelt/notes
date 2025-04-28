@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dynamo | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="None">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/ml-systems-research/papers/dynamo.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="dynamo">
+    <meta property="og:description" content="None">
+    <meta property="og:url" content="https://notes.elimelt.com/ml-systems-research/papers/dynamo.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="dynamo">
+    <meta name="twitter:description" content="None">
+
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "dynamo", "dateModified": "2024-08-22T07:19:30", "description": null}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href=/css/styles.css>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » dynamo
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>dynamo</h1>
+            <div class="meta">
+                <time datetime="2024-08-22T07:19:30">
+                    Last modified: 2024-08-22
+                </time>
+            </div>
+            <div class=content>
+                
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

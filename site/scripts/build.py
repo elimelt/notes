@@ -231,7 +231,7 @@ class SiteGenerator:
                     if item.is_file() and item.suffix in self.SUPPORTED_CONTENT
                 )
                 if links_html:
-                    self._generate_dir_index(file_path, links_html)
+                    self._generate_dir_index(file_path / "index.html", links_html)
 
     def _organize_content(self) -> None:
         """Organize pages by category and tags"""

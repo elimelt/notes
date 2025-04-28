@@ -190,55 +190,6 @@ class SiteGenerator:
         except Exception as e:
             logger.error(f"Failed to process {file_path}: {str(e)}")
 
-    def _process_pdf(self, file_path: Path) -> None:
-        """Process a PDF file into a Page object"""
-        try:
-            relative_path = file_path.relative_to(self.input_dir)
-            output_path = self.output_dir / relative_path.with_suffix(".html")
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(file_path, output_path)
-            output_path.chmod(0o644)
-
-            page = Page(
-                title=file_path.stem,
-                path=relative_path,
-                content="",
-                modified_date=datetime.fromtimestamp(file_path.stat().st_mtime),
-                category=None,
-                tags=[],
-                description=None,
-                is_index=False,
-            )
-
-            self.pages[relative_path] = page
-
-        except Exception as e:
-            logger.error(f"Failed to process {file_path}: {str(e)}")
-
-    def _process_image(self, file_path: Path) -> None:
-        """Process an image file into a Page object"""
-        try:
-            relative_path = file_path.relative_to(self.input_dir)
-            output_path = self.output_dir / relative_path
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(file_path, output_path)
-            output_path.chmod(0o644)
-
-            page = Page(
-                title=file_path.stem,
-                path=relative_path,
-                content="",
-                modified_date=datetime.fromtimestamp(file_path.stat().st_mtime),
-                category=None,
-                tags=[],
-                description=None,
-                is_index=False,
-            )
-
-            self.pages[relative_path] = page
-
-        except Exception as e:
-            logger.error(f"Failed to process {file_path}: {str(e)}")
 
     def _process_html(self, file_path: Path) -> None:
         """Process an HTML file into a Page object"""
@@ -272,18 +223,6 @@ class SiteGenerator:
             if file_path.is_file() and file_path.suffix in self.SUPPORTED_CONTENT:
                 if file_path.suffix in {".md", ".markdown"}:
                     self._process_markdown(file_path)
-                elif file_path.suffix == ".html":
-                    # Copy HTML files directly
-                    self._process_html(file_path)
-                elif file_path.suffix == ".pdf":
-                    # Copy PDF files directly
-                    self._process_pdf(file_path)
-                elif file_path.suffix in {".jpg", ".jpeg", ".png", ".gif"}:
-                    # Copy image files directly
-                    self._process_image(file_path)
-                else:
-                    # Unsupported file type, log a warning
-                    logger.warning(f"Unsupported file type: {file_path.suffix}")
             elif file_path.is_dir() and file_path.name not in self.IGNORED_DIRECTORIES:
                 # Generate an index.html for directories
                 links_html = "\n".join(

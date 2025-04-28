@@ -511,13 +511,13 @@ class SiteGenerator:
 
         content = f"<ul>{links_html}</ul>"
         page = Page(
-            title=f"Index of {dir_path.name}",
+            title=f"Index of {dir_path.parent.name}",
             path=dir_path,
             content=content,
             modified_date=datetime.now(),
             category=None,
             tags=[],
-            description=f"Index of {dir_path.name}",
+            description=f"Index of {dir_path.parent.name}",
             is_index=False,
         )
 

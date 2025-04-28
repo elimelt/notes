@@ -82,6 +82,7 @@ BASE_TEMPLATE = """
                 </time>
                 {% if category %}
                 <span>Category: <a href="/categories/{{ category|lower|urlencode }}.html">{{ category }}</a></span>
+                <span> | <a id="parent-link" href="/">..</a></span>
                 {% endif %}
             </div>
             <div class={{ css_selector }}>

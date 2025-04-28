@@ -226,7 +226,7 @@ class SiteGenerator:
                 print(f"Processing directory: {file_path}")
                 # Generate an index.html for directories
                 links_html = "\n".join(
-                    f'<li><a href="{file_path.name}/{item.name}">{item.name}</a></li>'
+                    f'<li><a href="{item.name}">{item.name}</a></li>'
                     for item in file_path.iterdir()
                     if item.is_file() and item.suffix in self.SUPPORTED_CONTENT
                 )

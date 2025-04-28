@@ -130,7 +130,6 @@ class SiteGenerator:
             item
             for item in directory.rglob("*")
             if not any(ignored in item.parts for ignored in self.IGNORED_DIRECTORIES)
-            and item.is_file()
         ]
 
     def _extract_metadata(self, file_path: Path, content: str) -> dict:
@@ -244,7 +243,7 @@ class SiteGenerator:
     def _copy_assets(self) -> None:
         """Copy non-markdown files to output directory"""
         for file_path in self._walk_directory(self.input_dir):
-            if file_path.suffix not in self.SUPPORTED_CONTENT:
+            if file_path.is_file() and file_path.suffix not in self.SUPPORTED_CONTENT:
                 relative_path = file_path.relative_to(self.input_dir)
                 output_path = self.output_dir / relative_path
                 output_path.parent.mkdir(parents=True, exist_ok=True)

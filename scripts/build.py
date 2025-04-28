@@ -509,7 +509,7 @@ class SiteGenerator:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.parent.chmod(0o755)
 
-        content = f"<h2>Index of {dir_path.name}</h2>\n<ul>{links_html}</ul>"
+        content = f"<ul>{links_html}</ul>"
         page = Page(
             title=f"Index of {dir_path.name}",
             path=dir_path,

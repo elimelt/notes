@@ -56,7 +56,7 @@ class SiteGenerator:
         "def_list",
         "admonition",
     ]
-    SUPPORTED_CONTENT = {".md", ".markdown", ".html", ".pdf"}
+    SUPPORTED_CONTENT = {".md", ".markdown"}
     IGNORED_DIRECTORIES = {
         ".git",
         "__pycache__",

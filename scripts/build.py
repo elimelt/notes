@@ -268,7 +268,8 @@ class SiteGenerator:
     def _process_content(self) -> None:
         """Process all content in the input directory"""
         for file_path in self._walk_directory(self.input_dir):
-            if file_path.suffix in self.SUPPORTED_CONTENT:
+
+            if file_path.is_file() and file_path.suffix in self.SUPPORTED_CONTENT:
                 if file_path.suffix in {".md", ".markdown"}:
                     self._process_markdown(file_path)
                 elif file_path.suffix == ".html":
@@ -283,6 +284,15 @@ class SiteGenerator:
                 else:
                     # Unsupported file type, log a warning
                     logger.warning(f"Unsupported file type: {file_path.suffix}")
+            elif file_path.is_dir() and file_path.name not in self.IGNORED_DIRECTORIES:
+                # Generate an index.html for directories
+                links_html = "\n".join(
+                    f'<li><a href="{file_path.name}/{item.name}">{item.name}</a></li>'
+                    for item in file_path.iterdir()
+                    if item.is_file() and item.suffix in self.SUPPORTED_CONTENT
+                )
+                if links_html:
+                    self._generate_dir_index(file_path, links_html)
 
     def _organize_content(self) -> None:
         """Organize pages by category and tags"""
@@ -553,6 +563,31 @@ class SiteGenerator:
         )
         output_path.write_text(html_content, encoding="utf-8")
         output_path.chmod(0o644)
+
+    def _generate_dir_index(self, dir_path: Path, links_html: str) -> None:
+        """Generate an index.html page for a directory"""
+        output_path = self.output_dir / dir_path.with_suffix(".html")
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.parent.chmod(0o755)
+
+        content = f"<h2>Index of {dir_path.name}</h2>\n<ul>{links_html}</ul>"
+        page = Page(
+            title=f"Index of {dir_path.name}",
+            path=dir_path,
+            content=content,
+            modified_date=datetime.now(),
+            category=None,
+            tags=[],
+            description=f"Index of {dir_path.name}",
+            is_index=False,
+        )
+
+        html_content = self.jinja_env.get_template("base").render(
+            **self._get_page_context(page)
+        )
+        output_path.write_text(html_content, encoding="utf-8")
+        output_path.chmod(0o644)
+        logger.info(f"Generated index page for {dir_path}")
 
     def _generate_html_pages(self) -> None:
         """Generate HTML pages for all processed content"""

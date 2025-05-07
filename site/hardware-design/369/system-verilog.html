@@ -28,12 +28,16 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "SystemVerilog", "dateModified": "2025-02-11T16:42:51.525903", "description": "Programming language for describing hardware behavior, including modules, primitives, execution, and structural representation", "articleSection": "Hardware", "keywords": "system-verilog,hardware,digital electronics,programming languages for hardware"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "SystemVerilog", "dateModified": "2025-05-07T16:08:22.445935", "description": "Programming language for describing hardware behavior, including modules, primitives, execution, and structural representation", "articleSection": "Hardware", "keywords": "system-verilog,hardware,digital electronics,programming languages for hardware"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
     <link rel="stylesheet" href=/css/styles.css>
 
     <!-- Configure KaTeX auto-render -->
@@ -75,8 +79,8 @@
         <article>
             <h1>SystemVerilog</h1>
             <div class="meta">
-                <time datetime="2025-02-11T16:42:51.525903">
-                    Last modified: 2025-02-11
+                <time datetime="2025-05-07T16:08:22.445935">
+                    Last modified: 2025-05-07
                 </time>
                 <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -114,7 +118,7 @@
 <p>You can't turn wires off. They transmit voltages near instantly. Gates and modules are constantly performing computation, which can be hard to keep track of.</p>
 <p>In pure hardware, there is no notion of initialization. Wires can naturally pick up voltages from their enviornment.</p>
 <h2 id="structural-verilog">Structural Verilog</h2>
-<pre><code class="language-sv">// SystemVerilog code for AND-OR-INVERT circuit
+<pre><code class="language-v">// SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;                     // each variable
     input logic A, B, C, D;             // is 1-bit (logic)
@@ -124,7 +128,7 @@ endmodule
 // end of SystemVerilog code
 </code></pre>
 <h3 id="equivalently-with-wires">Equivalently with wires</h3>
-<pre><code class="language-sv">// SystemVerilog code for AND-OR-INVERT circuit
+<pre><code class="language-v">// SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
     input logic A, B, C, D;
@@ -137,7 +141,7 @@ module AOI (F, A, B, C, D);
 endmodule
 </code></pre>
 <h3 id="equivalently-with-gates">Equivalently with gates</h3>
-<pre><code class="language-sv">// SystemVerilog code for AND-OR-INVERT circuit
+<pre><code class="language-v">// SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
     input logic A, B, C, D;
@@ -152,7 +156,7 @@ module AOI (F, A, B, C, D);
 endmodule
 </code></pre>
 <h2 id="2-input-mux">2-input MUX</h2>
-<pre><code class="language-sv">// SystemVerilog code for AND-OR-INVERT circuit
+<pre><code class="language-v">// SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
     input logic A, B, C, D;
@@ -160,7 +164,7 @@ module AOI (F, A, B, C, D);
     assign F = ~((A &amp; B)|(C &amp; D));
 endmodule
 </code></pre>
-<pre><code class="language-sv">// 2:1 multiplexer built on top of AOI module
+<pre><code class="language-v">// 2:1 multiplexer built on top of AOI module
 module MUX2 (V, SEL, I, J);
     output logic V;
     input logic SEL, I, J;

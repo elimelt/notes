@@ -28,12 +28,16 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Algorithmic State Machines", "dateModified": "2025-05-07T15:55:26.998781", "description": "What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?", "articleSection": "Hardware", "keywords": "systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Algorithmic State Machines", "dateModified": "2025-05-07T16:08:37.681547", "description": "What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?", "articleSection": "Hardware", "keywords": "systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
     <link rel="stylesheet" href=/css/styles.css>
 
     <!-- Configure KaTeX auto-render -->
@@ -75,7 +79,7 @@
         <article>
             <h1>Algorithmic State Machines</h1>
             <div class="meta">
-                <time datetime="2025-05-07T15:55:26.998781">
+                <time datetime="2025-05-07T16:08:37.681547">
                     Last modified: 2025-05-07
                 </time>
                 <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
@@ -198,7 +202,7 @@ $$</p>
 </li>
 </ol>
 <h2 id="systemverilog-controller-module">SystemVerilog Controller Module</h2>
-<pre><code class="language-sv">module controller(
+<pre><code class="language-v">module controller(
     input logic clk, reset, // (input signals, e.g. start)
     // input logic (status signals, e.g. x_le_y, i_eq_z)
     // output logic {status indicators, e.g. ready, done}
@@ -239,7 +243,7 @@ $$</p>
 endmodule // controller
 </code></pre>
 <h2 id="systemverilog-datapath-module">SystemVerilog Datapath Module</h2>
-<pre><code class="language-sv">
+<pre><code class="language-v">
 module datapath #(parameter W=4)(
     input logic clk,
     // input logic (input data, e.g. [W-1:0] x)

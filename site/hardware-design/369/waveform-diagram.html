@@ -28,12 +28,16 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-02-11T16:42:51.535440", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-05-07T16:08:22.445898", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
     <link rel="stylesheet" href=/css/styles.css>
 
     <!-- Configure KaTeX auto-render -->
@@ -75,8 +79,8 @@
         <article>
             <h1>Waveform Diagrams</h1>
             <div class="meta">
-                <time datetime="2025-02-11T16:42:51.535440">
-                    Last modified: 2025-02-11
+                <time datetime="2025-05-07T16:08:22.445898">
+                    Last modified: 2025-05-07
                 </time>
                 <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -93,7 +97,7 @@
 <p><code>n'b#...#</code> is a constant with width $n$.</p>
 <h2 id="concat">Concat</h2>
 <p><code>{A, B, C, ...}</code></p>
-<pre><code class="language-sv">// SystemVerilog code for AND-OR-INVERT circuit
+<pre><code class="language-v">// SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
     input logic A, B, C, D;
@@ -106,7 +110,7 @@ endmodule
 </code></pre>
 <h2 id="test-benches">Test Benches</h2>
 <p>Create emulated inputs for all of the FPGA's physical connections.</p>
-<pre><code class="language-sv">module MUX2_tb ();
+<pre><code class="language-v">module MUX2_tb ();
     logic SEL, I, J; // simulated inputs
     logic V; // net for reading output
 

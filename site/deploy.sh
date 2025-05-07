@@ -31,6 +31,8 @@ if [ -z "$VIRTUAL_ENV" ]; then
         log_message "ERROR: Virtual environment not found"
         exit 1
     fi
+else
+    log_message "Virtual environment already activated"
 fi
 
 # Check if git repository exists
@@ -70,7 +72,7 @@ fi
 
 # Generate commit message and commit
 commit_message=$(generate_commit_message)
-if ! git commit -m "$commit_message"; then
+if ! git commit -am "$commit_message"; then
     log_message "ERROR: Failed to commit changes"
     exit 1
 fi

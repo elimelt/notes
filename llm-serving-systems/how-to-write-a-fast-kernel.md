@@ -1,8 +1,8 @@
 ---
-title:
-category:
-tags: 
-description:
+title: How to write a fast kernel
+category: Machine Learning Systems
+tags: cuda, gpu, pytorch, kernel
+description: Techniques to write fast CUDA kernels, including coalesced memory access and shared memory usage.
 ---
 
 # How to write a fast kernel?

@@ -58,12 +58,11 @@ print(f'total time: {time_total} s')
 ```
 # CUDA
 
-```py
-
 - Memory allocation and deallocation is done explicitly
     - cudaMalloc, cudaFree, cudaMallocHost
 - Memory movement and setting
     - cudaMemcpy, cudaMemcpyAsync, cudaMemsset, cudaMemsetAsync
+
 
 ## CUDA Kernels
 
@@ -88,7 +87,8 @@ print(f'total time: {time_total} s')
 
 ## CUDA Addition Kernel
 
-```cu
+
+```cpp
 #include <cuda_runtime.h>
 #include <stdio.h>
 

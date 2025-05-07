@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Kernel Programming with Triton and CUDA", "dateModified": "2025-04-02T11:19:35.646590", "description": "Overview of programming GPU kernels with Triton and CUDA", "articleSection": "Systems", "keywords": "gpu,triton,cuda"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Kernel Programming with Triton and CUDA", "dateModified": "2025-05-07T16:44:49.596075", "description": "Overview of programming GPU kernels with Triton and CUDA", "articleSection": "Systems", "keywords": "gpu,triton,cuda"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -88,8 +88,8 @@
         <article>
             <h1>GPU Kernel Programming with Triton and CUDA</h1>
             <div class="meta">
-                <time datetime="2025-04-02T11:19:35.646590">
-                    Last modified: 2025-04-02
+                <time datetime="2025-05-07T16:44:49.596075">
+                    Last modified: 2025-05-07
                 </time>
                 <span>Category: <a href="/categories/systems.html">Systems</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -144,37 +144,33 @@ print(f'bandwidth: {num * 4 * 3 / time_total / 1000)} MB/s')
 print(f'total time: {time_total} s')
 </code></pre>
 <h1 id="cuda">CUDA</h1>
-<pre><code class="language-py">
-- Memory allocation and deallocation is done explicitly
-    - cudaMalloc, cudaFree, cudaMallocHost
-- Memory movement and setting
-    - cudaMemcpy, cudaMemcpyAsync, cudaMemsset, cudaMemsetAsync
-
-## CUDA Kernels
-
-- Declare a kernel: `__global__ void kernel_name(args...)`
-- Declare device &quot;helper&quot; function: `__device__ void helper_name(args...)`
-- Args are on host, pointers to device memory also on host
-
-## Launching Kernels
-
-- Define block shapes, e.g. `dim3 block(dim_x, dim_y, dim_z)`
-- Define thread shapes, e.g. `dim3 thread(thread_x, thread_y, thread_z)`
-- Launch kernel: `kernel_name&lt;&lt;&lt;block, thread&gt;&gt;&gt;(args...)`
-
-## Synchronization and Error Handling
-
-- Thread synchronization: `__syncthreads()` -&gt; device function
-- Block synchronization: usually not feasible, except for &quot;cooperative launch&quot;
-- Device synchronization: `cudaDeviceSynchronize()` -&gt; host function
-- Error handling: `cudaGetLastError()`, `cudaGetErrorString()`
-
-
-
-## CUDA Addition Kernel
-
-```cu
-#include &lt;cuda_runtime.h&gt;
+<ul>
+<li>Memory allocation and deallocation is done explicitly
+    - cudaMalloc, cudaFree, cudaMallocHost</li>
+<li>Memory movement and setting
+    - cudaMemcpy, cudaMemcpyAsync, cudaMemsset, cudaMemsetAsync</li>
+</ul>
+<h2 id="cuda-kernels">CUDA Kernels</h2>
+<ul>
+<li>Declare a kernel: <code>__global__ void kernel_name(args...)</code></li>
+<li>Declare device "helper" function: <code>__device__ void helper_name(args...)</code></li>
+<li>Args are on host, pointers to device memory also on host</li>
+</ul>
+<h2 id="launching-kernels">Launching Kernels</h2>
+<ul>
+<li>Define block shapes, e.g. <code>dim3 block(dim_x, dim_y, dim_z)</code></li>
+<li>Define thread shapes, e.g. <code>dim3 thread(thread_x, thread_y, thread_z)</code></li>
+<li>Launch kernel: <code>kernel_name&lt;&lt;&lt;block, thread&gt;&gt;&gt;(args...)</code></li>
+</ul>
+<h2 id="synchronization-and-error-handling">Synchronization and Error Handling</h2>
+<ul>
+<li>Thread synchronization: <code>__syncthreads()</code> -&gt; device function</li>
+<li>Block synchronization: usually not feasible, except for "cooperative launch"</li>
+<li>Device synchronization: <code>cudaDeviceSynchronize()</code> -&gt; host function</li>
+<li>Error handling: <code>cudaGetLastError()</code>, <code>cudaGetErrorString()</code></li>
+</ul>
+<h2 id="cuda-addition-kernel">CUDA Addition Kernel</h2>
+<pre><code class="language-cpp">#include &lt;cuda_runtime.h&gt;
 #include &lt;stdio.h&gt;
 
 #define BLOCK_SIZE 256

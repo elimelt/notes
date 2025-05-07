@@ -69,6 +69,8 @@ BASE_TEMPLATE = """
             });
         });
     </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
@@ -165,6 +167,5 @@ INDEX_TEMPLATE = """
             </div>
         </div>
     </div>
-    <script>hljs.highlightAll();</script>
 </div>
 """

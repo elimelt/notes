@@ -140,15 +140,19 @@ description: This document covers the fundamentals of distributed consensus algo
 <p>People are apparently pretty pessimistic about the performance of distributed consensus algorithms, but they can actually be quite fast. According to Google SREs, this is not the case.</p>
 <p>There are many factors that can affect the performance of distributed consensus algorithms, including:</p>
 <ul>
-<li><strong>Workload</strong></li>
+<li><strong>Workload</strong><ul>
 <li><strong>Throughput</strong>: number of proposals per second at peak load</li>
 <li>Types of requests: read-heavy, write-heavy, mixed</li>
 <li><strong>Consistency semantics</strong>: can reads be stale?</li>
 <li><strong>Request size</strong>: how much data is being read/written?</li>
-<li><strong>Deployment</strong></li>
+</ul>
+</li>
+<li><strong>Deployment</strong><ul>
 <li><strong>Network topology</strong>: how many nodes are in the cluster, and how are they connected? LAN, WAN, etc.</li>
 <li><strong>Quorum type</strong>: how many nodes are in a quorum? Where are they located?</li>
 <li><strong>Optimizations</strong>: sharding, pipelining, batching, etc.</li>
+</ul>
+</li>
 </ul>
 <p>One common performance pitfall with single-leader replication is that a client's perceived latency is proportional to the round-trip time between the client and the leader.</p>
 <h3 id="multi-paxos-detailed-message-flow">Multi-Paxos: Detailed Message Flow</h3>

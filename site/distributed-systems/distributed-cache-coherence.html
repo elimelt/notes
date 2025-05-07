@@ -115,16 +115,22 @@
 <ul>
 <li>Protocol for accessing remote shared file system</li>
 <li>Appears like a local directory (via mount in Unix)</li>
-<li>Open, close, read, write are RPCs to a remote server</li>
+<li>Open, close, read, write are RPCs to a remote server<ul>
 <li>Instead of maintaining some implicit state about the position in the file, reads/writes are block oriented such that no state needs to be maintained and the operation is idempotent</li>
-<li>Entirely stateless server, such that if the server crashes, a client just needs to wait until it reboots, after which the operation is resent</li>
+</ul>
+</li>
+<li>Entirely stateless server, such that if the server crashes, a client just needs to wait until it reboots, after which the operation is resent<ul>
 <li>At least once RPC semantics</li>
 <li>No callbacks</li>
 <li>Client applications don't need error handling</li>
+</ul>
+</li>
 <li>Locally caches file metadata and data, which is eventually consistent</li>
-<li>Each cache entry has a TTL</li>
+<li>Each cache entry has a TTL<ul>
 <li>Revalidate local copy on next access when TTL expires (3-30 sec)</li>
 <li>Updates sent back to remote file system after delay (3-30 sec)</li>
+</ul>
+</li>
 <li>Metadata (e.g. directories, file status) uses shorter TTL</li>
 <li>File data uses longer TTL</li>
 <li>This works well when resources aren't shared, i.e. when everyone works in their own directory</li>
@@ -133,41 +139,55 @@
 <ul>
 <li>Protocol for translating domain names to IP addresses</li>
 <li>Servers are stateless; at least once semantics to fetch data from name servers</li>
-<li>Hierarchical name resolution</li>
+<li>Hierarchical name resolution<ul>
 <li>Allow each domain to manage its own names</li>
 <li>Ask root: what is the IP address of <code>com</code>, then <code>google.com</code>, then <code>www.google.com</code></li>
-<li>Eventually consistent in that updates are propagated among servers</li>
+</ul>
+</li>
+<li>Eventually consistent in that updates are propagated among servers<ul>
 <li>Clients cache at each level, and updates go directly to the relevant name server.</li>
 <li>Clients only discover changes after TTL expires</li>
 <li>TTLs are set by the domain owner (can vary widely, even allowing infinite TTL)</li>
 <li>CDN servers typically have short TTLs so that they can be updated quickly in the event of a server failure</li>
 </ul>
+</li>
+</ul>
 <h3 id="caching-terminology">Caching Terminology</h3>
 <ul>
-<li><strong>Write Through</strong>:  Cache holds read-only data</li>
+<li><strong>Write Through</strong>:  Cache holds read-only data<ul>
 <li>Write sent to store, and store revokes copies</li>
 <li>Exploits locality for reads</li>
-<li><strong>Write Back</strong>: Cache holds read-write data, i.e. updates happen client side too (like NFS)</li>
+</ul>
+</li>
+<li><strong>Write Back</strong>: Cache holds read-write data, i.e. updates happen client side too (like NFS)<ul>
 <li>Writes to cache, and cache asks store to revoke copies</li>
 <li>Exploits locality for reads and writes</li>
 </ul>
+</li>
+</ul>
 <h4 id="write-back-cache-coherence">Write Back Cache Coherence</h4>
 <ul>
-<li>On write:</li>
+<li>On write:<ul>
 <li>Send invalidations to all caches</li>
 <li>Each cache invalidates, responds (possibly with updated data)</li>
 <li>Wait for all invalidations</li>
 <li>Return</li>
+</ul>
+</li>
 <li>Reads can proceed when there is a local copy</li>
 <li>Requests at server need to be ordered to avoid deadlock</li>
 </ul>
 <p>However, with write back caching, durability becomes an issue since a failure might lose writes.</p>
 <ul>
-<li>Option 1: period distributed checkpoint, restart from checkpoint if any cache fails</li>
+<li>Option 1: period distributed checkpoint, restart from checkpoint if any cache fails<ul>
 <li>appropriate for long running/background computations</li>
-<li>Option 2: send log of changes to replicated storage</li>
+</ul>
+</li>
+<li>Option 2: send log of changes to replicated storage<ul>
 <li>if cache fails, read its log from storage</li>
 <li>e.g. if primary fails, backup can take over by replaying log</li>
+</ul>
+</li>
 </ul>
             </div>
             <div class="tags">

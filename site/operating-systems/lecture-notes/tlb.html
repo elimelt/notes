@@ -92,22 +92,16 @@
 </ul>
 <h2 id="managing-tlbs">Managing TLBs</h2>
 <ul>
-<li>Address translation mostly handled by TLB<ul>
-<li>Over 99% of address translations are handled by the TLB, but the remaining 1% are handled by the page table.</li>
-<li>In case of a miss, translation is done by the page table and the result is stored in the TLB. Often this results in an eviction.</li>
-</ul>
-</li>
-<li>Hardware (MMU) in x86 systems<ul>
-<li>Knows where oage table is in memory. OS maintains page table, but hardware does the translation and accesses the page table.</li>
-<li>Page table is stored in a hardware-depended format, and the OS must maintain it in this format.</li>
-</ul>
-</li>
-<li>Software loaded TLB (OS)<ul>
-<li>TLB miss is handled like a page fault (trap to OS)</li>
-<li>OS finds the page table entry, loads it into the TLB, and restarts the instruction that caused the miss.</li>
-<li>Must be very fast (20-1000 cycles), so CPU ISA has special instructions to load TLB entries.</li>
-</ul>
-</li>
+<li>Address translation mostly handled by TLB
+    - Over 99% of address translations are handled by the TLB, but the remaining 1% are handled by the page table.
+    - In case of a miss, translation is done by the page table and the result is stored in the TLB. Often this results in an eviction.</li>
+<li>Hardware (MMU) in x86 systems
+    - Knows where oage table is in memory. OS maintains page table, but hardware does the translation and accesses the page table.
+    - Page table is stored in a hardware-depended format, and the OS must maintain it in this format.</li>
+<li>Software loaded TLB (OS)
+    - TLB miss is handled like a page fault (trap to OS)
+    - OS finds the page table entry, loads it into the TLB, and restarts the instruction that caused the miss.
+    - Must be very fast (20-1000 cycles), so CPU ISA has special instructions to load TLB entries.</li>
 </ul>
 <h3 id="context-switching">Context Switching</h3>
 <p>The OS <strong>needs</strong> to ensure TLB and page table are consistent. This is done by invalidating the TLB when the page table changes. When a process is switched, the OS must invalidate/flush the entire TLB, which is a big part of the overhead of context switching (since there will be many TLB misses subsequently). You can also use the PID as part of the TLB lookup to make the TLB "global" (ie. shared between processes). </p>

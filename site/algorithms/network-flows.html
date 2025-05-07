@@ -169,12 +169,10 @@ def ford_fulkerson(G, s, t, c):
 <ul>
 <li>$a_i \ge 0$ is the likelihood of pixel $i$ being in the foreground</li>
 <li>$b_i \ge 0$ is the likelihood of pixel $i$ being in the background</li>
-<li>
-<p>$p_{i,j} \ge 0$ is the penalty for labeling one of $i$ and $j$ as foreground and the other as background, i.e. the penalty for boundaries of the the two regions</p>
-</li>
-<li>
-<p><strong>Accuracy</strong>: If $a_i &gt; b_i$ in isolation, prefer to label $i$ in the foreground.</p>
-</li>
+<li>$p_{i,j} \ge 0$ is the penalty for labeling one of $i$ and $j$ as foreground and the other as background, i.e. the penalty for boundaries of the the two regions</li>
+</ul>
+<ul>
+<li><strong>Accuracy</strong>: If $a_i &gt; b_i$ in isolation, prefer to label $i$ in the foreground.</li>
 <li><strong>Smoothness</strong>: If many neighbors of $i$ are labeled foreground, we should be inclined to label $i$ as foreground as well.</li>
 </ul>
 <p>Find a partition $(A, B)$ that maximizes...</p>
@@ -198,9 +196,11 @@ $$</p>
 <p>Given an undirected graph $G = (V, E)$ and a set of vertices $S \subseteq V$ and a disjoint set of vertices $T \subseteq V$ , i.e., $S \cap T = \emptyset$. Design a polynomial time algorithm that outputs the maximum number of vertex disjoint paths between vertices of $S$ and $T$ (note that every vertex in $S$ and every vertex in $T$ can be in at most one path).</p>
 <p><strong>Algorithm</strong>:</p>
 <ul>
-<li>Given $G = (V, E)$, and $S, T$</li>
+<li>Given $G = (V, E)$, and $S, T$<ul>
 <li>Construct a directed graph $G'$ with all undirected edges $(u, v) \in E$ corresponding to two directed edges $(u, v), (v, u) \in E$. Additionally, add two vertices $s$, $t$ to $V'$, and an edge $(s, v)$ and $(u, t)$ for all $v \in S$, $u \in T$.</li>
 <li>Run the algorithm from section for the maximum number of vertex disjoint paths in an unweighted directed graph given $s, t$.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Correctness</strong>:</p>
 <p>Let $G = (V, E)$ be an undirected graph, and $S$, $T$ be disjoint subsets of $V$.</p>
@@ -215,12 +215,10 @@ $$</p>
 <p>By definition of the algorithm from section, paths in $A$ are vertex disjoint not counting $s$ and $t$, and $A$ contains the maximal number of such existing paths, or in other words, there are no additional vertex disjoint paths from $s \to t$ that can be added, nor other ways to choose vertex disjoint paths to end up with a larger set $A$.</p>
 <p>Therefore, by creating the set $B$ by taking each $a \in A$ and removing the starting and ending vertices $s$ and $t$, we also have vertex disjoint paths, since removing elements of disjoint sets will never make them not disjoint. Furthermore, since $A$ is of maximal size, there could not exist any other paths from $s \to t$ that would be vertex disjoint. Therefore, for $B$ to be maximal sized, we must have $|B| = |A|$. To show this more concretely, I will show that $|B| \le |A|$ and $|A| \le |B|$.</p>
 <ul>
-<li>
-<p>$|B| \le |A|$: Since $A$ is the maximal set of vertex disjoint paths from $s \to t$, there can be no additional paths that are vertex disjoint with the paths in $A$, nor any greater such sets. Suppose for the sake of contradiction that $|B| &gt; |A|$. Then, we can construct a set $A'$ with $|A'| = |B|$ by adding $s$ to the beginning of each path in $B$, and $t$ to the end of each path in $B$. We are able to do this because we added an edge from $s \to s'$ for $s' \in S$ and $t' \to t$ for $t' \in T$. However, we would then have found a set of vertex disjoint paths from $s \to t$ that is larger than $A$, which is a contradiction to $A$ being maximal.</p>
-</li>
-<li>
-<p>$|A| \le |B|$: Suppose for the sake of contradiction that $|A| &gt; |B|$. Since we defined $B$ as the maximal set of vertex disjoint paths between vertices in $S$ and $T$, we must not be able to find a greater set $B$. However, if $|A| &gt; |B|$, we could construct a set $B'$ as follows: for each path $a \in A$, remove the first and last vertex to make $a'$. Since each $a$ was vertex disjoint, each $a'$ will also be vertex disjoint, and so we've created a set of vertex disjoint paths from vertices in $S$ to vertices in $T$ (since the second and second to last vertices of $a$ must be in $S$ and $T$ respectively). Therefore, $B$ was not maximal, and we have a contradiction.</p>
-</li>
+<li>$|B| \le |A|$: Since $A$ is the maximal set of vertex disjoint paths from $s \to t$, there can be no additional paths that are vertex disjoint with the paths in $A$, nor any greater such sets. Suppose for the sake of contradiction that $|B| &gt; |A|$. Then, we can construct a set $A'$ with $|A'| = |B|$ by adding $s$ to the beginning of each path in $B$, and $t$ to the end of each path in $B$. We are able to do this because we added an edge from $s \to s'$ for $s' \in S$ and $t' \to t$ for $t' \in T$. However, we would then have found a set of vertex disjoint paths from $s \to t$ that is larger than $A$, which is a contradiction to $A$ being maximal.</li>
+</ul>
+<ul>
+<li>$|A| \le |B|$: Suppose for the sake of contradiction that $|A| &gt; |B|$. Since we defined $B$ as the maximal set of vertex disjoint paths between vertices in $S$ and $T$, we must not be able to find a greater set $B$. However, if $|A| &gt; |B|$, we could construct a set $B'$ as follows: for each path $a \in A$, remove the first and last vertex to make $a'$. Since each $a$ was vertex disjoint, each $a'$ will also be vertex disjoint, and so we've created a set of vertex disjoint paths from vertices in $S$ to vertices in $T$ (since the second and second to last vertices of $a$ must be in $S$ and $T$ respectively). Therefore, $B$ was not maximal, and we have a contradiction.</li>
 </ul>
 <p><strong>Running Time</strong>: We can construct $G'$ in $O(|V| + |E|)$, since we only need to visit each edge of each vertex in our graph for duplicating/orienting edges, and an additional $O(|S| + |T|) = O(|V|)$ to add $s$, $t$, and edges to vertices in $S$ and $T$. Then, we simply need to run the algorithm from section, which takes $O(|V||E|)$, so our total running time is $O(|V||E|)$, which is polynomial.</p>
 <h2 id="p2-number-of-disjoint-paths">P2 - Number of Disjoint Paths</h2>
@@ -238,15 +236,21 @@ $$</p>
 <p>Let $(A, B)$ be a min s-t cut in $H$. I will construct a vertex cover $S \subseteq X \cup Y$ such that $cap(A, B) = |S|$. Define the set $A_X, B_X, A_Y, B_Y$ as $A_X = A \cap X$, $B_X = B \cap X$, $A_Y = A \cap Y$, $B_Y = B \cap Y$ respectively.</p>
 <p>The following lemmas will become useful:</p>
 <ul>
-<li><em>(1)</em>: the capacity of the min s-t cut of $H$ is upper bounded by $|X|$</li>
+<li><em>(1)</em>: the capacity of the min s-t cut of $H$ is upper bounded by $|X|$<ul>
 <li>This is because the maximum flow introduced into the system by $s$ is $c_{e_s} = 1$ for each vertex in $X$.</li>
+</ul>
+</li>
 <li><em>(2)</em>: All $e_s \in E_s, e_t \in E_t$ have capacity $1$ (by construction).</li>
-<li><em>(3)</em>: No edges from $A_X \to B_Y$ exist</li>
+<li><em>(3)</em>: No edges from $A_X \to B_Y$ exist<ul>
 <li>By <em>(1)</em>, we know $cap(A, B)$ is finite. Since all edges $e \notin E_s \cup E_t$ have $c_e = \infty$, such an edge would imply an infinite capacity between $A$ and $B$, which contradicts <em>(1)</em>.</li>
-<li><em>(4)</em>: $cap(A, B) = |B_X| + |A_Y|$ (proven in lecture)</li>
+</ul>
+</li>
+<li><em>(4)</em>: $cap(A, B) = |B_X| + |A_Y|$ (proven in lecture)<ul>
 <li>By <em>(3)</em>, and the fact that $G$ was bipartite and we therefore have no edges between vertices in $Y$, we have that all edges from $A \to B$ must be from $A_Y \to B_X$.</li>
 <li>By <em>(2)</em>, we have that each $v \in X$ and $u \in Y$ are limited by conservation of capacity, since each have a single incoming and outgoing edge in $E_s$ and $E_t$ respectively.</li>
 <li>Therefore, we have $cap(A, B) = |B_X| + |A_Y|$, since there are $|B_X|$ many edges of capacity $1$ into $t$, and $|A_Y|$ many edges of capacity $1$ into $s$.</li>
+</ul>
+</li>
 </ul>
 <p>By <em>(3)</em>, all edges of $G$ must fall into sets $E_1$ between $A_X, A_Y$, $E_2$ between $A_Y, B_X$, and $E_3$ between $B_X, B_Y$.</p>
 <p>We can therefore select a vertex cover of $S = B_X \cup A_Y$, since $A_Y$ covers $E_1$ and $E_2$, and $B_X$ covers $E_2$ and $E_3$. By <em>(4)</em>, we have $|S| = |B_X| + |A_Y| = cap(A, B)$. Note that this isn't necessarily the minimum vertex cover, but it is a vertex cover of size $cap(A, B)$.</p>
@@ -262,11 +266,13 @@ $$</p>
 <p>Taking $(A, B)$ to be the cut described above, we have exactly $|S|$ units of flow leaving $s$, and by extension $A$, and also entering $t$, and by extension $B$. Therefore, $cap(A, B) = |S|$.</p>
 <p>### (d) Design the algorithm</p>
 <ul>
-<li>Given a bipartite graph $G = (X, Y, E)$</li>
+<li>Given a bipartite graph $G = (X, Y, E)$<ul>
 <li>Construct $H$ as described in (a), but instead of using edges with capacity $\infty$ between $X$ and $Y$, use edges with capacity $n + 1$</li>
 <li>Find the min s-t cut $(A, B)$ in $H$ using ford-fulkerson</li>
 <li>Let $B_X = B \cap X$, $A_Y = A \cap Y$</li>
 <li>Return $S = B_X \cup A_Y$</li>
+</ul>
+</li>
 </ul>
 <p><strong>Correctness</strong>:</p>
 <p>As mentioned in lecture, adjusting the edge capacities that were originally $\infty$ to $n + 1$ works here, since we still have the desired property that no edges could exist between $A_X \to B_Y$, since this would still respect our upper bound of $|X|$ on the capacity of the min s-t cut.</p>
@@ -282,7 +288,7 @@ $$</p>
 <p>Given an $n \times n$ chess board where some cells are removed. Design a polynomial time algorithm to find the maximum number of knights that can be placed on this board such that no two knights attack each other.</p>
 <p><strong>Algorithm</strong>:</p>
 <ul>
-<li>Given $X$, the set of pairs $(i, j)$ that correspond to the cells that are removed, and $n$ be the size of the chess board.</li>
+<li>Given $X$, the set of pairs $(i, j)$ that correspond to the cells that are removed, and $n$ be the size of the chess board.<ul>
 <li>Create an undirected graph $G = (V, E)$, where $V$ is $[n]^2 \setminus X$, i.e. the pairs $(i, j)$ that are not removed</li>
 <li>Add edges $((i, j), (i', j'))$ to $G$ such that knights placed on cells $(i, j)$ and $(i', j')$ attack each other. To compute this, for each $(i, j) \in [n]^2$, add edges to all cells $(i', j')$ that are $2$ cells away horizontally and $1$ cell away vertically or $2$ cells away vertically and $1$ cell away horizontally, but that satisfy $(i', j') \in V$. Given such a cell $(i, j)$, the cells to add edges between would be those that satisfy the predicate...<ul>
 <li>$(i', j') \in V \land (|i - i'| = 2 \land |j - j'| = 1 \lor |i - i'| = 1 \land |j - j'| = 2)$</li>
@@ -290,6 +296,8 @@ $$</p>
 </li>
 <li>Find the minimum vertex cover $S$ of $G$ using the algorithm from P3.</li>
 <li>Return $|V| - |S|$</li>
+</ul>
+</li>
 </ul>
 <p><strong>Running Time</strong>:</p>
 <p>To create $G$, we first create our set of vertices $V$, which can be done in $O(n^2)$ (assuming we can check $(i, j) \in X$ in $O(1) by using an $n \times n$ grid of boolean values).</p>

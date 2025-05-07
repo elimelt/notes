@@ -109,10 +109,14 @@
 - Very little required memory (since data is read and written to disk)</p>
 <p>There are several implementations of MapReduce, including <strong>Hadoop</strong> and <strong>Spark</strong>.</p>
 <ul>
-<li><strong>Map</strong>: Apply a user-written function to each element of a list, producing a new list.</li>
+<li><strong>Map</strong>: Apply a user-written function to each element of a list, producing a new list.<ul>
 <li><strong>Mapper</strong> applies the map function to a single element. Mapny mappers grouped in a <strong>Map task</strong> (the main unit of parallelism).</li>
-<li><strong>Group by key</strong>: Sorts and shuffles the output of the mappers so that all values for a given key are grouped together.</li>
+</ul>
+</li>
+<li><strong>Group by key</strong>: Sorts and shuffles the output of the mappers so that all values for a given key are grouped together.<ul>
 <li>Output is a list of key to list of value pairs</li>
+</ul>
+</li>
 <li><strong>Reduce</strong>: Apply a user-written function to each key and its associated list of values, producing a new list.</li>
 </ul>
 <p>It is important that your distribution of keys outputted by the map function is semi-uniform. Skew in keys leads to skew in the workload of reducers associated with those keys.</p>

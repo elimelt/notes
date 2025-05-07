@@ -390,55 +390,49 @@ interrupts are masked or not"</p>
 <p>Simulation of virtual devices doesn't need to be anything like a real device. For example, when the guest OS writes to a virtual disk (ie writing to the buffer descriptor ring for the device), the host OS can read these and perform the actual write to the real disk however it wants. The guest kernel then receives an interrupt when the write is complete, which is handled similarly to a timer interrupt, but executes the guest disk interrupt handler instead of the guest timer interrupt handler.</p>
 <h2 id="exercises">Exercises</h2>
 <ol>
-<li>
-<p><strong>Kernel Stack and User Process Interruption</strong></p>
-</li>
-<li>
-<p>When a user process is interrupted or causes a processor exception, the x86 hardware switches the stack pointer to a kernel stack. This is done before saving the current process state to ensure that sensitive kernel data is not overwritten or corrupted by user-level processes.</p>
-</li>
-<li>
-<p><strong>Screen Buffer Memory Protection</strong></p>
-</li>
-<li>
-<p>The screen's buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.</p>
-</li>
-<li>
-<p><strong>Dual-mode Operation Mechanisms</strong></p>
-</li>
-<li>
-<p>Without <strong>privileged instructions</strong>: User processes might be able to execute sensitive operations.</p>
-</li>
+<li><strong>Kernel Stack and User Process Interruption</strong></li>
+</ol>
+<ul>
+<li>When a user process is interrupted or causes a processor exception, the x86 hardware switches the stack pointer to a kernel stack. This is done before saving the current process state to ensure that sensitive kernel data is not overwritten or corrupted by user-level processes.</li>
+</ul>
+<ol>
+<li><strong>Screen Buffer Memory Protection</strong></li>
+</ol>
+<ul>
+<li>The screen's buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.</li>
+</ul>
+<ol>
+<li><strong>Dual-mode Operation Mechanisms</strong></li>
+</ol>
+<ul>
+<li>Without <strong>privileged instructions</strong>: User processes might be able to execute sensitive operations.</li>
 <li>Without <strong>memory protection</strong>: User processes could access and modify kernel memory directly.</li>
-<li>
-<p>Without <strong>timer interrupts</strong>: User processes could monopolize the CPU, leading to a denial-of-service situation.</p>
-</li>
-<li>
-<p><strong>Security Checks for Web Browser</strong></p>
-</li>
-<li>
-<p>To ensure executing buggy or malicious scripts cannot corrupt or crash the browser, checks like script sandboxing, code validation, resource limitations, and privilege separation should be implemented.</p>
-</li>
-<li>
-<p><strong>Types of User-Mode to Kernel-Mode Transfers</strong></p>
-</li>
-<li>
-<p>Software Interrupts</p>
-</li>
+<li>Without <strong>timer interrupts</strong>: User processes could monopolize the CPU, leading to a denial-of-service situation.</li>
+</ul>
+<ol>
+<li><strong>Security Checks for Web Browser</strong></li>
+</ol>
+<ul>
+<li>To ensure executing buggy or malicious scripts cannot corrupt or crash the browser, checks like script sandboxing, code validation, resource limitations, and privilege separation should be implemented.</li>
+</ul>
+<ol>
+<li><strong>Types of User-Mode to Kernel-Mode Transfers</strong></li>
+</ol>
+<ul>
+<li>Software Interrupts</li>
 <li>System Calls</li>
-<li>
-<p>Exceptions</p>
-</li>
-<li>
-<p><strong>Types of Kernel-Mode to User-Mode Transfers</strong></p>
-</li>
-<li>
-<p>Returning from an interrupt</p>
-</li>
+<li>Exceptions</li>
+</ul>
+<ol>
+<li><strong>Types of Kernel-Mode to User-Mode Transfers</strong></li>
+</ol>
+<ul>
+<li>Returning from an interrupt</li>
 <li>Returning from a system call</li>
 <li>Resuming execution after an exception</li>
-<li>
-<p>Context switching</p>
-</li>
+<li>Context switching</li>
+</ul>
+<ol>
 <li>
 <p><strong>IRET Instruction in OS</strong>
 a. The <code>iret</code> instruction is used in the interrupt service routine (ISR) to return from an interrupt, transitioning the mode from kernel-mode back to user-mode.
@@ -458,49 +452,49 @@ b. Modifying the hardware to provide consistent behavior for instructions like <
 <li>
 <p><strong>Initial Value in Program Counter</strong></p>
 </li>
-<li>
-<p>The boot ROM is responsible for loading the initial value in the program counter for an application program before it starts running.</p>
-</li>
-<li>
-<p><strong>Safe Access to Virtualized I/O Devices</strong></p>
-</li>
-<li>
-<p>To enable safe access to virtualized I/O devices, hardware support like I/O MMU, device assignment, and software support like device emulation, device drivers, and hypervisor integration are essential.</p>
-</li>
-<li>
-<p><strong>System Calls vs. Procedure Calls</strong></p>
-</li>
-<li>
-<p>System calls are generally more expensive than procedure calls due to the overhead of mode switching, trap handling, and potential context switches. A test program can be designed to measure and compare the time required for each type of call.</p>
-</li>
-<li>
-<p><strong>Substitute for Traps</strong></p>
-</li>
-<li>
-<p>Without a trap instruction, a combination of interrupts and exceptions can be used as a substitute for traps, allowing the operating system to handle events and transitions effectively.</p>
-</li>
-<li>
-<p><strong>Substitute for Interrupts</strong></p>
-</li>
-<li>
-<p>Without interrupts, a combination of exceptions and traps can be utilized to handle events and transitions within the operating system, although it may introduce additional complexity and overhead.</p>
-</li>
-<li>
-<p><strong>Steps for CPU Interrupt Handling</strong></p>
-</li>
-<li>
-<p>The operating system typically follows steps like saving the current state, identifying the interrupt source, invoking the appropriate interrupt handler, performing the required processing, and restoring the saved state.</p>
-</li>
-<li>
-<p><strong>Operating System Stack for System Calls</strong></p>
-</li>
-<li>
-<p>The operating system stack for handling system calls should be separate from the application stack to ensure isolation and prevent potential stack-related vulnerabilities or conflicts.</p>
-</li>
-<li>
-<p><strong>Verifying Rogue System Calls</strong></p>
-</li>
-<li>Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.</li>
+</ol>
+<ul>
+<li>The boot ROM is responsible for loading the initial value in the program counter for an application program before it starts running.</li>
+</ul>
+<ol>
+<li><strong>Safe Access to Virtualized I/O Devices</strong></li>
+</ol>
+<ul>
+<li>To enable safe access to virtualized I/O devices, hardware support like I/O MMU, device assignment, and software support like device emulation, device drivers, and hypervisor integration are essential.</li>
+</ul>
+<ol>
+<li><strong>System Calls vs. Procedure Calls</strong></li>
+</ol>
+<ul>
+<li>System calls are generally more expensive than procedure calls due to the overhead of mode switching, trap handling, and potential context switches. A test program can be designed to measure and compare the time required for each type of call.</li>
+</ul>
+<ol>
+<li><strong>Substitute for Traps</strong></li>
+</ol>
+<ul>
+<li>Without a trap instruction, a combination of interrupts and exceptions can be used as a substitute for traps, allowing the operating system to handle events and transitions effectively.</li>
+</ul>
+<ol>
+<li><strong>Substitute for Interrupts</strong></li>
+</ol>
+<ul>
+<li>Without interrupts, a combination of exceptions and traps can be utilized to handle events and transitions within the operating system, although it may introduce additional complexity and overhead.</li>
+</ul>
+<ol>
+<li><strong>Steps for CPU Interrupt Handling</strong></li>
+</ol>
+<ul>
+<li>The operating system typically follows steps like saving the current state, identifying the interrupt source, invoking the appropriate interrupt handler, performing the required processing, and restoring the saved state.</li>
+</ul>
+<ol>
+<li><strong>Operating System Stack for System Calls</strong></li>
+</ol>
+<ul>
+<li>The operating system stack for handling system calls should be separate from the application stack to ensure isolation and prevent potential stack-related vulnerabilities or conflicts.</li>
+</ul>
+<ol>
+<li><strong>Verifying Rogue System Calls</strong>
+- Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.</li>
 </ol>
             </div>
             <div class="tags">

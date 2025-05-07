@@ -88,8 +88,10 @@
 <ul>
 <li>A lock can be in one of two states: <code>BUSY</code> or <code>FREE</code>.</li>
 <li>Initially, the lock is <code>FREE</code>.</li>
-<li><code>acquire</code> waits until the lock is <code>FREE</code>, then sets it to <code>BUSY</code>.</li>
+<li><code>acquire</code> waits until the lock is <code>FREE</code>, then sets it to <code>BUSY</code>.<ul>
 <li>This needs to be an atomic operation, and is typically implemented to be so in hardware.</li>
+</ul>
+</li>
 <li><code>release</code> sets the lock to <code>FREE</code>. If there are processes waiting to acquire the lock, one of them is able to proceed after the lock is released.</li>
 </ul>
 <h3 id="formal-properties">Formal Properties</h3>

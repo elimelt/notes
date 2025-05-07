@@ -90,29 +90,23 @@
 <p>Core Innovation: The authors introduce Sparse Causal Flash Attention (SCFA), which extends the existing FlashAttention algorithm to handle irregular/sparse attention patterns while maintaining high computational efficiency.</p>
 </li>
 <li>
-<p>Two Main Applications:</p>
-</li>
-<li>Query/Key (QK) dropping: Selectively removing certain query and key pairs</li>
-<li>
-<p>Hash-based attention: Using locality-sensitive hashing to group similar queries and keys together</p>
+<p>Two Main Applications:
+- Query/Key (QK) dropping: Selectively removing certain query and key pairs
+- Hash-based attention: Using locality-sensitive hashing to group similar queries and keys together</p>
 </li>
 <li>
-<p>Key Results:</p>
-</li>
-<li>Achieves 2.0× speedup for sequences of 8,192 tokens</li>
-<li>Achieves 3.3× speedup for sequences of 16,384 tokens</li>
-<li>Maintains comparable perplexity to standard attention</li>
-<li>
-<p>Outperforms previous approaches like Reformer in both speed and accuracy</p>
+<p>Key Results:
+- Achieves 2.0× speedup for sequences of 8,192 tokens
+- Achieves 3.3× speedup for sequences of 16,384 tokens
+- Maintains comparable perplexity to standard attention
+- Outperforms previous approaches like Reformer in both speed and accuracy</p>
 </li>
 <li>
-<p>Main Advantages:</p>
-</li>
-<li>No computational complexity overhead compared to regular FlashAttention</li>
-<li>Supports dynamic sparsity patterns rather than just static ones</li>
-<li>Achieves exact computation (unlike some previous approaches that approximate)</li>
-<li>
-<p>Works particularly well for longer sequences</p>
+<p>Main Advantages:
+- No computational complexity overhead compared to regular FlashAttention
+- Supports dynamic sparsity patterns rather than just static ones
+- Achieves exact computation (unlike some previous approaches that approximate)
+- Works particularly well for longer sequences</p>
 </li>
 <li>
 <p>Technical Innovation:
@@ -131,18 +125,18 @@ The key technical achievement is modifying FlashAttention to handle non-triangul
 - Better speed than previous sparse attention methods
 - Efficient for both training and inference</p>
 <ol>
-<li>Performance:</li>
-<li>Outperforms previous sparse attention approaches</li>
-<li>Matches or exceeds full attention quality while being faster</li>
 <li>
-<p>Can handle sequences up to 16,384 tokens effectively</p>
+<p>Performance:
+- Outperforms previous sparse attention approaches
+- Matches or exceeds full attention quality while being faster
+- Can handle sequences up to 16,384 tokens effectively</p>
 </li>
 <li>
-<p>Technical Features:</p>
+<p>Technical Features:
+- Integrates with sliding window attention
+- Compatible with pre-trained LLMs through fine-tuning
+- Uses an IO-aware implementation based on Flash Attention</p>
 </li>
-<li>Integrates with sliding window attention</li>
-<li>Compatible with pre-trained LLMs through fine-tuning</li>
-<li>Uses an IO-aware implementation based on Flash Attention</li>
 </ol>
 <p>Results:
 - Language modeling tests show better perplexity than baseline methods
@@ -156,45 +150,39 @@ The key technical achievement is modifying FlashAttention to handle non-triangul
 <h2 id="moa">MoA</h2>
 <p>This paper introduces MoA (Mixture of Attention), a novel method for compressing large language models (LLMs) by automatically optimizing sparse attention patterns. Here are the key points:</p>
 <ol>
-<li>Problem &amp; Motivation:</li>
-<li>LLMs struggle with long contexts due to quadratic memory and computation costs from attention</li>
-<li>Existing sparse attention methods use uniform patterns across all attention heads, ignoring that different heads serve different purposes</li>
 <li>
-<p>Current approaches fail to extend effective context length beyond their attention span</p>
+<p>Problem &amp; Motivation:
+- LLMs struggle with long contexts due to quadratic memory and computation costs from attention
+- Existing sparse attention methods use uniform patterns across all attention heads, ignoring that different heads serve different purposes
+- Current approaches fail to extend effective context length beyond their attention span</p>
 </li>
 <li>
-<p>Key Innovation - MoA:</p>
-</li>
-<li>Automatically discovers heterogeneous sparse attention patterns tailored to each attention head</li>
-<li>Uses elastic rules that allow attention spans to scale differently with input length</li>
-<li>
-<p>Maintains different patterns for different layers and heads based on their functions</p>
+<p>Key Innovation - MoA:
+- Automatically discovers heterogeneous sparse attention patterns tailored to each attention head
+- Uses elastic rules that allow attention spans to scale differently with input length
+- Maintains different patterns for different layers and heads based on their functions</p>
 </li>
 <li>
-<p>Technical Approach:</p>
-</li>
-<li>Profiles the influence of each attention position on model predictions using gradient-based analysis</li>
-<li>Constructs a search space of various attention patterns and scaling rules</li>
-<li>Uses calibration datasets with long-range dependencies</li>
-<li>
-<p>Optimizes patterns automatically through a multi-objective framework</p>
+<p>Technical Approach:
+- Profiles the influence of each attention position on model predictions using gradient-based analysis
+- Constructs a search space of various attention patterns and scaling rules
+- Uses calibration datasets with long-range dependencies
+- Optimizes patterns automatically through a multi-objective framework</p>
 </li>
 <li>
-<p>Key Results:</p>
-</li>
-<li>Increases effective context length by 3.9× compared to baseline methods</li>
-<li>Improves retrieval accuracy by 1.5-7.1× over uniform attention baselines</li>
-<li>Reduces maximum performance drop from 9-36% to within 5% on benchmarks</li>
-<li>Achieves 6.6-8.2× throughput improvement over FlashAttention2</li>
-<li>
-<p>Reduces GPU memory usage by 1.2-1.4×</p>
+<p>Key Results:
+- Increases effective context length by 3.9× compared to baseline methods
+- Improves retrieval accuracy by 1.5-7.1× over uniform attention baselines
+- Reduces maximum performance drop from 9-36% to within 5% on benchmarks
+- Achieves 6.6-8.2× throughput improvement over FlashAttention2
+- Reduces GPU memory usage by 1.2-1.4×</p>
 </li>
 <li>
-<p>Limitations:</p>
+<p>Limitations:
+- Performance degrades under extremely low-density constraints
+- May benefit from dynamic attention patterns (left for future work)
+- Could explore non-linear elastic rules</p>
 </li>
-<li>Performance degrades under extremely low-density constraints</li>
-<li>May benefit from dynamic attention patterns (left for future work)</li>
-<li>Could explore non-linear elastic rules</li>
 </ol>
 <p>The paper demonstrates that automatically discovering heterogeneous attention patterns can significantly improve both the efficiency and capabilities of LLMs in handling long contexts, while maintaining model performance.</p>
             </div>

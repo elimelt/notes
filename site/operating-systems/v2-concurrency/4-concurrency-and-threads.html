@@ -417,11 +417,13 @@
 <p>Let the user and kernel level schedulers coordinate with eachother. Involves system call and upcalls (2-way communication), and thus overhead, but doesnt require the kernel to be aware of the user-level threads, and is able to optimize the uncommon case.</p>
 <ul>
 <li>User-level scheduler makes system calls to request or free processors.</li>
-<li>Kernel upcalls user-level scheduler to notify it of events. Examples include:</li>
+<li>Kernel upcalls user-level scheduler to notify it of events. Examples include:<ul>
 <li>Processor becomes available or unavailable.</li>
 <li>Transition to <code>WAITING</code> state (ie for I/O).</li>
 <li>Transition from <code>WAITING</code> to <code>READY</code> state.</li>
 <li>Transition from <code>RUNNING</code> to idle.</li>
+</ul>
+</li>
 </ul>
 <p><strong>Scheduler Activations</strong> replace kernel threads. It has a seperate stack and CPU context, and it can be scheduled the same as a kernel thread. However, if the kernel interrups it, processor restarts execution in the user-level scheduler. Then the user-level scheduler can decide which user-level thread to run next.</p>
 <h2 id="alternatives-to-threads">Alternatives to Threads</h2>
@@ -430,10 +432,12 @@
 <ul>
 <li>Process makes a system call to issue an I/O request</li>
 <li>Call returns immediately, and the process continues to run</li>
-<li>When the I/O is complete, the process is notified by the kernel through one of the following</li>
+<li>When the I/O is complete, the process is notified by the kernel through one of the following<ul>
 <li>calling a signal handler (callback)</li>
 <li>placing the result in a queue in the processes address space</li>
 <li>placing the result in a queue in the kernel's address space and letting the process poll through a system call</li>
+</ul>
+</li>
 </ul>
 <p>A common design pattern is to have a single thread interleave different I/O bound tasks by waiting for multiple different I/O events. For example, a web server that has 10 active clients might have a single thread that issues a <code>select</code> call to wait for any of the 10 clients to have data ready to read. Then, when the <code>select</code> call returns, the thread can read from the client and it will immediately (non-blocking).</p>
 <h4 id="event-driven-programming">Event-Driven Programming</h4>

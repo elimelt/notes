@@ -104,23 +104,33 @@
 </ul>
 <p>The basic approach is to:</p>
 <ul>
-<li>Read and write objects during execution</li>
+<li>Read and write objects during execution<ul>
 <li>Contact the appropriate paxos group leader and acquire any locks</li>
-<li>Client decides to commit and notifies coordinator</li>
+</ul>
+</li>
+<li>Client decides to commit and notifies coordinator<ul>
 <li>Coordinator contacts all shards and sends <code>prepare</code> message</li>
 <li>Prepare log entry is replicated throughout group</li>
 <li>Group votes to either send <code>ok</code> or <code>abort</code></li>
-<li>If all contacted shards vote <code>ok</code>, coordinator sends <code>commit</code> message</li>
+</ul>
+</li>
+<li>If all contacted shards vote <code>ok</code>, coordinator sends <code>commit</code> message<ul>
 <li>Each shard replicates <code>commit</code> entry in log</li>
 <li>Leader released locks</li>
+</ul>
+</li>
 </ul>
 <h2 id="caution-deadlocks">Caution: Deadlocks</h2>
 <p>Deadlocks are very easy to trigger when performing operations across shards. A general solution is to always kill things that need to wait. For instance, with a checking/savings account at a bank:</p>
 <ul>
-<li>Two clients execute the same exact transaction concurrently</li>
+<li>Two clients execute the same exact transaction concurrently<ul>
 <li>Both get read locks on accounts, so neither can acquire write locks and the transaction stalls</li>
-<li>Two clients, one moves from savings to checking, and the other from checking to savings</li>
+</ul>
+</li>
+<li>Two clients, one moves from savings to checking, and the other from checking to savings<ul>
 <li>Each gets read lock, neither can get write lock, so transaction stalls</li>
+</ul>
+</li>
 </ul>
 <p>Deadlocks can be an issue in sharded systems when moving shards across groups.</p>
 <h2 id="googles-bigtable-in-retrospect">Google's Bigtable in Retrospect</h2>

@@ -86,7 +86,7 @@
 <h2 id="scheduling-the-max-number-of-intervals">Scheduling the max number of intervals</h2>
 <ul>
 <li><strong>Algorithm:</strong> sort by finish time and select the next compatible interval</li>
-<li><strong>Proof</strong>: Greedy stays ahead, by induction</li>
+<li><strong>Proof</strong>: Greedy stays ahead, by induction<ul>
 <li><em>Claim</em>: Greedy algorithm is optimal</li>
 <li><strong>Lemma</strong><ul>
 <li>$P(r)$: For greedy choices $g_1, \ldots, g_n$ and optimal choices $k_1, \ldots, k_m$, $f(g_r) \le f(k_r)$</li>
@@ -96,13 +96,17 @@
 </li>
 <li>By this lemma, we must have $n \ge m$, since since otherwise $k_{n + 1}$ is in the set of candidates for $g_{n + 1}$.</li>
 </ul>
+</li>
+</ul>
 <h2 id="partitioning-intervals-into-the-minimum-number-of-sets">Partitioning intervals into the minimum number of sets</h2>
 <ul>
 <li><strong>Algorithm</strong>: sort intervals by start time, adding them to <strong>any</strong> compatible set. If no set is compatible, create a new one</li>
-<li><strong>Proof</strong>: exploit structural property</li>
+<li><strong>Proof</strong>: exploit structural property<ul>
 <li><em>Claim</em>: greedy algorithm is optimal</li>
 <li>Let $d$ be the number of sets the greedy algorithm allocates. The $d$th set, $S_d$ is allocated because we had to assign some interval, $I_i$, that was not compatible with any of the $d - 1$ previous sets.</li>
 <li>Since we sorted by start time, all intervals $I_j \in S_1 \cup \ldots \cup S_{d - 1}$ have $s(I_i) \ge s(I_j)$. Thus, we have at least depth $d$ intervals, and so all valid partitions must have $\ge d$ sets.</li>
+</ul>
+</li>
 </ul>
             </div>
             <div class="tags">

@@ -149,17 +149,25 @@ $$</p>
 <p>Consider an arbitrary pair chosen by $G$ on $A'$, $(a_i, a_j)$, with $a_i \le a_j$. By our sort order, we have $a_1 \le a_i \le a_j \le a_k$. Now, consider the ways we could swap elements between these two pairs</p>
 <p><strong>Case 1</strong>: $a_1 + a_k &gt; a_i + a_j$</p>
 <ul>
-<li>$(a_1, a_j), (a_i, a_k)$</li>
+<li>$(a_1, a_j), (a_i, a_k)$<ul>
 <li>$a_i + a_k \ge a_1 + a_k$, since $a_i \ge a_1$</li>
-<li>$(a_1, a_i), (a_k, a_j)$</li>
+</ul>
+</li>
+<li>$(a_1, a_i), (a_k, a_j)$<ul>
 <li>$a_k + a_j \ge a_1 + a_k$, since $a_j \ge a_i$</li>
+</ul>
+</li>
 </ul>
 <p><strong>Case 2</strong>: $a_1 + a_k \le a_i + a_j$</p>
 <ul>
-<li>$(a_1, a_j), (a_i, a_k)$</li>
+<li>$(a_1, a_j), (a_i, a_k)$<ul>
 <li>$a_i + a_k \ge a_i + a_j$, since $a_k \ge a_j$</li>
-<li>$(a_1, a_i), (a_k, a_j)$</li>
+</ul>
+</li>
+<li>$(a_1, a_i), (a_k, a_j)$<ul>
 <li>$a_k + a_j \ge a_i + a_j$, since $a_k \ge a_i$</li>
+</ul>
+</li>
 </ul>
 <p>In either of the above cases, we are increasing the max of the two sums by swapping elements, and this holds for an arbitrary $a_i, a_j$ chosen by $G'$, which is at least as good as the optimum. Since we know $X'<em max="max">{max} \ge G'</em>$, and so $P(k)$ holds.}$, and also that any pairing other than the one picked by $G$ ($a_1, a_k$) leads to an increased sum, it must be the case that $G_{max} \le X_{max</p>
 <h2 id="problem-3">Problem 3</h2>

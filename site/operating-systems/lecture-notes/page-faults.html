@@ -106,20 +106,18 @@
 <li>free page frame</li>
 <li>assigned but unmodified ("clean") page frame</li>
 <li>assigned and modified ("dirty") page frame</li>
-<li>assigned but "clean"</li>
+<li>assigned but "clean"<ul>
 <li>find PTE (may be a different process!)</li>
 <li>mark as invalid (disk address must be available for subsequent reload)</li>
-<li>assigned and "dirty"<ul>
-<li>find PTE (may be a different process!)</li>
-<li>mark as invalid</li>
-<li>write it out</li>
 </ul>
 </li>
-<li>OS may speculatively maintain lists of clean and dirty frames selected for replacement<ul>
-<li>May also speculatively clean the dirty pages (by writing them to
+<li>assigned and "dirty"
+    - find PTE (may be a different process!)
+    - mark as invalid
+    - write it out</li>
+<li>OS may speculatively maintain lists of clean and dirty frames selected for replacement
+    - May also speculatively clean the dirty pages (by writing them to
 disk)</li>
-</ul>
-</li>
 </ul>
 <h2 id="issues-with-page-faults">Issues with Page Faults</h2>
 <h3 id="memory-reference-overhead">Memory reference overhead</h3>
@@ -127,11 +125,9 @@ disk)</li>
 <h3 id="memory-required-to-hold-a-page-table-can-be-large">Memory required to hold a page table can be large</h3>
 <ul>
 <li>need one PTE per page in the virtual address space</li>
-<li>32 bit AS with 4KB pages = 220 PTEs = 1,048,576 PTEs. 4 bytes/PTE = 4MB per page table<ul>
-<li>OS's typically have separate page tables per process</li>
-<li>25 processes = 100MB of page tables</li>
-</ul>
-</li>
+<li>32 bit AS with 4KB pages = 220 PTEs = 1,048,576 PTEs. 4 bytes/PTE = 4MB per page table
+    - OS's typically have separate page tables per process
+    - 25 processes = 100MB of page tables</li>
 <li>48 bit AS, same assumptions, 64GB per page table!</li>
 </ul>
 <h4 id="old-solution-paging-the-page-table">Old Solution: Paging the page table</h4>
@@ -141,27 +137,21 @@ disk)</li>
 <p><strong>This is the solution used in modern operating systems.</strong></p>
 <h5 id="two-level-page-table">Two-level page table</h5>
 <ul>
-<li>VA has 3 parts:<ul>
-<li>master page number, secondary page number, offset</li>
-</ul>
-</li>
+<li>VA has 3 parts:
+    - master page number, secondary page number, offset</li>
 <li>master PT maps master PN to secondary PT</li>
 <li>secondary PT maps secondary PN to page frame number</li>
 <li>offset and PFN yield physical address</li>
 </ul>
 <h4 id="other-alternatives">Other Alternatives</h4>
 <ul>
-<li>Hashed page tables<ul>
-<li>VPN used as a hash</li>
-<li>collision resolved because elements in linked list at the hash index include the VPN as well as the PFN</li>
-</ul>
-</li>
-<li>Inverted page tables (really reduces space)<ul>
-<li>one entry per page frame</li>
-<li>includes the VPN and the PID of the process</li>
-<li>hard to search (but IBM PC/RT actually did it)</li>
-</ul>
-</li>
+<li>Hashed page tables
+    - VPN used as a hash
+    - collision resolved because elements in linked list at the hash index include the VPN as well as the PFN</li>
+<li>Inverted page tables (really reduces space)
+    - one entry per page frame
+    - includes the VPN and the PID of the process
+    - hard to search (but IBM PC/RT actually did it)</li>
 </ul>
             </div>
             <div class="tags">

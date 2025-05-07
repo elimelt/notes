@@ -93,13 +93,15 @@
 <h2 id="root-finding">Root Finding</h2>
 <p>Given a continuous function $f$ and two points $a &lt; b$ such that $f(a) \cdot f(b) &lt; 0$, there exists a root of $f$ in the interval $\lbrack  a, b  \rbrack$ by the <strong>intermediate value theorem</strong>. Since said root may be irrational, we aim to approximate it with an arbitrary precision $\epsilon$.</p>
 <ul>
-<li><strong>Algorithm</strong>: $Bisect(a, b, \epsilon)$</li>
+<li><strong>Algorithm</strong>: $Bisect(a, b, \epsilon)$<ul>
 <li>If $b - a &lt; \epsilon$, $a$ is a suitable approximation</li>
 <li>Otherwise, calculate the midpoint $m = (a + b)/2$</li>
 <li>If $f(m) \le 0$ then return $Bisect(m, b, \epsilon)$</li>
 <li>else return $Bisect(a, m, \epsilon)$</li>
+</ul>
+</li>
 <li><strong>Time</strong>: $T(n) = T(\frac{n}{2}) + O(1) = O(\log(\frac{b - a}{\epsilon}))$</li>
-<li><strong>Proof</strong>:</li>
+<li><strong>Proof</strong>:<ul>
 <li>$P(k) =$ For any $a, b$ such that $k\epsilon \le |a - b| \le (k + 1)\epsilon$, if $f(a)f(b) \le 0$, then we find an $\epsilon$ approx to a root using $\log k$ queries to $f$.</li>
 <li>$P(1)$: Output $a + \epsilon$, since the whole interval is at most $epsilon$. This requires $0$ calls to $f$.</li>
 <li>Suppose $P(k)$ and consider an arbitrary $a$, $b$ s.t. $2k\epsilon \le |a - b| \le (2k + 1)\epsilon$.</li>
@@ -108,14 +110,18 @@
 <li>Otherwise, we have $f(b)f(a + k\epsilon) &lt; 0$, since $f(a)f(b) &lt; 0$ and $f(a)f(a + k\epsilon) \ge 0$. Solve the interval $\lbrack  a + k\epsilon, b  \rbrack$.</li>
 <li>In any case, we used at most $\log(k) + 1 = $\log(2k)$ queries to $f$.</li>
 </ul>
+</li>
+</ul>
 <h2 id="kth-smallest-element">kth Smallest Element</h2>
 <ul>
-<li><strong>Algorithm</strong>: $f(S \in \mathbb{R}^n, k \in \mathbb{R})$</li>
+<li><strong>Algorithm</strong>: $f(S \in \mathbb{R}^n, k \in \mathbb{R})$<ul>
 <li>Select an approximate median element $w$ using median of $\frac{n}{5} medians with subarrays of size $5$</li>
 <li>Partition each element into three sets, $S_{&gt;}, S_{&lt;}, S_{=}$</li>
 <li>If $k \le |S_{&lt;}|$, recurse on $f(S_{&lt;}, k)$</li>
 <li>Else, if $k \le |S_{&lt;}| + |S_{=}|$, return $w$</li>
 <li>Else, recurse on $f(S_{&gt;}, k - |S_{&lt;}| - |S_{=}|)$</li>
+</ul>
+</li>
 </ul>
             </div>
             <div class="tags">

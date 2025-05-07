@@ -101,42 +101,30 @@
 <li>Continue despite failure</li>
 <li>Multiple types of communication</li>
 <li>Variety of networks</li>
-<li>Distributed management of resources<ul>
-<li>Any centralized control would be a bottleneck</li>
-<li>Each network should be able to manage its own resources</li>
-</ul>
-</li>
+<li>Distributed management of resources
+    - Any centralized control would be a bottleneck
+    - Each network should be able to manage its own resources</li>
 <li>Cost effective</li>
-<li>Host attachment<ul>
-<li>Hosts should be able to connect to the network without requiring changes to the network</li>
-</ul>
-</li>
-<li>Accountability<ul>
-<li>Hosts should be able to identify themselves to the network</li>
-<li>Quality of service should be able to be enforced</li>
-</ul>
-</li>
+<li>Host attachment
+    - Hosts should be able to connect to the network without requiring changes to the network</li>
+<li>Accountability
+    - Hosts should be able to identify themselves to the network
+    - Quality of service should be able to be enforced</li>
 </ul>
 <h4 id="datagrams">Datagrams</h4>
 <ul>
-<li>Connectionless service<ul>
-<li>no state established ahead of time</li>
-</ul>
-</li>
+<li>Connectionless service
+    - no state established ahead of time</li>
 <li>Key building block for switching</li>
-<li>UDP is app-level interface to datagram service of the internet<ul>
-<li>building block for other protocols (TCP)</li>
-</ul>
-</li>
+<li>UDP is app-level interface to datagram service of the internet
+    - building block for other protocols (TCP)</li>
 <li>Each packet is independent</li>
 </ul>
 <h4 id="tcp-vs-udp">TCP vs. UDP</h4>
 <ul>
 <li>TCP: connection-oriented, reliable, in-order delivery</li>
-<li>UDP: connectionless, unreliable, unordered delivery (loss is OK)<ul>
-<li>No QoS guarantees in lower-level</li>
-</ul>
-</li>
+<li>UDP: connectionless, unreliable, unordered delivery (loss is OK)
+    - No QoS guarantees in lower-level</li>
 </ul>
 <h4 id="supporting-variety-of-networks">Supporting Variety of Networks</h4>
 <p>"Thin waist" of the internet/hourglass model: IP at the network layer, TCP/UDP at the transport layer.</p>

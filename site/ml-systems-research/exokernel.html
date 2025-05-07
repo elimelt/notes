@@ -91,32 +91,40 @@
 <p>Download code into exokernel from lib os (similar to eBPF today)</p>
 <h3 id="key-insights">Key Insights</h3>
 <ul>
-<li>General-purpose abstractions in monolithic kernels can lead to performance overhead</li>
+<li>General-purpose abstractions in monolithic kernels can lead to performance overhead<ul>
 <li>Resource management is next-to-impossible since most resources are completely abstracted. Instead the kernel interface should be as close to hardware as possible, opting to use physical addresses, etc.</li>
 <li>Applications will oftentimes be working against built in "features" of the OS, e.g. databases slowed down by filesystems, non-zero-copy networking</li>
+</ul>
+</li>
 <li>Applications must frequently defer to the kernel for operations that could be done in user space, incurring context switching overhead</li>
 </ul>
 <h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
 <ul>
 <li>The interface provided by the kernel should be as close to hardware as possible, so as to directly expose hardware resources to applications in a safe manner</li>
 <li>Library operating systems can be tailored to specific use cases, avoiding the overhead of general-purpose abstractions usually found in monolithic kernels</li>
-<li>kernel interface with limited scope leads to better overall design</li>
+<li>kernel interface with limited scope leads to better overall design<ul>
 <li>completeness: optimizing the hell out of what little it does is a lot easier</li>
 <li>simplicity: less code to maintain, less code to break</li>
 <li>extensibility: easier to add new features via library OSes than to modify the kernel</li>
 </ul>
+</li>
+</ul>
 <h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
 <ul>
-<li>Compatibility between system-level software and dependencies has been kicked into user space, likely leading to less stability/reliability, or at the very least more work for the application developer and end user</li>
+<li>Compatibility between system-level software and dependencies has been kicked into user space, likely leading to less stability/reliability, or at the very least more work for the application developer and end user<ul>
 <li>Third party library OSes are very suspect</li>
 <li>Unless standards are not only developed but widely adopted for all OS components in user space, this could be a major issue</li>
+</ul>
+</li>
 <li>Cross-platform compatibility is not a priority, and additional work would be needed to port all upstream library OSes to a new exokernel to port an application</li>
 </ul>
 <h3 id="summary-of-key-results">Summary of Key Results</h3>
 <ul>
-<li>Many primitives are 1-2 orders of magnitude faster than Ultraix</li>
+<li>Many primitives are 1-2 orders of magnitude faster than Ultraix<ul>
 <li>Exception handling, virtual memory, IPC, etc. faster than Ultraix, and in some cases faster than SOTA implementations</li>
 <li>Primarily due to reduced context switching, low-overhead multiplexing of hardware, and specialized implementations of aforementioned systems in user space</li>
+</ul>
+</li>
 </ul>
 <h3 id="open-questions">Open Questions</h3>
 <ul>

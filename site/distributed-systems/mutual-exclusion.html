@@ -114,10 +114,12 @@
 <p>To acquire the lock:</p>
 <ul>
 <li>Broadcast <code>request</code> message</li>
-<li>Acquired once...</li>
+<li>Acquired once...<ul>
 <li><code>request</code> at head of queue</li>
 <li>Everyone else has sent a later-timestamped message</li>
 <li>so <code>request</code> is the earliest in the queue</li>
+</ul>
+</li>
 </ul>
             </div>
             <div class="tags">

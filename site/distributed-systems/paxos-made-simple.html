@@ -117,11 +117,9 @@ $$</p>
 <p>To satisfy P2b, we must maintain P2c as an invariant. To make sure this invariant holds, proposers proposing a proposal numbered $n$ must learn the highest-numbered proposal with a number less than $n$ that has been accepted by a majority of acceptors, and propose that value if it exists.</p>
 <h4 id="proposition-algorithm">Proposition Algorithm</h4>
 <ol>
-<li>A proposer chooses a new proposal number $n$ and sends a <em>prepare</em> request to each member of some set of acceptors, awaiting a response containing:<ul>
-<li>A guarantee that this acceptor will never accept a proposal numbered less than $n$</li>
-<li>The proposal with the highest number less than $n$ that it has accepted, if any.</li>
-</ul>
-</li>
+<li>A proposer chooses a new proposal number $n$ and sends a <em>prepare</em> request to each member of some set of acceptors, awaiting a response containing:
+    - A guarantee that this acceptor will never accept a proposal numbered less than $n$
+    - The proposal with the highest number less than $n$ that it has accepted, if any.</li>
 <li>If the proposer receives the requested responses from a majority of acceptors, it issues an <em>accept</em> request, which is a proposal with number $n$ and value $v$, where $v$ is the value of the highest-numbered proposal among the responses, or a value of the proposer's choice if no proposals in the responses were received.</li>
 </ol>
 <h4 id="acceptor-behavior">Acceptor Behavior</h4>

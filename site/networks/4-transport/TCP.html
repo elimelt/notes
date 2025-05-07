@@ -179,31 +179,23 @@
 <p>Sender uses <strong>congestion window (cwnd)</strong> to set its rate (cwnd/RTT), and packet loss as a signal.</p>
 <p>You want to quickly converge to the ideal window size, but you also don't want to cause congestion. Solution is to increase exponentially until you hit a packet loss, then set the window size to half of the current window size. Then, switch to additive increase.</p>
 <ul>
-<li>
-<p><strong>Slow Start Doubling</strong>: First send one packet. Then, on ACK, send two packets. Then, on two ACKs, send four packets. Keep this doubling until you hit a packet loss.</p>
-</li>
-<li>
-<p><strong>Additive Increase</strong>: After slow start, increase the window size by one packet per RTT/ACK.</p>
-</li>
+<li><strong>Slow Start Doubling</strong>: First send one packet. Then, on ACK, send two packets. Then, on two ACKs, send four packets. Keep this doubling until you hit a packet loss.</li>
+</ul>
+<ul>
+<li><strong>Additive Increase</strong>: After slow start, increase the window size by one packet per RTT/ACK.</li>
 </ul>
 <h3 id="tcp-tahoe">TCP Tahoe</h3>
 <ul>
-<li>Initial slow-start phase<ul>
-<li>Start with cwnd = 1 (or another small val)</li>
-<li>cwnd += 1 for each ACK</li>
-</ul>
-</li>
-<li>After packet loss, additively increase cwnd<ul>
-<li>cwnd += 1/cwnd for each ACK</li>
-<li>roughly add 1 packet per RTT</li>
-</ul>
-</li>
-<li>Switching threshold<ul>
-<li>Switch to AI when cwnd &gt; ssthresh</li>
-<li>set ssthresh = cwnd / 2 on packet loss</li>
-<li>begin slow start again</li>
-</ul>
-</li>
+<li>Initial slow-start phase
+    - Start with cwnd = 1 (or another small val)
+    - cwnd += 1 for each ACK</li>
+<li>After packet loss, additively increase cwnd
+    - cwnd += 1/cwnd for each ACK
+    - roughly add 1 packet per RTT</li>
+<li>Switching threshold
+    - Switch to AI when cwnd &gt; ssthresh
+    - set ssthresh = cwnd / 2 on packet loss
+    - begin slow start again</li>
 </ul>
 <p>Need to go back to cwnd = 1 on packet loss because we lost the ack clock. This is conservative but not very efficient.</p>
 <h3 id="fast-recovery">Fast Recovery</h3>

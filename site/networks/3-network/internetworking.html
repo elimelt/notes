@@ -102,10 +102,14 @@
 <h2 id="ip-addressing">IP Addressing</h2>
 <p>IP is the lowest common denominator of the internet. It allows networks that support entirely different services to communicate. Asks very little of the underlying network, and provides very little in return.</p>
 <ul>
-<li>IPv4 uses 32-bit addresses written in "dotted quad" notation (Four 8-bit numbers separated by dots).</li>
+<li>IPv4 uses 32-bit addresses written in "dotted quad" notation (Four 8-bit numbers separated by dots).<ul>
 <li>Ex: <code>255.255.255.0</code></li>
-<li>IPv6 uses 128-bit addresses written in hexadecimal notation.</li>
+</ul>
+</li>
+<li>IPv6 uses 128-bit addresses written in hexadecimal notation.<ul>
 <li>Ex: <code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code></li>
+</ul>
+</li>
 </ul>
 <h3 id="ipv4">IPv4</h3>
 <pre><code class="language-plaintext">
@@ -134,15 +138,21 @@
 </code></pre>
 <h3 id="ip-prefixes">IP Prefixes</h3>
 <ul>
-<li>Addresses allocated in blocks called "prefixes".</li>
+<li>Addresses allocated in blocks called "prefixes".<ul>
 <li>Addresses in an L-bit prefix have the first L bits in common.</li>
 <li>There are $2^{32-L}$ addresses in an L-bit prefix.</li>
-<li>Written in "addr/prefix" notation.</li>
+</ul>
+</li>
+<li>Written in "addr/prefix" notation.<ul>
 <li>Ex: <code>128.13.0.0/16</code> is a 16-bit prefix and contains $2^{32-16} = 65536$ addresses.</li>
-<li>Originally, IP addresses were allocated in fixed size blocks to a designated class. Still are, but class is now ignored in favor of CIDR (Classless Inter-Domain Routing).</li>
+</ul>
+</li>
+<li>Originally, IP addresses were allocated in fixed size blocks to a designated class. Still are, but class is now ignored in favor of CIDR (Classless Inter-Domain Routing).<ul>
 <li>Class A: $2^{24}$ addresses</li>
 <li>Class B: $2^{16}$ addresses</li>
 <li>Class C: $2^{8}$ addresses</li>
+</ul>
+</li>
 </ul>
 <h4 id="example">Example:</h4>
 <p><code>128.13.0.0/16</code></p>
@@ -172,19 +182,21 @@ else:
         deliver packet to NextHop router
 </code></pre>
 <ul>
-<li><a href="#internetworking">Internetworking</a></li>
+<li><a href="#internetworking">Internetworking</a><ul>
 <li><a href="#how-netorks-may-differ">How netorks may differ</a><ul>
 <li><a href="#connecting-datagram-and-virtual-circuit-networks">Connecting Datagram and Virtual Circuit Networks</a></li>
 </ul>
 </li>
 <li><a href="#ip-addressing">IP Addressing</a><ul>
 <li><a href="#ipv4">IPv4</a></li>
-<li><a href="#ip-prefixes">IP Prefixes</a></li>
+<li><a href="#ip-prefixes">IP Prefixes</a><ul>
 <li><a href="#example:">Example:</a></li>
 </ul>
 </li>
-<li><a href="#ip-datagram-forwarding">IP Datagram Forwarding</a><ul>
-<li><a href="#longest-prefix-match">Longest Prefix Match</a></li>
+</ul>
+</li>
+<li><a href="#ip-datagram-forwarding">IP Datagram Forwarding</a>
+    - <a href="#longest-prefix-match">Longest Prefix Match</a></li>
 </ul>
 </li>
 </ul>

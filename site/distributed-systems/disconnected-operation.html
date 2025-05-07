@@ -86,11 +86,15 @@
 <p>Always available writes inherently pose a problem in distributed systems. To allow for disconnected operation, we need to be able to write to a local copy of the data, and then synchronize it with the rest of the system when we're back online. Many apps today are built to work with intermittent lack of connectivity, for example, file syncing apps/sourcing control systems. In many of these systems, writes can conflict, and need to be resolved either manually or automatically.</p>
 <h2 id="two-models">Two Models</h2>
 <ul>
-<li>Applications only communicate with the cloud (Coda, SVN)</li>
+<li>Applications only communicate with the cloud (Coda, SVN)<ul>
 <li>Log changes, apply on reconnection</li>
-<li>Applications communicate with cloud and other clients (Git)</li>
+</ul>
+</li>
+<li>Applications communicate with cloud and other clients (Git)<ul>
 <li>Log changes and exchange with other clients</li>
 <li>Remerge changes when connected to a new client</li>
+</ul>
+</li>
 </ul>
 <h2 id="coda">Coda</h2>
 <p>Coda lets you mount a remote file system as a local directory. The local file system is a partial replica of the global version. It makes extensive use of local caching to reduce latency. While disconnected, it uses a write ahead log to record changes. When reconnected, it replays the log to the server and merges changes atomically.</p>

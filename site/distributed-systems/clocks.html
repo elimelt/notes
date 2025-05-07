@@ -122,9 +122,11 @@
 <p>Clock is a vector <code>C</code>, with length = # of nodes in the system</p>
 <ul>
 <li>On node <code>i</code>, increment <code>C[i]</code> on each event</li>
-<li>On receipt of message with clock <code>C_m</code> on node <code>i</code>:</li>
+<li>On receipt of message with clock <code>C_m</code> on node <code>i</code>:<ul>
 <li>increment <code>C[i]</code></li>
 <li>for each <code>j != i</code>, <code>C[j] = max(C[j], C_m[j])</code></li>
+</ul>
+</li>
 </ul>
 <pre><code class="language-java">public class VectorClock {
   public final int[] clock;

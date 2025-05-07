@@ -89,19 +89,25 @@
 <p>A partial ordering of objects is a relation that is reflexive, antisymmetric, and transitive. Conversely, a total ordering is a partial ordering that is also connexive, i.e. for any two objects $a$ and $b$, either $a \leq b$ or $b \leq a$.</p>
 <h2 id="notation">Notation</h2>
 <ul>
-<li>$a \rightarrow b$: Event $a$ happened before event $b$.</li>
+<li>$a \rightarrow b$: Event $a$ happened before event $b$.<ul>
 <li>$\to$ is an irreflexive, transitive relation that defines a partial order of events in a distributed system.</li>
 <li>if $a$ is the sending of a message and $b$ is the receipt of that message, then $a \rightarrow b$.</li>
 <li>if $a \rightarrow b$ and $b \rightarrow c$, then $a \rightarrow c$.</li>
 <li>$a \nrightarrow a$.</li>
+</ul>
+</li>
 <li>$a \nrightarrow b$: Event $a$ did not happen before event $b$.</li>
-<li>$a \Rightarrow b$: Event $a$ happened before or concurrently with event $b$.</li>
+<li>$a \Rightarrow b$: Event $a$ happened before or concurrently with event $b$.<ul>
 <li>if $a$ is an event in process $P_i$ and $b$ is an event in process $P_j$, then $a \Rightarrow b \iff a \rightarrow C_i\langle a \rangle &lt; C_j\langle b \rangle \lor (C_j\langle b \rangle = C_i\langle a \rangle \land P_i \prec P_j)$, where $\prec$ is an arbitrary total order of processes (e.g. lexicographic order of process identifiers)</li>
 <li>$a \Rightarrow b \implies a \to b$.</li>
+</ul>
+</li>
 <li>$a \nRightarrow b$: Event $a$ did not happen before or concurrently with event $b$.</li>
-<li>$C_i\langle a \rangle$: The clock value of process $P_i$ when event $a$ occurs.</li>
+<li>$C_i\langle a \rangle$: The clock value of process $P_i$ when event $a$ occurs.<ul>
 <li>$C_i\langle a \rangle &lt; C_j\langle b \rangle$: Event $a$ happened before event $b$.</li>
 <li>$(a \to b) \implies (C_i\langle a \rangle &lt; C_j\langle b \rangle)$.</li>
+</ul>
+</li>
 </ul>
 <h2 id="clock-condition">Clock Condition</h2>
 <p>If $a$ and $b$ are events in process $P_i$ and $a \to b$, then $C_i\langle a \rangle &lt; C_i\langle b \rangle$.</p>
@@ -124,9 +130,11 @@
 <li>When process $P_j$ receives $T_m:P_i$ <em>request</em>, it places it on its request queue and sends a <em>reply</em> message to $P_i$ with its current clock value.</li>
 <li>To release the resource, $P_i$ removes $T_m:P_i$ <em>request</em> from its request queue and sends a <em>release</em> message with its current clock value to all other processes.</li>
 <li>When process $P_j$ receives a $P_i$ <em>release</em> message, it removes $T_m:P_i$ <em>request</em> from its request queue.</li>
-<li>$P_i$ is granted the resource when the following conditions are met:</li>
+<li>$P_i$ is granted the resource when the following conditions are met:<ul>
 <li>There is a $T_m:P_i$ <em>request</em> message in its queue ordered by $\Rightarrow$ before any other <em>request</em> messages.</li>
 <li>$P_i$ has received a <em>reply</em> message from all other processes with a clock value greater than $T_m$.</li>
+</ul>
+</li>
 </ol>
 <h3 id="state-machine-perspective">State Machine Perspective</h3>
 <p>The algorithm can be viewed as a state machine consisting of $C$, the set of commands and $S$, the set of states. The state machine is defined by the following function:</p>

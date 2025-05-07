@@ -55,6 +55,7 @@ class SiteGenerator:
         "footnotes",
         "def_list",
         "admonition",
+        "mdx_truly_sane_lists",
     ]
     SUPPORTED_CONTENT = {".md", ".markdown"}
     IGNORED_DIRECTORIES = {
@@ -176,7 +177,7 @@ class SiteGenerator:
                 tags=tags,
                 description=metadata["description"],
                 is_index=is_index,
-                css_classes=['markdown-content', 'content'],
+                css_classes=["markdown-content", "content"],
             )
 
             self.pages[relative_path] = page
@@ -188,7 +189,6 @@ class SiteGenerator:
 
         except Exception as e:
             logger.error(f"Failed to process {file_path}: {str(e)}")
-
 
     def _process_html(self, file_path: Path) -> None:
         """Process an HTML file into a Page object"""
@@ -267,7 +267,7 @@ class SiteGenerator:
             "@type": "Article",
             "headline": page.title,
             "dateModified": page.modified_date.isoformat(),
-            "description": meta_description
+            "description": meta_description,
         }
         if page.category:
             schema_json["articleSection"] = page.category
@@ -288,7 +288,9 @@ class SiteGenerator:
             "navigation": self._generate_navigation(page),
             "breadcrumbs": self._generate_breadcrumbs(page),
             "current_year": datetime.now().year,
-            "css_selector": " ".join(page.css_classes) if page.css_classes else "content",
+            "css_selector": (
+                " ".join(page.css_classes) if page.css_classes else "content"
+            ),
         }
 
     def _generate_navigation(self, current_page: Page) -> str:
@@ -322,7 +324,6 @@ class SiteGenerator:
         """Generate special pages like main index, category index and tag index"""
         self._generate_main_index()
         self._generate_taxonomy_pages()
-
 
     def _generate_taxonomy_pages(self) -> None:
         """Generate category and tag index pages with enhanced markup for better UX"""
@@ -409,7 +410,9 @@ class SiteGenerator:
         styles_path = css_dir / "styles.css"
 
         # Only write the file if it doesn't exist or is older than this build
-        if not styles_path.exists() or datetime.fromtimestamp(styles_path.stat().st_mtime) < datetime.now() - timedelta(minutes=5):
+        if not styles_path.exists() or datetime.fromtimestamp(
+            styles_path.stat().st_mtime
+        ) < datetime.now() - timedelta(minutes=5):
             with open(styles_path, "w") as f:
                 f.write(STYLES_TEMPLATE)
                 print(f"Generated {styles_path}")
@@ -423,7 +426,9 @@ class SiteGenerator:
         taxonomy_js_path = js_dir / "taxonomy.js"
 
         # Only write the file if it doesn't exist or is older than this build
-        if not taxonomy_js_path.exists() or datetime.fromtimestamp(taxonomy_js_path.stat().st_mtime) < datetime.now() - timedelta(minutes=5):
+        if not taxonomy_js_path.exists() or datetime.fromtimestamp(
+            taxonomy_js_path.stat().st_mtime
+        ) < datetime.now() - timedelta(minutes=5):
             with open(taxonomy_js_path, "w") as f:
                 f.write(TAXONOMY_JS)
                 print(f"Generated {taxonomy_js_path}")
@@ -646,23 +651,34 @@ if __name__ == "__main__":
     import subprocess
 
     # compile presentation directory with marp
-    input_dir = 'slides/'
-    output_dir = 'site/slides/'
+    input_dir = "slides/"
+    output_dir = "site/slides/"
 
     os.makedirs(output_dir, exist_ok=True)
 
     for root, dirs, files in os.walk(input_dir):
         for file in files:
-            if file.endswith('.md'):
+            if file.endswith(".md"):
                 input_file = os.path.join(root, file)
-                output_file = os.path.join(output_dir, os.path.relpath(root, input_dir), file[:-3] + '.html')
+                output_file = os.path.join(
+                    output_dir, os.path.relpath(root, input_dir), file[:-3] + ".html"
+                )
                 os.makedirs(os.path.dirname(output_file), exist_ok=True)
-                subprocess.run(['npx', '@marp-team/marp-cli', '--html', input_file, '-o', output_file])
+                subprocess.run(
+                    [
+                        "npx",
+                        "@marp-team/marp-cli",
+                        "--html",
+                        input_file,
+                        "-o",
+                        output_file,
+                    ]
+                )
 
     # copy slides/assets to site/slides/assets
-    shutil.copytree('slides/assets', 'site/slides/assets', dirs_exist_ok=True)
-    print('Generated slides in site/slides')
+    shutil.copytree("slides/assets", "site/slides/assets", dirs_exist_ok=True)
+    print("Generated slides in site/slides")
 
     # copy sitemap and robots.txt
-    shutil.copy('sitemap.xml', 'site/sitemap.xml')
-    shutil.copy('robots.txt', 'site/robots.txt')
+    shutil.copy("sitemap.xml", "site/sitemap.xml")
+    shutil.copy("robots.txt", "site/robots.txt")

@@ -112,11 +112,13 @@
 <h2 id="depth-first-search">Depth First Search</h2>
 <ul>
 <li>$DFS(s)$ visits $x$ iff there is a path from $s \to x$ (so you can find C.C.s)</li>
-<li>DFS Spanning Tree formed by edges into then-undiscovered vertices</li>
+<li>DFS Spanning Tree formed by edges into then-undiscovered vertices<ul>
 <li>DFS tree not minimum depth, nor do its levels reflect the min distance</li>
 <li>Non-tree edges never join vertices on the same or adjacent level. Always join a vertex with one of its ancestors or descendants</li>
 <li>All vertices visited during $DFS(s)$ are a descendant of $s$ in the DFS tree<ul>
 <li>For every edge $(u, v) \notin T_{DFS(s)}$, either $x$ is an ancestor of $y$ or $y$ is an ancestor of $x$</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -145,10 +147,12 @@
 </ul>
 <h2 id="minimum-spanning-tree">Minimum Spanning Tree</h2>
 <ul>
-<li><strong>Algorithm</strong>: $O(m\log(n))$</li>
+<li><strong>Algorithm</strong>: $O(m\log(n))$<ul>
 <li>Sort edges by increasing weight, initialize an empty tree $T$, and add each vertex to its own set.</li>
 <li>Then, for each edge $e = (u, v)$, if $u$ and $v$ are currently in different sets, add $e$ to $T$ and merge the sets containing $u$ and $v$.</li>
-<li><strong>Proof</strong>:</li>
+</ul>
+</li>
+<li><strong>Proof</strong>:<ul>
 <li>Show that it is a tree<ul>
 <li>Initially start with $|V| = n$ sets, and only add an edge if you are connecting two of them. Therefore, we end with $n - 1$ sets to add an edge between each original set</li>
 <li>Only add edges between disconnected components, so it must be acyclic, since each additional edge $e$ connecting $C_1$ and $C_2$ (two disconnected components) is the only edge between them. This means $C_1 + e + C_2$ has an odd number of edges in its cut, so there are no cycles formed.</li>
@@ -159,13 +163,19 @@
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <h3 id="disjoint-sets">Disjoint Sets</h3>
 <ul>
-<li><strong>Implementation</strong>:</li>
+<li><strong>Implementation</strong>:<ul>
 <li>Maintain a tree of pointers, where every vertex is labeled with the longest path ending at that vertex. To check set membership of $u$ and $v$, traverse to root and check if $root(u) = root(v)$. This is $O(\log(n))$</li>
 <li>To merge two sets, point root with smaller label to root with larger label, adjusting labels of the new root if necessary. This is $O(1)$.</li>
-<li><strong>Properties</strong>:</li>
+</ul>
+</li>
+<li><strong>Properties</strong>:<ul>
 <li>If the label of a root is $k$, there are at least $2^k$ elements in the set.</li>
+</ul>
+</li>
 </ul>
             </div>
             <div class="tags">

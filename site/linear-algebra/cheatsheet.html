@@ -157,10 +157,12 @@
 <h3 id="scalar-multiplication">Scalar Multiplication</h3>
 <ul>
 <li>$c\vec{v} = \langle cv_1, cv_2, cv_3 \rangle$</li>
-<li>Properties:</li>
+<li>Properties:<ul>
 <li>$c(\vec{a} + \vec{b}) = c\vec{a} + c\vec{b}$</li>
 <li>$(c_1 + c_2)\vec{a} = c_1\vec{a} + c_2\vec{a}$</li>
 <li>$|c\vec{v}| = |c||\vec{v}|$</li>
+</ul>
+</li>
 </ul>
 <h1 id="systems-of-linear-equations">Systems of Linear Equations</h1>
 <h2 id="matrix-form-ax-b">Matrix Form (Ax = b)</h2>
@@ -216,20 +218,22 @@ $$</p>
 <ol>
 <li>
 <p>Forward Elimination</p>
+<ul>
+<li>Convert matrix to row echelon form (REF)</li>
+<li>Create zeros below diagonal</li>
+</ul>
+<p><code>[1 * * *]
+ [0 1 * *]
+ [0 0 1 *]
+ [0 0 0 1]</code></p>
 </li>
 <li>
-<p>Convert matrix to row echelon form (REF)</p>
-</li>
-<li>Create zeros below diagonal</li>
-</ol>
-<p><code>[1 * * *]
-   [0 1 * *]
-   [0 0 1 *]
-   [0 0 0 1]</code></p>
-<ol>
-<li>Back Substitution</li>
+<p>Back Substitution</p>
+<ul>
 <li>Solve for variables from bottom up</li>
 <li>$x_n \rightarrow x_{n-1} \rightarrow \cdots \rightarrow x_1$</li>
+</ul>
+</li>
 </ol>
 <h3 id="gauss-jordan-elimination">Gauss-Jordan Elimination</h3>
 <ul>
@@ -654,10 +658,12 @@ $$(AB)<em k="1">{ij} = \sum</em>$$}^n a_{ik}b_{kj</p>
 <ul>
 <li>Generally, $AB \neq BA$</li>
 <li>Exception: If $A$ and $B$ commute, they are called "commuting matrices"</li>
-<li>Special cases where $AB = BA$:</li>
+<li>Special cases where $AB = BA$:<ul>
 <li>When $A$ or $B$ is identity matrix</li>
 <li>When $A$ or $B$ is scalar multiple of identity</li>
 <li>When $A$ and $B$ are diagonal matrices</li>
+</ul>
+</li>
 </ul>
 <h3 id="associativity">Associativity</h3>
 <p>$(AB)C = A(BC)$ always holds for conformable matrices</p>
@@ -710,24 +716,30 @@ where adj(A) is the adjugate matrix</p>
 <h3 id="elementary-matrices">Elementary Matrices</h3>
 <ul>
 <li>Result from applying elementary row operations to identity matrix</li>
-<li>Types:</li>
+<li>Types:<ol>
 <li>Row swap: $E_{ij}$</li>
 <li>Row multiplication: $E_i(c)$</li>
 <li>Row addition: $E_{ij}(c)$</li>
-<li>Properties:</li>
+</ol>
+</li>
+<li>Properties:<ul>
 <li>Always invertible</li>
 <li>$(E_1E_2...E_k)A = A'$ where $A'$ is row reduced form</li>
+</ul>
+</li>
 </ul>
 <h2 id="conjugate-transpose">Conjugate Transpose</h2>
 <p>For matrix $A$:</p>
 <ul>
 <li>Denoted as $A^H$ or $A^*$</li>
 <li>$(a_{ij})^H = \overline{a_{ji}}$</li>
-<li>Properties:</li>
+<li>Properties:<ul>
 <li>$(A^H)^H = A$</li>
 <li>$(AB)^H = B^HA^H$</li>
 <li>$(A + B)^H = A^H + B^H$</li>
 <li>For real matrices, $A^H = A^T$</li>
+</ul>
+</li>
 </ul>
 <h1 id="systems-of-linear-equations-cont-1">Systems of Linear Equations (cont. 1)</h1>
 <h2 id="homogeneous-systems-amathbfx-mathbf0">Homogeneous Systems ($A\mathbf{x} = \mathbf{0}$)</h2>
@@ -1005,37 +1017,33 @@ $$\text{proj}<em i="1">W(x) = \sum</em>^k \langle x,w_i \rangle w_i$$</p>
 <ol>
 <li>
 <p><strong>Symmetric Matrices</strong>:</p>
-</li>
-<li>
-<p>All real symmetric matrices are diagonalizable</p>
-</li>
-<li>
-<p>$x^TAx$ is a quadratic form</p>
+<ul>
+<li>All real symmetric matrices are diagonalizable</li>
+<li>$x^TAx$ is a quadratic form</li>
+</ul>
 </li>
 <li>
 <p><strong>Orthogonal Matrices</strong>:</p>
-</li>
-<li>
-<p>Every column/row has unit length</p>
-</li>
+<ul>
+<li>Every column/row has unit length</li>
 <li>Any two columns/rows are perpendicular</li>
-<li>
-<p>Preserves inner products: $(Ax)^T(Ay) = x^Ty$</p>
+<li>Preserves inner products: $(Ax)^T(Ay) = x^Ty$</li>
+</ul>
 </li>
 <li>
 <p><strong>Idempotent Matrices</strong>:</p>
-</li>
-<li>
-<p>$I - A$ is also idempotent if $A$ is idempotent</p>
-</li>
-<li>
-<p>Rank = Trace for idempotent matrices</p>
+<ul>
+<li>$I - A$ is also idempotent if $A$ is idempotent</li>
+<li>Rank = Trace for idempotent matrices</li>
+</ul>
 </li>
 <li>
 <p><strong>Nilpotent Matrices</strong>:</p>
-</li>
+<ul>
 <li>The minimal $k$ for which $A^k = 0$ is called the index of nilpotency</li>
 <li>Characteristic polynomial is $\lambda^n$</li>
+</ul>
+</li>
 </ol>
 <h1 id="change-of-basis">Change of Basis</h1>
 <h2 id="transition-matrices">Transition Matrices</h2>
@@ -1270,9 +1278,11 @@ $$p(A) = 0 \text{ where } p(\lambda) = \det(A - \lambda I)$$</p>
 <ul>
 <li>All eigenvalues are real</li>
 <li>Eigenvectors of distinct eigenvalues are orthogonal</li>
-<li>$A = PDP^T$ where:</li>
+<li>$A = PDP^T$ where:<ul>
 <li>$P$ is orthogonal ($P^TP = I$)</li>
 <li>$D$ is diagonal containing eigenvalues</li>
+</ul>
+</li>
 </ul>
 <h2 id="triangle-inequality_1">Triangle Inequality</h2>
 <p>For vectors $x, y$:
@@ -1424,10 +1434,12 @@ $$</p>
 <ul>
 <li>For operator $T$, adjoint $T^<em>$ satisfies $\langle Tx,y \rangle = \langle x,T^</em>y \rangle$</li>
 <li>Matrix representation: conjugate transpose</li>
-<li>Properties:</li>
+<li>Properties:<ul>
 <li>$(T^<em>)^</em> = T$</li>
 <li>$(ST)^<em> = T^</em>S^*$</li>
 <li>$(\alpha T)^<em> = \overline{\alpha}T^</em>$</li>
+</ul>
+</li>
 </ul>
 <h3 id="self-adjoint-operators">Self-Adjoint Operators</h3>
 <ul>
@@ -1452,9 +1464,11 @@ $$\langle T^</em>f,v \rangle = \langle f,Tv \rangle$$</p>
 <h3 id="definition_4">Definition</h3>
 <ul>
 <li>Elementary tensors: $v \otimes w$</li>
-<li>Bilinear in components:</li>
+<li>Bilinear in components:<ul>
 <li>$(av_1 + bv_2) \otimes w = av_1 \otimes w + bv_2 \otimes w$</li>
 <li>$v \otimes (aw_1 + bw_2) = av \otimes w_1 + bv \otimes w_2$</li>
+</ul>
+</li>
 </ul>
 <h3 id="properties_12">Properties</h3>
 <table>
@@ -1494,11 +1508,13 @@ $$\langle T^</em>f,v \rangle = \langle f,Tv \rangle$$</p>
 <ul>
 <li>Antisymmetric tensors</li>
 <li>Wedge product $\wedge$</li>
-<li>Properties:</li>
+<li>Properties:<ul>
 <li>Anticommutativity: $v \wedge w = -w \wedge v$</li>
 <li>Associativity: $(u \wedge v) \wedge w = u \wedge (v \wedge w)$</li>
 <li>Distributivity over addition</li>
 <li>$k$-forms and differential forms</li>
+</ul>
+</li>
 </ul>
             </div>
             <div class="tags">

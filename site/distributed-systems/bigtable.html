@@ -164,12 +164,16 @@
 <h3 id="caching-for-read-performance">Caching for read performance</h3>
 <p>Tablet servers use two levels of caching:</p>
 <ul>
-<li>Scan cache</li>
+<li>Scan cache<ul>
 <li>Caches kv pairs returned by the SSTable</li>
 <li>Useful for repeated reads</li>
-<li>Block cache</li>
+</ul>
+</li>
+<li>Block cache<ul>
 <li>Caches SSTable blocks read from GFS</li>
 <li>Useful for locality/sequential reads</li>
+</ul>
+</li>
 </ul>
 <h3 id="bloom-filters">Bloom filters</h3>
 <p>Clients can specify that SSTables be created with a bloom filter in the tablet server's memory, reducing the number of disk accesses required for read operations by preventing many lookups for non-existent rows</p>

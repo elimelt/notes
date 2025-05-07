@@ -94,35 +94,27 @@
 <p>Google handles $10^{10}$ RPCs per second.</p>
 <h2 id="local-procedure-call">Local Procedure Call</h2>
 <ul>
-<li>Caller invokes function by name with args.<ul>
-<li>Pass args in register, push others onto stack.</li>
-<li>Push return program counter (%rip) onto stack.</li>
-<li>Jump to first instruction (entry point) of callee.</li>
-</ul>
-</li>
-<li>Callee executes function, returns to caller.<ul>
-<li>Reads params from registers/stack.</li>
-<li>Computes the function, possibly updating state.</li>
-<li>Jump back to next instruction after call.</li>
-</ul>
-</li>
+<li>Caller invokes function by name with args.
+    - Pass args in register, push others onto stack.
+    - Push return program counter (%rip) onto stack.
+    - Jump to first instruction (entry point) of callee.</li>
+<li>Callee executes function, returns to caller.
+    - Reads params from registers/stack.
+    - Computes the function, possibly updating state.
+    - Jump back to next instruction after call.</li>
 </ul>
 <p>The compiler defines the protocol for the call above.</p>
 <h2 id="remote-procedure-call">Remote Procedure Call</h2>
 <ul>
-<li>On client, implements a function that looks like a local call.<ul>
-<li>Parameters are <em>marshalled</em> into a message (arbitrary types)</li>
-<li>Message is sent to server (possibly in multiple packets).</li>
-<li>Client waits for response.</li>
-</ul>
-</li>
-<li>On server, implements the function.<ul>
-<li><em>Unmarshals</em> (parses) the message.</li>
-<li>Computes the function, possibly updating state.</li>
-<li><em>Marshals</em> the return value into a message (possibly into multiple packets).</li>
-<li>Sends the message back to the client.</li>
-</ul>
-</li>
+<li>On client, implements a function that looks like a local call.
+    - Parameters are <em>marshalled</em> into a message (arbitrary types)
+    - Message is sent to server (possibly in multiple packets).
+    - Client waits for response.</li>
+<li>On server, implements the function.
+    - <em>Unmarshals</em> (parses) the message.
+    - Computes the function, possibly updating state.
+    - <em>Marshals</em> the return value into a message (possibly into multiple packets).
+    - Sends the message back to the client.</li>
 </ul>
 <p>Client/server implementation is usually auto-generated from procedure spec, e.g. Google's Protocol Buffers/Protobuf.</p>
 <h2 id="rpc-vs-local-procedure-call">RPC vs. Local Procedure Call</h2>
@@ -139,10 +131,8 @@
 <h3 id="interface-description-language-idl-eg-protobuf">Interface Description Language (IDL, e.g. Protobuf)</h3>
 <p><strong>Serialization is important!</strong></p>
 <ul>
-<li>Generate client/server serialization/deserialization stubs automatically based on the IDL.<ul>
-<li>Procedue args can be values or pointers, which need to be assembled into a single linear message in a transportable format (not always just a string, e.g. Protobuf using binary format).</li>
-</ul>
-</li>
+<li>Generate client/server serialization/deserialization stubs automatically based on the IDL.
+    - Procedue args can be values or pointers, which need to be assembled into a single linear message in a transportable format (not always just a string, e.g. Protobuf using binary format).</li>
 </ul>
 <h3 id="failures">Failures</h3>
 <ul>
@@ -153,61 +143,43 @@
 <p>Some of the network issues can be mitigated by TCP, but sockets can fail and messages aren't always transmitted over TCP anyways.</p>
 <h2 id="fault-model">Fault Model</h2>
 <ul>
-<li><strong>Asynchronous fail stop nodes</strong><ul>
-<li>Computer may be arbitrarily slow while still working.</li>
-<li>Nodes should always fail by stopping, before transmitting garbage data/forgetting state. This is a strong assumption. For non-fail-stop/arbitrarily behaving nodes, see <em>Byzantine Fault Tolerance</em>.</li>
-</ul>
-</li>
-<li><strong>Network model</strong><ul>
-<li>Messages can be lost, delayed, reordered, or duplicated. Messages can be arbitrarily delayed while the network still works correctly.</li>
-<li>Messages won't be corrupted (bit flips). This is another strong assumption. See error detection and correction for working without this assumption.</li>
-<li>Network may partition some nodes from eachother.<ul>
-<li>Possible for nodes to be in isolated groups without a connection between them.</li>
-</ul>
-</li>
-<li>Network is (1) commutative and (2) transitive.<ul>
-<li>(1) If A can talk to B, B can talk to A.</li>
-<li>(2) If A can talk to B and B can talk to C, then A can talk to C.</li>
-</ul>
-</li>
-</ul>
-</li>
+<li><strong>Asynchronous fail stop nodes</strong>
+    - Computer may be arbitrarily slow while still working.
+    - Nodes should always fail by stopping, before transmitting garbage data/forgetting state. This is a strong assumption. For non-fail-stop/arbitrarily behaving nodes, see <em>Byzantine Fault Tolerance</em>.</li>
+<li><strong>Network model</strong>
+    - Messages can be lost, delayed, reordered, or duplicated. Messages can be arbitrarily delayed while the network still works correctly.
+    - Messages won't be corrupted (bit flips). This is another strong assumption. See error detection and correction for working without this assumption.
+    - Network may partition some nodes from eachother.
+        - Possible for nodes to be in isolated groups without a connection between them.
+    - Network is (1) commutative and (2) transitive.
+        - (1) If A can talk to B, B can talk to A.
+        - (2) If A can talk to B and B can talk to C, then A can talk to C.</li>
 <li>Clients only make one RPC request at a time, a very strong assumption.</li>
 </ul>
 <h2 id="naive-rpc">Naive RPC</h2>
 <ul>
-<li><strong>Nodes</strong><ul>
-<li>Any number of stateless clients and servers.</li>
-<li>Servers perform some computation when they recieve a message, and then reply.</li>
-</ul>
-</li>
-<li><strong>Messages</strong><ul>
-<li>Client request, server response</li>
-<li>Client reqyest contains IP addr of client and server, name of procedure, arguments.</li>
-<li>Server response contains IP addr of client and server, and results of the procedure.</li>
-</ul>
-</li>
+<li><strong>Nodes</strong>
+    - Any number of stateless clients and servers.
+    - Servers perform some computation when they recieve a message, and then reply.</li>
+<li><strong>Messages</strong>
+    - Client request, server response
+    - Client reqyest contains IP addr of client and server, name of procedure, arguments.
+    - Server response contains IP addr of client and server, and results of the procedure.</li>
 </ul>
 <h2 id="client-timeout-and-retry">Client timeout and retry</h2>
 <p>If a request or reply message is dropped, the client will wait forever for the response. This can be fixed with client timer/retransmission, where the client sends the request again if it doesn't get a response in a certain amount of time. This leads to duplication and reordering of messages at the server.</p>
 <p>We can handle this with a unique request ID. Include a message ID in each request/reply. When the client retransmits, it uses the same message ID. The server can then ignore duplicate requests.</p>
 <h3 id="rpc-semantics">RPC Semantics</h3>
 <ul>
-<li><strong>At least once</strong><ul>
-<li>Client resends on timeout, server executes every copy of requests that arrive</li>
-<li>If client gets a response, it knows the server executed the request at least once. Otherwise, it doesn't know if the server executed the request(s) or not.</li>
-</ul>
-</li>
-<li><strong>At most once</strong><ul>
-<li>Execute only the first copy that arrives at the server.</li>
-<li>If client gets a reply, it knows the server executed the request exactly once. Otherwise, it doesn't know if the server executed the request or not (but it knows it didn't execute it more than once).</li>
-</ul>
-</li>
-<li><strong>Exactly once</strong><ul>
-<li>Execute the request exactly once.</li>
-<li>Requires a unique request ID, and the server to remember the request ID and the result of the request.</li>
-</ul>
-</li>
+<li><strong>At least once</strong>
+    - Client resends on timeout, server executes every copy of requests that arrive
+    - If client gets a response, it knows the server executed the request at least once. Otherwise, it doesn't know if the server executed the request(s) or not.</li>
+<li><strong>At most once</strong>
+    - Execute only the first copy that arrives at the server.
+    - If client gets a reply, it knows the server executed the request exactly once. Otherwise, it doesn't know if the server executed the request or not (but it knows it didn't execute it more than once).</li>
+<li><strong>Exactly once</strong>
+    - Execute the request exactly once.
+    - Requires a unique request ID, and the server to remember the request ID and the result of the request.</li>
 </ul>
 <h4 id="at-least-once">At least once</h4>
 <p>Client should do a finite number of retries, eventually giving up and returning an error to the caller.</p>

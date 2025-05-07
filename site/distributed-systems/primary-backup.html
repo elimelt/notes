@@ -110,15 +110,11 @@
 </ul>
 <h4 id="key-challenges">Key Challenges</h4>
 <ul>
-<li>There can only be one primary at a time.<ul>
-<li>Primary, backup, and clients all need to agree on who the primary is.</li>
-<li>State at primary must be consistent with all previous operations.</li>
-</ul>
-</li>
-<li>Needs to operate despite failures of primary or backup.<ul>
-<li>Must handle dropped/duplicated messages and arbitrary delays.</li>
-</ul>
-</li>
+<li>There can only be one primary at a time.
+    - Primary, backup, and clients all need to agree on who the primary is.
+    - State at primary must be consistent with all previous operations.</li>
+<li>Needs to operate despite failures of primary or backup.
+    - Must handle dropped/duplicated messages and arbitrary delays.</li>
 </ul>
 <h3 id="the-view-service">The View Service</h3>
 <p>The <strong>view service</strong> is a server that provides a consistent view of the system. Clients ask the view service for the primary server's address in order to find out where to send operations. Even if the view server incorrectly identifies failure, the system will still be consistent.</p>
@@ -133,10 +129,8 @@
 <h4 id="primary-failures">Primary Failures</h4>
 <ul>
 <li>View server detects failure through lack of pings (some sort of timeout after missing $n$ pings).</li>
-<li>View server declares new view with backup as new primary, and if any idle servers are available, a new backup as well.<ul>
-<li>Requests eventually time out and check in with view server.</li>
-</ul>
-</li>
+<li>View server declares new view with backup as new primary, and if any idle servers are available, a new backup as well.
+    - Requests eventually time out and check in with view server.</li>
 <li>View server sends new view in all subsequent responses.</li>
 <li>New primary hears new view and sends state to new backup</li>
 <li>Backup initializes state and sends acknowledgment to new primary.</li>

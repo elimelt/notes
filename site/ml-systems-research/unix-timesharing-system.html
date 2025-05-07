@@ -96,34 +96,26 @@
 <li>i-node contains metadata for each file</li>
 <li>path names don't distinguish between files and directories</li>
 <li>mount table for mounted file systems</li>
-<li>buffering is built into kernel and transparent to user<ul>
-<li>write-behind (flushes to disk when buffer is full)</li>
-</ul>
-</li>
+<li>buffering is built into kernel and transparent to user
+    - write-behind (flushes to disk when buffer is full)</li>
 </ul>
 <h4 id="storage-devices">Storage Devices</h4>
 <ul>
-<li>block devices<ul>
-<li>data is stored in fixed-size blocks</li>
-<li>"free list" of blocks for allocation, Linked list of blocks</li>
-<li>hard disks, usb drive, ssd, tape drives</li>
-<li>early versions of ethernet</li>
-</ul>
-</li>
+<li>block devices
+    - data is stored in fixed-size blocks
+    - "free list" of blocks for allocation, Linked list of blocks
+    - hard disks, usb drive, ssd, tape drives
+    - early versions of ethernet</li>
 <li>character devices</li>
 </ul>
 <h4 id="execution">Execution</h4>
 <ul>
 <li><strong>Image</strong> is an execution env (parallel container)</li>
-<li><strong>Process</strong> is an instance/execution of an image<ul>
-<li>Program text write-protected and shared between all instances of that process</li>
-<li>Separate virtual address space for each process</li>
-</ul>
-</li>
-<li>Kernel<ul>
-<li>Mediator for accessing services/hardware/shared resources</li>
-</ul>
-</li>
+<li><strong>Process</strong> is an instance/execution of an image
+    - Program text write-protected and shared between all instances of that process
+    - Separate virtual address space for each process</li>
+<li>Kernel
+    - Mediator for accessing services/hardware/shared resources</li>
 </ul>
 <h3 id="key-insights">Key Insights</h3>
 <h2 id="-">-</h2>

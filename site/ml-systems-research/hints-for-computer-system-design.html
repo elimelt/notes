@@ -98,16 +98,12 @@ $$</p>
 <h3 id="lecture-review-notes">Lecture Review Notes</h3>
 <h4 id="why-is-system-design-hard">Why is system design hard?</h4>
 <ul>
-<li>external interface isn't well defined<ul>
-<li>requirements aren't clear</li>
-<li>Things are often not well-designed</li>
-</ul>
-</li>
-<li>The measure of success is not very clear<ul>
-<li>Many different ways to interact with a system</li>
-<li>Many systems, even in production, have bugs</li>
-</ul>
-</li>
+<li>external interface isn't well defined
+    - requirements aren't clear
+    - Things are often not well-designed</li>
+<li>The measure of success is not very clear
+    - Many different ways to interact with a system
+    - Many systems, even in production, have bugs</li>
 </ul>
 <h4 id="throw-one-away">Throw one away</h4>
 <ul>
@@ -125,23 +121,15 @@ $$</p>
 <li>Don't over-promise</li>
 <li>Get it right, but beware the dangers of abstractions (especially performance)</li>
 <li>Make it fast rather than general and complete. You should keep scope small so that it's easy to optimize, and also to compose with other systems/components</li>
-<li>Procedure args let you keep it general but extendable<ul>
-<li>C function pointers, C++ functions</li>
-<li><code>LD_PRELOAD</code> trick: override calls by providing a wrapper that calls the original function, but with some extra functionality</li>
-</ul>
-</li>
-<li>Leave it to the client (check Exokernel paper)<ul>
-<li>Unix pipes</li>
-</ul>
-</li>
-<li>Keep interfaces stable<ul>
-<li>Counterexample LLVM</li>
-</ul>
-</li>
-<li>Keep a place to stand<ul>
-<li>Virtualization!!!</li>
-</ul>
-</li>
+<li>Procedure args let you keep it general but extendable
+    - C function pointers, C++ functions
+    - <code>LD_PRELOAD</code> trick: override calls by providing a wrapper that calls the original function, but with some extra functionality</li>
+<li>Leave it to the client (check Exokernel paper)
+    - Unix pipes</li>
+<li>Keep interfaces stable
+    - Counterexample LLVM</li>
+<li>Keep a place to stand
+    - Virtualization!!!</li>
 </ul>
 <h4 id="implementation">Implementation</h4>
 <p>Plan to throw one away - learn from prototyping</p>
@@ -154,29 +142,21 @@ $$</p>
 </ul>
 <h4 id="efficiency">Efficiency</h4>
 <ul>
-<li>Split resources<ul>
-<li>Faster to allocate a new resource than to wait for one to be freed</li>
-<li>Heterogeneous systems<ul>
-<li>Specialized hardware like FPGA or GPU to run specialized tasks</li>
-<li>E.G. Google's TPU, Microsoft Azure FPGAs</li>
-</ul>
-</li>
-</ul>
-</li>
+<li>Split resources
+    - Faster to allocate a new resource than to wait for one to be freed
+    - Heterogeneous systems
+        - Specialized hardware like FPGA or GPU to run specialized tasks
+        - E.G. Google's TPU, Microsoft Azure FPGAs</li>
 <li>Use static analysis</li>
 </ul>
 <h4 id="reliability">Reliability</h4>
 <ul>
-<li>Log updates<ul>
-<li>Can recover</li>
-<li>Append only is efficient</li>
-<li>Can be used for replication</li>
-</ul>
-</li>
-<li>Atomic transactions<ul>
-<li>E.G. ACID</li>
-</ul>
-</li>
+<li>Log updates
+    - Can recover
+    - Append only is efficient
+    - Can be used for replication</li>
+<li>Atomic transactions
+    - E.G. ACID</li>
 </ul>
 <h4 id="takeaways">Takeaways</h4>
 <ul>

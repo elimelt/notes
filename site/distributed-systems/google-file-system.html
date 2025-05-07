@@ -96,9 +96,11 @@
 <ul>
 <li>Built with commodity hardware, and is thus failure prone and needs to constantly monitor, detect, and tolerate failures</li>
 <li>Typically storing a modest number of large files. Anywhere from a few million ~100 MB files, to multi-GB files. The system should be optimized for working with these large files.</li>
-<li>Two types of workloads:</li>
+<li>Two types of workloads:<ul>
 <li>large streaming reads spanning &gt; 1 MB</li>
 <li>smaller random reads (which are often batched)</li>
+</ul>
+</li>
 <li>Well defined semantics and easy concurrency control for concurrent appends are essential. A common application of GFS is to be used as a producer-consumer queue</li>
 <li>High sustained bandwidth takes precedence over latency</li>
 </ul>
@@ -143,11 +145,15 @@
 <h4 id="guarantees-by-gfs">Guarantees by GFS</h4>
 <p>File namespace mutations are atomic through being done exclusively at the master with locking. File mutations have looser guarantees, particularly at the level of defined, and undefined regions</p>
 <ul>
-<li>Defined:</li>
+<li>Defined:<ul>
 <li>After a data mutation, the file is in a consistent state and the mutation was universally applied without being interrupted</li>
-<li>Undefined:</li>
+</ul>
+</li>
+<li>Undefined:<ul>
 <li>All clients will see the same data, but the data may not be consistent with any single mutation (i.e. interleaved)</li>
 <li>Successful concurrent mutations leave a region consistent but undefined, whereas failed concurrent mutations leave it undefined and inconsistent.</li>
+</ul>
+</li>
 </ul>
 <p>After a sequence of successful mutations, the file is guaranteed to be defined and to contain the data written by the last mutation. GFS achieves this by...</p>
 <ul>

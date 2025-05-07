@@ -137,9 +137,11 @@ Phase 2: release locks
 <p><strong>2PC</strong> is a blocking protocol, meaning that it makes no progress if some participants are unavailable. It has fault tolerance, but is not highly available, which is a fundamental limit of the protocol.</p>
 <ul>
 <li>For a given transaction a central coordinator sends a prepare</li>
-<li>Participants commit to commit</li>
+<li>Participants commit to commit<ul>
 <li>Acquires locks, prevent/delay conflicting operations</li>
 <li>Abort if deadlock or if any of the operations cannot be completed</li>
+</ul>
+</li>
 <li>Central coordinator decides and tells everyone, then releases all locks</li>
 </ul>
 <h3 id="handling-failures">Handling Failures</h3>

@@ -93,10 +93,12 @@
 <p>A typical algorithm might look like this:</p>
 <ul>
 <li>Initialize the window state with the first $k$ elements.</li>
-<li>Iterate through the array, from index $k$ to $n - 1$.</li>
+<li>Iterate through the array, from index $k$ to $n - 1$.<ul>
 <li>At each step, update the window state by removing the first element of your current window and adding the next element.</li>
 <li>(Sometimes conditionally) update the result based on the window state.</li>
 <li>Move the window boundries to the right by one element.</li>
+</ul>
+</li>
 <li>Return result based on the window state.</li>
 </ul>
 <p>To design such an algorithm, you need to identify the following:

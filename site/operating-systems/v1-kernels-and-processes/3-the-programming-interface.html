@@ -489,14 +489,12 @@ Server:
 </li>
 <li>
 <p>What happens if we run the following program on UNIX?</p>
-</li>
-</ol>
 <p><code>c
-   main() {
-       while (fork() &gt;= 0)
-           ;
-   }</code></p>
-<ol>
+ main() {
+     while (fork() &gt;= 0)
+         ;
+ }</code></p>
+</li>
 <li>
 <p>Explain what must happen for UNIX wait to return immediately (and successfully).</p>
 </li>
@@ -511,70 +509,65 @@ Server:
 </li>
 <li>
 <p>How many processes are created if the following program is run?</p>
-</li>
-</ol>
 <p><code>c
-   main(int argc, char ** argv) {
-       forkthem(5);
-   }
-   void forkthem(int n) {
-       if (n &gt; 0) {
-           fork();
-           forkthem(n-1);
-       }
-   }</code>
+ main(int argc, char ** argv) {
+     forkthem(5);
+ }
+ void forkthem(int n) {
+     if (n &gt; 0) {
+         fork();
+         forkthem(n-1);
+     }
+ }</code>
 9. Consider the following program:</p>
 <p>```c
-   main (int argc, char ** argv) {
-       int child = fork();
-       int x = 5;</p>
-<pre><code>   if (child == 0) {
-       x += 5;
-   } else {
-       child = fork();
-       x += 10;
-       if(child) {
-           x += 5;
-       }
-   }
+ main (int argc, char ** argv) {
+     int child = fork();
+     int x = 5;</p>
+<pre><code> if (child == 0) {
+     x += 5;
+ } else {
+     child = fork();
+     x += 10;
+     if(child) {
+         x += 5;
+     }
+ }
 </code></pre>
 <p>}
-   ```</p>
+ ```</p>
 <p>How many different copies of the variable x are there? What are their values when their process finishes?
 10. What is the output of the following programs? (Please try to solve the problem without compiling and running the programs.)</p>
-<pre><code>- Program 1:
+<p>- Program 1:</p>
+<pre><code>```c
+main() {
+    int val = 5;
+    int pid;
 
-  ```c
-  main() {
-      int val = 5;
-      int pid;
-
-      if (pid = fork())
-          wait(pid);
-      val++;
-      printf("%d\n", val);
-      return val;
-  }
-  ```
-
-- Program 2:
-  ```c
-  main() {
-      int val = 5;
-      int pid;
-      if (pid = fork())
-          wait(pid);
-      else
-          exit(val);
-      val++;
-      printf("%d\n", val);
-      return val;
-  }
-  ```
+    if (pid = fork())
+        wait(pid);
+    val++;
+    printf("%d\n", val);
+    return val;
+}
+```
 </code></pre>
-<ol>
-<li>Implement a simple Linux shell in C capable of executing a sequence of programs that communicate through a pipe. For example, if the user types ls | wc, your program should fork off the two programs, which together will calculate the number of files in the directory. For this, you will need to use several of the Linux system calls described in this chapter: fork, exec, open, close, pipe, dup2, and wait. Note: You will to replace stdin and stdout in the child process with the pipe file descriptors; that is the role of dup2.</li>
-<li>Extend the shell implemented above to support foreground and background tasks, as well as job control: suspend, resume, and kill.</li>
+<p>- Program 2:
+    <code>c
+    main() {
+        int val = 5;
+        int pid;
+        if (pid = fork())
+            wait(pid);
+        else
+            exit(val);
+        val++;
+        printf("%d\n", val);
+        return val;
+    }</code>
+11. Implement a simple Linux shell in C capable of executing a sequence of programs that communicate through a pipe. For example, if the user types ls | wc, your program should fork off the two programs, which together will calculate the number of files in the directory. For this, you will need to use several of the Linux system calls described in this chapter: fork, exec, open, close, pipe, dup2, and wait. Note: You will to replace stdin and stdout in the child process with the pipe file descriptors; that is the role of dup2.
+12. Extend the shell implemented above to support foreground and background tasks, as well as job control: suspend, resume, and kill.</p>
+</li>
 </ol>
             </div>
             <div class="tags">

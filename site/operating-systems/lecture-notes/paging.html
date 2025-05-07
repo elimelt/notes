@@ -139,27 +139,21 @@
 <h3 id="page-faults">Page Faults</h3>
 <ul>
 <li>When a page is evicted, the OS sets the PTE to invalid and records the disk location of the page into a seperate data structure.</li>
-<li>When a process tries to access the now invalid page, an exception is thrown (page fault).<ul>
-<li>After trapping into the kernel on exception, the OS runs the page fault handler</li>
-<li>The OS looks up the page on disk, and reads it into a free frame</li>
-<li>The OS updates the page table to point to the new frame</li>
-<li>The OS restarts the instruction that caused the page fault</li>
-</ul>
-</li>
+<li>When a process tries to access the now invalid page, an exception is thrown (page fault).
+    - After trapping into the kernel on exception, the OS runs the page fault handler
+    - The OS looks up the page on disk, and reads it into a free frame
+    - The OS updates the page table to point to the new frame
+    - The OS restarts the instruction that caused the page fault</li>
 </ul>
 <h3 id="demand-paging">Demand Paging</h3>
 <ul>
-<li>Pages are only brought into main memory when they are referenced.<ul>
-<li>only the code/data that is actually used is brought into memory</li>
-</ul>
-</li>
+<li>Pages are only brought into main memory when they are referenced.
+    - only the code/data that is actually used is brought into memory</li>
 <li>Few systems try to anticipate what pages will be used, and instead just bring in pages as they are used</li>
-<li>However, not uncommon to cluster pages that are likely to be used together (ie. code and data pages)<ul>
-<li>OS keeps track of pages that come and go together</li>
-<li>bring in all pages in the cluster when one is referenced</li>
-<li>interface may allow programmer or compiler to specify clusters</li>
-</ul>
-</li>
+<li>However, not uncommon to cluster pages that are likely to be used together (ie. code and data pages)
+    - OS keeps track of pages that come and go together
+    - bring in all pages in the cluster when one is referenced
+    - interface may allow programmer or compiler to specify clusters</li>
 </ul>
 <h3 id="page-replacement">Page Replacement</h3>
 <ul>
@@ -191,12 +185,10 @@
 <h5 id="approximate-lru">Approximate LRU</h5>
 <ul>
 <li>Keep counter for each page</li>
-<li>At some regular interval, for each page:<ul>
-<li>if ref bit == 1, increment counter</li>
-<li>if ref bit == 0, zero counter</li>
-<li>zero ref bit</li>
-</ul>
-</li>
+<li>At some regular interval, for each page:
+    - if ref bit == 1, increment counter
+    - if ref bit == 0, zero counter
+    - zero ref bit</li>
 <li>counter contains the number of intervals since the last reference to the page. page with the largest counter is least recently used</li>
 </ul>
 <h5 id="lru-clock">LRU Clock</h5>
@@ -214,12 +206,10 @@
 <li>Create descriptor/process control block (PCB)</li>
 <li>Create page table</li>
 <li>Put address space image on disk in page-sized blocks</li>
-<li>Build page table<ul>
-<li>All PTE valid bits set to 0</li>
-<li>Some data structure stores disk location of each page</li>
-<li>When process starts executing, the OS sets the PTBR to point to the page table</li>
-</ul>
-</li>
+<li>Build page table
+    - All PTE valid bits set to 0
+    - Some data structure stores disk location of each page
+    - When process starts executing, the OS sets the PTBR to point to the page table</li>
 </ul>
 <h3 id="locality">Locality</h3>
 <ul>

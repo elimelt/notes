@@ -129,12 +129,10 @@
 <li>iretq from trap_ret triggers kernel/vectors.S: vector14 (ie page fault)</li>
 <li>jumps to alltraps and calls trap with an addr 0x7fffff52 of a COW page</li>
 <li>allocate seperate copy for COW page and return from trap to trapret</li>
-<li>
-<p>iretq from trapret returns to bad_mem_access, reading pid which has &amp;pid == 0x7fffff52</p>
-</li>
-<li>
-<p>child runs user/lab3test.c:83    printf(stdout, "bad_mem_access: oops could read kernel addr %lp = %lx\n", a, *a);</p>
-</li>
+<li>iretq from trapret returns to bad_mem_access, reading pid which has &amp;pid == 0x7fffff52</li>
+</ul>
+<ul>
+<li>child runs user/lab3test.c:83    printf(stdout, "bad_mem_access: oops could read kernel addr %lp = %lx\n", a, *a);</li>
 <li>traps with page fault addr == 0xffffffff80000000</li>
 <li>struct vpage_info* vpi = va2vpage_info(vr, addr) in trap causes another page fault trap, this time with addr == 24</li>
 <li>infinite loop on above line with addr == 24</li>

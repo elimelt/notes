@@ -85,9 +85,11 @@
                 <h1 id="bipartite-graphs">Bipartite Graphs</h1>
 <ul>
 <li><strong>Definition</strong>: An undirected graph $G = (V, E)$ is bipartite if there exists a partition of $V$ into two sets $V_1$ and $V_2$ such that every edge in $E$ has one endpoint in $V_1$ and the other in $V_2$.</li>
-<li><strong>Applications</strong>:</li>
+<li><strong>Applications</strong>:<ul>
 <li>Scheduling (machines = $V_1$, jobs = $V_2$)</li>
 <li>Stable matching (men = $V_1$, women = $V_2$)</li>
+</ul>
+</li>
 </ul>
 <p>You can tell if a graph is bipartite if there is a proper coloring of vertices, i.e., you can assign one of two colors to each vertex such that no two adjacent vertices have the same color. Many problems become easier if the underlying graph is bipartite graphs.</p>
 <h2 id="odd-length-cycles">Odd-Length Cycles</h2>

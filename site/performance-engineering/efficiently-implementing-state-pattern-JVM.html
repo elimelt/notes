@@ -91,42 +91,54 @@
 </ol>
 <h2 id="when-might-i-reach-for-either">When might I reach for either?</h2>
 <ol>
-<li><strong>Inline State Pattern</strong>:</li>
-<li>Use when state transitions are simple and predictable.</li>
 <li>
-<p>Ideal for low contention scenarios where synchronization overhead is a concern. For example, in a high-throughput system with little locking overhead, like a cache or a message queue.</p>
+<p><strong>Inline State Pattern</strong>:</p>
+<ul>
+<li>Use when state transitions are simple and predictable.</li>
+<li>Ideal for low contention scenarios where synchronization overhead is a concern. For example, in a high-throughput system with little locking overhead, like a cache or a message queue.</li>
+</ul>
 </li>
 <li>
 <p><strong>Generic State Pattern</strong>:</p>
-</li>
+<ul>
 <li>Use when state transitions are complex or require additional logic.</li>
 <li>Ideal for high contention scenarios where synchronization is necessary. For example, in a shared resource or a asynchronous/distributed system. Note that while I'm saying high contention, this is not a hard and fast rule. It's more about the nature of the contention and the nature of the state transitions, e.g. if the state transitions are complex and the contention is low, you might still want to use the generic state patter for the sake of readability maintainability.</li>
+</ul>
+</li>
 </ol>
 <h3 id="jvm-optimizations-and-overheads">JVM Optimizations and Overheads</h3>
 <ol>
-<li><strong>Enum-Based State Handling (Inlined Transitions)</strong>:</li>
-<li>Enums offer low-level performance wins by making state transitions in-line without additional method calls or object creation. OpenJDK initial</li>
 <li>
-<p>In this setup, each <code>DocumentState</code> enum implements its own <code>handle</code> and <code>nextState</code> methods. Transitioning states here is a simple assignment with little locking overhead, so the JVM can optimize by inlining these transitions at runtime.</p>
+<p><strong>Enum-Based State Handling (Inlined Transitions)</strong>:</p>
+<ul>
+<li>Enums offer low-level performance wins by making state transitions in-line without additional method calls or object creation. OpenJDK initial</li>
+<li>In this setup, each <code>DocumentState</code> enum implements its own <code>handle</code> and <code>nextState</code> methods. Transitioning states here is a simple assignment with little locking overhead, so the JVM can optimize by inlining these transitions at runtime.</li>
+</ul>
 </li>
 <li>
 <p><strong>Generic Interface with <code>AtomicReference</code></strong>:</p>
-</li>
+<ul>
 <li><code>AtomicReference</code> ensures thread safety for transitions, but adds some overhead due to its CAS (Compare-and-Swap) operations, which are costly under high contention.</li>
 <li>With lazy state transition, this implementation could theoretically avoid unnecessary state updates, which may be beneficial under lower contention.</li>
+</ul>
+</li>
 </ol>
 <h2 id="predictions-and-testing">Predictions and Testing</h2>
 <p>Based on JVM behaviors, here are our predictions:</p>
 <ol>
-<li><strong>Single-threaded Performance</strong>:</li>
 <li>
-<p><code>InlineStatePattern</code> should outperform <code>PolymorphicStatePattern</code> in single-threaded scenarios due to reduced overhead from <code>AtomicReference</code>.</p>
+<p><strong>Single-threaded Performance</strong>:</p>
+<ul>
+<li><code>InlineStatePattern</code> should outperform <code>PolymorphicStatePattern</code> in single-threaded scenarios due to reduced overhead from <code>AtomicReference</code>.</li>
+</ul>
 </li>
 <li>
 <p><strong>Multi-threaded Performance</strong>:</p>
-</li>
+<ul>
 <li>At lower levels of contention, <code>InlineStatePattern</code> should still perform better due to fewer synchronization requirements.</li>
 <li>Under high contention, the <code>AtomicReference</code> CAS operations in <code>PolymorphicStatePattern</code> may actually limit performance due to frequent retries.</li>
+</ul>
+</li>
 </ol>
 <p>To verify these assumptions, let’s test using the following code blocks. You can add these into the <code>main</code> method to see the results.</p>
 <h3 id="code-blocks-to-test-performance">Code Blocks to Test Performance</h3>

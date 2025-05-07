@@ -94,29 +94,21 @@
 <li><strong>Queueing delay ($W$)</strong>: Time a task spends waiting to be scheduled. In a time slicing system (e.g. CPU), this is the sum of all the time it takes for a request to be completed.</li>
 <li><strong>Tasks queued ($Q$)</strong>: Number of tasks in the queue.</li>
 <li><strong>Service time ($S$)</strong>: Time it takes to complete a task, assuming no waiting.</li>
-<li><strong>Response time ($R$)</strong>: Time it takes for a task to be completed, including queueing and service time.<ul>
-<li>Note that $R = W + S$, and that in order to improve overall response time, we need to reduce either queueing time or service time.</li>
-</ul>
-</li>
+<li><strong>Response time ($R$)</strong>: Time it takes for a task to be completed, including queueing and service time.
+    - Note that $R = W + S$, and that in order to improve overall response time, we need to reduce either queueing time or service time.</li>
 <li><strong>Arrival rate ($\lambda$)</strong>: Number of tasks arriving per unit time.</li>
 <li><strong>Arrival process</strong>: The distribution of the time between task arrivals.</li>
 <li><strong>Service rate ($\mu$)</strong>: Number of tasks completed per unit time. $\mu = 1/S$.</li>
-<li><strong>Utilization ($U$)</strong>: Fraction of time the server is busy.<ul>
-<li>$0 \leq U \leq 1$.</li>
-<li>$U = \lambda / \mu$ if $\lambda &lt; \mu$.</li>
-<li>$U = 1$ if $\lambda \geq \mu$.</li>
-</ul>
-</li>
-<li><strong>Throughput ($X$)</strong>: Number of tasks completed per unit time.<ul>
-<li>$X = U \cdot \mu$.</li>
-<li>X = $\lambda$ if $U &lt; 1$.</li>
-<li>X = $\mu$ if $U = 1$.</li>
-</ul>
-</li>
-<li><strong>Tasks in the system (N)</strong>: Tasks in the system, including those being serviced and those in the queue.<ul>
-<li>$N = Q + U$.</li>
-</ul>
-</li>
+<li><strong>Utilization ($U$)</strong>: Fraction of time the server is busy.
+    - $0 \leq U \leq 1$.
+    - $U = \lambda / \mu$ if $\lambda &lt; \mu$.
+    - $U = 1$ if $\lambda \geq \mu$.</li>
+<li><strong>Throughput ($X$)</strong>: Number of tasks completed per unit time.
+    - $X = U \cdot \mu$.
+    - X = $\lambda$ if $U &lt; 1$.
+    - X = $\mu$ if $U = 1$.</li>
+<li><strong>Tasks in the system (N)</strong>: Tasks in the system, including those being serviced and those in the queue.
+    - $N = Q + U$.</li>
 </ul>
 <h2 id="littles-law">Little's Law</h2>
 <p>Defines a very general relationship for any system, and is useful for understanding the relationship between throughput, response time, and the number of tasks in the system.</p>

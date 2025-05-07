@@ -111,7 +111,7 @@ Given some sequential algorithm:
 
 ## SystemVerilog Controller Module
 
-```v
+```verilog
 module controller(
     input logic clk, reset, // (input signals, e.g. start)
     // input logic (status signals, e.g. x_le_y, i_eq_z)
@@ -155,7 +155,7 @@ endmodule // controller
 
 ## SystemVerilog Datapath Module
 
-```v
+```verilog
 
 module datapath #(parameter W=4)(
     input logic clk,

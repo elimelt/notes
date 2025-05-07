@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-05-07T16:08:22.445898", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-05-07T16:15:38.687200", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -83,7 +83,7 @@
         <article>
             <h1>Waveform Diagrams</h1>
             <div class="meta">
-                <time datetime="2025-05-07T16:08:22.445898">
+                <time datetime="2025-05-07T16:15:38.687200">
                     Last modified: 2025-05-07
                 </time>
                 <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
@@ -101,7 +101,7 @@
 <p><code>n'b#...#</code> is a constant with width $n$.</p>
 <h2 id="concat">Concat</h2>
 <p><code>{A, B, C, ...}</code></p>
-<pre><code class="language-v">// SystemVerilog code for AND-OR-INVERT circuit
+<pre><code class="language-verilog">// SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
     input logic A, B, C, D;
@@ -114,7 +114,7 @@ endmodule
 </code></pre>
 <h2 id="test-benches">Test Benches</h2>
 <p>Create emulated inputs for all of the FPGA's physical connections.</p>
-<pre><code class="language-v">module MUX2_tb ();
+<pre><code class="language-verilog">module MUX2_tb ();
     logic SEL, I, J; // simulated inputs
     logic V; // net for reading output
 

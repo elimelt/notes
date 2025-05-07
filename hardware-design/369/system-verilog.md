@@ -45,7 +45,7 @@ In pure hardware, there is no notion of initialization. Wires can naturally pick
 
 ## Structural Verilog
 
-```v
+```verilog
 // SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;                     // each variable
@@ -58,7 +58,7 @@ endmodule
 
 ### Equivalently with wires
 
-```v
+```verilog
 // SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
@@ -74,7 +74,7 @@ endmodule
 
 ### Equivalently with gates
 
-```v
+```verilog
 // SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
@@ -91,7 +91,7 @@ endmodule
 ```
 
 ## 2-input MUX
-```v
+```verilog
 // SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
@@ -101,7 +101,7 @@ module AOI (F, A, B, C, D);
 endmodule
 ```
 
-```v
+```verilog
 // 2:1 multiplexer built on top of AOI module
 module MUX2 (V, SEL, I, J);
     output logic V;

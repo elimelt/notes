@@ -27,7 +27,7 @@ Defining them: `[n-1:0]` is an $n$-bit bus. Access with array syntax. Can access
 
  `{A, B, C, ...}`
 
-```v
+```verilog
 // SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
     output logic F;
@@ -45,7 +45,7 @@ endmodule
 
 Create emulated inputs for all of the FPGA's physical connections.
 
-```v
+```verilog
 module MUX2_tb ();
     logic SEL, I, J; // simulated inputs
     logic V; // net for reading output

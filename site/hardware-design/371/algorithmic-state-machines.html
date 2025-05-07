@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithmic State Machines | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/hardware-design/371/algorithmic-state-machines.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Algorithmic State Machines">
+    <meta property="og:description" content="What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?">
+    <meta property="og:url" content="https://notes.elimelt.com/hardware-design/371/algorithmic-state-machines.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Algorithmic State Machines">
+    <meta name="twitter:description" content="What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?">
+
+    <meta name="keywords" content="systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Algorithmic State Machines", "dateModified": "2025-05-07T15:12:16.210770", "description": "What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?", "articleSection": "Hardware", "keywords": "systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href=/css/styles.css>
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Algorithmic State Machines
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Algorithmic State Machines</h1>
+            <div class="meta">
+                <time datetime="2025-05-07T15:12:16.210770">
+                    Last modified: 2025-05-07
+                </time>
+                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=markdown-content content>
+                <h1 id="algorithmic-state-machines">Algorithmic State Machines</h1>
+<h2 id="review-finite-state-machines-fsms">Review: Finite State Machines (FSMs)</h2>
+<p>State machines are defined as a set of states, transitions, and outputs. You can use them to model the behavior of systems with <strong>finite, discrete states</strong>. They are pretty much the bread and butter of hardware design, but can also be used in software (e.g. state machines pattern).</p>
+<h3 id="mealy-vs-moore">Mealy vs. Moore</h3>
+<ul>
+<li><strong>Mealy</strong>: Outputs depend on both the current state and the input. This means that the output can change as soon as the input changes, even without a state transition.</li>
+<li><strong>Moore</strong>: Outputs depend only on the current state. This means that the output can only change when the state changes.</li>
+</ul>
+<h3 id="mathematical-definition">Mathematical Definition</h3>
+<p>More concisely, a finite state machine is defined as a 5-tuple:</p>
+<p>$$
+FSM = (S, I, O, T, s_0)
+$$</p>
+<p>Where:</p>
+<ul>
+<li>$S$ is the set of states</li>
+<li>$I$ is the set of inputs</li>
+<li>$O$ is the set of outputs</li>
+<li>$T$ is the transition function, which maps a state and an input to a new state</li>
+<li>$s_0$ is the initial state</li>
+</ul>
+<h2 id="so-what-is-an-algorithmic-state-machine">So what is an Algorithmic State Machine?</h2>
+<p>An Algorithmic State Machine (ASM) is basically an extended framework for designing and implementing synchronous (clocked) digital systems using finite state machines. At the highest level, you divide the design two parts:</p>
+<ol>
+<li><strong>Control</strong>: The part that manages the state transitions and controls the flow of the algorithm.</li>
+<li>This is typically implemented using a finite state machine (FSM).</li>
+<li>The control unit generates control signals based on the current state and inputs.</li>
+<li>It determines which operations to perform and when to perform them.</li>
+<li><strong>Data Path</strong>: The part that performs the actual computations and data manipulations.</li>
+<li>This is typically implemented using combinational and sequential logic.</li>
+<li>The data path consists of registers, multiplexers, arithmetic units, and other components that perform the required operations.</li>
+<li>It processes the data based on the signals generated by the control unit.</li>
+</ol>
+<p>For my more software-brained readers, it's sort of like the data path is the model/view of a web application, while the control unit is the frontend controller (please don't read too far into this analogy...).</p>
+<h2 id="register-transfer-level-rtl-design">Register Transfer Level (RTL) Design</h2>
+<ul>
+<li>Sequential algorithms:</li>
+<li>Variables used as symbolic memory locations</li>
+<li>Sequential execution dictates the ordering of operations</li>
+<li>Hardware implementation:</li>
+<li>Registers store intermediate data (variables)</li>
+<li>Datapath implements all necessary register operations (computations attached to register inputs)</li>
+<li>A control path FSM specifies the ordering of register operations</li>
+<li>This design scheme sometimes referred to as
+  register-transfer level (RTL) design</li>
+</ul>
+<p>$$
+r_{\text{dest}} \leftarrow f(r_{\text{src1}}, r_{\text{src2}}, \ldots, r_{\text{srcn}})
+$$</p>
+<p>Where:</p>
+<ul>
+<li>$r_{i}$ is a register</li>
+<li>$f$ is some combinational function</li>
+</ul>
+<p>For example:</p>
+<ul>
+<li>$r_{1} \leftarrow r_{2} + r_{3}$ means that the value in register 2 is added to the value in register 3, and the result is stored in register 1.</li>
+<li>$r_{1} \leftarrow 0$ means clear register 1 (set it to 0).</li>
+<li>$y \leftarrow a * a$ means that the value in register $a$ is multiplied by itself, and the result is stored in register $y$.</li>
+</ul>
+<h3 id="timing-interpretation">Timing Interpretation</h3>
+<ul>
+<li>After the clock edge, the outputs of all registers update simultaneously and become available</li>
+<li>During the rest of the clock cycle, these outputs propagate through the combinational logic that performs $f$</li>
+<li>At the <em>next</em> clock edge, the result is stored into $r_{\text{dest}}$ and the process repeats</li>
+</ul>
+<h2 id="asm-diagram-asmd">ASM Diagram (ASMD)</h2>
+<p>An ASM diagram is a graphical representation of an algorithmic state machine. It consists of:</p>
+<ul>
+<li><strong>State boxes</strong>: Represent the different states of the machine.</li>
+<li>Rectangular boxes, containing the state name and the output signals (Moore type).</li>
+<li><strong>Transition arrows</strong>: Represent the transitions between states.</li>
+<li><strong>Decision boxes</strong>: Represent the conditions that determine state transitions.</li>
+<li>Diamond-shaped boxes, containing a condition with a $0$ and $1$ transition.</li>
+<li><strong>Conditional output box</strong>: Represent the outputs that depend on the current state and the input conditions.</li>
+<li>Box with rounded corners, containing the output signals (Mealy type).</li>
+<li>Must be output of decision box.</li>
+<li><strong>ASM Block</strong>: A rectangular box that groups together a set of states and transitions.</li>
+<li>A single state box grouped with all decision and conditional output boxes that are part of the state.</li>
+<li>NO overlap between ASM blocks, and NO internal feedback loops (just make the ASM block smaller so the feedback loop goes outside the box).</li>
+<li>All changes happen within the ASM block in a single clock cycle, <strong>particularly at state exit</strong> rather than entrance (important!).</li>
+</ul>
+<h2 id="asmd-design-procedure">ASMD Design Procedure</h2>
+<p>Given some sequential algorithm:</p>
+<ol>
+<li>Identify <strong>datapath</strong> components and <strong>operations</strong></li>
+<li>Registers, ALUs, multiplexers, etc.</li>
+<li>Operations: addition, subtraction, multiplication, etc.</li>
+<li>Identify <strong>states</strong> and <strong>signals</strong> that cause state transitions</li>
+<li>external inputs, status signals, etc. based on sequence of operations</li>
+<li>Name the control signals</li>
+<li>Outputs of the control unit and inputs to the datapath</li>
+</ol>
+<h2 id="systemverilog-controller-module">SystemVerilog Controller Module</h2>
+<pre><code class="language-sv">module controller(
+    input logic clk, reset, // (input signals, e.g. start)
+    // input logic (status signals, e.g. x_le_y, i_eq_z)
+    // output logic {status indicators, e.g. ready, done}
+    // output logic {control signals, e.g. load, incr, set}
+);
+
+  // define state names (enum) and variables
+  /*
+  enum logic [2:0] {S0, S1, S2, S3} ps, ns;
+  */
+
+  // constoller logic with synchronous reset
+  /*
+  always_ff @(posedge clk)
+    if (reset) ps &lt;= S0;
+    else ps &lt;= ns;
+  */
+
+  // next state logic
+  /*
+  always_comb
+    case (ps)
+      S0:       ns = ...
+      S1:       ns = ...
+      S2:       ns = ...
+      S3:       ns = ...
+      default:  ns = ...
+    endcase
+  */
+
+  // output assignment
+  /*
+  assign ctrl_sig_1 = (ps == Si) &amp; (...);
+  assign ctrl_sig_2 = (ps == Sj) &amp; (...);
+  ...
+  */
+
+endmodule // controller
+</code></pre>
+<h2 id="systemverilog-datapath-module">SystemVerilog Datapath Module</h2>
+<pre><code class="language-sv">
+module datapath #(parameter W=4)(
+    input logic clk,
+    // input logic (input data, e.g. [W-1:0] x)
+    // output logic (output data, e.g. y)
+    // input logic (control signals, e.g. load, incr, set)
+    // output logic (status signals, e.g. x_le_y, i_eq_z)
+);
+  // internal datapath signals and regs
+  /*
+  logic [W-1:0] x;
+
+  // datapath logic
+  /*
+  always_ff @(posedge clk) begin
+    if (load) x &lt;= ...;
+    else if (incr) x &lt;= x + 1;
+    else if (set) x &lt;= ...;
+  end
+  */
+
+  // outpt assignments
+  /*
+  assign y = ...;
+  assign x_le_y = (x &lt;= y);
+  assign i_eq_z = (i == z);
+  */
+
+endmodule // datapath
+</code></pre>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/asmd.html">asmd</a>
+                <a href="/tags/datapath.html">datapath</a>
+                <a href="/tags/fsm.html">fsm</a>
+                <a href="/tags/hardware%20design.html">hardware design</a>
+                <a href="/tags/pipeline%20parallelism.html">pipeline parallelism</a>
+                <a href="/tags/state%20machine.html">state machine</a>
+                <a href="/tags/systemverilog.html">systemverilog</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

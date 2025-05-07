@@ -1,12 +1,14 @@
 ---
-title: SystemVerilog Review 
+title: SystemVerilog Review
 category: Hardware
-tags: SystemVerilog, review, combinational logic, sequential logic, FSMs, test benches
+tags: systemverilog, review, combinational logic, sequential logic, FSM, test benches
 description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic concepts for combinational and sequential logic, FSMs, and test benches.
 ---
+
 # SystemVerilog Review
 
 ### Integer Representation
+
 - **Unsigned integers**: Standard binary (base 2) representation
   - With $n$ bits, can represent integers $0$ to $2^n - 1$
 - **Signed integers**: Two's Complement representation
@@ -16,6 +18,7 @@ description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic c
   - Negation: Bitwise complement + 1 (e.g., `~x + 1`)
 
 ### Constants & Data Types
+
 - Multi-bit constants format: `<n>'<s><b>#...#`
   - `<n>` = width (unsized by default)
   - `<s>` = signed designation (omit or 's')
@@ -23,6 +26,7 @@ description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic c
   - Case-insensitive, underscores allowed for readability
 
 ### Operators
+
 - Arithmetic: `+`, `-`, `*`, `/`, `%` (modulus), `**` (exponentiation)
 - Shift: `>>`, `<<`, `>>>` (arithmetic right shift)
 - Relational: `>`, `<`, `>=`, `<=`
@@ -32,16 +36,19 @@ description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic c
 - Ternary operator: `select ? <then_expr> : <else_expr>`
 
 ### Bit Manipulation
+
 - Concatenation: `{sig, ..., sig}`
 - Replication: `{n{m}}` (repeats value m, n times)
 
 ### Parameters
+
 - Named constants with default values
 - Format for parameterized modules:
   - `module <name> #(<parameter list>) (<port list>);`
   - Example: `#(parameter N = 8)`
 
 ## Modules & Instantiation
+
 - Modules are the building blocks of design hierarchy
 - Ports define connections between module and environment
 - Port direction: `input`, `output`, `inout`
@@ -52,6 +59,7 @@ description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic c
   3. Implicit: `my_tri(.out, .in, .enable);` (when port/signal names match)
 
 ## Procedural Blocks
+
 - **Always blocks**: Used for behavioral code, run repeatedly based on sensitivity list
 - SystemVerilog variants:
   - `always_comb`: For combinational logic (auto sensitivity list)
@@ -60,17 +68,20 @@ description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic c
 - **Initial blocks**: Run once at time zero (for simulation/test benches only)
 
 ## Latches vs. Flip-Flops
+
 - Both store information, but operate differently:
   - Latches are asynchronous (level-sensitive)
   - Flip-flops are edge-triggered (synchronous)
 - Beware of inadvertent latches from incomplete assignments
 
 ## Case Statements
+
 - Create combinational logic inside always blocks
 - Must include `default` case to avoid incomplete assignments
 - Each case has an implied break
 
 ## Finite State Machines (FSMs)
+
 - A way to conceptualize computation over time using state transition diagrams
 - Components:
   1. State register (sequential logic)
@@ -82,16 +93,18 @@ description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic c
   - State logic can be one combined block or two separate blocks
 
 ### Moore vs. Mealy FSMs
+
 - **Moore**: Outputs depend only on current state
   - Output changes synchronously with state changes
 - **Mealy**: Outputs depend on state and inputs
   - Input changes can cause immediate output changes
 
 ## Test Benches
+
 - Special modules for simulation only
 - Create simulated inputs for FPGA testing
 - Control timing of signals using:
-  - Delay: `#<time>` 
+  - Delay: `#<time>`
   - Edge-sensitive: `@(<pos/neg>edge <signal>)`
   - Level-sensitive: `wait(<expression>)`
 - Output test results using `$display` and related system tasks

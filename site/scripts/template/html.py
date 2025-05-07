@@ -165,5 +165,6 @@ INDEX_TEMPLATE = """
             </div>
         </div>
     </div>
+    <script>hljs.highlightAll();</script>
 </div>
 """

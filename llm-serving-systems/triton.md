@@ -88,7 +88,7 @@ print(f'total time: {time_total} s')
 ## CUDA Addition Kernel
 
 
-```cpp
+```python
 #include <cuda_runtime.h>
 #include <stdio.h>
 

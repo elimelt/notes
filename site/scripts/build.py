@@ -627,6 +627,7 @@ class SiteGenerator:
 
         # Copy all theme files
         for theme_file in from_dir.glob("*.css"):
+            print(f"Copying {theme_file} to {to_dir}")
             if theme_file.is_file():
                 shutil.copy2(theme_file, to_dir / theme_file.name)
                 logger.info(f"Copied theme file: {theme_file.name}")

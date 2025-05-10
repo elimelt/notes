@@ -329,10 +329,10 @@ article {
 }
 
 .content img {
-  max-width: 100%;
+  max-width: 70%;
   height: auto;
   border-radius: var(--radius-sm);
-  display: block;
+  float: left;
   margin: 2rem auto;
 }
 

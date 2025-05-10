@@ -627,13 +627,15 @@ class SiteGenerator:
         to_dir.mkdir(parents=True, exist_ok=True)
         to_dir.chmod(0o755)
 
-        print("current directory:", Path.cwd())
         # Copy all theme files
-        for theme_file in from_dir.glob("*.css"):
-            print(f"Copying {theme_file} to {to_dir}")
+        for theme_file in self._walk_directory(from_dir):
+            print(f"Copying theme file: {theme_file}")
             if theme_file.is_file():
-                shutil.copy2(theme_file, to_dir / theme_file.name)
-                logger.info(f"Copied theme file: {theme_file.name}")
+                relative_path = theme_file.relative_to(from_dir)
+                output_path = to_dir / relative_path
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(theme_file, output_path)
+                output_path.chmod(0o644)
 
 
 def main():

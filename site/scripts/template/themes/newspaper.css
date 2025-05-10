@@ -7,7 +7,7 @@
   --text-color-tertiary: rgba(17, 17, 17, 0.6);
   --background-color: #f9f7f1;
   /* Off-white, slightly aged paper color */
-  --accent-color: #8b0000;
+  --accent-color: #35417e;
   /* Deep, classic newspaper red */
   --accent-light: rgba(139, 0, 0, 0.1);
   --border-color: #d6d3c9;
@@ -150,7 +150,7 @@
     --text-color-tertiary: rgba(230, 227, 217, 0.7);
     --background-color: #1f1e1c;
     /* Dark, slightly brown-tinted background */
-    --accent-color: #bf4d4d;
+    --accent-color: #314669;
     /* Lighter red for dark mode */
     --accent-light: rgba(191, 77, 77, 0.1);
     --border-color: #3a3832;

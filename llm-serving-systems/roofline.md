@@ -40,6 +40,7 @@ This is *bad*. Modern accelerators can achieve much higher intensity, e.g. NVIDI
 ## Roofline Model
 
 ![plot](assets/roofline-plot.png)
+
 Roofline plots visualize arithmetic intensity (x-axis) vs. performance (y-axis), typically both in log scale. The plot is divided into three regions:
 
 - **Roofline**: The upper bound of performance for a given arithmetic intensity. This is the maximum performance that can be achieved given the hardware's compute and memory bandwidth.

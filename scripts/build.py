@@ -149,16 +149,21 @@ class SiteGenerator:
                 "description": None,
             }
 
-        return {
+        metadata = {
             "title": md.Meta.get("title", [file_path.stem.replace("-", " ").title()])[
                 0
             ],
             "category": md.Meta.get("category", [None])[0],
-            "tags": (
-                md.Meta.get("tags", [""])[0].split(",") if "tags" in md.Meta else []
-            ),
+            "tags": [],
             "description": md.Meta.get("description", [None])[0],
         }
+
+        if "tags" in md.Meta and md.Meta["tags"][0]:
+            metadata["tags"] = [
+                tag.strip() for tag in md.Meta["tags"][0].split(",") if tag.strip()
+            ]
+
+        return metadata
 
     def _process_markdown(self, file_path: Path) -> None:
         """Process a markdown file into a Page object"""
@@ -221,19 +226,24 @@ class SiteGenerator:
     def _process_content(self) -> None:
         """Process all content in the input directory"""
         for file_path in self._walk_directory(self.input_dir):
-
             if file_path.is_file() and file_path.suffix in self.SUPPORTED_CONTENT:
                 if file_path.suffix in {".md", ".markdown"}:
                     self._process_markdown(file_path)
             elif file_path.is_dir() and file_path.name not in self.IGNORED_DIRECTORIES:
                 # Generate an index.html for directories
-                links_html = "\n".join(
-                    f'<li><a href="{item.name.replace('.md', '.html')}">{item.name}</a></li>'
-                    for item in file_path.iterdir()
-                    if item.is_file()
-                )
+                links_html = self._create_directory_index_links(file_path)
                 if links_html:
                     self._generate_dir_index(file_path / "index.html", links_html)
+
+    def _create_directory_index_links(self, directory: Path) -> str:
+        """Create HTML links for directory index pages"""
+        links = []
+        for item in directory.iterdir():
+            if item.is_file():
+                links.append(
+                    f'<li><a href="{item.name.replace(".md", ".html")}">{item.name}</a></li>'
+                )
+        return "\n".join(links)
 
     def _organize_content(self) -> None:
         """Organize pages by category and tags"""
@@ -331,87 +341,91 @@ class SiteGenerator:
         """Generate category and tag index pages with enhanced markup for better UX"""
         # Generate categories index
         if self.categories:
-            # Create structured content with CSS classes for JavaScript enhancement
-            content = """
-            <div class="taxonomy-container">
-                <ul class="original-taxonomy-list" style="display:none;">
-            """
-            for category, pages in sorted(self.categories.items()):
-                content += f'\n<li><a href="/categories/{quote(category.lower())}.html">{category}</a> ({len(pages)} pages)</li>'
-            content += """
-                </ul>
-                <noscript>
-                    <ul>
-            """
-            for category, pages in sorted(self.categories.items()):
-                content += f'\n<li><a href="/categories/{quote(category.lower())}.html">{category}</a> ({len(pages)} pages)</li>'
-            content += """
-                    </ul>
-                </noscript>
-            </div>
-            <script src="/js/taxonomy.js" defer></script>
-            """
-
-            categories_page = Page(
-                title="Categories",
-                path=Path("categories/index.md"),
-                content=content,
-                modified_date=datetime.now(),
-                category=None,
-                tags=[],
-                description="Browse all content categories",
-                is_index=True,
-            )
-            self.pages[categories_page.path] = categories_page
+            self._generate_categories_index()
 
         # Generate tags index
         if self.tags:
-            # Create structured content with CSS classes for JavaScript enhancement
-            content = """
-            <div class="taxonomy-container">
-                <ul class="original-taxonomy-list" style="display:none;">
-            """
-            for tag, pages in sorted(self.tags.items()):
-                content += f'\n<li><a href="/tags/{quote(tag.lower())}.html">{tag}</a> ({len(pages)} pages)</li>'
-            content += """
-                </ul>
-                <noscript>
-                    <ul>
-            """
-            for tag, pages in sorted(self.tags.items()):
-                content += f'\n<li><a href="/tags/{quote(tag.lower())}.html">{tag}</a> ({len(pages)} pages)</li>'
-            content += """
-                    </ul>
-                </noscript>
-            </div>
-            <script src="/js/taxonomy.js" defer></script>
-            """
+            self._generate_tags_index()
 
-            tags_page = Page(
-                title="Tags",
-                path=Path("tags/index.md"),
-                content=content,
-                modified_date=datetime.now(),
-                category=None,
-                tags=[],
-                description="Browse all content tags",
-                is_index=True,
-            )
-            self.pages[tags_page.path] = tags_page
-
-        # Also ensure the JS file is included in the output
+        # Ensure the JS file is included in the output
         self._ensure_taxonomy_js()
         self._ensure_css()
+
+    def _generate_categories_index(self) -> None:
+        """Generate the categories index page"""
+        content = """
+        <div class="taxonomy-container">
+            <ul class="original-taxonomy-list" style="display:none;">
+        """
+        for category, pages in sorted(self.categories.items()):
+            content += f'\n<li><a href="/categories/{quote(category.lower())}.html">{category}</a> ({len(pages)} pages)</li>'
+        content += """
+            </ul>
+            <noscript>
+                <ul>
+        """
+        for category, pages in sorted(self.categories.items()):
+            content += f'\n<li><a href="/categories/{quote(category.lower())}.html">{category}</a> ({len(pages)} pages)</li>'
+        content += """
+                </ul>
+            </noscript>
+        </div>
+        <script src="/js/taxonomy.js" defer></script>
+        """
+
+        categories_page = Page(
+            title="Categories",
+            path=Path("categories/index.md"),
+            content=content,
+            modified_date=datetime.now(),
+            category=None,
+            tags=[],
+            description="Browse all content categories",
+            is_index=True,
+        )
+        self.pages[categories_page.path] = categories_page
+
+    def _generate_tags_index(self) -> None:
+        """Generate the tags index page"""
+        content = """
+        <div class="taxonomy-container">
+            <ul class="original-taxonomy-list" style="display:none;">
+        """
+        for tag, pages in sorted(self.tags.items()):
+            content += f'\n<li><a href="/tags/{quote(tag.lower())}.html">{tag}</a> ({len(pages)} pages)</li>'
+        content += """
+            </ul>
+            <noscript>
+                <ul>
+        """
+        for tag, pages in sorted(self.tags.items()):
+            content += f'\n<li><a href="/tags/{quote(tag.lower())}.html">{tag}</a> ({len(pages)} pages)</li>'
+        content += """
+                </ul>
+            </noscript>
+        </div>
+        <script src="/js/taxonomy.js" defer></script>
+        """
+
+        tags_page = Page(
+            title="Tags",
+            path=Path("tags/index.md"),
+            content=content,
+            modified_date=datetime.now(),
+            category=None,
+            tags=[],
+            description="Browse all content tags",
+            is_index=True,
+        )
+        self.pages[tags_page.path] = tags_page
 
     def _ensure_css(self) -> None:
         """Ensures the styles.css file is added to the output directory"""
         css_dir = self.output_dir / "css"
         css_dir.mkdir(exist_ok=True)
 
-        # Path to the styles.css file
         styles_path = css_dir / "styles.css"
 
-        # Only write the file if it doesn't exist or is older than this build
         if not styles_path.exists() or datetime.fromtimestamp(
             styles_path.stat().st_mtime
         ) < datetime.now() - timedelta(minutes=5):
@@ -423,10 +437,8 @@ class SiteGenerator:
         js_dir = self.output_dir / "js"
         js_dir.mkdir(exist_ok=True)
 
-        # Path to the taxonomy.js file
         taxonomy_js_path = js_dir / "taxonomy.js"
 
-        # Only write the file if it doesn't exist or is older than this build
         if not taxonomy_js_path.exists() or datetime.fromtimestamp(
             taxonomy_js_path.stat().st_mtime
         ) < datetime.now() - timedelta(minutes=5):
@@ -618,7 +630,6 @@ class SiteGenerator:
 
     def _copy_themes(self) -> None:
         """Copy themes to the output directory"""
-
         from_dir = self.input_dir / "scripts" / "template" / "themes"
         to_dir = self.output_dir / "css" / "themes"
 
@@ -636,6 +647,7 @@ class SiteGenerator:
                 output_path.chmod(0o644)
 
     def _generate_slides(self) -> None:
+        """Generate slides from markdown files"""
         input_dir = "slides/"
         output_dir = "site/slides/"
 

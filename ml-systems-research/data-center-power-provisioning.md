@@ -1,6 +1,6 @@
 ---
 title: Power Provisioning for a Warehouse-sized Computer
-category: Systems
+category: Hardware
 tags: datacenter, power, provisioning, capacity, utilization
 description: A paper review of Power Provisioning for a Warehouse-sized Computer
 ---

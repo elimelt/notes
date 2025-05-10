@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+import subprocess
 import json
+import os
 from pathlib import Path
 from typing import List, Dict, Optional, Any
 import shutil
@@ -224,7 +226,6 @@ class SiteGenerator:
                 if file_path.suffix in {".md", ".markdown"}:
                     self._process_markdown(file_path)
             elif file_path.is_dir() and file_path.name not in self.IGNORED_DIRECTORIES:
-                print(f"Processing directory: {file_path}")
                 # Generate an index.html for directories
                 links_html = "\n".join(
                     f'<li><a href="{item.name.replace('.md', '.html')}">{item.name}</a></li>'
@@ -416,7 +417,6 @@ class SiteGenerator:
         ) < datetime.now() - timedelta(minutes=5):
             with open(styles_path, "w") as f:
                 f.write(STYLES_TEMPLATE)
-                print(f"Generated {styles_path}")
 
     def _ensure_taxonomy_js(self) -> None:
         """Ensures the taxonomy JavaScript file is added to the output directory"""
@@ -432,7 +432,6 @@ class SiteGenerator:
         ) < datetime.now() - timedelta(minutes=5):
             with open(taxonomy_js_path, "w") as f:
                 f.write(TAXONOMY_JS)
-                print(f"Generated {taxonomy_js_path}")
 
     def _generate_main_index(self) -> None:
         """Generate the main index.html page"""
@@ -629,13 +628,42 @@ class SiteGenerator:
 
         # Copy all theme files
         for theme_file in self._walk_directory(from_dir):
-            print(f"Copying theme file: {theme_file}")
             if theme_file.is_file():
                 relative_path = theme_file.relative_to(from_dir)
                 output_path = to_dir / relative_path
                 output_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(theme_file, output_path)
                 output_path.chmod(0o644)
+
+    def _generate_slides(self) -> None:
+        input_dir = "slides/"
+        output_dir = "site/slides/"
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        for root, dirs, files in os.walk(input_dir):
+            for file in files:
+                if file.endswith(".md"):
+                    input_file = os.path.join(root, file)
+                    output_file = os.path.join(
+                        output_dir,
+                        os.path.relpath(root, input_dir),
+                        file[:-3] + ".html",
+                    )
+                    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+                    subprocess.run(
+                        [
+                            "npx",
+                            "@marp-team/marp-cli",
+                            "--html",
+                            input_file,
+                            "-o",
+                            output_file,
+                        ]
+                    )
+
+        # copy slides/assets to site/slides/assets
+        shutil.copytree("slides/assets", "site/slides/assets", dirs_exist_ok=True)
 
 
 def main():
@@ -665,40 +693,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    # create temp directory
-    import tempfile
-    import os
-    import subprocess
-
-    # compile presentation directory with marp
-    input_dir = "slides/"
-    output_dir = "site/slides/"
-
-    os.makedirs(output_dir, exist_ok=True)
-
-    for root, dirs, files in os.walk(input_dir):
-        for file in files:
-            if file.endswith(".md"):
-                input_file = os.path.join(root, file)
-                output_file = os.path.join(
-                    output_dir, os.path.relpath(root, input_dir), file[:-3] + ".html"
-                )
-                os.makedirs(os.path.dirname(output_file), exist_ok=True)
-                subprocess.run(
-                    [
-                        "npx",
-                        "@marp-team/marp-cli",
-                        "--html",
-                        input_file,
-                        "-o",
-                        output_file,
-                    ]
-                )
-
-    # copy slides/assets to site/slides/assets
-    shutil.copytree("slides/assets", "site/slides/assets", dirs_exist_ok=True)
-    print("Generated slides in site/slides")
 
     # copy sitemap and robots.txt
     shutil.copy("sitemap.xml", "site/sitemap.xml")

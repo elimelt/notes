@@ -1,9 +1,7 @@
 @import 'themes/mcdonalds.css';
 
-/* Google Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-/* Reset and base styles */
 *,
 *::before,
 *::after {
@@ -33,7 +31,6 @@ body {
   }
 }
 
-/* Typography */
 h1,
 h2,
 h3,
@@ -57,7 +54,6 @@ h2 {
   border-bottom: 1px solid var(--heading-border-color);
 }
 
-/* Links */
 a {
   color: var(--link-color);
   text-decoration: none;
@@ -68,7 +64,6 @@ a:hover {
   text-decoration: var(--link-hover-decoration);
 }
 
-/* Images */
 img {
   max-width: 100%;
   height: auto;
@@ -78,7 +73,6 @@ img {
   box-shadow: var(--shadow-md);
 }
 
-/* Tables */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -107,7 +101,6 @@ th {
   font-weight: var(--font-weight-semibold);
 }
 
-/* Blockquotes */
 blockquote {
   margin: var(--spacing-lg) 0;
   padding-left: var(--spacing-md);
@@ -117,13 +110,11 @@ blockquote {
   font-style: italic;
 }
 
-/* Focus styles for accessibility */
 *:focus-visible {
   outline: var(--focus-outline-size) solid var(--focus-outline-color);
   outline-offset: 2px;
 }
 
-/* Navigation */
 nav {
   position: sticky;
   top: 0;
@@ -171,7 +162,6 @@ nav a:focus {
   text-decoration: none;
 }
 
-/* Breadcrumbs */
 .breadcrumbs {
   margin-bottom: var(--spacing-lg);
   color: var(--text-color);
@@ -199,7 +189,6 @@ nav a:focus {
   opacity: 0.5;
 }
 
-/* Article and content styling */
 article {
   margin-bottom: var(--spacing-xl);
 }
@@ -217,38 +206,32 @@ article {
 }
 
 .content {
-  /* Layout and spacing */
+
   margin-top: 2rem;
   max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
   padding: 0 .5rem;
 
-  /* Base font settings */
   font-family: var(--font-family-content);
   font-size: clamp(var(--font-size-base), 0.95rem + 0.25vw, var(--font-size-md));
   line-height: var(--line-height-relaxed);
   font-weight: var(--font-weight-normal);
 
-  /* Color and contrast */
   color: var(--text-color);
   background-color: var(--background-color);
 
-  /* Text rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 
-  /* Better spacing */
   letter-spacing: var(--letter-spacing-normal);
   word-spacing: 0.05em;
 
-  /* Hyphenation for better text flow */
   -ms-hyphens: auto;
   -webkit-hyphens: auto;
   hyphens: auto;
 
-  /* Advanced font features */
   font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'pnum' 1, 'tnum' 0, 'onum' 1, 'lnum' 0, 'dlig' 0;
 }
 
@@ -390,7 +373,6 @@ article {
   text-shadow: none;
 }
 
-/* Footer */
 footer {
   margin-top: var(--spacing-xl);
   padding-top: var(--spacing-md);
@@ -400,7 +382,6 @@ footer {
   opacity: 0.8;
 }
 
-/* Tags styling */
 .tags {
   margin-top: var(--spacing-lg);
   padding-top: var(--spacing-md);
@@ -428,7 +409,6 @@ footer {
   text-decoration: none;
 }
 
-/* Tags cloud */
 .tags-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -461,7 +441,6 @@ footer {
   font-size: var(--font-size-lg);
 }
 
-/* KaTeX styling */
 .katex-display {
   overflow: auto hidden;
   padding: var(--spacing-md) 0;
@@ -493,7 +472,6 @@ footer {
   min-height: 40px;
 }
 
-/* Landing page and directory styling */
 .landing-grid {
   margin: 0 auto;
   max-width: 1200px;
@@ -526,7 +504,6 @@ footer {
   opacity: 0.8;
 }
 
-/* Content areas */
 .content-area,
 .sidebar-area {
   width: 100%;
@@ -556,13 +533,12 @@ footer {
   }
 
   .content {
-    /* Better paragraph rhythm using CSS Grid */
+
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     row-gap: 0rem;
   }
 
-  /* Improve reading with advanced CSS columns for certain elements */
   .content .two-column {
     column-count: 2;
     column-gap: 2.5rem;
@@ -570,7 +546,6 @@ footer {
   }
 }
 
-/* Lists styling */
 .recent-posts,
 .categories-list {
   list-style: none;
@@ -604,7 +579,6 @@ footer {
   padding: 2px 6px;
 }
 
-/* Top level links */
 .top-level-links {
   border-left: 4px solid var(--accent-color);
   padding-left: 1rem;
@@ -628,7 +602,6 @@ footer {
   padding: var(--spacing-sm);
 }
 
-/* Taxonomy specific styling */
 .taxonomy-container {
   margin: var(--spacing-lg) 0;
 }
@@ -772,7 +745,6 @@ footer {
   margin: var(--spacing-lg) 0;
 }
 
-/* Category cards */
 .category-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -826,7 +798,6 @@ footer {
   font-weight: 500;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -839,7 +810,6 @@ footer {
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .taxonomy-list {
     grid-template-columns: 1fr;
@@ -860,7 +830,6 @@ footer {
   }
 }
 
-/* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   .taxonomy-list li {
     background: var(--card-background);
@@ -905,7 +874,6 @@ footer {
   }
 }
 
-/* High contrast and print modes */
 @media (forced-colors: active) {
   .content a {
     background-image: none;

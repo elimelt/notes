@@ -67,7 +67,7 @@ class SiteGenerator:
         "venv",
         ".venv",
     }
-    DEFAULT_CSS_CLASSES = ["markdown-content", "content"]
+    DEFAULT_CSS_CLASSES = ["content"]
     DEFAULT_PERMISSIONS = {"directory": 0o755, "file": 0o644}
 
     def __init__(

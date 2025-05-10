@@ -94,7 +94,7 @@
                 <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
-            <div class=markdown-content content>
+            <div class=content>
                 <h2 id="abstract">Abstract</h2>
 <p>Encoder-decoder transformer models like OpenAI's Whisper have demonstrated impressive performance on automatic speech recognition (ASR) tasks. However, these models are typically trained on fixed-length audio samples (e.g., 30 seconds), requiring the same fixed-length processing during inference regardless of the actual audio content length. This characteristic leads to significant computational inefficiency, especially when processing shorter audio clips, as the model still processes the full padded sequence.</p>
 <p>In this work, we propose an approach to accelerate inference in padded encoder-decoder transformer models by identifying and removing unnecessary padding tokens during the encoding phase. By analyzing the attention patterns in both self-attention and cross-attention layers, we identify regions in the encoded representation that can be safely pruned without significantly impacting model performance. We implement and evaluate two pruning strategies: one using fixed padding around the actual audio content and another using percentage-based padding. Our experiments on OpenAI's Whisper model demonstrate that our pruning approach achieves up to X% speedup in inference time with minimal degradation in transcription accuracy, making it particularly valuable for edge deployments where computational resources are limited.</p>

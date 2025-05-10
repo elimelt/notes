@@ -94,7 +94,7 @@
                 <span>Category: <a href="/categories/networks.html">Networks</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
-            <div class=markdown-content content>
+            <div class=content>
                 <h1 id="flow-control">Flow Control</h1>
 <p>Recall <strong>stop and wait</strong> ARQ. This only allows a single packet to be transmitted at a time. This is inefficient, as the sender is often waiting for the receiver to acknowledge the packet.</p>
 <p>Next recall <strong>sliding window</strong> ARQ. This allows multiple packets to be transmitted at a time. The sender can keep sending packets until the window is full. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. With a window size of $w$, you can send $w$ packets before waiting for an acknowledgement (ie $w$ packets per RTT).</p>

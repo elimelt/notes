@@ -10,7 +10,9 @@ class Section:
         self.level = level
 
     def __str__(self):
-        return f"{'#' * self.level} {self.title}\n{self.content}\n" + "\n".join(str(sub) for sub in self.subsections)
+        return f"{'#' * self.level} {self.title}\n{self.content}\n" + "\n".join(
+            str(sub) for sub in self.subsections
+        )
 
     def __repr__(self):
         return self.__str__()
@@ -39,7 +41,6 @@ class Section:
         print(f"Level: {self.level}")
 
 
-
 class MarkdownTree:
     def __init__(self, md):
         self.md = md
@@ -57,9 +58,9 @@ class MarkdownTree:
         for sub in section.subsections:
             self.debug(sub)
 
-
     def parse_sections(self, md: str = None, parent: Section = None):
         pass
+
 
 def main(args):
     for path in args.input_paths:
@@ -71,9 +72,14 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Markdown Tree Utility")
-    parser.add_argument('input_paths', nargs='+', help='List of input files/paths')
-    parser.add_argument('-r', '--recursive', action='store_true', help='Traverse directories recursively')
-     
+    parser.add_argument("input_paths", nargs="+", help="List of input files/paths")
+    parser.add_argument(
+        "-r",
+        "--recursive",
+        action="store_true",
+        help="Traverse directories recursively",
+    )
+
     args = parser.parse_args()
 
     main(args)
@@ -83,5 +89,4 @@ if __name__ == "__main__":
     #     md = f.read()
     #     tree = MarkdownTree(md)
     #     print(tree)
-        # tree.debug(tree.root)
-
+    # tree.debug(tree.root)

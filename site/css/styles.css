@@ -332,8 +332,8 @@ article {
   max-width: 70%;
   height: auto;
   border-radius: var(--radius-sm);
-  float: left;
-  margin: 2rem auto;
+  float: right;
+  margin: 0 0 1rem 1.5rem;
 }
 
 .content table {

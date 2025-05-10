@@ -87,7 +87,7 @@
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
-  --paragraph-indent: 0.5rem;
+  --paragraph-indent: 0.0rem;
 
   /* Radius - kept the same */
   --radius-sm: 4px;

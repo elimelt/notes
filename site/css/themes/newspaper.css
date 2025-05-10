@@ -92,7 +92,7 @@
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
-  --paragraph-indent: 0.5rem;
+  --paragraph-indent: 0.0rem;
 
   /* Radius - slight modification for more newspaper feel */
   --radius-sm: 2px;

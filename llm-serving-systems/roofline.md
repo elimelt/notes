@@ -39,4 +39,4 @@ This is *bad*. Modern accelerators can achieve much higher intensity, e.g. NVIDI
 
 ## Roofline Model
 
-![plot](assets/roofline.png)
+![plot](assets/roofline-plot.png)

@@ -109,6 +109,7 @@ class SiteGenerator:
             self._copy_assets()
             self._generate_special_pages()
             self._generate_html_pages()
+            self._copy_themes()
             logger.info(f"Site generated successfully in {self.output_dir}")
         except Exception as e:
             logger.error(f"Failed to generate site: {str(e)}")

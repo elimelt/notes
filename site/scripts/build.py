@@ -623,7 +623,7 @@ class SiteGenerator:
         themes_dir.mkdir(parents=True, exist_ok=True)
 
         # Copy all theme files
-        for theme_file in self.input_dir.glob("themes/*"):
+        for theme_file in self.input_dir.glob("template/themes/*"):
             if theme_file.is_file():
                 shutil.copy2(theme_file, themes_dir / theme_file.name)
                 logger.info(f"Copied theme file: {theme_file.name}")

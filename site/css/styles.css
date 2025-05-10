@@ -729,6 +729,7 @@ footer {
 }
 
 .taxonomy-search {
+  background-color: var(--background-color);
   margin-bottom: var(--spacing-lg);
   width: 100%;
 }
@@ -862,12 +863,12 @@ footer {
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   .taxonomy-list li {
-    background: rgba(96, 165, 250, 0.1);
+    background: var(--card-background);
   }
 
   .content {
     color: rgba(255, 255, 255, 0.87);
-    background-color: #1a1a1a;
+    background-color: var(--background-color);
   }
 
   .content h1,
@@ -876,31 +877,31 @@ footer {
   .content h4,
   .content h5,
   .content h6 {
-    color: rgba(255, 255, 255, 0.95);
+    color: var(--text-color);
   }
 
   .content a {
-    color: #58a6ff;
+    color: var(--accent-color);
   }
 
   .content blockquote {
-    border-left-color: rgba(255, 255, 255, 0.2);
-    background-color: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.7);
+    border-left-color: var(--border-color);
+    background-color: var(--card-background);
+    color: var(--text-color);
   }
 
   .content pre,
   .content code {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--code-background);
   }
 
   .content th,
   .content td {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-color);
   }
 
   .content th {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--card-background);
   }
 }
 
@@ -924,12 +925,12 @@ footer {
   body {
     max-width: none;
     padding: 0;
-    color: black;
-    background: white;
+    color: var(--text-color);
+    background: var(--background-color);
   }
 
   a {
-    color: black;
+    color: var(--accent-color);
     text-decoration: underline;
   }
 
@@ -937,12 +938,13 @@ footer {
     max-width: 100%;
     font-size: 12pt;
     line-height: 1.5;
-    color: #000;
+    color: var(--text-color);
   }
 
   .content a {
     text-decoration: underline;
-    color: #000;
+    color: var(--accent-color);
+    ;
     background-image: none;
   }
 

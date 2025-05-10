@@ -623,8 +623,11 @@ class SiteGenerator:
         from_dir = self.input_dir / "template" / "themes"
         to_dir = self.output_dir / "css" / "themes"
 
-        print("Copying themes from", from_dir, "to", to_dir)
+        # create the themes directory if it doesn't exist
+        to_dir.mkdir(parents=True, exist_ok=True)
+        to_dir.chmod(0o755)
 
+        print("current directory:", Path.cwd())
         # Copy all theme files
         for theme_file in from_dir.glob("*.css"):
             print(f"Copying {theme_file} to {to_dir}")

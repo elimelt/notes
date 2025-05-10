@@ -616,6 +616,17 @@ class SiteGenerator:
         output_path.write_text(html_content, encoding="utf-8")
         output_path.chmod(0o644)
 
+    def _copy_themes(self) -> None:
+        """Copy themes to the output directory"""
+        themes_dir = self.output_dir / "themes"
+        themes_dir.mkdir(parents=True, exist_ok=True)
+
+        # Copy all theme files
+        for theme_file in self.input_dir.glob("themes/*"):
+            if theme_file.is_file():
+                shutil.copy2(theme_file, themes_dir / theme_file.name)
+                logger.info(f"Copied theme file: {theme_file.name}")
+
 
 def main():
     """CLI entry point"""

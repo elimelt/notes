@@ -50,7 +50,7 @@
   --link-gradient: linear-gradient(transparent calc(100% - 2px), #c00c0c 2px);
 
   /* Tags and badges */
-  --tag-color: #c00c0c;
+  --tag-color: #ffcc00;
   /* Red text on yellow tags */
   --tag-hover-color: #ffcc00;
   /* Yellow text on hover */

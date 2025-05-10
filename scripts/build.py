@@ -620,7 +620,7 @@ class SiteGenerator:
     def _copy_themes(self) -> None:
         """Copy themes to the output directory"""
 
-        from_dir = self.input_dir / "template" / "themes"
+        from_dir = self.input_dir / "scripts" / "template" / "themes"
         to_dir = self.output_dir / "css" / "themes"
 
         # create the themes directory if it doesn't exist

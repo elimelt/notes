@@ -1,6 +1,6 @@
 ---
 title: Homelessness in Seattle (DRAFT)
-category: Social Issues
+category: Thoughts
 tags: seattle
 description: I'm disappointed in the city of Seattle
 ---

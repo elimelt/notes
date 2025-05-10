@@ -1,6 +1,6 @@
 ---
 title: The Multikernel, A new OS architecture for scalable multicore systems
-category: Systems
+category: Operating Systems
 tags: os, operating-system, systems, multicore, kernel
 description: A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.
 ---

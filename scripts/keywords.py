@@ -8,7 +8,8 @@ from pathlib import Path
 from keybert import KeyBERT
 
 nltk.download("stopwords")
-nltk.download('wordnet')
+nltk.download("wordnet")
+
 
 class DataReader:
     def __init__(self, root_dir: str = "."):
@@ -84,6 +85,7 @@ def get_kw_path_map(files: List[Path], model: KeyBERT) -> dict:
 
     return keyword_map
 
+
 def deduplicate(file_to_keywords: dict) -> dict:
     wnl = WordNetLemmatizer()
     deduped = {}
@@ -93,12 +95,13 @@ def deduplicate(file_to_keywords: dict) -> dict:
         for kw, acc in kws:
             stem = wnl.lemmatize(kw)
             if stem != kw:
-                print('stem', stem, 'kw', kw)
+                print("stem", stem, "kw", kw)
                 dedup_count += 1
             if stem not in deduped[f]:
                 deduped[f].append((stem, acc))
-    print('dedup count', dedup_count)
+    print("dedup count", dedup_count)
     return deduped
+
 
 def aggregate(file_to_keywords: dict) -> dict:
     keyword_to_files = {}

@@ -1,6 +1,6 @@
 ---
 title: Exokernel: An Operating System Architecture for Application-Level Resource Management
-category: Systems
+category: Operating Systems
 tags: operating systems, exokernel, resource management
 description: Paper review for the classic exokernel paper
 ---

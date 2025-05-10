@@ -1,6 +1,6 @@
 ---
 title: GPU Kernel Programming with Triton and CUDA
-category: Systems
+category: Machine Learning Systems
 tags: gpu, triton, cuda
 description: Overview of programming GPU kernels with Triton and CUDA
 ---

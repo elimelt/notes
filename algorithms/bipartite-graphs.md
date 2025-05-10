@@ -1,6 +1,6 @@
 ---
 title: Bipartite Graphs Properties, Proofs, and Detection Algorithm
-category: Graph Theory
+category: Algorithms
 tags: bipartite graphs, graph coloring, odd cycles, breadth-first search
 description: A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.
 ---

@@ -1,6 +1,6 @@
 ---
 title: Resistance
-category: Electrical Engineering
+category: Hardware
 tags: resistance, ohm's law, power, series resistors, parallel resistors
 description: Covers the implementation of Ohm's law, power calculations, and the behavior of resistors in series and parallel circuits. Discusses the fundamental concepts of resistance, including how it relates to voltage, current, and power dissipation. Provides detailed explanations of series and parallel resistor configurations and their impact on overall circuit resistance and power distribution.
 ---

@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical Lessons from Predicting Clicks on Ads at Facebook | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A review/summary of the paper "Practical Lessons from Predicting Clicks on Ads at Facebook", covering foundational concepts of ads modeling/ranking systems.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/recc-sys/predicting-clicks-on-ads-at-facebook.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Practical Lessons from Predicting Clicks on Ads at Facebook">
+    <meta property="og:description" content="A review/summary of the paper "Practical Lessons from Predicting Clicks on Ads at Facebook", covering foundational concepts of ads modeling/ranking systems.">
+    <meta property="og:url" content="https://notes.elimelt.com/recc-sys/predicting-clicks-on-ads-at-facebook.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Practical Lessons from Predicting Clicks on Ads at Facebook">
+    <meta name="twitter:description" content="A review/summary of the paper "Practical Lessons from Predicting Clicks on Ads at Facebook", covering foundational concepts of ads modeling/ranking systems.">
+
+    <meta name="keywords" content="recommender systems,machine learning,ads,facebook">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Practical Lessons from Predicting Clicks on Ads at Facebook", "dateModified": "2025-05-16T16:09:36.384158", "description": "A review/summary of the paper \"Practical Lessons from Predicting Clicks on Ads at Facebook\", covering foundational concepts of ads modeling/ranking systems.", "articleSection": "Machine Learning Systems", "keywords": "recommender systems,machine learning,ads,facebook"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Practical Lessons from Predicting Clicks on Ads at Facebook
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Practical Lessons from Predicting Clicks on Ads at Facebook</h1>
+            <div class="meta">
+                <time datetime="2025-05-16T16:09:36.384158">
+                    Last modified: 2025-05-16
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="practical-lessons-from-predicting-clicks-on-ads-at-facebook">Practical Lessons from Predicting Clicks on Ads at Facebook</h1>
+<blockquote>
+<p>Disclaimer: This is not affiliated with my work at Meta. This paper is publicly available at https://research.facebook.com/file/273183074306353/practical-lessons-from-predicting-clicks-on-ads-at-facebook.pdf</p>
+</blockquote>
+<h2 id="background">Background</h2>
+<p>The overall ads ranking system is composed of two main components: the <strong>ranking</strong> and <strong>bidding</strong>. Ranking is performed by a series of models that increase in complexity and cost as they progress through the pipeline, progressively filtering out the majority of ads, since most are not relevant to the user. Then, an "auction" is performed to determine which ad will be shown to the user based on the bids from advertisers, e.g. how much they are willing to pay for a click.</p>
+<p>This paper is primarily focused on the ranking component, particularly the final layer of the ranking system where higher accuracy over a smaller dataset is required.</p>
+<h2 id="normalized-entropy">Normalized Entropy</h2>
+<p>Normalized entropy is used to measure the discriminative power of a model. It is defined as:</p>
+<p>$$
+\text{Normalized Entropy} = \frac{H}{H_{\text{max}}}
+$$</p>
+<p>Where $H$ is the entropy of the model and $H_{\text{max}}$ is the maximum possible entropy, e.g. the average CTR of the dataset.</p>
+<p>Given a dataset labeled $1, \ldots, n$ with outputs $y_i \in {-1, 1}$, with a background CTR $p$ and a predicted click probability $p_i$, the entropy is defined as:</p>
+<p>$$
+\text{Entropy} = -\frac{1}{n} \sum_{i=1}^{n} \left( \frac{1 + y_i}{2} \log(p_i) + \frac{1 - y_i}{2} \log(1 - p_i) \right)
+$$</p>
+<p>The maximum possible entropy is given by $Ber(p)$, i.e.:
+$$
+H_{\text{max}} = -(p \log(p) + (1 - p) \log(1 - p))
+$$.</p>
+<p>So we have the normalized entropy as:</p>
+<p>$$
+\text{NE} = \frac{-\frac{1}{n} \sum_{i=1}^{n} \left( \frac{1 + y_i}{2} \log(p_i) + \frac{1 - y_i}{2} \log(1 - p_i) \right)}{-(p \log(p) + (1 - p) \log(1 - p))}
+$$</p>
+<p>Intuitively, the closer the background CTR is, the easier it is for the model to discriminate. This metric is nice for a few reasons:</p>
+<ul>
+<li>It is interpretable, as 1 means the model is no better than using the average CTR to predict clicks, and anything lower than 1 means the model is performing better than the average CTR.</li>
+<li>It helps compare models, since normalizing makes it insensitive to the background CTR.</li>
+</ul>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/ads.html">ads</a>
+                <a href="/tags/facebook.html">facebook</a>
+                <a href="/tags/machine%20learning.html">machine learning</a>
+                <a href="/tags/recommender%20systems.html">recommender systems</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

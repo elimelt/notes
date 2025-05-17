@@ -4,31 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Locality Principle | Elijah's Notes</title>
+    <title>The Multikernel, A new OS architecture for scalable multicore systems | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.">
+    <meta name="description" content="A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
-    <link rel="canonical" href="https://notes.elimelt.com/ml-systems-research/locality-principle.html">
+    <link rel="canonical" href="https://notes.elimelt.com/systems-research/barrelfish.html">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="The Locality Principle">
-    <meta property="og:description" content="A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.">
-    <meta property="og:url" content="https://notes.elimelt.com/ml-systems-research/locality-principle.html">
+    <meta property="og:title" content="The Multikernel, A new OS architecture for scalable multicore systems">
+    <meta property="og:description" content="A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.">
+    <meta property="og:url" content="https://notes.elimelt.com/systems-research/barrelfish.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="The Locality Principle">
-    <meta name="twitter:description" content="A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.">
+    <meta name="twitter:title" content="The Multikernel, A new OS architecture for scalable multicore systems">
+    <meta name="twitter:description" content="A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.">
 
     <meta name="keywords" content="os,operating-system,systems,multicore,kernel">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Locality Principle", "dateModified": "2025-03-05T06:50:54.254342", "description": "A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.", "articleSection": "Systems", "keywords": "os,operating-system,systems,multicore,kernel"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Multikernel, A new OS architecture for scalable multicore systems", "dateModified": "2025-05-10T14:43:32.655004", "description": "A review of the paper The Multikernel, A new OS architecture for scalable multicore systems, where the OS is treated as a distributed system.", "articleSection": "Operating Systems", "keywords": "os,operating-system,systems,multicore,kernel"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -81,51 +81,46 @@
 <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » The Locality Principle
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » The Multikernel, A new OS architecture for scalable multicore systems
         </div>
     </header>
     <main role="main">
         <article>
-            <h1>The Locality Principle</h1>
+            <h1>The Multikernel, A new OS architecture for scalable multicore systems</h1>
             <div class="meta">
-                <time datetime="2025-03-05T06:50:54.254342">
-                    Last modified: 2025-03-05
+                <time datetime="2025-05-10T14:43:32.655004">
+                    Last modified: 2025-05-10
                 </time>
-                <span>Category: <a href="/categories/systems.html">Systems</a></span>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h6 id="paper-title"><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/asplos2016.pdf">Paper Title</a></h6>
+                <h6 id="the-multikernel-a-new-os-architecture-for-scalable-multicore-systems"><a href="https://people.inf.ethz.ch/troscoe/pubs/sosp09-barrelfish.pdf">The Multikernel: A new OS architecture for scalable multicore systems</a></h6>
 <hr />
 <h3 id="what-is-the-problem">What is the Problem?</h3>
-<p>Early implementations of virtual memory were plagued by poor performance due to thrashing, when the system spends more time swapping pages in and out of memory than executing the actual program. This is caused by a larger "working set" than the available physical memory, leading to repeated page faults and throughput collapse.</p>
+<p>Scaling to varying loads and demands on multicore systems is difficult with traditional OS architectures. Optimizations tend to be specific to not only a particular workload, but also a particular choice of hardware.</p>
+<p>In particular, traditional kernels are littered with shared state (e.g. global data structures in shared memory) that can lead to bottlenecks and unforeseen interactions between components. Modern systems being multicore makes this a real problem for scalability that adapts to all varieties of workloads.</p>
 <h3 id="summary">Summary</h3>
-<p>The author details the history of virtual memory and the development and evolution of the working set model for managing memory. While studying this, the author discovered a natural pattern in the behavior of modern workloads: working sets tend to be related by some measure of locality. This property is generally applicable and can therefore be exploited to improve the performance of many systems.</p>
+<p>The authors proposed a new OS architecture, the Multikernel, that treats the OS as a distributed system. The key idea is to use message passing for all inter-core communication. It turns out that message passing is a better model for hardware (networked, heterogeneous) than sequentially updating shared state, and it allows for natural pipelining as well.</p>
 <h3 id="key-insights">Key Insights</h3>
 <ul>
-<li>Systems, particularly those that interact with some external storage, naturally exhibit patterns in locality that can be exploited to improve performance.</li>
-<li>When working sets grow too large, one way to cope is to queue up requests and and control admission to the working set.</li>
+<li>Systems, and even individual cores within a machine, are extremely diverse. It is therefore hard to write optimizations that work on all of them.</li>
+<li>Even on current, cache coherent systems, the hardware is designed to facilitate message passing (e.g. cache coherence protocols).</li>
+<li>Message passing has less overhead than shared memory. Shared state tends to cause cores to wait on cache misses, stalling the pipeline. Message passing on the other hand can be implemented with async RPCs, and is even still faster with synchronous RPCs in some cases.</li>
+<li>Cache coherence overhead typically grows with the number of cores, even becoming a bottleneck at ~80 cores. Modern programmable cores (e.g. NICs, GPUs) are not cache coherent, so there is precedent for non-coherent systems.</li>
 </ul>
 <h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
 <ul>
-<li>The working set model ($W(t,T)$) abstractly defines a process's memory needs as the set of pages referenced in the time interval of length T preceding time t, giving a good theoretical basis for understanding memory behavior.</li>
-<li>The feedback control mechanism for limiting multiprogramming level prevents thrashing by refusing to activate programs whose working sets wouldn't fit in available memory.</li>
+<li>Make all inter-core communication explicit</li>
+<li>Make OS structure hardware-neutral</li>
+<li>View state as replicated instead of shared</li>
 </ul>
 <h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
-<ul>
-<li>The original working set model requires a fixed $T$ (essentially an LRU cache of size $T$), which is not always ideal for all workloads.</li>
-<li>Some workloads differ in nature from the traditional working set model, e.g. a job running over a massive file that is read sequentially.</li>
-</ul>
+<h2 id="-">-</h2>
 <h3 id="summary-of-key-results">Summary of Key Results</h3>
-<ul>
-<li>Virtual memory became a viable and relatively predictable technology.</li>
-<li>The locality principle has been successfully applied to many many domains and systems/</li>
-</ul>
+<h2 id="-_1">-</h2>
 <h3 id="open-questions">Open Questions</h3>
-<ul>
-<li>Can malicious actors exploit systems that design for the common case of locality, somehow executing a DOS attack?</li>
-<li>Is designing a system for high throughput sequential reads directly at odds with designing for locality? Or can the two be targeted simultaneously?</li>
-</ul>
+<h2 id="-_2">-</h2>
             </div>
             <div class="tags">
                 Tags:

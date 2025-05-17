@@ -4,31 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Unix Timesharing System | Elijah's Notes</title>
+    <title>Paper Review Template | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Paper review/notes from lecture of Unix Timesharing System">
+    <meta name="description" content="A template for reviewing research papers">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
-    <link rel="canonical" href="https://notes.elimelt.com/ml-systems-research/unix-timesharing-system.html">
+    <link rel="canonical" href="https://notes.elimelt.com/systems-research/paper-review-template.html">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="The Unix Timesharing System">
-    <meta property="og:description" content="Paper review/notes from lecture of Unix Timesharing System">
-    <meta property="og:url" content="https://notes.elimelt.com/ml-systems-research/unix-timesharing-system.html">
+    <meta property="og:title" content="Paper Review Template">
+    <meta property="og:description" content="A template for reviewing research papers">
+    <meta property="og:url" content="https://notes.elimelt.com/systems-research/paper-review-template.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="The Unix Timesharing System">
-    <meta name="twitter:description" content="Paper review/notes from lecture of Unix Timesharing System">
+    <meta name="twitter:title" content="Paper Review Template">
+    <meta name="twitter:description" content="A template for reviewing research papers">
 
-    <meta name="keywords" content="unix,systems,operating systems">
+    <meta name="keywords" content="meta,template,research,paper,review">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Unix Timesharing System", "dateModified": "2025-03-05T03:27:55.426524", "description": "Paper review/notes from lecture of Unix Timesharing System", "articleSection": "Operating Systems", "keywords": "unix,systems,operating systems"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Paper Review Template", "dateModified": "2025-05-10T15:17:28.267918", "description": "A template for reviewing research papers", "articleSection": "Research", "keywords": "meta,template,research,paper,review"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -81,63 +81,42 @@
 <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » The Unix Timesharing System
+            <a href="/index.html">Home</a> » <a href="/categories/research.html">Research</a> » Paper Review Template
         </div>
     </header>
     <main role="main">
         <article>
-            <h1>The Unix Timesharing System</h1>
+            <h1>Paper Review Template</h1>
             <div class="meta">
-                <time datetime="2025-03-05T03:27:55.426524">
-                    Last modified: 2025-03-05
+                <time datetime="2025-05-10T15:17:28.267918">
+                    Last modified: 2025-05-10
                 </time>
-                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+                <span>Category: <a href="/categories/research.html">Research</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h6 id="the-unix-timesharing-system"><a href="https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf">The Unix Timesharing System</a></h6>
+                <h6 id="paper-title"><a href="https://example.com">Paper Title</a></h6>
 <hr />
 <h3 id="what-is-the-problem">What is the Problem?</h3>
-<p>A very unspecific problem. Essentially they were burnt by Multics and wanted to create a simpler and more general system.</p>
 <h3 id="summary">Summary</h3>
-<p>Key design goal is simplicity. Everything is hierarchical. Everything is a file.</p>
-<h4 id="file-system-implementation">File System Implementation</h4>
-<ul>
-<li>Tree strucutre</li>
-<li>FS mounted on a file</li>
-<li>Sys table of i-numbers (i-list)</li>
-<li>i-node contains metadata for each file</li>
-<li>path names don't distinguish between files and directories</li>
-<li>mount table for mounted file systems</li>
-<li>buffering is built into kernel and transparent to user
-    - write-behind (flushes to disk when buffer is full)</li>
-</ul>
-<h4 id="storage-devices">Storage Devices</h4>
-<ul>
-<li>block devices
-    - data is stored in fixed-size blocks
-    - "free list" of blocks for allocation, Linked list of blocks
-    - hard disks, usb drive, ssd, tape drives
-    - early versions of ethernet</li>
-<li>character devices</li>
-</ul>
-<h4 id="execution">Execution</h4>
-<ul>
-<li><strong>Image</strong> is an execution env (parallel container)</li>
-<li><strong>Process</strong> is an instance/execution of an image
-    - Program text write-protected and shared between all instances of that process
-    - Separate virtual address space for each process</li>
-<li>Kernel
-    - Mediator for accessing services/hardware/shared resources</li>
-</ul>
 <h3 id="key-insights">Key Insights</h3>
 <h2 id="-">-</h2>
+<h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
+<h2 id="-_1">-</h2>
+<h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
+<h2 id="-_2">-</h2>
+<h3 id="summary-of-key-results">Summary of Key Results</h3>
+<h2 id="-_3">-</h2>
+<h3 id="open-questions">Open Questions</h3>
+<h2 id="-_4">-</h2>
             </div>
             <div class="tags">
                 Tags:
-                <a href="/tags/operating%20systems.html">operating systems</a>
-                <a href="/tags/systems.html">systems</a>
-                <a href="/tags/unix.html">unix</a>
+                <a href="/tags/meta.html">meta</a>
+                <a href="/tags/paper.html">paper</a>
+                <a href="/tags/research.html">research</a>
+                <a href="/tags/review.html">review</a>
+                <a href="/tags/template.html">template</a>
             </div>
         </article>
     </main>

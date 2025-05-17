@@ -1,3 +1,10 @@
+---
+title: S’more Blondies
+category: Recipes
+tags: baking, blondies, s'mores
+description: An recipe
+---
+
 ## S’more Blondies
 
 **Yields:** 16 bars (9×13″ pan)  

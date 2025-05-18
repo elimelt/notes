@@ -14,7 +14,7 @@ description: How should you reason about timing in hardware? What are the key th
 - $t_{co}$ (**Clock-to-Q Delay**): The time it takes for the output of the flip-flop to change after the clock edge. This is the time it takes for the data to propagate through the flip-flop.
 
 ```txt
-        clock edge
+            T (clk edge)
             |
             |
   +---------+------------+
@@ -39,3 +39,14 @@ So there are two key constraints to keep in mind:
 When considering combinational logic delay, we think about minimizing with respect to the hold time constraint, and maximizing with respect to the setup time constraint. So for hold time we want to find the shortest path through our circuit, and for setup time we want to find the longest path through our circuit.
 
 For example, if you are given $t_{co}$, $t_{h}$, $t_{s}$, and $T_{clk}$, you can calculate the range of tolerable delays for components on a path between two registers, or the input signal's delay after clock edge to change, or some variation on these. In order to do this, you identify the longest and shortest paths through the circuit that concern your component/between the two registers, and then write out the inequalities.
+
+## In Practice
+
+Static timing analysis usually happens twice in the FPGA design process: once after synthesis (static analysis of the RTL), and once after place and route (static analysis of the netlist).
+
+### Circuit Path Categorization
+
+- **Data paths** are between inputs, sequential elements, and outputs
+- **Clock paths** are from device ports or internally-generated clocks to the clock pins of sequential elements
+- **Asynchronous paths** are between inputs and asynchronous set and clear pins of sequential elements
+

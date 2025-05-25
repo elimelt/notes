@@ -46,6 +46,8 @@ BASE_TEMPLATE = """
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link rel="stylesheet" href=/css/styles.css>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
 
@@ -135,7 +137,6 @@ INDEX_TEMPLATE = """
             <div class="stat-number">612</div>
             <div class="stat-label">Tags</div>
         </div>
-    </div>
 
     <div class="main-content-wrapper">
         <!-- Main content area -->

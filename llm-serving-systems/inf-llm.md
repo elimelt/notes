@@ -1,7 +1,7 @@
 ---
 title: InfLLM: Training-Free Long-Context Extrapolation for LLMs with an Efficient Context Memory
 category: Machine Learning Systems
-tags: llm, research, long-context, memory
+tags: llm, research, long-context, memory, machine learning
 description: InfLLM is a training-free, memory-based method that enables LLMs to process extremely long sequences by augmenting the standard sliding window attention mechanism with an efficient external context memory. It allows LLMs to capture long-distance dependencies and avoid distractions from irrelevant contexts without further training.
 ---
 

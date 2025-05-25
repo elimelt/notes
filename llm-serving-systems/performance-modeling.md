@@ -1,7 +1,7 @@
 ---
 title: Performance Modeling for LLM Serving Systems
 category: Machine Learning Systems
-tags: performance, roofline, arithmetic intensity
+tags: performance, roofline, arithmetic intensity, machine learning
 description: How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?
 ---
 

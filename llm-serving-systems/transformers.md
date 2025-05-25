@@ -1,7 +1,7 @@
 ---
 title: Transformer Architecture and Implementation
 category: Machine Learning Systems
-tags: transformers, architecture, implementation, attention, prefill, decode, feedforward, normalization
+tags: transformers, architecture, implementation, attention, prefill, decode, feedforward, normalization, machine learning
 description: Overview of transformer architecture (specifically Llama) and its implementation details for LLM serving systems
 ---
 

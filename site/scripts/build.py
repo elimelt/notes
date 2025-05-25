@@ -338,7 +338,9 @@ class SiteGenerator:
 
     def _generate_navigation(self, current_page: Page) -> str:
 
-        nav_items = []
+        nav_items = [
+            '<a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>'
+        ]
 
         if not current_page.is_index:
             nav_items.append('<a href="/index.html">Home</a>')

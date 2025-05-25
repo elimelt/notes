@@ -1,7 +1,7 @@
 ---
 title: Memory Management in LLM Serving Systems
 category: Machine Learning Systems
-tags: memory management, kv cache, prefix sharing, paged attention, flash attention
+tags: memory management, kv cache, prefix sharing, paged attention, flash attention, machine learning
 description: Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache methods.
 ---
 

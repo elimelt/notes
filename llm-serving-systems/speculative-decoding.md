@@ -1,7 +1,7 @@
 ---
 title: Speculative Decoding in LLM Serving Systems
 category: Machine Learning Systems
-tags: speculative decoding, llm, performance,
+tags: speculative decoding, llm, performance, machine learning
 description: Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.
 ---
 

@@ -2,7 +2,7 @@
 ---
 title: Parallelism in LLM Serving Systems
 category: Machine Learning Systems
-tags: parallelism, performance, throughput, latency, llm, serving systems
+tags: parallelism, performance, throughput, latency, llm, serving systems, machine learning
 description: Overview of parallelism techniques in LLM serving systems, focusing on theoretical foundations and practical applications.
 ---
 

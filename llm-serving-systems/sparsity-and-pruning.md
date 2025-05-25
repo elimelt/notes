@@ -1,7 +1,7 @@
 ---
 title: Sparsity and Pruning in LLM Serving Systems
 category: Machine Learning Systems
-tags: sparsity, pruning, performance optimization
+tags: sparsity, pruning, performance optimization, machine learning
 description: Overview of techniques in LLM serving systems using sparsity and pruning to optimize performance and reduce model size.
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Quantization in LLM Serving Systems
 category: Machine Learning Systems
-tags: quantization, low precision, performance, memory efficiency
+tags: quantization, low precision, performance, memory efficiency, machine learning
 description: Overview of quantization techniques for LLM serving systems, focusing on theoretical foundations and practical applications.
 ---
 

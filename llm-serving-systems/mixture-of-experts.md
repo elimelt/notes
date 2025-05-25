@@ -1,7 +1,7 @@
 ---
 title: Intro to Mixture of Experts (MoE) in LLM Serving Systems
 category: Machine Learning Systems
-tags: mixture of experts, MoE, performance optimization, memory efficiency
+tags: mixture of experts, MoE, performance optimization, memory efficiency, machine learning
 description: How do Mixture of Experts (MoE) models achieve these crazy performance improvements?
 ---
 

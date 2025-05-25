@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batching in LLM Serving Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Overview of batching techniques in LLM serving systems,">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/batching.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Batching in LLM Serving Systems">
+    <meta property="og:description" content="Overview of batching techniques in LLM serving systems,">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/batching.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Batching in LLM Serving Systems">
+    <meta name="twitter:description" content="Overview of batching techniques in LLM serving systems,">
+
+    <meta name="keywords" content="batching,performance,throughput,latency,llm,serving systems">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Batching in LLM Serving Systems", "dateModified": "2025-05-25T16:32:00.774899", "description": "Overview of batching techniques in LLM serving systems,", "articleSection": "Machine Learning Systems", "keywords": "batching,performance,throughput,latency,llm,serving systems"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Batching in LLM Serving Systems
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Batching in LLM Serving Systems</h1>
+            <div class="meta">
+                <time datetime="2025-05-25T16:32:00.774899">
+                    Last modified: 2025-05-25
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="batching-in-llm-serving-systems">Batching in LLM Serving Systems</h1>
+<h2 id="overview">Overview</h2>
+<p>Batching is critical for LLM serving performance. The H100 needs <strong>333 batch size</strong> to reach peak performance. Batching involves two key considerations:
+1. <strong>User Experience</strong> - maintaining response quality and latency
+2. <strong>Throughput</strong> - maximizing system efficiency</p>
+<h2 id="user-experience-metrics">User Experience Metrics</h2>
+<h3 id="key-latency-metrics">Key Latency Metrics</h3>
+<ul>
+<li><strong>Time to First Token (TTFT)</strong>: Time between user request submission and first token generation<ul>
+<li>TTFT = Queuing time + Prefill time</li>
+</ul>
+</li>
+<li><strong>Time Per Output Token (TPOT/ITL/IBT)</strong>: Time between each output token</li>
+<li><strong>Average TPOT</strong>: Average time to produce one output token</li>
+<li><strong>End-to-end time</strong>: Total time to queue, prefill, and decode entire request</li>
+<li><strong>Normalized Latency</strong>: End-to-end time / number of output tokens</li>
+</ul>
+<h3 id="service-level-objectives-slo">Service Level Objectives (SLO)</h3>
+<p>Common SLO types in order of difficulty:
+1. <strong>End-to-end time</strong> (easiest)
+2. <strong>TTFT + Average TPOT</strong>
+3. <strong>TTFT + Maximum TPOT</strong> (hardest)</p>
+<p><strong>SLO Difficulty</strong>: TTFT + TPOT_max &gt; TTFT + TPOT_avg &gt; E2E</p>
+<h3 id="deadline-based-slo-management">Deadline-Based SLO Management</h3>
+<ul>
+<li>Can use <strong>delay strategies</strong> to smooth token generation when deadlines allow</li>
+<li><strong>TTFT + TPOT_max ge DDL &gt; TTFT + TPOT_avg &gt; E2E</strong></li>
+<li>Delaying token output can help meet consistent TPOT requirements</li>
+</ul>
+<h2 id="batching-strategies">Batching Strategies</h2>
+<h3 id="1-simple-batching">1. Simple Batching</h3>
+<ul>
+<li><strong>Characteristics</strong>:<ul>
+<li>Lowest throughput</li>
+<li>Short TTFT and TPOT</li>
+<li>Low infrastructure complexity</li>
+</ul>
+</li>
+<li><strong>Limitation</strong>: Bottlenecked by longest decode request</li>
+</ul>
+<h3 id="2-continuous-batching-orca">2. Continuous Batching (Orca)</h3>
+<p><strong>Key Insight</strong>: Admit new requests when decode requests finish</p>
+<p><strong>Benefits</strong>:
+- <strong>Higher throughput</strong>: No waiting for longest decode request
+- <strong>Stabilized GEMM batch size</strong>: Better GPU utilization
+- <strong>Reduced queuing time</strong>: Requests enter at token granularity</p>
+<p><strong>Drawbacks</strong>:
+- <strong>Higher prefill latency</strong>: Prefill batched with decode requests
+- <strong>Higher decode latency</strong>: Prefill slows concurrent decode</p>
+<h4 id="batch-size-calculation">Batch Size Calculation</h4>
+<p>For continuous batching with:
+- Decode length <code>d</code>
+- Prefill length <code>p</code>
+- Request batch size <code>B</code></p>
+<p><strong>GEMM batch size</strong> = $$\frac{p+d}{d+1}B = B + \frac{p-1}{d+1}B$$</p>
+<p><strong>Key relationships</strong>:
+- Increasing prefill length     o increases GEMM batch size
+- Increasing decode length  o decreases GEMM batch size
+- For large <code>d</code>: GEMM batch size approx $(1 + \frac{p}{d})B$</p>
+<p><strong>Example</strong>: Batch size = 512, p/d = 2  o GEMM batch size = 512 imes3 = 1536</p>
+<h3 id="3-chunked-prefill">3. Chunked Prefill</h3>
+<p><strong>Problem</strong>: Simple continuous batching creates generation stalls due to variable prefill sizes</p>
+<p><strong>Solution</strong>: Break prefill into fixed-size chunks</p>
+<p><strong>Benefits</strong>:
+- <strong>Highest throughput</strong>: Further stabilized batch size
+- <strong>Controlled decode latency</strong>: Eliminates generation stalls
+- <strong>Consistent GEMM batch size</strong>: Better performance predictability</p>
+<p><strong>Drawbacks</strong>:
+- <strong>Longest TTFT</strong>: More cycles needed for prefill
+- <strong>Higher infrastructure complexity</strong>: Chunking management overhead</p>
+<h4 id="fixed-token-budget-approach">Fixed Token Budget Approach</h4>
+<ul>
+<li>Allocate fixed token budget per iteration</li>
+<li>Mix decode requests with prefill chunks</li>
+<li>Maintains constant GEMM batch size</li>
+</ul>
+<h3 id="4-prefill-decode-disaggregation">4. Prefill-Decode Disaggregation</h3>
+<p><strong>Architecture</strong>: Separate clusters for prefill and decode operations</p>
+<p><strong>Process</strong>:
+1. Prefill server processes input tokens
+2. KV cache transferred to decode server
+3. Decode server handles token generation</p>
+<p><strong>Benefits</strong>:
+- <strong>Short TTFT and TPOT</strong>: Decoupled operations
+- <strong>Optimal latency</strong>: Can scale to one request per machine</p>
+<p><strong>Drawbacks</strong>:
+- <strong>Low throughput</strong>: Prefill cluster fully utilized, decode underutilized
+- <strong>High infrastructure complexity</strong>: KV cache transfer overhead
+- <strong>Network overhead</strong>: KV transfer can be significant (160ms for 16K tokens)</p>
+<h4 id="kv-transfer-optimization">KV Transfer Optimization</h4>
+<ul>
+<li>Use <strong>chunked prefill</strong> + <strong>layer-wise transfer</strong> to overlap KV movement</li>
+<li>Transfer last layer of last chunk when prefill completes</li>
+</ul>
+<h2 id="batching-limitations">Batching Limitations</h2>
+<h3 id="1-slo-constraints">1. SLO Constraints</h3>
+<p><strong>For PD Disaggregation</strong>:
+- Prefill batch limit   o TTFT constraint
+- Decode batch limit    o TPOT constraint: <code>B*attn + GEMM(B) + C &lt; TPOT</code></p>
+<p><strong>For Chunked Prefill</strong>:
+- Cycle Time = GEMM(B_dense) + $\frac{d}{p+d}B_{dense}$     imes attn
+- Constraints: Cycle time &lt; TPOT, $\frac{p+d}{B_{dense}}$   imes Cycle Time &lt; TTFT</p>
+<h3 id="2-gpu-memory-capacity">2. GPU Memory Capacity</h3>
+<p><strong>KV Cache Limitations</strong>:
+- For 8B model on H100: ~512K tokens max
+- <strong>Challenge</strong>: Output length unknown, KV cache grows over time</p>
+<h4 id="batch-size-formulas">Batch Size Formulas</h4>
+<p><strong>For constant lengths</strong>:
+$$B = \frac{C}{p + \frac{1}{2}d}$$</p>
+<p><strong>For variable lengths</strong>:
+$$B = \frac{d_{avg}C}{(pd)<em avg="avg">{avg} + \frac{1}{2}(d^2)</em>$$}</p>
+<p>Where:
+- <code>C</code> = KV cache capacity
+- <code>p</code> = prefill length
+- <code>d</code> = decode length
+- Longer requests occupy cache longer, reducing effective batch size</p>
+<p><strong>Example</strong>: 1K input, uniform 0-4K output  o effective batch size approx 220</p>
+<h3 id="3-memory-management-strategies">3. Memory Management Strategies</h3>
+<p><strong>Prediction-Based Control</strong>:
+- Use small encoder models to predict output length
+- Stop prefill when KV cache predicted to exceed capacity
+- Add decode pending queues for PD disaggregation</p>
+<p><strong>Out-of-Memory Handling</strong>:
+- Similar to prefix sharing eviction
+- Offload KV cache to CPU memory (faster than recomputation)
+- Evict least recently used requests</p>
+<h2 id="performance-comparison">Performance Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Throughput</th>
+<th>TTFT</th>
+<th>TPOT</th>
+<th>Infra Complexity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple</td>
+<td>Lowest</td>
+<td>Short</td>
+<td>Short</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>Continuous Batching</td>
+<td>High</td>
+<td>Longer</td>
+<td>Long, Unstable</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>Chunked Prefill</td>
+<td>Highest</td>
+<td>Longest</td>
+<td>Long, Controlled</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>PD Disaggregation</td>
+<td>Low</td>
+<td>Short</td>
+<td>Short</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h2 id="advanced-considerations">Advanced Considerations</h2>
+<h3 id="slo-attainment-strategies">SLO Attainment Strategies</h3>
+<ul>
+<li><strong>95% SLO targets</strong> may require:<ul>
+<li>Dropping long input/output requests</li>
+<li>Infinite delay for predicted SLO violations</li>
+<li>Prioritizing high-SLO requests</li>
+</ul>
+</li>
+</ul>
+<h3 id="fairness-constraints">Fairness Constraints</h3>
+<ul>
+<li>All requests should make progress</li>
+<li>Equal throughput share per user</li>
+<li>SLO violation "badness" metrics vs binary attain/violate</li>
+</ul>
+<h3 id="output-length-impact">Output Length Impact</h3>
+<ul>
+<li>Longer requests stay in KV cache longer</li>
+<li>Creates memory pressure and batch size oscillations</li>
+<li>Prediction accuracy critical for optimal performance</li>
+</ul>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/batching.html">batching</a>
+                <a href="/tags/latency.html">latency</a>
+                <a href="/tags/llm.html">llm</a>
+                <a href="/tags/performance.html">performance</a>
+                <a href="/tags/serving%20systems.html">serving systems</a>
+                <a href="/tags/throughput.html">throughput</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

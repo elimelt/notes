@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modeling and Scaling Performance with Roofline | Elijah's Notes</title>
+    <title>Performance Modeling for LLM Serving Systems | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?">
+    <meta name="description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -15,20 +15,20 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Modeling and Scaling Performance with Roofline">
-    <meta property="og:description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?">
+    <meta property="og:title" content="Performance Modeling for LLM Serving Systems">
+    <meta property="og:description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?">
     <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/performance-modeling.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Modeling and Scaling Performance with Roofline">
-    <meta name="twitter:description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?">
+    <meta name="twitter:title" content="Performance Modeling for LLM Serving Systems">
+    <meta name="twitter:description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?">
 
-    <meta name="keywords" content="roofline,performance,optimization,gpu,bandwidth,compute">
+    <meta name="keywords" content="performance,roofline,arithmetic intensity">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Modeling and Scaling Performance with Roofline", "dateModified": "2025-05-10T21:18:03.697316", "description": "How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?", "articleSection": "Machine Learning Systems", "keywords": "roofline,performance,optimization,gpu,bandwidth,compute"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Performance Modeling for LLM Serving Systems", "dateModified": "2025-05-25T16:32:00.792813", "description": "How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?", "articleSection": "Machine Learning Systems", "keywords": "performance,roofline,arithmetic intensity"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -81,121 +81,173 @@
 <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Modeling and Scaling Performance with Roofline
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Performance Modeling for LLM Serving Systems
         </div>
     </header>
     <main role="main">
         <article>
-            <h1>Modeling and Scaling Performance with Roofline</h1>
+            <h1>Performance Modeling for LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-10T21:18:03.697316">
-                    Last modified: 2025-05-10
+                <time datetime="2025-05-25T16:32:00.792813">
+                    Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="scaling-with-the-roofline-model">Scaling with the Roofline Model</h1>
-<blockquote>
-<p><em>"When we run algorithms on hardware, we're bounded by three things: how fast it can do math (OPs/second), the bandwidth available for moving data around (bytes/second), and the total memory available to store data (bytes). These “roofline” constraints let us upper and lower bound the time of a given computation." - <a href="https://jax-ml.github.io/scaling-book/roofline/">How to Scale Your Model - All About Rooflines</a></em></p>
-</blockquote>
+                <h1 id="performance-modeling-for-llm-serving-systems">Performance Modeling for LLM Serving Systems</h1>
+<h3 id="performance-analysis">Performance Analysis</h3>
+<ul>
+<li><strong>Roofline model</strong> - Based on the Roofline paper and Google's scaling book</li>
+<li><strong>Detailed model of Transformer performance</strong></li>
+</ul>
 <hr />
-<h2 id="arithmetic-intensity">Arithmetic Intensity</h2>
-<blockquote>
-<p>Definition: the arithmetic intensity of an algorithm is given by the ratio of the total FLOPs it performs to the number of bytes it needs to communicate — either within a chip or between chips.</p>
-</blockquote>
-<p>$$
-\text{Arithmetic Intensity} = \frac{\text{Computation FLOPs}}{\text{Communication Bytes}}
-$$</p>
-<p>At a high level, we want to push our models to be as compute-bound as possible, meaning that the arithmetic intensity's demand matches the hardware's supply. This drives utilization up, as opposed to when our model is memory-bound, meaning we have unmatched supply and therefore underutilized hardware.</p>
-<h3 id="example-dot-product">Example: Dot-Product</h3>
-<p>$$
-\text{Dot Product} = \sum_{i=1}^{n} a_i b_i
-$$</p>
-<p>For two vectors $a, b \in \mathbb{R}^n$, we need to load $2n$ elements, write one element, and perform $n$ multiplications and $n-1$ additions (FLOPs). Assuming our datatype is 2 bytes (e.g., float16), we have:</p>
-<p>$$
-\text{Intensity (dot product)} = \frac{\text{FLOPs}}{\text{Bytes}} = \frac{2n + 1}{2n + 2n + 2} = \frac{2n + 1}{4n + 2}
-$$</p>
-<p>Then, as $n \to \infty$, we have $\text{Intensity} \to \frac{1}{2}$.</p>
-<p>This is <em>bad</em>. Modern accelerators can achieve much higher intensity, e.g. NVIDIA H100 ~315 FLOPS/B. The dot-product is thus a memory-bound operation, meaning GPUs will spend most of their time waiting for data to be loaded from memory.</p>
-<h2 id="roofline-model">Roofline Model</h2>
-<p><img alt="plot" src="assets/roofline-plot.png" /></p>
-<p>Roofline plots visualize arithmetic intensity (x-axis) vs. performance (y-axis), typically both in log scale. The plot is divided into three regions:</p>
+<h2 id="the-roofline-model">The Roofline Model</h2>
+<h3 id="core-concept">Core Concept</h3>
+<p><strong>Operational Intensity</strong> = $\frac{\text{# of Operations}}{\text{# of Bytes Moved}}$</p>
 <ul>
-<li><strong>Roofline</strong>: The upper bound of performance for a given arithmetic intensity. This is the maximum performance that can be achieved given the hardware's compute and memory bandwidth.</li>
-<li><strong>Compute-bound</strong>: The region where the performance is limited by the compute capability of the hardware. This is where we want to be for compute-heavy workloads.</li>
-<li><strong>Memory-bound</strong>: The region where the performance is limited by the memory bandwidth. This is where we want to avoid being for compute-heavy workloads.</li>
+<li><strong>Operations</strong>: E.g., FLOPs/Sec</li>
+<li><strong>Bytes Moved</strong>: E.g., Bytes/sec (Memory or Network Bandwidth)</li>
 </ul>
-<p>To travel in the positive $y$ direction, we can either use optimizations like multithreading, vectorization/SIMD, etc., all of which increase the FLOPs achievable of our accelerator, or we can increase the memory bandwidth by using faster memory (e.g., HBM), better access patterns (e.g., coalesced memory access, tiling).</p>
-<p>Major challenges are associated with memory boundedness, especially with non-uniform memory access (NUMA) architectures, where memory can be considered either "local" or "remote" to a given core. Without considering allocation and access patterns, you end up with a lot of communication overhead.</p>
-<p>For compute bound workloads, we have</p>
-<p>$$
-\text{OI}(\text{algorithm}) &gt; \text{OI}(\text{accelerator})
-$$</p>
-<p>and for memory bound workloads, we have</p>
-<p>$$
-\text{OI}(\text{algorithm}) &lt; \text{OI}(\text{accelerator})
-$$</p>
-<p>The challenge then becomes reaching the <em>critical operational intensity</em>:</p>
-<p>$$
-\text{OI}(\text{algorithm}) = \text{OI}(\text{accelerator})
-$$</p>
-<p>Earlier we calculated the operational intensity of the dot product as $\frac{1}{2}$. Given an H100 with 333 FLOPS/B, we're indeed very memory bound.</p>
-<h2 id="matrix-multiplication-with-fp16">Matrix Multiplication with FP16</h2>
-<p>Given two matrices $A \in \mathbb{R}^{M \times N}$ and $B \in \mathbb{R}^{N \times K}$, consider the OI of the matrix multiplication $C = AB$.</p>
-<p>We read $2MN + 2NK$ bytes of data, and write $2MK$ bytes of data to $C$. We do $2MNK$ FLOPs of computation. Thus, we have:</p>
-<p>$$
-\text{OI}(\text{matmul}) = \frac{2MNK}{2MN + 2NK + 2MK} \approx M \text{ if } M \text { is large}
-$$</p>
-<p>So as long as $M &gt; 333$, it would be compute bound on the H100.</p>
-<h2 id="key-hardware-specs-for-serving-throughput">Key Hardware Specs for Serving Throughput</h2>
+<h3 id="key-components">Key Components</h3>
+<h4 id="computational-ceilings">Computational Ceilings</h4>
 <ul>
-<li>$N_{\text{gpus}}$: Number of GPUs</li>
-<li>$\text{MemBW}$: Memory bandwidth (GB/s)</li>
-<li>$\text{NetBW}$: GPU interconnect bandwidth (GB/s)</li>
-<li>$\text{GPU}_{\text{mem}}$: GPU memory (GB)</li>
-<li>$\text{compute}$: GPU compute (TFLOPS)</li>
+<li><strong>Memory Bound</strong>: Low operational intensity region</li>
+<li><strong>Compute Bound</strong>: High operational intensity region</li>
+<li><strong>Roofline</strong>: The boundary between memory and compute limitations</li>
 </ul>
-<h2 id="key-model-specs-for-serving-throughput">Key Model Specs for Serving Throughput</h2>
+<h4 id="performance-optimization-strategies">Performance Optimization Strategies</h4>
+<p><strong>Compute optimizations:</strong>
+- Multithreading
+- ILP (Instruction-Level Parallelism)
+- SIMD (Single Instruction, Multiple Data)</p>
+<p><strong>Memory optimizations:</strong>
+- Stride accesses (HW prefetching)
+- Memory affinity (NUMA effect)
+- Software prefetching</p>
+<h3 id="critical-operational-intensity">Critical Operational Intensity</h3>
+<p>$$\text{Intensity(Computation)} = \text{Intensity(Accelerator)}$$</p>
+<p>$$\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} = \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$$</p>
+<p><strong>Compute-Bound</strong>: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} &gt; \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$</p>
+<p><strong>Memory-Bound</strong>: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} &lt; \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$</p>
+<hr />
+<h2 id="example-nvidia-h100-analysis">Example: NVIDIA H100 Analysis</h2>
+<h3 id="hardware-specifications">Hardware Specifications</h3>
 <ul>
-<li>$D_\text{model}$: hidden dimension size (<code>hidden_dim</code>)</li>
-<li>$L$: number of layers (<code>num_layers</code>)</li>
-<li>$P_\text{model}$: number of parameters</li>
-<li>$R_\text{GQA}$: group size of GQA (<code>group_size</code>)</li>
-<li>$S_\text{type}$: datatype size (e.g., <code>float16</code> = 2 bytes, <code>bfloat16</code> = 2 bytes, <code>int8</code> = 1 byte)</li>
-<li>$p$: average number of tokens to prefill</li>
-<li>$d$: average number of tokens to decode</li>
-<li>$p + d$: average number of tokens per user request</li>
-<li>$\frac{\text{Throughput}_\text{total}}{p + d}$: per-request throughput</li>
-<li>$d\frac{\text{Throughput}_\text{total}}{p + d}$: decoding throughput</li>
+<li><strong>Peak FP16 Tensor TFLOPS</strong>: 1000/2000 TFLOPs (with sparsity/no sparsity)</li>
+<li><strong>Memory bandwidth</strong>: 3000 GB/s</li>
+<li><strong>Critical intensity</strong>: $(1000 \times 10^{12}) / (3000 \times 10^9) = 333$ FLOPs/Byte</li>
 </ul>
-<h2 id="execution-time-model">Execution Time Model</h2>
-<p>We operate under the assumption we have optimal request batching/workload demand, meaning that we can effectively utilize the available hardware resources.</p>
-<p>From a memory standpoint, on each iteration we need to essentially load the entire content of GPU memory (weights, activations, kv cache). We thus have $t_\text{mem} = \frac{\text{GPU}_{\text{mem}}}{\text{MemBW}}$.</p>
-<p>From a compute standpoint, activations being multiplied by weights in batches gives us $B_{\text{dense}} K N$ FLOPs, so for all dense operations we have $t_{\text{compute}} = \frac{2 B_{\text{dense}} P_\text{model}}{\text{compute}}$.</p>
-<p>Lastly, from a network standpoint, there are two main operations we care about (assuming a model sharded across multiple GPUs): <code>AllGather</code> and <code>AllReduce</code>.</p>
+<p><strong>Rule</strong>: If kernel has higher operational intensity than 333 FLOPs/Byte    o compute-bound, otherwise memory-bound</p>
+<h3 id="example-operations">Example Operations</h3>
+<h4 id="fp32-dot-product">FP32 Dot Product</h4>
+<p><strong>Compute</strong>: $N$ multiplications, $N$ additions = $2N$ FLOPs</p>
+<p><strong>Memory</strong>: $2 \times 4N$ bytes read + $4$ bytes written back</p>
+<p><strong>Operational Intensity</strong>: $\frac{2N}{4N + 4} \approx \frac{1}{2}$</p>
+<p><strong>Result</strong>: FP32 dot product on H100 is <strong>memory-bound</strong></p>
+<h4 id="matrix-multiplication-with-fp16">Matrix Multiplication with FP16</h4>
+<p>For $[M,N] \times [N,K] \rightarrow [M,K]$:</p>
+<p><strong>Memory</strong>: $2MN + 2NK$ bytes read, $2MK$ bytes written back</p>
+<p><strong>Compute</strong>: $2MNK$ FLOPs</p>
+<p><strong>Operational Intensity</strong>: $\frac{2MNK}{2MN + 2NK + 2MK} \approx M$</p>
+<p><strong>Result</strong>: Matrix multiplication on H100 is compute-bound if $M &gt; 333$</p>
+<hr />
+<h2 id="numa-effect-with-gpus">NUMA Effect with GPUs</h2>
+<p>Modern GPU clusters show significant bandwidth variations:
+- <strong>GPU memory bandwidth</strong>: 900 GB/s
+- <strong>Network bandwidth</strong>: 200 Gb/s = 25 GB/s</p>
+<p>This creates hierarchical memory access patterns affecting performance modeling.</p>
+<hr />
+<h2 id="performance-modeling-framework">Performance Modeling Framework</h2>
+<h3 id="key-hardware-factors">Key Hardware Factors</h3>
 <ul>
-<li><code>AllGather</code>: gather the output of each GPU's computation. This takes roughly $N_{\text{gpus} - 1}$ network hops, and typically each layer contains multiple <code>AllGather</code> operations (e.g. 4 in llama2).</li>
-<li><code>AllReduce</code>: reduce the gathered outputs across all GPUs. As a rough estimate, this is roughly double the overhead of <code>AllGather</code></li>
+<li><strong>$N_{GPU}$</strong>: number of GPUs</li>
+<li><strong>MemBW</strong> (GB/s): aggregate GPU memory bandwidth</li>
+<li><strong>$GPU_{mem}$</strong> (GB): aggregate GPU memory capacity</li>
+<li><strong>Compute</strong> (GFLOPS/s): aggregate GPU compute capacity</li>
+<li><strong>NetBW</strong> (GB/s): aggregate GPU interconnect bandwidth</li>
 </ul>
-<p>$$
-\begin{align<em>}
-N_{\text{gpus}} - 1 &amp; \text{ hops} \
-4 &amp; \text{ allgather per layer} \
-B_\text{dense} D_\text{model} &amp; \text{ shape of the activations} \
-S_\text{type} &amp; \text{ size of the datatype}\
-\end{align</em>}
-$$</p>
-<p>$$
-T_\text{network} = \frac{4(N_{\text{gpus}} - 1) B_\text{dense} D_\text{model} S_\text{type}L}{\text{NetBW}}
-$$</p>
+<h3 id="key-model-configuration-factors">Key Model Configuration Factors</h3>
+<ul>
+<li><strong>$D_{model}$</strong>: hidden dimension size (hidden_dim)</li>
+<li><strong>$L$</strong>: number of layers</li>
+<li><strong>$P_{model}$</strong>: number of parameters</li>
+<li><strong>$R_{GQA}$</strong>: group size of GQA (group_size)</li>
+<li><strong>$S_{Type}$</strong>: Model parameters' data size in bytes (e.g., 2 for FP16)</li>
+</ul>
+<h3 id="key-user-statistics">Key User Statistics</h3>
+<ul>
+<li><strong>$p$</strong>: average number of tokens in prompts to be prefilled</li>
+<li><strong>$d$</strong>: average number of tokens in output to be decoded</li>
+<li><strong>$p + d$</strong>: average number of tokens in user request (sequence length)</li>
+<li><strong>Per request throughput</strong>: $\frac{\text{Throughput}_{total}}{p + d}$</li>
+<li><strong>Decoding throughput</strong>: $d \frac{\text{Throughput}_{total}}{p + d}$</li>
+</ul>
+<hr />
+<h2 id="execution-time-models">Execution Time Models</h2>
+<h3 id="memory-centric-execution-time">Memory-Centric Execution Time</h3>
+<p>$$T_{memory} = \frac{GPU_{mem}}{MemBW}$$</p>
+<p><strong>Assumption</strong>: Entire contents of GPU memory loaded once during one iteration</p>
+<h3 id="compute-centric-execution-time">Compute-Centric Execution Time</h3>
+<p>$$T_{compute} = \frac{2B_{dense}P_{model}}{Compute}$$</p>
+<p><strong>Logic</strong>: All dense operations require $2B_{dense}P_{model}$ FLOPs total</p>
+<h3 id="network-centric-execution-time">Network-Centric Execution Time</h3>
+<p>$$T_{net} = \frac{4(N_{GPU} - 1)D_{model}B_{dense}S_{type}L}{NetBw}$$</p>
+<p><strong>Components</strong>:
+- $(N_{GPU} - 1)$: number of hops
+- $4$: All-Gathers per layer
+- All-Reduce approx 2   imes All-Gather</p>
+<hr />
+<h2 id="performance-analysis-results">Performance Analysis Results</h2>
+<h3 id="compute-vs-network">Compute vs Network</h3>
+<p>$$\frac{T_{net}}{T_{compute}} = 2(N_{GPU} - 1)\frac{D_{model}L}{P_{model}} \frac{S_{type} \cdot Compute}{NetBw}$$</p>
+<p><strong>Key Finding</strong>: LLM Serving is more <strong>compute-bound</strong> than <strong>network-bound</strong></p>
+<h3 id="compute-vs-memory">Compute vs Memory</h3>
+<p>$$\frac{T_{memory}}{T_{compute}} = \frac{Compute \cdot GPU_{mem}}{MemBW \cdot 2B_{dense}P_{model}}$$</p>
+<p><strong>Factors affecting the balance</strong>:
+- <strong>GQA allows for larger batch size</strong>  o favors compute
+- <strong>Model sizes tend to increase</strong>  o favors compute
+- <strong>Batches with large decode requests increase memory accesses</strong>   o favors memory</p>
+<p><strong>Key Finding</strong>: LLM serving is more <strong>compute-bound</strong> than <strong>memory-bound</strong></p>
+<hr />
+<h2 id="grouped-query-attention-gqa">Grouped Query Attention (GQA)</h2>
+<h3 id="concept">Concept</h3>
+<ul>
+<li><strong>Traditional</strong>: Each attention head has its own Key-Value cache</li>
+<li><strong>GQA</strong>: Multiple attention heads share Key-Value pairs</li>
+<li><strong>Group size</strong>: Number of heads sharing the same K-V pairs</li>
+</ul>
+<h3 id="impact-on-performance">Impact on Performance</h3>
+<ul>
+<li><strong>Reduces KV cache memory requirements</strong> by factor of group size</li>
+<li><strong>Allows increasing batch size</strong> by factor of group size</li>
+<li><strong>Shifts workload toward compute-bound</strong> rather than memory-bound</li>
+</ul>
+<hr />
+<h2 id="optimal-throughput-analysis">Optimal Throughput Analysis</h2>
+<h3 id="theoretical-maximum">Theoretical Maximum</h3>
+<p>$$\text{Throughput} = \frac{B_{dense}}{T_{compute}} = \frac{B_{dense}}{\frac{2B_{dense}P_{model}}{Compute}} = \frac{Compute}{2P_{model}}$$</p>
+<p><strong>Example</strong>: LLaMA 70B on A100  o <strong>1857 tokens/s/GPU</strong></p>
+<h3 id="performance-gap">Performance Gap</h3>
+<p>Current serving frameworks show significant gaps to optimal throughput:
+- <strong>vLLM</strong>: ~494-552 tokens/s
+- <strong>DeepSpeed-FastGen</strong>: ~372-513 tokens/s
+- <strong>TensorRT-LLM</strong>: ~636-817 tokens/s</p>
+<p><strong>Key Insight</strong>: There is a <strong>large gap to optimal throughput</strong> - high GPU compute utilization is critical for LLM serving performance.</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><strong>Roofline model</strong> provides framework for understanding compute vs memory bounds</li>
+<li><strong>Critical operational intensity</strong> determines performance bottlenecks</li>
+<li><strong>LLM serving is primarily compute-bound</strong> rather than memory or network bound</li>
+<li><strong>GQA enables larger batch sizes</strong> and improves compute utilization</li>
+<li><strong>Significant optimization opportunities exist</strong> - current frameworks achieve only ~25-45% of theoretical peak throughput</li>
+<li><strong>High GPU compute utilization is the key</strong> for effective LLM serving</li>
+</ol>
             </div>
             <div class="tags">
                 Tags:
-                <a href="/tags/bandwidth.html">bandwidth</a>
-                <a href="/tags/compute.html">compute</a>
-                <a href="/tags/gpu.html">gpu</a>
-                <a href="/tags/optimization.html">optimization</a>
+                <a href="/tags/arithmetic%20intensity.html">arithmetic intensity</a>
                 <a href="/tags/performance.html">performance</a>
                 <a href="/tags/roofline.html">roofline</a>
             </div>

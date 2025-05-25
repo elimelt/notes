@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modeling and Scaling Performance with Roofline | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/roofline-reference.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Modeling and Scaling Performance with Roofline">
+    <meta property="og:description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/roofline-reference.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Modeling and Scaling Performance with Roofline">
+    <meta name="twitter:description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?">
+
+    <meta name="keywords" content="roofline,performance,optimization,gpu,bandwidth,compute">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Modeling and Scaling Performance with Roofline", "dateModified": "2025-05-25T16:32:00.750631", "description": "How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?", "articleSection": "Machine Learning Systems", "keywords": "roofline,performance,optimization,gpu,bandwidth,compute"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Modeling and Scaling Performance with Roofline
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Modeling and Scaling Performance with Roofline</h1>
+            <div class="meta">
+                <time datetime="2025-05-25T16:32:00.750631">
+                    Last modified: 2025-05-25
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="scaling-with-the-roofline-model">Scaling with the Roofline Model</h1>
+<blockquote>
+<p><em>"When we run algorithms on hardware, we're bounded by three things: how fast it can do math (OPs/second), the bandwidth available for moving data around (bytes/second), and the total memory available to store data (bytes). These "roofline" constraints let us upper and lower bound the time of a given computation." - <a href="https://jax-ml.github.io/scaling-book/roofline/">How to Scale Your Model - All About Rooflines</a></em></p>
+</blockquote>
+<hr />
+<h2 id="arithmetic-intensity">Arithmetic Intensity</h2>
+<blockquote>
+<p>Definition: the arithmetic intensity of an algorithm is given by the ratio of the total FLOPs it performs to the number of bytes it needs to communicate - either within a chip or between chips.</p>
+</blockquote>
+<p>$$
+\text{Arithmetic Intensity} = \frac{\text{Computation FLOPs}}{\text{Communication Bytes}}
+$$</p>
+<p>At a high level, we want to push our models to be as compute-bound as possible, meaning that the arithmetic intensity's demand matches the hardware's supply. This drives utilization up, as opposed to when our model is memory-bound, meaning we have unmatched supply and therefore underutilized hardware.</p>
+<h3 id="example-dot-product">Example: Dot-Product</h3>
+<p>$$
+\text{Dot Product} = \sum_{i=1}^{n} a_i b_i
+$$</p>
+<p>For two vectors $a, b \in \mathbb{R}^n$, we need to load $2n$ elements, write one element, and perform $n$ multiplications and $n-1$ additions (FLOPs). Assuming our datatype is 2 bytes (e.g., float16), we have:</p>
+<p>$$
+\text{Intensity (dot product)} = \frac{\text{FLOPs}}{\text{Bytes}} = \frac{2n + 1}{2n + 2n + 2} = \frac{2n + 1}{4n + 2}
+$$</p>
+<p>Then, as $n \to \infty$, we have $\text{Intensity} \to \frac{1}{2}$.</p>
+<p>This is <em>bad</em>. Modern accelerators can achieve much higher intensity, e.g. NVIDIA H100 ~315 FLOPS/B. The dot-product is thus a memory-bound operation, meaning GPUs will spend most of their time waiting for data to be loaded from memory.</p>
+<h2 id="roofline-model">Roofline Model</h2>
+<p><img alt="plot" src="assets/roofline-plot.png" /></p>
+<p>Roofline plots visualize arithmetic intensity (x-axis) vs. performance (y-axis), typically both in log scale. The plot is divided into three regions:</p>
+<ul>
+<li><strong>Roofline</strong>: The upper bound of performance for a given arithmetic intensity. This is the maximum performance that can be achieved given the hardware's compute and memory bandwidth.</li>
+<li><strong>Compute-bound</strong>: The region where the performance is limited by the compute capability of the hardware. This is where we want to be for compute-heavy workloads.</li>
+<li><strong>Memory-bound</strong>: The region where the performance is limited by the memory bandwidth. This is where we want to avoid being for compute-heavy workloads.</li>
+</ul>
+<p>To travel in the positive $y$ direction, we can either use optimizations like multithreading, vectorization/SIMD, etc., all of which increase the FLOPs achievable of our accelerator, or we can increase the memory bandwidth by using faster memory (e.g., HBM), better access patterns (e.g., coalesced memory access, tiling).</p>
+<p>Major challenges are associated with memory boundedness, especially with non-uniform memory access (NUMA) architectures, where memory can be considered either "local" or "remote" to a given core. Without considering allocation and access patterns, you end up with a lot of communication overhead.</p>
+<p>For compute bound workloads, we have</p>
+<p>$$
+\text{OI}(\text{algorithm}) &gt; \text{OI}(\text{accelerator})
+$$</p>
+<p>and for memory bound workloads, we have</p>
+<p>$$
+\text{OI}(\text{algorithm}) &lt; \text{OI}(\text{accelerator})
+$$</p>
+<p>The challenge then becomes reaching the <em>critical operational intensity</em>:</p>
+<p>$$
+\text{OI}(\text{algorithm}) = \text{OI}(\text{accelerator})
+$$</p>
+<p>Earlier we calculated the operational intensity of the dot product as $\frac{1}{2}$. Given an H100 with 333 FLOPS/B, we're indeed very memory bound.</p>
+<h2 id="matrix-multiplication-with-fp16">Matrix Multiplication with FP16</h2>
+<p>Given two matrices $A \in \mathbb{R}^{M \times N}$ and $B \in \mathbb{R}^{N \times K}$, consider the OI of the matrix multiplication $C = AB$.</p>
+<p>We read $2MN + 2NK$ bytes of data, and write $2MK$ bytes of data to $C$. We do $2MNK$ FLOPs of computation. Thus, we have:</p>
+<p>$$
+\text{OI}(\text{matmul}) = \frac{2MNK}{2MN + 2NK + 2MK} \approx M \text{ if } M \text { is large}
+$$</p>
+<p>So as long as $M &gt; 333$, it would be compute bound on the H100.</p>
+<h2 id="key-hardware-specs-for-serving-throughput">Key Hardware Specs for Serving Throughput</h2>
+<ul>
+<li>$N_{\text{gpus}}$: Number of GPUs</li>
+<li>$\text{MemBW}$: Memory bandwidth (GB/s)</li>
+<li>$\text{NetBW}$: GPU interconnect bandwidth (GB/s)</li>
+<li>$\text{GPU}_{\text{mem}}$: GPU memory (GB)</li>
+<li>$\text{compute}$: GPU compute (TFLOPS)</li>
+</ul>
+<h2 id="key-model-specs-for-serving-throughput">Key Model Specs for Serving Throughput</h2>
+<ul>
+<li>$D_\text{model}$: hidden dimension size (<code>hidden_dim</code>)</li>
+<li>$L$: number of layers (<code>num_layers</code>)</li>
+<li>$P_\text{model}$: number of parameters</li>
+<li>$R_\text{GQA}$: group size of GQA (<code>group_size</code>)</li>
+<li>$S_\text{type}$: datatype size (e.g., <code>float16</code> = 2 bytes, <code>bfloat16</code> = 2 bytes, <code>int8</code> = 1 byte)</li>
+<li>$p$: average number of tokens to prefill</li>
+<li>$d$: average number of tokens to decode</li>
+<li>$p + d$: average number of tokens per user request</li>
+<li>$\frac{\text{Throughput}_\text{total}}{p + d}$: per-request throughput</li>
+<li>$d\frac{\text{Throughput}_\text{total}}{p + d}$: decoding throughput</li>
+</ul>
+<h2 id="execution-time-model">Execution Time Model</h2>
+<p>We operate under the assumption we have optimal request batching/workload demand, meaning that we can effectively utilize the available hardware resources.</p>
+<p>From a memory standpoint, on each iteration we need to essentially load the entire content of GPU memory (weights, activations, kv cache). We thus have $t_\text{mem} = \frac{\text{GPU}_{\text{mem}}}{\text{MemBW}}$.</p>
+<p>From a compute standpoint, activations being multiplied by weights in batches gives us $B_{\text{dense}} K N$ FLOPs, so for all dense operations we have $t_{\text{compute}} = \frac{2 B_{\text{dense}} P_\text{model}}{\text{compute}}$.</p>
+<p>Lastly, from a network standpoint, there are two main operations we care about (assuming a model sharded across multiple GPUs): <code>AllGather</code> and <code>AllReduce</code>.</p>
+<ul>
+<li><code>AllGather</code>: gather the output of each GPU's computation. This takes roughly $N_{\text{gpus} - 1}$ network hops, and typically each layer contains multiple <code>AllGather</code> operations (e.g. 4 in llama2).</li>
+<li><code>AllReduce</code>: reduce the gathered outputs across all GPUs. As a rough estimate, this is roughly double the overhead of <code>AllGather</code></li>
+</ul>
+<p>$$
+\begin{align<em>}
+N_{\text{gpus}} - 1 &amp; \text{ hops} \
+4 &amp; \text{ allgather per layer} \
+B_\text{dense} D_\text{model} &amp; \text{ shape of the activations} \
+S_\text{type} &amp; \text{ size of the datatype}\
+\end{align</em>}
+$$</p>
+<p>$$
+T_\text{network} = \frac{4(N_{\text{gpus}} - 1) B_\text{dense} D_\text{model} S_\text{type}L}{\text{NetBW}}
+$$</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/bandwidth.html">bandwidth</a>
+                <a href="/tags/compute.html">compute</a>
+                <a href="/tags/gpu.html">gpu</a>
+                <a href="/tags/optimization.html">optimization</a>
+                <a href="/tags/performance.html">performance</a>
+                <a href="/tags/roofline.html">roofline</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

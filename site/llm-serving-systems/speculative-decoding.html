@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speculative Decoding in LLM Serving Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/speculative-decoding.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Speculative Decoding in LLM Serving Systems">
+    <meta property="og:description" content="Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/speculative-decoding.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Speculative Decoding in LLM Serving Systems">
+    <meta name="twitter:description" content="Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.">
+
+    <meta name="keywords" content="speculative decoding,llm,performance">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Speculative Decoding in LLM Serving Systems", "dateModified": "2025-05-25T16:32:00.779358", "description": "Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.", "articleSection": "Machine Learning Systems", "keywords": "speculative decoding,llm,performance"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Speculative Decoding in LLM Serving Systems
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Speculative Decoding in LLM Serving Systems</h1>
+            <div class="meta">
+                <time datetime="2025-05-25T16:32:00.779358">
+                    Last modified: 2025-05-25
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h2 id="overview">Overview</h2>
+<p><strong>Speculative Decoding</strong> is a technique to accelerate large language model inference by using a smaller, faster model to generate candidate tokens that are then verified by the larger target model in parallel.</p>
+<h3 id="key-references">Key References</h3>
+<ul>
+<li>Chen et al., "Accelerating Large Language Model Decoding with Speculative Sampling" (2023)</li>
+<li>Leviathan et al., "Fast Inference from Transformers via Speculative Decoding" (2022)</li>
+</ul>
+<h2 id="core-concept">Core Concept</h2>
+<h3 id="speculative-decoding-in-a-nutshell">Speculative Decoding in a Nutshell</h3>
+<ul>
+<li><strong>Small LM (Draft Model)</strong>: Generates multiple tokens quickly<ul>
+<li>Can be obtained via quantization, pruning, training from scratch, etc.</li>
+</ul>
+</li>
+<li><strong>Large LM (Target Model)</strong>: Verifies the generated tokens for accuracy</li>
+<li><strong>Analogy</strong>: Similar to speculative execution in CPUs - the small model may quickly generate many tokens that are mostly accurate</li>
+</ul>
+<h3 id="key-enabling-observations">Key Enabling Observations</h3>
+<ol>
+<li>
+<p><strong>Compute vs Memory Bound</strong>:</p>
+<ul>
+<li>LLM serving is <strong>compute-bound</strong> at large batch sizes</li>
+<li>At lower batch sizes, LLM serving becomes <strong>memory-bound</strong></li>
+<li>A batch of quickly generated tokens can be verified in parallel at once</li>
+</ul>
+</li>
+<li>
+<p><strong>Draft Model Accuracy</strong>:</p>
+<ul>
+<li>Small (draft) LLMs are quite accurate for most "easy" tokens</li>
+<li>Most of the time, a large (target) LLM is not needed</li>
+<li>Example: "Geoffrey Hinton did his PhD at the University of..."     o "Edinburgh" (easy) vs more complex completions (difficult)</li>
+</ul>
+</li>
+</ol>
+<h2 id="algorithm-details">Algorithm Details</h2>
+<h3 id="two-step-process">Two-Step Process</h3>
+<ol>
+<li>
+<p><strong>Draft Generation</strong>: Run the draft model N iterations (e.g., 5)
+   <code>p1(x) = Mp(prefix)   o x1
+   pz(x) = Mp(prefix, x1)   o xz
+   ...
+   p5(x) = Mp(prefix, x1, xz, xepsilon, x4)     o x5</code></p>
+</li>
+<li>
+<p><strong>Parallel Verification</strong>: Run the target model once to verify all tokens
+   <code>q1(x), qz(x), qepsilon(x), q4(x), q5(x), q6(x) = Mq(prefix, x1, xz, xepsilon, x4, x5)</code></p>
+</li>
+</ol>
+<p><strong>Important</strong>: Target model only produces distributions; sampling is only done from the draft model.</p>
+<h3 id="rejection-sampling-process">Rejection Sampling Process</h3>
+<p>For each generated token, compare draft probability <code>p(x)</code> with target probability <code>q(x)</code>:</p>
+<ul>
+<li><strong>Case 1</strong>: If <code>q(x) ge p(x)</code>     o <strong>Accept</strong> the token<ul>
+<li>Target model is even more confident than draft model</li>
+</ul>
+</li>
+<li><strong>Case 2</strong>: If <code>q(x) &lt; p(x)</code>  o <strong>Accept with probability <code>q(x)/p(x)</code></strong></li>
+</ul>
+<h3 id="handling-rejections">Handling Rejections</h3>
+<p>When a token is rejected:
+- Sample from the <strong>corrected distribution</strong>: <code>(q(x) - p(x))+</code>
+- The <code>+</code> notation means we won't sample from negative probabilities
+- This ensures the final distribution matches what the target model would produce</p>
+<h3 id="token-generation-outcomes">Token Generation Outcomes</h3>
+<ul>
+<li><strong>Best case</strong>: All tokens accepted    o K+1 tokens generated</li>
+<li><strong>Worst case</strong>: First token rejected  o 1 token generated</li>
+<li><strong>Key insight</strong>: The worst case doesn't slow down the algorithm since a forward pass normally generates only one token</li>
+</ul>
+<h2 id="performance-analysis">Performance Analysis</h2>
+<h3 id="speedup-factors">Speedup Factors</h3>
+<ul>
+<li><strong>alpha</strong>: Measure of how accurately the draft model represents the target model</li>
+<li><strong>gamma</strong>: Number of draft model predictions before verification</li>
+</ul>
+<h3 id="speedup-results">Speedup Results</h3>
+<p>The effectiveness shows:
+- Higher accuracy (alpha) leads to better speedup
+- Optimal gamma values exist (diminishing returns from too many draft predictions)
+- Typical speedups: 1.4x to 3.4x depending on model size and task</p>
+<h2 id="advanced-techniques">Advanced Techniques</h2>
+<h3 id="medusa">Medusa</h3>
+<p><strong>Key Innovation</strong>: Add multiple prediction heads to a single model instead of using separate draft/target models.</p>
+<p><strong>Architecture</strong>:
+- Add a few additional heads to predict tokens
+- Easy to train the new heads with basic GPU
+- Easy to serve (same parallelism patterns)
+- Good speedup (~3x)</p>
+<p><strong>Tree Attention</strong>:
+- Heads provide different token candidates, forming different candidate sequences
+- Each sequence becomes a branch in the tree
+- Tree attention mask allows each token to attend only to its predecessors
+- Multiple sequences can be batched and verified in one forward pass</p>
+<p><strong>Variants</strong>:
+- <strong>Medusa-1</strong>: Medusa heads fine-tuned on top of frozen backbone LLM
+- <strong>Medusa-2</strong>: Medusa heads fine-tuned together with backbone LLM (requires special training recipe)</p>
+<h3 id="specinfer">SpecInfer</h3>
+<p><strong>Problem</strong>: Single draft model may not provide enough "coverage"</p>
+<p><strong>Solution</strong>: Use multiple draft models simultaneously
+- Creates a tree of sequences
+- Can be verified simultaneously
+- Leverages memory-bound regime for batched verification</p>
+<p><strong>Token Tree Verification</strong>:
+- Uses topology-aware causal mask
+- Applies attention in a manner aware of tree topology
+- Enables batching of verification requests</p>
+<h2 id="implementation-details">Implementation Details</h2>
+<h3 id="parallel-token-probability-computation">Parallel Token Probability Computation</h3>
+<pre><code class="language-python"># Project to vocabulary
+# I: (seq_len, hidden_dim): (seq_len, 4096)
+# O: (seq_len, vocab_size): (seq_len, 128256)
+logits = model_output.matmul(lm_head_weight.t())
+# Pick the next token with highest probability
+sample_output = torch.argmax(logits, dim=1)
+# Return the next token following the last token in input sequence
+return sample_output[-1].item()
+</code></pre>
+<p>This gives <strong>next token probabilities for each token in the sequence in one pass</strong>.</p>
+<h3 id="benefits-timeline-comparison">Benefits Timeline Comparison</h3>
+<ul>
+<li><strong>Base</strong>: Sequential token generation</li>
+<li><strong>Sequence-based Speculative</strong>: Alternating speculation and verification phases</li>
+<li><strong>Tree-based Speculative</strong>: More efficient with parallel tree verification</li>
+</ul>
+<h2 id="results-summary">Results Summary</h2>
+<h3 id="performance-gains">Performance Gains</h3>
+<ul>
+<li><strong>T5-Small</strong>: 2.6x - 3.4x speedup</li>
+<li><strong>T5-Base</strong>: 2.4x - 3.0x speedup  </li>
+<li><strong>T5-Large</strong>: 1.4x - 2.2x speedup</li>
+<li><strong>Medusa</strong>: Consistent ~2.5x - 3.6x across different task categories</li>
+</ul>
+<h3 id="key-insight">Key Insight</h3>
+<p>Diminishing returns from increased gamma (number of draft predictions) - there's an optimal balance between speculation depth and verification overhead.</p>
+<h2 id="practical-applications">Practical Applications</h2>
+<p>Speculative decoding is particularly effective for:
+- <strong>Memory-bound serving scenarios</strong> (lower batch sizes)
+- <strong>Tasks with predictable patterns</strong> where draft models can be reasonably accurate
+- <strong>Scenarios requiring maintained output quality</strong> (lossless acceleration)
+- <strong>Real-time applications</strong> where latency reduction is critical</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/llm.html">llm</a>
+                <a href="/tags/performance.html">performance</a>
+                <a href="/tags/speculative%20decoding.html">speculative decoding</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

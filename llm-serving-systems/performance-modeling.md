@@ -1,131 +1,209 @@
 ---
-title: Modeling and Scaling Performance with Roofline
+title: Performance Modeling for LLM Serving Systems
 category: Machine Learning Systems
-tags: roofline, performance, optimization, gpu, bandwidth, compute
-description: How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?
+tags: performance, roofline, arithmetic intensity
+description: How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?
 ---
 
-# Scaling with the Roofline Model
+# Performance Modeling for LLM Serving Systems
 
-> *"When we run algorithms on hardware, we're bounded by three things: how fast it can do math (OPs/second), the bandwidth available for moving data around (bytes/second), and the total memory available to store data (bytes). These “roofline” constraints let us upper and lower bound the time of a given computation." - [How to Scale Your Model - All About Rooflines](https://jax-ml.github.io/scaling-book/roofline/)*
+### Performance Analysis
+- **Roofline model** - Based on the Roofline paper and Google's scaling book
+- **Detailed model of Transformer performance**
 
 ---
 
-## Arithmetic Intensity
+## The Roofline Model
 
-> Definition: the arithmetic intensity of an algorithm is given by the ratio of the total FLOPs it performs to the number of bytes it needs to communicate — either within a chip or between chips.
+### Core Concept
 
-$$
-\text{Arithmetic Intensity} = \frac{\text{Computation FLOPs}}{\text{Communication Bytes}}
-$$
+**Operational Intensity** = $\frac{\text{# of Operations}}{\text{# of Bytes Moved}}$
 
-At a high level, we want to push our models to be as compute-bound as possible, meaning that the arithmetic intensity's demand matches the hardware's supply. This drives utilization up, as opposed to when our model is memory-bound, meaning we have unmatched supply and therefore underutilized hardware.
+- **Operations**: E.g., FLOPs/Sec
+- **Bytes Moved**: E.g., Bytes/sec (Memory or Network Bandwidth)
 
-### Example: Dot-Product
+### Key Components
 
-$$
-\text{Dot Product} = \sum_{i=1}^{n} a_i b_i
-$$
+#### Computational Ceilings
+- **Memory Bound**: Low operational intensity region
+- **Compute Bound**: High operational intensity region
+- **Roofline**: The boundary between memory and compute limitations
 
-For two vectors $a, b \in \mathbb{R}^n$, we need to load $2n$ elements, write one element, and perform $n$ multiplications and $n-1$ additions (FLOPs). Assuming our datatype is 2 bytes (e.g., float16), we have:
+#### Performance Optimization Strategies
 
-$$
-\text{Intensity (dot product)} = \frac{\text{FLOPs}}{\text{Bytes}} = \frac{2n + 1}{2n + 2n + 2} = \frac{2n + 1}{4n + 2}
-$$
+**Compute optimizations:**
+- Multithreading
+- ILP (Instruction-Level Parallelism)
+- SIMD (Single Instruction, Multiple Data)
 
-Then, as $n \to \infty$, we have $\text{Intensity} \to \frac{1}{2}$.
+**Memory optimizations:**
+- Stride accesses (HW prefetching)
+- Memory affinity (NUMA effect)
+- Software prefetching
 
-This is *bad*. Modern accelerators can achieve much higher intensity, e.g. NVIDIA H100 ~315 FLOPS/B. The dot-product is thus a memory-bound operation, meaning GPUs will spend most of their time waiting for data to be loaded from memory.
+### Critical Operational Intensity
 
-## Roofline Model
+$$\text{Intensity(Computation)} = \text{Intensity(Accelerator)}$$
 
-![plot](assets/roofline-plot.png)
+$$\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} = \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$$
 
-Roofline plots visualize arithmetic intensity (x-axis) vs. performance (y-axis), typically both in log scale. The plot is divided into three regions:
+**Compute-Bound**: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} > \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$
 
-- **Roofline**: The upper bound of performance for a given arithmetic intensity. This is the maximum performance that can be achieved given the hardware's compute and memory bandwidth.
-- **Compute-bound**: The region where the performance is limited by the compute capability of the hardware. This is where we want to be for compute-heavy workloads.
-- **Memory-bound**: The region where the performance is limited by the memory bandwidth. This is where we want to avoid being for compute-heavy workloads.
+**Memory-Bound**: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} < \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$
 
-To travel in the positive $y$ direction, we can either use optimizations like multithreading, vectorization/SIMD, etc., all of which increase the FLOPs achievable of our accelerator, or we can increase the memory bandwidth by using faster memory (e.g., HBM), better access patterns (e.g., coalesced memory access, tiling).
+---
 
-Major challenges are associated with memory boundedness, especially with non-uniform memory access (NUMA) architectures, where memory can be considered either "local" or "remote" to a given core. Without considering allocation and access patterns, you end up with a lot of communication overhead.
+## Example: NVIDIA H100 Analysis
 
-For compute bound workloads, we have
+### Hardware Specifications
+- **Peak FP16 Tensor TFLOPS**: 1000/2000 TFLOPs (with sparsity/no sparsity)
+- **Memory bandwidth**: 3000 GB/s
+- **Critical intensity**: $(1000 \times 10^{12}) / (3000 \times 10^9) = 333$ FLOPs/Byte
 
-$$
-\text{OI}(\text{algorithm}) > \text{OI}(\text{accelerator})
-$$
+**Rule**: If kernel has higher operational intensity than 333 FLOPs/Byte 	o compute-bound, otherwise memory-bound
 
-and for memory bound workloads, we have
+### Example Operations
 
-$$
-\text{OI}(\text{algorithm}) < \text{OI}(\text{accelerator})
-$$
+#### FP32 Dot Product
+**Compute**: $N$ multiplications, $N$ additions = $2N$ FLOPs
 
-The challenge then becomes reaching the *critical operational intensity*:
+**Memory**: $2 \times 4N$ bytes read + $4$ bytes written back
 
-$$
-\text{OI}(\text{algorithm}) = \text{OI}(\text{accelerator})
-$$
+**Operational Intensity**: $\frac{2N}{4N + 4} \approx \frac{1}{2}$
 
-Earlier we calculated the operational intensity of the dot product as $\frac{1}{2}$. Given an H100 with 333 FLOPS/B, we're indeed very memory bound.
+**Result**: FP32 dot product on H100 is **memory-bound**
 
-## Matrix Multiplication with FP16
+#### Matrix Multiplication with FP16
+For $[M,N] \times [N,K] \rightarrow [M,K]$:
 
-Given two matrices $A \in \mathbb{R}^{M \times N}$ and $B \in \mathbb{R}^{N \times K}$, consider the OI of the matrix multiplication $C = AB$.
+**Memory**: $2MN + 2NK$ bytes read, $2MK$ bytes written back
 
-We read $2MN + 2NK$ bytes of data, and write $2MK$ bytes of data to $C$. We do $2MNK$ FLOPs of computation. Thus, we have:
+**Compute**: $2MNK$ FLOPs
 
-$$
-\text{OI}(\text{matmul}) = \frac{2MNK}{2MN + 2NK + 2MK} \approx M \text{ if } M \text { is large}
-$$
+**Operational Intensity**: $\frac{2MNK}{2MN + 2NK + 2MK} \approx M$
 
-So as long as $M > 333$, it would be compute bound on the H100.
+**Result**: Matrix multiplication on H100 is compute-bound if $M > 333$
 
-## Key Hardware Specs for Serving Throughput
+---
 
-- $N_{\text{gpus}}$: Number of GPUs
-- $\text{MemBW}$: Memory bandwidth (GB/s)
-- $\text{NetBW}$: GPU interconnect bandwidth (GB/s)
-- $\text{GPU}_{\text{mem}}$: GPU memory (GB)
-- $\text{compute}$: GPU compute (TFLOPS)
+## NUMA Effect with GPUs
 
-## Key Model Specs for Serving Throughput
+Modern GPU clusters show significant bandwidth variations:
+- **GPU memory bandwidth**: 900 GB/s
+- **Network bandwidth**: 200 Gb/s = 25 GB/s
 
-- $D_\text{model}$: hidden dimension size (`hidden_dim`)
-- $L$: number of layers (`num_layers`)
-- $P_\text{model}$: number of parameters
-- $R_\text{GQA}$: group size of GQA (`group_size`)
-- $S_\text{type}$: datatype size (e.g., `float16` = 2 bytes, `bfloat16` = 2 bytes, `int8` = 1 byte)
-- $p$: average number of tokens to prefill
-- $d$: average number of tokens to decode
-- $p + d$: average number of tokens per user request
-- $\frac{\text{Throughput}_\text{total}}{p + d}$: per-request throughput
-- $d\frac{\text{Throughput}_\text{total}}{p + d}$: decoding throughput
+This creates hierarchical memory access patterns affecting performance modeling.
 
-## Execution Time Model
+---
 
-We operate under the assumption we have optimal request batching/workload demand, meaning that we can effectively utilize the available hardware resources.
+## Performance Modeling Framework
 
-From a memory standpoint, on each iteration we need to essentially load the entire content of GPU memory (weights, activations, kv cache). We thus have $t_\text{mem} = \frac{\text{GPU}_{\text{mem}}}{\text{MemBW}}$.
+### Key Hardware Factors
+- **$N_{GPU}$**: number of GPUs
+- **MemBW** (GB/s): aggregate GPU memory bandwidth
+- **$GPU_{mem}$** (GB): aggregate GPU memory capacity
+- **Compute** (GFLOPS/s): aggregate GPU compute capacity
+- **NetBW** (GB/s): aggregate GPU interconnect bandwidth
 
-From a compute standpoint, activations being multiplied by weights in batches gives us $B_{\text{dense}} K N$ FLOPs, so for all dense operations we have $t_{\text{compute}} = \frac{2 B_{\text{dense}} P_\text{model}}{\text{compute}}$.
+### Key Model Configuration Factors
+- **$D_{model}$**: hidden dimension size (hidden_dim)
+- **$L$**: number of layers
+- **$P_{model}$**: number of parameters
+- **$R_{GQA}$**: group size of GQA (group_size)
+- **$S_{Type}$**: Model parameters' data size in bytes (e.g., 2 for FP16)
 
-Lastly, from a network standpoint, there are two main operations we care about (assuming a model sharded across multiple GPUs): `AllGather` and `AllReduce`.
+### Key User Statistics
+- **$p$**: average number of tokens in prompts to be prefilled
+- **$d$**: average number of tokens in output to be decoded
+- **$p + d$**: average number of tokens in user request (sequence length)
+- **Per request throughput**: $\frac{\text{Throughput}_{total}}{p + d}$
+- **Decoding throughput**: $d \frac{\text{Throughput}_{total}}{p + d}$
 
-- `AllGather`: gather the output of each GPU's computation. This takes roughly $N_{\text{gpus} - 1}$ network hops, and typically each layer contains multiple `AllGather` operations (e.g. 4 in llama2).
-- `AllReduce`: reduce the gathered outputs across all GPUs. As a rough estimate, this is roughly double the overhead of `AllGather`
+---
 
-$$
-\begin{align*}
-N_{\text{gpus}} - 1 & \text{ hops} \\
-4 & \text{ allgather per layer} \\
-B_\text{dense} D_\text{model} & \text{ shape of the activations} \\
-S_\text{type} & \text{ size of the datatype}\\
-\end{align*}
-$$
+## Execution Time Models
 
-$$
-T_\text{network} = \frac{4(N_{\text{gpus}} - 1) B_\text{dense} D_\text{model} S_\text{type}L}{\text{NetBW}}
-$$
+### Memory-Centric Execution Time
+
+$$T_{memory} = \frac{GPU_{mem}}{MemBW}$$
+
+**Assumption**: Entire contents of GPU memory loaded once during one iteration
+
+### Compute-Centric Execution Time
+
+$$T_{compute} = \frac{2B_{dense}P_{model}}{Compute}$$
+
+**Logic**: All dense operations require $2B_{dense}P_{model}$ FLOPs total
+
+### Network-Centric Execution Time
+
+$$T_{net} = \frac{4(N_{GPU} - 1)D_{model}B_{dense}S_{type}L}{NetBw}$$
+
+**Components**:
+- $(N_{GPU} - 1)$: number of hops
+- $4$: All-Gathers per layer
+- All-Reduce approx 2 	imes All-Gather
+
+---
+
+## Performance Analysis Results
+
+### Compute vs Network
+
+$$\frac{T_{net}}{T_{compute}} = 2(N_{GPU} - 1)\frac{D_{model}L}{P_{model}} \frac{S_{type} \cdot Compute}{NetBw}$$
+
+**Key Finding**: LLM Serving is more **compute-bound** than **network-bound**
+
+### Compute vs Memory
+
+$$\frac{T_{memory}}{T_{compute}} = \frac{Compute \cdot GPU_{mem}}{MemBW \cdot 2B_{dense}P_{model}}$$
+
+**Factors affecting the balance**:
+- **GQA allows for larger batch size** 	o favors compute
+- **Model sizes tend to increase** 	o favors compute
+- **Batches with large decode requests increase memory accesses** 	o favors memory
+
+**Key Finding**: LLM serving is more **compute-bound** than **memory-bound**
+
+---
+
+## Grouped Query Attention (GQA)
+
+### Concept
+- **Traditional**: Each attention head has its own Key-Value cache
+- **GQA**: Multiple attention heads share Key-Value pairs
+- **Group size**: Number of heads sharing the same K-V pairs
+
+### Impact on Performance
+- **Reduces KV cache memory requirements** by factor of group size
+- **Allows increasing batch size** by factor of group size
+- **Shifts workload toward compute-bound** rather than memory-bound
+
+---
+
+## Optimal Throughput Analysis
+
+### Theoretical Maximum
+
+$$\text{Throughput} = \frac{B_{dense}}{T_{compute}} = \frac{B_{dense}}{\frac{2B_{dense}P_{model}}{Compute}} = \frac{Compute}{2P_{model}}$$
+
+**Example**: LLaMA 70B on A100 	o **1857 tokens/s/GPU**
+
+### Performance Gap
+Current serving frameworks show significant gaps to optimal throughput:
+- **vLLM**: ~494-552 tokens/s
+- **DeepSpeed-FastGen**: ~372-513 tokens/s
+- **TensorRT-LLM**: ~636-817 tokens/s
+
+**Key Insight**: There is a **large gap to optimal throughput** - high GPU compute utilization is critical for LLM serving performance.
+
+---
+
+## Key Takeaways
+
+1. **Roofline model** provides framework for understanding compute vs memory bounds
+2. **Critical operational intensity** determines performance bottlenecks
+3. **LLM serving is primarily compute-bound** rather than memory or network bound
+4. **GQA enables larger batch sizes** and improves compute utilization
+5. **Significant optimization opportunities exist** - current frameworks achieve only ~25-45% of theoretical peak throughput
+6. **High GPU compute utilization is the key** for effective LLM serving

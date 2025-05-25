@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparsity and Pruning in LLM Serving Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Overview of techniques in LLM serving systems using sparsity and pruning to optimize performance and reduce model size.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/sparsity-and-pruning.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Sparsity and Pruning in LLM Serving Systems">
+    <meta property="og:description" content="Overview of techniques in LLM serving systems using sparsity and pruning to optimize performance and reduce model size.">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/sparsity-and-pruning.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Sparsity and Pruning in LLM Serving Systems">
+    <meta name="twitter:description" content="Overview of techniques in LLM serving systems using sparsity and pruning to optimize performance and reduce model size.">
+
+    <meta name="keywords" content="sparsity,pruning,performance optimization">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sparsity and Pruning in LLM Serving Systems", "dateModified": "2025-05-25T16:32:00.733998", "description": "Overview of techniques in LLM serving systems using sparsity and pruning to optimize performance and reduce model size.", "articleSection": "Machine Learning Systems", "keywords": "sparsity,pruning,performance optimization"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Sparsity and Pruning in LLM Serving Systems
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Sparsity and Pruning in LLM Serving Systems</h1>
+            <div class="meta">
+                <time datetime="2025-05-25T16:32:00.733998">
+                    Last modified: 2025-05-25
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="sparsity-and-pruning-in-llm-serving-systems">Sparsity and Pruning in LLM Serving Systems</h1>
+<h2 id="introduction">Introduction</h2>
+<h3 id="types-of-sparsity">Types of Sparsity</h3>
+<ul>
+<li><strong>Weights</strong>: Model parameter sparsity</li>
+<li><strong>Activations</strong>: Runtime computation sparsity</li>
+<li><strong>KV-Cache</strong>: Attention cache sparsity</li>
+</ul>
+<h2 id="sparsity-enables-pruning">Sparsity Enables Pruning</h2>
+<h3 id="core-concepts">Core Concepts</h3>
+<ul>
+<li><strong>Pruning</strong>: Removing synapses, neurons, weights, or reducing hidden dimension size</li>
+<li><strong>Granularity matters</strong>: Different levels of pruning have different accuracy impacts</li>
+<li><strong>Pruning + fine-tuning</strong>: Common approach to recover accuracy</li>
+<li>Can sometimes achieve <strong>higher accuracy</strong> than the original model</li>
+</ul>
+<h3 id="accuracy-impact">Accuracy Impact</h3>
+<ul>
+<li>Pruning alone causes gradual accuracy degradation</li>
+<li>Pruning + fine-tuning maintains accuracy better across higher sparsity levels</li>
+<li>Sharp accuracy drop occurs around 80-90% sparsity even with fine-tuning</li>
+</ul>
+<h2 id="weight-sparsity-approaches">Weight Sparsity Approaches</h2>
+<h3 id="magnitude-based-weight-pruning">Magnitude-Based Weight Pruning</h3>
+<ul>
+<li><strong>Method</strong>: Remove weights based on their magnitude</li>
+<li><strong>Optimal Brain Damage</strong>: Theoretical foundation<ul>
+<li>Shows pruning weights with least impact is optimal</li>
+<li>Requires computing Hessian of weights (expensive)</li>
+<li><strong>Weight magnitude serves as simple proxy</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="the-lottery-ticket-hypothesis">The Lottery Ticket Hypothesis</h3>
+<p><strong>Core Hypothesis</strong>: "In a large, randomly initialized neural network, there exist small sparse subnetworks - the 'winning tickets' - that, when trained from scratch (with their original initial weights), can match the full model's performance."</p>
+<p><strong>Key Insights</strong>:
+- Over-parametrization is useful - gives many chances for good initializations
+- Explains why pruning works: winning tickets exist from the start
+- Can prune after training because winning subnetworks were present initially</p>
+<h3 id="weight-sparsity-types">Weight Sparsity Types</h3>
+<h4 id="structured-sparsity">Structured Sparsity</h4>
+<ul>
+<li>Removes entire pre-defined blocks of weights</li>
+<li>Examples: complete rows, columns, channels, attention heads, layers</li>
+<li>Easy to implement efficiently</li>
+</ul>
+<h4 id="semi-structured-sparsity">Semi-structured Sparsity</h4>
+<ul>
+<li><strong>2:4 pattern</strong>: Two non-zero weights out of every 4 weights</li>
+<li>Hardware-friendly (NVIDIA Ampere support)</li>
+<li>Balance between flexibility and efficiency</li>
+</ul>
+<h4 id="unstructured-sparsity">Unstructured Sparsity</h4>
+<ul>
+<li>Maximum flexibility in weight removal</li>
+<li><strong>Hard to implement efficiently</strong> due to irregular patterns</li>
+</ul>
+<h2 id="advanced-pruning-techniques">Advanced Pruning Techniques</h2>
+<h3 id="wanda-weight-and-activation-pruning">Wanda (Weight and Activation Pruning)</h3>
+<p><strong>Key Features</strong>:
+- Prunes weights on per-output basis
+- Uses product of <strong>weight magnitudes</strong> and <strong>input activation norms</strong>
+- <strong>No retraining required</strong></p>
+<p><strong>Algorithm</strong>:</p>
+<pre><code class="language-python">def prune(W, X, s):
+    metric = W.abs() * X.norm(p=2, dim=0)  # Wanda pruning metric
+    _, sorted_idx = torch.sort(metric, dim=1)  # sort per output
+    pruned_idx = sorted_idx[:, :int(C_in * s)]  # get indices to prune
+    W.scatter_(dim=1, index=pruned_idx, src=0)  # zero out weights
+    return W
+</code></pre>
+<p><strong>Performance</strong>:
+- Comparable to SparseGPT but simpler (no intensive weight updates)
+- Maintains good accuracy across different sparsity levels (50%, 4:8, 2:4)</p>
+<h3 id="dejavu-contextual-sparsity">DEJAVU: Contextual Sparsity</h3>
+<p><strong>Core Concept</strong>: Input-dependent sparsity patterns
+- Dynamically selects which attention heads and FFN parameters to activate
+- <strong>Query-aware</strong>: Sparsity patterns adapt to current input context</p>
+<p><strong>Key Innovation</strong>:
+- Uses <strong>lookahead predictors</strong>:
+  - Attention layer at block k  o predicts MLP sparsity at block k
+  - MLP at block k  o predicts attention sparsity at block k+1
+- Implemented via hardware-aware sparse matrix multiplication</p>
+<p><strong>Results</strong>:
+- <strong>No accuracy drop until 75% sparsity</strong>
+- <strong>1.8-6x speedup</strong> compared to state-of-the-art
+- Preserves long-dependency task performance</p>
+<h2 id="kv-cache-sparsity">KV Cache Sparsity</h2>
+<h3 id="sparsity-in-attention">Sparsity in Attention</h3>
+<ul>
+<li><strong>Attention matrices are &gt;95% sparse</strong> at inference time</li>
+<li>Only <strong>&lt;1% of attention weights are relatively large</strong></li>
+<li>Motivates KV cache compression techniques</li>
+</ul>
+<h3 id="quest-query-aware-sparsity">Quest: Query-Aware Sparsity</h3>
+<p><strong>Problem with Previous Methods</strong>:
+- Evict "unimportant" KV cache based on historical information
+- <strong>Challenge</strong>: Evicted tokens might be important for future tokens</p>
+<p><strong>Quest Solution</strong>:
+- <strong>Preserve all KV cache</strong> in storage
+- <strong>Reduce memory movement</strong> by selecting only top-K relevant pages
+- Two-stage process:
+  1. <strong>Stage 1</strong>: Identify most relevant KV cache pages for current query
+  2. <strong>Stage 2</strong>: Compute sparse attention only on selected pages</p>
+<p><strong>Performance</strong>:
+- <strong>7.03x speedup</strong> at 32k sequence length with 2k token budget
+- Maintains high accuracy on long-dependency tasks
+- Quest estimation policy aligns closely with oracle selection</p>
+<h3 id="deepseek-multi-head-latent-attention-mla">DeepSeek Multi-Head Latent Attention (MLA)</h3>
+<p><strong>Key Innovation</strong>: Matrix-level KV cache compression
+- <strong>15x smaller KV cache</strong> in DeepSeek-V2 vs V1
+- <strong>5.7x throughput improvement</strong></p>
+<p><strong>Approach</strong>:
+- Store compressed <strong>latent vector</strong> instead of full keys &amp; values
+- <strong>7% of original size</strong> through learned matrix projections
+- Exploits redundancy in high-dimensional vectors</p>
+<p><strong>Integration with RoPE</strong>:
+- Standard RoPE makes compression harder (position-dependent rotations)
+- <strong>MLA trick</strong>: Keep Q&amp;K unrotated, concatenate RoPE information separately</p>
+<h3 id="kv-cache-comparison">KV Cache Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Attention Mechanism</th>
+<th>KV Cache per Token</th>
+<th>Capability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-Head Attention (MHA)</td>
+<td>$2n_h d_h l$</td>
+<td>Strong</td>
+</tr>
+<tr>
+<td>Grouped-Query Attention (GQA)</td>
+<td>$2n_g d_h l$</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td>Multi-Query Attention (MQA)</td>
+<td>$2d_h l$</td>
+<td>Weak</td>
+</tr>
+<tr>
+<td><strong>MLA</strong></td>
+<td>$(d_c + d_h^R)l \approx \frac{3}{2}d_h l$</td>
+<td><strong>Stronger</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="activation-sparsity">Activation Sparsity</h2>
+<h3 id="core-concept">Core Concept</h3>
+<ul>
+<li><strong>Skip computation dynamically</strong> based on activation values</li>
+<li>Focus on ~zero values at activation function outputs</li>
+<li>When activations are zero, corresponding weights become unnecessary</li>
+</ul>
+<h3 id="motivation">Motivation</h3>
+<p>Activation distributions in LLMs are <strong>centered around zero</strong>, making magnitude-based pruning effective across:
+- MLP up/down projections
+- Attention Q, K, V weights
+- Attention output weights</p>
+<h3 id="teal-threshold-based-activation-pruning">TEAL (Threshold-based Activation Pruning)</h3>
+<p><strong>Method</strong>:
+- During decoding, threshold low-magnitude activations to 0
+- Skip moving associated weight channels to registers
+- Provides speedup by reducing memory movement</p>
+<p><strong>Performance</strong>:
+- <strong>25% sparsity</strong>: Minimal accuracy loss, 1.2-1.3x speedup
+- <strong>50% sparsity</strong>: Small accuracy degradation, 1.6-1.8x speedup
+- Works across different model sizes (8B to 70B parameters)</p>
+<h2 id="implementation-considerations">Implementation Considerations</h2>
+<h3 id="hardware-support">Hardware Support</h3>
+<ul>
+<li><strong>NVIDIA Ampere 2:4 sparsity</strong>: Hardware acceleration for semi-structured patterns</li>
+<li><strong>Structured formats</strong>: Enable efficient compressed storage and computation</li>
+<li><strong>Memory bandwidth</strong>: Key bottleneck addressed by activation sparsity</li>
+</ul>
+<h3 id="practical-deployment">Practical Deployment</h3>
+<ul>
+<li><strong>Zero-shot methods</strong> (Wanda, TEAL) require no retraining</li>
+<li><strong>Fine-tuning approaches</strong> offer better accuracy recovery</li>
+<li><strong>Hardware-aware implementation</strong> crucial for realizing speedups</li>
+<li><strong>Granularity trade-offs</strong> between flexibility and efficiency</li>
+</ul>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol>
+<li><strong>Sparsity is pervasive</strong> in LLMs across weights, activations, and attention</li>
+<li><strong>Multiple sparsity types</strong> serve different optimization goals</li>
+<li><strong>Contextual/dynamic sparsity</strong> often outperforms static approaches</li>
+<li><strong>Hardware support</strong> is crucial for practical speedups</li>
+<li><strong>Accuracy-efficiency trade-offs</strong> can be managed through careful technique selection</li>
+<li><strong>Combination approaches</strong> (weight + activation sparsity) show promise for maximum efficiency</li>
+</ol>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/performance%20optimization.html">performance optimization</a>
+                <a href="/tags/pruning.html">pruning</a>
+                <a href="/tags/sparsity.html">sparsity</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

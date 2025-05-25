@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimizing GPU Kernels | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/optimizing-gpu-kernels.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Optimizing GPU Kernels">
+    <meta property="og:description" content="How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/optimizing-gpu-kernels.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Optimizing GPU Kernels">
+    <meta name="twitter:description" content="How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.">
+
+    <meta name="keywords" content="gpu,kernel,optimization,cuda,triton">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Optimizing GPU Kernels", "dateModified": "2025-05-25T16:32:00.745509", "description": "How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.", "articleSection": "Machine Learning Systems", "keywords": "gpu,kernel,optimization,cuda,triton"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="/index.html">Home</a>
+<a href="/categories/index.html">Categories</a>
+<a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Optimizing GPU Kernels
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Optimizing GPU Kernels</h1>
+            <div class="meta">
+                <time datetime="2025-05-25T16:32:00.745509">
+                    Last modified: 2025-05-25
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="gpu-kernel-optimizations">GPU Kernel Optimizations</h1>
+<h2 id="gpu-architecture-recap">GPU Architecture Recap</h2>
+<ul>
+<li>Memory hierarchy with varying capacities and bandwidths:<ul>
+<li>Global Memory (80GB): ~3TB/s</li>
+<li>L2 Cache (50MB): ~10TB/s</li>
+<li>Shared Memory/L1 Cache (228 KB): ~20TB/s</li>
+<li>Registers (64K * 32 Bit): ~600TB/s</li>
+</ul>
+</li>
+<li>Streaming Multiprocessors (SMs) contain cores, registers, and shared memory</li>
+</ul>
+<h2 id="gpu-programming-model">GPU Programming Model</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Definition</th>
+<th>Corresponding Architecture</th>
+<th>Communication</th>
+<th>Limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thread</td>
+<td>Minimal units that execute instructions</td>
+<td>Functional units</td>
+<td>Local</td>
+<td>Up to 255 registers</td>
+</tr>
+<tr>
+<td>Warp</td>
+<td>Group of Threads</td>
+<td>"SM tiles"</td>
+<td>Register file</td>
+<td>32 threads</td>
+</tr>
+<tr>
+<td>Thread Blocks</td>
+<td>Group of Warps</td>
+<td>SM</td>
+<td>Shared memory</td>
+<td>Up to 32 warps (1024 threads)</td>
+</tr>
+<tr>
+<td>Kernel</td>
+<td>Function on GPU</td>
+<td>GPU</td>
+<td>L2 / Global memory</td>
+<td>Up to (2^32-1)^3 Blocks</td>
+</tr>
+</tbody>
+</table>
+<h2 id="triton-framework">Triton Framework</h2>
+<ul>
+<li><strong>What is Triton?</strong> A compiler framework from OpenAI for high-performance kernels with reduced human inputs<ul>
+<li>Python interface</li>
+<li>Automated thread management</li>
+<li>High performance</li>
+</ul>
+</li>
+<li><strong>Why Triton?</strong><ul>
+<li>Write customized kernels easily</li>
+<li>Higher performance than PyTorch for complex kernels</li>
+</ul>
+</li>
+<li>Triton composes kernels at the block level</li>
+<li>Provides useful primitives: <code>tl.load</code>, <code>tl.store</code>, <code>tl.min</code>, etc.</li>
+</ul>
+<h2 id="cuda">CUDA</h2>
+<ul>
+<li><strong>What is CUDA?</strong><ul>
+<li>Bare-bone GPU programming</li>
+<li>One-to-one mapping to the hardware</li>
+<li>Highest performance</li>
+<li>Heavy implementation burden</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Memory Management in CUDA</strong><ul>
+<li>Allocation and deallocation:<ul>
+<li><code>cudaMalloc</code> -&gt; device memory allocation</li>
+<li><code>cudaMallocHost</code> -&gt; pinned host memory allocation</li>
+<li><code>cudaFree</code> -&gt; free memory</li>
+</ul>
+</li>
+<li>Memory movement and setting:<ul>
+<li><code>cudaMemcpy</code> -&gt; synchronize copy</li>
+<li><code>cudaMemcpyAsync</code> -&gt; asynchronize copy</li>
+<li><code>cudaMemset</code> -&gt; synchronize set</li>
+<li><code>cudaMemsetAsync</code> -&gt; asynchronize set</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>CUDA Kernels</strong><ul>
+<li>Declaring a kernel: <code>__global__ void kernel_name(args...)</code></li>
+<li>Declaring a device helper function: <code>__device__ T helper_name(args...)</code></li>
+<li>Args are on the host</li>
+<li>Pointers to device memory also reside in the host</li>
+<li>Inside a kernel, args (basic types) can be used and device pointers can be dereferenced</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Launching a Kernel</strong><ul>
+<li>Defining block shapes: <code>dim3 block(x,y,z)</code></li>
+<li>Defining thread shapes: <code>dim3 thread(x,y,z)</code></li>
+<li>Launching kernels: <code>kernel_name&lt;&lt;&lt;block, thread&gt;&gt;&gt;(args);</code></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Synchronization and Error Checking</strong><ul>
+<li>Thread synchronization: <code>__syncthreads()</code> -&gt; device function</li>
+<li>Block synchronization: Usually not feasible, except for cooperative launch</li>
+<li>Device synchronization: <code>cudaDeviceSynchronize()</code> -&gt; host function</li>
+<li>Error checking: <code>cudaGetLastError()</code>, <code>cudaGetErrorString()</code></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Additional CUDA Features in Modern GPUs</strong><ul>
+<li>Unified memory address (P100+)</li>
+<li>NvLink (P100+)</li>
+<li>Clusters (H100+)</li>
+<li>TMA (H100+)</li>
+<li>NVSHARP (H100+)</li>
+<li>FP4 and FP6 (B100+)</li>
+</ul>
+</li>
+</ul>
+<h2 id="gpu-optimization-techniques">GPU Optimization Techniques</h2>
+<h3 id="how-to-write-fast-kernels">How to Write Fast Kernels</h3>
+<p>Four key optimization strategies:
+1. Coalesced Global Loading
+2. Using Shared Memory
+3. Avoiding Bank Conflicts
+4. Avoiding Branch Divergence</p>
+<h3 id="matrix-transpose-example">Matrix Transpose Example</h3>
+<ul>
+<li><strong>Problem</strong>: When transposing a matrix, memory access patterns change from row-major to column-major</li>
+</ul>
+<ul>
+<li><strong>V0: Torch Implementation</strong><ul>
+<li><code>x.t()</code> will not actually perform the transpose</li>
+<li>Must use <code>contiguous()</code></li>
+<li>Performance: 0.561 ms, 956 GB/s -&gt; 1/3 of optimal</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>V1: Row-wise Partitioning</strong><ul>
+<li>Each thread handles elements from one row</li>
+<li>Performance: 3.65 ms</li>
+<li>Issue: Uncoalesced global accesses</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>V2: Global Memory Coalescing</strong><ul>
+<li>Inside one warp, if memory access addresses are contiguous, memory access is coalesced (batched)</li>
+<li>Data can be retrieved from global memory in one or a few transactions</li>
+<li>Performance: 1.40 ms</li>
+<li>Issue: Uncoalesced writes to output matrix</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>V3: Tilewise Partitioning</strong><ul>
+<li>Load small tiles into shared memory</li>
+<li>Reading discontinuously from shared memory doesn't significantly affect performance</li>
+<li>Performance: 312 mus</li>
+<li>Issue: Bank conflicts</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>V4: Padding Shared Memory</strong><ul>
+<li>Add padding to shared memory to avoid bank conflicts</li>
+<li>Performance: 280 mus, 1.9TB/s</li>
+</ul>
+</li>
+</ul>
+<h3 id="bank-conflicts">Bank Conflicts</h3>
+<ul>
+<li>Shared memory is divided into banks (typically 32)</li>
+<li>If multiple threads in a warp access the same bank, accesses are serialized</li>
+<li>Bank conflicts occur when threads access different addresses in the same bank</li>
+<li>Solutions:<ul>
+<li>Padding shared memory</li>
+<li>Rearranging memory access patterns</li>
+</ul>
+</li>
+</ul>
+<h3 id="branch-divergence">Branch Divergence</h3>
+<ul>
+<li>Threads in a warp always execute the same instructions</li>
+<li>If a warp has both threads that need to execute the 'if' path and threads that need to execute the 'else' path, all threads will execute both paths</li>
+<li>The warp explores all paths and then uses a mask to determine outputs</li>
+<li>For optimal performance, minimize branch divergence within a warp</li>
+</ul>
+<h2 id="reduction-problem">Reduction Problem</h2>
+<ul>
+<li><strong>Definition</strong>: Combine elements using an operation (sum, max, min, etc.)</li>
+<li>Example: <code>for elements in array: temp = op(temp, element)</code></li>
+</ul>
+<h3 id="parallel-reduction-optimizations">Parallel Reduction Optimizations</h3>
+<ol>
+<li><strong>Reduction #1</strong>: Basic parallel reduction with divergent branching</li>
+<li><strong>Reduction #2</strong>: Better access patterns to improve coalescing</li>
+<li><strong>Reduction #3</strong>: Sequential addressing to eliminate bank conflicts</li>
+<li><strong>Reduction #4</strong>: Load multiple elements per thread</li>
+<li><strong>Reduction #5</strong>: Load even more elements per thread</li>
+</ol>
+<ul>
+<li><strong>Trade-off</strong>: More elements loading means higher memory utilization, but number of blocks reduces, and GPU utilization goes down</li>
+</ul>
+<h2 id="gemm-general-matrix-multiplication">GEMM (General Matrix Multiplication)</h2>
+<ul>
+<li><strong>Memory Load Challenge</strong>:<ul>
+<li>For every output element: Load one row + one column = 2K elements</li>
+<li>Total memory load = 2MNK</li>
+<li>Unique load is only MK + NK</li>
+<li>Need to cache efficiently</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>GEMM Tiling</strong>:<ul>
+<li>Load data in tiles to reduce memory accesses</li>
+<li>Input: TILE_M * TILE_K</li>
+<li>Weight: TILE_K * TILE_N</li>
+<li>Output: TILE_M * TILE_N</li>
+<li>Memory load reduced by a factor of tile dimension</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Tensor Core</strong>:<ul>
+<li>Special hardware unit that performs small shape GEMM</li>
+<li>A warp (32 threads) collectively uses the tensor core</li>
+<li>Different data types supported with different speeds (FP16, TF32, FP64, etc.)</li>
+</ul>
+</li>
+</ul>
+<h1 id="matrix-transpose-kernel-case-study">Matrix Transpose Kernel Case Study</h1>
+<h2 id="problem-setup">Problem Setup</h2>
+<ul>
+<li>Transform a 4 imes4 matrix from row-major to column-major layout</li>
+<li>Input: <code>[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]</code></li>
+<li>Output: <code>[0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15]</code></li>
+</ul>
+<h2 id="transpose-v1-row-wise-partitioning">Transpose V1: Row-wise Partitioning</h2>
+<ul>
+<li><strong>Performance</strong>: 3.65 ms</li>
+<li><strong>Problem</strong>: Uncoalesced global accesses<ul>
+<li><strong>Uncoalesced Global Accesses</strong>: 117,440,512 excessive sectors (88% of total)</li>
+<li>Branch efficiency: 100%, but poor memory access pattern</li>
+</ul>
+</li>
+</ul>
+<h2 id="transpose-v2-global-memory-coalescing">Transpose V2: Global Memory Coalescing</h2>
+<ul>
+<li><strong>Key Concept</strong>: Inside one warp, if memory access addresses are contiguous, the memory access is coalesced (batched)</li>
+<li><strong>Performance</strong>: 1.40 ms (significant improvement)</li>
+<li><strong>Remaining Issue</strong>: Uncoalesced writes to output matrix<ul>
+<li>Still has 58,720,256 excessive sectors (78% of total)</li>
+</ul>
+</li>
+</ul>
+<h2 id="transpose-v3-tilewise-partitioning-with-shared-memory">Transpose V3: Tilewise Partitioning with Shared Memory</h2>
+<ul>
+<li><strong>Strategy</strong>: Use shared memory as intermediate buffer</li>
+<li><strong>Key Insight</strong>: Reading discontinuously from shared memory doesn't significantly affect performance</li>
+<li><strong>Performance</strong>: 312 mus</li>
+<li><strong>New Problem</strong>: Bank conflicts<ul>
+<li><strong>Bank Conflict Rate</strong>: 33.0-way bank conflict across 524,288 shared load requests</li>
+</ul>
+</li>
+</ul>
+<h3 id="shared-memory-allocation-methods">Shared Memory Allocation Methods</h3>
+<h4 id="static-allocation">Static Allocation</h4>
+<pre><code class="language-cpp">__shared__ float f_array[10];
+</code></pre>
+<ul>
+<li>Easier to use</li>
+<li>Fixed size, up to 48 KB</li>
+</ul>
+<h4 id="dynamic-allocation">Dynamic Allocation</h4>
+<pre><code class="language-cpp">extern __shared__ int shared_mem[];
+// Launch kernel with:
+my_kernel&lt;&lt;&lt;grid, block, shared_mem_size_in_bytes&gt;&gt;&gt;
+</code></pre>
+<ul>
+<li>Up to 228 KB</li>
+<li>Requires <code>cudaFuncSetAttribute()</code> for sizes &gt; 48KB</li>
+</ul>
+<h2 id="understanding-bank-conflicts">Understanding Bank Conflicts</h2>
+<p><strong>Bank Structure</strong>: Shared memory is organized into banks (typically 32 banks)
+- Elements are distributed across banks in round-robin fashion
+- <strong>Conflict occurs</strong> when multiple threads in a warp access different addresses in the same bank
+- <strong>No conflict</strong> when threads access the same address or different banks</p>
+<h2 id="transpose-v4-padding-to-avoid-bank-conflicts">Transpose V4: Padding to Avoid Bank Conflicts</h2>
+<ul>
+<li><strong>Solution</strong>: Add padding to shared memory arrays</li>
+<li><strong>Result</strong>:<ul>
+<li><strong>Performance</strong>: 280 mus</li>
+<li><strong>Bandwidth</strong>: 1.9 TB/s</li>
+</ul>
+</li>
+<li><strong>Key Principle</strong>: Padding shifts memory access patterns to avoid systematic bank conflicts</li>
+</ul>
+<hr />
+<h1 id="reduction-kernel-case-study">Reduction Kernel Case Study</h1>
+<h2 id="reduction-problem-definition">Reduction Problem Definition</h2>
+<ul>
+<li><strong>Goal</strong>: Apply associative operation across array elements</li>
+<li><strong>Examples</strong>: Sum, Max/Min operations</li>
+<li><strong>Pattern</strong>:</li>
+</ul>
+<pre><code>for elements in array:
+    temp = op(temp, element)
+</code></pre>
+<h2 id="parallel-reduction-strategy">Parallel Reduction Strategy</h2>
+<p>Instead of sequential reduction, use tree-like parallel reduction:
+- Step 1: 8 elements    o 4 partial results
+- Step 2: 4 partial results     o 2 partial results
+- Step 3: 2 partial results     o 1 final result</p>
+<h2 id="reduction-implementation-variants">Reduction Implementation Variants</h2>
+<h3 id="reduction-1-interleaved-addressing">Reduction #1: Interleaved Addressing</h3>
+<ul>
+<li><strong>Pattern</strong>: <code>threadID % 2^N == 0</code> does the work</li>
+<li><strong>Offset</strong>: <code>2^(N-1)</code></li>
+<li><strong>Problem</strong>: Severe branch divergence</li>
+</ul>
+<h3 id="branch-divergence-in-cuda">Branch Divergence in CUDA</h3>
+<p><strong>Key Concept</strong>: Threads in a warp always execute the same instructions
+- GPU explores all code paths and uses masks to determine outputs
+- <strong>Divergent warps</strong>: Some threads active, others idle
+- <strong>Performance Impact</strong>: Redundant operations reduce efficiency</p>
+<h3 id="reduction-2-sequential-access-pattern">Reduction #2: Sequential Access Pattern</h3>
+<ul>
+<li><strong>Improvement</strong>: Better access patterns</li>
+<li><strong>Still has</strong>: Some branch divergence issues</li>
+</ul>
+<h3 id="reduction-3-sequential-accesses">Reduction #3: Sequential Accesses</h3>
+<ul>
+<li><strong>Key Insight</strong>: Start with larger stride and work down</li>
+<li><strong>Benefit</strong>: Eliminates bank conflicts</li>
+<li><strong>Access Pattern</strong>: Stride 8  o Stride 4  o Stride 2  o Stride 1</li>
+</ul>
+<h3 id="reduction-4-load-two-elements">Reduction #4: Load Two Elements</h3>
+<ul>
+<li><strong>Optimization</strong>: Each thread loads and processes multiple elements</li>
+<li><strong>Benefit</strong>: Better memory utilization</li>
+</ul>
+<h3 id="reduction-5-load-more-elements">Reduction #5: Load More Elements</h3>
+<ul>
+<li><strong>Trade-off</strong>: Higher memory utilization vs. reduced GPU occupancy</li>
+<li><strong>Challenge</strong>: Fewer blocks means lower overall GPU utilization</li>
+</ul>
+<hr />
+<h1 id="gemm-general-matrix-multiply-optimization">GEMM (General Matrix Multiply) Optimization</h1>
+<h2 id="gemm-memory-access-pattern">GEMM Memory Access Pattern</h2>
+<p>For matrices of size M  imesK and K imesN:
+- <strong>Per output element</strong>: Load one row + one column = 2K elements
+- <strong>Total memory loads</strong>: 2MNK
+- <strong>Unique loads</strong>: Only MK + NK
+- <strong>Problem</strong>: Massive redundancy in memory access</p>
+<h2 id="gemm-tiling-strategy">GEMM Tiling Strategy</h2>
+<p><strong>Load by Tiles</strong>:
+- Input tile: <code>TILE_M   imes K</code>
+- Weight tile: <code>K   imes TILE_N</code>
+- Output tile: <code>TILE_M  imes TILE_N</code></p>
+<p><strong>Memory Load Reduction</strong>:
+$$L = \frac{Tile_M + Tile_N}{Tile_M \cdot Tile_N} \cdot MNK$$</p>
+<p><strong>Key Benefit</strong>: L2 cache access reduced by factor of tile dimensions</p>
+<h2 id="tensor-cores">Tensor Cores</h2>
+<p><strong>Definition</strong>: Special hardware units that perform small GEMM operations
+- <strong>Usage</strong>: One warp (32 threads) collectively uses tensor core
+- <strong>Shapes</strong>: Various supported (16 imes8   imes16, 8   imes8   imes4, etc.)
+- <strong>Performance</strong>: Up to 256    imes speedup over F32 CUDA cores for specific data types</p>
+<h3 id="gemm-hierarchy">GEMM Hierarchy</h3>
+<ul>
+<li><strong>Thread Block</strong>: Handles large tile</li>
+<li><strong>Warp</strong>: Handles medium tile</li>
+<li><strong>Tensor Core</strong>: Handles small GEMM (e.g., 16 imes8   imes16)</li>
+</ul>
+<hr />
+<h1 id="high-performance-kernel-libraries">High-Performance Kernel Libraries</h1>
+<h2 id="essential-libraries">Essential Libraries</h2>
+<h3 id="cublas"><strong>cuBLAS</strong></h3>
+<ul>
+<li>Closed-source GEMM library</li>
+<li>Highly optimized by NVIDIA</li>
+</ul>
+<h3 id="cutlass"><strong>CUTLASS</strong></h3>
+<ul>
+<li>Open-source template-based GEMM library</li>
+<li>Customizable and extensible</li>
+</ul>
+<h3 id="raft"><strong>Raft</strong></h3>
+<ul>
+<li>Vector Search, Clustering, Top-K, Sort operations</li>
+</ul>
+<h3 id="flashinfer"><strong>FlashInfer</strong></h3>
+<ul>
+<li>Attention kernels (Fused Softmax, Discontinuous GEMV)</li>
+</ul>
+<h3 id="cub"><strong>CUB</strong></h3>
+<ul>
+<li>Templates for basic operations at Warp, Block, and Device level</li>
+</ul>
+<hr />
+<h1 id="python-integration">Python Integration</h1>
+<h2 id="pybind11-for-cuda-kernels">Pybind11 for CUDA Kernels</h2>
+<p><strong>Basic Pattern</strong>:</p>
+<pre><code class="language-cpp">#include &lt;pybind11/pybind11.h&gt;
+#include &lt;torch/torch.h&gt;
+#include &lt;torch/extension.h&gt;
+#include &lt;cuda_runtime.h&gt;
+
+__global__ void add_kernel(int *a, int *b, int *c, size_t num) {
+    int block_start = blockIdx.x * blockDim.x;
+    int thread_id = threadIdx.x;
+    int index = block_start + thread_id;
+    if (index &lt; num) {
+        c[index] = a[index] + b[index];
+    }
+}
+
+torch::Tensor add(torch::Tensor a, torch::Tensor b) {
+    auto num = a.size(0);
+    auto c = torch::empty_like(a);
+
+    int threads_per_block = 256;
+    int blocks_per_grid = (num + threads_per_block - 1) / threads_per_block;
+
+    add_kernel&lt;&lt;&lt;blocks_per_grid, threads_per_block&gt;&gt;&gt;(
+        a.data_ptr&lt;int&gt;(), b.data_ptr&lt;int&gt;(), c.data_ptr&lt;int&gt;(), num);
+    cudaDeviceSynchronize();
+    return c;
+}
+
+PYBIND11_MODULE(my_addition, m) {
+    m.def(&quot;add&quot;, &amp;add, &quot;Add two tensors&quot;);
+}
+</code></pre>
+<h2 id="key-optimization-principles-summary">Key Optimization Principles Summary</h2>
+<ol>
+<li><strong>Memory Coalescing</strong>: Ensure contiguous memory access within warps</li>
+<li><strong>Shared Memory</strong>: Use as high-speed cache for frequently accessed data</li>
+<li><strong>Bank Conflict Avoidance</strong>: Pad shared memory arrays when necessary</li>
+<li><strong>Branch Divergence Minimization</strong>: Structure algorithms to keep warps synchronized</li>
+<li><strong>Occupancy vs Efficiency</strong>: Balance thread utilization with per-thread work</li>
+<li><strong>Hierarchical Tiling</strong>: Optimize for different levels of memory hierarchy</li>
+</ol>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/cuda.html">cuda</a>
+                <a href="/tags/gpu.html">gpu</a>
+                <a href="/tags/kernel.html">kernel</a>
+                <a href="/tags/optimization.html">optimization</a>
+                <a href="/tags/triton.html">triton</a>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

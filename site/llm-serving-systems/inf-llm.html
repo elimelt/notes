@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "InfLLM: Training-Free Long-Context Extrapolation for LLMs with an Efficient Context Memory", "dateModified": "2025-04-14T13:49:40.043669", "description": "InfLLM is a training-free, memory-based method that enables LLMs to process extremely long sequences by augmenting the standard sliding window attention mechanism with an efficient external context memory. It allows LLMs to capture long-distance dependencies and avoid distractions from irrelevant contexts without further training.", "articleSection": "Machine Learning Systems", "keywords": "llm,research,long-context,memory"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "InfLLM: Training-Free Long-Context Extrapolation for LLMs with an Efficient Context Memory", "dateModified": "2025-05-25T16:32:00.783351", "description": "InfLLM is a training-free, memory-based method that enables LLMs to process extremely long sequences by augmenting the standard sliding window attention mechanism with an efficient external context memory. It allows LLMs to capture long-distance dependencies and avoid distractions from irrelevant contexts without further training.", "articleSection": "Machine Learning Systems", "keywords": "llm,research,long-context,memory"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -88,8 +88,8 @@
         <article>
             <h1>InfLLM: Training-Free Long-Context Extrapolation for LLMs with an Efficient Context Memory</h1>
             <div class="meta">
-                <time datetime="2025-04-14T13:49:40.043669">
-                    Last modified: 2025-04-14
+                <time datetime="2025-05-25T16:32:00.783351">
+                    Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -98,7 +98,7 @@
                 <h6 id="infllm-training-free-long-context-extrapolation-for-llms-with-an-efficient-context-memory"><a href="https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/31922851/d1880b1e-f732-4c87-b694-7d3a457724fc/inf-llm.pdf">InfLLM: Training-Free Long-Context Extrapolation for LLMs with an Efficient Context Memory</a></h6>
 <hr />
 <h3 id="what-is-the-problem">What is the Problem?</h3>
-<p>Large language models (LLMs) are typically pre-trained on sequences with limited maximum lengths (a few thousand tokens), which restricts their ability to process much longer sequences required in real-world applications such as LLM-driven agents and streaming inputs. Existing solutions often require expensive continual pre-training on longer sequences, which is computationally intensive and can degrade performance on shorter contexts. The challenge is to enable LLMs to efficiently and effectively process extremely long sequences—well beyond their training context window—without any additional training or architectural changes.</p>
+<p>Large language models (LLMs) are typically pre-trained on sequences with limited maximum lengths (a few thousand tokens), which restricts their ability to process much longer sequences required in real-world applications such as LLM-driven agents and streaming inputs. Existing solutions often require expensive continual pre-training on longer sequences, which is computationally intensive and can degrade performance on shorter contexts. The challenge is to enable LLMs to efficiently and effectively process extremely long sequences-well beyond their training context window-without any additional training or architectural changes.</p>
 <h3 id="summary">Summary</h3>
 <p>The paper introduces <strong>InfLLM</strong>, a training-free, memory-based method that enables LLMs to process extremely long sequences by augmenting the standard sliding window attention mechanism with an efficient external context memory. InfLLM stores distant context information in memory units and dynamically retrieves only the most relevant units for each token during attention computation. This approach allows LLMs to capture long-distance dependencies and avoid the distraction caused by irrelevant or noisy contexts, all without any further training. The method is evaluated on challenging long-context benchmarks, demonstrating that LLMs pre-trained on short sequences can achieve performance comparable to or better than models that have undergone costly continual training on long sequences.</p>
 <h3 id="key-insights">Key Insights</h3>
@@ -117,7 +117,7 @@
 <ul>
 <li><strong>Increased CPU Memory Usage</strong>: Storing large amounts of past key-value cache in CPU memory can be demanding, especially for extremely long sequences.</li>
 <li><strong>Inference Speed</strong>: While GPU memory usage is optimized, there is still room to further accelerate inference, particularly for very long sequences.</li>
-<li><strong>Dependence on Base Model Quality</strong>: The effectiveness of InfLLM can be limited by the base model’s ability to filter noise and represent context, as seen in some tasks with weaker base models.</li>
+<li><strong>Dependence on Base Model Quality</strong>: The effectiveness of InfLLM can be limited by the base model's ability to filter noise and represent context, as seen in some tasks with weaker base models.</li>
 </ul>
 <h3 id="summary-of-key-results">Summary of Key Results</h3>
 <ul>

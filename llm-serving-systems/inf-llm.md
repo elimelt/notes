@@ -11,7 +11,7 @@ description: InfLLM is a training-free, memory-based method that enables LLMs to
 
 ### What is the Problem?
 
-Large language models (LLMs) are typically pre-trained on sequences with limited maximum lengths (a few thousand tokens), which restricts their ability to process much longer sequences required in real-world applications such as LLM-driven agents and streaming inputs. Existing solutions often require expensive continual pre-training on longer sequences, which is computationally intensive and can degrade performance on shorter contexts. The challenge is to enable LLMs to efficiently and effectively process extremely long sequences—well beyond their training context window—without any additional training or architectural changes.
+Large language models (LLMs) are typically pre-trained on sequences with limited maximum lengths (a few thousand tokens), which restricts their ability to process much longer sequences required in real-world applications such as LLM-driven agents and streaming inputs. Existing solutions often require expensive continual pre-training on longer sequences, which is computationally intensive and can degrade performance on shorter contexts. The challenge is to enable LLMs to efficiently and effectively process extremely long sequences-well beyond their training context window-without any additional training or architectural changes.
 
 ### Summary
 
@@ -33,7 +33,7 @@ The paper introduces **InfLLM**, a training-free, memory-based method that enabl
 
 - **Increased CPU Memory Usage**: Storing large amounts of past key-value cache in CPU memory can be demanding, especially for extremely long sequences.
 - **Inference Speed**: While GPU memory usage is optimized, there is still room to further accelerate inference, particularly for very long sequences.
-- **Dependence on Base Model Quality**: The effectiveness of InfLLM can be limited by the base model’s ability to filter noise and represent context, as seen in some tasks with weaker base models.
+- **Dependence on Base Model Quality**: The effectiveness of InfLLM can be limited by the base model's ability to filter noise and represent context, as seen in some tasks with weaker base models.
 
 ### Summary of Key Results
 

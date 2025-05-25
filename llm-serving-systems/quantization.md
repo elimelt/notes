@@ -7,6 +7,8 @@ description: Overview of quantization techniques for LLM serving systems, focusi
 
 # Quantization
 
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+
 ## Fundamentals
 
 ### What is Quantization?

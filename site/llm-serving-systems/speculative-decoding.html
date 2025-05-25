@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Speculative Decoding in LLM Serving Systems", "dateModified": "2025-05-25T16:47:53.335615", "description": "Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.", "articleSection": "Machine Learning Systems", "keywords": "speculative decoding,llm,performance,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Speculative Decoding in LLM Serving Systems", "dateModified": "2025-05-25T16:53:16.289989", "description": "Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.", "articleSection": "Machine Learning Systems", "keywords": "speculative decoding,llm,performance,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Speculative Decoding in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:47:53.335615">
+                <time datetime="2025-05-25T16:53:16.289989">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -99,6 +99,9 @@
             </div>
             <div class=content>
                 <h2 id="overview">Overview</h2>
+<blockquote>
+<p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
+</blockquote>
 <p><strong>Speculative Decoding</strong> is a technique to accelerate large language model inference by using a smaller, faster model to generate candidate tokens that are then verified by the larger target model in parallel.</p>
 <h3 id="key-references">Key References</h3>
 <ul>

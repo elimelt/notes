@@ -6,6 +6,7 @@ description: How to write high-performance GPU kernels using CUDA and Triton, wi
 ---
 
 # GPU Kernel Optimizations
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## GPU Architecture Recap
 - Memory hierarchy with varying capacities and bandwidths:

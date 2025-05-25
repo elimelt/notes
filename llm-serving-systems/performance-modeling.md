@@ -6,6 +6,7 @@ description: How do you model and optimize performance for LLM serving systems? 
 ---
 
 # Performance Modeling for LLM Serving Systems
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ### Performance Analysis
 - **Roofline model** - Based on the Roofline paper and Google's scaling book

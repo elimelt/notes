@@ -7,6 +7,8 @@ description: Overview of transformer architecture (specifically Llama) and its i
 
 ## Transformer Architecture Overview
 
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+
 ### Prefill vs. Decode Phases
 
 **Prefill Phase:**

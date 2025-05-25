@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-05-25T16:47:12.997992", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-05-25T16:53:52.440403", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Intro to Mixture of Experts (MoE) in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:47:12.997992">
+                <time datetime="2025-05-25T16:53:52.440403">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -99,6 +99,9 @@
             </div>
             <div class=content>
                 <h1 id="mixture-of-experts-moe">Mixture of Experts (MoE)</h1>
+<blockquote>
+<p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
+</blockquote>
 <h2 id="overview">Overview</h2>
 <p><strong>Mixture of Experts (MoE)</strong> is an architecture that replaces large feedforward networks with multiple expert networks and a selector/routing layer. The key advantage is that <strong>you can increase the number of experts without affecting FLOPs</strong>, enabling massive parameter scaling with constant computational cost.</p>
 <h3 id="popular-moe-models">Popular MoE Models</h3>

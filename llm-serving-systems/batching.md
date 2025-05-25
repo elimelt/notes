@@ -1,11 +1,12 @@
 ---
 title: Batching in LLM Serving Systems
 category: Machine Learning Systems
-tags: batching, performance, throughput, latency, llm, serving systems
+tags: batching, performance, throughput, latency, llm, serving systems, machine learning
 description: Overview of batching techniques in LLM serving systems,
 ---
 
 # Batching in LLM Serving Systems
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Overview
 

@@ -6,6 +6,7 @@ description: Overview of memory management techniques in LLM serving systems, pe
 ---
 
 # Memory Management in LLM Serving Systems
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## KV Cache Size Calculation
 

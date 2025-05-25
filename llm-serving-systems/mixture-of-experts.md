@@ -6,6 +6,7 @@ description: How do Mixture of Experts (MoE) models achieve these crazy performa
 ---
 
 # Mixture of Experts (MoE)
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Overview
 

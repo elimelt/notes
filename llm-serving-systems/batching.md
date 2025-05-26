@@ -11,6 +11,7 @@ description: Overview of batching techniques in LLM serving systems,
 ## Overview
 
 Batching is critical for LLM serving performance. The H100 needs **333 batch size** to reach peak performance. Batching involves two key considerations:
+
 1. **User Experience** - maintaining response quality and latency
 2. **Throughput** - maximizing system efficiency
 

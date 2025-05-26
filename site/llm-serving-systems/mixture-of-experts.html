@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-05-25T16:53:52.440403", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-05-25T17:29:27.795148", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Intro to Mixture of Experts (MoE) in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:53:52.440403">
+                <time datetime="2025-05-25T17:29:27.795148">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -323,10 +323,12 @@ GPU3: [D0, D1, D2, D3]  o GPU3: [A3, B3, C3, D3]
 2. <strong>Expert compute</strong>: Each expert processes its assigned tokens
 3. <strong>Combine phase</strong>: Second All-to-All     o Layout transformation     o Restore original positions</p>
 <h3 id="communication-bottlenecks">Communication Bottlenecks</h3>
-<p><strong>Problem</strong>: All-to-All operations consume significant time:
-- Average <strong>34.1%</strong> of total step time in DeepSeek V3
-- Synchronous and blocking operation with large data transfers
-- Slowdown varies: Median 2x, Maximum ~4x when overlapping with other operations</p>
+<p><strong>Problem</strong>: All-to-All operations consume significant time:</p>
+<ul>
+<li>Average <strong>34.1%</strong> of total step time in DeepSeek V3</li>
+<li>Synchronous and blocking operation with large data transfers</li>
+<li>Slowdown varies: Median 2x, Maximum ~4x when overlapping with other operations</li>
+</ul>
 <h3 id="training-optimizations-lina">Training Optimizations: Lina</h3>
 <h4 id="core-strategy">Core Strategy</h4>
 <p><strong>Intuition</strong>: Always prioritize All-to-All and avoid bandwidth sharing.</p>
@@ -337,10 +339,12 @@ GPU3: [D0, D1, D2, D3]  o GPU3: [A3, B3, C3, D3]
 <p><strong>Results</strong>: Up to 2.4x speedup in MoE layer execution</p>
 <h2 id="deployment-strategies">Deployment Strategies</h2>
 <h3 id="memory-requirements">Memory Requirements</h3>
-<p><strong>Mixtral 8x7B Example</strong>:
-- Attention layers: ~3.5GB
-- Expert layers: ~90GB
-- <strong>Total</strong>: ~93.5GB (doesn't fit on single GPU)</p>
+<p><strong>Mixtral 8x7B Example</strong>:</p>
+<ul>
+<li>Attention layers: ~3.5GB</li>
+<li>Expert layers: ~90GB</li>
+<li><strong>Total</strong>: ~93.5GB (doesn't fit on single GPU)</li>
+</ul>
 <h3 id="inference-optimizations">Inference Optimizations</h3>
 <h4 id="1-offloading-approaches">1. Offloading Approaches</h4>
 <ul>
@@ -396,11 +400,13 @@ $$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert
 5. <strong>Mixing</strong>: Combine expert outputs with routing weights</p>
 <p><strong>Efficiency</strong>: Single GPU kernel with batching benefits across all experts.</p>
 <h4 id="permutation-index-generation">Permutation Index Generation</h4>
-<p><strong>Method</strong>: Use prefix sum (scan) operations for efficient parallel permutation index calculation:
-- Convert expert selection to binary mask
-- Apply cumsum to flattened transpose
-- Reshape to get permutation indices
-- Highly parallelizable on GPU</p>
+<p><strong>Method</strong>: Use prefix sum (scan) operations for efficient parallel permutation index calculation:</p>
+<ul>
+<li>Convert expert selection to binary mask</li>
+<li>Apply cumsum to flattened transpose</li>
+<li>Reshape to get permutation indices</li>
+<li>Highly parallelizable on GPU</li>
+</ul>
 <h2 id="performance-results">Performance Results</h2>
 <h3 id="training-efficiency">Training Efficiency</h3>
 <ul>
@@ -415,10 +421,12 @@ $$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert
 <li><strong>Expert popularity prediction</strong>: Approaches ideal performance with perfect knowledge</li>
 </ul>
 <h3 id="benchmark-performance">Benchmark Performance</h3>
-<p><strong>Mixtral 8x7B vs Dense Models</strong>:
-- Matches LLaMA 2 70B performance with 5x fewer active parameters
-- Competitive or superior performance across MMLU, Knowledge, Reasoning, and Comprehension tasks
-- Demonstrates substantial efficiency gains in both parameter count and training cost</p>
+<p><strong>Mixtral 8x7B vs Dense Models</strong>:</p>
+<ul>
+<li>Matches LLaMA 2 70B performance with 5x fewer active parameters</li>
+<li>Competitive or superior performance across MMLU, Knowledge, Reasoning, and Comprehension tasks</li>
+<li>Demonstrates substantial efficiency gains in both parameter count and training cost</li>
+</ul>
 <h2 id="key-takeaways">Key Takeaways</h2>
 <ol>
 <li><strong>MoEs enable parameter scaling without proportional FLOP increases</strong></li>

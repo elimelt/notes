@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-05-25T16:54:03.584744", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-05-25T17:17:02.087821", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>GPU Architecture and Programming</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:54:03.584744">
+                <time datetime="2025-05-25T17:17:02.087821">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -109,10 +109,12 @@
 <li><strong>Inference</strong>: Applying capability to new data</li>
 </ul>
 <h3 id="serving">Serving</h3>
-<p><strong>ML model serving</strong> is about building a system to efficiently and scalably perform inference with:
-- High throughput
-- Low latency
-- Compliance with diverse Service Level Objectives (SLOs)</p>
+<p><strong>ML model serving</strong> is about building a system to efficiently and scalably perform inference with:</p>
+<ul>
+<li>High throughput</li>
+<li>Low latency</li>
+<li>Compliance with diverse Service Level Objectives (SLOs)</li>
+</ul>
 <h2 id="llm-applications-and-market-context">LLM Applications and Market Context</h2>
 <h3 id="applications-enabled-by-llms">Applications Enabled by LLMs</h3>
 <ul>
@@ -129,15 +131,19 @@
 <li>Users frequently encounter "We're experiencing exceptionally high demand" messages</li>
 </ul>
 <h3 id="infrastructure-costs">Infrastructure Costs</h3>
-<p><strong>Large-scale H100 investments in 2024:</strong>
-- Meta: 300K units
-- Google: 150K units
-- Microsoft: 150K units
-- X: 85K units</p>
-<p><strong>NVIDIA H200 HGX Server specs:</strong>
-- Cost: ~$250,000
-- High operating cost: Up to ~10,000W
-- Long lead time</p>
+<p><strong>Large-scale H100 investments in 2024:</strong></p>
+<ul>
+<li>Meta: 300K units</li>
+<li>Google: 150K units</li>
+<li>Microsoft: 150K units</li>
+<li>X: 85K units</li>
+</ul>
+<p><strong>NVIDIA H200 HGX Server specs:</strong></p>
+<ul>
+<li>Cost: ~$250,000</li>
+<li>High operating cost: Up to ~10,000W</li>
+<li>Long lead time</li>
+</ul>
 <h2 id="gpu-fundamentals">GPU Fundamentals</h2>
 <h3 id="what-is-a-gpu">What is a GPU?</h3>
 <ul>
@@ -220,9 +226,11 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Key difference:</strong>
-- <strong>CPU DRAM</strong>: Low latency random access
-- <strong>GPU HBM</strong>: Higher bandwidth, structured batch access</p>
+<p><strong>Key difference:</strong></p>
+<ul>
+<li><strong>CPU DRAM</strong>: Low latency random access</li>
+<li><strong>GPU HBM</strong>: Higher bandwidth, structured batch access</li>
+</ul>
 <hr />
 <h2 id="gpu-hardware-architecture">GPU Hardware Architecture</h2>
 <h3 id="data-center-context">Data Center Context</h3>
@@ -239,10 +247,12 @@
 <li><strong>Registers</strong>: 64K    imes 32 Bit per SM, ~600TB/s bandwidth</li>
 </ul>
 <h3 id="streaming-multiprocessors-sms">Streaming Multiprocessors (SMs)</h3>
-<p><strong>Components:</strong>
-- <strong>CUDA Cores</strong>: Scalar computation
-- <strong>Tensor Cores</strong>: Matrix (dense) computation
-- <strong>Shared/Constant Memory</strong>: High bandwidth temp buffer</p>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong>CUDA Cores</strong>: Scalar computation</li>
+<li><strong>Tensor Cores</strong>: Matrix (dense) computation</li>
+<li><strong>Shared/Constant Memory</strong>: High bandwidth temp buffer</li>
+</ul>
 <hr />
 <h2 id="gpu-programming-model">GPU Programming Model</h2>
 <h3 id="hierarchy-of-execution-units">Hierarchy of Execution Units</h3>

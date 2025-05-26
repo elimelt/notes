@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Sparsity and Pruning in LLM Serving Systems", "dateModified": "2025-05-25T16:53:19.875252", "description": "Overview of techniques in LLM serving systems using sparsity and pruning to optimize performance and reduce model size.", "articleSection": "Machine Learning Systems", "keywords": "sparsity,pruning,performance optimization,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sparsity and Pruning in LLM Serving Systems", "dateModified": "2025-05-25T17:30:33.194462", "description": "Overview of techniques in LLM serving systems using sparsity and pruning to optimize performance and reduce model size.", "articleSection": "Machine Learning Systems", "keywords": "sparsity,pruning,performance optimization,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Sparsity and Pruning in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:53:19.875252">
+                <time datetime="2025-05-25T17:30:33.194462">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -136,10 +136,12 @@
 </ul>
 <h3 id="the-lottery-ticket-hypothesis">The Lottery Ticket Hypothesis</h3>
 <p><strong>Core Hypothesis</strong>: "In a large, randomly initialized neural network, there exist small sparse subnetworks - the 'winning tickets' - that, when trained from scratch (with their original initial weights), can match the full model's performance."</p>
-<p><strong>Key Insights</strong>:
-- Over-parametrization is useful - gives many chances for good initializations
-- Explains why pruning works: winning tickets exist from the start
-- Can prune after training because winning subnetworks were present initially</p>
+<p><strong>Key Insights</strong>:</p>
+<ul>
+<li>Over-parametrization is useful - gives many chances for good initializations</li>
+<li>Explains why pruning works: winning tickets exist from the start</li>
+<li>Can prune after training because winning subnetworks were present initially</li>
+</ul>
 <h3 id="weight-sparsity-types">Weight Sparsity Types</h3>
 <h4 id="structured-sparsity">Structured Sparsity</h4>
 <ul>
@@ -160,10 +162,12 @@
 </ul>
 <h2 id="advanced-pruning-techniques">Advanced Pruning Techniques</h2>
 <h3 id="wanda-weight-and-activation-pruning">Wanda (Weight and Activation Pruning)</h3>
-<p><strong>Key Features</strong>:
-- Prunes weights on per-output basis
-- Uses product of <strong>weight magnitudes</strong> and <strong>input activation norms</strong>
-- <strong>No retraining required</strong></p>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Prunes weights on per-output basis</li>
+<li>Uses product of <strong>weight magnitudes</strong> and <strong>input activation norms</strong></li>
+<li><strong>No retraining required</strong></li>
+</ul>
 <p><strong>Algorithm</strong>:</p>
 <pre><code class="language-python">def prune(W, X, s):
     metric = W.abs() * X.norm(p=2, dim=0)  # Wanda pruning metric
@@ -172,22 +176,32 @@
     W.scatter_(dim=1, index=pruned_idx, src=0)  # zero out weights
     return W
 </code></pre>
-<p><strong>Performance</strong>:
-- Comparable to SparseGPT but simpler (no intensive weight updates)
-- Maintains good accuracy across different sparsity levels (50%, 4:8, 2:4)</p>
+<p><strong>Performance</strong>:</p>
+<ul>
+<li>Comparable to SparseGPT but simpler (no intensive weight updates)</li>
+<li>Maintains good accuracy across different sparsity levels (50%, 4:8, 2:4)</li>
+</ul>
 <h3 id="dejavu-contextual-sparsity">DEJAVU: Contextual Sparsity</h3>
-<p><strong>Core Concept</strong>: Input-dependent sparsity patterns
-- Dynamically selects which attention heads and FFN parameters to activate
-- <strong>Query-aware</strong>: Sparsity patterns adapt to current input context</p>
-<p><strong>Key Innovation</strong>:
-- Uses <strong>lookahead predictors</strong>:
-  - Attention layer at block k  o predicts MLP sparsity at block k
-  - MLP at block k  o predicts attention sparsity at block k+1
-- Implemented via hardware-aware sparse matrix multiplication</p>
-<p><strong>Results</strong>:
-- <strong>No accuracy drop until 75% sparsity</strong>
-- <strong>1.8-6x speedup</strong> compared to state-of-the-art
-- Preserves long-dependency task performance</p>
+<p><strong>Core Concept</strong>: Input-dependent sparsity patterns</p>
+<ul>
+<li>Dynamically selects which attention heads and FFN parameters to activate</li>
+<li><strong>Query-aware</strong>: Sparsity patterns adapt to current input context</li>
+</ul>
+<p><strong>Key Innovation</strong>:</p>
+<ul>
+<li>Uses <strong>lookahead predictors</strong>:<ul>
+<li>Attention layer at block k  o predicts MLP sparsity at block k</li>
+<li>MLP at block k  o predicts attention sparsity at block k+1</li>
+</ul>
+</li>
+<li>Implemented via hardware-aware sparse matrix multiplication</li>
+</ul>
+<p><strong>Results</strong>:</p>
+<ul>
+<li><strong>No accuracy drop until 75% sparsity</strong></li>
+<li><strong>1.8-6x speedup</strong> compared to state-of-the-art</li>
+<li>Preserves long-dependency task performance</li>
+</ul>
 <h2 id="kv-cache-sparsity">KV Cache Sparsity</h2>
 <h3 id="sparsity-in-attention">Sparsity in Attention</h3>
 <ul>
@@ -196,30 +210,44 @@
 <li>Motivates KV cache compression techniques</li>
 </ul>
 <h3 id="quest-query-aware-sparsity">Quest: Query-Aware Sparsity</h3>
-<p><strong>Problem with Previous Methods</strong>:
-- Evict "unimportant" KV cache based on historical information
-- <strong>Challenge</strong>: Evicted tokens might be important for future tokens</p>
-<p><strong>Quest Solution</strong>:
-- <strong>Preserve all KV cache</strong> in storage
-- <strong>Reduce memory movement</strong> by selecting only top-K relevant pages
-- Two-stage process:
-  1. <strong>Stage 1</strong>: Identify most relevant KV cache pages for current query
-  2. <strong>Stage 2</strong>: Compute sparse attention only on selected pages</p>
-<p><strong>Performance</strong>:
-- <strong>7.03x speedup</strong> at 32k sequence length with 2k token budget
-- Maintains high accuracy on long-dependency tasks
-- Quest estimation policy aligns closely with oracle selection</p>
+<p><strong>Problem with Previous Methods</strong>:</p>
+<ul>
+<li>Evict "unimportant" KV cache based on historical information</li>
+<li><strong>Challenge</strong>: Evicted tokens might be important for future tokens</li>
+</ul>
+<p><strong>Quest Solution</strong>:</p>
+<ul>
+<li><strong>Preserve all KV cache</strong> in storage</li>
+<li><strong>Reduce memory movement</strong> by selecting only top-K relevant pages</li>
+<li>Two-stage process:<ol>
+<li><strong>Stage 1</strong>: Identify most relevant KV cache pages for current query</li>
+<li><strong>Stage 2</strong>: Compute sparse attention only on selected pages</li>
+</ol>
+</li>
+</ul>
+<p><strong>Performance</strong>:</p>
+<ul>
+<li><strong>7.03x speedup</strong> at 32k sequence length with 2k token budget</li>
+<li>Maintains high accuracy on long-dependency tasks</li>
+<li>Quest estimation policy aligns closely with oracle selection</li>
+</ul>
 <h3 id="deepseek-multi-head-latent-attention-mla">DeepSeek Multi-Head Latent Attention (MLA)</h3>
-<p><strong>Key Innovation</strong>: Matrix-level KV cache compression
-- <strong>15x smaller KV cache</strong> in DeepSeek-V2 vs V1
-- <strong>5.7x throughput improvement</strong></p>
-<p><strong>Approach</strong>:
-- Store compressed <strong>latent vector</strong> instead of full keys &amp; values
-- <strong>7% of original size</strong> through learned matrix projections
-- Exploits redundancy in high-dimensional vectors</p>
-<p><strong>Integration with RoPE</strong>:
-- Standard RoPE makes compression harder (position-dependent rotations)
-- <strong>MLA trick</strong>: Keep Q&amp;K unrotated, concatenate RoPE information separately</p>
+<p><strong>Key Innovation</strong>: Matrix-level KV cache compression</p>
+<ul>
+<li><strong>15x smaller KV cache</strong> in DeepSeek-V2 vs V1</li>
+<li><strong>5.7x throughput improvement</strong></li>
+</ul>
+<p><strong>Approach</strong>:</p>
+<ul>
+<li>Store compressed <strong>latent vector</strong> instead of full keys &amp; values</li>
+<li><strong>7% of original size</strong> through learned matrix projections</li>
+<li>Exploits redundancy in high-dimensional vectors</li>
+</ul>
+<p><strong>Integration with RoPE</strong>:</p>
+<ul>
+<li>Standard RoPE makes compression harder (position-dependent rotations)</li>
+<li><strong>MLA trick</strong>: Keep Q&amp;K unrotated, concatenate RoPE information separately</li>
+</ul>
 <h3 id="kv-cache-comparison">KV Cache Comparison</h3>
 <table>
 <thead>
@@ -265,14 +293,18 @@
 - Attention Q, K, V weights
 - Attention output weights</p>
 <h3 id="teal-threshold-based-activation-pruning">TEAL (Threshold-based Activation Pruning)</h3>
-<p><strong>Method</strong>:
-- During decoding, threshold low-magnitude activations to 0
-- Skip moving associated weight channels to registers
-- Provides speedup by reducing memory movement</p>
-<p><strong>Performance</strong>:
-- <strong>25% sparsity</strong>: Minimal accuracy loss, 1.2-1.3x speedup
-- <strong>50% sparsity</strong>: Small accuracy degradation, 1.6-1.8x speedup
-- Works across different model sizes (8B to 70B parameters)</p>
+<p><strong>Method</strong>:</p>
+<ul>
+<li>During decoding, threshold low-magnitude activations to 0</li>
+<li>Skip moving associated weight channels to registers</li>
+<li>Provides speedup by reducing memory movement</li>
+</ul>
+<p><strong>Performance</strong>:</p>
+<ul>
+<li><strong>25% sparsity</strong>: Minimal accuracy loss, 1.2-1.3x speedup</li>
+<li><strong>50% sparsity</strong>: Small accuracy degradation, 1.6-1.8x speedup</li>
+<li>Works across different model sizes (8B to 70B parameters)</li>
+</ul>
 <h2 id="implementation-considerations">Implementation Considerations</h2>
 <h3 id="hardware-support">Hardware Support</h3>
 <ul>

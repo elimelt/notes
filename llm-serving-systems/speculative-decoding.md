@@ -11,12 +11,14 @@ description: Using speculative decoding to accelerate large language model infer
 **Speculative Decoding** is a technique to accelerate large language model inference by using a smaller, faster model to generate candidate tokens that are then verified by the larger target model in parallel.
 
 ### Key References
+
 - Chen et al., "Accelerating Large Language Model Decoding with Speculative Sampling" (2023)
 - Leviathan et al., "Fast Inference from Transformers via Speculative Decoding" (2022)
 
 ## Core Concept
 
 ### Speculative Decoding in a Nutshell
+
 - **Small LM (Draft Model)**: Generates multiple tokens quickly
   - Can be obtained via quantization, pruning, training from scratch, etc.
 - **Large LM (Target Model)**: Verifies the generated tokens for accuracy
@@ -76,6 +78,7 @@ When a token is rejected:
 ## Performance Analysis
 
 ### Speedup Factors
+
 - **alpha**: Measure of how accurately the draft model represents the target model
 - **gamma**: Number of draft model predictions before verification
 
@@ -91,18 +94,21 @@ The effectiveness shows:
 **Key Innovation**: Add multiple prediction heads to a single model instead of using separate draft/target models.
 
 **Architecture**:
+
 - Add a few additional heads to predict tokens
 - Easy to train the new heads with basic GPU
 - Easy to serve (same parallelism patterns)
 - Good speedup (~3x)
 
 **Tree Attention**:
+
 - Heads provide different token candidates, forming different candidate sequences
 - Each sequence becomes a branch in the tree
 - Tree attention mask allows each token to attend only to its predecessors
 - Multiple sequences can be batched and verified in one forward pass
 
 **Variants**:
+
 - **Medusa-1**: Medusa heads fine-tuned on top of frozen backbone LLM
 - **Medusa-2**: Medusa heads fine-tuned together with backbone LLM (requires special training recipe)
 
@@ -110,11 +116,13 @@ The effectiveness shows:
 **Problem**: Single draft model may not provide enough "coverage"
 
 **Solution**: Use multiple draft models simultaneously
+
 - Creates a tree of sequences
 - Can be verified simultaneously
 - Leverages memory-bound regime for batched verification
 
 **Token Tree Verification**:
+
 - Uses topology-aware causal mask
 - Applies attention in a manner aware of tree topology
 - Enables batching of verification requests
@@ -136,6 +144,7 @@ return sample_output[-1].item()
 This gives **next token probabilities for each token in the sequence in one pass**.
 
 ### Benefits Timeline Comparison
+
 - **Base**: Sequential token generation
 - **Sequence-based Speculative**: Alternating speculation and verification phases
 - **Tree-based Speculative**: More efficient with parallel tree verification
@@ -143,6 +152,7 @@ This gives **next token probabilities for each token in the sequence in one pass
 ## Results Summary
 
 ### Performance Gains
+
 - **T5-Small**: 2.6x - 3.4x speedup
 - **T5-Base**: 2.4x - 3.0x speedup  
 - **T5-Large**: 1.4x - 2.2x speedup

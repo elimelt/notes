@@ -6,16 +6,19 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 ---
 
 # GPU Architecture and Introduction to GPU Programming
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ---
 
 ### Training vs Inference
+
 - **Training**: Learning from existing data
 - **Inference**: Applying capability to new data
 
 ### Serving
 **ML model serving** is about building a system to efficiently and scalably perform inference with:
+
 - High throughput
 - Low latency
 - Compliance with diverse Service Level Objectives (SLOs)
@@ -24,6 +27,7 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 ## LLM Applications and Market Context
 
 ### Applications Enabled by LLMs
+
 - **AI Assistants** (ChatGPT, Google Bard)
 - **Text-to-Image** (DALLcdotE, MidJourney)
 - **Creative Writing** (Jasper, Copy.ai)
@@ -33,17 +37,20 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 **Key principle**: Batching user requests and aiming for optimal throughput are key
 
 ### Market Demand
+
 - ChatGPT monthly visits grew from ~500M (Dec 2022) to ~2000M (Jan 2024)
 - Users frequently encounter "We're experiencing exceptionally high demand" messages
 
 ### Infrastructure Costs
 **Large-scale H100 investments in 2024:**
+
 - Meta: 300K units
 - Google: 150K units
 - Microsoft: 150K units
 - X: 85K units
 
 **NVIDIA H200 HGX Server specs:**
+
 - Cost: ~$250,000
 - High operating cost: Up to ~10,000W
 - Long lead time
@@ -52,6 +59,7 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 ## GPU Fundamentals
 
 ### What is a GPU?
+
 - **Graphics Processing Unit**
 - Originally designed for accelerated graphics rendering
 - Now handles scientific computing and machine learning
@@ -78,6 +86,7 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 | **Memory Latency** | ~70ns | ~110ns |
 
 **Key difference:**
+
 - **CPU DRAM**: Low latency random access
 - **GPU HBM**: Higher bandwidth, structured batch access
 
@@ -86,11 +95,13 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 ## GPU Hardware Architecture
 
 ### Data Center Context
+
 - GPUs are deployed in server clusters
 - Connected via high-speed networks (NVLink: 900 GB/s)
 - Network connectivity: 200 Gb/s = 25 GB/s to data center network
 
 ### GPU Memory Hierarchy
+
 - **Global Memory (HBM)**: 80 GB, 3TB/s bandwidth
 - **L2 Cache**: 50MB, ~10TB/s bandwidth
 - **Shared Memory ("Smem")**: 228 KB per SM, ~20TB/s bandwidth
@@ -98,6 +109,7 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 
 ### Streaming Multiprocessors (SMs)
 **Components:**
+
 - **CUDA Cores**: Scalar computation
 - **Tensor Cores**: Matrix (dense) computation
 - **Shared/Constant Memory**: High bandwidth temp buffer
@@ -116,6 +128,7 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 | **Kernel** | Function on GPU | GPU | L2/Global memory | Up to (2epsilonz-1)epsilon Blocks |
 
 ### Key Concepts
+
 - **32 threads form a warp**
 - **Threads in a warp run in parallel** with:
   - Same instructions
@@ -158,6 +171,7 @@ if __name__ == "__main__":
 ```
 
 ### 2. Triton (Intermediate)
+
 - **Compiler framework from OpenAI**
 - **Python interface with automated thread management**
 - **Higher performance than PyTorch for complex kernels**
@@ -179,6 +193,7 @@ def add_kernel(x_ptr, y_ptr, output_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
 ```
 
 ### 3. CUDA (Most Control)
+
 - **Bare-bone, one-to-one mapping to hardware**
 - **Highest performance**
 - **Heavy implementation burden**
@@ -241,16 +256,19 @@ cudaGetErrorString()      // Get error description
 ## Performance Analysis
 
 ### Timing Considerations
+
 - **PyTorch dispatches kernels non-blocking**
 - CPU continues execution before GPU finishes
 - **Must use CUDA events for accurate GPU timing**
 
 ### Profiling Tools
+
 - **Torch.profiler**: Good at showing CPU activity, slow processing
 - **Nsight Systems (nsys)**: High performance system-level profiling
 - **Nsight Compute (ncu)**: Tailored for intra-kernel profiling
 
 ### CUDA Streams
+
 - **Multiple streams may execute in parallel**
 - Depends on kernels and schedulers
 - **Use cudaEvents to synchronize between streams**
@@ -262,6 +280,7 @@ cudaGetErrorString()      // Get error description
 ## Modern GPU Features
 
 ### Advanced CUDA Features
+
 - **Unified memory address** (P100+)
 - **NvLink** (P100+)
 - **Clusters** (H100+)

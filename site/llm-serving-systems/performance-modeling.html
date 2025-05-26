@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Performance Modeling for LLM Serving Systems", "dateModified": "2025-05-25T16:53:46.063186", "description": "How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?", "articleSection": "Machine Learning Systems", "keywords": "performance,roofline,arithmetic intensity,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Performance Modeling for LLM Serving Systems", "dateModified": "2025-05-25T17:30:13.127561", "description": "How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?", "articleSection": "Machine Learning Systems", "keywords": "performance,roofline,arithmetic intensity,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Performance Modeling for LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:53:46.063186">
+                <time datetime="2025-05-25T17:30:13.127561">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -123,14 +123,18 @@
 <li><strong>Roofline</strong>: The boundary between memory and compute limitations</li>
 </ul>
 <h4 id="performance-optimization-strategies">Performance Optimization Strategies</h4>
-<p><strong>Compute optimizations:</strong>
-- Multithreading
-- ILP (Instruction-Level Parallelism)
-- SIMD (Single Instruction, Multiple Data)</p>
-<p><strong>Memory optimizations:</strong>
-- Stride accesses (HW prefetching)
-- Memory affinity (NUMA effect)
-- Software prefetching</p>
+<p><strong>Compute optimizations:</strong></p>
+<ul>
+<li>Multithreading</li>
+<li>ILP (Instruction-Level Parallelism)</li>
+<li>SIMD (Single Instruction, Multiple Data)</li>
+</ul>
+<p><strong>Memory optimizations:</strong></p>
+<ul>
+<li>Stride accesses (HW prefetching)</li>
+<li>Memory affinity (NUMA effect)</li>
+<li>Software prefetching</li>
+</ul>
 <h3 id="critical-operational-intensity">Critical Operational Intensity</h3>
 <p>$$\text{Intensity(Computation)} = \text{Intensity(Accelerator)}$$</p>
 <p>$$\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} = \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$$</p>
@@ -199,10 +203,12 @@
 <p><strong>Logic</strong>: All dense operations require $2B_{dense}P_{model}$ FLOPs total</p>
 <h3 id="network-centric-execution-time">Network-Centric Execution Time</h3>
 <p>$$T_{net} = \frac{4(N_{GPU} - 1)D_{model}B_{dense}S_{type}L}{NetBw}$$</p>
-<p><strong>Components</strong>:
-- $(N_{GPU} - 1)$: number of hops
-- $4$: All-Gathers per layer
-- All-Reduce approx 2   imes All-Gather</p>
+<p><strong>Components</strong>:</p>
+<ul>
+<li>$(N_{GPU} - 1)$: number of hops</li>
+<li>$4$: All-Gathers per layer</li>
+<li>All-Reduce approx 2   imes All-Gather</li>
+</ul>
 <hr />
 <h2 id="performance-analysis-results">Performance Analysis Results</h2>
 <h3 id="compute-vs-network">Compute vs Network</h3>
@@ -210,10 +216,12 @@
 <p><strong>Key Finding</strong>: LLM Serving is more <strong>compute-bound</strong> than <strong>network-bound</strong></p>
 <h3 id="compute-vs-memory">Compute vs Memory</h3>
 <p>$$\frac{T_{memory}}{T_{compute}} = \frac{Compute \cdot GPU_{mem}}{MemBW \cdot 2B_{dense}P_{model}}$$</p>
-<p><strong>Factors affecting the balance</strong>:
-- <strong>GQA allows for larger batch size</strong>  o favors compute
-- <strong>Model sizes tend to increase</strong>  o favors compute
-- <strong>Batches with large decode requests increase memory accesses</strong>   o favors memory</p>
+<p><strong>Factors affecting the balance</strong>:</p>
+<ul>
+<li><strong>GQA allows for larger batch size</strong>  o favors compute</li>
+<li><strong>Model sizes tend to increase</strong>  o favors compute</li>
+<li><strong>Batches with large decode requests increase memory accesses</strong>   o favors memory</li>
+</ul>
 <p><strong>Key Finding</strong>: LLM serving is more <strong>compute-bound</strong> than <strong>memory-bound</strong></p>
 <hr />
 <h2 id="grouped-query-attention-gqa">Grouped Query Attention (GQA)</h2>

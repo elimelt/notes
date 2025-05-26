@@ -12,11 +12,13 @@ description: Overview of transformer architecture (specifically Llama) and its i
 ### Prefill vs. Decode Phases
 
 **Prefill Phase:**
+
 - Processes entire input prompt at once
 - All tokens processed in parallel
 - Compute-bound operation
 
 **Decode Phase:**
+
 - Generates one token at a time
 - Sequential generation process
 - Memory-bound operation (utilizes KV cache)
@@ -49,17 +51,20 @@ embeddings: {
 $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
 Where:
+
 - **Q (Query):** What the transformer is looking for
 - **K (Key):** What's available in the sequence
 - **V (Value):** What needs to be updated to assimilate context
 - **$d_k$:** Head dimension for scaling
 
 #### Causal Self-Attention
+
 - **Causal Mask:** Prevents tokens from attending to future tokens
 - Uses $-\infty$ values in attention matrix for future positions
 - When $x_i \to -\infty$, $\text{softmax}(x_i) \to 0$
 
 #### Grouped Query Attention (GQA)
+
 - **Purpose:** Reduce KV cache memory usage
 - **Mechanism:** Multiple query heads share the same key and value heads
 - **Group Size:** Number of query heads per key/value head (e.g., group size = 4)
@@ -85,6 +90,7 @@ sub_q = [[[1, 2, 3],   # Head 1 for Token 1
 ### 4. Feed Forward Network (FFN)
 
 **Architecture:** Two linear transformations with activation function
+
 - **Up Projection:** Expands hidden dimension
 - **Gate Projection:** Controls information flow
 - **Activation Function:** SwiGLU (Swish-Gated Linear Unit)
@@ -99,11 +105,13 @@ $$\text{FFN}(x) = \text{Down}(\text{SwiGLU}(\text{Up}(x)) \odot \text{Gate}(x))$
 $$\text{RMSNorm}(x) = \frac{x}{\sqrt{\frac{1}{n}\sum_{i=1}^n x_i^2 + \epsilon}} \odot g$$
 
 Where:
+
 - **x:** Input vector of size n
 - **epsilon:** Small constant for numerical stability (e.g., $10^{-8}$)
 - **g:** Learned scaling parameter (element-wise multiplication)
 
 ### 6. Residual Connections
+
 - **Purpose:** Enable gradient flow in deep networks
 - **Implementation:** Add input to output of each major component
 - **Formula:** $\text{output} = \text{input} + \text{component}(\text{input})$
@@ -113,6 +121,7 @@ Where:
 ## Multi-GPU Implementation
 
 ### Tensor Parallelism
+
 - **Weight Distribution:** Split weight matrices across GPUs
 - **Query/Key/Value:** Distributed across different GPUs
 - **Computation:** Parallel matrix multiplications
@@ -120,11 +129,13 @@ Where:
 ### Communication Operations
 
 #### AllGather
+
 - **Purpose:** Collect partial results from all GPUs
 - **Usage:** After attention computation to gather all head outputs
 - **Operation Type:** Network-bound
 
 #### AllReduce
+
 - **Purpose:** Sum partial results across GPUs
 - **Composition:** ReduceScatter + AllGather
 - **Usage:** After FFN down projection
@@ -135,16 +146,19 @@ Where:
 ## Resource Utilization Patterns
 
 ### Compute-Bound Operations
+
 - Query, Key, Value projections
 - Up and Gate projections in FFN
 - Output projections
 - Prefill attention computation
 
 ### Memory-Bound Operations
+
 - Decode attention (KV cache access)
 - Reading cached key-value pairs
 
 ### Network-Bound Operations
+
 - AllGather communications
 - AllReduce communications
 
@@ -153,11 +167,13 @@ Where:
 ## Key Implementation Details
 
 ### KV Cache Management
+
 - **Storage:** Unique per batch, shared across layers
 - **Purpose:** Avoid recomputing key-value pairs during decode
 - **Memory Impact:** Major contributor to GPU memory usage
 
 ### Rotary Positional Encoding
+
 - **Application:** Applied to query and key vectors
 - **Purpose:** Encode relative position information
 - **Advantage:** Better handling of variable sequence lengths
@@ -172,6 +188,7 @@ $$\text{softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$$
 ## Architecture Comparison
 
 ### Original Transformer vs. Llama Architecture
+
 - **Original:** Encoder-decoder with cross-attention
 - **Llama:** Decoder-only architecture
 - **Normalization:** LayerNorm 	o RMSNorm

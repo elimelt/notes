@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Speculative Decoding in LLM Serving Systems", "dateModified": "2025-05-25T16:53:16.289989", "description": "Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.", "articleSection": "Machine Learning Systems", "keywords": "speculative decoding,llm,performance,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Speculative Decoding in LLM Serving Systems", "dateModified": "2025-05-25T17:30:43.516508", "description": "Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.", "articleSection": "Machine Learning Systems", "keywords": "speculative decoding,llm,performance,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Speculative Decoding in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:53:16.289989">
+                <time datetime="2025-05-25T17:30:43.516508">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -187,29 +187,39 @@
 <h2 id="advanced-techniques">Advanced Techniques</h2>
 <h3 id="medusa">Medusa</h3>
 <p><strong>Key Innovation</strong>: Add multiple prediction heads to a single model instead of using separate draft/target models.</p>
-<p><strong>Architecture</strong>:
-- Add a few additional heads to predict tokens
-- Easy to train the new heads with basic GPU
-- Easy to serve (same parallelism patterns)
-- Good speedup (~3x)</p>
-<p><strong>Tree Attention</strong>:
-- Heads provide different token candidates, forming different candidate sequences
-- Each sequence becomes a branch in the tree
-- Tree attention mask allows each token to attend only to its predecessors
-- Multiple sequences can be batched and verified in one forward pass</p>
-<p><strong>Variants</strong>:
-- <strong>Medusa-1</strong>: Medusa heads fine-tuned on top of frozen backbone LLM
-- <strong>Medusa-2</strong>: Medusa heads fine-tuned together with backbone LLM (requires special training recipe)</p>
+<p><strong>Architecture</strong>:</p>
+<ul>
+<li>Add a few additional heads to predict tokens</li>
+<li>Easy to train the new heads with basic GPU</li>
+<li>Easy to serve (same parallelism patterns)</li>
+<li>Good speedup (~3x)</li>
+</ul>
+<p><strong>Tree Attention</strong>:</p>
+<ul>
+<li>Heads provide different token candidates, forming different candidate sequences</li>
+<li>Each sequence becomes a branch in the tree</li>
+<li>Tree attention mask allows each token to attend only to its predecessors</li>
+<li>Multiple sequences can be batched and verified in one forward pass</li>
+</ul>
+<p><strong>Variants</strong>:</p>
+<ul>
+<li><strong>Medusa-1</strong>: Medusa heads fine-tuned on top of frozen backbone LLM</li>
+<li><strong>Medusa-2</strong>: Medusa heads fine-tuned together with backbone LLM (requires special training recipe)</li>
+</ul>
 <h3 id="specinfer">SpecInfer</h3>
 <p><strong>Problem</strong>: Single draft model may not provide enough "coverage"</p>
-<p><strong>Solution</strong>: Use multiple draft models simultaneously
-- Creates a tree of sequences
-- Can be verified simultaneously
-- Leverages memory-bound regime for batched verification</p>
-<p><strong>Token Tree Verification</strong>:
-- Uses topology-aware causal mask
-- Applies attention in a manner aware of tree topology
-- Enables batching of verification requests</p>
+<p><strong>Solution</strong>: Use multiple draft models simultaneously</p>
+<ul>
+<li>Creates a tree of sequences</li>
+<li>Can be verified simultaneously</li>
+<li>Leverages memory-bound regime for batched verification</li>
+</ul>
+<p><strong>Token Tree Verification</strong>:</p>
+<ul>
+<li>Uses topology-aware causal mask</li>
+<li>Applies attention in a manner aware of tree topology</li>
+<li>Enables batching of verification requests</li>
+</ul>
 <h2 id="implementation-details">Implementation Details</h2>
 <h3 id="parallel-token-probability-computation">Parallel Token Probability Computation</h3>
 <pre><code class="language-python"># Project to vocabulary

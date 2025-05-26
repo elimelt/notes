@@ -6,8 +6,7 @@ description: Overview of memory management techniques in LLM serving systems, pe
 ---
 
 # Memory Management in LLM Serving Systems
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
-
+> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhuz
 ## KV Cache Size Calculation
 
 ### Key Components
@@ -20,6 +19,7 @@ The KV cache size depends on:
 - **Layer**: Number of transformer layers
 
 ### Example Calculation - Llama3-8B on H100
+
 - **Total GPU memory**: 80GB
 - **Model weights**: 2	imes8=16GB (assuming FP16)
 - **Activations**: Negligible during serving
@@ -53,6 +53,7 @@ When serving requests with different output lengths:
 **Approach**: Allocate KV cache using maximum sequence length the model supports
 
 **Problems**:
+
 - **Low utilization**: Significant internal fragmentation
 - **Wasted memory**: Short requests don't use full allocated space
 - **Reduced batch size**: Max batch size = (80-16)/(384/1024) = 170
@@ -60,11 +61,13 @@ When serving requests with different output lengths:
 ### Method 2: std::vector-style Allocation
 
 **Approach**: 
+
 - Start with small size allocation
 - Double the size when fully occupied
 - Similar to dynamic array growth
 
 **Characteristics**:
+
 - **Internal waste**: ~75% average utilization within requests
 - **External fragmentation**: Memory gaps between requests
 - **Copy overhead**: Acceptable for the flexibility gained
@@ -74,6 +77,7 @@ When serving requests with different output lengths:
 **Core Innovation**: Chunk global memory space into small pages
 
 **Key Features**:
+
 - **Page size**: 16 tokens' KV = 16	imes2	imes2	imes8	imes128 = 64 KB
 - **No fragmentation**: Pages can be allocated non-contiguously
 - **Efficient bandwidth**: Each page large enough for good utilization
@@ -89,6 +93,7 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 ```
 
 **How it works**:
+
 - `kv_indptr[i]` to `kv_indptr[i+1]` indicates page range for request i
 - `kv_indices[kv_indptr[i]:kv_indptr[i+1]]` contains page IDs for request i
 - `kv_data[page_id]` stores the actual KV cache data
@@ -98,12 +103,14 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 **Concept**: Share common prefixes across multiple requests
 
 **Benefits**:
+
 - **Reduced prefill computation**: n	imesp 	o p (where p = prefix length, n = requests)
 - **Reduced KV cache size**: n	imesp 	o p
 - **Reduced memory bandwidth**: n	imesp 	o p during decoding
 - **Asynchronous matching**: Can be performed in background
 
 **Drawbacks**:
+
 - **Memory overhead**: Must store prefix chunks even when not reused
 
 ### Use Cases for Prefix Sharing
@@ -116,6 +123,7 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 ```
 
 #### Multi-request Scenarios
+
 - Same system prompts across different user queries
 - Shared conversation contexts
 - Common document prefixes
@@ -156,6 +164,7 @@ $$\frac{T_{recompute}}{T_{load}} = \frac{PCIE\_Bandwidth \times P_{compute}}{dty
 ## FlashAttention: Memory-Efficient Attention
 
 ### Problem with Standard Attention
+
 - **Large intermediate matrices**: Seq_len 	imes Seq_len attention scores
 - **Memory bottleneck**: Quadratic memory growth with sequence length
 
@@ -179,16 +188,19 @@ Where c = max(x_i) prevents overflow.
 4. **Rescaling**: Properly combine results from different blocks
 
 **Memory hierarchy utilization**:
+
 - **SRAM**: Fast, limited capacity for active blocks
 - **Global memory**: Slower, larger capacity for full matrices
 - **Registers**: Fastest, smallest capacity for running statistics
 
 ### Causal Masking in FlashAttention
+
 - **Implementation**: Set masked positions to -infty before softmax
 - **Effect**: Masked positions contribute 0 to attention weights
 - **Integration**: Seamlessly handled within block-wise computation
 
 ### Grouped Query Attention (GQA)
+
 - **Shared KV heads**: Multiple query heads share same key-value heads
 - **Memory savings**: Reduces KV cache size significantly
 - **Implementation**: Process multiple query blocks with same KV block

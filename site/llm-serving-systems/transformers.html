@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Transformer Architecture and Implementation", "dateModified": "2025-05-25T16:53:10.244944", "description": "Overview of transformer architecture (specifically Llama) and its implementation details for LLM serving systems", "articleSection": "Machine Learning Systems", "keywords": "transformers,architecture,implementation,attention,prefill,decode,feedforward,normalization,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Transformer Architecture and Implementation", "dateModified": "2025-05-25T17:31:49.046257", "description": "Overview of transformer architecture (specifically Llama) and its implementation details for LLM serving systems", "articleSection": "Machine Learning Systems", "keywords": "transformers,architecture,implementation,attention,prefill,decode,feedforward,normalization,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Transformer Architecture and Implementation</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:53:10.244944">
+                <time datetime="2025-05-25T17:31:49.046257">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -103,14 +103,18 @@
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
 <h3 id="prefill-vs-decode-phases">Prefill vs. Decode Phases</h3>
-<p><strong>Prefill Phase:</strong>
-- Processes entire input prompt at once
-- All tokens processed in parallel
-- Compute-bound operation</p>
-<p><strong>Decode Phase:</strong>
-- Generates one token at a time
-- Sequential generation process
-- Memory-bound operation (utilizes KV cache)</p>
+<p><strong>Prefill Phase:</strong></p>
+<ul>
+<li>Processes entire input prompt at once</li>
+<li>All tokens processed in parallel</li>
+<li>Compute-bound operation</li>
+</ul>
+<p><strong>Decode Phase:</strong></p>
+<ul>
+<li>Generates one token at a time</li>
+<li>Sequential generation process</li>
+<li>Memory-bound operation (utilizes KV cache)</li>
+</ul>
 <h3 id="transformer-layers-and-iterations">Transformer Layers and Iterations</h3>
 <ul>
 <li><strong>Inference Iteration:</strong> Complete forward pass through all layers to generate one output token</li>
@@ -130,11 +134,13 @@ embeddings: {
 <h3 id="2-attention-mechanism">2. Attention Mechanism</h3>
 <h4 id="self-attention-formula">Self-Attention Formula</h4>
 <p>$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$</p>
-<p>Where:
-- <strong>Q (Query):</strong> What the transformer is looking for
-- <strong>K (Key):</strong> What's available in the sequence
-- <strong>V (Value):</strong> What needs to be updated to assimilate context
-- <strong>$d_k$:</strong> Head dimension for scaling</p>
+<p>Where:</p>
+<ul>
+<li><strong>Q (Query):</strong> What the transformer is looking for</li>
+<li><strong>K (Key):</strong> What's available in the sequence</li>
+<li><strong>V (Value):</strong> What needs to be updated to assimilate context</li>
+<li><strong>$d_k$:</strong> Head dimension for scaling</li>
+</ul>
 <h4 id="causal-self-attention">Causal Self-Attention</h4>
 <ul>
 <li><strong>Causal Mask:</strong> Prevents tokens from attending to future tokens</li>
@@ -163,20 +169,24 @@ sub_q = [[[1, 2, 3],   # Head 1 for Token 1
 # Shape: (seq_len, num_heads, head_dim) = (2, 2, 3)
 </code></pre>
 <h3 id="4-feed-forward-network-ffn">4. Feed Forward Network (FFN)</h3>
-<p><strong>Architecture:</strong> Two linear transformations with activation function
-- <strong>Up Projection:</strong> Expands hidden dimension
-- <strong>Gate Projection:</strong> Controls information flow
-- <strong>Activation Function:</strong> SwiGLU (Swish-Gated Linear Unit)
-- <strong>Down Projection:</strong> Returns to original dimension</p>
+<p><strong>Architecture:</strong> Two linear transformations with activation function</p>
+<ul>
+<li><strong>Up Projection:</strong> Expands hidden dimension</li>
+<li><strong>Gate Projection:</strong> Controls information flow</li>
+<li><strong>Activation Function:</strong> SwiGLU (Swish-Gated Linear Unit)</li>
+<li><strong>Down Projection:</strong> Returns to original dimension</li>
+</ul>
 <p><strong>Mathematical representation:</strong>
 $$\text{FFN}(x) = \text{Down}(\text{SwiGLU}(\text{Up}(x)) \odot \text{Gate}(x))$$</p>
 <h3 id="5-normalization">5. Normalization</h3>
 <h4 id="rmsnorm-root-mean-square-normalization">RMSNorm (Root Mean Square Normalization)</h4>
 <p>$$\text{RMSNorm}(x) = \frac{x}{\sqrt{\frac{1}{n}\sum_{i=1}^n x_i^2 + \epsilon}} \odot g$$</p>
-<p>Where:
-- <strong>x:</strong> Input vector of size n
-- <strong>epsilon:</strong> Small constant for numerical stability (e.g., $10^{-8}$)
-- <strong>g:</strong> Learned scaling parameter (element-wise multiplication)</p>
+<p>Where:</p>
+<ul>
+<li><strong>x:</strong> Input vector of size n</li>
+<li><strong>epsilon:</strong> Small constant for numerical stability (e.g., $10^{-8}$)</li>
+<li><strong>g:</strong> Learned scaling parameter (element-wise multiplication)</li>
+</ul>
 <h3 id="6-residual-connections">6. Residual Connections</h3>
 <ul>
 <li><strong>Purpose:</strong> Enable gradient flow in deep networks</li>

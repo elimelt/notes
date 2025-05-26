@@ -18,6 +18,7 @@ Batching is critical for LLM serving performance. The H100 needs **333 batch siz
 ## User Experience Metrics
 
 ### Key Latency Metrics
+
 - **Time to First Token (TTFT)**: Time between user request submission and first token generation
   - TTFT = Queuing time + Prefill time
 - **Time Per Output Token (TPOT/ITL/IBT)**: Time between each output token
@@ -28,6 +29,7 @@ Batching is critical for LLM serving performance. The H100 needs **333 batch siz
 ### Service Level Objectives (SLO)
 
 Common SLO types in order of difficulty:
+
 1. **End-to-end time** (easiest)
 2. **TTFT + Average TPOT**
 3. **TTFT + Maximum TPOT** (hardest)
@@ -43,6 +45,7 @@ Common SLO types in order of difficulty:
 ## Batching Strategies
 
 ### 1. Simple Batching
+
 - **Characteristics**:
   - Lowest throughput
   - Short TTFT and TPOT
@@ -54,16 +57,19 @@ Common SLO types in order of difficulty:
 **Key Insight**: Admit new requests when decode requests finish
 
 **Benefits**:
+
 - **Higher throughput**: No waiting for longest decode request
 - **Stabilized GEMM batch size**: Better GPU utilization
 - **Reduced queuing time**: Requests enter at token granularity
 
 **Drawbacks**:
+
 - **Higher prefill latency**: Prefill batched with decode requests
 - **Higher decode latency**: Prefill slows concurrent decode
 
 #### Batch Size Calculation
 For continuous batching with:
+
 - Decode length `d`
 - Prefill length `p`
 - Request batch size `B`
@@ -71,6 +77,7 @@ For continuous batching with:
 **GEMM batch size** = $$\frac{p+d}{d+1}B = B + \frac{p-1}{d+1}B$$
 
 **Key relationships**:
+
 - Increasing prefill length 	o increases GEMM batch size
 - Increasing decode length 	o decreases GEMM batch size
 - For large `d`: GEMM batch size approx $(1 + \frac{p}{d})B$
@@ -84,11 +91,13 @@ For continuous batching with:
 **Solution**: Break prefill into fixed-size chunks
 
 **Benefits**:
+
 - **Highest throughput**: Further stabilized batch size
 - **Controlled decode latency**: Eliminates generation stalls
 - **Consistent GEMM batch size**: Better performance predictability
 
 **Drawbacks**:
+
 - **Longest TTFT**: More cycles needed for prefill
 - **Higher infrastructure complexity**: Chunking management overhead
 
@@ -102,20 +111,24 @@ For continuous batching with:
 **Architecture**: Separate clusters for prefill and decode operations
 
 **Process**:
+
 1. Prefill server processes input tokens
 2. KV cache transferred to decode server
 3. Decode server handles token generation
 
 **Benefits**:
+
 - **Short TTFT and TPOT**: Decoupled operations
 - **Optimal latency**: Can scale to one request per machine
 
 **Drawbacks**:
+
 - **Low throughput**: Prefill cluster fully utilized, decode underutilized
 - **High infrastructure complexity**: KV cache transfer overhead
 - **Network overhead**: KV transfer can be significant (160ms for 16K tokens)
 
 #### KV Transfer Optimization
+
 - Use **chunked prefill** + **layer-wise transfer** to overlap KV movement
 - Transfer last layer of last chunk when prefill completes
 
@@ -124,28 +137,33 @@ For continuous batching with:
 ### 1. SLO Constraints
 
 **For PD Disaggregation**:
+
 - Prefill batch limit 	o TTFT constraint
 - Decode batch limit 	o TPOT constraint: `B*attn + GEMM(B) + C < TPOT`
 
 **For Chunked Prefill**:
+
 - Cycle Time = GEMM(B_dense) + $\frac{d}{p+d}B_{dense}$ 	imes attn
 - Constraints: Cycle time < TPOT, $\frac{p+d}{B_{dense}}$ 	imes Cycle Time < TTFT
 
 ### 2. GPU Memory Capacity
 
 **KV Cache Limitations**:
+
 - For 8B model on H100: ~512K tokens max
 - **Challenge**: Output length unknown, KV cache grows over time
 
 #### Batch Size Formulas
 
 **For constant lengths**:
+
 $$B = \frac{C}{p + \frac{1}{2}d}$$
 
 **For variable lengths**:
 $$B = \frac{d_{avg}C}{(pd)_{avg} + \frac{1}{2}(d^2)_{avg}}$$
 
 Where:
+
 - `C` = KV cache capacity
 - `p` = prefill length
 - `d` = decode length
@@ -156,11 +174,13 @@ Where:
 ### 3. Memory Management Strategies
 
 **Prediction-Based Control**:
+
 - Use small encoder models to predict output length
 - Stop prefill when KV cache predicted to exceed capacity
 - Add decode pending queues for PD disaggregation
 
 **Out-of-Memory Handling**:
+
 - Similar to prefix sharing eviction
 - Offload KV cache to CPU memory (faster than recomputation)
 - Evict least recently used requests
@@ -177,17 +197,20 @@ Where:
 ## Advanced Considerations
 
 ### SLO Attainment Strategies
+
 - **95% SLO targets** may require:
   - Dropping long input/output requests
   - Infinite delay for predicted SLO violations
   - Prioritizing high-SLO requests
 
 ### Fairness Constraints
+
 - All requests should make progress
 - Equal throughput share per user
 - SLO violation "badness" metrics vs binary attain/violate
 
 ### Output Length Impact
+
 - Longer requests stay in KV cache longer
 - Creates memory pressure and batch size oscillations
 - Prediction accuracy critical for optimal performance

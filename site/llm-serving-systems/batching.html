@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Batching in LLM Serving Systems", "dateModified": "2025-05-25T17:07:15.834464", "description": "Overview of batching techniques in LLM serving systems,", "articleSection": "Machine Learning Systems", "keywords": "batching,performance,throughput,latency,llm,serving systems,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Batching in LLM Serving Systems", "dateModified": "2025-05-25T17:10:36.039095", "description": "Overview of batching techniques in LLM serving systems,", "articleSection": "Machine Learning Systems", "keywords": "batching,performance,throughput,latency,llm,serving systems,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Batching in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-05-25T17:07:15.834464">
+                <time datetime="2025-05-25T17:10:36.039095">
                     Last modified: 2025-05-25
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
@@ -121,10 +121,12 @@
 <li><strong>Normalized Latency</strong>: End-to-end time / number of output tokens</li>
 </ul>
 <h3 id="service-level-objectives-slo">Service Level Objectives (SLO)</h3>
-<p>Common SLO types in order of difficulty:
-1. <strong>End-to-end time</strong> (easiest)
-2. <strong>TTFT + Average TPOT</strong>
-3. <strong>TTFT + Maximum TPOT</strong> (hardest)</p>
+<p>Common SLO types in order of difficulty:</p>
+<ol>
+<li><strong>End-to-end time</strong> (easiest)</li>
+<li><strong>TTFT + Average TPOT</strong></li>
+<li><strong>TTFT + Maximum TPOT</strong> (hardest)</li>
+</ol>
 <p><strong>SLO Difficulty</strong>: TTFT + TPOT_max &gt; TTFT + TPOT_avg &gt; E2E</p>
 <h3 id="deadline-based-slo-management">Deadline-Based SLO Management</h3>
 <ul>
@@ -145,34 +147,46 @@
 </ul>
 <h3 id="2-continuous-batching-orca">2. Continuous Batching (Orca)</h3>
 <p><strong>Key Insight</strong>: Admit new requests when decode requests finish</p>
-<p><strong>Benefits</strong>:
-- <strong>Higher throughput</strong>: No waiting for longest decode request
-- <strong>Stabilized GEMM batch size</strong>: Better GPU utilization
-- <strong>Reduced queuing time</strong>: Requests enter at token granularity</p>
-<p><strong>Drawbacks</strong>:
-- <strong>Higher prefill latency</strong>: Prefill batched with decode requests
-- <strong>Higher decode latency</strong>: Prefill slows concurrent decode</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li><strong>Higher throughput</strong>: No waiting for longest decode request</li>
+<li><strong>Stabilized GEMM batch size</strong>: Better GPU utilization</li>
+<li><strong>Reduced queuing time</strong>: Requests enter at token granularity</li>
+</ul>
+<p><strong>Drawbacks</strong>:</p>
+<ul>
+<li><strong>Higher prefill latency</strong>: Prefill batched with decode requests</li>
+<li><strong>Higher decode latency</strong>: Prefill slows concurrent decode</li>
+</ul>
 <h4 id="batch-size-calculation">Batch Size Calculation</h4>
-<p>For continuous batching with:
-- Decode length <code>d</code>
-- Prefill length <code>p</code>
-- Request batch size <code>B</code></p>
+<p>For continuous batching with:</p>
+<ul>
+<li>Decode length <code>d</code></li>
+<li>Prefill length <code>p</code></li>
+<li>Request batch size <code>B</code></li>
+</ul>
 <p><strong>GEMM batch size</strong> = $$\frac{p+d}{d+1}B = B + \frac{p-1}{d+1}B$$</p>
-<p><strong>Key relationships</strong>:
-- Increasing prefill length     o increases GEMM batch size
-- Increasing decode length  o decreases GEMM batch size
-- For large <code>d</code>: GEMM batch size approx $(1 + \frac{p}{d})B$</p>
+<p><strong>Key relationships</strong>:</p>
+<ul>
+<li>Increasing prefill length     o increases GEMM batch size</li>
+<li>Increasing decode length  o decreases GEMM batch size</li>
+<li>For large <code>d</code>: GEMM batch size approx $(1 + \frac{p}{d})B$</li>
+</ul>
 <p><strong>Example</strong>: Batch size = 512, p/d = 2  o GEMM batch size = 512 imes3 = 1536</p>
 <h3 id="3-chunked-prefill">3. Chunked Prefill</h3>
 <p><strong>Problem</strong>: Simple continuous batching creates generation stalls due to variable prefill sizes</p>
 <p><strong>Solution</strong>: Break prefill into fixed-size chunks</p>
-<p><strong>Benefits</strong>:
-- <strong>Highest throughput</strong>: Further stabilized batch size
-- <strong>Controlled decode latency</strong>: Eliminates generation stalls
-- <strong>Consistent GEMM batch size</strong>: Better performance predictability</p>
-<p><strong>Drawbacks</strong>:
-- <strong>Longest TTFT</strong>: More cycles needed for prefill
-- <strong>Higher infrastructure complexity</strong>: Chunking management overhead</p>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li><strong>Highest throughput</strong>: Further stabilized batch size</li>
+<li><strong>Controlled decode latency</strong>: Eliminates generation stalls</li>
+<li><strong>Consistent GEMM batch size</strong>: Better performance predictability</li>
+</ul>
+<p><strong>Drawbacks</strong>:</p>
+<ul>
+<li><strong>Longest TTFT</strong>: More cycles needed for prefill</li>
+<li><strong>Higher infrastructure complexity</strong>: Chunking management overhead</li>
+</ul>
 <h4 id="fixed-token-budget-approach">Fixed Token Budget Approach</h4>
 <ul>
 <li>Allocate fixed token budget per iteration</li>
@@ -181,17 +195,23 @@
 </ul>
 <h3 id="4-prefill-decode-disaggregation">4. Prefill-Decode Disaggregation</h3>
 <p><strong>Architecture</strong>: Separate clusters for prefill and decode operations</p>
-<p><strong>Process</strong>:
-1. Prefill server processes input tokens
-2. KV cache transferred to decode server
-3. Decode server handles token generation</p>
-<p><strong>Benefits</strong>:
-- <strong>Short TTFT and TPOT</strong>: Decoupled operations
-- <strong>Optimal latency</strong>: Can scale to one request per machine</p>
-<p><strong>Drawbacks</strong>:
-- <strong>Low throughput</strong>: Prefill cluster fully utilized, decode underutilized
-- <strong>High infrastructure complexity</strong>: KV cache transfer overhead
-- <strong>Network overhead</strong>: KV transfer can be significant (160ms for 16K tokens)</p>
+<p><strong>Process</strong>:</p>
+<ol>
+<li>Prefill server processes input tokens</li>
+<li>KV cache transferred to decode server</li>
+<li>Decode server handles token generation</li>
+</ol>
+<p><strong>Benefits</strong>:</p>
+<ul>
+<li><strong>Short TTFT and TPOT</strong>: Decoupled operations</li>
+<li><strong>Optimal latency</strong>: Can scale to one request per machine</li>
+</ul>
+<p><strong>Drawbacks</strong>:</p>
+<ul>
+<li><strong>Low throughput</strong>: Prefill cluster fully utilized, decode underutilized</li>
+<li><strong>High infrastructure complexity</strong>: KV cache transfer overhead</li>
+<li><strong>Network overhead</strong>: KV transfer can be significant (160ms for 16K tokens)</li>
+</ul>
 <h4 id="kv-transfer-optimization">KV Transfer Optimization</h4>
 <ul>
 <li>Use <strong>chunked prefill</strong> + <strong>layer-wise transfer</strong> to overlap KV movement</li>
@@ -199,36 +219,48 @@
 </ul>
 <h2 id="batching-limitations">Batching Limitations</h2>
 <h3 id="1-slo-constraints">1. SLO Constraints</h3>
-<p><strong>For PD Disaggregation</strong>:
-- Prefill batch limit   o TTFT constraint
-- Decode batch limit    o TPOT constraint: <code>B*attn + GEMM(B) + C &lt; TPOT</code></p>
-<p><strong>For Chunked Prefill</strong>:
-- Cycle Time = GEMM(B_dense) + $\frac{d}{p+d}B_{dense}$     imes attn
-- Constraints: Cycle time &lt; TPOT, $\frac{p+d}{B_{dense}}$   imes Cycle Time &lt; TTFT</p>
+<p><strong>For PD Disaggregation</strong>:</p>
+<ul>
+<li>Prefill batch limit   o TTFT constraint</li>
+<li>Decode batch limit    o TPOT constraint: <code>B*attn + GEMM(B) + C &lt; TPOT</code></li>
+</ul>
+<p><strong>For Chunked Prefill</strong>:</p>
+<ul>
+<li>Cycle Time = GEMM(B_dense) + $\frac{d}{p+d}B_{dense}$     imes attn</li>
+<li>Constraints: Cycle time &lt; TPOT, $\frac{p+d}{B_{dense}}$   imes Cycle Time &lt; TTFT</li>
+</ul>
 <h3 id="2-gpu-memory-capacity">2. GPU Memory Capacity</h3>
-<p><strong>KV Cache Limitations</strong>:
-- For 8B model on H100: ~512K tokens max
-- <strong>Challenge</strong>: Output length unknown, KV cache grows over time</p>
+<p><strong>KV Cache Limitations</strong>:</p>
+<ul>
+<li>For 8B model on H100: ~512K tokens max</li>
+<li><strong>Challenge</strong>: Output length unknown, KV cache grows over time</li>
+</ul>
 <h4 id="batch-size-formulas">Batch Size Formulas</h4>
-<p><strong>For constant lengths</strong>:
-$$B = \frac{C}{p + \frac{1}{2}d}$$</p>
+<p><strong>For constant lengths</strong>:</p>
+<p>$$B = \frac{C}{p + \frac{1}{2}d}$$</p>
 <p><strong>For variable lengths</strong>:
 $$B = \frac{d_{avg}C}{(pd)<em avg="avg">{avg} + \frac{1}{2}(d^2)</em>$$}</p>
-<p>Where:
-- <code>C</code> = KV cache capacity
-- <code>p</code> = prefill length
-- <code>d</code> = decode length
-- Longer requests occupy cache longer, reducing effective batch size</p>
+<p>Where:</p>
+<ul>
+<li><code>C</code> = KV cache capacity</li>
+<li><code>p</code> = prefill length</li>
+<li><code>d</code> = decode length</li>
+<li>Longer requests occupy cache longer, reducing effective batch size</li>
+</ul>
 <p><strong>Example</strong>: 1K input, uniform 0-4K output  o effective batch size approx 220</p>
 <h3 id="3-memory-management-strategies">3. Memory Management Strategies</h3>
-<p><strong>Prediction-Based Control</strong>:
-- Use small encoder models to predict output length
-- Stop prefill when KV cache predicted to exceed capacity
-- Add decode pending queues for PD disaggregation</p>
-<p><strong>Out-of-Memory Handling</strong>:
-- Similar to prefix sharing eviction
-- Offload KV cache to CPU memory (faster than recomputation)
-- Evict least recently used requests</p>
+<p><strong>Prediction-Based Control</strong>:</p>
+<ul>
+<li>Use small encoder models to predict output length</li>
+<li>Stop prefill when KV cache predicted to exceed capacity</li>
+<li>Add decode pending queues for PD disaggregation</li>
+</ul>
+<p><strong>Out-of-Memory Handling</strong>:</p>
+<ul>
+<li>Similar to prefix sharing eviction</li>
+<li>Offload KV cache to CPU memory (faster than recomputation)</li>
+<li>Evict least recently used requests</li>
+</ul>
 <h2 id="performance-comparison">Performance Comparison</h2>
 <table>
 <thead>

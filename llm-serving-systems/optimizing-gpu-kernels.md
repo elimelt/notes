@@ -9,6 +9,7 @@ description: How to write high-performance GPU kernels using CUDA and Triton, wi
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## GPU Architecture Recap
+
 - Memory hierarchy with varying capacities and bandwidths:
   - Global Memory (80GB): ~3TB/s
   - L2 Cache (50MB): ~10TB/s
@@ -26,6 +27,7 @@ description: How to write high-performance GPU kernels using CUDA and Triton, wi
 | Kernel | Function on GPU | GPU | L2 / Global memory | Up to (2^32-1)^3 Blocks |
 
 ## Triton Framework
+
 - **What is Triton?** A compiler framework from OpenAI for high-performance kernels with reduced human inputs
   - Python interface
   - Automated thread management
@@ -37,6 +39,7 @@ description: How to write high-performance GPU kernels using CUDA and Triton, wi
 - Provides useful primitives: `tl.load`, `tl.store`, `tl.min`, etc.
 
 ## CUDA
+
 - **What is CUDA?**
   - Bare-bone GPU programming
   - One-to-one mapping to the hardware
@@ -90,6 +93,7 @@ Four key optimization strategies:
 4. Avoiding Branch Divergence
 
 ### Matrix Transpose Example
+
 - **Problem**: When transposing a matrix, memory access patterns change from row-major to column-major
 
 - **V0: Torch Implementation**
@@ -119,6 +123,7 @@ Four key optimization strategies:
   - Performance: 280 mus, 1.9TB/s
 
 ### Bank Conflicts
+
 - Shared memory is divided into banks (typically 32)
 - If multiple threads in a warp access the same bank, accesses are serialized
 - Bank conflicts occur when threads access different addresses in the same bank
@@ -127,12 +132,14 @@ Four key optimization strategies:
   - Rearranging memory access patterns
 
 ### Branch Divergence
+
 - Threads in a warp always execute the same instructions
 - If a warp has both threads that need to execute the 'if' path and threads that need to execute the 'else' path, all threads will execute both paths
 - The warp explores all paths and then uses a mask to determine outputs
 - For optimal performance, minimize branch divergence within a warp
 
 ## Reduction Problem
+
 - **Definition**: Combine elements using an operation (sum, max, min, etc.)
 - Example: `for elements in array: temp = op(temp, element)`
 
@@ -146,6 +153,7 @@ Four key optimization strategies:
 - **Trade-off**: More elements loading means higher memory utilization, but number of blocks reduces, and GPU utilization goes down
 
 ## GEMM (General Matrix Multiplication)
+
 - **Memory Load Challenge**:
   - For every output element: Load one row + one column = 2K elements
   - Total memory load = 2MNK
@@ -167,23 +175,27 @@ Four key optimization strategies:
 # Matrix Transpose Kernel Case Study
 
 ## Problem Setup
+
 - Transform a 4	imes4 matrix from row-major to column-major layout
 - Input: `[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]`
 - Output: `[0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15]`
 
 ## Transpose V1: Row-wise Partitioning
+
 - **Performance**: 3.65 ms
 - **Problem**: Uncoalesced global accesses
   - **Uncoalesced Global Accesses**: 117,440,512 excessive sectors (88% of total)
   - Branch efficiency: 100%, but poor memory access pattern
 
 ## Transpose V2: Global Memory Coalescing
+
 - **Key Concept**: Inside one warp, if memory access addresses are contiguous, the memory access is coalesced (batched)
 - **Performance**: 1.40 ms (significant improvement)
 - **Remaining Issue**: Uncoalesced writes to output matrix
   - Still has 58,720,256 excessive sectors (78% of total)
 
 ## Transpose V3: Tilewise Partitioning with Shared Memory
+
 - **Strategy**: Use shared memory as intermediate buffer
 - **Key Insight**: Reading discontinuously from shared memory doesn't significantly affect performance
 - **Performance**: 312 mus
@@ -211,11 +223,13 @@ my_kernel<<<grid, block, shared_mem_size_in_bytes>>>
 ## Understanding Bank Conflicts
 
 **Bank Structure**: Shared memory is organized into banks (typically 32 banks)
+
 - Elements are distributed across banks in round-robin fashion
 - **Conflict occurs** when multiple threads in a warp access different addresses in the same bank
 - **No conflict** when threads access the same address or different banks
 
 ## Transpose V4: Padding to Avoid Bank Conflicts
+
 - **Solution**: Add padding to shared memory arrays
 - **Result**:
   - **Performance**: 280 mus
@@ -227,6 +241,7 @@ my_kernel<<<grid, block, shared_mem_size_in_bytes>>>
 # Reduction Kernel Case Study
 
 ## Reduction Problem Definition
+
 - **Goal**: Apply associative operation across array elements
 - **Examples**: Sum, Max/Min operations
 - **Pattern**:
@@ -244,30 +259,36 @@ Instead of sequential reduction, use tree-like parallel reduction:
 ## Reduction Implementation Variants
 
 ### Reduction #1: Interleaved Addressing
+
 - **Pattern**: `threadID % 2^N == 0` does the work
 - **Offset**: `2^(N-1)`
 - **Problem**: Severe branch divergence
 
 ### Branch Divergence in CUDA
 **Key Concept**: Threads in a warp always execute the same instructions
+
 - GPU explores all code paths and uses masks to determine outputs
 - **Divergent warps**: Some threads active, others idle
 - **Performance Impact**: Redundant operations reduce efficiency
 
 ### Reduction #2: Sequential Access Pattern
+
 - **Improvement**: Better access patterns
 - **Still has**: Some branch divergence issues
 
 ### Reduction #3: Sequential Accesses
+
 - **Key Insight**: Start with larger stride and work down
 - **Benefit**: Eliminates bank conflicts
 - **Access Pattern**: Stride 8 	o Stride 4 	o Stride 2 	o Stride 1
 
 ### Reduction #4: Load Two Elements
+
 - **Optimization**: Each thread loads and processes multiple elements
 - **Benefit**: Better memory utilization
 
 ### Reduction #5: Load More Elements
+
 - **Trade-off**: Higher memory utilization vs. reduced GPU occupancy
 - **Challenge**: Fewer blocks means lower overall GPU utilization
 
@@ -284,6 +305,7 @@ For matrices of size M	imesK and K	imesN:
 
 ## GEMM Tiling Strategy
 **Load by Tiles**:
+
 - Input tile: `TILE_M 	imes K`
 - Weight tile: `K 	imes TILE_N`
 - Output tile: `TILE_M 	imes TILE_N`
@@ -296,11 +318,13 @@ $$L = \frac{Tile_M + Tile_N}{Tile_M \cdot Tile_N} \cdot MNK$$
 ## Tensor Cores
 
 **Definition**: Special hardware units that perform small GEMM operations
+
 - **Usage**: One warp (32 threads) collectively uses tensor core
 - **Shapes**: Various supported (16	imes8	imes16, 8	imes8	imes4, etc.)
 - **Performance**: Up to 256	imes speedup over F32 CUDA cores for specific data types
 
 ### GEMM Hierarchy
+
 - **Thread Block**: Handles large tile
 - **Warp**: Handles medium tile
 - **Tensor Core**: Handles small GEMM (e.g., 16	imes8	imes16)
@@ -312,20 +336,25 @@ $$L = \frac{Tile_M + Tile_N}{Tile_M \cdot Tile_N} \cdot MNK$$
 ## Essential Libraries
 
 ### **cuBLAS**
+
 - Closed-source GEMM library
 - Highly optimized by NVIDIA
 
 ### **CUTLASS**
+
 - Open-source template-based GEMM library
 - Customizable and extensible
 
 ### **Raft**
+
 - Vector Search, Clustering, Top-K, Sort operations
 
 ### **FlashInfer**
+
 - Attention kernels (Fused Softmax, Discontinuous GEMV)
 
 ### **CUB**
+
 - Templates for basic operations at Warp, Block, and Device level
 
 ---

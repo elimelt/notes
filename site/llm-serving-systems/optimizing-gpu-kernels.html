@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Optimizing GPU Kernels", "dateModified": "2025-05-25T16:53:49.938920", "description": "How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.", "articleSection": "Machine Learning Systems", "keywords": "gpu,kernel,optimization,cuda,triton"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Optimizing GPU Kernels", "dateModified": "2025-05-30T14:34:56.485598", "description": "How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.", "articleSection": "Machine Learning Systems", "keywords": "gpu,kernel,optimization,cuda,triton"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,8 +91,8 @@
         <article>
             <h1>Optimizing GPU Kernels</h1>
             <div class="meta">
-                <time datetime="2025-05-25T16:53:49.938920">
-                    Last modified: 2025-05-25
+                <time datetime="2025-05-30T14:34:56.485598">
+                    Last modified: 2025-05-30
                 </time>
                 <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -404,10 +404,12 @@ my_kernel&lt;&lt;&lt;grid, block, shared_mem_size_in_bytes&gt;&gt;&gt;
 <li>Requires <code>cudaFuncSetAttribute()</code> for sizes &gt; 48KB</li>
 </ul>
 <h2 id="understanding-bank-conflicts">Understanding Bank Conflicts</h2>
-<p><strong>Bank Structure</strong>: Shared memory is organized into banks (typically 32 banks)
-- Elements are distributed across banks in round-robin fashion
-- <strong>Conflict occurs</strong> when multiple threads in a warp access different addresses in the same bank
-- <strong>No conflict</strong> when threads access the same address or different banks</p>
+<p><strong>Bank Structure</strong>: Shared memory is organized into banks (typically 32 banks)</p>
+<ul>
+<li>Elements are distributed across banks in round-robin fashion</li>
+<li><strong>Conflict occurs</strong> when multiple threads in a warp access different addresses in the same bank</li>
+<li><strong>No conflict</strong> when threads access the same address or different banks</li>
+</ul>
 <h2 id="transpose-v4-padding-to-avoid-bank-conflicts">Transpose V4: Padding to Avoid Bank Conflicts</h2>
 <ul>
 <li><strong>Solution</strong>: Add padding to shared memory arrays</li>
@@ -442,10 +444,12 @@ my_kernel&lt;&lt;&lt;grid, block, shared_mem_size_in_bytes&gt;&gt;&gt;
 <li><strong>Problem</strong>: Severe branch divergence</li>
 </ul>
 <h3 id="branch-divergence-in-cuda">Branch Divergence in CUDA</h3>
-<p><strong>Key Concept</strong>: Threads in a warp always execute the same instructions
-- GPU explores all code paths and uses masks to determine outputs
-- <strong>Divergent warps</strong>: Some threads active, others idle
-- <strong>Performance Impact</strong>: Redundant operations reduce efficiency</p>
+<p><strong>Key Concept</strong>: Threads in a warp always execute the same instructions</p>
+<ul>
+<li>GPU explores all code paths and uses masks to determine outputs</li>
+<li><strong>Divergent warps</strong>: Some threads active, others idle</li>
+<li><strong>Performance Impact</strong>: Redundant operations reduce efficiency</li>
+</ul>
 <h3 id="reduction-2-sequential-access-pattern">Reduction #2: Sequential Access Pattern</h3>
 <ul>
 <li><strong>Improvement</strong>: Better access patterns</li>
@@ -476,18 +480,22 @@ my_kernel&lt;&lt;&lt;grid, block, shared_mem_size_in_bytes&gt;&gt;&gt;
 - <strong>Unique loads</strong>: Only MK + NK
 - <strong>Problem</strong>: Massive redundancy in memory access</p>
 <h2 id="gemm-tiling-strategy">GEMM Tiling Strategy</h2>
-<p><strong>Load by Tiles</strong>:
-- Input tile: <code>TILE_M   imes K</code>
-- Weight tile: <code>K   imes TILE_N</code>
-- Output tile: <code>TILE_M  imes TILE_N</code></p>
+<p><strong>Load by Tiles</strong>:</p>
+<ul>
+<li>Input tile: <code>TILE_M   imes K</code></li>
+<li>Weight tile: <code>K   imes TILE_N</code></li>
+<li>Output tile: <code>TILE_M  imes TILE_N</code></li>
+</ul>
 <p><strong>Memory Load Reduction</strong>:
 $$L = \frac{Tile_M + Tile_N}{Tile_M \cdot Tile_N} \cdot MNK$$</p>
 <p><strong>Key Benefit</strong>: L2 cache access reduced by factor of tile dimensions</p>
 <h2 id="tensor-cores">Tensor Cores</h2>
-<p><strong>Definition</strong>: Special hardware units that perform small GEMM operations
-- <strong>Usage</strong>: One warp (32 threads) collectively uses tensor core
-- <strong>Shapes</strong>: Various supported (16 imes8   imes16, 8   imes8   imes4, etc.)
-- <strong>Performance</strong>: Up to 256    imes speedup over F32 CUDA cores for specific data types</p>
+<p><strong>Definition</strong>: Special hardware units that perform small GEMM operations</p>
+<ul>
+<li><strong>Usage</strong>: One warp (32 threads) collectively uses tensor core</li>
+<li><strong>Shapes</strong>: Various supported (16 imes8   imes16, 8   imes8   imes4, etc.)</li>
+<li><strong>Performance</strong>: Up to 256    imes speedup over F32 CUDA cores for specific data types</li>
+</ul>
 <h3 id="gemm-hierarchy">GEMM Hierarchy</h3>
 <ul>
 <li><strong>Thread Block</strong>: Handles large tile</li>

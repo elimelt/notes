@@ -480,9 +480,7 @@ class SiteGenerator:
             'style="font-size:24px; color: white;" class="fa">&#xf09b;</a>'
         )
 
-        # Add home link if not on index page
-        if not current_page.is_index:
-            nav_items.append('<a href="/index.html">Home</a>')
+        nav_items.append('<a href="/index.html">Home</a>')
 
         # Add categories link if categories exist
         if self.categories:

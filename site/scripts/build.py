@@ -543,7 +543,22 @@ class SiteGenerator:
             is_index=True,
         )
 
+        # Add to pages collection
         self.pages[index_page.path] = index_page
+
+        # Generate the HTML file immediately
+        output_path = self.output_dir / taxonomy_type / "index.html"
+        self._ensure_parent_directory(output_path)
+
+        try:
+            html_content = self.jinja_env.get_template("base").render(
+                **self._get_page_context(index_page)
+            )
+            output_path.write_text(html_content, encoding="utf-8")
+            self._set_file_permissions(output_path)
+            logger.info(f"Generated {taxonomy_type} index page")
+        except Exception as e:
+            logger.error(f"Failed to generate {taxonomy_type} index: {str(e)}")
 
     def _create_taxonomy_list_html(
         self, taxonomy_type: str, taxonomy_items: Dict[str, List[Page]]
@@ -695,10 +710,16 @@ class SiteGenerator:
 
     def _generate_html_pages(self) -> None:
         """Generate HTML for all pages."""
+        # Generate regular pages (excluding taxonomy index pages that were already generated)
         for page in self.pages.values():
-            self._generate_page(page)
+            # Skip taxonomy index pages as they're generated in _generate_taxonomy_index
+            if not (
+                str(page.path).endswith("/index.md")
+                and str(page.path).startswith(("categories/", "tags/"))
+            ):
+                self._generate_page(page)
 
-        # Generate taxonomy collection pages
+        # Generate taxonomy collection pages (individual category/tag pages)
         self._generate_taxonomy_collection_pages("category", self.categories)
         self._generate_taxonomy_collection_pages("tag", self.tags)
 

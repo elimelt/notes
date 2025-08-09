@@ -727,7 +727,8 @@ class SiteGenerator:
         self, taxonomy_type: str, collection: Dict[str, List[Page]]
     ) -> None:
         """Generate individual pages for each taxonomy item."""
-        taxonomy_plural = f"{taxonomy_type}s"
+        # Proper pluralization
+        taxonomy_plural = "categories" if taxonomy_type == "category" else "tags"
 
         for name, pages in collection.items():
             output_path = self.output_dir / taxonomy_plural / f"{name.lower()}.html"

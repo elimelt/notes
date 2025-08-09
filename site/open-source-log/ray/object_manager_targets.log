@@ -1,9 +1,0 @@
-//:_object_manager_cc_grpc_grpc_codegen
-//:local_object_manager_test
-//:object_manager
-//:object_manager_cc_grpc
-//:object_manager_common
-//:object_manager_rpc
-//python/ray/tests:test_object_manager
-//src/ray/protobuf:object_manager_cc_proto
-//src/ray/protobuf:object_manager_proto

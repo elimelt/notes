@@ -7,7 +7,7 @@
     <title>Sliding Window Ack Clock | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receiver where the receiver's ability to process incoming data can become a bottleneck, leading to buffer buildup and reduced throughput. Describes the sliding window ACK clock approach as a solution to this issue, which aims to pace the transmission of data to match the receiver's processing capacity.">
+    <meta name="description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Sliding Window Ack Clock">
-    <meta property="og:description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receiver where the receiver's ability to process incoming data can become a bottleneck, leading to buffer buildup and reduced throughput. Describes the sliding window ACK clock approach as a solution to this issue, which aims to pace the transmission of data to match the receiver's processing capacity.">
+    <meta property="og:description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive">
     <meta property="og:url" content="https://notes.elimelt.com/networks/4-transport/ACK-clocking.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Sliding Window Ack Clock">
-    <meta name="twitter:description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receiver where the receiver's ability to process incoming data can become a bottleneck, leading to buffer buildup and reduced throughput. Describes the sliding window ACK clock approach as a solution to this issue, which aims to pace the transmission of data to match the receiver's processing capacity.">
+    <meta name="twitter:description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive">
 
     <meta name="keywords" content="sliding window,ack clocking,tcp,network congestion control">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Ack Clock", "dateModified": "2025-02-11T20:48:12.244702", "description": "Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receiver where the receiver's ability to process incoming data can become a bottleneck, leading to buffer buildup and reduced throughput. Describes the sliding window ACK clock approach as a solution to this issue, which aims to pace the transmission of data to match the receiver's processing capacity.", "articleSection": "Networks", "keywords": "sliding window,ack clocking,tcp,network congestion control"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Ack Clock", "dateModified": "2025-02-11T20:48:12.244702", "description": "Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive", "url": "https://notes.elimelt.com/networks/4-transport/ACK-clocking.html", "articleSection": "Networks", "keywords": "sliding window,ack clocking,tcp,network congestion control"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Sliding Window Ack Clock
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="ack-clocking">ACK Clocking</h1>
-<h2 id="sliding-window-ack-clock">Sliding Window Ack CLock</h2>
+                <h1 id="ack-clocking"><a class="toclink" href="#ack-clocking">ACK Clocking</a></h1>
+<h2 id="sliding-window-ack-clock"><a class="toclink" href="#sliding-window-ack-clock">Sliding Window Ack CLock</a></h2>
 <p>Each in-order ACK advances the sliding window and lets a new segment enter the network. This prevents queuing buildups at slow links, and thus congestion. Segments are buffered and spread out on slow links.</p>
 <ul>
 <li>Helps run with low levels of loss and delay</li>
@@ -108,7 +105,7 @@
 <li>Subsequent data segments are not sent in burts so they don't queue up in the network.</li>
 </ul>
 <p>TCP uses sliding window, controlling the number of segments in the network. It ensures that only small bursts of segments are sent to keep traffic smooth.</p>
-<h2 id="problem-at-the-receiver">Problem at the Receiver</h2>
+<h2 id="problem-at-the-receiver"><a class="toclink" href="#problem-at-the-receiver">Problem at the Receiver</a></h2>
 <p>Sliding window has pipelining to keep network busy, but what if the receiver is overloaded?</p>
 <p>Consider receiver with $w$ buffers. Application <em>should</em> <code>recv</code> to accept packets, but if it didn't, then</p>
             </div>

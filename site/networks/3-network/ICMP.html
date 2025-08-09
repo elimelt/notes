@@ -7,7 +7,7 @@
     <title>Internet Control Message Protocol (ICMP) | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.">
+    <meta name="description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Tracerou">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Internet Control Message Protocol (ICMP)">
-    <meta property="og:description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.">
+    <meta property="og:description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Tracerou">
     <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/ICMP.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Internet Control Message Protocol (ICMP)">
-    <meta name="twitter:description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.">
+    <meta name="twitter:description" content="Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Tracerou">
 
     <meta name="keywords" content="network protocols,icmp,ping,traceroute,routing,ttl">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Internet Control Message Protocol (ICMP)", "dateModified": "2025-02-11T20:48:36.989899", "description": "Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.", "articleSection": "Networks", "keywords": "network protocols,icmp,ping,traceroute,routing,ttl"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Internet Control Message Protocol (ICMP)", "dateModified": "2025-02-11T20:48:36.989899", "description": "Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Tracerou", "url": "https://notes.elimelt.com/networks/3-network/ICMP.html", "articleSection": "Networks", "keywords": "network protocols,icmp,ping,traceroute,routing,ttl"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Internet Control Message Protocol (ICMP)
@@ -98,13 +95,13 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="internet-control-message-protocol-icmp">Internet Control Message Protocol (ICMP)</h1>
+                <h1 id="internet-control-message-protocol-icmp"><a class="toclink" href="#internet-control-message-protocol-icmp">Internet Control Message Protocol (ICMP)</a></h1>
 <p>ICMP is a network layer protocol used to report errors and exchange control messages. It is also the basis for tools like <code>ping</code> and <code>traceroute</code>.</p>
 <p>One particularly useful ICMP message is the <strong>ICMP Redirect</strong>, which is used to inform a host that a better route exists for a given destination. When a host receives an ICMP Redirect, it updates its routing table to use the new route.</p>
-<h2 id="traceroute">Traceroute</h2>
+<h2 id="traceroute"><a class="toclink" href="#traceroute">Traceroute</a></h2>
 <p><code>traceroute</code> works by continuously sending packets with increasing TTLs, and listening for ICMP Time Exceeded messages. When a packet reaches a router, the router decrements the TTL, and if it reaches 0, it sends an ICMP Time Exceeded message back to the source. This message contains the IP address of the router, and the time it took for the packet to reach it.</p>
 <p>After each packet, <code>traceroute</code> prints the IP address of the router and the time it took for the packet to reach it. This is repeated until the destination is reached.</p>
-<h2 id="ping">Ping</h2>
+<h2 id="ping"><a class="toclink" href="#ping">Ping</a></h2>
 <p><code>ping</code> works by sending ICMP Echo Request messages to the destination, and listening for ICMP Echo Reply messages. When the destination receives an Echo Request, it responds with an Echo Reply. This is repeated until the user stops the command.</p>
             </div>
             <div class="tags">

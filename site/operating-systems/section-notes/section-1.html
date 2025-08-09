@@ -7,7 +7,7 @@
     <title>C and GDB Review | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.">
+    <meta name="description" content="Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debuggin">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="C and GDB Review">
-    <meta property="og:description" content="Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.">
+    <meta property="og:description" content="Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debuggin">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/section-notes/section-1.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="C and GDB Review">
-    <meta name="twitter:description" content="Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.">
+    <meta name="twitter:description" content="Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debuggin">
 
     <meta name="keywords" content="static,extern,pointers,gdb,printf debugging,backtrace,watch">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "C and GDB Review", "dateModified": "2025-02-11T20:49:25.904824", "description": "Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.", "articleSection": "Computer Science", "keywords": "static,extern,pointers,gdb,printf debugging,backtrace,watch"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "C and GDB Review", "dateModified": "2025-02-11T20:49:25.904824", "description": "Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debuggin", "url": "https://notes.elimelt.com/operating-systems/section-notes/section-1.html", "articleSection": "Computer Science", "keywords": "static,extern,pointers,gdb,printf debugging,backtrace,watch"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/computer%20science.html">Computer Science</a> » C and GDB Review
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="section-1-c-and-gdb-review">Section 1 - C and GDB review</h1>
-<h2 id="c-review">C Review</h2>
+                <h1 id="section-1-c-and-gdb-review"><a class="toclink" href="#section-1-c-and-gdb-review">Section 1 - C and GDB review</a></h1>
+<h2 id="c-review"><a class="toclink" href="#c-review">C Review</a></h2>
 <p><strong>static</strong>: has different meanings</p>
 <ul>
 <li>static functions indicate it can't be used outside of the file (like private)</li>
@@ -121,7 +118,7 @@ int main() {
 }
 </code></pre>
 <p>When you use an uninitialized pointer, the address that the pointer stores is the uninitialized part, and will probably lead to errors when it is interpreted as an address.</p>
-<h2 id="gdb-review">GDB Review</h2>
+<h2 id="gdb-review"><a class="toclink" href="#gdb-review">GDB Review</a></h2>
 <p><code>printf</code> debugging are useful, but limited when it comes to debugging concurrent code</p>
 <p>Enter <code>GDB</code></p>
 <p><code>run &lt;...args&gt;</code>: start execution</p>

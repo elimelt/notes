@@ -7,7 +7,7 @@
     <title>Linear Programming Fundamentals and Applications in Optimization | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key concepts such as hyperplanes, polytopes, and convex sets, and demonstrates how to transform various optimization problems into linear programs. The document also explores practical applications of linear programming in areas like max-flow and weighted vertex cover problems.">
+    <meta name="description" content="This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key conce">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Linear Programming Fundamentals and Applications in Optimization">
-    <meta property="og:description" content="This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key concepts such as hyperplanes, polytopes, and convex sets, and demonstrates how to transform various optimization problems into linear programs. The document also explores practical applications of linear programming in areas like max-flow and weighted vertex cover problems.">
+    <meta property="og:description" content="This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key conce">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/linear-programming.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Linear Programming Fundamentals and Applications in Optimization">
-    <meta name="twitter:description" content="This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key concepts such as hyperplanes, polytopes, and convex sets, and demonstrates how to transform various optimization problems into linear programs. The document also explores practical applications of linear programming in areas like max-flow and weighted vertex cover problems.">
+    <meta name="twitter:description" content="This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key conce">
 
     <meta name="keywords" content="linear systems,linear programs,optimization">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Linear Programming Fundamentals and Applications in Optimization", "dateModified": "2025-05-10T14:42:13.978323", "description": "This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key concepts such as hyperplanes, polytopes, and convex sets, and demonstrates how to transform various optimization problems into linear programs. The document also explores practical applications of linear programming in areas like max-flow and weighted vertex cover problems.", "articleSection": "Algorithms", "keywords": "linear systems,linear programs,optimization"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Linear Programming Fundamentals and Applications in Optimization", "dateModified": "2025-05-10T14:42:13.978323", "description": "This document provides a comprehensive overview of linear programming, covering linear systems, linear programs, and their standard forms. It explains key conce", "url": "https://notes.elimelt.com/algorithms/linear-programming.html", "articleSection": "Algorithms", "keywords": "linear systems,linear programs,optimization"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Linear Programming Fundamentals and Applications in Optimization
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="linear-programming">Linear Programming</h1>
-<h2 id="linear-systems">Linear Systems</h2>
+                <h1 id="linear-programming"><a class="toclink" href="#linear-programming">Linear Programming</a></h1>
+<h2 id="linear-systems"><a class="toclink" href="#linear-systems">Linear Systems</a></h2>
 <p>Systems of linear equations (key word being equality) can be solved via gaussian elimination. This is relatively easy, since your solution space ends up being a line, a plane, or a hyperplane in higher dimensions.</p>
 <p>Let $a$ be a column vector in $\mathbb{R}^d$, and $x$ a column vector of $d$ variables. We can represent a system using the <em>inner product</em> of these two vectors:</p>
 <p>$$
@@ -107,7 +104,7 @@
 $$</p>
 <p>A <strong>hyperplane</strong> is the set of points $x$ such that $\langle a, x \rangle = b$ for some $b$. A <strong>handspace</strong> is the set of points on one side of a hyperplace, ${x : \langle a, x \rangle \geq b}$ or ${x : \langle a, x \rangle \leq b}$.</p>
 <p>The intersection of a system of half spaces creates a <strong>polytope</strong>, which is a convex set. A <strong>convex set</strong> is a set where the line segment between any two points in the set is also in the set.</p>
-<h2 id="linear-programs">Linear Programs</h2>
+<h2 id="linear-programs"><a class="toclink" href="#linear-programs">Linear Programs</a></h2>
 <p>The goal of a linear program is to optimize some <strong>objective function</strong> subject to a set of constraints, which are also linear functions. For example...</p>
 <p>$$
 \begin{aligned}
@@ -118,7 +115,7 @@ $$</p>
 &amp;     &amp; x_1, x_2, x_3 \ge 0\
 \end{aligned}
 $$</p>
-<h2 id="linear-algebra-review">Linear Algebra Review</h2>
+<h2 id="linear-algebra-review"><a class="toclink" href="#linear-algebra-review">Linear Algebra Review</a></h2>
 <p>$$
 \langle a, x \rangle = a^Tx = a_1x_1 + a_2x_2 + \ldots + a_dx_d
 $$</p>
@@ -144,7 +141,7 @@ Ax \le b \Rightarrow \begin{array}{c}
 \langle a_m, x \rangle \le b_m
 \end{array}
 $$</p>
-<h2 id="linear-program-standard-form">Linear Program Standard Form</h2>
+<h2 id="linear-program-standard-form"><a class="toclink" href="#linear-program-standard-form">Linear Program Standard Form</a></h2>
 <p>We can write any linear program in the <em>standard form</em> below.</p>
 <p>$$
 \begin{array}{cc}
@@ -188,24 +185,20 @@ s.t., &amp; z_1 - z_1' + y_2 \le 3\
 ~     &amp; z_1, z_1', y_2 \ge 0\
 \end{array}
 $$</p>
-<h2 id="applications-of-linear-programming">Applications of Linear Programming.</h2>
+<h2 id="applications-of-linear-programming"><a class="toclink" href="#applications-of-linear-programming">Applications of Linear Programming.</a></h2>
 <p>LPs generalize to all sorts of problems, such as 2-person zero-sum games, shortest path, max-flow, matching, multi-commodity flow, MST, min weighted, arborescence, ...</p>
 <p>We can solve linear programs in polynomial time, and they turn out to be useful for approximation algorithms.</p>
-<h2 id="components-of-a-linear-program">Components of a Linear Program</h2>
+<h2 id="components-of-a-linear-program"><a class="toclink" href="#components-of-a-linear-program">Components of a Linear Program</a></h2>
 <ul>
 <li>Set of variables</li>
-<li>Bounding constraints on variables<ul>
+<li>Bounding constraints on variables</li>
 <li>Are they non-negative?</li>
-</ul>
-</li>
 <li>Objective function</li>
 <li>Is it a minimization or maximization problem?</li>
-<li>LP constrains, but they need to be linear<ul>
+<li>LP constrains, but they need to be linear</li>
 <li>Is it an equality or inequality?</li>
 </ul>
-</li>
-</ul>
-<h2 id="max-flow">Max-Flow</h2>
+<h2 id="max-flow"><a class="toclink" href="#max-flow">Max-Flow</a></h2>
 <p>Given a graph $G = (V, E)$ with source $s$ and sink $t$, for every edge $e$ we have a variable $x_e$ as the flow on the edge $e$.</p>
 <p>The bounding constraints would be...</p>
 <ul>
@@ -227,7 +220,7 @@ s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp;
 \end{array}
 $$</p>
 <p>Note that the flow this gives you is not necessarily an integer max-flow.</p>
-<h2 id="min-cost-max-flow">Min-Cost Max-Flow</h2>
+<h2 id="min-cost-max-flow"><a class="toclink" href="#min-cost-max-flow">Min-Cost Max-Flow</a></h2>
 <p>Expanding on the previous example, we can add a cost to each edge $p(e)$ and try to minimize $p(e)$ while achieving some constant flow $f$.</p>
 <p>$$
 \begin{array}{ccc}
@@ -238,7 +231,7 @@ s.t.,   &amp; \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e &amp;
 ~       &amp; x_e \ge 0 &amp; \forall e
 \end{array}
 $$</p>
-<h2 id="weighted-vertex-cover">Weighted Vertex Cover</h2>
+<h2 id="weighted-vertex-cover"><a class="toclink" href="#weighted-vertex-cover">Weighted Vertex Cover</a></h2>
 <p>Given a graph $G = (V, E)$, where each vertex has a cost $c_v$, find the minimum cost vertex cover, i.e. $\min \sum_{v \in S} c_v$</p>
 <p>We have a variable $x_v$ for each $v$, where $x_v = 1$ if $v \in S$ and $x_v = 0$ otherwise. Then we have the constraint that for every edge $(u, v) \in</p>
 <p>$$

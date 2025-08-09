@@ -7,7 +7,7 @@
     <title>Wireless Media and Access Protocols | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Collision Avoidance (MACA) protocol. Discusses the 802.11 (WiFi) standard, including its physical layer, link layer, and centralized MAC used in cellular networks. Explores the challenges of wireless communication and the techniques used to mitigate them.">
+    <meta name="description" content="Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Coll">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Wireless Media and Access Protocols">
-    <meta property="og:description" content="Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Collision Avoidance (MACA) protocol. Discusses the 802.11 (WiFi) standard, including its physical layer, link layer, and centralized MAC used in cellular networks. Explores the challenges of wireless communication and the techniques used to mitigate them.">
+    <meta property="og:description" content="Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Coll">
     <meta property="og:url" content="https://notes.elimelt.com/networks/2-direct-links/wireless.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Wireless Media and Access Protocols">
-    <meta name="twitter:description" content="Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Collision Avoidance (MACA) protocol. Discusses the 802.11 (WiFi) standard, including its physical layer, link layer, and centralized MAC used in cellular networks. Explores the challenges of wireless communication and the techniques used to mitigate them.">
+    <meta name="twitter:description" content="Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Coll">
 
     <meta name="keywords" content="wireless media,hidden terminal problem,exposed terminal problem,maca,802.11,csma/ca,rts/cts">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Wireless Media and Access Protocols", "dateModified": "2025-02-11T20:47:40.574535", "description": "Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Collision Avoidance (MACA) protocol. Discusses the 802.11 (WiFi) standard, including its physical layer, link layer, and centralized MAC used in cellular networks. Explores the challenges of wireless communication and the techniques used to mitigate them.", "articleSection": "Networks", "keywords": "wireless media,hidden terminal problem,exposed terminal problem,maca,802.11,csma/ca,rts/cts"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Wireless Media and Access Protocols", "dateModified": "2025-02-11T20:47:40.574535", "description": "Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Coll", "url": "https://notes.elimelt.com/networks/2-direct-links/wireless.html", "articleSection": "Networks", "keywords": "wireless media,hidden terminal problem,exposed terminal problem,maca,802.11,csma/ca,rts/cts"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Wireless Media and Access Protocols
@@ -98,36 +95,32 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="wireless">Wireless</h1>
+                <h1 id="wireless"><a class="toclink" href="#wireless">Wireless</a></h1>
 <p>Wireless media is infinite, and therefore cannot carrier sense. Futhermore, nodes cannot hear the network while sending</p>
-<h2 id="hidden-terminal-problem">Hidden Terminal Problem</h2>
+<h2 id="hidden-terminal-problem"><a class="toclink" href="#hidden-terminal-problem">Hidden Terminal Problem</a></h2>
 <p>Two nodes are out of range of each other, but in range of a third node. The third node can hear both nodes, but the two nodes cannot hear each other. This can cause collisions at the node in the middle.</p>
-<h2 id="exposed-terminal-problem">Exposed Terminal Problem</h2>
+<h2 id="exposed-terminal-problem"><a class="toclink" href="#exposed-terminal-problem">Exposed Terminal Problem</a></h2>
 <p>Two nodes are in range of each other, but are sending to different nodes out of each other's range. The two nodes can hear each other, but are not in each other's way. The two nodes should be able to send at the same time, but this might be prevented by some protocols.</p>
-<h2 id="multiple-access-with-collision-avoidance-maca">Multiple Access with Collision Avoidance (MACA)</h2>
+<h2 id="multiple-access-with-collision-avoidance-maca"><a class="toclink" href="#multiple-access-with-collision-avoidance-maca">Multiple Access with Collision Avoidance (MACA)</a></h2>
 <p>Uses short handshake instead of CSMA. Collisions are still possible, but less likely.</p>
 <ol>
 <li><strong>Request to Send (RTS)</strong>: Sender sends a request to send to the receiver.</li>
 <li><strong>Clear to Send (CTS)</strong>: Receiver sends a clear to send to the sender, including the frame size.</li>
 <li><strong>Data</strong>: Sender sends the frame while nodes that heard the CTS stay silent.</li>
 </ol>
-<h2 id="80211-wifi">802.11 (WiFi)</h2>
+<h2 id="80211-wifi"><a class="toclink" href="#80211-wifi">802.11 (WiFi)</a></h2>
 <p>Clients connect to the network through an <strong>access point (AP)</strong>.</p>
-<h2 id="physical-layer">Physical Layer</h2>
+<h2 id="physical-layer"><a class="toclink" href="#physical-layer">Physical Layer</a></h2>
 <ul>
-<li>Uses 20/40 MHz channels on ISM (unlicensed) bands<ul>
+<li>Uses 20/40 MHz channels on ISM (unlicensed) bands</li>
 <li>802.11b/g/n on 2.4 GHz</li>
 <li>802.11 a/n on 5 GHz</li>
-</ul>
-</li>
-<li>OFDM modulation (except legacy 802.11b)<ul>
+<li>OFDM modulation (except legacy 802.11b)</li>
 <li>Different amplitudes/phases for varying SNRs</li>
 <li>Rates from 6 to 54 Mbps plus error correction</li>
 <li>802.11n uses multiple antennas</li>
 </ul>
-</li>
-</ul>
-<h2 id="link-layer">Link Layer</h2>
+<h2 id="link-layer"><a class="toclink" href="#link-layer">Link Layer</a></h2>
 <ul>
 <li>Multiple access uses CSMA/CA; RTS/CTS optional</li>
 <li>Frames are ACKed and retransmitted with ARQ</li>
@@ -135,7 +128,7 @@
 <li>Errors are detected with a 32-bit CRC</li>
 <li>Features like encryption, power save</li>
 </ul>
-<h2 id="centralized-mac-cellular">Centralized MAC: Cellular</h2>
+<h2 id="centralized-mac-cellular"><a class="toclink" href="#centralized-mac-cellular">Centralized MAC: Cellular</a></h2>
 <p>Usually on a very limited spectrum because there are more regulations on non-ISM bands. The base station coordinates the transmissions of the mobiles, and is able to provide more strict control over the network to provide things like QoS and robustness.</p>
 <p>GSM MAC uses FDMA/TDMA, and BEB for random access. One channel for coordination, and other channels for traffic. There is also a dedicated channel for QoS.</p>
             </div>

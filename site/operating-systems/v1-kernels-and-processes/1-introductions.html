@@ -7,7 +7,7 @@
     <title>What is an Operating System? | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.">
+    <meta name="description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusse">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="What is an Operating System?">
-    <meta property="og:description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.">
+    <meta property="og:description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusse">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/1-introductions.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="What is an Operating System?">
-    <meta name="twitter:description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.">
+    <meta name="twitter:description" content="This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusse">
 
     <meta name="keywords" content="operating system,virtualization,resource management,services,reliability,availability,fault tolerance">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "What is an Operating System?", "dateModified": "2025-02-11T20:49:28.129048", "description": "This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusses the evolution of operating systems and the design tradeoffs involved. The document also includes a set of exercises that explore various aspects of operating system design, including fault isolation, virtual memory, and reliability.", "articleSection": "Operating Systems", "keywords": "operating system,virtualization,resource management,services,reliability,availability,fault tolerance"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "What is an Operating System?", "dateModified": "2025-02-11T20:49:28.129048", "description": "This document provides an introduction to operating systems, covering key concepts such as virtualization, resource management, and system services. It discusse", "url": "https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/1-introductions.html", "articleSection": "Operating Systems", "keywords": "operating system,virtualization,resource management,services,reliability,availability,fault tolerance"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » What is an Operating System?
@@ -98,20 +95,22 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="introduction">Introduction</h1>
-<h2 id="what-is-an-operating-system">What is an Operating System?</h2>
+                <h1 id="introduction"><a class="toclink" href="#introduction">Introduction</a></h1>
+<h2 id="what-is-an-operating-system"><a class="toclink" href="#what-is-an-operating-system">What is an Operating System?</a></h2>
 <p><strong>Referee.</strong> Manages the resources of a computer shared between applications.</p>
 <p><strong>Illusionist.</strong> Makes the computer's resources appear to be dedicated to each application through abstraction.</p>
 <p><strong>Glue.</strong> Binds the hardware, software, and users through services that facilitate communication/sharing.</p>
-<h3 id="virtualization">Virtualization</h3>
+<h3 id="virtualization"><a class="toclink" href="#virtualization">Virtualization</a></h3>
 <ul>
 <li>Creates the illusion of extra resources through abstraction.</li>
-<li>Some examples of virtualization are:
-    - <strong>Virtual Memory.</strong> Creates the illusion of more memory than is physically available.
-    - <strong>Virtual Machines.</strong> Creates the illusion of multiple computers on one computer.
-    - <strong>Virtual Processors.</strong> Creates the illusion of multiple processors on one processor.</li>
+<li>Some examples of virtualization are:<ul>
+<li><strong>Virtual Memory.</strong> Creates the illusion of more memory than is physically available.</li>
+<li><strong>Virtual Machines.</strong> Creates the illusion of multiple computers on one computer.</li>
+<li><strong>Virtual Processors.</strong> Creates the illusion of multiple processors on one processor.</li>
 </ul>
-<h3 id="services">Services</h3>
+</li>
+</ul>
+<h3 id="services"><a class="toclink" href="#services">Services</a></h3>
 <p>Services are provided by the operating system so applications can adapt to a single interface (like POSIX) instead of the hardware. Some examples of services are:</p>
 <ul>
 <li><strong>File System.</strong> Create, delete, read, and write files through read, write, open, close, seek, etc.</li>
@@ -119,7 +118,7 @@
 <li><strong>Process Management.</strong> Create and manage processes through fork, exec, wait, etc.</li>
 <li><strong>GUI</strong> Windows, cut and paste, etc.</li>
 </ul>
-<h2 id="evolution-of-operating-systems">Evolution of Operating Systems</h2>
+<h2 id="evolution-of-operating-systems"><a class="toclink" href="#evolution-of-operating-systems">Evolution of Operating Systems</a></h2>
 <p><strong>Reliability and Availability.</strong> Does what it is expected without crashing. At scale, an OS must be invulnerable to failure, even in edge cases. Availability, the percentage of time a system is available, is influecned by <strong>Mean Time To Failure</strong> (MTTF) and <strong>Mean Time To Repair</strong> (MTTR). Increasing MTTF and decreasing MTTR increases availability.</p>
 <p><strong>Security.</strong> Prevents compromise from malicious users. Privacy is an aspect of security; data is only accessible to authorized users. Strong fault isolation is necessary for security.</p>
 <p><strong>Portability.</strong> Code can be run independently of the hardware. This is achieved through abstraction. <strong>Abstract Virtual Machine</strong> (AVM) is the interface between the OS and applicatons. <strong>Hardware Abstract Layer</strong> (HAL) is the interface between the OS and hardware.</p>
@@ -131,14 +130,14 @@
 - <strong>throughput.</strong> the number of requests per unit time.
 - <strong>predictability.</strong> the ability to provide consistent performance.</p>
 <p><strong>Adoption.</strong> Also important</p>
-<h3 id="design-tradeoffs">Design Tradeoffs</h3>
+<h3 id="design-tradeoffs"><a class="toclink" href="#design-tradeoffs">Design Tradeoffs</a></h3>
 <p>Sometimes, it is better to sacrifice one aspect for another. For example, losing some performance to fit an interface. The tradeoff of performance and complexity is common.</p>
 <p>Early (single user) operating systems would let the CPU wait idle for I/O. Later, when multi-user systems were introduced, the CPU would switch to another process while waiting for I/O. This is called <strong>multiprogramming</strong>. In a <strong>bath operating system</strong>, the CPU reads from a queue of jobs, loading, running, and unloading each job.</p>
 <p>While one job is running, the OS may set up IO devices for another in the background through direct memory access (DMA). Through interrupts, the OS can then switch to the new job when it is ready. From the point of view of the original job, there was just a short delay. This is called <strong>time sharing</strong>.</p>
 <p>When the OS directly controls multiple concurrent processes, (<strong>multiprocessing</strong>), debugging becomes difficult, and developers need to essentially stop the system to debug. <strong>Virtualization</strong> solves this problem by creating the illusion of multiple processors on one processor. This allows developers to debug one virtual processor while the others continue to run. Instead of debugging directly on the hardware, developers can debug on a virtual machine that is being run as an application.</p>
-<h1 id="ch-1-exercises">Ch. 1 Exercises</h1>
-<h2 id="introduction_1">Introduction</h2>
-<h3 id="1-what-is-an-example-of-an-operating-system-as">1. What is an example of an operating system as:</h3>
+<h1 id="ch-1-exercises"><a class="toclink" href="#ch-1-exercises">Ch. 1 Exercises</a></h1>
+<h2 id="introduction_1"><a class="toclink" href="#introduction_1">Introduction</a></h2>
+<h3 id="1-what-is-an-example-of-an-operating-system-as"><a class="toclink" href="#1-what-is-an-example-of-an-operating-system-as">1. What is an example of an operating system as:</a></h3>
 <ul>
 <li><strong>Referee?</strong></li>
 </ul>
@@ -151,7 +150,7 @@
 <li><strong>Glue?</strong></li>
 </ul>
 <p>The OS provides services like the file system and network.</p>
-<h3 id="2-what-is-the-difference-if-any-between-the-following-terms">2. What is the difference, if any, between the following terms:</h3>
+<h3 id="2-what-is-the-difference-if-any-between-the-following-terms"><a class="toclink" href="#2-what-is-the-difference-if-any-between-the-following-terms">2. What is the difference, if any, between the following terms:</a></h3>
 <ul>
 <li><strong>Reliability</strong> vs. <strong>availability?</strong></li>
 </ul>
@@ -196,9 +195,9 @@
 <li><strong>Multiprogramming</strong> vs. <strong>multiprocessing</strong>?</li>
 </ul>
 <p>Multiprogramming allows the CPU to switch to another process while waiting for I/O. Multiprocessing allows multiple processes to run concurrently.</p>
-<h3 id="3-define-the-term-direct-memory-access-dma">3. Define the term, direct memory access (DMA).</h3>
+<h3 id="3-define-the-term-direct-memory-access-dma"><a class="toclink" href="#3-define-the-term-direct-memory-access-dma">3. Define the term, direct memory access (DMA).</a></h3>
 <p>DMA allows the OS to set up IO devices for another process in the background while the CPU is running another process. Through interrupts, the OS can then switch to the new process when it is ready.</p>
-<h3 id="4-before-there-were-operating-systems-someone-needed-to-develop-solutions-without-being-able-to-look-them-up-how-would-you-have-designed-the-first-operating-system">4. Before there were operating systems, someone needed to develop solutions without being able to look them up! How would you have designed the first operating system?</h3>
+<h3 id="4-before-there-were-operating-systems-someone-needed-to-develop-solutions-without-being-able-to-look-them-up-how-would-you-have-designed-the-first-operating-system"><a class="toclink" href="#4-before-there-were-operating-systems-someone-needed-to-develop-solutions-without-being-able-to-look-them-up-how-would-you-have-designed-the-first-operating-system">4. Before there were operating systems, someone needed to develop solutions without being able to look them up! How would you have designed the first operating system?</a></h3>
 <p>Albeit relying on what I just read...</p>
 <p>Users need to be able to execute arbitrary code on hardware. Although security is important, I won't focus on it for now.</p>
 <p>First, I would need a way to load and run code. Assuming I can use a preexisting compiler (GCC?), I would first create a set of "kernel" modules that interact directly with the hardware. These modules would be written in C and assembly, and would cover the very basics of interacting with IO devices and any other hardware I need to control. In particular:</p>
@@ -222,8 +221,8 @@
 <p>My memory allocator would be a basic implementation of malloc using a linked list. Simple compaction running periodically would be used, with heap sweeping on process termination. No virtual memory yet...</p>
 <p>Network communication would be done entirely through reads/writes over sockets. TPC/IP would be used for communication, assuming a modern network stack is available. If not, then machines would need to be connected directly to each other and would read/write directly to each other's open sockets using whatever protocol is available (or a new one I would design).</p>
 <p>Process management would be done through fork/exec/wait. I would need to implement a way to handle interrupts, so that processes can be interrupted and switched to when IO is ready. Callbacks would be used to handle this, where processes register a callback with the OS when blocked on IO. When the IO is ready, the OS would call the callback and the process would resume (or be added to the ready queue if it is not the highest priority process). An event driven model would be used for all IO, so that processes can be interrupted when IO is ready. Each event should contain the nessessary information to stop and resume work, and then I can just use a producer/consumer model to handle events off of an event queue. I would use a simple round robin scheduler to switch between processes, and would keep both a log of events, and streaming statistics to try and schedule events fairly. Although limited, this would allow for some concurrency since processes can be interrupted while waiting for IO.</p>
-<h2 id="system-design">System Design</h2>
-<h3 id="5-suppose-a-computer-system-and-all-of-its-applications-were-completely-bug-free-and-everyone-in-the-world-were-completely-honest-and-trustworthy-in-other-words-we-need-not-consider-fault-isolation">5. Suppose a computer system and all of its applications were completely bug-free and everyone in the world were completely honest and trustworthy. In other words, we need not consider fault isolation.</h3>
+<h2 id="system-design"><a class="toclink" href="#system-design">System Design</a></h2>
+<h3 id="5-suppose-a-computer-system-and-all-of-its-applications-were-completely-bug-free-and-everyone-in-the-world-were-completely-honest-and-trustworthy-in-other-words-we-need-not-consider-fault-isolation"><a class="toclink" href="#5-suppose-a-computer-system-and-all-of-its-applications-were-completely-bug-free-and-everyone-in-the-world-were-completely-honest-and-trustworthy-in-other-words-we-need-not-consider-fault-isolation">5. Suppose a computer system and all of its applications were completely bug-free and everyone in the world were completely honest and trustworthy. In other words, we need not consider fault isolation.</a></h3>
 <ul>
 <li><strong>How should the operating system allocate the CPU to applications?</strong></li>
 </ul>
@@ -236,14 +235,14 @@
 <li><strong>How should the operating system allocate its disk space?</strong></li>
 </ul>
 <p>Applications should access disk through the file system, which has an interface for creating, deleting, reading, and writing files. The OS keeps a table of open files, and uses this table to perform IO operations on files in a consistent/safe way. Simply blocking access to files while they are being written to would be sufficient, although more complex buffering and locking could be used to improve performance.</p>
-<h3 id="6-now-suppose-the-computer-system-needs-to-support-fault-isolation-what-hardware-andor-operating-support-do-you-think-would-be-needed-to-do-the-following">6. Now suppose the computer system needs to support fault isolation. What hardware and/or operating support do you think would be needed to do the following?</h3>
+<h3 id="6-now-suppose-the-computer-system-needs-to-support-fault-isolation-what-hardware-andor-operating-support-do-you-think-would-be-needed-to-do-the-following"><a class="toclink" href="#6-now-suppose-the-computer-system-needs-to-support-fault-isolation-what-hardware-andor-operating-support-do-you-think-would-be-needed-to-do-the-following">6. Now suppose the computer system needs to support fault isolation. What hardware and/or operating support do you think would be needed to do the following?</a></h3>
 <ul>
 <li><strong>Protect an application's data structures in memory from being corrupted by other applications.</strong></li>
 <li><strong>Protecting one user's disk files from being accessed or corrupted by another user.</strong></li>
 <li><strong>Protecting the network from a virus trying to use your computer to send spam.</strong></li>
 </ul>
 <p>Permissions ^^^ and virtualization. Each process has its own memory space, and each user has its own file system. The OS can then use permissions to control access to resources for individual users. Network access should be mutually consentual, and the OS should prevent unauthorized access to the network.</p>
-<h3 id="7-how-should-an-operating-system-support-communication-between-applications">7. How should an operating system support communication between applications?</h3>
+<h3 id="7-how-should-an-operating-system-support-communication-between-applications"><a class="toclink" href="#7-how-should-an-operating-system-support-communication-between-applications">7. How should an operating system support communication between applications?</a></h3>
 <ul>
 <li><strong>Through the file system?</strong></li>
 </ul>
@@ -257,18 +256,18 @@
 </ul>
 <p>Reentrant locking service that thinly wraps a piece of shared memory owned in the kernel.</p>
 <p>Essentially all of the above, but programmers need to understand the tradeoffs and correcness of each approach.</p>
-<h3 id="8-how-would-you-design-combined-hardware-and-software-support-to-provide-the-illusion-of-a-nearly-infinite-virtual-memory-on-a-limited-amount-of-physical-memory">8. How would you design combined hardware and software support to provide the illusion of a nearly infinite virtual memory on a limited amount of physical memory?</h3>
+<h3 id="8-how-would-you-design-combined-hardware-and-software-support-to-provide-the-illusion-of-a-nearly-infinite-virtual-memory-on-a-limited-amount-of-physical-memory"><a class="toclink" href="#8-how-would-you-design-combined-hardware-and-software-support-to-provide-the-illusion-of-a-nearly-infinite-virtual-memory-on-a-limited-amount-of-physical-memory">8. How would you design combined hardware and software support to provide the illusion of a nearly infinite virtual memory on a limited amount of physical memory?</a></h3>
 <p>Analogy of cache to memory, we would use main memory as a temporary space to hold the data of running processes. Then, when another process needs time on the CPU, the context of main memory is switched to another process, and the previously occupying memory is loaded to disk.</p>
 <p>The process management service would handle this "paging" of memory by keeping a table of processes and the location and metadata for their memory. As tasks are pulled from the job queue, they are loaded into memory and added to the ready queue. When a process is blocked on IO, the OS can switch to another process and load the blocked process's memory to disk. When the process is ready again, the OS can load the process's memory from disk and resume execution.</p>
-<h3 id="9-how-would-you-design-a-system-to-run-an-entire-operating-system-as-an-application-on-top-of-another-operating-system">9. How would you design a system to run an entire operating system as an application on top of another operating system?</h3>
+<h3 id="9-how-would-you-design-a-system-to-run-an-entire-operating-system-as-an-application-on-top-of-another-operating-system"><a class="toclink" href="#9-how-would-you-design-a-system-to-run-an-entire-operating-system-as-an-application-on-top-of-another-operating-system">9. How would you design a system to run an entire operating system as an application on top of another operating system?</a></h3>
 <p>The hardware modules that the host OS run on all follow an interface, so by mocking the interface of these hardware systems, we can simulate the hardware. Then, simply running the guest OS on top of this simulated hardware would allow us to run the guest OS as an application on top of the host OS. This should all be done in an isolated environment, so that the guest OS cannot access the host resources directly.</p>
-<h3 id="10-how-would-you-design-a-system-to-update-complex-data-structures-on-disk-in-a-consistent-fashion-despite-machine-crashes">10. How would you design a system to update complex data structures on disk in a consistent fashion despite machine crashes?</h3>
+<h3 id="10-how-would-you-design-a-system-to-update-complex-data-structures-on-disk-in-a-consistent-fashion-despite-machine-crashes"><a class="toclink" href="#10-how-would-you-design-a-system-to-update-complex-data-structures-on-disk-in-a-consistent-fashion-despite-machine-crashes">10. How would you design a system to update complex data structures on disk in a consistent fashion despite machine crashes?</a></h3>
 <p>I would use a write ahead log (buffered in memory for high throughput events, but also flushed to disk in the background as often as possible to aid in recovery) that keeps track of all disk writes. Each record in the log would correspond to an event that happend regarding our data structure, and each event would have an id. We keep track of an atomic counter that keeps track of the last event executed on our structure. In the event of a crash, we can simply replay the log from the last event executed to the end of the log, and our data structure will be in a consistent state. We can also use this log to recover from a crash during a write, by simply replaying the log from the beginning.</p>
-<h3 id="11-society-itself-must-grapple-with-managing-resources-what-ways-do-governments-use-to-allocate-resources-isolate-misuse-and-foster-sharing-in-real-life">11. Society itself must grapple with managing resources. What ways do governments use to allocate resources, isolate misuse, and foster sharing in real life?</h3>
+<h3 id="11-society-itself-must-grapple-with-managing-resources-what-ways-do-governments-use-to-allocate-resources-isolate-misuse-and-foster-sharing-in-real-life"><a class="toclink" href="#11-society-itself-must-grapple-with-managing-resources-what-ways-do-governments-use-to-allocate-resources-isolate-misuse-and-foster-sharing-in-real-life">11. Society itself must grapple with managing resources. What ways do governments use to allocate resources, isolate misuse, and foster sharing in real life?</a></h3>
 <p>Taxes, laws, and regulations. Taxes are used to allocate resources, and laws are used to prevent misuse and foster sharing. For example, public services (firefighters) are funded by taxes, and laws are <em>supposed</em> to help ensure people can faily access these services.</p>
-<h3 id="12-suppose-you-were-tasked-with-designing-and-implementing-an-ultra-reliable-and-ultra-available-operating-system-what-techniques-would-you-use-what-tests-if-any-might-be-sufficient-to-convince-you-of-the-systems-reliability-short-of-handing-your-operating-system-to-millions-of-users-to-serve-as-beta-testers">12. Suppose you were tasked with designing and implementing an ultra-reliable and ultra-available operating system. What techniques would you use? What tests, if any, might be sufficient to convince you of the system's reliability, short of handing your operating system to millions of users to serve as beta testers?</h3>
+<h3 id="12-suppose-you-were-tasked-with-designing-and-implementing-an-ultra-reliable-and-ultra-available-operating-system-what-techniques-would-you-use-what-tests-if-any-might-be-sufficient-to-convince-you-of-the-systems-reliability-short-of-handing-your-operating-system-to-millions-of-users-to-serve-as-beta-testers"><a class="toclink" href="#12-suppose-you-were-tasked-with-designing-and-implementing-an-ultra-reliable-and-ultra-available-operating-system-what-techniques-would-you-use-what-tests-if-any-might-be-sufficient-to-convince-you-of-the-systems-reliability-short-of-handing-your-operating-system-to-millions-of-users-to-serve-as-beta-testers">12. Suppose you were tasked with designing and implementing an ultra-reliable and ultra-available operating system. What techniques would you use? What tests, if any, might be sufficient to convince you of the system's reliability, short of handing your operating system to millions of users to serve as beta testers?</a></h3>
 <p>Extensive testing like in other forms of software (unit, integration, fuzzing, fault injection), as well as monitoring and telemetry of real devices. Formal verification would be nice, but is probably not feasible. A microkernel would be a good start, since it would allow me to isolate "trusted" code.</p>
-<h3 id="13-for-the-computer-you-are-currently-using-how-should-the-operating-system-designers-prioritize-among-reliability-security-portability-performance-and-adoption-explain-why">13. For the computer you are currently using, how should the operating system designers prioritize among reliability, security, portability, performance, and adoption? Explain why.</h3>
+<h3 id="13-for-the-computer-you-are-currently-using-how-should-the-operating-system-designers-prioritize-among-reliability-security-portability-performance-and-adoption-explain-why"><a class="toclink" href="#13-for-the-computer-you-are-currently-using-how-should-the-operating-system-designers-prioritize-among-reliability-security-portability-performance-and-adoption-explain-why">13. For the computer you are currently using, how should the operating system designers prioritize among reliability, security, portability, performance, and adoption? Explain why.</a></h3>
 <p>As a user of a macbook pro, security, performance, and adoption are extremely important. However, as a developer it would be nice to also have a portable and (less importantly) a reliable system. Something that I think the OS designers were less concerned about is portability (Apple hardware only), but this is also a question of adoption of the Sillicon based chips in Apple's hardware.</p>
             </div>
             <div class="tags">

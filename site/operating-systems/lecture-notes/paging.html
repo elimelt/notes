@@ -7,7 +7,7 @@
     <title>Virtual Memory and Paging | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.">
+    <meta name="description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared f">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Virtual Memory and Paging">
-    <meta property="og:description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.">
+    <meta property="og:description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared f">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/paging.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Virtual Memory and Paging">
-    <meta name="twitter:description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.">
+    <meta name="twitter:description" content="Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared f">
 
     <meta name="keywords" content="virtual memory,paging,fragmentation,page table,address translation">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Virtual Memory and Paging", "dateModified": "2025-02-11T20:49:03.395139", "description": "Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.", "articleSection": "Operating Systems", "keywords": "virtual memory,paging,fragmentation,page table,address translation"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Virtual Memory and Paging", "dateModified": "2025-02-11T20:49:03.395139", "description": "Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared f", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/paging.html", "articleSection": "Operating Systems", "keywords": "virtual memory,paging,fragmentation,page table,address translation"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Virtual Memory and Paging
@@ -98,19 +95,19 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="virtual-memory-and-paging">Virtual Memory and Paging</h1>
+                <h1 id="virtual-memory-and-paging"><a class="toclink" href="#virtual-memory-and-paging">Virtual Memory and Paging</a></h1>
 <p>Use pages to map virtual memory to physical memory. This prevents <strong>external fragmentation</strong> by dividing memory into fixed-size pages, and <strong>internal fragmentation</strong> by making the units of allocation smaller.</p>
-<h3 id="fragmentation">Fragmentation</h3>
+<h3 id="fragmentation"><a class="toclink" href="#fragmentation">Fragmentation</a></h3>
 <ul>
 <li><strong>external fragmentation</strong>: when free memory is broken into small pieces, but the memory is not being used because it is not contiguous.</li>
 <li><strong>internal fragmentation</strong>: when a process is allocated more memory than it needs, and the extra memory is not being used.</li>
 </ul>
 <p>Virtual address space is divided into <em>pages</em>, and physical address space is divided into <em>frames</em>. The page table maps pages to frames. The page table is stored in memory, and the page table base register (PTBR) points to the page table. The page table is indexed by the page number, and the value at that index is the frame number.</p>
 <p>From the programmers perspective, memory is a giant contiguous block, completely independent of the physical memory and hardware.</p>
-<h3 id="protection">Protection</h3>
+<h3 id="protection"><a class="toclink" href="#protection">Protection</a></h3>
 <p>One processes cannot "name" or address the memory of another process. This provides protection between processes.</p>
 <p>Set the first page to be invalid so that if a process tries to access it (NULL pointer), it will cause an exception.</p>
-<h3 id="address-translation">Address Translation</h3>
+<h3 id="address-translation"><a class="toclink" href="#address-translation">Address Translation</a></h3>
 <ul>
 <li>Page table provides layer of indirection</li>
 <li>Virtual address is divided into <strong>virtual page number (vpn)</strong>, which is an index into the page table, and <strong>offset</strong></li>
@@ -118,10 +115,10 @@
 <li>The physical address is the frame number concatenated with the offset</li>
 </ul>
 <p>Page tables are managed by the operating system, and are stored in memory. There is one PTE for each page, ie one PTE per VPN. The page table maps VPNs to PFNs. Each process has its own page table, and the PTBR points to the page table.</p>
-<h3 id="shared-frames">Shared Frames</h3>
+<h3 id="shared-frames"><a class="toclink" href="#shared-frames">Shared Frames</a></h3>
 <p>Multiple processes can share the same frame. This is useful for shared libraries, and for shared memory between processes. Can also be used when implementing <strong>copy-on-write (COW)</strong> to optimize things like read-only fork, or exec.</p>
-<h3 id="page-table-entries">Page Table Entries</h3>
-<h4 id="more-functionality-to-the-ptes">More functionality to the PTEs:</h4>
+<h3 id="page-table-entries"><a class="toclink" href="#page-table-entries">Page Table Entries</a></h3>
+<h4 id="more-functionality-to-the-ptes"><a class="toclink" href="#more-functionality-to-the-ptes">More functionality to the PTEs:</a></h4>
 <ul>
 <li>Protection by setting read/write/execute bits</li>
 <li>Page table entry can point to nothing, causing a page fault</li>
@@ -132,19 +129,19 @@
 <li><strong>protection bits</strong>: read/write/execute permissions</li>
 </ul>
 <p>More out there.</p>
-<h4 id="advantages-of-paging">Advantages of Paging</h4>
+<h4 id="advantages-of-paging"><a class="toclink" href="#advantages-of-paging">Advantages of Paging</a></h4>
 <ul>
 <li>Easy to allocate physical memory. Allocated from a free list (linked usually) of frames. To allocate, remove</li>
 <li>External fragmentation is eliminated. Pages are fixed size, so no fragmentation.</li>
 <li>Leads naturally to virual memory. Pages can be swapped in and out of memory, and don't need to be entirely in physical memory for a program to run.</li>
 </ul>
-<h4 id="disadvantages-of-paging">Disadvantages of Paging</h4>
+<h4 id="disadvantages-of-paging"><a class="toclink" href="#disadvantages-of-paging">Disadvantages of Paging</a></h4>
 <ul>
 <li>Can still have internal fragmentation. If a page is not entirely used, there is wasted space.</li>
 <li>Overhead of managing the page table. Page table is stored in memory, and is accessed for every memory access. This can be mitigated by using a TLB (essentially a cache).</li>
 <li>Memory required to hold a page table can be large. Need one PTE/page, and if the page size is small, the page table can be large. ie 32 bit AS with 4 KB pages = $2^20$ PTEs = $1,048,576$ PTEs = 4 MB (using 4 bytes/page). Solution: page the page table.</li>
 </ul>
-<h3 id="paged-virtual-memory">Paged Virtual Memory</h3>
+<h3 id="paged-virtual-memory"><a class="toclink" href="#paged-virtual-memory">Paged Virtual Memory</a></h3>
 <ul>
 <li>The full (used) address space exists on secondary storage (disk) in page-sized blocks</li>
 <li>OS uses main memory as a cache for the disk</li>
@@ -152,62 +149,70 @@
 <li>If there are no free page frames, the OS must choose a page to evict. If the evicted page is dirty, it must be written to disk. Otherwise, it can just be discarded.</li>
 <li>All transparent to the application/user</li>
 </ul>
-<h3 id="page-faults">Page Faults</h3>
+<h3 id="page-faults"><a class="toclink" href="#page-faults">Page Faults</a></h3>
 <ul>
 <li>When a page is evicted, the OS sets the PTE to invalid and records the disk location of the page into a seperate data structure.</li>
-<li>When a process tries to access the now invalid page, an exception is thrown (page fault).
-    - After trapping into the kernel on exception, the OS runs the page fault handler
-    - The OS looks up the page on disk, and reads it into a free frame
-    - The OS updates the page table to point to the new frame
-    - The OS restarts the instruction that caused the page fault</li>
+<li>When a process tries to access the now invalid page, an exception is thrown (page fault).<ul>
+<li>After trapping into the kernel on exception, the OS runs the page fault handler</li>
+<li>The OS looks up the page on disk, and reads it into a free frame</li>
+<li>The OS updates the page table to point to the new frame</li>
+<li>The OS restarts the instruction that caused the page fault</li>
 </ul>
-<h3 id="demand-paging">Demand Paging</h3>
+</li>
+</ul>
+<h3 id="demand-paging"><a class="toclink" href="#demand-paging">Demand Paging</a></h3>
 <ul>
-<li>Pages are only brought into main memory when they are referenced.
-    - only the code/data that is actually used is brought into memory</li>
-<li>Few systems try to anticipate what pages will be used, and instead just bring in pages as they are used</li>
-<li>However, not uncommon to cluster pages that are likely to be used together (ie. code and data pages)
-    - OS keeps track of pages that come and go together
-    - bring in all pages in the cluster when one is referenced
-    - interface may allow programmer or compiler to specify clusters</li>
+<li>Pages are only brought into main memory when they are referenced.<ul>
+<li>only the code/data that is actually used is brought into memory</li>
 </ul>
-<h3 id="page-replacement">Page Replacement</h3>
+</li>
+<li>Few systems try to anticipate what pages will be used, and instead just bring in pages as they are used</li>
+<li>However, not uncommon to cluster pages that are likely to be used together (ie. code and data pages)<ul>
+<li>OS keeps track of pages that come and go together</li>
+<li>bring in all pages in the cluster when one is referenced</li>
+<li>interface may allow programmer or compiler to specify clusters</li>
+</ul>
+</li>
+</ul>
+<h3 id="page-replacement"><a class="toclink" href="#page-replacement">Page Replacement</a></h3>
 <ul>
 <li>When you read in a page, you either use an existing free frame, or you evict a page.</li>
 </ul>
-<h4 id="page-replacement-algorithms">Page Replacement Algorithms</h4>
+<h4 id="page-replacement-algorithms"><a class="toclink" href="#page-replacement-algorithms">Page Replacement Algorithms</a></h4>
 <ul>
 <li>pick one that won't be used for a while</li>
 <li>pick one that hasn't been modified (so we don't have to write it to disk)</li>
 <li>OS typically keeps a pool of free pages so that allocations don't need to evict.</li>
 <li>OS also tries to keep clean pages around so that they can be evicted without writing to disk.</li>
 </ul>
-<h5 id="beladys-optimal-algorithm">Belady's Optimal Algorithm</h5>
+<h5 id="beladys-optimal-algorithm"><a class="toclink" href="#beladys-optimal-algorithm">Belady's Optimal Algorithm</a></h5>
 <ul>
 <li>Replace the page that will not be used for the longest time in the future</li>
 <li>Impossible to implement in practice, but useful for comparing other algorithms</li>
 </ul>
-<h5 id="fifo">FIFO</h5>
+<h5 id="fifo"><a class="toclink" href="#fifo">FIFO</a></h5>
 <ul>
 <li>Replace the page that has been in memory the longest</li>
 <li>Simple to implement, but not always the best</li>
 <li>Can cause <strong>Belady's Anomaly</strong>: increasing the number of frames can increase the number of page faults</li>
 </ul>
-<h5 id="lru">LRU</h5>
+<h5 id="lru"><a class="toclink" href="#lru">LRU</a></h5>
 <ul>
 <li>Replace the page that has not been used for the longest time</li>
 <li>Requires keeping track of the time of the last reference for each page</li>
 </ul>
-<h5 id="approximate-lru">Approximate LRU</h5>
+<h5 id="approximate-lru"><a class="toclink" href="#approximate-lru">Approximate LRU</a></h5>
 <ul>
 <li>Keep counter for each page</li>
-<li>At some regular interval, for each page:
-    - if ref bit == 1, increment counter
-    - if ref bit == 0, zero counter
-    - zero ref bit</li>
+<li>At some regular interval, for each page:<ul>
+<li>if ref bit == 1, increment counter</li>
+<li>if ref bit == 0, zero counter</li>
+<li>zero ref bit</li>
+</ul>
+</li>
 <li>counter contains the number of intervals since the last reference to the page. page with the largest counter is least recently used</li>
 </ul>
-<h5 id="lru-clock">LRU Clock</h5>
+<h5 id="lru-clock"><a class="toclink" href="#lru-clock">LRU Clock</a></h5>
 <ul>
 <li>Keep a circular list of pages</li>
 <li>Each page has a reference bit</li>
@@ -217,17 +222,19 @@
 <li>Low overhead if plenty of memory</li>
 <li>As memory increases, accuracy decreases. Can use multiple hands to increase accuracy.</li>
 </ul>
-<h3 id="how-do-you-load-a-program">How do you load a program?</h3>
+<h3 id="how-do-you-load-a-program"><a class="toclink" href="#how-do-you-load-a-program">How do you load a program?</a></h3>
 <ul>
 <li>Create descriptor/process control block (PCB)</li>
 <li>Create page table</li>
 <li>Put address space image on disk in page-sized blocks</li>
-<li>Build page table
-    - All PTE valid bits set to 0
-    - Some data structure stores disk location of each page
-    - When process starts executing, the OS sets the PTBR to point to the page table</li>
+<li>Build page table<ul>
+<li>All PTE valid bits set to 0</li>
+<li>Some data structure stores disk location of each page</li>
+<li>When process starts executing, the OS sets the PTBR to point to the page table</li>
 </ul>
-<h3 id="locality">Locality</h3>
+</li>
+</ul>
+<h3 id="locality"><a class="toclink" href="#locality">Locality</a></h3>
 <ul>
 <li><strong>Temporal locality</strong>: if a memory location is accessed, it is likely to be accessed again soon</li>
 <li><strong>Spatial locality</strong>: if a memory location is accessed, it is likely that nearby memory locations will be accessed soon</li>
@@ -237,10 +244,10 @@
 <li>Once you bring in a page, you will use it many times</li>
 <li>On average, you will use the pages you bring in</li>
 </ul>
-<h3 id="local-vs-global-page-replacement">Local vs Global Page Replacement</h3>
+<h3 id="local-vs-global-page-replacement"><a class="toclink" href="#local-vs-global-page-replacement">Local vs Global Page Replacement</a></h3>
 <p>Local page replacement means that each process has its own set of pages that it is replacing. Global page replacement means that the OS can choose any page to replace, regardless of which process it belongs to. Linux uses global page replacement.</p>
 <p>This is typically implemented by keeping a pool of free pages, and when a page is needed, the OS can choose any page to evict. This is useful because it allows the OS to make better decisions about which pages to evict, and can reduce the number of page faults.</p>
-<h4 id="working-set-model">Working Set Model</h4>
+<h4 id="working-set-model"><a class="toclink" href="#working-set-model">Working Set Model</a></h4>
 <ul>
 <li>$t$: time</li>
 <li>$w$: working set window (measured in page refs)</li>
@@ -258,7 +265,7 @@ $$</p>
 <li>Typically, the working set is the set of pages that have been referenced in the last $n$ references, where $n$ is the working set window.</li>
 </ul>
 <p>The goal is to reduce page faults by keeping the working set in memory. <strong>Thrashing</strong> is when a process is spending more time paging than executing, and keeping the working set in memory can help prevent thrashing.</p>
-<h3 id="hard-vs-soft-page-faults">Hard vs Soft Page Faults</h3>
+<h3 id="hard-vs-soft-page-faults"><a class="toclink" href="#hard-vs-soft-page-faults">Hard vs Soft Page Faults</a></h3>
 <ul>
 <li><strong>Hard page fault</strong>: when a page is not in memory, and the OS must read it from disk/backend storage</li>
 <li><strong>Soft page fault</strong>: when a page is not in memory, but the OS can find it in the page file, and bring it into memory without reading from the backend storage</li>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Xen and the Art of Virtualization", "dateModified": "2025-05-10T14:44:31.221803", "description": "Paper review of Xen and the Art of Virtualization", "articleSection": "Operating Systems", "keywords": "virtualization,hypervisor,xen,operating system,systems"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Xen and the Art of Virtualization", "dateModified": "2025-05-10T14:44:31.221803", "description": "Paper review of Xen and the Art of Virtualization", "url": "https://notes.elimelt.com/systems-research/xen.html", "articleSection": "Operating Systems", "keywords": "virtualization,hypervisor,xen,operating system,systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Xen and the Art of Virtualization
@@ -98,33 +95,33 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h6 id="xen-and-the-art-of-virtualization"><a href="https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf">Xen and the Art of Virtualization</a></h6>
+                <h6 id="xen-and-the-art-of-virtualization"><a class="toclink" href="#xen-and-the-art-of-virtualization"><a href="https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf">Xen and the Art of Virtualization</a></a></h6>
 <hr />
-<h3 id="what-is-the-problem">What is the Problem?</h3>
+<h3 id="what-is-the-problem"><a class="toclink" href="#what-is-the-problem">What is the Problem?</a></h3>
 <p>Full virtualization, where you completely emulate the underlying hardware of a machine to run a guest OS, is not a very good solution. In particular, it is much slower due to overhead, and it doesn't guest OSes to access hardware features from the host OS.</p>
-<h3 id="summary">Summary</h3>
+<h3 id="summary"><a class="toclink" href="#summary">Summary</a></h3>
 <p>Xen is a hypervisor that allows multiple OSes to run on the same hardware through <strong>paravirtualization</strong>. This means that the guest OSes are modified to be aware of the hypervisor, and they can make calls to the hypervisor to access hardware features. It implements efficient mechanisms for memory management, scheduling, event delivery, and I/O that exist in the hypervisor, which are then used to delegate resources to the guest OSes. To this end, it achieves many performance improvements over traditional full virtualization systems on their port <strong>XenoLinux</strong>.</p>
-<h3 id="key-insights">Key Insights</h3>
+<h3 id="key-insights"><a class="toclink" href="#key-insights">Key Insights</a></h3>
 <ul>
 <li>Guest OSes benefit from being hypervisor-aware, both for correctness (clocks, paging), and performance (fast handlers).</li>
 <li>Paravirtualization provides huge performance improvements over full virtualization, but requires modifying the guest OSes. Xen was still able to minimize the amount of source code that needed to be changed by using a simple and clean interface that can easily be ported to new OSes.</li>
 </ul>
-<h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
+<h3 id="notable-design-detailsstrengths"><a class="toclink" href="#notable-design-detailsstrengths">Notable Design Details/Strengths</a></h3>
 <ul>
 <li>Requires minimal changes to the guest OSes; only need to "port" new guest OSes, which involves modifying the OS to be aware of the hypervisor</li>
 <li>Very low overhead in terms of latency and throughput for most operations, since emulation is not needed in many cases</li>
 </ul>
-<h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
+<h3 id="limitationsweaknesses"><a class="toclink" href="#limitationsweaknesses">Limitations/Weaknesses</a></h3>
 <ul>
 <li>Guest OSes still need to be modified, making adoption more difficult for new OSes</li>
 <li>Doesn't support SMP on guest OSes, meaning some workloads are still far more efficient on native hardware</li>
 </ul>
-<h3 id="summary-of-key-results">Summary of Key Results</h3>
+<h3 id="summary-of-key-results"><a class="toclink" href="#summary-of-key-results">Summary of Key Results</a></h3>
 <ul>
 <li>Performance very close to native linux for many workloads, and even when it is not, it is still much better than full virtualization</li>
 <li>Many concurrent guest OSes can run with little memory imprint resulting from the hypervisor.</li>
 </ul>
-<h3 id="open-questions">Open Questions</h3>
+<h3 id="open-questions"><a class="toclink" href="#open-questions">Open Questions</a></h3>
 <ul>
 <li>Is there a way to automatically/programmatically port guest OSes to be hypervisor-aware? Is there some way we could make implementing a new OS conform to an interface that complies with the hypervisor automatically?</li>
 <li>Has there been any work in detecting "hot spots" for routines that that are called a lot, for which we could automatically register a fast handler in the hypervisor?</li>

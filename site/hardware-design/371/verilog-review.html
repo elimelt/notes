@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "SystemVerilog Review", "dateModified": "2025-05-07T12:52:53.957165", "description": "SystemVerilog review for EE271/CSE371 Spring 2025, covering basic concepts for combinational and sequential logic, FSMs, and test benches.", "articleSection": "Hardware", "keywords": "systemverilog,review,combinational logic,sequential logic,fsm,test benches"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "SystemVerilog Review", "dateModified": "2025-05-07T12:52:53.957165", "description": "SystemVerilog review for EE271/CSE371 Spring 2025, covering basic concepts for combinational and sequential logic, FSMs, and test benches.", "url": "https://notes.elimelt.com/hardware-design/371/verilog-review.html", "articleSection": "Hardware", "keywords": "systemverilog,review,combinational logic,sequential logic,fsm,test benches"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » SystemVerilog Review
@@ -98,32 +95,26 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="systemverilog-review">SystemVerilog Review</h1>
-<h3 id="integer-representation">Integer Representation</h3>
+                <h1 id="systemverilog-review"><a class="toclink" href="#systemverilog-review">SystemVerilog Review</a></h1>
+<h3 id="integer-representation"><a class="toclink" href="#integer-representation">Integer Representation</a></h3>
 <ul>
-<li><strong>Unsigned integers</strong>: Standard binary (base 2) representation<ul>
+<li><strong>Unsigned integers</strong>: Standard binary (base 2) representation</li>
 <li>With $n$ bits, can represent integers $0$ to $2^n - 1$</li>
-</ul>
-</li>
-<li><strong>Signed integers</strong>: Two's Complement representation<ul>
+<li><strong>Signed integers</strong>: Two's Complement representation</li>
 <li>Most significant bit (MSB) has negative weight $(-2^{(n-1)})$</li>
 <li>With $n$ bits, can represent integers $-2^{(n-1)}$ to $2^{(n-1)} - 1$</li>
 <li>MSB functions as sign bit (0 = positive, 1 = negative)</li>
 <li>Negation: Bitwise complement + 1 (e.g., <code>~x + 1</code>)</li>
 </ul>
-</li>
-</ul>
-<h3 id="constants-data-types">Constants &amp; Data Types</h3>
+<h3 id="constants-data-types"><a class="toclink" href="#constants-data-types">Constants &amp; Data Types</a></h3>
 <ul>
-<li>Multi-bit constants format: <code>&lt;n&gt;'&lt;s&gt;&lt;b&gt;#...#</code><ul>
+<li>Multi-bit constants format: <code>&lt;n&gt;'&lt;s&gt;&lt;b&gt;#...#</code></li>
 <li><code>&lt;n&gt;</code> = width (unsized by default)</li>
 <li><code>&lt;s&gt;</code> = signed designation (omit or 's')</li>
 <li><code>&lt;b&gt;</code> = radix/base (d=decimal, h=hex, b=binary, o=octal)</li>
 <li>Case-insensitive, underscores allowed for readability</li>
 </ul>
-</li>
-</ul>
-<h3 id="operators">Operators</h3>
+<h3 id="operators"><a class="toclink" href="#operators">Operators</a></h3>
 <ul>
 <li>Arithmetic: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code> (modulus), <code>**</code> (exponentiation)</li>
 <li>Shift: <code>&gt;&gt;</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;&gt;</code> (arithmetic right shift)</li>
@@ -133,96 +124,78 @@
 <li>Logical: <code>!</code>, <code>&amp;&amp;</code>, <code>||</code></li>
 <li>Ternary operator: <code>select ? &lt;then_expr&gt; : &lt;else_expr&gt;</code></li>
 </ul>
-<h3 id="bit-manipulation">Bit Manipulation</h3>
+<h3 id="bit-manipulation"><a class="toclink" href="#bit-manipulation">Bit Manipulation</a></h3>
 <ul>
 <li>Concatenation: <code>{sig, ..., sig}</code></li>
 <li>Replication: <code>{n{m}}</code> (repeats value m, n times)</li>
 </ul>
-<h3 id="parameters">Parameters</h3>
+<h3 id="parameters"><a class="toclink" href="#parameters">Parameters</a></h3>
 <ul>
 <li>Named constants with default values</li>
-<li>Format for parameterized modules:<ul>
+<li>Format for parameterized modules:</li>
 <li><code>module &lt;name&gt; #(&lt;parameter list&gt;) (&lt;port list&gt;);</code></li>
 <li>Example: <code>#(parameter N = 8)</code></li>
 </ul>
-</li>
-</ul>
-<h2 id="modules-instantiation">Modules &amp; Instantiation</h2>
+<h2 id="modules-instantiation"><a class="toclink" href="#modules-instantiation">Modules &amp; Instantiation</a></h2>
 <ul>
 <li>Modules are the building blocks of design hierarchy</li>
 <li>Ports define connections between module and environment</li>
 <li>Port direction: <code>input</code>, <code>output</code>, <code>inout</code></li>
 <li>Module instantiation: <code>&lt;type&gt; &lt;name&gt; (&lt;port connections&gt;);</code></li>
-<li>Connection styles:<ol>
+<li>Connection styles:</li>
 <li>Positional: <code>my_tri(out, in, enable);</code></li>
 <li>Named/explicit: <code>my_tri(.out(out), .in(in), .enable(enable));</code></li>
 <li>Implicit: <code>my_tri(.out, .in, .enable);</code> (when port/signal names match)</li>
-</ol>
-</li>
 </ul>
-<h2 id="procedural-blocks">Procedural Blocks</h2>
+<h2 id="procedural-blocks"><a class="toclink" href="#procedural-blocks">Procedural Blocks</a></h2>
 <ul>
 <li><strong>Always blocks</strong>: Used for behavioral code, run repeatedly based on sensitivity list</li>
-<li>SystemVerilog variants:<ul>
+<li>SystemVerilog variants:</li>
 <li><code>always_comb</code>: For combinational logic (auto sensitivity list)</li>
 <li><code>always_latch</code>: For latch-based logic (auto sensitivity list)</li>
 <li><code>always_ff</code>: For sequential/clocked logic (must specify sensitivity)</li>
-</ul>
-</li>
 <li><strong>Initial blocks</strong>: Run once at time zero (for simulation/test benches only)</li>
 </ul>
-<h2 id="latches-vs-flip-flops">Latches vs. Flip-Flops</h2>
+<h2 id="latches-vs-flip-flops"><a class="toclink" href="#latches-vs-flip-flops">Latches vs. Flip-Flops</a></h2>
 <ul>
-<li>Both store information, but operate differently:<ul>
+<li>Both store information, but operate differently:</li>
 <li>Latches are asynchronous (level-sensitive)</li>
 <li>Flip-flops are edge-triggered (synchronous)</li>
-</ul>
-</li>
 <li>Beware of inadvertent latches from incomplete assignments</li>
 </ul>
-<h2 id="case-statements">Case Statements</h2>
+<h2 id="case-statements"><a class="toclink" href="#case-statements">Case Statements</a></h2>
 <ul>
 <li>Create combinational logic inside always blocks</li>
 <li>Must include <code>default</code> case to avoid incomplete assignments</li>
 <li>Each case has an implied break</li>
 </ul>
-<h2 id="finite-state-machines-fsms">Finite State Machines (FSMs)</h2>
+<h2 id="finite-state-machines-fsms"><a class="toclink" href="#finite-state-machines-fsms">Finite State Machines (FSMs)</a></h2>
 <ul>
 <li>A way to conceptualize computation over time using state transition diagrams</li>
-<li>Components:<ol>
+<li>Components:</li>
 <li>State register (sequential logic)</li>
 <li>Next state logic (combinational)</li>
 <li>Output logic (combinational)</li>
-</ol>
-</li>
-<li>Implementation notes:<ul>
+<li>Implementation notes:</li>
 <li>States require binary encoding (use enum for readability)</li>
 <li>Reset can be synchronous or asynchronous</li>
 <li>State logic can be one combined block or two separate blocks</li>
 </ul>
-</li>
-</ul>
-<h3 id="moore-vs-mealy-fsms">Moore vs. Mealy FSMs</h3>
+<h3 id="moore-vs-mealy-fsms"><a class="toclink" href="#moore-vs-mealy-fsms">Moore vs. Mealy FSMs</a></h3>
 <ul>
-<li><strong>Moore</strong>: Outputs depend only on current state<ul>
+<li><strong>Moore</strong>: Outputs depend only on current state</li>
 <li>Output changes synchronously with state changes</li>
-</ul>
-</li>
-<li><strong>Mealy</strong>: Outputs depend on state and inputs<ul>
+<li><strong>Mealy</strong>: Outputs depend on state and inputs</li>
 <li>Input changes can cause immediate output changes</li>
 </ul>
-</li>
-</ul>
-<h2 id="test-benches">Test Benches</h2>
+<h2 id="test-benches"><a class="toclink" href="#test-benches">Test Benches</a></h2>
 <ul>
 <li>Special modules for simulation only</li>
 <li>Create simulated inputs for FPGA testing</li>
-<li>Control timing of signals using:<ul>
+<li>Control timing of signals using:</li>
 <li>Delay: <code>#&lt;time&gt;</code></li>
 <li>Edge-sensitive: <code>@(&lt;pos/neg&gt;edge &lt;signal&gt;)</code></li>
 <li>Level-sensitive: <code>wait(&lt;expression&gt;)</code></li>
-</ul>
-</li>
 <li>Output test results using <code>$display</code> and related system tasks</li>
 <li>Format specifiers for output: <code>%h</code> (hex), <code>%d</code> (decimal), <code>%b</code> (binary), etc.</li>
 </ul>

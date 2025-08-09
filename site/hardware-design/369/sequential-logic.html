@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Sequential Logic (SL)", "dateModified": "2025-02-11T16:42:51.458671", "description": "Explains the concept of sequential logic in digital systems and its applications.", "articleSection": "Hardware", "keywords": "sequential logic,digital systems,finite state machines,flip-flops,clock signals"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sequential Logic (SL)", "dateModified": "2025-02-11T16:42:51.458671", "description": "Explains the concept of sequential logic in digital systems and its applications.", "url": "https://notes.elimelt.com/hardware-design/369/sequential-logic.html", "articleSection": "Hardware", "keywords": "sequential logic,digital systems,finite state machines,flip-flops,clock signals"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Sequential Logic (SL)
@@ -98,14 +95,14 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="sequential-logic-sl">Sequential Logic (SL)</h1>
+                <h1 id="sequential-logic-sl"><a class="toclink" href="#sequential-logic-sl">Sequential Logic (SL)</a></h1>
 <p>Whereas in <em>combinational logic</em>, you have outputs which are direct functions of their inputs, with sequential logic the presence of <em>feedback</em> gives circuits the ability to store state. This is the basis for memory and computation in digital systems.</p>
 <p>This helps control the flow of information through blocks of combinational logic, usually synchronizing with a clock signal. One of the major use cases of sequential logic is in <strong>Finite State Machines (FSM)</strong>. Without SL, the output of a combinational circuit would change instantly with every change in input, which can lead to unpredictable behavior within intermediate states, leading to unexpected outputs.</p>
-<h2 id="positive-edge-triggered-d-type-flip-flop">Positive Edge-Triggered D-type Flip-Flop</h2>
+<h2 id="positive-edge-triggered-d-type-flip-flop"><a class="toclink" href="#positive-edge-triggered-d-type-flip-flop">Positive Edge-Triggered D-type Flip-Flop</a></h2>
 <p>On the rising edge of the clock signal, input is sampled and transferred to the output signal. At all other times, changes in the input are ignored and the previously samples value is retained. This essentially has the effect of <em>synchronizing</em> the input signal with the clock signal, or rather quantizing changes in the input signal to only fall on the rising edge of the clock signal.</p>
-<h2 id="registers">Registers</h2>
+<h2 id="registers"><a class="toclink" href="#registers">Registers</a></h2>
 <p>A <code>n</code> bit register is composed of <code>n</code> flip-flops. Registers have the addition of a <code>reset</code> signal, which sets the register to a known state if it is high during a clock trigger.</p>
-<h2 id="flip-flop-timing">Flip-Flop Timing</h2>
+<h2 id="flip-flop-timing"><a class="toclink" href="#flip-flop-timing">Flip-Flop Timing</a></h2>
 <ul>
 <li><strong>Setup Time</strong>: how long the input needs to be stable <em>before</em> the clock trigger for a proper read</li>
 <li><strong>Hold Time</strong>: how long the input needs to be stable <em>after</em> the clock trigger for a proper read</li>
@@ -115,13 +112,13 @@
 <p>$$
 t_{hold} \le t_{input, i} \le t_{period} - t_{setup}
 $$</p>
-<h3 id="minimum-delay">Minimum Delay</h3>
+<h3 id="minimum-delay"><a class="toclink" href="#minimum-delay">Minimum Delay</a></h3>
 <p>If the shortest path to a register input is too short, then $t_{hold}$ could be violated, meaning the input could change before the state is "locked in". We have...</p>
 <ul>
 <li><code>min_delay = min(clk_to_q + min_cl_delay, min_cl_delay)</code></li>
 <li><code>min_delay &gt;= t_hold</code></li>
 </ul>
-<h3 id="maximum-clock-frequency">Maximum Clock Frequency</h3>
+<h3 id="maximum-clock-frequency"><a class="toclink" href="#maximum-clock-frequency">Maximum Clock Frequency</a></h3>
 <p>The maximum frequency you can run your clock at is limited by the amount of time needed to get a correct next state to your registers. We must have...</p>
 <p><code>max_delay = max(clock_to_q + max_cl_delay, max_cl_delay)</code></p>
 <p>Then, <code>min_period = max_delay + t_setup</code>, and <code>max_freq = 1/min_period</code>.</p>

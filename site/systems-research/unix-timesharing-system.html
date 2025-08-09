@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Unix Timesharing System", "dateModified": "2025-03-05T03:27:55.426524", "description": "Paper review/notes from lecture of Unix Timesharing System", "articleSection": "Operating Systems", "keywords": "unix,systems,operating systems"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Unix Timesharing System", "dateModified": "2025-03-05T03:27:55.426524", "description": "Paper review/notes from lecture of Unix Timesharing System", "url": "https://notes.elimelt.com/systems-research/unix-timesharing-system.html", "articleSection": "Operating Systems", "keywords": "unix,systems,operating systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » The Unix Timesharing System
@@ -98,13 +95,13 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h6 id="the-unix-timesharing-system"><a href="https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf">The Unix Timesharing System</a></h6>
+                <h6 id="the-unix-timesharing-system"><a class="toclink" href="#the-unix-timesharing-system"><a href="https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf">The Unix Timesharing System</a></a></h6>
 <hr />
-<h3 id="what-is-the-problem">What is the Problem?</h3>
+<h3 id="what-is-the-problem"><a class="toclink" href="#what-is-the-problem">What is the Problem?</a></h3>
 <p>A very unspecific problem. Essentially they were burnt by Multics and wanted to create a simpler and more general system.</p>
-<h3 id="summary">Summary</h3>
+<h3 id="summary"><a class="toclink" href="#summary">Summary</a></h3>
 <p>Key design goal is simplicity. Everything is hierarchical. Everything is a file.</p>
-<h4 id="file-system-implementation">File System Implementation</h4>
+<h4 id="file-system-implementation"><a class="toclink" href="#file-system-implementation">File System Implementation</a></h4>
 <ul>
 <li>Tree strucutre</li>
 <li>FS mounted on a file</li>
@@ -112,29 +109,37 @@
 <li>i-node contains metadata for each file</li>
 <li>path names don't distinguish between files and directories</li>
 <li>mount table for mounted file systems</li>
-<li>buffering is built into kernel and transparent to user
-    - write-behind (flushes to disk when buffer is full)</li>
+<li>buffering is built into kernel and transparent to user<ul>
+<li>write-behind (flushes to disk when buffer is full)</li>
 </ul>
-<h4 id="storage-devices">Storage Devices</h4>
+</li>
+</ul>
+<h4 id="storage-devices"><a class="toclink" href="#storage-devices">Storage Devices</a></h4>
 <ul>
-<li>block devices
-    - data is stored in fixed-size blocks
-    - "free list" of blocks for allocation, Linked list of blocks
-    - hard disks, usb drive, ssd, tape drives
-    - early versions of ethernet</li>
+<li>block devices<ul>
+<li>data is stored in fixed-size blocks</li>
+<li>"free list" of blocks for allocation, Linked list of blocks</li>
+<li>hard disks, usb drive, ssd, tape drives</li>
+<li>early versions of ethernet</li>
+</ul>
+</li>
 <li>character devices</li>
 </ul>
-<h4 id="execution">Execution</h4>
+<h4 id="execution"><a class="toclink" href="#execution">Execution</a></h4>
 <ul>
 <li><strong>Image</strong> is an execution env (parallel container)</li>
-<li><strong>Process</strong> is an instance/execution of an image
-    - Program text write-protected and shared between all instances of that process
-    - Separate virtual address space for each process</li>
-<li>Kernel
-    - Mediator for accessing services/hardware/shared resources</li>
+<li><strong>Process</strong> is an instance/execution of an image<ul>
+<li>Program text write-protected and shared between all instances of that process</li>
+<li>Separate virtual address space for each process</li>
 </ul>
-<h3 id="key-insights">Key Insights</h3>
-<h2 id="-">-</h2>
+</li>
+<li>Kernel<ul>
+<li>Mediator for accessing services/hardware/shared resources</li>
+</ul>
+</li>
+</ul>
+<h3 id="key-insights"><a class="toclink" href="#key-insights">Key Insights</a></h3>
+<h2 id="-"><a class="toclink" href="#-">-</a></h2>
             </div>
             <div class="tags">
                 Tags:

@@ -7,7 +7,7 @@
     <title>Introduction to Undirected Graphs and Their Properties | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves important theorems about degree sums and odd vertices, and compares adjacency matrix and list representations with their respective time and space complexities.">
+    <meta name="description" content="A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Introduction to Undirected Graphs and Their Properties">
-    <meta property="og:description" content="A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves important theorems about degree sums and odd vertices, and compares adjacency matrix and list representations with their respective time and space complexities.">
+    <meta property="og:description" content="A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves ">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/graphs-intro.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Introduction to Undirected Graphs and Their Properties">
-    <meta name="twitter:description" content="A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves important theorems about degree sums and odd vertices, and compares adjacency matrix and list representations with their respective time and space complexities.">
+    <meta name="twitter:description" content="A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves ">
 
     <meta name="keywords" content="graph,graph fundamentals,graph representation,graph properties,data structures">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Introduction to Undirected Graphs and Their Properties", "dateModified": "2025-05-10T14:41:29.675177", "description": "A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves important theorems about degree sums and odd vertices, and compares adjacency matrix and list representations with their respective time and space complexities.", "articleSection": "Algorithms", "keywords": "graph,graph fundamentals,graph representation,graph properties,data structures"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Introduction to Undirected Graphs and Their Properties", "dateModified": "2025-05-10T14:41:29.675177", "description": "A comprehensive introduction to undirected graphs covering fundamental concepts, properties, and storage methods. The document explains key terminology, proves ", "url": "https://notes.elimelt.com/algorithms/graphs-intro.html", "articleSection": "Algorithms", "keywords": "graph,graph fundamentals,graph representation,graph properties,data structures"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Introduction to Undirected Graphs and Their Properties
@@ -98,13 +95,13 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="graphs-introduction">Graphs Introduction</h1>
-<h2 id="undirected-graphs">Undirected Graphs</h2>
+                <h1 id="graphs-introduction"><a class="toclink" href="#graphs-introduction">Graphs Introduction</a></h1>
+<h2 id="undirected-graphs"><a class="toclink" href="#undirected-graphs">Undirected Graphs</a></h2>
 <p>An undirected graph is defined by a set of vertices and a set of edges.</p>
 <p>$$
 G = (V, E)
 $$</p>
-<h3 id="terminology">Terminology</h3>
+<h3 id="terminology"><a class="toclink" href="#terminology">Terminology</a></h3>
 <ul>
 <li><strong>Connectedness</strong>: A graph is connected if there is a path between every pair of vertices.</li>
 <li><strong>Isolated vertex</strong>: A vertex with no edges.</li>
@@ -115,38 +112,38 @@ $$</p>
 <li><strong>Cycle</strong>: Path of length &gt; 2 that has the same start and end</li>
 <li><strong>Tree</strong>: A connected graph with no cycles.</li>
 </ul>
-<h3 id="degree-sum">Degree Sum</h3>
-<h4 id="claim">Claim</h4>
+<h3 id="degree-sum"><a class="toclink" href="#degree-sum">Degree Sum</a></h3>
+<h4 id="claim"><a class="toclink" href="#claim">Claim</a></h4>
 <p>In any undirected graph, the number of edges is half the sum of all vertices degrees.</p>
 <p>$$
 \text{edges } = \frac{1}{2} \sum_{v \in V} deg(v)
 $$</p>
-<h4 id="proof">Proof:</h4>
+<h4 id="proof"><a class="toclink" href="#proof">Proof:</a></h4>
 <p>The sum counts each edge twice.</p>
-<h3 id="odd-degree-vertices">Odd Degree Vertices</h3>
-<h4 id="claim_1">Claim</h4>
+<h3 id="odd-degree-vertices"><a class="toclink" href="#odd-degree-vertices">Odd Degree Vertices</a></h3>
+<h4 id="claim_1"><a class="toclink" href="#claim_1">Claim</a></h4>
 <p>In any undirected graph, the number of odd degree vertices is even.</p>
-<h4 id="proof_1">Proof</h4>
+<h4 id="proof_1"><a class="toclink" href="#proof_1">Proof</a></h4>
 <p>Adding any two odd numbers results in an even number. Adding an odd and even number is odd. With this in mind, knowing that the sum of all vertex degrees is even,there must be even number of odd degree vertices, because sum of odd number of odd numbers is odd.</p>
-<h3 id="degree-1-vertices">Degree 1 vertices</h3>
-<h4 id="claim_2">Claim</h4>
+<h3 id="degree-1-vertices"><a class="toclink" href="#degree-1-vertices">Degree 1 vertices</a></h3>
+<h4 id="claim_2"><a class="toclink" href="#claim_2">Claim</a></h4>
 <p>Suppose $G$ is an acyclic graph. Then $G$ must have a vertex of degree less than or equal to 1.</p>
 <p>$$
 G = (V, E) \text{ is acyclic} \to \exists v \in V, deg(v) \le 1
 $$</p>
-<h4 id="proof_2">Proof</h4>
+<h4 id="proof_2"><a class="toclink" href="#proof_2">Proof</a></h4>
 <p>Proof by contradiction.</p>
 <p>Assume $\forall v \in V, d(v) \ge 2$.</p>
 <p>Consider a path from $v_1$ to $v_n$. At $v_i$, we choose the next vertex such that isnt an edge to $v_{i - 1}$, which is possible because $deg(v_i) \ge 2$. The first time we see a repeated vertex $v_j = v_i$, we get a cycle. Since $G$ has finitely many edges, at some point you need to either terminate your traversal, or loop back and repeat a node.</p>
-<h3 id="number-of-edges">Number of edges</h3>
+<h3 id="number-of-edges"><a class="toclink" href="#number-of-edges">Number of edges</a></h3>
 <p>Let $G = (V, E)$ be a graph with $n = |V|$ vertices and $m = |E|$ edges.</p>
 <p>Claim: $m \le (n \choose 2) = \frac{n(n - 1)}{2} = O(n^2)$</p>
 <p>Proof: Each vertex can be connected to at most $n - 1$ other vertices. Thus, the total number of edges is at most $n(n - 1)/2$.</p>
-<h3 id="sparsity">Sparsity</h3>
+<h3 id="sparsity"><a class="toclink" href="#sparsity">Sparsity</a></h3>
 <p>A graph is called sparse if $|E| &lt;&lt; |V|^2$, and dense otherwise. Sparse graphs are common in applications like social networks, the web, planar graphs, etc.</p>
 <p>Technically, $O(n + m) = O(n^2)$, but in practice, $O(n + m) = O(n)$ for sparse graphs.</p>
-<h3 id="storing-graphs">Storing Graphs</h3>
-<h4 id="adjacency-matrix">Adjacency Matrix</h4>
+<h3 id="storing-graphs"><a class="toclink" href="#storing-graphs">Storing Graphs</a></h3>
+<h4 id="adjacency-matrix"><a class="toclink" href="#adjacency-matrix">Adjacency Matrix</a></h4>
 <p>A matrix $A$ where $A_{ij} = 1$ if there is an edge between $v_i$ and $v_j$, and $0$ otherwise.</p>
 <ul>
 <li>Pro: $O(1)$ time to check if there is an edge between two vertices.</li>
@@ -154,7 +151,7 @@ $$</p>
 <li>Con: $O(n)$ time to find all neighbors of a vertex.</li>
 </ul>
 <p>Good for dense graphs.</p>
-<h4 id="adjacency-list">Adjacency List</h4>
+<h4 id="adjacency-list"><a class="toclink" href="#adjacency-list">Adjacency List</a></h4>
 <p>A list of lists, where each vertex has a list of its neighbors.</p>
 <ul>
 <li>Pro: $O(1)$ time to find all neighbors of a vertex.</li>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Scheduling/Partitioning", "dateModified": "2025-02-11T16:41:49.585509", "description": "A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.", "articleSection": "Algorithms", "keywords": "greedy algorithms,interval partitioning,scheduling,time complexity"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Scheduling/Partitioning", "dateModified": "2025-02-11T16:41:49.585509", "description": "A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.", "url": "https://notes.elimelt.com/cheatsheets/algorithms/intervals.html", "articleSection": "Algorithms", "keywords": "greedy algorithms,interval partitioning,scheduling,time complexity"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Interval Scheduling/Partitioning
@@ -98,11 +95,11 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="interval-schedulingpartitioning">Interval Scheduling/Partitioning</h1>
-<h2 id="scheduling-the-max-number-of-intervals">Scheduling the max number of intervals</h2>
+                <h1 id="interval-schedulingpartitioning"><a class="toclink" href="#interval-schedulingpartitioning">Interval Scheduling/Partitioning</a></h1>
+<h2 id="scheduling-the-max-number-of-intervals"><a class="toclink" href="#scheduling-the-max-number-of-intervals">Scheduling the max number of intervals</a></h2>
 <ul>
 <li><strong>Algorithm:</strong> sort by finish time and select the next compatible interval</li>
-<li><strong>Proof</strong>: Greedy stays ahead, by induction<ul>
+<li><strong>Proof</strong>: Greedy stays ahead, by induction</li>
 <li><em>Claim</em>: Greedy algorithm is optimal</li>
 <li><strong>Lemma</strong><ul>
 <li>$P(r)$: For greedy choices $g_1, \ldots, g_n$ and optimal choices $k_1, \ldots, k_m$, $f(g_r) \le f(k_r)$</li>
@@ -112,17 +109,13 @@
 </li>
 <li>By this lemma, we must have $n \ge m$, since since otherwise $k_{n + 1}$ is in the set of candidates for $g_{n + 1}$.</li>
 </ul>
-</li>
-</ul>
-<h2 id="partitioning-intervals-into-the-minimum-number-of-sets">Partitioning intervals into the minimum number of sets</h2>
+<h2 id="partitioning-intervals-into-the-minimum-number-of-sets"><a class="toclink" href="#partitioning-intervals-into-the-minimum-number-of-sets">Partitioning intervals into the minimum number of sets</a></h2>
 <ul>
 <li><strong>Algorithm</strong>: sort intervals by start time, adding them to <strong>any</strong> compatible set. If no set is compatible, create a new one</li>
-<li><strong>Proof</strong>: exploit structural property<ul>
+<li><strong>Proof</strong>: exploit structural property</li>
 <li><em>Claim</em>: greedy algorithm is optimal</li>
 <li>Let $d$ be the number of sets the greedy algorithm allocates. The $d$th set, $S_d$ is allocated because we had to assign some interval, $I_i$, that was not compatible with any of the $d - 1$ previous sets.</li>
 <li>Since we sorted by start time, all intervals $I_j \in S_1 \cup \ldots \cup S_{d - 1}$ have $s(I_i) \ge s(I_j)$. Thus, we have at least depth $d$ intervals, and so all valid partitions must have $\ge d$ sets.</li>
-</ul>
-</li>
 </ul>
             </div>
             <div class="tags">

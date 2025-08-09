@@ -7,7 +7,7 @@
     <title>Measuring Algorithm Efficiency with Asymptotic Notation | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and provides common efficiency bounds for various function types, emphasizing the importance of polynomial-time algorithms in practical computing.">
+    <meta name="description" content="This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and pr">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Measuring Algorithm Efficiency with Asymptotic Notation">
-    <meta property="og:description" content="This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and provides common efficiency bounds for various function types, emphasizing the importance of polynomial-time algorithms in practical computing.">
+    <meta property="og:description" content="This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and pr">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/runtime.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Measuring Algorithm Efficiency with Asymptotic Notation">
-    <meta name="twitter:description" content="This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and provides common efficiency bounds for various function types, emphasizing the importance of polynomial-time algorithms in practical computing.">
+    <meta name="twitter:description" content="This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and pr">
 
     <meta name="keywords" content="algorithm,time complexity,asymptotic notation,efficiency">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Measuring Algorithm Efficiency with Asymptotic Notation", "dateModified": "2025-01-01T04:23:23.697563", "description": "This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and provides common efficiency bounds for various function types, emphasizing the importance of polynomial-time algorithms in practical computing.", "articleSection": "Computer Science", "keywords": "algorithm,time complexity,asymptotic notation,efficiency"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Measuring Algorithm Efficiency with Asymptotic Notation", "dateModified": "2025-01-01T04:23:23.697563", "description": "This document introduces methods for measuring algorithm efficiency using asymptotic notation. It defines O-notation, Omega-notation, and Theta-notation, and pr", "url": "https://notes.elimelt.com/algorithms/runtime.html", "articleSection": "Computer Science", "keywords": "algorithm,time complexity,asymptotic notation,efficiency"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/computer%20science.html">Computer Science</a> » Measuring Algorithm Efficiency with Asymptotic Notation
@@ -98,33 +95,33 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="measuring-efficiency">Measuring Efficiency</h1>
+                <h1 id="measuring-efficiency"><a class="toclink" href="#measuring-efficiency">Measuring Efficiency</a></h1>
 <p>Time is roughly proportional to the number of operations performed. Generally, this holds for simple operations. As a side note, you should avoid hashing.</p>
-<h2 id="o-notation-definition">O-Notation Definition</h2>
+<h2 id="o-notation-definition"><a class="toclink" href="#o-notation-definition">O-Notation Definition</a></h2>
 <p>Given two functions $f(n)$ and $g(n)$, we say that $f(n)$ is $O(g(n))$ if there exist constants $c$ and $n_0$ such that $0 \leq f(n) \leq c \cdot g(n)$ for all $n \geq n_0$.</p>
-<h2 id="omega-notation-definition">Omega-Notation Definition</h2>
+<h2 id="omega-notation-definition"><a class="toclink" href="#omega-notation-definition">Omega-Notation Definition</a></h2>
 <p>Given two functions $f(n)$ and $g(n)$, we say that $f(n)$ is $\Omega(g(n))$ if there exist constants $c$ and $n_0$ such that $0 \leq c \cdot g(n) \leq f(n)$ for all $n \geq n_0$.</p>
-<h2 id="theta-notation-definition">Theta-Notation Definition</h2>
+<h2 id="theta-notation-definition"><a class="toclink" href="#theta-notation-definition">Theta-Notation Definition</a></h2>
 <p>Given two functions $f(n)$ and $g(n)$, we say that $f(n)$ is $\Theta(g(n))$ if there exist constants $c_1$, $c_2$, and $n_0$ such that $0 \leq c_1 \cdot g(n) \leq f(n) \leq c_2 \cdot g(n)$ for all $n \geq n_0$.</p>
-<h2 id="common-bounds">Common Bounds</h2>
+<h2 id="common-bounds"><a class="toclink" href="#common-bounds">Common Bounds</a></h2>
 <p>Logarithms <strong>always</strong> grow slower than polynomial functions.</p>
-<h3 id="polynomial">Polynomial</h3>
+<h3 id="polynomial"><a class="toclink" href="#polynomial">Polynomial</a></h3>
 <p>$$
 a_0 + a_1n + a_2n^2 + \ldots + a_kn^k \in O(n^k)
 $$</p>
-<h3 id="logarithmic">Logarithmic</h3>
+<h3 id="logarithmic"><a class="toclink" href="#logarithmic">Logarithmic</a></h3>
 <p>$$
 \log_a n \in O(\log_b n) \text{ for all } a, b &gt; 1
 $$</p>
-<h3 id="exponential">Exponential</h3>
+<h3 id="exponential"><a class="toclink" href="#exponential">Exponential</a></h3>
 <p>$$
 a^n \in O(b^n) \text{ for all } a, b &gt; 1
 $$</p>
-<h3 id="factorial">Factorial</h3>
+<h3 id="factorial"><a class="toclink" href="#factorial">Factorial</a></h3>
 <p>$$
 n! \in O(n^n)
 $$</p>
-<h2 id="efficient-algorithms">"Efficient" Algorithms</h2>
+<h2 id="efficient-algorithms"><a class="toclink" href="#efficient-algorithms">"Efficient" Algorithms</a></h2>
 <p>A CPU typically does less than $2^30$ operations per second. For this reason, some things just aren't computable.</p>
 <p>Polynomial time algorithms are great, since if a problem size grows by at most a constant factor, then so does its run-time. </p>
             </div>

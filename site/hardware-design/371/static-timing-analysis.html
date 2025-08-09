@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Static Timing Analysis", "dateModified": "2025-05-17T18:21:15.518725", "description": "How should you reason about timing in hardware? What are the key thresholds for signal integrity?", "articleSection": "Hardware", "keywords": "timing analysis,verilog,systemverilog,clock domain crossing,metastability"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Static Timing Analysis", "dateModified": "2025-05-17T18:21:15.518725", "description": "How should you reason about timing in hardware? What are the key thresholds for signal integrity?", "url": "https://notes.elimelt.com/hardware-design/371/static-timing-analysis.html", "articleSection": "Hardware", "keywords": "timing analysis,verilog,systemverilog,clock domain crossing,metastability"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Static Timing Analysis
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="static-timing-analysis">Static Timing Analysis</h1>
-<h2 id="sequential-timing-constraints">Sequential Timing Constraints</h2>
+                <h1 id="static-timing-analysis"><a class="toclink" href="#static-timing-analysis">Static Timing Analysis</a></h1>
+<h2 id="sequential-timing-constraints"><a class="toclink" href="#sequential-timing-constraints">Sequential Timing Constraints</a></h2>
 <ul>
 <li>$t_s$ (<strong>Setup Time</strong>): The minimum time before the clock edge that the data input must be stable. This is to ensure that the data is latched correctly by the flip-flop.</li>
 <li>$t_h$ (<strong>Hold Time</strong>): The minimum time after the clock edge that the data input must remain stable. This is to ensure that the data is not changed before it is latched by the flip-flop.</li>
@@ -125,9 +122,9 @@ $$</p>
 </ul>
 <p>When considering combinational logic delay, we think about minimizing with respect to the hold time constraint, and maximizing with respect to the setup time constraint. So for hold time we want to find the shortest path through our circuit, and for setup time we want to find the longest path through our circuit.</p>
 <p>For example, if you are given $t_{co}$, $t_{h}$, $t_{s}$, and $T_{clk}$, you can calculate the range of tolerable delays for components on a path between two registers, or the input signal's delay after clock edge to change, or some variation on these. In order to do this, you identify the longest and shortest paths through the circuit that concern your component/between the two registers, and then write out the inequalities.</p>
-<h2 id="in-practice">In Practice</h2>
+<h2 id="in-practice"><a class="toclink" href="#in-practice">In Practice</a></h2>
 <p>Static timing analysis usually happens twice in the FPGA design process: once after synthesis (static analysis of the RTL), and once after place and route (static analysis of the netlist).</p>
-<h3 id="circuit-path-categorization">Circuit Path Categorization</h3>
+<h3 id="circuit-path-categorization"><a class="toclink" href="#circuit-path-categorization">Circuit Path Categorization</a></h3>
 <ul>
 <li><strong>Data paths</strong> are between inputs, sequential elements, and outputs</li>
 <li><strong>Clock paths</strong> are from device ports or internally-generated clocks to the clock pins of sequential elements</li>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tokenization, Segmentation, and Edit Distance", "dateModified": "2025-02-12T00:59:15.625957", "description": "Overview of tokenization techniques in Natural Language Processing (NLP), including Unix tools, regex, Byte-Pair Encoding (BPE), and edit distance.", "articleSection": "Natural Language Processing", "keywords": "tokenization,segmentation,edit distance,bpe,nltk,tr,regex,byte-pair encoding"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tokenization, Segmentation, and Edit Distance", "dateModified": "2025-02-12T00:59:15.625957", "description": "Overview of tokenization techniques in Natural Language Processing (NLP), including Unix tools, regex, Byte-Pair Encoding (BPE), and edit distance.", "url": "https://notes.elimelt.com/natural-language-processing/reading/tokenization.html", "articleSection": "Natural Language Processing", "keywords": "tokenization,segmentation,edit distance,bpe,nltk,tr,regex,byte-pair encoding"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Tokenization, Segmentation, and Edit Distance
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="tokenization">Tokenization</h1>
-<h2 id="old-school-unix">Old-School Unix</h2>
+                <h1 id="tokenization"><a class="toclink" href="#tokenization">Tokenization</a></h1>
+<h2 id="old-school-unix"><a class="toclink" href="#old-school-unix">Old-School Unix</a></h2>
 <pre><code class="language-bash"># output all words in a file, one per line
 tr -sc 'A-Za-z' '\n' &lt; input.txt
 
@@ -112,7 +109,7 @@ tr -sc 'A-Za-z' '\n' &lt; input.txt | tr A-Z a-z | sort | uniq -c
 # most frequent words
 tr -sc 'A-Za-z' '\n' &lt; input.txt | tr A-Z a-z | sort | uniq -c | sort -n -r
 </code></pre>
-<h2 id="top-down-regex-tokenization">Top-Down Regex Tokenization</h2>
+<h2 id="top-down-regex-tokenization"><a class="toclink" href="#top-down-regex-tokenization">Top-Down Regex Tokenization</a></h2>
 <pre><code class="language-python">import nltk
 
 pattern = r'''(?x)     # set flag to allow verbose regexps
@@ -126,7 +123,7 @@ pattern = r'''(?x)     # set flag to allow verbose regexps
 text = &quot;This is a sentence.  This is another sentence.&quot;
 nltk.regexp_tokenize(text, pattern)
 </code></pre>
-<h2 id="bottom-up-tokenization-with-byte-pair-encoding-bpe">Bottom-Up Tokenization with Byte-Pair Encoding (BPE)</h2>
+<h2 id="bottom-up-tokenization-with-byte-pair-encoding-bpe"><a class="toclink" href="#bottom-up-tokenization-with-byte-pair-encoding-bpe">Bottom-Up Tokenization with Byte-Pair Encoding (BPE)</a></h2>
 <p>BPE is a simple algorithm that learns tokens from a corpus by iteratively merging the most frequent pair of characters.</p>
 <pre><code class="language-python">def get_freq(vocab: Dict[str, int]) -&gt; Dict[Tuple[str, str], int]:
     pairs = defaultdict(int)
@@ -176,7 +173,7 @@ print(&quot;Merge operations performed:&quot;)
 for i, pair in enumerate(merge_operations, 1):
     print(f&quot;{i}. Merged '{pair[0]}' with '{pair[1]}'&quot;)
 </code></pre>
-<h2 id="segmentation-and-tokenization">Segmentation and Tokenization</h2>
+<h2 id="segmentation-and-tokenization"><a class="toclink" href="#segmentation-and-tokenization">Segmentation and Tokenization</a></h2>
 <pre><code class="language-python">import nltk
 
 sent_text = nltk.sent_tokenize(text)
@@ -186,7 +183,7 @@ for sentence in sent_text:
     tagged = nltk.pos_tag(tokenized_text)
     print(tagged)
 </code></pre>
-<h2 id="edit-distance">Edit Distance</h2>
+<h2 id="edit-distance"><a class="toclink" href="#edit-distance">Edit Distance</a></h2>
 <pre><code class="language-python">def min_edit_distance(w1, w2):
     n, m = len(w1), len(w2)
     dp = [[0] * (m + 1) for _ in range(n + 1)]

@@ -7,7 +7,7 @@
     <title>File Systems | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.">
+    <meta name="description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="File Systems">
-    <meta property="og:description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.">
+    <meta property="og:description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of ">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/file-systems.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="File Systems">
-    <meta name="twitter:description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.">
+    <meta name="twitter:description" content="Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of ">
 
     <meta name="keywords" content="file systems,storage,hierarchical structure,programming interface,system calls">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "File Systems", "dateModified": "2025-02-11T20:48:47.884995", "description": "Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.", "articleSection": "Operating Systems", "keywords": "file systems,storage,hierarchical structure,programming interface,system calls"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "File Systems", "dateModified": "2025-02-11T20:48:47.884995", "description": "Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of ", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/file-systems.html", "articleSection": "Operating Systems", "keywords": "file systems,storage,hierarchical structure,programming interface,system calls"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » File Systems
@@ -98,9 +95,9 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="file-systems">File Systems</h1>
+                <h1 id="file-systems"><a class="toclink" href="#file-systems">File Systems</a></h1>
 <p>A file system interacts with storage by reading/writing blocks (sectors) on a per-volume basis. It is basically a thick layer of abstraction over the raw storage device.</p>
-<h2 id="programming-interface">Programming Interface</h2>
+<h2 id="programming-interface"><a class="toclink" href="#programming-interface">Programming Interface</a></h2>
 <ul>
 <li>Naming: files and directories in a hierarchical structure.</li>
 <li>Operations: create, delete, open, close, read, write, seek, stat, etc.</li>
@@ -156,18 +153,18 @@
 </tbody>
 </table>
 <p>We all know about this and I'm not going to get into it.</p>
-<h3 id="windows-vs-unix">Windows vs. Unix</h3>
-<h4 id="moving-files">Moving Files</h4>
+<h3 id="windows-vs-unix"><a class="toclink" href="#windows-vs-unix">Windows vs. Unix</a></h3>
+<h4 id="moving-files"><a class="toclink" href="#moving-files">Moving Files</a></h4>
 <p>Windows and Unix have different ways of moving files. In Unix, you always use the <code>rename</code> system call. In Windows, moving a file within the same volume is a rename operation, whereas moving a file between volumes is a copy operation followed by a delete operation.</p>
-<h4 id="deleting-files">Deleting Files</h4>
+<h4 id="deleting-files"><a class="toclink" href="#deleting-files">Deleting Files</a></h4>
 <p>In Unix, a file is not actually deleted until all references to it are removed. In Windows, a file is deleted as soon as the last reference to it is removed. This is why you can't delete a file that is open in Windows.</p>
-<h2 id="files">Files</h2>
+<h2 id="files"><a class="toclink" href="#files">Files</a></h2>
 <p>A file is logically just a sequence of bytes, typically consisting of data and properties/metadata. Some file systems also have types (ie. regular file, directory, symbolic link, device, etc.). </p>
 <p>Some files are also understood to be executable by the OS. In Windows, the file type is determined by the file extension. In Unix, the file type is determined by the file's metadata.</p>
 <p>Shared file handles will also share the file's offset. This can be an issue if you have multiple threads or processes reading/writing to the same file handle.</p>
-<h2 id="directories">Directories</h2>
+<h2 id="directories"><a class="toclink" href="#directories">Directories</a></h2>
 <p>A directory is typically just a file that contains metadata about the files it contains in the form of <strong>directory entries</strong>. It is a mapping from file names to file metadata.</p>
-<h2 id="design-constriants">Design Constriants</h2>
+<h2 id="design-constriants"><a class="toclink" href="#design-constriants">Design Constriants</a></h2>
 <ul>
 <li>Want to support small and large files efficiently. Small files need small blocks for efficient storage, whereas large files need large blocks for contiguity</li>
 <li>Store actual file data within <strong>blocks</strong>. Need an indexing structure to retrieve the blocks of a file: <strong>inode</strong> in Unix, <strong>file control block</strong> in Windows.</li>
@@ -175,9 +172,9 @@
 <li>Want to maximize spatial locality and minimize seek time, while minimizing fragmentation.</li>
 <li>Need reliability and fault tolerance. Can use <strong>journaling</strong> to recover from crashes, and error detection/correction codes + redundancy to recover from disk errors (RAID).</li>
 </ul>
-<h2 id="on-disk-structure">On-Disk Structure</h2>
+<h2 id="on-disk-structure"><a class="toclink" href="#on-disk-structure">On-Disk Structure</a></h2>
 <p>There is typically a layer of storage that actually gets persisted on disk, as well as the in-memory representation of the file system that is manipulated by the OS.</p>
-<h3 id="fat-file-system">FAT File System</h3>
+<h3 id="fat-file-system"><a class="toclink" href="#fat-file-system">FAT File System</a></h3>
 <p>The <strong>File Allocation Table</strong> file system is a simple file system that was used in DOS and Windows. It has a simple on-disk structure that consists of a <strong>reserved area</strong>, a number of <strong>FAT areas</strong>, and a <strong>data area</strong>. The reserved area contains the boot sector and metadata about the file system/disk layout. The FAT areas contain the file allocation table, which is a table that maps file names to disk blocks. The data area contains the actual file data.</p>
 <pre><code>+-----------------+-----------------+-----------------+-----------------+
 | Reserved Area   | FAT Area 1      | FAT Area 2      | Data Area       |

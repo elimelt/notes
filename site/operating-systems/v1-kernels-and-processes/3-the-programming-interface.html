@@ -7,7 +7,7 @@
     <title>Syscall API Reference | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.">
+    <meta name="description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process m">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Syscall API Reference">
-    <meta property="og:description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.">
+    <meta property="og:description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process m">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Syscall API Reference">
-    <meta name="twitter:description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.">
+    <meta name="twitter:description" content="Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process m">
 
     <meta name="keywords" content="operating systems,syscall,process management,i/o operations">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Syscall API Reference", "dateModified": "2025-02-11T20:49:33.966336", "description": "Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process management operations like creating and managing processes, as well as I/O operations. Examines process management on Windows and UNIX, including system calls like fork, exec, and wait. Explores inter-process communication mechanisms like pipes and file descriptor replacement. Includes case studies on the UNIX shell and inter-process communication patterns.", "articleSection": "Operating Systems", "keywords": "operating systems,syscall,process management,i/o operations"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Syscall API Reference", "dateModified": "2025-02-11T20:49:33.966336", "description": "Covers the implementation of the system call (syscall) API, a key interface between user-space applications and the operating system kernel. Discusses process m", "url": "https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/3-the-programming-interface.html", "articleSection": "Operating Systems", "keywords": "operating systems,syscall,process management,i/o operations"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Syscall API Reference
@@ -98,9 +95,9 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="chapter-3-the-programming-interface">Chapter 3 - The Programming Interface</h1>
-<h2 id="syscall-api-reference">Syscall API Reference</h2>
-<h3 id="creating-and-managing-processes">Creating and managing processes</h3>
+                <h1 id="chapter-3-the-programming-interface"><a class="toclink" href="#chapter-3-the-programming-interface">Chapter 3 - The Programming Interface</a></h1>
+<h2 id="syscall-api-reference"><a class="toclink" href="#syscall-api-reference">Syscall API Reference</a></h2>
+<h3 id="creating-and-managing-processes"><a class="toclink" href="#creating-and-managing-processes">Creating and managing processes</a></h3>
 <table>
 <thead>
 <tr>
@@ -131,7 +128,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="io-operations">I/O operations</h3>
+<h3 id="io-operations"><a class="toclink" href="#io-operations">I/O operations</a></h3>
 <table>
 <thead>
 <tr>
@@ -170,7 +167,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="overview">Overview</h2>
+<h2 id="overview"><a class="toclink" href="#overview">Overview</a></h2>
 <p>What features/functions do we need an OS to provide for applications?</p>
 <table>
 <thead>
@@ -215,7 +212,7 @@
 </tbody>
 </table>
 <p>This chapter will focus on the first two.</p>
-<h3 id="design-choices">Design Choices</h3>
+<h3 id="design-choices"><a class="toclink" href="#design-choices">Design Choices</a></h3>
 <p>For any bit of functionality, there are several possible places it could be implemented in an OS.</p>
 <table>
 <thead>
@@ -250,8 +247,8 @@
 <li><strong>Reliability</strong>: kernel programs aren't protected from each other, so keeping the kernel small and simple minimizes the chance of bugs. "If it can be done in user-level, it should be done in user-level". Extreme of this is a <strong>micro-kernel architecture</strong>, where the kernel is a small set of primitives for inter-process communication, and everything else is implemented in user-level processes/servers, accessed though user-level programs via inter-process communication.</li>
 <li><strong>Performance</strong>: transferring control from user-level to kernel is expensive, so we want to minimize the number of system calls. Windows NT started out as a micro-kernel, but moved many responsibilities back into the kernel to improve performance.</li>
 </ul>
-<h2 id="process-management">Process Management</h2>
-<h3 id="windows-process-management">Windows Process Management</h3>
+<h2 id="process-management"><a class="toclink" href="#process-management">Process Management</a></h2>
+<h3 id="windows-process-management"><a class="toclink" href="#windows-process-management">Windows Process Management</a></h3>
 <p>Has a syscall to create a process, and others for various process management operations. Turns out to be simple in theory, but complicated in practice. In an ideal world, it would be as simple as:</p>
 <pre><code class="language-c">boolean CreateProcess(char* prog, char* args);
 </code></pre>
@@ -275,13 +272,13 @@
      &amp;pi ) // Pointer to PROCESS_INFORMATION structure
  )
 </code></pre>
-<h3 id="unix-process-management">UNIX Process Management</h3>
+<h3 id="unix-process-management"><a class="toclink" href="#unix-process-management">UNIX Process Management</a></h3>
 <p>UNIX takes an approach that is complex in theory, but simple in practice. <code>CreateProcess</code> is replaced by two system calls:</p>
 <pre><code class="language-c">pid_t fork(void);
 int exec(char* prog, char* args);
 </code></pre>
 <p><code>fork</code> creates a copy of the calling process, called the child process. It is almost identical to the parent, except for the return value of <code>fork</code> and the pid. The child process has a new pid, and the return value of <code>fork</code> is 0. The parent process gets the pid of the child process as the return value of <code>fork</code>. The child process sets itself up the the same as the parent, and once the context is set, the child process calls <code>exec</code> to replace itself with a new program. <code>exec</code> loads the program into the address space, and starts it running.</p>
-<h4 id="fork">fork</h4>
+<h4 id="fork"><a class="toclink" href="#fork">fork</a></h4>
 <ul>
 <li>Create and init process control block (PCB) in kernel</li>
 <li>Create and init new address space</li>
@@ -289,22 +286,22 @@ int exec(char* prog, char* args);
 <li>Inherit execution context from parent (e.g., open files)</li>
 <li>Inform scheduler new process is ready to run</li>
 </ul>
-<h5 id="browsers-and-fork">Browsers and fork</h5>
+<h5 id="browsers-and-fork"><a class="toclink" href="#browsers-and-fork">Browsers and fork</a></h5>
 <p>Browsers use new processes to create a new tab. When you click on a link, Chrome forks a process to fetch and render the web page at the link in a new tab. This also gives the browser seperation between tabs, so that if one tab crashes or contains anything harmful, the others are unaffected. Interestingly, Chrome on Windows doesn't even use <code>CreateProcess</code> for new tabs, and relies on a pool of pre-created processes.</p>
-<h4 id="exec">exec</h4>
+<h4 id="exec"><a class="toclink" href="#exec">exec</a></h4>
 <ul>
 <li>Load program <code>prog</code> into address space</li>
 <li>Copy arguments <code>args</code> into memory in address space</li>
 <li>Init hardware context to start execution</li>
 </ul>
 <p>Note that <code>exec</code> does not create a new process!</p>
-<h4 id="wait">wait</h4>
+<h4 id="wait"><a class="toclink" href="#wait">wait</a></h4>
 <p>Parent process can wait for child process to complete with <code>wait(pid)</code>. This is a blocking call, and returns the exit status of the child process. If the child process has not yet exited, the parent process is blocked until it does. If the child process has already exited, the parent process is not blocked.</p>
 <p><code>wait</code> is optional in UNIX, but a little ambiguous in terminology and use. Windows arguably did it better with <code>WaitForSingleObject</code>.</p>
-<h3 id="kernel-handles-and-garbage-collection">Kernel Handles and Garbage Collection</h3>
+<h3 id="kernel-handles-and-garbage-collection"><a class="toclink" href="#kernel-handles-and-garbage-collection">Kernel Handles and Garbage Collection</a></h3>
 <p>UNIX processes call <code>exit</code> to terminate themselves. This releasing various resources, including user stack, heap, code segments. Has to be careful with PCB though. Even if the child exits, the parent still has access to the PCB and can still call wait. Thus, PCB can't be GC's until both parent and child have exited.</p>
 <p>In general, both the Windows and UNIX kernels have various syscalls that return a handle to a kernel object (e.g. pid of a process, fd of an I/O device, etc.). Thense are <strong>not</strong> pointers, and are instead specific to a given process, and should be validated as such. The kernel maintains a reference count (important) for each object, and when the reference count reaches 0, the kernel can GC the object.</p>
-<h4 id="signals">Signals</h4>
+<h4 id="signals"><a class="toclink" href="#signals">Signals</a></h4>
 <p>Sending async notifications to processes done with <code>signal</code>.</p>
 <pre><code class="language-c">typedef void (*sig_t) (int);
 sig_t signal(int sig, sig_t func);
@@ -314,7 +311,7 @@ sig_t signal(int sig, sig_t func);
               const struct sigaction *restrict act,
               struct sigaction *restrict oact);
 </code></pre>
-<h2 id="inputoutput">Input/Output</h2>
+<h2 id="inputoutput"><a class="toclink" href="#inputoutput">Input/Output</a></h2>
 <p>The key ideas behind UNIX I/O are:</p>
 <ul>
 <li><strong>Uniformity</strong>: all I/O devices use the same set of system calls: <code>open</code>, <code>close</code>, <code>read</code>, <code>write</code> (and <code>seek</code>, <code>ioctl</code>). This makes it real easy to add new device support without changing the OS or system call interface.</li>
@@ -324,12 +321,12 @@ sig_t signal(int sig, sig_t func);
 <li><strong>Kernel-buffered writes</strong>: the kernel similarly buffers writes to devices. Before the buffer is full, the <code>write</code> syscall returns immediately after copying the data into the kernel buffer, allowing the data to be transferred to the device asynchronously. If the buffer is full then the <code>write</code> syscall blocks from the kernel until there is space in the buffer.</li>
 <li><strong>Explicit close</strong>: the <code>close</code> syscall is used to release resources associated with a file descriptor. This allows the kernel to flush any buffered data to the device, and to release any other resources associated with the file descriptor, as well as decrementing the reference count on the file descriptor.</li>
 </ul>
-<h2 id="inter-process-communication">Inter-Process Communication</h2>
-<h3 id="pipes">Pipes</h3>
+<h2 id="inter-process-communication"><a class="toclink" href="#inter-process-communication">Inter-Process Communication</a></h2>
+<h3 id="pipes"><a class="toclink" href="#pipes">Pipes</a></h3>
 <p>A <strong>UNIX pipe</strong> is a kernel buffer with two file descriptors, one for reading and the other for writing. Data is read from the pipe in the same order as it is written, but the buffer allows the decoupling of the consumer and producer processes. The pipe terminates when the last process closes the file descriptors or exits. TCP sockets are similar to pipes.</p>
-<h3 id="replace-file-descriptors">Replace file descriptors</h3>
+<h3 id="replace-file-descriptors"><a class="toclink" href="#replace-file-descriptors">Replace file descriptors</a></h3>
 <p><code>dup2(from, to)</code> replaces the file descriptor <code>to</code> with <code>from</code> in a child process. This is useful for redirecting stdin/stdout/stderr to files or pipes.</p>
-<h3 id="wait-for-multiple-reads">Wait for multiple reads</h3>
+<h3 id="wait-for-multiple-reads"><a class="toclink" href="#wait-for-multiple-reads">Wait for multiple reads</a></h3>
 <p>In a client/server context, a server might have a pipe open to multiple clients, and want to read from whichever client has data available. <code>select</code> allows the server to wait for data to be available on any of the pipes, and then read from the pipe that has data available. This is a blocking call, and returns when data is available on one of the pipes.</p>
 <pre><code class="language-c">int select(int nfds, fd_set *readfds, fd_set *writefds,
            fd_set *exceptfds, struct timeval *timeout);
@@ -337,7 +334,7 @@ sig_t signal(int sig, sig_t func);
 <p><code>select</code> is a bit of a pain to use, so <code>poll</code> was introduced as a more convenient alternative for synchronous I/O multiplexing.</p>
 <pre><code class="language-c">int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 </code></pre>
-<h2 id="case-study-the-unix-shell">Case Study: The UNIX Shell</h2>
+<h2 id="case-study-the-unix-shell"><a class="toclink" href="#case-study-the-unix-shell">Case Study: The UNIX Shell</a></h2>
 <pre><code class="language-c">//                    [!!!] pseudocode [!!!]
 main() {
     char *prog = NULL;
@@ -366,8 +363,8 @@ main() {
 <li><strong>input/output to file</strong>: the shell can redirect input and output to files using <code>&lt;</code> <code>&gt;</code> respectively. Uses <code>dup2</code> to replace stdin/stdout/stderr with the file descriptors of the files to read/write to.</li>
 <li><strong>input/output to other programs</strong>: the shell can redirect input and output to other programs using <code>|</code>. Uses <code>pipe</code> to create a pipe, and <code>dup2</code> to replace stdin/stdout/stderr with the file descriptors of the pipes to read/write to. This allows for chaining of programs together, where each program runs in parallel in its own process.</li>
 </ul>
-<h2 id="case-study-inter-process-communication">Case Study: Inter-Process Communication</h2>
-<h3 id="producerconsumer">Producer/Consumer</h3>
+<h2 id="case-study-inter-process-communication"><a class="toclink" href="#case-study-inter-process-communication">Case Study: Inter-Process Communication</a></h2>
+<h3 id="producerconsumer"><a class="toclink" href="#producerconsumer">Producer/Consumer</a></h3>
 <pre><code class="language-txt">
     Producer                            Consumer
     --------                            --------
@@ -387,7 +384,7 @@ KERNEL |                                    |
 </code></pre>
 <p>When the producer writes to the pipe (kernel buffer), they can do so entirely decoupled from the consumer. If the buffer is ever full, then writes are blocked by the producer until the consumer reads some data from the buffer. Similarly, if the buffer is ever empty, then reads are blocked by the consumer until the producer writes some data to the buffer.</p>
 <p>WIn UNIX, when the producer is done it usually closes its side of the buffer. The consumer can then read until the buffer is empty, at which point the read syscall will hit EOF and return 0. The consumer can then close its side of the buffer, and the kernel will GC the buffer.</p>
-<h3 id="clientserver">Client/Server</h3>
+<h3 id="clientserver"><a class="toclink" href="#clientserver">Client/Server</a></h3>
 <pre><code class="language-txt">         Client                              Server
        ----------                          ----------
        |      ^ |                             |     ^ |
@@ -440,7 +437,7 @@ Server:
         write(output, reply, ReplySize);
     }
 </code></pre>
-<h4 id="streamlining-clientserver-communication">Streamlining Client/Server Communication</h4>
+<h4 id="streamlining-clientserver-communication"><a class="toclink" href="#streamlining-clientserver-communication">Streamlining Client/Server Communication</a></h4>
 <p>Since both issue a write followed by a read, one could combine these into a single system call (at the expense of adding a system call...) in order to eliminate a context switch.</p>
 <p>Furthermore, the client always needs to wait for the server, so an even further optimization that was done in microkernel Windows in the early 1990s is to donate the client processor to run server code, reducing latency. However, this requires that code and data for both client and server are in cache simultaneously.</p>
 <p>Even further, on a multi-core system where the client and server have their own processors, the kernel can set up a shared memory region between them so that they can (safely) communicate directly without involving the kernel at all.</p>
@@ -459,7 +456,7 @@ Server:
         write(clientOutput[fd], reply, ReplySize);
     }
 </code></pre>
-<h2 id="operating-system-structures">Operating System Structures</h2>
+<h2 id="operating-system-structures"><a class="toclink" href="#operating-system-structures">Operating System Structures</a></h2>
 <ul>
 <li>Many parts of the operating system depend on synchronization primitives for
   coordinating access to shared data structures with the kernel.</li>
@@ -471,16 +468,16 @@ Server:
   located on a different machine.</li>
 </ul>
 <p>There is a fundamental tradeoff between maintainability and performance when it comes to designing kernels. Keeping functionality tightly coupled and integrated with kernel code makes it more performant, but also messy.</p>
-<h3 id="monolothic-kernels">Monolothic Kernels</h3>
+<h3 id="monolothic-kernels"><a class="toclink" href="#monolothic-kernels">Monolothic Kernels</a></h3>
 <p>Monolith kernels usually have everything tightly coupled within the kernel itself. Modules often have dependencies that span multiple other modules within the kernel. Not ALL functionality is built directly into the kernel, but much of it is.</p>
 <p>Since OS designers are free to structure their code however they want with a monolith, there is a lot of variation between systems. However, two emerging patterns are usually present:</p>
-<h4 id="hardware-abstraction-layer-hal">Hardware Abstraction Layer (HAL)</h4>
+<h4 id="hardware-abstraction-layer-hal"><a class="toclink" href="#hardware-abstraction-layer-hal">Hardware Abstraction Layer (HAL)</a></h4>
 <p>Portable interface to machine configuration and processor specific operations.</p>
 <p>For an OS to be portable between processor families (ex ARM -&gt; Intel or 32 -&gt; 64 bit), there needs to be a layer over the processor specific code that handles things like context switches, interrupts, exceptions, and traps.</p>
 <p>All of these hardware specific instructions need to be mapped to the platform independent "virtual" procedure. Porting an OS to a new platform is really just a matter of implementing this layer for a new architecture/hardwarep</p>
-<h5 id="windows-hal">Windows HAL</h5>
+<h5 id="windows-hal"><a class="toclink" href="#windows-hal">Windows HAL</a></h5>
 <p>Windows uses two-pronged strategy for portability. Kernel is dynamically linked at boot time with a set of libaray routines that are specific to the hardware configuration. Also runs a different kernel binary accross different processor architectures, each of which contains conditional execution for closely related processor designs.</p>
-<h4 id="dynamically-installed-device-drivers">Dynamically Installed Device Drivers</h4>
+<h4 id="dynamically-installed-device-drivers"><a class="toclink" href="#dynamically-installed-device-drivers">Dynamically Installed Device Drivers</a></h4>
 <p>Similar considerations for supporting wide variety of IO devices. <strong>Dynamically loadable device drivers</strong> are provided as the kernel is already running in order to handle new devices. Device manufacturers write drivers that follow a stardard interface for the OS, and these routines are called by the kernel when the device needs to be used.</p>
 <p>When the OS boots, there are a small number of drivers that are already loaded, e.g. disk drivers. All devices physically attached to the computer have corresponding drivers usually bundled into a file that is stored along with the boot loader. When the OS starts up, it queries the I/O bus to find out what devices are attached, and then loads the corresponding drivers from disk. Any network-attached devices (like network printers) are loaded from over the internet.</p>
 <p>Drivers have been found to be responsible for ~90% of OS crashes, and are a potential source of corruption, as well as a security risk. Mitigated with...</p>
@@ -491,11 +488,11 @@ Server:
 <li><strong>VM device drivers</strong>: to handle old drivers that need to run in kernel mode, one approach is to run device driver inside guest OS. This way, bugs can only corrupt the guest OS. This is what Apple does with their Rosetta 2 emulator for running old Intel apps on new ARM Macs.</li>
 <li><strong>driver sandboxing</strong>: to address performance issues with full virtualization, run drivers in a restricted execution environment that prevents them from accessing kernel data structures</li>
 </ul>
-<h3 id="microkernels">Microkernels</h3>
+<h3 id="microkernels"><a class="toclink" href="#microkernels">Microkernels</a></h3>
 <p>Run as much of the OS as possible in user mode. The window manager on most modern OS's is a good example of this.</p>
 <p>The difference between micro and monolithic kernels is often transparent to application programs. User level libraries can either directly make requests to the server process, or make system calls that are then redirected by the kernel.</p>
 <p>Generally, microkernels provide little benefit beyond the ease of development. The performance cost of context switching between user and kernel mode is high enough that most modern systems take on a hybrid approach.</p>
-<h2 id="exercises">Exercises</h2>
+<h2 id="exercises"><a class="toclink" href="#exercises">Exercises</a></h2>
 <ol>
 <li>
 <p>Can UNIX fork return an error? Why or why not?</p>
@@ -505,12 +502,14 @@ Server:
 </li>
 <li>
 <p>What happens if we run the following program on UNIX?</p>
-<p><code>c
- main() {
-     while (fork() &gt;= 0)
-         ;
- }</code></p>
 </li>
+</ol>
+<p><code>c
+   main() {
+       while (fork() &gt;= 0)
+           ;
+   }</code></p>
+<ol>
 <li>
 <p>Explain what must happen for UNIX wait to return immediately (and successfully).</p>
 </li>
@@ -525,65 +524,70 @@ Server:
 </li>
 <li>
 <p>How many processes are created if the following program is run?</p>
+</li>
+</ol>
 <p><code>c
- main(int argc, char ** argv) {
-     forkthem(5);
- }
- void forkthem(int n) {
-     if (n &gt; 0) {
-         fork();
-         forkthem(n-1);
-     }
- }</code>
+   main(int argc, char ** argv) {
+       forkthem(5);
+   }
+   void forkthem(int n) {
+       if (n &gt; 0) {
+           fork();
+           forkthem(n-1);
+       }
+   }</code>
 9. Consider the following program:</p>
 <p>```c
- main (int argc, char ** argv) {
-     int child = fork();
-     int x = 5;</p>
-<pre><code> if (child == 0) {
-     x += 5;
- } else {
-     child = fork();
-     x += 10;
-     if(child) {
-         x += 5;
-     }
- }
+   main (int argc, char ** argv) {
+       int child = fork();
+       int x = 5;</p>
+<pre><code>   if (child == 0) {
+       x += 5;
+   } else {
+       child = fork();
+       x += 10;
+       if(child) {
+           x += 5;
+       }
+   }
 </code></pre>
 <p>}
- ```</p>
+   ```</p>
 <p>How many different copies of the variable x are there? What are their values when their process finishes?
 10. What is the output of the following programs? (Please try to solve the problem without compiling and running the programs.)</p>
-<p>- Program 1:</p>
-<pre><code>```c
-main() {
-    int val = 5;
-    int pid;
+<pre><code>- Program 1:
 
-    if (pid = fork())
-        wait(pid);
-    val++;
-    printf("%d\n", val);
-    return val;
-}
-```
+  ```c
+  main() {
+      int val = 5;
+      int pid;
+
+      if (pid = fork())
+          wait(pid);
+      val++;
+      printf("%d\n", val);
+      return val;
+  }
+  ```
+
+- Program 2:
+  ```c
+  main() {
+      int val = 5;
+      int pid;
+      if (pid = fork())
+          wait(pid);
+      else
+          exit(val);
+      val++;
+      printf("%d\n", val);
+      return val;
+  }
+  ```
 </code></pre>
-<p>- Program 2:
-    <code>c
-    main() {
-        int val = 5;
-        int pid;
-        if (pid = fork())
-            wait(pid);
-        else
-            exit(val);
-        val++;
-        printf("%d\n", val);
-        return val;
-    }</code>
-11. Implement a simple Linux shell in C capable of executing a sequence of programs that communicate through a pipe. For example, if the user types ls | wc, your program should fork off the two programs, which together will calculate the number of files in the directory. For this, you will need to use several of the Linux system calls described in this chapter: fork, exec, open, close, pipe, dup2, and wait. Note: You will to replace stdin and stdout in the child process with the pipe file descriptors; that is the role of dup2.
-12. Extend the shell implemented above to support foreground and background tasks, as well as job control: suspend, resume, and kill.</p>
-</li>
+<ol>
+<li>Implement a simple Linux shell in C capable of executing a sequence of programs that communicate through a pipe. For example, if the user types ls | wc, your program should fork off the two programs, which together will calculate the number of files in the directory. For this, you will need to use several of the Linux system calls described in this chapter: fork, exec, open, close, pipe, dup2, and wait. Note: You will to replace stdin and stdout in the child process with the pipe file descriptors; that is the role of dup2.</li>
+<li>Extend the shell implemented above to support foreground and background tasks, as well as job control: suspend, resume, and kill.</li>
 </ol>
             </div>
             <div class="tags">

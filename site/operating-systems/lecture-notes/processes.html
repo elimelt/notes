@@ -7,7 +7,7 @@
     <title>Processes | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.">
+    <meta name="description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Processes">
-    <meta property="og:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.">
+    <meta property="og:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/processes.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Processes">
-    <meta name="twitter:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.">
+    <meta name="twitter:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ">
 
     <meta name="keywords" content="operating systems,processes,address space,cpu state,namespace">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Processes", "dateModified": "2025-02-11T20:49:05.939934", "description": "Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.", "articleSection": "Operating Systems", "keywords": "operating systems,processes,address space,cpu state,namespace"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Processes", "dateModified": "2025-02-11T20:49:05.939934", "description": "Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/processes.html", "articleSection": "Operating Systems", "keywords": "operating systems,processes,address space,cpu state,namespace"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Processes
@@ -98,22 +95,22 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="processes">Processes</h1>
-<h2 id="what-is-a-process">What is a process?</h2>
+                <h1 id="processes"><a class="toclink" href="#processes">Processes</a></h1>
+<h2 id="what-is-a-process"><a class="toclink" href="#what-is-a-process">What is a process?</a></h2>
 <p>The OS's abstraction of a running program. A process is a program in execution.</p>
 <p>Simplest case:</p>
 <ul>
 <li>An address space</li>
 <li>A sinle thread of execution</li>
 </ul>
-<h2 id="whats-in-a-process">What's "in" a process?</h2>
+<h2 id="whats-in-a-process"><a class="toclink" href="#whats-in-a-process">What's "in" a process?</a></h2>
 <p>Consists of (at least)</p>
 <ul>
 <li>An address space, containing the code (instructions) and data of the running program</li>
 <li>(At least one) CPU state, consisting of the instruction pointer (EIP), stack pointer (ESP), and other general purpose registers.</li>
 <li>A set of OS resources, including open files, open pipes, open network connections, etc.</li>
 </ul>
-<h3 id="address-space">Address Space</h3>
+<h3 id="address-space"><a class="toclink" href="#address-space">Address Space</a></h3>
 <p>Remember stack grows down (ie push decrements ESP, pop increments ESP). Stack contains all runtime frames.</p>
 <p>A processes address space (idealized):</p>
 <pre><code class="language-txt">+----------------------+ &lt;- 0x7FFFFFFF
@@ -136,7 +133,7 @@
 |   (text segment)     |
 +----------------------+ 0x00000000
 </code></pre>
-<h2 id="os-process-namespace">OS Process Namespace</h2>
+<h2 id="os-process-namespace"><a class="toclink" href="#os-process-namespace">OS Process Namespace</a></h2>
 <ul>
 <li>Each process has a unique identifier (PID)</li>
 <li>The PID namespace is global to the OS</li>

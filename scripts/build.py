@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import subprocess
 import json
 import os
@@ -12,9 +12,98 @@ from urllib.parse import quote
 import re
 from collections import defaultdict
 from jinja2 import Environment, BaseLoader, TemplateNotFound, select_autoescape
-from template.html import BASE_TEMPLATE, INDEX_TEMPLATE
-from template.css import STYLES_TEMPLATE
-from template.js import TAXONOMY_JS
+
+# Import templates (these need to be defined separately)
+try:
+    from template.html import BASE_TEMPLATE, INDEX_TEMPLATE
+    from template.css import STYLES_TEMPLATE
+    from template.js import TAXONOMY_JS
+except ImportError:
+    # Fallback templates if imports fail
+    BASE_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ meta_description }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="stylesheet" href="/css/styles.css">
+    {% if schema_json %}
+    <script type="application/ld+json">{{ schema_json|safe }}</script>
+    {% endif %}
+</head>
+<body>
+    <header>
+        <nav>{{ navigation|safe }}</nav>
+        <div class="breadcrumbs">{{ breadcrumbs|safe }}</div>
+    </header>
+    <main class="{{ css_selector }}">
+        <h1>{{ title }}</h1>
+        {{ content|safe }}
+    </main>
+    <footer>
+        <p>&copy; {{ current_year }} Notes Site</p>
+    </footer>
+</body>
+</html>
+    """
+
+    INDEX_TEMPLATE = """
+<div class="stats">
+    <p>{{ stats.notes }} notes, {{ stats.categories }} categories, {{ stats.tags }} tags</p>
+</div>
+
+<section class="recent-pages">
+    <h2>Recent Pages</h2>
+    <ul>
+    {% for page in recent_pages %}
+        <li>
+            <a href="{{ page.url }}">{{ page.title }}</a>
+            <span class="date">{{ page.date }}</span>
+            {% if page.category %}<span class="category">{{ page.category }}</span>{% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+</section>
+
+<section class="categories">
+    <h2>Categories</h2>
+    <ul>
+    {% for category in categories %}
+        <li><a href="{{ category.url }}">{{ category.name }}</a> ({{ category.count }})</li>
+    {% endfor %}
+    </ul>
+</section>
+
+<section class="popular-tags">
+    <h2>Popular Tags</h2>
+    <div class="tag-cloud">
+    {% for tag in popular_tags %}
+        <a href="{{ tag.url }}" class="tag-{{ tag.size_class }}">{{ tag.name }}</a>
+    {% endfor %}
+    </div>
+</section>
+    """
+
+    STYLES_TEMPLATE = """
+body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+.content { max-width: 800px; margin: 0 auto; }
+nav a { margin-right: 15px; }
+.breadcrumbs { margin: 10px 0; color: #666; }
+.tag-cloud a { margin: 5px; padding: 5px; background: #eee; }
+.stats { background: #f5f5f5; padding: 10px; border-radius: 5px; }
+    """
+
+    TAXONOMY_JS = """
+document.addEventListener('DOMContentLoaded', function() {
+    const list = document.querySelector('.original-taxonomy-list');
+    if (list) {
+        list.style.display = 'block';
+    }
+});
+    """
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -22,19 +111,23 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class Page:
+    """Represents a page in the site with its metadata and content."""
+
     title: str
     path: Path
     content: str
     modified_date: datetime
-    category: Optional[str]
-    tags: List[str]
-    description: Optional[str]
+    category: Optional[str] = None
+    tags: List[str] = field(default_factory=list)
+    description: Optional[str] = None
     is_index: bool = False
-    css_classes: List[str] = None
+    css_classes: List[str] = field(default_factory=lambda: ["content"])
 
 
 class JinjaTemplateLoader(BaseLoader):
-    def __init__(self, templates):
+    """Custom Jinja2 template loader for in-memory templates."""
+
+    def __init__(self, templates: Dict[str, str]):
         self.templates = templates
 
     def get_source(self, environment, template):
@@ -44,6 +137,7 @@ class JinjaTemplateLoader(BaseLoader):
 
 
 class SiteGenerator:
+    """Static site generator that converts Markdown files to HTML pages."""
 
     MARKDOWN_EXTENSIONS = [
         "meta",
@@ -54,9 +148,9 @@ class SiteGenerator:
         "footnotes",
         "def_list",
         "admonition",
-        "mdx_truly_sane_lists",
     ]
     SUPPORTED_CONTENT = {".md", ".markdown"}
+    SUPPORTED_HTML = {".html", ".htm"}
     IGNORED_DIRECTORIES = {
         ".git",
         "__pycache__",
@@ -66,6 +160,7 @@ class SiteGenerator:
         "site",
         "venv",
         ".venv",
+        ".DS_Store",
     }
     DEFAULT_CSS_CLASSES = ["content"]
     DEFAULT_PERMISSIONS = {"directory": 0o755, "file": 0o644}
@@ -76,17 +171,25 @@ class SiteGenerator:
         output_dir: str,
         site_domain: str = "https://notes.elimelt.com",
     ):
-        self.site_domain = site_domain
-        self.input_dir = Path(input_dir)
-        self.output_dir = Path(output_dir)
-        self.markdown_converter = markdown.Markdown(extensions=self.MARKDOWN_EXTENSIONS)
+        self.site_domain = site_domain.rstrip("/")
+        self.input_dir = Path(input_dir).resolve()
+        self.output_dir = Path(output_dir).resolve()
+
+        # Validate input directory exists
+        if not self.input_dir.exists():
+            raise ValueError(f"Input directory does not exist: {self.input_dir}")
+
+        self.markdown_converter = markdown.Markdown(
+            extensions=self.MARKDOWN_EXTENSIONS,
+            extension_configs={"toc": {"anchorlink": True}},
+        )
         self.pages: Dict[Path, Page] = {}
         self.categories: Dict[str, List[Page]] = defaultdict(list)
         self.tags: Dict[str, List[Page]] = defaultdict(list)
         self._setup_jinja()
 
-    def _setup_jinja(self):
-
+    def _setup_jinja(self) -> None:
+        """Initialize Jinja2 environment with templates."""
         templates = {
             "base": BASE_TEMPLATE,
             "index": INDEX_TEMPLATE,
@@ -102,8 +205,9 @@ class SiteGenerator:
         self.jinja_env.filters["urlencode"] = quote
 
     def generate_site(self) -> None:
-
+        """Generate the complete static site."""
         try:
+            logger.info("Starting site generation...")
             self._prepare_output_directory()
             self._process_content()
             self._organize_content()
@@ -111,70 +215,90 @@ class SiteGenerator:
             self._generate_special_pages()
             self._generate_html_pages()
             self._copy_themes()
+            self._copy_static_files()
             logger.info(f"Site generated successfully in {self.output_dir}")
         except Exception as e:
             logger.error(f"Failed to generate site: {str(e)}")
             raise
 
     def _prepare_output_directory(self) -> None:
-
+        """Prepare the output directory by cleaning and creating necessary subdirectories."""
         if self.output_dir.exists():
             shutil.rmtree(self.output_dir)
+
         self._create_directory(self.output_dir)
-        self._create_directory(self.output_dir / "assets")
+
+        # Create standard subdirectories
+        for subdir in ["css", "js", "assets", "categories", "tags"]:
+            self._create_directory(self.output_dir / subdir)
 
     def _create_directory(self, directory: Path) -> None:
-
+        """Create a directory with proper permissions."""
         directory.mkdir(parents=True, exist_ok=True)
-        directory.chmod(self.DEFAULT_PERMISSIONS["directory"])
+        try:
+            directory.chmod(self.DEFAULT_PERMISSIONS["directory"])
+        except (OSError, AttributeError):
+            # Skip chmod on systems where it's not supported
+            pass
 
     def _walk_directory(self, directory: Path) -> List[Path]:
+        """Walk directory and return all files/directories not in ignored list."""
+        if not directory.exists():
+            return []
 
         return [
             item
             for item in directory.rglob("*")
             if not any(ignored in item.parts for ignored in self.IGNORED_DIRECTORIES)
+            and not item.name.startswith(".")
         ]
 
-    def _extract_metadata(self, file_path: Path, content: str) -> dict:
-
+    def _extract_metadata(self, file_path: Path, content: str) -> Dict[str, Any]:
+        """Extract metadata from markdown file."""
+        # Create a fresh markdown instance for metadata extraction
         md = markdown.Markdown(extensions=self.MARKDOWN_EXTENSIONS)
         md.convert(content)
 
-        default_title = file_path.stem.replace("-", " ").title()
-
-        if not hasattr(md, "Meta"):
-            return {
-                "title": default_title,
-                "category": None,
-                "tags": [],
-                "description": None,
-            }
+        default_title = file_path.stem.replace("-", " ").replace("_", " ").title()
 
         metadata = {
-            "title": md.Meta.get("title", [default_title])[0],
-            "category": md.Meta.get("category", [None])[0],
+            "title": default_title,
+            "category": None,
             "tags": [],
-            "description": md.Meta.get("description", [None])[0],
+            "description": None,
         }
 
-        if "tags" in md.Meta and md.Meta["tags"][0]:
-            metadata["tags"] = [
-                tag.strip() for tag in md.Meta["tags"][0].split(",") if tag.strip()
-            ]
+        if hasattr(md, "Meta") and md.Meta:
+            metadata["title"] = md.Meta.get("title", [default_title])[0]
+            metadata["category"] = md.Meta.get("category", [None])[0]
+            metadata["description"] = md.Meta.get("description", [None])[0]
+
+            # Process tags
+            if "tags" in md.Meta and md.Meta["tags"] and md.Meta["tags"][0]:
+                raw_tags = md.Meta["tags"][0]
+                if isinstance(raw_tags, str):
+                    metadata["tags"] = [
+                        tag.strip().lower()
+                        for tag in raw_tags.split(",")
+                        if tag.strip()
+                    ]
 
         return metadata
 
     def _process_markdown(self, file_path: Path) -> None:
-
+        """Process a markdown file and convert it to a Page object."""
         try:
             content = file_path.read_text(encoding="utf-8")
             metadata = self._extract_metadata(file_path, content)
+
+            # Convert markdown to HTML
             html_content = self.markdown_converter.convert(content)
+
+            # Reset markdown converter for next file
+            self.markdown_converter.reset()
 
             relative_path = file_path.relative_to(self.input_dir)
             is_index = file_path.stem.lower() == "index"
-            tags = [tag.strip().lower() for tag in metadata["tags"] if tag.strip()]
 
             page = Page(
                 title=metadata["title"],
@@ -182,19 +306,20 @@ class SiteGenerator:
                 content=html_content,
                 modified_date=datetime.fromtimestamp(file_path.stat().st_mtime),
                 category=metadata["category"],
-                tags=tags,
+                tags=metadata["tags"],
                 description=metadata["description"],
                 is_index=is_index,
-                css_classes=self.DEFAULT_CSS_CLASSES,
+                css_classes=self.DEFAULT_CSS_CLASSES.copy(),
             )
 
             self._add_page_to_collections(page)
+            logger.debug(f"Processed markdown: {file_path}")
 
         except Exception as e:
             logger.error(f"Failed to process {file_path}: {str(e)}")
 
     def _add_page_to_collections(self, page: Page) -> None:
-
+        """Add a page to the appropriate collections (pages, categories, tags)."""
         self.pages[page.path] = page
 
         if page.category:
@@ -204,84 +329,92 @@ class SiteGenerator:
             self.tags[tag].append(page)
 
     def _process_html(self, file_path: Path) -> None:
-
+        """Process an HTML file by copying it to output directory."""
         try:
             relative_path = file_path.relative_to(self.input_dir)
             output_path = self.output_dir / relative_path
             self._ensure_parent_directory(output_path)
-            shutil.copy2(file_path, output_path)
-            output_path.chmod(self.DEFAULT_PERMISSIONS["file"])
 
+            shutil.copy2(file_path, output_path)
+            self._set_file_permissions(output_path)
+
+            # Create a page entry for the HTML file
             page = Page(
-                title=file_path.stem,
+                title=file_path.stem.replace("-", " ").replace("_", " ").title(),
                 path=relative_path,
                 content="",
                 modified_date=datetime.fromtimestamp(file_path.stat().st_mtime),
                 category=None,
                 tags=[],
                 description=None,
-                is_index=False,
+                is_index=file_path.stem.lower() == "index",
             )
 
             self.pages[relative_path] = page
+            logger.debug(f"Processed HTML: {file_path}")
 
         except Exception as e:
-            logger.error(f"Failed to process {file_path}: {str(e)}")
+            logger.error(f"Failed to process HTML file {file_path}: {str(e)}")
 
     def _ensure_parent_directory(self, path: Path) -> None:
-
+        """Ensure the parent directory of a path exists."""
         parent = path.parent
         if not parent.exists():
             self._create_directory(parent)
 
+    def _set_file_permissions(self, file_path: Path) -> None:
+        """Set file permissions, with error handling for unsupported systems."""
+        try:
+            file_path.chmod(self.DEFAULT_PERMISSIONS["file"])
+        except (OSError, AttributeError):
+            # Skip chmod on systems where it's not supported
+            pass
+
     def _process_content(self) -> None:
-
+        """Process all content files in the input directory."""
         for file_path in self._walk_directory(self.input_dir):
-            if file_path.is_file() and file_path.suffix in self.SUPPORTED_CONTENT:
-                if file_path.suffix in {".md", ".markdown"}:
-                    self._process_markdown(file_path)
-            elif file_path.is_dir() and file_path.name not in self.IGNORED_DIRECTORIES:
-                self._process_directory(file_path)
+            if not file_path.is_file():
+                continue
 
-    def _process_directory(self, directory: Path) -> None:
-
-        links_html = self._create_directory_index_links(directory)
-        if links_html:
-            self._generate_dir_index(directory / "index.html", links_html)
-
-    def _create_directory_index_links(self, directory: Path) -> str:
-
-        links = []
-        for item in directory.iterdir():
-            if item.is_file():
-                links.append(
-                    f'<li><a href="{item.name.replace(".md", ".html")}">{item.name}</a></li>'
-                )
-        return "\n".join(links)
+            if file_path.suffix in self.SUPPORTED_CONTENT:
+                self._process_markdown(file_path)
+            elif file_path.suffix in self.SUPPORTED_HTML:
+                self._process_html(file_path)
 
     def _organize_content(self) -> None:
+        """Sort content in categories and tags by title."""
+        for category_pages in self.categories.values():
+            category_pages.sort(key=lambda p: p.title.lower())
 
-        for category in self.categories:
-            self.categories[category].sort(key=lambda p: p.title)
-        for tag in self.tags:
-            self.tags[tag].sort(key=lambda p: p.title)
+        for tag_pages in self.tags.values():
+            tag_pages.sort(key=lambda p: p.title.lower())
 
     def _copy_assets(self) -> None:
-
+        """Copy non-content files to the output directory."""
         for file_path in self._walk_directory(self.input_dir):
-            if file_path.is_file() and file_path.suffix not in self.SUPPORTED_CONTENT:
+            if (
+                file_path.is_file()
+                and file_path.suffix not in self.SUPPORTED_CONTENT
+                and file_path.suffix not in self.SUPPORTED_HTML
+            ):
                 self._copy_file_to_output(file_path)
 
     def _copy_file_to_output(self, file_path: Path) -> None:
+        """Copy a file to the output directory maintaining structure."""
+        try:
+            relative_path = file_path.relative_to(self.input_dir)
+            output_path = self.output_dir / relative_path
+            self._ensure_parent_directory(output_path)
 
-        relative_path = file_path.relative_to(self.input_dir)
-        output_path = self.output_dir / relative_path
-        self._ensure_parent_directory(output_path)
-        shutil.copy2(file_path, output_path)
-        output_path.chmod(self.DEFAULT_PERMISSIONS["file"])
+            shutil.copy2(file_path, output_path)
+            self._set_file_permissions(output_path)
+            logger.debug(f"Copied asset: {file_path}")
 
-    def _get_page_context(self, page: Page) -> dict:
+        except Exception as e:
+            logger.error(f"Failed to copy file {file_path}: {str(e)}")
 
+    def _get_page_context(self, page: Page) -> Dict[str, Any]:
+        """Get template context for a page."""
         meta_description = self._generate_meta_description(page)
         schema_json = self._generate_schema_json(page, meta_description)
         canonical_url = f"{self.site_domain}/{page.path.with_suffix('.html')}"
@@ -298,34 +431,35 @@ class SiteGenerator:
             "navigation": self._generate_navigation(page),
             "breadcrumbs": self._generate_breadcrumbs(page),
             "current_year": datetime.now().year,
-            "css_selector": (
-                " ".join(page.css_classes) if page.css_classes else "content"
-            ),
+            "css_selector": " ".join(page.css_classes),
         }
 
     def _generate_meta_description(self, page: Page) -> str:
-
+        """Generate meta description for a page."""
         if page.description:
-            return page.description
+            return page.description[:160]
 
         if page.content:
+            # Remove HTML tags and get first 160 characters
             plain_content = re.sub(r"<[^>]+>", "", page.content)
+            plain_content = re.sub(r"\s+", " ", plain_content).strip()
             return (
-                plain_content[:160].strip() + "..."
+                plain_content[:157] + "..."
                 if len(plain_content) > 160
                 else plain_content
             )
 
-        return ""
+        return f"Page: {page.title}"
 
-    def _generate_schema_json(self, page: Page, description: str) -> dict:
-
+    def _generate_schema_json(self, page: Page, description: str) -> Dict[str, Any]:
+        """Generate JSON-LD schema for a page."""
         schema = {
             "@context": "https://schema.org",
             "@type": "Article",
             "headline": page.title,
             "dateModified": page.modified_date.isoformat(),
             "description": description,
+            "url": f"{self.site_domain}/{page.path.with_suffix('.html')}",
         }
 
         if page.category:
@@ -337,54 +471,65 @@ class SiteGenerator:
         return schema
 
     def _generate_navigation(self, current_page: Page) -> str:
+        """Generate navigation HTML for a page."""
+        nav_items = []
 
-        nav_items = [
-            '<a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>'
-        ]
+        # Add GitHub link
+        nav_items.append(
+            '<a href="https://github.com/elimelt/notes" '
+            'style="font-size:24px; color: white;" class="fa">&#xf09b;</a>'
+        )
 
+        # Add home link if not on index page
         if not current_page.is_index:
             nav_items.append('<a href="/index.html">Home</a>')
+
+        # Add categories link if categories exist
         if self.categories:
             nav_items.append('<a href="/categories/index.html">Categories</a>')
+
+        # Add tags link if tags exist
         if self.tags:
             nav_items.append('<a href="/tags/index.html">Tags</a>')
 
-        return "\n".join(nav_items)
+        return " | ".join(nav_items)
 
     def _generate_breadcrumbs(self, page: Page) -> str:
-
+        """Generate breadcrumb navigation for a page."""
         parts = ['<a href="/index.html">Home</a>']
 
+        # Add category if present
         if page.category:
-            parts.append(
-                f'<a href="/categories/{quote(page.category.lower())}.html">'
-                f"{page.category}</a>"
-            )
+            category_url = f"/categories/{quote(page.category.lower())}.html"
+            parts.append(f'<a href="{category_url}">{page.category}</a>')
+
+        # Add page title if not index
         if not page.is_index:
             parts.append(page.title)
 
         return " » ".join(parts)
 
     def _generate_special_pages(self) -> None:
-
+        """Generate special pages like index, categories, and tags."""
         self._generate_main_index()
         self._generate_taxonomy_pages()
 
     def _generate_taxonomy_pages(self) -> None:
-
+        """Generate taxonomy index pages for categories and tags."""
         if self.categories:
             self._generate_taxonomy_index("categories", self.categories)
 
         if self.tags:
             self._generate_taxonomy_index("tags", self.tags)
 
-        self._ensure_taxonomy_js()
+        # Ensure CSS and JS files are created
         self._ensure_css()
+        self._ensure_taxonomy_js()
 
     def _generate_taxonomy_index(
         self, taxonomy_type: str, taxonomy_items: Dict[str, List[Page]]
     ) -> None:
-
+        """Generate an index page for a taxonomy (categories or tags)."""
         content = self._create_taxonomy_list_html(taxonomy_type, taxonomy_items)
 
         index_page = Page(
@@ -403,61 +548,71 @@ class SiteGenerator:
     def _create_taxonomy_list_html(
         self, taxonomy_type: str, taxonomy_items: Dict[str, List[Page]]
     ) -> str:
+        """Create HTML for taxonomy list with JavaScript enhancement."""
+        html_parts = [
+            '<div class="taxonomy-container">',
+            '    <ul class="original-taxonomy-list" style="display:none;">',
+        ]
 
-        html = """
-        <div class="taxonomy-container">
-            <ul class="original-taxonomy-list" style="display:none;">
-        """
-
+        # Add items to the list
         for name, pages in sorted(taxonomy_items.items()):
-            html += f'\n<li><a href="/{taxonomy_type}/{quote(name.lower())}.html">{name}</a> ({len(pages)} pages)</li>'
+            url = f"/{taxonomy_type}/{quote(name.lower())}.html"
+            html_parts.append(
+                f'        <li><a href="{url}">{name}</a> ({len(pages)} pages)</li>'
+            )
 
-        html += """
-            </ul>
-            <noscript>
-                <ul>
-        """
+        html_parts.extend(["    </ul>", "    <noscript>", "        <ul>"])
 
+        # Fallback for no-JS users
         for name, pages in sorted(taxonomy_items.items()):
-            html += f'\n<li><a href="/{taxonomy_type}/{quote(name.lower())}.html">{name}</a> ({len(pages)} pages)</li>'
+            url = f"/{taxonomy_type}/{quote(name.lower())}.html"
+            html_parts.append(
+                f'            <li><a href="{url}">{name}</a> ({len(pages)} pages)</li>'
+            )
 
-        html += """
-                </ul>
-            </noscript>
-        </div>
-        <script src="/js/taxonomy.js" defer></script>
-        """
+        html_parts.extend(
+            [
+                "        </ul>",
+                "    </noscript>",
+                "</div>",
+                '<script src="/js/taxonomy.js" defer></script>',
+            ]
+        )
 
-        return html
+        return "\n".join(html_parts)
 
     def _ensure_css(self) -> None:
-
+        """Ensure CSS file exists in output directory."""
         self._ensure_static_file("css", "styles.css", STYLES_TEMPLATE)
 
     def _ensure_taxonomy_js(self) -> None:
-
+        """Ensure JavaScript file exists in output directory."""
         self._ensure_static_file("js", "taxonomy.js", TAXONOMY_JS)
 
     def _ensure_static_file(self, subdir: str, filename: str, content: str) -> None:
-
+        """Ensure a static file exists and is up to date."""
         directory = self.output_dir / subdir
         self._create_directory(directory)
 
         file_path = directory / filename
 
-        if not file_path.exists() or datetime.fromtimestamp(
-            file_path.stat().st_mtime
-        ) < datetime.now() - timedelta(minutes=5):
-            with open(file_path, "w") as f:
+        # Always write the file to ensure it's current
+        try:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(content)
+            self._set_file_permissions(file_path)
+            logger.debug(f"Created static file: {file_path}")
+        except Exception as e:
+            logger.error(f"Failed to create static file {file_path}: {str(e)}")
 
     def _generate_main_index(self) -> None:
-
+        """Generate the main index page."""
         regular_pages = self._get_regular_pages()
         recent_pages = sorted(
             regular_pages, key=lambda p: p.modified_date, reverse=True
         )[:10]
 
+        # Calculate tag popularity
         tag_counts = {tag: len(pages) for tag, pages in self.tags.items()}
         popular_tags = sorted(tag_counts.items(), key=lambda x: (-x[1], x[0]))[:20]
 
@@ -465,35 +620,43 @@ class SiteGenerator:
         content = self.jinja_env.get_template("index").render(**context)
 
         index_page = Page(
-            title="",
+            title="Notes",
             path=Path("index.md"),
             content=content,
             modified_date=datetime.now(),
             category=None,
             tags=[],
-            description="So so many notes",
+            description="A collection of notes and documentation",
             is_index=True,
         )
 
+        # Generate the HTML file
         output_path = self.output_dir / "index.html"
         html_content = self.jinja_env.get_template("base").render(
             **self._get_page_context(index_page)
         )
-        output_path.write_text(html_content, encoding="utf-8")
-        output_path.chmod(self.DEFAULT_PERMISSIONS["file"])
+
+        try:
+            output_path.write_text(html_content, encoding="utf-8")
+            self._set_file_permissions(output_path)
+            logger.info("Generated main index page")
+        except Exception as e:
+            logger.error(f"Failed to generate main index: {str(e)}")
 
     def _get_regular_pages(self) -> List[Page]:
-
+        """Get all regular pages (excluding special pages)."""
         return [
-            p
-            for p in self.pages.values()
-            if not (p.is_index or str(p.path).startswith(("categories/", "tags/")))
+            page
+            for page in self.pages.values()
+            if not (
+                page.is_index or str(page.path).startswith(("categories/", "tags/"))
+            )
         ]
 
     def _build_main_index_context(
         self, recent_pages: List[Page], popular_tags: List[Tuple[str, int]]
-    ) -> dict:
-
+    ) -> Dict[str, Any]:
+        """Build context for main index template."""
         regular_pages = self._get_regular_pages()
 
         return {
@@ -528,63 +691,38 @@ class SiteGenerator:
                 }
                 for tag, count in popular_tags
             ],
-            "top_level_dirs": [
-                {
-                    "name": dir.name,
-                    "url": f"/{dir.name}/index.html",
-                }
-                for dir in self.input_dir.iterdir()
-                if dir.is_dir() and dir.name not in self.IGNORED_DIRECTORIES
-            ],
         }
 
-    def _generate_dir_index(self, dir_path: Path, links_html: str) -> None:
-
-        output_path = self.output_dir / dir_path.with_suffix(".html")
-        self._ensure_parent_directory(output_path)
-
-        content = f"<ul>{links_html}</ul>"
-        page = Page(
-            title=f"Index of {dir_path.parent.name}",
-            path=dir_path,
-            content=content,
-            modified_date=datetime.now(),
-            category=None,
-            tags=[],
-            description=f"Index of {dir_path.parent.name}",
-            is_index=False,
-        )
-
-        html_content = self.jinja_env.get_template("base").render(
-            **self._get_page_context(page)
-        )
-        output_path.write_text(html_content, encoding="utf-8")
-        output_path.chmod(self.DEFAULT_PERMISSIONS["file"])
-        logger.info(f"Generated index page for {dir_path}")
-
     def _generate_html_pages(self) -> None:
-
+        """Generate HTML for all pages."""
         for page in self.pages.values():
             self._generate_page(page)
 
+        # Generate taxonomy collection pages
         self._generate_taxonomy_collection_pages("category", self.categories)
         self._generate_taxonomy_collection_pages("tag", self.tags)
 
     def _generate_taxonomy_collection_pages(
         self, taxonomy_type: str, collection: Dict[str, List[Page]]
     ) -> None:
-
+        """Generate individual pages for each taxonomy item."""
         taxonomy_plural = f"{taxonomy_type}s"
 
         for name, pages in collection.items():
             output_path = self.output_dir / taxonomy_plural / f"{name.lower()}.html"
             self._ensure_parent_directory(output_path)
 
-            content = f"<h2>{taxonomy_type.title()}: {name}</h2>\n<ul>"
-            for page in sorted(pages, key=lambda p: p.title):
+            # Create content for the taxonomy page
+            content_parts = [f"<h2>{taxonomy_type.title()}: {name}</h2>", "<ul>"]
+
+            for page in sorted(pages, key=lambda p: p.title.lower()):
                 page_url = f"/{page.path.with_suffix('.html')}"
-                content += f'\n<li><a href="{page_url}">{page.title}</a></li>'
-            content += "</ul>"
+                content_parts.append(
+                    f'    <li><a href="{page_url}">{page.title}</a></li>'
+                )
+
+            content_parts.append("</ul>")
+            content = "\n".join(content_parts)
 
             page = Page(
                 title=f"{taxonomy_type.title()}: {name}",
@@ -597,96 +735,198 @@ class SiteGenerator:
                 is_index=False,
             )
 
+            try:
+                html_content = self.jinja_env.get_template("base").render(
+                    **self._get_page_context(page)
+                )
+                output_path.write_text(html_content, encoding="utf-8")
+                self._set_file_permissions(output_path)
+                logger.debug(f"Generated {taxonomy_type} page: {name}")
+            except Exception as e:
+                logger.error(
+                    f"Failed to generate {taxonomy_type} page {name}: {str(e)}"
+                )
+
+    def _generate_page(self, page: Page) -> None:
+        """Generate HTML file for a single page."""
+        output_path = self.output_dir / page.path.with_suffix(".html")
+        self._ensure_parent_directory(output_path)
+
+        try:
             html_content = self.jinja_env.get_template("base").render(
                 **self._get_page_context(page)
             )
             output_path.write_text(html_content, encoding="utf-8")
-            output_path.chmod(self.DEFAULT_PERMISSIONS["file"])
-
-    def _generate_page(self, page: Page) -> None:
-
-        output_path = self.output_dir / page.path.with_suffix(".html")
-        self._ensure_parent_directory(output_path)
-
-        html_content = self.jinja_env.get_template("base").render(
-            **self._get_page_context(page)
-        )
-        output_path.write_text(html_content, encoding="utf-8")
-        output_path.chmod(self.DEFAULT_PERMISSIONS["file"])
+            self._set_file_permissions(output_path)
+            logger.debug(f"Generated page: {page.path}")
+        except Exception as e:
+            logger.error(f"Failed to generate page {page.path}: {str(e)}")
 
     def _copy_themes(self) -> None:
+        """Copy theme files if they exist."""
+        themes_source = self.input_dir / "scripts" / "template" / "themes"
+        if not themes_source.exists():
+            themes_source = self.input_dir / "themes"
 
-        from_dir = self.input_dir / "scripts" / "template" / "themes"
-        to_dir = self.output_dir / "css" / "themes"
+        if not themes_source.exists():
+            logger.debug("No themes directory found, skipping theme copy")
+            return
 
-        self._create_directory(to_dir)
+        themes_dest = self.output_dir / "css" / "themes"
+        self._create_directory(themes_dest)
 
-        for theme_file in self._walk_directory(from_dir):
-            if theme_file.is_file():
-                relative_path = theme_file.relative_to(from_dir)
-                output_path = to_dir / relative_path
-                self._ensure_parent_directory(output_path)
-                shutil.copy2(theme_file, output_path)
-                output_path.chmod(self.DEFAULT_PERMISSIONS["file"])
+        try:
+            for theme_file in self._walk_directory(themes_source):
+                if theme_file.is_file():
+                    relative_path = theme_file.relative_to(themes_source)
+                    output_path = themes_dest / relative_path
+                    self._ensure_parent_directory(output_path)
+                    shutil.copy2(theme_file, output_path)
+                    self._set_file_permissions(output_path)
+            logger.info("Copied theme files")
+        except Exception as e:
+            logger.error(f"Failed to copy themes: {str(e)}")
 
-    def _generate_slides(self) -> None:
+    def _copy_static_files(self) -> None:
+        """Copy static files like sitemap.xml and robots.txt."""
+        static_files = ["sitemap.xml", "robots.txt"]
 
-        input_dir = "slides/"
-        output_dir = "site/slides/"
+        for filename in static_files:
+            source_path = self.input_dir / filename
+            if source_path.exists():
+                dest_path = self.output_dir / filename
+                try:
+                    shutil.copy2(source_path, dest_path)
+                    self._set_file_permissions(dest_path)
+                    logger.debug(f"Copied static file: {filename}")
+                except Exception as e:
+                    logger.error(f"Failed to copy {filename}: {str(e)}")
 
-        os.makedirs(output_dir, exist_ok=True)
+    def generate_slides(self) -> None:
+        """Generate slides using Marp (optional feature)."""
+        slides_input = self.input_dir / "slides"
+        if not slides_input.exists():
+            logger.debug("No slides directory found, skipping slide generation")
+            return
 
-        for root, dirs, files in os.walk(input_dir):
-            for file in files:
-                if file.endswith(".md"):
-                    input_file = os.path.join(root, file)
-                    output_file = os.path.join(
-                        output_dir,
-                        os.path.relpath(root, input_dir),
-                        file[:-3] + ".html",
-                    )
-                    os.makedirs(os.path.dirname(output_file), exist_ok=True)
-                    subprocess.run(
-                        [
-                            "npx",
-                            "@marp-team/marp-cli",
-                            "--html",
-                            input_file,
-                            "-o",
-                            output_file,
-                        ]
-                    )
+        slides_output = self.output_dir / "slides"
+        self._create_directory(slides_output)
 
-        shutil.copytree("slides/assets", "site/slides/assets", dirs_exist_ok=True)
+        try:
+            # Check if Marp CLI is available
+            subprocess.run(
+                ["npx", "@marp-team/marp-cli", "--version"],
+                capture_output=True,
+                check=True,
+            )
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            logger.warning("Marp CLI not available, skipping slide generation")
+            return
+
+        # Process all markdown files in slides directory
+        for md_file in slides_input.rglob("*.md"):
+            try:
+                relative_path = md_file.relative_to(slides_input)
+                output_file = slides_output / relative_path.with_suffix(".html")
+                self._ensure_parent_directory(output_file)
+
+                subprocess.run(
+                    [
+                        "npx",
+                        "@marp-team/marp-cli",
+                        "--html",
+                        str(md_file),
+                        "-o",
+                        str(output_file),
+                    ],
+                    check=True,
+                    capture_output=True,
+                )
+                logger.debug(f"Generated slide: {relative_path}")
+            except subprocess.CalledProcessError as e:
+                logger.error(f"Failed to generate slide {md_file}: {e}")
+
+        # Copy slide assets if they exist
+        slides_assets = slides_input / "assets"
+        if slides_assets.exists():
+            dest_assets = slides_output / "assets"
+            try:
+                if dest_assets.exists():
+                    shutil.rmtree(dest_assets)
+                shutil.copytree(slides_assets, dest_assets)
+                logger.info("Copied slide assets")
+            except Exception as e:
+                logger.error(f"Failed to copy slide assets: {e}")
 
 
 def main():
-
+    """Main entry point for the site generator."""
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Generate a static site from markdown files"
+        description="Generate a static site from markdown files",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  %(prog)s content/ site/              # Basic usage
+  %(prog)s content/ site/ --verbose    # With verbose logging
+  %(prog)s content/ site/ --slides     # Include slide generation
+        """,
     )
     parser.add_argument("input_dir", help="Input directory containing content")
     parser.add_argument("output_dir", help="Output directory for generated site")
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Enable verbose logging"
     )
+    parser.add_argument(
+        "--slides", action="store_true", help="Generate slides using Marp CLI"
+    )
+    parser.add_argument(
+        "--domain",
+        default="https://notes.elimelt.com",
+        help="Site domain for canonical URLs (default: %(default)s)",
+    )
+
     args = parser.parse_args()
 
-    if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
+    # Configure logging
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    logging.getLogger().setLevel(log_level)
 
     try:
-        generator = SiteGenerator(args.input_dir, args.output_dir)
+        # Validate arguments
+        input_path = Path(args.input_dir)
+        if not input_path.exists():
+            logger.error(f"Input directory does not exist: {input_path}")
+            return 1
+
+        if not input_path.is_dir():
+            logger.error(f"Input path is not a directory: {input_path}")
+            return 1
+
+        # Generate the site
+        generator = SiteGenerator(args.input_dir, args.output_dir, args.domain)
         generator.generate_site()
+
+        # Generate slides if requested
+        if args.slides:
+            generator.generate_slides()
+
+        return 0
+
+    except KeyboardInterrupt:
+        logger.info("Site generation interrupted by user")
+        return 1
     except Exception as e:
-        logger.error(f"Failed to generate site: {str(e)}")
-        exit(1)
+        logger.error(f"Site generation failed: {str(e)}")
+        if args.verbose:
+            import traceback
+
+            traceback.print_exc()
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    import sys
 
-    shutil.copy("sitemap.xml", "site/sitemap.xml")
-    shutil.copy("robots.txt", "site/robots.txt")
+    sys.exit(main())

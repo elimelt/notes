@@ -7,7 +7,7 @@
     <title>Components of an OS | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.">
+    <meta name="description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Components of an OS">
-    <meta property="og:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.">
+    <meta property="og:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/components.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Components of an OS">
-    <meta name="twitter:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.">
+    <meta name="twitter:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys">
 
     <meta name="keywords" content="process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Components of an OS", "dateModified": "2025-02-11T20:48:44.915278", "description": "Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's \"THE\" multiprogramming system as an influential early design.", "articleSection": "Operating Systems", "keywords": "process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Components of an OS", "dateModified": "2025-02-11T20:48:44.915278", "description": "Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/components.html", "articleSection": "Operating Systems", "keywords": "process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Components of an OS
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="components-of-an-os">Components of an OS</h1>
-<h2 id="process-operations">Process Operations</h2>
+                <h1 id="components-of-an-os"><a class="toclink" href="#components-of-an-os">Components of an OS</a></h1>
+<h2 id="process-operations"><a class="toclink" href="#process-operations">Process Operations</a></h2>
 <p>OS provides the following kinds of operations:</p>
 <ul>
 <li><em>Create</em> a process</li>
@@ -111,7 +108,7 @@
 <li>Inter-process <em>synchronization</em></li>
 <li>Create/delete <em>child</em> processes (<em>subprocess</em>)</li>
 </ul>
-<h2 id="memory-management">Memory Management</h2>
+<h2 id="memory-management"><a class="toclink" href="#memory-management">Memory Management</a></h2>
 <p>primary memory is directly accessible to the CPU.</p>
 <ul>
 <li>Programs must be in memory to execute</li>
@@ -125,19 +122,19 @@
 <li>maintain mappings from physical -&gt; virtual memory though <em>page tables</em></li>
 <li>decide how much memory to allocate to each process</li>
 </ul>
-<h2 id="io">I/O</h2>
+<h2 id="io"><a class="toclink" href="#io">I/O</a></h2>
 <ul>
 <li>a "big" chunk of kernel deals with I/O. Soft of like the "glue" that connects devices to the rest of the system.</li>
 <li>OS must provide a uniform interface to devices</li>
 </ul>
-<h3 id="device-drivers">Device Drivers</h3>
+<h3 id="device-drivers"><a class="toclink" href="#device-drivers">Device Drivers</a></h3>
 <p>Routines that interact with specific device types. <strong>Encapsulate</strong> the details of the device.</p>
 <ul>
 <li>e.g. how to initialize the device, how to request I/O, how to handle interrupts, etc.</li>
 <li>ex: SCSI device drivers, Ethernet card drivers, video card drivers.</li>
 </ul>
 <p>Note: Windows has ~35,000 device drivers.</p>
-<h3 id="file-systems">File Systems</h3>
+<h3 id="file-systems"><a class="toclink" href="#file-systems">File Systems</a></h3>
 <p>A nice abstraction on top of physica storage device drivers. Provides the usual list of operations (open, close, read, write, seek, etc.), but also higher level operations on the fs itself:</p>
 <ul>
 <li>create/delete files</li>
@@ -147,7 +144,7 @@
 <li>(sometimes) indexing and searching</li>
 <li>(sometimes) file versioning</li>
 </ul>
-<h3 id="structure">Structure</h3>
+<h3 id="structure"><a class="toclink" href="#structure">Structure</a></h3>
 <pre><code class="language-txt">Monolith:
 
 +----------------------+
@@ -166,8 +163,8 @@
 <p>disadvantages:
 - hard to maintain
 - hard to extend</p>
-<h3 id="layering">Layering</h3>
-<h4 id="dikjstras-the-multiprogramming-system">Dikjstra's "THE" multiprogramming system:</h4>
+<h3 id="layering"><a class="toclink" href="#layering">Layering</a></h3>
+<h4 id="dikjstras-the-multiprogramming-system"><a class="toclink" href="#dikjstras-the-multiprogramming-system">Dikjstra's "THE" multiprogramming system:</a></h4>
 <p>Each layer presents a "virtual machine" to the layer above it. Each layer only uses the services of the layer below it.</p>
 <ul>
 <li>Layer 5: Job Managers, execute user programs</li>
@@ -178,9 +175,9 @@
 <li>Layer 0: Hardware</li>
 </ul>
 <p>Each layer can be tested and verified independently.</p>
-<h4 id="hardware-abstraction-layer">Hardware Abstraction Layer</h4>
+<h4 id="hardware-abstraction-layer"><a class="toclink" href="#hardware-abstraction-layer">Hardware Abstraction Layer</a></h4>
 <p>Goal: seperate hardwarte-specific routines from the "core" OS. Provides protability and improves readability.</p>
-<h3 id="microkernels">Microkernels</h3>
+<h3 id="microkernels"><a class="toclink" href="#microkernels">Microkernels</a></h3>
 <p>Introduced in the late 80s, early 90s. Goal: minimize the kernel, move as much as possible into user space.</p>
 <p>Results in:
 - better reliability (isolation between components)

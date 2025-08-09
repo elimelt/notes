@@ -7,7 +7,7 @@
     <title>Hard Lessons Learned: Windows RtlZeroMemory | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the "Gary's Sad Story" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.">
+    <meta name="description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt hand">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Hard Lessons Learned: Windows RtlZeroMemory">
-    <meta property="og:description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the "Gary's Sad Story" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.">
+    <meta property="og:description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt hand">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/windows-rtz.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Hard Lessons Learned: Windows RtlZeroMemory">
-    <meta name="twitter:description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the "Gary's Sad Story" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.">
+    <meta name="twitter:description" content="Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt hand">
 
     <meta name="keywords" content="rtlzeromemory,interrupt handling,windows optimization,operating system development,memory management">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Hard Lessons Learned: Windows RtlZeroMemory", "dateModified": "2025-02-11T20:49:18.402146", "description": "Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the \"Gary's Sad Story\" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.", "articleSection": "Operating Systems", "keywords": "rtlzeromemory,interrupt handling,windows optimization,operating system development,memory management"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Hard Lessons Learned: Windows RtlZeroMemory", "dateModified": "2025-02-11T20:49:18.402146", "description": "Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt hand", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/windows-rtz.html", "articleSection": "Operating Systems", "keywords": "rtlzeromemory,interrupt handling,windows optimization,operating system development,memory management"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Hard Lessons Learned: Windows RtlZeroMemory
@@ -98,16 +95,16 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="hard-lessons-learned-windows-rtlzeromemory">Hard Lessons Learned: Windows RtlZeroMemory</h1>
-<h2 id="zero-memory">Zero Memory</h2>
+                <h1 id="hard-lessons-learned-windows-rtlzeromemory"><a class="toclink" href="#hard-lessons-learned-windows-rtlzeromemory">Hard Lessons Learned: Windows RtlZeroMemory</a></h1>
+<h2 id="zero-memory"><a class="toclink" href="#zero-memory">Zero Memory</a></h2>
 <p>Make it faster by picking larger register (same optimization can be done to copy memory).</p>
 <p>In early Windows, they picked the BIGGEST register (floating point)</p>
-<h2 id="speed-up-interrupt-handling">Speed Up Interrupt Handling</h2>
+<h2 id="speed-up-interrupt-handling"><a class="toclink" href="#speed-up-interrupt-handling">Speed Up Interrupt Handling</a></h2>
 <ul>
 <li>Save only the registers needed by the device driver</li>
 <li>Who would've thought that a device driver would need to do floating point arithmetic.</li>
 </ul>
-<h2 id="garys-sad-story">Gary's Sad Story</h2>
+<h2 id="garys-sad-story"><a class="toclink" href="#garys-sad-story">Gary's Sad Story</a></h2>
 <ul>
 <li>Everyone in the Windows team ran nightly stress tests on each new build</li>
 <li>Nightly bug checking of parts of the file system on multiple test machines</li>
@@ -115,7 +112,7 @@
 <li>Manually checked that <em>RtlZeroMemory()</em> to see if it zeros a buffer correctly. It was not.</li>
 </ul>
 <p>It turns out Dave Cutler tried to optimize interrupt handling to not save fp registers. Both <code>RtlZeroMemory</code> and <code>RtlCopyMemory</code> didnt copy the fp registers. When the filesystem calls <code>RtlZeroMemory</code>, if an interrupt occurs and the device calls CopyMemory, this has side effects when control is returned to the process.</p>
-<h2 id="moral-of-the-story">Moral of the Story</h2>
+<h2 id="moral-of-the-story"><a class="toclink" href="#moral-of-the-story">Moral of the Story</a></h2>
 <ul>
 <li>Many "good" optimizations have unforseen consequences</li>
 <li>OS develepment is riddled with examples where modifying code one place breaks code elsewhere.</li>

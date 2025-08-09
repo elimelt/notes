@@ -7,7 +7,7 @@
     <title>Breadth First Search Algorithm Implementation and Analysis | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.">
+    <meta name="description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document co">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Breadth First Search Algorithm Implementation and Analysis">
-    <meta property="og:description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.">
+    <meta property="og:description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document co">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/BFS.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Breadth First Search Algorithm Implementation and Analysis">
-    <meta name="twitter:description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.">
+    <meta name="twitter:description" content="A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document co">
 
     <meta name="keywords" content="graph traversal,shortest paths,graph theory,complexity analysis">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Breadth First Search Algorithm Implementation and Analysis", "dateModified": "2025-02-11T18:52:43.110536", "description": "A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.", "articleSection": "Algorithms", "keywords": "graph traversal,shortest paths,graph theory,complexity analysis"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Breadth First Search Algorithm Implementation and Analysis", "dateModified": "2025-02-11T18:52:43.110536", "description": "A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document co", "url": "https://notes.elimelt.com/algorithms/BFS.html", "articleSection": "Algorithms", "keywords": "graph traversal,shortest paths,graph theory,complexity analysis"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Breadth First Search Algorithm Implementation and Analysis
@@ -98,13 +95,13 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="breadth-first-search">Breadth First Search</h1>
+                <h1 id="breadth-first-search"><a class="toclink" href="#breadth-first-search">Breadth First Search</a></h1>
 <p>Completely explore the vertices of a graph in order of their distance from the starting node.</p>
 <p>There are three states of a vertex in BFS:
 - <strong>Undiscovered</strong>: The vertex has not been seen yet.
 - <strong>Discovered</strong>: The vertex has been seen, but its neighbors have not been explored yet.
 - <strong>Explored</strong>: The vertex has been seen and its neighbors have been explored.</p>
-<h3 id="algorithm">Algorithm</h3>
+<h3 id="algorithm"><a class="toclink" href="#algorithm">Algorithm</a></h3>
 <pre><code class="language-plaintext">BFS(G, s):
   mark all vertices as undiscovered
 
@@ -118,19 +115,19 @@
         add v to q
     mark u as explored
 </code></pre>
-<h3 id="analysis">Analysis</h3>
+<h3 id="analysis"><a class="toclink" href="#analysis">Analysis</a></h3>
 <p>The outer while loop runs once for each vertex in the graph, and the inner for loop runs once for each edge of the current node. Remembering that the sum of the degrees of all vertices is equal to twice the number of edges in the graph, we have...</p>
 <p>$$
 O(|V|) + O(\sum_{v \in V} deg(v)) = O(|V| + |E|)
 $$</p>
-<h3 id="lemmas">Lemmas</h3>
+<h3 id="lemmas"><a class="toclink" href="#lemmas">Lemmas</a></h3>
 <ol>
 <li>$BFS(s)$ visits a vertex $v$ if and only if there is a path from $s$ to $v$.</li>
 <li>Edges into then-unexplored vertices form a tree rooted at $s$ (the <strong>BFS spanning tree</strong>).</li>
 <li>Level $i$ in the tree are exactly all vertices $v$ stuch that the shortest path from $s$ to $v$ has $i$ edges.</li>
 <li>All non-tree edges from $G$ connect vertices in the same level or adjacent levels.</li>
 </ol>
-<h3 id="difference-in-levels">Difference in levels</h3>
+<h3 id="difference-in-levels"><a class="toclink" href="#difference-in-levels">Difference in levels</a></h3>
 <p>Let $L(v)$ be the level of vertex $v$ in a BFS tree of interest.</p>
 <p>Claim:
 $$
@@ -142,7 +139,7 @@ Suppose $L(x) = i$ and $L(y) = j$. Without loss of generality, assume $x$ is exp
 <p>Case 1: $y$ is still undiscovered. Since there is an edge between $x$ and $y$, we will discover $y$ in the next iteration, and so $L(y) = i + 1$.</p>
 <p>Case 2: $y$ is discovered. Then $y$ is already in the queue, somewhere before $x$. We know $L(y) \ge i$ because $x$ was discovered before $y$. Since the levels are non-decreasing, and $L(x) = i$, we have $L(y) \le i + 1$.</p>
 <p>Thus, $|L(x) - L(y)| \le 1$.</p>
-<h3 id="shortest-paths">Shortest paths</h3>
+<h3 id="shortest-paths"><a class="toclink" href="#shortest-paths">Shortest paths</a></h3>
 <p>Claim:</p>
 <p>For every vertex $v \in V$ reachable from $s$, $L(v)$ is the length of the shortest path from $s$ to $v$.</p>
 <p>Proof:</p>

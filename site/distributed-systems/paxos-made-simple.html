@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Paxos Protocol", "dateModified": "2025-02-11T16:42:07.823973", "description": "A protocol for achieving consensus in distributed systems", "articleSection": "Distributed Systems", "keywords": "consensus algorithm,distributed systems,fault-tolerant systems"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Paxos Protocol", "dateModified": "2025-02-11T16:42:07.823973", "description": "A protocol for achieving consensus in distributed systems", "url": "https://notes.elimelt.com/distributed-systems/paxos-made-simple.html", "articleSection": "Distributed Systems", "keywords": "consensus algorithm,distributed systems,fault-tolerant systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Paxos Protocol
@@ -98,10 +95,10 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="paxos-made-simple">Paxos Made Simple</h1>
+                <h1 id="paxos-made-simple"><a class="toclink" href="#paxos-made-simple">Paxos Made Simple</a></h1>
 <p><a href="https://lamport.azurewebsites.net/pubs/paxos-simple.pdf">reading</a></p>
-<h2 id="the-consensus-algorithm">The Consensus Algorithm</h2>
-<h3 id="the-problem">The Problem</h3>
+<h2 id="the-consensus-algorithm"><a class="toclink" href="#the-consensus-algorithm">The Consensus Algorithm</a></h2>
+<h3 id="the-problem"><a class="toclink" href="#the-problem">The Problem</a></h3>
 <p>Consider a set of processes that can propose values. A consensus algorithm ensures that a single value is chosen and agreed upon. For safety, we must have...</p>
 <ul>
 <li>Only proposed values are chosen</li>
@@ -109,58 +106,60 @@
 <li>Processes only learn values that are actually chosen</li>
 </ul>
 <p>And it assumes an asynchronous, non-byzantine network in which nodes are fail-stop.</p>
-<h3 id="choosing-a-value">Choosing a Value</h3>
+<h3 id="choosing-a-value"><a class="toclink" href="#choosing-a-value">Choosing a Value</a></h3>
 <p>In paxos there are 3 types of agents</p>
 <ul>
 <li><em>proposers</em></li>
 <li><em>acceptors</em></li>
 <li><em>learners</em></li>
 </ul>
-<h4 id="p1-an-acceptor-must-accept-the-first-proposal-it-receives">P1: An acceptor must accept the first proposal it receives</h4>
+<h4 id="p1-an-acceptor-must-accept-the-first-proposal-it-receives"><a class="toclink" href="#p1-an-acceptor-must-accept-the-first-proposal-it-receives">P1: An acceptor must accept the first proposal it receives</a></h4>
 <p>This guarantees that some value is accepted by each node that is proposed to, but it doesn't prevent situations where no proposal is accepted by a majority of acceptors.</p>
-<h4 id="p2-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h4>
+<h4 id="p2-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v"><a class="toclink" href="#p2-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</a></h4>
 <p>This guarantees that only a single value is chosen, since unique proposal numbers can be used to decide between accepted values.</p>
-<h5 id="p2a-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2a: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</h5>
+<h5 id="p2a-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v"><a class="toclink" href="#p2a-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-accepted-by-any-acceptor-has-value-v">P2a: If a proposal with value $v$ is chosen, then every higher-numbered proposal accepted by any acceptor has value $v$</a></h5>
 <p>This is a stronger version of P2 that ensures previous values are not forgotten/overridden.</p>
 <p>However, P2a contradicts P1, since if a proposer "wakes up" after having been out of commission, it must accept whatever value is proposed first. We thus strengthen even further to...</p>
-<h5 id="p2b-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-v">P2b: If a proposal with value $v$ is chosen, then every higher-numbered proposal issues by any proposer has value $v$</h5>
+<h5 id="p2b-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-v"><a class="toclink" href="#p2b-if-a-proposal-with-value-v-is-chosen-then-every-higher-numbered-proposal-issues-by-any-proposer-has-value-v">P2b: If a proposal with value $v$ is chosen, then every higher-numbered proposal issues by any proposer has value $v$</a></h5>
 <p>This shifts the burden of remembering and staying consistent with the chosen value to the proposers instead of the acceptors. We then have...</p>
 <p>$$
 \text{P2b} \to \text{P2a} \to \text{P2}
 $$</p>
 <p>In order to implement P2b, we must further constrain our algorithm's behavior to...</p>
-<h5 id="p2c-for-any-v-and-n-if-a-proposal-with-value-v-and-number-n-is-issued-there-is-a-set-s-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-s-has-accepted-any-proposal-numbered-less-than-n-or-b-v-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-n-accepted-by-the-acceptors-in-s">P2c: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, there is a set $S$ consisting of a majority of acceptors such that either (a) no acceptor in $S$ has accepted any proposal numbered less than $n$, or (b) $v$ is the value of the highest-numbered proposal among all proposals numbered less than $n$ accepted by the acceptors in $S$</h5>
+<h5 id="p2c-for-any-v-and-n-if-a-proposal-with-value-v-and-number-n-is-issued-there-is-a-set-s-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-s-has-accepted-any-proposal-numbered-less-than-n-or-b-v-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-n-accepted-by-the-acceptors-in-s"><a class="toclink" href="#p2c-for-any-v-and-n-if-a-proposal-with-value-v-and-number-n-is-issued-there-is-a-set-s-consisting-of-a-majority-of-acceptors-such-that-either-a-no-acceptor-in-s-has-accepted-any-proposal-numbered-less-than-n-or-b-v-is-the-value-of-the-highest-numbered-proposal-among-all-proposals-numbered-less-than-n-accepted-by-the-acceptors-in-s">P2c: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, there is a set $S$ consisting of a majority of acceptors such that either (a) no acceptor in $S$ has accepted any proposal numbered less than $n$, or (b) $v$ is the value of the highest-numbered proposal among all proposals numbered less than $n$ accepted by the acceptors in $S$</a></h5>
 <p>To satisfy P2b, we must maintain P2c as an invariant. To make sure this invariant holds, proposers proposing a proposal numbered $n$ must learn the highest-numbered proposal with a number less than $n$ that has been accepted by a majority of acceptors, and propose that value if it exists.</p>
-<h4 id="proposition-algorithm">Proposition Algorithm</h4>
+<h4 id="proposition-algorithm"><a class="toclink" href="#proposition-algorithm">Proposition Algorithm</a></h4>
 <ol>
-<li>A proposer chooses a new proposal number $n$ and sends a <em>prepare</em> request to each member of some set of acceptors, awaiting a response containing:
-    - A guarantee that this acceptor will never accept a proposal numbered less than $n$
-    - The proposal with the highest number less than $n$ that it has accepted, if any.</li>
+<li>A proposer chooses a new proposal number $n$ and sends a <em>prepare</em> request to each member of some set of acceptors, awaiting a response containing:<ul>
+<li>A guarantee that this acceptor will never accept a proposal numbered less than $n$</li>
+<li>The proposal with the highest number less than $n$ that it has accepted, if any.</li>
+</ul>
+</li>
 <li>If the proposer receives the requested responses from a majority of acceptors, it issues an <em>accept</em> request, which is a proposal with number $n$ and value $v$, where $v$ is the value of the highest-numbered proposal among the responses, or a value of the proposer's choice if no proposals in the responses were received.</li>
 </ol>
-<h4 id="acceptor-behavior">Acceptor Behavior</h4>
+<h4 id="acceptor-behavior"><a class="toclink" href="#acceptor-behavior">Acceptor Behavior</a></h4>
 <p>Acceptors can only receive <em>prepare</em> and <em>accept</em> requests, and can ignore any request without compromising safety (but certainly still sacrificing liveness).</p>
-<h5 id="p1a-an-acceptor-can-accept-a-proposal-numbered-n-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-n">P1a: An acceptor can accept a proposal numbered $n$ iff it has not responded to a <em>prepare</em> request numbered greater than $n$</h5>
+<h5 id="p1a-an-acceptor-can-accept-a-proposal-numbered-n-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-n"><a class="toclink" href="#p1a-an-acceptor-can-accept-a-proposal-numbered-n-iff-it-has-not-responded-to-a-prepare-request-numbered-greater-than-n">P1a: An acceptor can accept a proposal numbered $n$ iff it has not responded to a <em>prepare</em> request numbered greater than $n$</a></h5>
 <p>which implies P1</p>
-<h3 id="phases">Phases</h3>
-<h4 id="phase-1">Phase 1</h4>
+<h3 id="phases"><a class="toclink" href="#phases">Phases</a></h3>
+<h4 id="phase-1"><a class="toclink" href="#phase-1">Phase 1</a></h4>
 <ul>
 <li>(a) A proposer selects a proposal number $n$ and sends a <em>prepare</em> request with number $n$ to a majority of acceptors.</li>
 <li>(b) If an acceptor receives a <em>prepare</em> request with number $n$ greater than any it has seen, it responds with a promise not to accept any proposal numbered less than $n$ and the highest-numbered proposal (and corresponding value) it has accepted.</li>
 </ul>
-<h4 id="phase-2">Phase 2</h4>
+<h4 id="phase-2"><a class="toclink" href="#phase-2">Phase 2</a></h4>
 <ul>
 <li>(a) If the proposer receives responses from a majority of acceptors, it sends an <em>accept</em> request to each acceptor with the proposal number $n$ and the value $v$ of the highest-numbered proposal among the responses, or a value of its choosing if no proposals were received.</li>
 <li>(b) If an acceptor receives an <em>accept</em> request with number $n$ greater than any it has seen, it accepts the proposal and responds to the proposer, unless it has already responded to a <em>prepare</em> request with a number greater than $n$.</li>
 </ul>
 <p>Note that to increase performance, if an acceptor ignores a <em>prepare</em> or <em>accept</em> request because it has already received a <em>prepare</em> request with a higher number, it should notify the proposer with a <em>reject</em> message. This however doesn't change the correctness, and is thus optional.</p>
-<h2 id="learning-a-chosen-value">Learning a Chosen Value</h2>
+<h2 id="learning-a-chosen-value"><a class="toclink" href="#learning-a-chosen-value">Learning a Chosen Value</a></h2>
 <p>One option would be for each acceptor to send a message upon accepting a value to all learners, but this requires a whole lot of message passing. Another option is to maintain a set of <em>distinguished</em> learners, which after hearing of a majority acceptance, notify all other learners of the accepted value. The larger this set of distinguished learners, the more fault-tolerant the system, but also the more communication required.</p>
 <p>Since messages can be dropped, a value can be chosen without any learner finding out. In this case, learners will find out the chosen value only after a new proposal is chosen. Learners can thus determine whether a value was chosen by following the same protocol to issue a new proposal as above.</p>
-<h2 id="progress">Progress</h2>
+<h2 id="progress"><a class="toclink" href="#progress">Progress</a></h2>
 <p>It is entirely possible with the above protocol that multiple proposers indefinitely one-up each other between sending their <em>propose</em> and <em>accept</em> requests, such that all proposals are ignored. To prevent this, choose and maintain a single <em>distinguished</em> proposer, which is the only proposer allowed to issue proposals. If the distinguished proposer fails, a new one can be elected by the acceptors.</p>
 <p>By <strong>FLP</strong>, any such leader election system must rely either on randomness, or real-time (i.e. timeouts).</p>
-<h2 id="implementing-a-state-machine">Implementing a State Machine</h2>
+<h2 id="implementing-a-state-machine"><a class="toclink" href="#implementing-a-state-machine">Implementing a State Machine</a></h2>
 <p>Consider a system of clients that issue requests to execute commands on a cluster of single-threaded application servers. Each application server can be thought of as a deterministic state machine, where the ordering of requests to each server <strong>must</strong> be consistent for them to end up in the same state.</p>
 <p>To guarantee consistent ordering of commands executed within our cluster, we implement a separate instance of Paxos, where the $i$th instance's chosen value determines the $i$th command executed on all application servers.</p>
 <p>During normal operation, a single server is elected to be leader, which acts as the <em>distinguished</em> proposer, and is the only server allowed to issue proposals. Clients then send their requests to this leader, which decides the sequence of commands globally. Any given instance of the protocol might fail, but regardless only one command can ever be chosen as the $i$th command to be executed.</p>

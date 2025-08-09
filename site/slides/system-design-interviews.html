@@ -7,12 +7,7 @@
     <title>System Design Interviews | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="System Design Interviews
-
-Agenda
-
-Introduce the concept of a system design interview
-Cover the format and structure of the interview, and what might be ex...">
+    <meta name="description" content="System Design Interviews Agenda Introduce the concept of a system design interview Cover the format and structure of the interview, and what might be expecte...">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -21,28 +16,18 @@ Cover the format and structure of the interview, and what might be ex...">
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="System Design Interviews">
-    <meta property="og:description" content="System Design Interviews
-
-Agenda
-
-Introduce the concept of a system design interview
-Cover the format and structure of the interview, and what might be ex...">
+    <meta property="og:description" content="System Design Interviews Agenda Introduce the concept of a system design interview Cover the format and structure of the interview, and what might be expecte...">
     <meta property="og:url" content="https://notes.elimelt.com/slides/system-design-interviews.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="System Design Interviews">
-    <meta name="twitter:description" content="System Design Interviews
-
-Agenda
-
-Introduce the concept of a system design interview
-Cover the format and structure of the interview, and what might be ex...">
+    <meta name="twitter:description" content="System Design Interviews Agenda Introduce the concept of a system design interview Cover the format and structure of the interview, and what might be expecte...">
 
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "System Design Interviews", "dateModified": "2025-03-06T03:46:32.664759", "description": "System Design Interviews\n\nAgenda\n\nIntroduce the concept of a system design interview\nCover the format and structure of the interview, and what might be ex..."}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "System Design Interviews", "dateModified": "2025-03-06T03:46:32.664759", "description": "System Design Interviews Agenda Introduce the concept of a system design interview Cover the format and structure of the interview, and what might be expecte...", "url": "https://notes.elimelt.com/slides/system-design-interviews.html"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -92,10 +77,7 @@ Cover the format and structure of the interview, and what might be ex...">
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » System Design Interviews
@@ -118,16 +100,16 @@ Overview of system design interviews
 <!-- color: #fff -->
 <!-- style: normal -->
 
-<h1 id="system-design-interviews">System Design Interviews</h1>
+<h1 id="system-design-interviews"><a class="toclink" href="#system-design-interviews">System Design Interviews</a></h1>
 <hr />
-<h2 id="agenda">Agenda</h2>
+<h2 id="agenda"><a class="toclink" href="#agenda">Agenda</a></h2>
 <ul>
 <li>Introduce the concept of a system design interview</li>
 <li>Cover the format and structure of the interview, and what might be expected of you</li>
 <li>Some basic principles to get your started, and ways to learn more</li>
 </ul>
 <hr />
-<h2 id="what-is-a-system-design-interview">What is a System Design Interview?</h2>
+<h2 id="what-is-a-system-design-interview"><a class="toclink" href="#what-is-a-system-design-interview">What is a System Design Interview?</a></h2>
 <ul>
 <li>Given a set of features/requirements, you design the high level architecture and interface of a system</li>
 <li>Extremely open ended compared to coding interviews</li>
@@ -136,10 +118,10 @@ Overview of system design interviews
 <li>Will come up more and more after you graduate, and is a useful skill to start developing</li>
 </ul>
 <hr />
-<h2 id="example">Example:</h2>
+<h2 id="example"><a class="toclink" href="#example">Example:</a></h2>
 <p>Design a URL shortening service, which takes a long, complex web address and converts it into a shorter, more manageable link. This shorter URL redirects users to the original destination, making sharing links easier and cleaner</p>
 <hr />
-<h2 id="formatstructure-of-the-interview">Format/Structure of the Interview</h2>
+<h2 id="formatstructure-of-the-interview"><a class="toclink" href="#formatstructure-of-the-interview">Format/Structure of the Interview</a></h2>
 <ul>
 <li>Requirements clarification (functional and non-functional)</li>
 <li>Back-of-envelope estimations (scale, throughput, storage)</li>
@@ -151,8 +133,8 @@ Overview of system design interviews
 </ul>
 <p>Note: there is not one right way of doing them, and you might not need to touch on all of these.</p>
 <hr />
-<h2 id="formatstructure-of-the-interview_1">Format/Structure of the Interview</h2>
-<h3 id="requirements-clarificationfunctional-and-non-functional">Requirements clarification(functional and non-functional)</h3>
+<h2 id="formatstructure-of-the-interview_1"><a class="toclink" href="#formatstructure-of-the-interview_1">Format/Structure of the Interview</a></h2>
+<h3 id="requirements-clarificationfunctional-and-non-functional"><a class="toclink" href="#requirements-clarificationfunctional-and-non-functional">Requirements clarification(functional and non-functional)</a></h3>
 <ul>
 <li>functional: what your system does/features supported</li>
 <li>e.g. takes a long, complex web address and converts it into a shorter, more manageable link</li>
@@ -160,8 +142,8 @@ Overview of system design interviews
 <li>e.g. Support 3 million concurrent users at peak</li>
 </ul>
 <hr />
-<h2 id="formatstructure-of-the-interview_2">Format/Structure of the Interview</h2>
-<h3 id="back-of-envelope-estimations-scale-throughput-storage">Back-of-envelope estimations (scale, throughput, storage)</h3>
+<h2 id="formatstructure-of-the-interview_2"><a class="toclink" href="#formatstructure-of-the-interview_2">Format/Structure of the Interview</a></h2>
+<h3 id="back-of-envelope-estimations-scale-throughput-storage"><a class="toclink" href="#back-of-envelope-estimations-scale-throughput-storage">Back-of-envelope estimations (scale, throughput, storage)</a></h3>
 <p>Calculate the expected scale of your system
 - e.g. 100M new URLs per month = ~40 URLs/second
 Estimate storage requirements-
@@ -171,8 +153,8 @@ Determine read/write ratio-
 Calculate bandwidth needs
 - e.g. 500 bytes × 400 reads/second = 200KB/second</p>
 <hr />
-<h2 id="formatstructure-of-the-interview_3">Format/Structure of the Interview</h2>
-<h3 id="system-interface-design-apis-data-models">System interface design (APIs, data models)</h3>
+<h2 id="formatstructure-of-the-interview_3"><a class="toclink" href="#formatstructure-of-the-interview_3">Format/Structure of the Interview</a></h2>
+<h3 id="system-interface-design-apis-data-models"><a class="toclink" href="#system-interface-design-apis-data-models">System interface design (APIs, data models)</a></h3>
 <p>Define the API endpoints/interfaces
 - e.g. createShortURL(api_key, original_url, custom_alias=null)
 - e.g. getOriginalURL(short_url)
@@ -181,8 +163,8 @@ Specify input/output parameters
 Define data models and schemas
 - e.g. URL object: {id, original_url, short_key, created_at, expires_at}</p>
 <hr />
-<h2 id="formatstructure-of-the-interview_4">Format/Structure of the Interview</h2>
-<h3 id="high-level-architecture-components-and-data-flow">High-level architecture (components and data flow)</h3>
+<h2 id="formatstructure-of-the-interview_4"><a class="toclink" href="#formatstructure-of-the-interview_4">Format/Structure of the Interview</a></h2>
+<h3 id="high-level-architecture-components-and-data-flow"><a class="toclink" href="#high-level-architecture-components-and-data-flow">High-level architecture (components and data flow)</a></h3>
 <p>Identify the main components of your system
 - e.g. Load balancers, web servers, application servers, databases, caches
 Show how data flows between components
@@ -192,8 +174,8 @@ Specify communication patterns
 Select technologies for each component
 - e.g. NGINX for load balancing, Redis for caching, PostgreSQL for database</p>
 <hr />
-<h2 id="formatstructure-of-the-interview_5">Format/Structure of the Interview</h2>
-<h3 id="details-of-notable-components">Details of notable components</h3>
+<h2 id="formatstructure-of-the-interview_5"><a class="toclink" href="#formatstructure-of-the-interview_5">Format/Structure of the Interview</a></h2>
+<h3 id="details-of-notable-components"><a class="toclink" href="#details-of-notable-components">Details of notable components</a></h3>
 <p>Deep dive into 1-2 most important components
 - e.g. URL shortening algorithm: MD5 hash + Base62 encoding
 Explain specific algorithms or data structures
@@ -203,8 +185,8 @@ Database schema with tables and relationships
 Caching strategy and policies
 - e.g. LRU cache for frequently accessed URLs with 80% hit rate</p>
 <hr />
-<h2 id="formatstructure-of-the-interview_6">Format/Structure of the Interview</h2>
-<h3 id="addressing-bottlenecks-and-edge-cases">Addressing bottlenecks and edge cases</h3>
+<h2 id="formatstructure-of-the-interview_6"><a class="toclink" href="#formatstructure-of-the-interview_6">Format/Structure of the Interview</a></h2>
+<h3 id="addressing-bottlenecks-and-edge-cases"><a class="toclink" href="#addressing-bottlenecks-and-edge-cases">Addressing bottlenecks and edge cases</a></h3>
 <p>Identify potential bottlenecks
 - e.g. Database becomes read bottleneck at scale
 Propose solutions for each bottleneck
@@ -214,8 +196,8 @@ Discuss single points of failure
 Handle edge cases
 - e.g. URL collision resolution, handling expired URLs</p>
 <hr />
-<h2 id="formatstructure-of-the-interview_7">Format/Structure of the Interview</h2>
-<h3 id="trade-off-discussion-and-potential-improvements">Trade-off discussion and potential improvements</h3>
+<h2 id="formatstructure-of-the-interview_7"><a class="toclink" href="#formatstructure-of-the-interview_7">Format/Structure of the Interview</a></h2>
+<h3 id="trade-off-discussion-and-potential-improvements"><a class="toclink" href="#trade-off-discussion-and-potential-improvements">Trade-off discussion and potential improvements</a></h3>
 <p>Discuss trade-offs made in your design
 - e.g. Consistency vs availability: choosing eventual consistency
 Cost vs performance considerations
@@ -225,7 +207,7 @@ Security considerations
 Future improvements
 - e.g. Geographic distribution for lower latency, analytics features</p>
 <hr />
-<h1 id="part-2"><a href="system-design.html">Part 2</a></h1>
+<h1 id="part-2"><a class="toclink" href="#part-2"><a href="system-design.html">Part 2</a></a></h1>
             </div>
         </article>
     </main>

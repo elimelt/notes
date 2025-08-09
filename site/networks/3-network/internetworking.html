@@ -7,7 +7,7 @@
     <title>Internetworking | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the concepts of IPv4 addressing, IP prefixes, and IP datagram forwarding using the longest prefix match algorithm.">
+    <meta name="description" content="Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the conce">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Internetworking">
-    <meta property="og:description" content="Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the concepts of IPv4 addressing, IP prefixes, and IP datagram forwarding using the longest prefix match algorithm.">
+    <meta property="og:description" content="Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the conce">
     <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/internetworking.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Internetworking">
-    <meta name="twitter:description" content="Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the concepts of IPv4 addressing, IP prefixes, and IP datagram forwarding using the longest prefix match algorithm.">
+    <meta name="twitter:description" content="Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the conce">
 
     <meta name="keywords" content="internetworking,networks,ip addressing">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Internetworking", "dateModified": "2025-02-11T20:47:59.615405", "description": "Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the concepts of IPv4 addressing, IP prefixes, and IP datagram forwarding using the longest prefix match algorithm.", "articleSection": "Networks", "keywords": "internetworking,networks,ip addressing"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Internetworking", "dateModified": "2025-02-11T20:47:59.615405", "description": "Covers the implementation of internetworking, including how different network types can be connected, and the fundamentals of IP addressing. Discusses the conce", "url": "https://notes.elimelt.com/networks/3-network/internetworking.html", "articleSection": "Networks", "keywords": "internetworking,networks,ip addressing"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Internetworking
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="internetworking">Internetworking</h1>
-<h2 id="how-netorks-may-differ">How netorks may differ</h2>
+                <h1 id="internetworking"><a class="toclink" href="#internetworking">Internetworking</a></h1>
+<h2 id="how-netorks-may-differ"><a class="toclink" href="#how-netorks-may-differ">How netorks may differ</a></h2>
 <ul>
 <li>Serive model (datagrams vs virtual circuits)</li>
 <li>Addressing</li>
@@ -108,26 +105,22 @@
 <li>Security (encryption, authentication)</li>
 </ul>
 <p>Internetworking hides the difference with a common prorocol (IP) and a common addressing scheme (IP addresses).</p>
-<h3 id="connecting-datagram-and-virtual-circuit-networks">Connecting Datagram and Virtual Circuit Networks</h3>
+<h3 id="connecting-datagram-and-virtual-circuit-networks"><a class="toclink" href="#connecting-datagram-and-virtual-circuit-networks">Connecting Datagram and Virtual Circuit Networks</a></h3>
 <p>Need to map a destination address to a VC and visa versa. In order to accomplish this, might have to set up a VC between two routers, and then use datagrams to send packets between the routers.</p>
 <pre><code class="language-plaintext">+--------+   802.11   +--------+ &lt;---- MPLS ----&gt; +--------+  Ethernet  +--------+
 |  host  |------------| Router |                  | Router |------------|  host  |
 +--------+            +--------+ &lt;--------------&gt; +--------+            +--------+
  source                            VC network                           destination
 </code></pre>
-<h2 id="ip-addressing">IP Addressing</h2>
+<h2 id="ip-addressing"><a class="toclink" href="#ip-addressing">IP Addressing</a></h2>
 <p>IP is the lowest common denominator of the internet. It allows networks that support entirely different services to communicate. Asks very little of the underlying network, and provides very little in return.</p>
 <ul>
-<li>IPv4 uses 32-bit addresses written in "dotted quad" notation (Four 8-bit numbers separated by dots).<ul>
+<li>IPv4 uses 32-bit addresses written in "dotted quad" notation (Four 8-bit numbers separated by dots).</li>
 <li>Ex: <code>255.255.255.0</code></li>
-</ul>
-</li>
-<li>IPv6 uses 128-bit addresses written in hexadecimal notation.<ul>
+<li>IPv6 uses 128-bit addresses written in hexadecimal notation.</li>
 <li>Ex: <code>2001:0db8:85a3:0000:0000:8a2e:0370:7334</code></li>
 </ul>
-</li>
-</ul>
-<h3 id="ipv4">IPv4</h3>
+<h3 id="ipv4"><a class="toclink" href="#ipv4">IPv4</a></h3>
 <pre><code class="language-plaintext">
 &lt;--------------------------------------- 32 bits ---------------------------------------&gt;
 
@@ -152,32 +145,26 @@
 +---------------------+---------------------+---------------------+---------------------+
 
 </code></pre>
-<h3 id="ip-prefixes">IP Prefixes</h3>
+<h3 id="ip-prefixes"><a class="toclink" href="#ip-prefixes">IP Prefixes</a></h3>
 <ul>
-<li>Addresses allocated in blocks called "prefixes".<ul>
+<li>Addresses allocated in blocks called "prefixes".</li>
 <li>Addresses in an L-bit prefix have the first L bits in common.</li>
 <li>There are $2^{32-L}$ addresses in an L-bit prefix.</li>
-</ul>
-</li>
-<li>Written in "addr/prefix" notation.<ul>
+<li>Written in "addr/prefix" notation.</li>
 <li>Ex: <code>128.13.0.0/16</code> is a 16-bit prefix and contains $2^{32-16} = 65536$ addresses.</li>
-</ul>
-</li>
-<li>Originally, IP addresses were allocated in fixed size blocks to a designated class. Still are, but class is now ignored in favor of CIDR (Classless Inter-Domain Routing).<ul>
+<li>Originally, IP addresses were allocated in fixed size blocks to a designated class. Still are, but class is now ignored in favor of CIDR (Classless Inter-Domain Routing).</li>
 <li>Class A: $2^{24}$ addresses</li>
 <li>Class B: $2^{16}$ addresses</li>
 <li>Class C: $2^{8}$ addresses</li>
 </ul>
-</li>
-</ul>
-<h4 id="example">Example:</h4>
+<h4 id="example"><a class="toclink" href="#example">Example:</a></h4>
 <p><code>128.13.0.0/16</code></p>
 <pre><code class="language-plaintext">        Network                Host
 +----------+----------+----------+----------+
 | 10000000 | 00001101 |   ....   |   ....   |
 +----------+----------+----------+----------+
 </code></pre>
-<h2 id="ip-datagram-forwarding">IP Datagram Forwarding</h2>
+<h2 id="ip-datagram-forwarding"><a class="toclink" href="#ip-datagram-forwarding">IP Datagram Forwarding</a></h2>
 <p>When a host wants to send a packet to another host, it first checks if the destination IP address is on the same network (matching subnet). If it is, it can send the packet directly over the link layer (using ARP to get resolve IP address to MAC address). Otherwise, it sends the packet to the <em>default gateway</em>, or <strong>router</strong>.</p>
 <p>The router then forwards the packet to its <strong>next hop</strong> based on the destination IP and the router's routing table.</p>
 <pre><code class="language-python">if (NetworkNum of destination = NetworkNum of one of my interfaces):
@@ -188,7 +175,7 @@ else:
     else:
         deliver packet to default router
 </code></pre>
-<h4 id="longest-prefix-match">Longest Prefix Match</h4>
+<h4 id="longest-prefix-match"><a class="toclink" href="#longest-prefix-match">Longest Prefix Match</a></h4>
 <ul>
 <li>For each packet, find the longest prefix that contains the destination address, ie. the most specific match.</li>
 <li>forward the packet to the next hop for that prefix.</li>
@@ -198,21 +185,19 @@ else:
         deliver packet to NextHop router
 </code></pre>
 <ul>
-<li><a href="#internetworking">Internetworking</a><ul>
+<li><a href="#internetworking">Internetworking</a></li>
 <li><a href="#how-netorks-may-differ">How netorks may differ</a><ul>
 <li><a href="#connecting-datagram-and-virtual-circuit-networks">Connecting Datagram and Virtual Circuit Networks</a></li>
 </ul>
 </li>
 <li><a href="#ip-addressing">IP Addressing</a><ul>
 <li><a href="#ipv4">IPv4</a></li>
-<li><a href="#ip-prefixes">IP Prefixes</a><ul>
+<li><a href="#ip-prefixes">IP Prefixes</a></li>
 <li><a href="#example:">Example:</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#ip-datagram-forwarding">IP Datagram Forwarding</a>
-    - <a href="#longest-prefix-match">Longest Prefix Match</a></li>
+<li><a href="#ip-datagram-forwarding">IP Datagram Forwarding</a><ul>
+<li><a href="#longest-prefix-match">Longest Prefix Match</a></li>
 </ul>
 </li>
 </ul>

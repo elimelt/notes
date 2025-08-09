@@ -7,7 +7,7 @@
     <title>Dynamic Programming Algorithms and Problem Solutions Guide | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems. Includes detailed explanations of problem-solving approaches, correctness proofs, and runtime analysis for each algorithm, with practical Python implementations.">
+    <meta name="description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Dynamic Programming Algorithms and Problem Solutions Guide">
-    <meta property="og:description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems. Includes detailed explanations of problem-solving approaches, correctness proofs, and runtime analysis for each algorithm, with practical Python implementations.">
+    <meta property="og:description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/dynamic-programming.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Dynamic Programming Algorithms and Problem Solutions Guide">
-    <meta name="twitter:description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems. Includes detailed explanations of problem-solving approaches, correctness proofs, and runtime analysis for each algorithm, with practical Python implementations.">
+    <meta name="twitter:description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems">
 
     <meta name="keywords" content="dynamic programming,optimization,algorithm analysis">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Programming Algorithms and Problem Solutions Guide", "dateModified": "2025-02-11T18:54:45.969330", "description": "A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems. Includes detailed explanations of problem-solving approaches, correctness proofs, and runtime analysis for each algorithm, with practical Python implementations.", "articleSection": "Algorithms", "keywords": "dynamic programming,optimization,algorithm analysis"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Programming Algorithms and Problem Solutions Guide", "dateModified": "2025-02-11T18:54:45.969330", "description": "A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems", "url": "https://notes.elimelt.com/algorithms/dynamic-programming.html", "articleSection": "Algorithms", "keywords": "dynamic programming,optimization,algorithm analysis"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Dynamic Programming Algorithms and Problem Solutions Guide
@@ -98,38 +95,30 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="dynamic-programming">Dynamic Programming</h1>
+                <h1 id="dynamic-programming"><a class="toclink" href="#dynamic-programming">Dynamic Programming</a></h1>
 <p><strong>Dynamic Programming</strong> is an algorithmic paradigm where you break up a problem into a series of <strong>overlapping</strong> sub-problems, building up solutions to progressively larger subproblems until the original answer is obtained. The key efficiency of DP is to <strong>memoize</strong> the answers to sub problems, often yielding a polynomial time algorithm.</p>
 <p>You can design dynamic programming algorithms by induction, with the added construct of somehow memorizing/caching previously solved problems. The key then becomes finding a valid recurrence relation that relates a given instance of the problem to its composite subproblems.</p>
-<h2 id="weighted-interval-scheduling">Weighted Interval Scheduling</h2>
+<h2 id="weighted-interval-scheduling"><a class="toclink" href="#weighted-interval-scheduling">Weighted Interval Scheduling</a></h2>
 <p><strong>Problem</strong>: Given a set of jobs $J$ with start times $s_i$, finish times $f_i$, and weights $w_i$, find the maximum weight subset of jobs that are compatible with each other.</p>
 <p>A naive approach would be to use the following induction:</p>
 <p>Given jobs $j_1, j_2, \ldots, j_n$, suppose we can compute the optimum job scheduling for $&lt; n$ jobs.</p>
 <p>Then, for any $n$ jobs we can compute $OPT$ as:</p>
 <ul>
-<li>Case 1: $j_n \notin OPT(j_1, j_2, \ldots, j_n)$:<ul>
+<li>Case 1: $j_n \notin OPT(j_1, j_2, \ldots, j_n)$:</li>
 <li>Then just return $OPT(j_1, j_2, \ldots, j_{n - 1})$</li>
-</ul>
-</li>
-<li>Case 2: $j_n \in OPT(j_1, j_2, \ldots, j_n)$:<ul>
+<li>Case 2: $j_n \in OPT(j_1, j_2, \ldots, j_n)$:</li>
 <li>Delete jobs not compatible with $j_n$ and recurse on that new subset of jobs</li>
-</ul>
-</li>
 </ul>
 <p>However, this approach is unfortunately still exponential, since there are potentially $2^n$ possible subsets of jobs to consider. Note that this problem is equivalent to maximum independent set, which is NP-complete. To differentiate our solution from the general (supposed) unsolvability of this problem, we can instead rely on an extra property of our inputs, namely that they are partially order-able.</p>
 <p>So we sort by finishing time of each job, which reduces the number of subproblems from $O(2^n) \to O(n)$, i.e. the $n$ possible prefix subsets of our sorted jobs.</p>
 <p><strong>Algorithm</strong>: Given weighted jobs sorted by finish time, suppose we can compute the $OPT$ for $&lt; n$ jobs.</p>
 <ul>
-<li>Case 1: $j_n \in OPT$:<ul>
+<li>Case 1: $j_n \in OPT$:</li>
 <li>So all jobs $i$ that are not compatible with $n$ are not in $OPT$</li>
 <li>We can find this efficiently, i.e. $p(n) = $ largest index $i &lt; n$ such that $j_i$ is compatible with $j_n$ (binary search based on $s_j, f_i$)</li>
 <li>Then, we just need to find $OPT(j_1, \ldots, j_{p(n)})$</li>
-</ul>
-</li>
-<li>Case 2: $j_n \notin OPT$:<ul>
+<li>Case 2: $j_n \notin OPT$:</li>
 <li>Then we can return $OPT(j_1, \ldots, j_{n - 1})$</li>
-</ul>
-</li>
 <li>Our actual $OPT(j_1, \ldots, j_n)$ is then just the maximum of these two cases</li>
 </ul>
 <pre><code class="language-python"># J[i] = (s_i, f_i, c_i)
@@ -154,10 +143,10 @@ def max_weighted_interval_subset(J: tuple[int, int, int]) -&gt; int:
 
     return dp(n - 1)
 </code></pre>
-<h2 id="knapsack-problem">Knapsack Problem</h2>
+<h2 id="knapsack-problem"><a class="toclink" href="#knapsack-problem">Knapsack Problem</a></h2>
 <p><strong>Problem</strong>: Given $n$ items with weights $w_1, \ldots, w_n$ and values $v_1, \ldots, v_n$, and a knapsack of capacity $W$, find the maximum value subset of items that fit in the knapsack.</p>
 <p>In other words, let $I$ be our set of items, and $S \subseteq I$ be the items we select. We want to find the maximum value of $S$ such that $\sum_{i \in S} w_i \le W$</p>
-<h3 id="what-are-we-inducting-on">What are we inducting on?</h3>
+<h3 id="what-are-we-inducting-on"><a class="toclink" href="#what-are-we-inducting-on">What are we inducting on?</a></h3>
 <p>Assume $P(i, w)$ holds $\forall w \in [0, W]$, and then show $P(i + 1, w)$ holds $\forall w \in [0, W]$. This is a <strong>bottom-up</strong> approach, where we start from the base case and build up to the final solution.</p>
 <p><strong>Algorithm</strong>: Define $OPT(i, w)$ to be the solution for items $1, \ldots, i$ with a knapsack of capacity $w$. Then, we have the following induction:</p>
 <p>$$
@@ -199,7 +188,7 @@ def knapsack_it(W: int, w: list[int], v: list[int]) -&gt; int:
 
     return M[n][W]
 </code></pre>
-<h2 id="string-building">String Building</h2>
+<h2 id="string-building"><a class="toclink" href="#string-building">String Building</a></h2>
 <p>Given 3 integers $n \geq 1$ and $k_A,k_B \geq 1$, design an algorithm that runs in time polynomial in $n, k_A, k_B$ and outputs the number of length $n$ strings composed of copies of $A, B$ such that no more than $k_A$ copies of $A$ are placed consecutively and no more than $k_B$ copies of $B$ are placed consecutively.</p>
 <p><strong>Algorithm</strong>:</p>
 <pre><code class="language-python">A, B = 0, 1
@@ -248,9 +237,9 @@ $$</p>
 <p>In the case where $2 \le n \le k_c$, we know that there is no way we'd have a run of $c$ of more than $k_c$, so we can simply count the number of valid strings of size $n - 1$ that either end in a $c$ or a $c'$. Then, we can add a $c$ to the end of all those strings to get our valid strings of length $n$.</p>
 <p>Therefore, we cover all cases and $OPT(n, c)$ computes the correct value $\forall n \ge 1$.</p>
 <p>To compute the total number of valid strings of length $n$, we simply return $OPT(n, A) + OPT(n, B)$, since all valid strings either end in $A$ or $B$.</p>
-<h3 id="running-time">Running Time</h3>
+<h3 id="running-time"><a class="toclink" href="#running-time">Running Time</a></h3>
 <p>We compute $2n$ total values of $OPT(n, c)$, $n$ corresponding to strings ending in $A$, and $n$ ending in $B$. When $n \le k_c$, we can compute our answer in constant time using the values previously computed. When $n &gt; k_c$, we need to sum over $k_c$ previously computed values, which is $O(k_c)$. Therefore, our total running time is at most $O(nk_Ak_B)$.</p>
-<h2 id="post-office">Post Office</h2>
+<h2 id="post-office"><a class="toclink" href="#post-office">Post Office</a></h2>
 <p><strong>Problem</strong>: Interstate highway 5 is a straight highway from Washington all the way to California. There are $n$ villages alongside this highway. Think about the highway as an integer axis, and the position of village $i$ is an integer $x_i$ along this axis. Assume that there are no two villages in the same position, i.e., $x_i \neq x_j$ for $i \neq j$. The distance between two villages $x_i,x_j$ is simply $| x_i - x_j |$.</p>
 <p>USPS is interested in building k post offices in some, but not necessarily all of the villages along highway 5, for some $1 \leq k \leq n$. A village and the post office in it have the same position. We want to choose the positions of these post offices so that the sum of the distances from each village to its nearest post office is minimized. Design an algorithm that runs in time polynomial in $n$ and outputs the minimum possible sum of distances to the optimal location for post offices.</p>
 <p><strong>Algorithm</strong>:</p>
@@ -293,7 +282,7 @@ $$</p>
 
   return min(c(i) for i in range(k, n + 1))
 </code></pre>
-<h3 id="correctness">Correctness</h3>
+<h3 id="correctness"><a class="toclink" href="#correctness">Correctness</a></h3>
 <p>Define $f(n, k)$ to be the minimum sum of distances from the nearest post office of the first $n$ villages to $k$ post offices given the $kth$ post office is placed in village $n$.</p>
 <p>When $n \le k$, we have a sum of $0$, since every village has a post office. Then, assuming $f(i, k)$ is correct $\forall k &gt; 0, 0 \le i &lt; n$, we can calculate $f(n, k)$ by considering every possible placement of the $k - 1th$ post office, and choose the one that minimizes the sum of distances for villages between the $k - 1th$ and $kth$ post office. However, if $k = 1$, then the only post office we can place is the one in $x_n$, so we only need to find the distances of towns $x_1, \ldots, x_{n - 1}$ from $x_n$.</p>
 <p>In the case where $k &gt; 1$, we must consider placing a post office in towns $x_{k - 1}, x_k, \ldots, x_{n - 1}$, since it doesn't make sense to place the $k - 1th$ post office before we've seen $k - 1$ villages, and we can only place up to the village before $x_n$, since by construction it is the last of our $k$ post offices places in the $n$ towns. Therefore, we have the following recurrence:</p>
@@ -322,7 +311,7 @@ $$</p>
 <p>Then, each $c(i)$ takes constant time to retrieve each $f(i, k)$, and an additional $O(n)$ to compute the sum of the remaining distances, for a total of $O(n)$.</p>
 <p>Finally, we call $c(i)$ $O(n)$ times, for a total of $O(n^2)$.</p>
 <p>Thus, our running time is $O(kn^3)$</p>
-<h2 id="rna-secondary-structure">RNA Secondary Structure</h2>
+<h2 id="rna-secondary-structure"><a class="toclink" href="#rna-secondary-structure">RNA Secondary Structure</a></h2>
 <p><strong>Problem</strong>: Given an RNA molecule $B = b_1 b_2 \ldots b_n$, find a secondary structure $S$ that maximizes the number of base pairs.</p>
 <p>Note that maximizing the number of base pairs is a practical problem, since RNA molecules fold into a secondary structure that minimizes free energy, and the number of base pairs is a good proxy for free energy.</p>
 <p><em>Rules</em>:</p>
@@ -376,16 +365,12 @@ def ssi(B):
 <p><strong>Base Case</strong>: $\forall i, j$, we have $|j - i| \le 4 \to OPT(i, j) = 0$</p>
 <p>Suppose that for some $l = j - i \ge 4$, we have computed all $OPT(i, j)$. Then to compute $OPT(i, j)$ for $|j - i| &gt; l$, we do the following:</p>
 <ul>
-<li>Case 1: Base $b_j$ is not involved in a pair in our solution<ul>
+<li>Case 1: Base $b_j$ is not involved in a pair in our solution</li>
 <li>$OPT(i, j) = OPT(i, j - 1)$, since we have $OPT$ solved for $l$</li>
-</ul>
-</li>
-<li>Case 2: Base $b_j$ pairs with $b_t$ for some $t \in [i, j - 5]$<ul>
+<li>Case 2: Base $b_j$ pairs with $b_t$ for some $t \in [i, j - 5]$</li>
 <li>$OPT(i, j) = max_{i \le t \le j - 5} {1 + OPT(i, t - 1) + OPT(t + 1, j - 1)}$</li>
 </ul>
-</li>
-</ul>
-<h2 id="sequence-alignment">Sequence Alignment</h2>
+<h2 id="sequence-alignment"><a class="toclink" href="#sequence-alignment">Sequence Alignment</a></h2>
 <p><strong>Problem</strong>: Given two strings $x_1 x_2 \ldots x_m$ and $y_1 y_2 \ldots y_n$, find an alignment with the minimum number of mismatches and gaps.</p>
 <p>An alignment is a set of ordered pairs $(x_{i_1}, y_{j_1}), \ldots, (x_{i_k}, y_{j_k})$ such that $i_1 &lt; i_2 &lt; \ldots$ and $j_1 &lt; j_2 &lt; \ldots$.</p>
 <ul>
@@ -393,18 +378,12 @@ def ssi(B):
 </ul>
 <p>Our base case is when either $i$ or $j$ are $0$, we just need to do $j$ or $i$ deletes respectively.</p>
 <ul>
-<li>Case 1: $OPT$ matches $x_i, y_j$<ul>
+<li>Case 1: $OPT$ matches $x_i, y_j$</li>
 <li>Then, if $x_i \ne y_j$, add one, and otherwise add zero to $OPT(i - 1, j - 1)$.</li>
-</ul>
-</li>
-<li>Case 2: $OPT$ leaves $x_i$ unmatched<ul>
+<li>Case 2: $OPT$ leaves $x_i$ unmatched</li>
 <li>Then, pay the gap cost for $x_i + OPT(i - 1, j)$</li>
-</ul>
-</li>
-<li>Case 3: $OPT$ leaves $y_j$ unmatched<ul>
+<li>Case 3: $OPT$ leaves $y_j$ unmatched</li>
 <li>Then, pay gap cost for $y_j + OPT(i, j - 1)$</li>
-</ul>
-</li>
 </ul>
 <pre><code class="language-python"># Bottom up, non memory optimized - T = O(mn), S = O(mn)
 def seq_alignment(x, y):
@@ -447,7 +426,7 @@ def seq_alignment(x, y):
 
   return dp_curr[n]
 </code></pre>
-<h2 id="longest-path-in-a-dag">Longest Path in a DAG</h2>
+<h2 id="longest-path-in-a-dag"><a class="toclink" href="#longest-path-in-a-dag">Longest Path in a DAG</a></h2>
 <p><strong>Problem</strong> Given a DAG $G$, find the longest path.</p>
 <p><em>Note</em>: This problem is NP-hard for general directed graphs , as it has the Hamiltonian Path as a special case. However, with a DAG you can solve this in polynomial time.</p>
 <p><strong>Approach</strong>: Since $G$ is a DAG, it has a topological sort. Start by sorting vertices in their topological order.</p>
@@ -459,7 +438,7 @@ $$</p>
 <p>$$
 \max_{j \in [1, n]} OPT(j)
 $$</p>
-<h2 id="longest-increasing-subsequence">Longest Increasing Subsequence</h2>
+<h2 id="longest-increasing-subsequence"><a class="toclink" href="#longest-increasing-subsequence">Longest Increasing Subsequence</a></h2>
 <p>Given a sequence of numbers $x_1, x_2, \ldots, x_n$, find the longest increasing (not necessarily contiguous) subsequence.</p>
 <p>Define $OPT(j)$ as LIS that ends at $x_j$. Our approach is to guess the previous element $x_k$. Our base case is $OPT(1) = 1$, and for any $j$ such that $\forall k &lt; j$, $x_j &lt; x_k$, $OPT(j) = 1$.</p>
 <p>$$
@@ -481,19 +460,15 @@ $$</p>
 
   return max(f(i) for i in range(1, n + 1))
 </code></pre>
-<h2 id="shortest-paths-with-negative-edge-weights-bellman-ford">Shortest Paths with Negative Edge Weights (Bellman-Ford)</h2>
+<h2 id="shortest-paths-with-negative-edge-weights-bellman-ford"><a class="toclink" href="#shortest-paths-with-negative-edge-weights-bellman-ford">Shortest Paths with Negative Edge Weights (Bellman-Ford)</a></h2>
 <p>Given a weighted directed graph $G = (V, E)$, and a source vertex $s4, where the weight of edges $e = (u, v) \in E$ is $c_e = c_{u, v}$, find the shortest path from $s$ to all other vertices.</p>
 <p><em>Note</em>: if $G$ has a negative cycle, there is no solution, so suppose $G$ has no negative cycles.</p>
 <p><strong>Approach</strong>: Define $OPT(v, i)$ as the length of the shortest path from $s \to v$ among all paths that use at most $i$ edges. We induct on $i$.</p>
 <ul>
-<li><em>Case 1</em>: Shortest path from $s \to v$ has $&lt; i$ edges:<ul>
+<li><em>Case 1</em>: Shortest path from $s \to v$ has $&lt; i$ edges:</li>
 <li>$OPT(v, i) = OPT(v, i - 1)$</li>
-</ul>
-</li>
-<li><em>Case 2</em>: Shortest path from $s \to v$ has exactly $i$ edges<ul>
+<li><em>Case 2</em>: Shortest path from $s \to v$ has exactly $i$ edges</li>
 <li>$OPT(v, i) = \min_{u \to v} { OPT(u, i - 1) + c_{u, v} }$</li>
-</ul>
-</li>
 </ul>
 <p>So we have...</p>
 <p>$$
@@ -520,7 +495,7 @@ $$</p>
 
   return [dp[v][n] for v in range(n)]
 </code></pre>
-<h2 id="p1-knapsack-approximation">P1 - Knapsack Approximation</h2>
+<h2 id="p1-knapsack-approximation"><a class="toclink" href="#p1-knapsack-approximation">P1 - Knapsack Approximation</a></h2>
 <p>Given $n$ items with integer weights $w_1, \ldots , w_n$ and values $v_1, \ldots , v_n$ and knapsack of weight $W$ such that $w_i \le \frac{W}{2}$ for all $i$. Design an algorithm that runs in time polynomial in $n$ and $\log W$ and outputs a 2-approximation for the knapsack problem.</p>
 <pre><code class="language-python">def A(weights, values, W):
   n = len(weights)
@@ -544,14 +519,10 @@ $$</p>
 <p><em>Lemma 3</em>: $G$ will choose the whole item up until the last item it adds to its knapsack</p>
 <p><em>Proof</em>: By the design of the algorithm this must be true. Consider an arbitrary round of $G$ in which it considers item $i$ and has a current remaining weight of $x$. We have two cases:</p>
 <ul>
-<li>Case 1: $w_i \le x$<ul>
+<li>Case 1: $w_i \le x$</li>
 <li>Then we take the entire item since this is the best value/weight item that we haven't already visited</li>
-</ul>
-</li>
-<li>Case 2: $w_i &gt; x$<ul>
+<li>Case 2: $w_i &gt; x$</li>
 <li>Then we take as much of the item as possible (weight $x$ of it), after which our knapsack is full and we terminate</li>
-</ul>
-</li>
 </ul>
 <p>No matter what, if we select a fractional amount of an item then it means we've filled the remaining weight of our knapsack and so the algorithm terminates immediately after.</p>
 <p><em>Lemma 4</em>: For any integers $a, b$, if $a \le b$, then $a \le \frac{a + b}{2}$</p>
@@ -559,14 +530,10 @@ $$</p>
 <p>From (1), we have that $\frac{1}{2} OPT \le \frac{1}{2} G$</p>
 <p>From (2) we have that $w(S) \ge \frac{W}{2} + 1$, and by definition $w(S') \le W$, so we have that $w(S) \ge \frac{1}{2} w(S')$. Both $G$ and $A$ choose values in the same order, and by (3) we have that $G$ picks only full items until the very last item added. Therefore, the items chosen by $A$ are exactly the same as the items chosen by $G$ up until the very last item. Let $x$ be the remaining weight in both $A$ and $G$'s knapsack at this point, and $g_k$ be the last item added by $G$. We have the following cases:</p>
 <ul>
-<li>Case 1: $w_{g_k} = x$<ul>
+<li>Case 1: $w_{g_k} = x$</li>
 <li>Then $G$ chooses all of $g_k$, and $A$ will also choose $g_k$, so $A$ and $G$ pick the exact same set and amounts of items, and we have $v(S) = v(S') \ge v(S^<em>)$, and so $v(S) \ge \frac{1}{2} v(S^</em>)$</li>
-</ul>
-</li>
-<li>Case 2: $w_{g_k} &gt; x$<ul>
+<li>Case 2: $w_{g_k} &gt; x$</li>
 <li>Then $G$ chooses $x$ of $g_k$, and $A$ will see the item that it can't fit and terminate, in which case we have $v(S) = v(S') - x \cdot \frac{v_{g_k}}{w_{g_k}}$</li>
-</ul>
-</li>
 </ul>
 <p>In case 1, we clearly have a 2-approximation of $OPT$, since $A$ is optimal.</p>
 <p>In case 2 however, the key insight is that the value that the last item contributes to $v(S')$ is no more than half of the total value, which I will show below.</p>
@@ -600,7 +567,7 @@ $$</p>
 <p>Since $w_i \le \frac{W}{2}$, and division by $W$ is $O(\log W)$, calculating <code>greed</code>, which has $n$ elements, takes $O(n \cdot \log W)$, and sorting it takes $O(n \log n)$.</p>
 <p>Then, I iterate through $O(n)$ items in the loop, and once again since $w_i \le \frac{W}{2}$, and each iteration is only performing addition, we have $O(\log W)$ work in each iteration, for a total of $O(n \log W)$</p>
 <p>Therefore, the overall running time of the algorithm is $O(n (\log n + \log W))$, which is polynomial in $n$ and $\log W$</p>
-<h2 id="p2-maximum-sub-rectangle">P2 - Maximum Sub-Rectangle</h2>
+<h2 id="p2-maximum-sub-rectangle"><a class="toclink" href="#p2-maximum-sub-rectangle">P2 - Maximum Sub-Rectangle</a></h2>
 <p><strong>Problem</strong>: You are given an $n \times n$ array $A$ where for all $1 \le i, j \le n$, $A_{ij}$ is an integer that may be negative. For a rectangle $(x_1, y_1), (x_2, y_2)$ where $x_1 \le x_2$ and $y_1 \le y_2$, the value is the sum of all numbers in this rectangle, i.e.,</p>
 <p>$$
 \sum_{i = x_1}^{x_2} \sum_{j = y_1}^{y_2} A_{ij}
@@ -655,7 +622,7 @@ $$</p>
 <p>I start by finding the prefix sum of all rows in $O(n^2)$.</p>
 <p>Then, I solve $O(n^2)$ many subproblems, one for each $y_1, y_2$. Each subproblem takes $O(n)$ time to solve, since I need to loop through $n$ many sub-sub problems to find the maximum sum contiguous subsequence of row sums. Note that to calculate row sums, I use my precomputed prefix sum, which allows me to calculate the sum of a row in $O(1)$.</p>
 <p>Therefore, the overall runtime is $O(n^3)$.</p>
-<h2 id="p3-count-connected-subsets-of-size-k">P3 - Count connected subsets of size k</h2>
+<h2 id="p3-count-connected-subsets-of-size-k"><a class="toclink" href="#p3-count-connected-subsets-of-size-k">P3 - Count connected subsets of size k</a></h2>
 <p>Given a tree $T$ with $n$ vertices and an integer $k \ge 1$ such that every vertex of $T$ has degree $deg(v) \le 3$, we want to choose a set $S$ of $k$ vertices of the tree which are connected, i.e., for any pair of vertices $u, v \in S$ the unique path between $u, v$ in $T$ is also in $S$. Design a polynomial time algorithm that outputs the number of such sets $S$.</p>
 <pre><code class="language-python">def num_sets_deg_3(T, k):
 
@@ -721,22 +688,14 @@ $$</p>
 <p>Note that $children(v)$ is defined at ${ u \in neighbors(v) : L[u] = L[v] + 1 }$</p>
 <p>And so to calculate $f(v, k)$, we just need to sum over all possibilities that involve $v$ in terms of children of $v$. Let $c = |children(v)| \le 3$ (since $deg(v) \le 3$), and $u_1, \ldots, u_c$ be $v$'s children. Any given subproblem contains vertices in any subset of $children(v)$ of size $\le \min(k - 1, c)$, so we need to iterate through all possible ways to choose such a subset of children for a given subproblem of size $k - 1$, accounting for the fact that any subset counted must contain $v$.</p>
 <ul>
-<li>Case 0: $c = 0$<ul>
+<li>Case 0: $c = 0$</li>
 <li>This is a base case, so if $k \le 1$ we return $1$, and otherwise return $0$</li>
-</ul>
-</li>
-<li>Case 1: $c = 1$<ul>
+<li>Case 1: $c = 1$</li>
 <li>We have only one child, so we just need to calculate $f(u_1, k - 1)$, since we must choose $v$ as an element of any subset counted, and so we have $k - 1$ remaining vertices to choose</li>
-</ul>
-</li>
-<li>Case 2: $c = 2$<ul>
+<li>Case 2: $c = 2$</li>
 <li>We have two children, so we need to iterate through all possible ways to choose $c_1$ vertices from the first child and $c_2$ vertices from the second child, such that $c_1 + c_2 = k - 1$, keeping a sum of all possibilities. Then, via the product rule for counting, we just multiply $f(u_1, c_1) \cdot f(u_2, c_2)$ for the total number of possibilities for each value of $c_1, c_2$.</li>
-</ul>
-</li>
-<li>Case 3: $c = 3$<ul>
+<li>Case 3: $c = 3$</li>
 <li>We have three children, so we need to iterate through all possible ways to choose $c_1, c_2, c_3$ vertices from the children, such that $c_1 + c_2 + c_3 = k - 1$, keeping a sum of all possibilities. Then, via the product rule for counting, we just multiply $f(u_1, c_1) \cdot f(u_2, c_2) \cdot f(u_3, c_3)$ for the total number of possibilities for each value of $c_1, c_2, c_3$.</li>
-</ul>
-</li>
 </ul>
 <p>Note that these are disjoint cases, but the case where we choose only vertices from a subset of subtrees is handled by letting $c_i = 0$ for the subtrees not chosen.</p>
 <p>This gives rise to the following recurrence:</p>

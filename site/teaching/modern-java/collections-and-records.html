@@ -7,7 +7,7 @@
     <title>Creating Collections and Data Types in Modern Java | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collections, and the introduction of records in Java 14+. Discusses the motivation and practical applications of these features, highlighting their benefits in terms of conciseness, immutability, and type safety.">
+    <meta name="description" content="Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collecti">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Creating Collections and Data Types in Modern Java">
-    <meta property="og:description" content="Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collections, and the introduction of records in Java 14+. Discusses the motivation and practical applications of these features, highlighting their benefits in terms of conciseness, immutability, and type safety.">
+    <meta property="og:description" content="Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collecti">
     <meta property="og:url" content="https://notes.elimelt.com/teaching/modern-java/collections-and-records.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Creating Collections and Data Types in Modern Java">
-    <meta name="twitter:description" content="Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collections, and the introduction of records in Java 14+. Discusses the motivation and practical applications of these features, highlighting their benefits in terms of conciseness, immutability, and type safety.">
+    <meta name="twitter:description" content="Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collecti">
 
     <meta name="keywords" content="java,collections,data structures,immutable,records">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Creating Collections and Data Types in Modern Java", "dateModified": "2025-02-11T20:50:28.442294", "description": "Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collections, and the introduction of records in Java 14+. Discusses the motivation and practical applications of these features, highlighting their benefits in terms of conciseness, immutability, and type safety.", "articleSection": "Software Engineering", "keywords": "java,collections,data structures,immutable,records"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Creating Collections and Data Types in Modern Java", "dateModified": "2025-02-11T20:50:28.442294", "description": "Covers the implementation of modern Java collections and data types, including the use of Arrays.asList, Java 9+ factory methods for creating immutable collecti", "url": "https://notes.elimelt.com/teaching/modern-java/collections-and-records.html", "articleSection": "Software Engineering", "keywords": "java,collections,data structures,immutable,records"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » Creating Collections and Data Types in Modern Java
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="creating-collections-and-data-types-in-modern-java">Creating Collections and Data Types in Modern Java</h1>
-<h2 id="motivation">Motivation</h2>
+                <h1 id="creating-collections-and-data-types-in-modern-java"><a class="toclink" href="#creating-collections-and-data-types-in-modern-java">Creating Collections and Data Types in Modern Java</a></h1>
+<h2 id="motivation"><a class="toclink" href="#motivation">Motivation</a></h2>
 <p>Often while testing your code or implementing common algorithms, you'll want to specify an immutable collection of elements. The UW intro series as (as far as I'm aware) doesn't teach you some pretty useful java features that can make this a lot easier.</p>
 <p>Furthermore, java can be a little verbose when it comes to defining new data types to hold structured data. This is where the <code>record</code> keyword comes in.</p>
-<h2 id="arraysaslist">Arrays.asList</h2>
+<h2 id="arraysaslist"><a class="toclink" href="#arraysaslist">Arrays.asList</a></h2>
 <p>The most basic way to create a list in Java is to use the <code>Arrays.asList</code> method. This method takes a variable number of arguments and returns a fixed-size list backed by the specified array. This means that you can't add or remove elements from the list, but you can modify the elements themselves.</p>
 <pre><code class="language-java">List&lt;Integer&gt; list = Arrays.asList(1, 2, 3, 4, 5);
 </code></pre>
-<h2 id="java-9-factory-methods">Java 9+ Factory Methods</h2>
+<h2 id="java-9-factory-methods"><a class="toclink" href="#java-9-factory-methods">Java 9+ Factory Methods</a></h2>
 <p>Java 9 introduced a new way to create immutable collections using factory methods. These methods are available in the <code>List</code>, <code>Set</code>, and <code>Map</code> interfaces. Here are some examples:</p>
 <pre><code class="language-java">List&lt;Integer&gt; list = List.of(1, 2, 3, 4, 5);
 Set&lt;Integer&gt; set = Set.of(1, 2, 3, 4, 5);
@@ -116,7 +113,7 @@ Map&lt;Integer, String&gt; map = Map.of(
   3, &quot;three&quot;
 );
 </code></pre>
-<h2 id="records">Records</h2>
+<h2 id="records"><a class="toclink" href="#records">Records</a></h2>
 <p>Records are a new feature in Java 14 that allow you to define simple data classes with minimal boilerplate. On top of being far more concise than traditional classes, records also provide a <code>toString</code>, <code>equals</code>, and <code>hashCode</code> method by default.</p>
 <pre><code class="language-java">// With classes
 class Point {
@@ -147,7 +144,7 @@ class Point {
 // With records
 record Point(int x, int y) {}
 </code></pre>
-<h2 id="using-this-in-practice">Using this in Practice</h2>
+<h2 id="using-this-in-practice"><a class="toclink" href="#using-this-in-practice">Using this in Practice</a></h2>
 <p>Say we're implementing a poker game and we want to represent a card. With introductory Java knowledge, you might define a class like this:</p>
 <pre><code class="language-java">enum Suit {
   HEARTS, DIAMONDS, CLUBS, SPADES

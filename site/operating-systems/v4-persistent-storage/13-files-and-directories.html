@@ -7,7 +7,7 @@
     <title>Files and Directories | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.">
+    <meta name="description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space managem">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Files and Directories">
-    <meta property="og:description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.">
+    <meta property="og:description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space managem">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v4-persistent-storage/13-files-and-directories.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Files and Directories">
-    <meta name="twitter:description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.">
+    <meta name="twitter:description" content="Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space managem">
 
     <meta name="keywords" content="directories,index structures,free space maps,locality heuristics,file systems,persistence,performance">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Files and Directories", "dateModified": "2025-02-11T20:49:55.166623", "description": "Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.", "articleSection": "Operating Systems", "keywords": "directories,index structures,free space maps,locality heuristics,file systems,persistence,performance"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Files and Directories", "dateModified": "2025-02-11T20:49:55.166623", "description": "Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space managem", "url": "https://notes.elimelt.com/operating-systems/v4-persistent-storage/13-files-and-directories.html", "articleSection": "Operating Systems", "keywords": "directories,index structures,free space maps,locality heuristics,file systems,persistence,performance"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Files and Directories
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="chapter-13-files-and-directories">Chapter 13 - Files and Directories</h1>
+                <h1 id="chapter-13-files-and-directories"><a class="toclink" href="#chapter-13-files-and-directories">Chapter 13 - Files and Directories</a></h1>
 <p>Need to achieve the following:</p>
 <ul>
 <li><strong>performance</strong></li>
@@ -106,7 +103,7 @@
 <li><strong>persistence</strong></li>
 <li><strong>relability</strong></li>
 </ul>
-<h2 id="implementation-overview">Implementation Overview</h2>
+<h2 id="implementation-overview"><a class="toclink" href="#implementation-overview">Implementation Overview</a></h2>
 <p>Most implementations are based on four key ideas:</p>
 <ul>
 <li>directories</li>
@@ -114,28 +111,28 @@
 <li>free space maps</li>
 <li>locality heuristics</li>
 </ul>
-<h3 id="directories-and-index-structures">Directories and Index Structures</h3>
+<h3 id="directories-and-index-structures"><a class="toclink" href="#directories-and-index-structures">Directories and Index Structures</a></h3>
 <p>File names and offsets are mapped to storage blocks in two steps:</p>
 <ol>
 <li><strong>directories</strong> map names to file numbers</li>
 <li><strong>index structures</strong> map file numbers and offsets to storage blocks</li>
 </ol>
 <p>Often, the index is some form of tree.</p>
-<h3 id="free-space-maps">Free Space Maps</h3>
+<h3 id="free-space-maps"><a class="toclink" href="#free-space-maps">Free Space Maps</a></h3>
 <p>Free space maps are used to keep track of which blocks are free and which are in use. At a minimum, it needs to work, but it is also nice if files are allocated in a way that gives better spacial locality. For example, many file systems implement free space maps as bitmaps in persistent storage.</p>
-<h3 id="locality-heuristics">Locality Heuristics</h3>
+<h3 id="locality-heuristics"><a class="toclink" href="#locality-heuristics">Locality Heuristics</a></h3>
 <p>Locality heuristics are used to improve performance. Operating systems implement their own policies on where to store data in order to increase the spacing locality of files. For instance, storing files in the same directory in the same area of the disk. Some also periodically <em>defragment</em> the disk by rewriting files to be contiguous.</p>
-<h2 id="directories-naming-data">Directories: Naming Data</h2>
+<h2 id="directories-naming-data"><a class="toclink" href="#directories-naming-data">Directories: Naming Data</a></h2>
 <p>Can simply store name -&gt; number mappings in a file that represents the directory. As a base case, you can just have a predefined number for the root directory. Linux's Fast File System (FFS) uses 2 as the root directory's number. Files in the same directory are often accessed together, so it is nice to store them in the same area of the disk so that caching can work its magic.</p>
 <p>Although they are files, directories need their own API to prevent users from accidentally corrupting the directory structure. However, processes can still <code>read</code> directories to get a list of files in a directory, but it can be convinent to have a syscall to get the list of files in a directory (<code>getdents</code> in Linux).</p>
-<h3 id="internals">Internals</h3>
+<h3 id="internals"><a class="toclink" href="#internals">Internals</a></h3>
 <p>Although simple lists of file name number pairs works (and were used in early versions of Linux), modern file systems use more complex data structures to acccomodate large directories. Linux XFS, Microsoft NTFS, and Oracle ZFS all use trees to store directories.</p>
 <p>XFS uses a B+ tree, and directory entries are stored in the first part of the directory file. The B+ tree's root node is stored in a known offset (<code>BTREE_ROOT_PTR</code>). The fixed-size internal and leaf nodes are stored after the root node, and the variable-size directory entries are stored at the start of the file. Starting from the root, each tree node includes pointers to where in the file its children are stored.</p>
-<h4 id="links">Links</h4>
+<h4 id="links"><a class="toclink" href="#links">Links</a></h4>
 <p>Hard links are multiple names (and directory entries) for the same file on disk. OS uses reference counting to garbage collect files that are unlinked.</p>
 <p>Soft (symbolic) links are files that directly map to the name of another file.</p>
 <p>A consequence of hard links is that you can't keep file metadata in the directory entry</p>
-<h2 id="files-finding-data">Files: Finding Data</h2>
+<h2 id="files-finding-data"><a class="toclink" href="#files-finding-data">Files: Finding Data</a></h2>
 <p>Files systems usually try to:</p>
 <ul>
 <li>Locate blocks of disk that belong to a file</li>
@@ -152,8 +149,8 @@
 <li>The <em>locality heuristic</em>, which is used to improve performance. For example, storing files in the same directory in the same area of the disk.</li>
 </ul>
 <p>Although storage arranges data in <em>sectors</em> (magnectic disk) or <em>pages</em> (flash), file systems usually use <em>blocks</em> as the unit of allocation. Blocks are usually a power of two multiple of the sector or page size. For example, Linux uses 4KB blocks on 512 byte sectors. FAT and NTFS call blocks <em>clusters</em>. Similarly, file systems store data in variable length arrays of contiguous tracks called <em>extents</em>. NTFs calls them <em>runs</em>.</p>
-<h3 id="case-studies">Case Studies</h3>
-<h3 id="fat">FAT</h3>
+<h3 id="case-studies"><a class="toclink" href="#case-studies">Case Studies</a></h3>
+<h3 id="fat"><a class="toclink" href="#fat">FAT</a></h3>
 <p>Very simple file system that uses a linked list to store the index structure. Still used in places like flash drives and SD cards, and most recent version (FAT32) supports volumes with up to 2^28 blocks, and files with up to 2^32 - 1 byes.</p>
 <p>The FAT is an array of 32-bit entries that resides in a reserved area of the volume. Each file has a linked list of FAT entries that point to the blocks that make up the file. Directories map file names to the index of the first FAT entry for the file.</p>
 <p>System can also use the FAT for free space tracking. OS scans for unused entries (0x00000000), and takes it out of the free list.</p>

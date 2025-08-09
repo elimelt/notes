@@ -7,7 +7,7 @@
     <title>Socket Reference | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.">
+    <meta name="description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, a">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Socket Reference">
-    <meta property="og:description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.">
+    <meta property="og:description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, a">
     <meta property="og:url" content="https://notes.elimelt.com/networks/sockets.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Socket Reference">
-    <meta name="twitter:description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.">
+    <meta name="twitter:description" content="This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, a">
 
     <meta name="keywords" content="socket,networking,system programming,c,python">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Socket Reference", "dateModified": "2025-02-11T20:48:41.766556", "description": "This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.", "articleSection": "Networks", "keywords": "socket,networking,system programming,c,python"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Socket Reference", "dateModified": "2025-02-11T20:48:41.766556", "description": "This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, a", "url": "https://notes.elimelt.com/networks/sockets.html", "articleSection": "Networks", "keywords": "socket,networking,system programming,c,python"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Socket Reference
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="socket-reference">Socket Reference</h1>
-<h2 id="creating-a-socket">Creating a Socket</h2>
+                <h1 id="socket-reference"><a class="toclink" href="#socket-reference">Socket Reference</a></h1>
+<h2 id="creating-a-socket"><a class="toclink" href="#creating-a-socket">Creating a Socket</a></h2>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
 
@@ -124,8 +121,8 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 </code></pre>
-<h2 id="server-side">Server Side</h2>
-<h3 id="binding-a-socket">Binding a Socket</h3>
+<h2 id="server-side"><a class="toclink" href="#server-side">Server Side</a></h2>
+<h3 id="binding-a-socket"><a class="toclink" href="#binding-a-socket">Binding a Socket</a></h3>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
 
@@ -149,7 +146,7 @@ port = 80
 # Bind the socket to an address
 serversock.bind((socket.gethostname(), port))
 </code></pre>
-<h3 id="listening-on-a-socket">Listening on a Socket</h3>
+<h3 id="listening-on-a-socket"><a class="toclink" href="#listening-on-a-socket">Listening on a Socket</a></h3>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
 
@@ -173,7 +170,7 @@ backlog = 5
 # Listen for connections
 serversock.listen(backlog)
 </code></pre>
-<h3 id="accepting-a-connection">Accepting a Connection</h3>
+<h3 id="accepting-a-connection"><a class="toclink" href="#accepting-a-connection">Accepting a Connection</a></h3>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
 
@@ -195,8 +192,8 @@ int accept(int socket, struct sockaddr *address, int *addr_len);
 # Accept a connection
 clientsock, addr = serversock.accept()
 </code></pre>
-<h2 id="client-side">Client Side</h2>
-<h3 id="connecting-to-a-server">Connecting to a Server</h3>
+<h2 id="client-side"><a class="toclink" href="#client-side">Client Side</a></h2>
+<h3 id="connecting-to-a-server"><a class="toclink" href="#connecting-to-a-server">Connecting to a Server</a></h3>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
 
@@ -221,7 +218,7 @@ clientsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # connect to a server
 clientsock.connect(('http://elimelt.com', port))
 </code></pre>
-<h2 id="sending-and-receiving-data">Sending and Receiving Data</h2>
+<h2 id="sending-and-receiving-data"><a class="toclink" href="#sending-and-receiving-data">Sending and Receiving Data</a></h2>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
 
@@ -258,7 +255,7 @@ clientsock.send('Hello, world!')
 # Receive data
 data = clientsock.recv(1024)
 </code></pre>
-<h2 id="closing-a-socket">Closing a Socket</h2>
+<h2 id="closing-a-socket"><a class="toclink" href="#closing-a-socket">Closing a Socket</a></h2>
 <pre><code class="language-c">#include &lt;sys/types.h&gt;
 #include &lt;sys/socket.h&gt;
 
@@ -276,7 +273,7 @@ int close(int socket);
 # Close the socket
 clientsock.close()
 </code></pre>
-<h2 id="simple-client">Simple Client</h2>
+<h2 id="simple-client"><a class="toclink" href="#simple-client">Simple Client</a></h2>
 <pre><code class="language-c">// from book.systemsapproach.org
 
 #include &lt;stdio.h&gt;
@@ -355,7 +352,7 @@ while 1:
     s.send(line)
 s.close()
 </code></pre>
-<h2 id="simple-server">Simple Server</h2>
+<h2 id="simple-server"><a class="toclink" href="#simple-server">Simple Server</a></h2>
 <pre><code class="language-c">// from book.systemsapproach.org
 #include &lt;stdio.h&gt;
 #include &lt;sys/types.h&gt;

@@ -7,7 +7,7 @@
     <title>I/O Systems and Secondary Storage | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.">
+    <meta name="description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="I/O Systems and Secondary Storage">
-    <meta property="og:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.">
+    <meta property="og:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="I/O Systems and Secondary Storage">
-    <meta name="twitter:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.">
+    <meta name="twitter:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure">
 
     <meta name="keywords" content="i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "I/O Systems and Secondary Storage", "dateModified": "2025-02-11T21:54:13.663995", "description": "Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.", "articleSection": "Operating Systems", "keywords": "i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "I/O Systems and Secondary Storage", "dateModified": "2025-02-11T21:54:13.663995", "description": "Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html", "articleSection": "Operating Systems", "keywords": "i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » I/O Systems and Secondary Storage
@@ -98,28 +95,28 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="io-systems-and-secondary-storage">I/O Systems and Secondary Storage</h1>
-<h2 id="io-system-hardware-environment">I/O System Hardware Environment</h2>
+                <h1 id="io-systems-and-secondary-storage"><a class="toclink" href="#io-systems-and-secondary-storage">I/O Systems and Secondary Storage</a></h1>
+<h2 id="io-system-hardware-environment"><a class="toclink" href="#io-system-hardware-environment">I/O System Hardware Environment</a></h2>
 <p>I/O devices are typically either <strong>block devices</strong>, which transfer data in fixed-size blocks, or <strong>character devices</strong>, which transfer data one character at a time in a stream.</p>
 <p><strong>Device controllers</strong> are the hardware (a mini-computer) that connects the CPU to the I/O devices. They are responsible for sending commands to the device, and for receiving and sending data to and from the device.</p>
 <p>The I/O devices communicate via controller registers/memory-mapped I/O, or direct memory access (DMA).</p>
 <p>Old computers typically had a single bus (the <strong>system bus</strong>) that connects the CPU, memory, and I/O devices. The topology of the computer was similar to old ethernet networks with a single broadcast domain.</p>
 <p>More modern and performant systems have multiple buses. The <strong>PCI</strong> bus is a high-speed backbone that all the other busses branch off of (<strong>memory</strong>, <strong>SCSI</strong>, <strong>USB</strong>, etc.).</p>
 <p>The I/O system needs to be able to handle a wide variety of devices with different data transfer rates, data formats, and control mechanisms.</p>
-<h2 id="io-systems-role-and-structure">I/O System's Role and Structure</h2>
+<h2 id="io-systems-role-and-structure"><a class="toclink" href="#io-systems-role-and-structure">I/O System's Role and Structure</a></h2>
 <p>Needs to provide:</p>
 <ul>
 <li>A uniform interface to many devices, as well as device specific interfaces when necessary.</li>
 <li>Device-system communication and interaction through device drivers.</li>
 <li>Every device is given a unique id so it can be referenced by applications.</li>
 </ul>
-<h3 id="organization">Organization</h3>
+<h3 id="organization"><a class="toclink" href="#organization">Organization</a></h3>
 <ul>
 <li><strong>Programmed I/O with polling</strong>: CPU issues an I/O command for the process, and the process busy waits until the I/O is complete. Inefficient because the CPU is tied up waiting for the I/O to complete.</li>
 <li><strong>Interrupt-driven I/O</strong>: CPU issues an I/O command and continues to execute. When the I/O is complete, the device sends an interrupt to the CPU, which then handles the I/O completion. The process may or may not be blocked while waiting for the I/O to complete, but the processor is not tied up waiting for the I/O to complete.</li>
 <li><strong>Direct Memory Access (DMA)</strong>: The DMA module controls exchange of data between I/O module and main memory using physical addresses. The processor requests transfer of a block of data from DMA, and is interrupted when the transfer is complete. This saves the processor from having to handle the data transfer.</li>
 </ul>
-<h2 id="secondary-storage">Secondary Storage</h2>
+<h2 id="secondary-storage"><a class="toclink" href="#secondary-storage">Secondary Storage</a></h2>
 <p>Anything outside of <em>primary memory</em> (RAM) is considered <strong>secondary storage</strong>. This includes hard drives, SSDs, and other storage devices. SS doesn't allow direct execution of instructions or data access via load/store instructions, and is instead accessed via I/O operations.</p>
 <p>Secondary storage is...
 - <strong>Non-volatile</strong>: Data is retained even when the power is off.
@@ -130,7 +127,7 @@
     - 30 TB HDD for $700
     - 500 GB SSD for $50 ($10/GB)
     - 100 TB SSD for $40,000</p>
-<h3 id="memory-hierarchy">Memory Hierarchy</h3>
+<h3 id="memory-hierarchy"><a class="toclink" href="#memory-hierarchy">Memory Hierarchy</a></h3>
 <table>
 <thead>
 <tr>
@@ -186,17 +183,17 @@
 </tr>
 </tbody>
 </table>
-<h3 id="hdds-and-sdds">HDDs and SDDs</h3>
+<h3 id="hdds-and-sdds"><a class="toclink" href="#hdds-and-sdds">HDDs and SDDs</a></h3>
 <p><strong>HDDs</strong> are mechanical devices that store data on spinning disks. They have a read/write head that moves across the disk to read and write data. They are slow, but have a large capacity and are relatively cheap.</p>
 <p><strong>SSDs</strong> are solid-state devices that store data on flash memory. They are much faster than HDDs, but are more expensive. They are also more reliable and consume less power.</p>
-<h3 id="disks-and-the-os">Disks and the OS</h3>
+<h3 id="disks-and-the-os"><a class="toclink" href="#disks-and-the-os">Disks and the OS</a></h3>
 <p>Disks are messy, slow, error-prone, horrible devices, and its the OS's job to make them look like a nice, clean, fast, reliable, and easy-to-use device.</p>
 <p>The OS typically provides different levels of disk access to different clients, including:
 - <strong>physical block access</strong>: the ability to read and write blocks of data to the disk.
 - <strong>disk logical block access</strong>: the ability to read and write to a disk block number, without needing to know the physical location of the block.
 - <strong>file system</strong>: the ability to read and write files at a specified offset, block, or byte.</p>
 <p>With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $\lbrack  0, n  \rbrack$, (ie a contiguous range of blocks to the OS).</p>
-<h3 id="performance-issues">Performance Issues</h3>
+<h3 id="performance-issues"><a class="toclink" href="#performance-issues">Performance Issues</a></h3>
 <p>The HDD's performance is affected by its mechanically moving parts. Limiting the amount of seeking and <strong>defragmenting</strong> help, but only to an extent.</p>
             </div>
             <div class="tags">

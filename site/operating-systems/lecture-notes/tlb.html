@@ -7,7 +7,7 @@
     <title>Translation Lookaside Buffer (TLB) | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.">
+    <meta name="description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical m">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Translation Lookaside Buffer (TLB)">
-    <meta property="og:description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.">
+    <meta property="og:description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical m">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/tlb.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Translation Lookaside Buffer (TLB)">
-    <meta name="twitter:description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.">
+    <meta name="twitter:description" content="The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical m">
 
     <meta name="keywords" content="virtual memory,address translation,page table,hardware,mmu">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Translation Lookaside Buffer (TLB)", "dateModified": "2025-02-11T20:49:09.808136", "description": "The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.", "articleSection": "Operating Systems", "keywords": "virtual memory,address translation,page table,hardware,mmu"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Translation Lookaside Buffer (TLB)", "dateModified": "2025-02-11T20:49:09.808136", "description": "The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical m", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/tlb.html", "articleSection": "Operating Systems", "keywords": "virtual memory,address translation,page table,hardware,mmu"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Translation Lookaside Buffer (TLB)
@@ -98,43 +95,49 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</h1>
+                <h1 id="translation-lookaside-buffer-tlb"><a class="toclink" href="#translation-lookaside-buffer-tlb">Translation Lookaside Buffer (TLB)</a></h1>
 <p>Translates virtual page numbers to physical page numbers. It is a small, fully associative cache of page table entries implemented in hardware to improve the speed of address translation and decrease the number of memory accesses.</p>
-<h2 id="associative-and-direct-mapping">Associative and Direct Mapping</h2>
+<h2 id="associative-and-direct-mapping"><a class="toclink" href="#associative-and-direct-mapping">Associative and Direct Mapping</a></h2>
 <ul>
 <li><strong>Direct Mapping</strong>: Each entry in the TLB corresponds to a unique entry in the page table. This is the simplest and most common implementation of the TLB. It is also the fastest, but it is also the most limited in terms of the number of entries it can hold.</li>
 <li><strong>Fully Associative</strong>: Each entry in the TLB can correspond to any entry in the page table. This is the most flexible, but also the slowest. It means that the TLB must be searched for every memory access.</li>
 <li><strong>N-way Set Associative</strong>: A compromise between the two. The TLB is divided into a number of sets, and each entry in the TLB can correspond to any entry in the page table within its set.</li>
 </ul>
-<h2 id="managing-tlbs">Managing TLBs</h2>
+<h2 id="managing-tlbs"><a class="toclink" href="#managing-tlbs">Managing TLBs</a></h2>
 <ul>
-<li>Address translation mostly handled by TLB
-    - Over 99% of address translations are handled by the TLB, but the remaining 1% are handled by the page table.
-    - In case of a miss, translation is done by the page table and the result is stored in the TLB. Often this results in an eviction.</li>
-<li>Hardware (MMU) in x86 systems
-    - Knows where oage table is in memory. OS maintains page table, but hardware does the translation and accesses the page table.
-    - Page table is stored in a hardware-depended format, and the OS must maintain it in this format.</li>
-<li>Software loaded TLB (OS)
-    - TLB miss is handled like a page fault (trap to OS)
-    - OS finds the page table entry, loads it into the TLB, and restarts the instruction that caused the miss.
-    - Must be very fast (20-1000 cycles), so CPU ISA has special instructions to load TLB entries.</li>
+<li>Address translation mostly handled by TLB<ul>
+<li>Over 99% of address translations are handled by the TLB, but the remaining 1% are handled by the page table.</li>
+<li>In case of a miss, translation is done by the page table and the result is stored in the TLB. Often this results in an eviction.</li>
 </ul>
-<h3 id="context-switching">Context Switching</h3>
+</li>
+<li>Hardware (MMU) in x86 systems<ul>
+<li>Knows where oage table is in memory. OS maintains page table, but hardware does the translation and accesses the page table.</li>
+<li>Page table is stored in a hardware-depended format, and the OS must maintain it in this format.</li>
+</ul>
+</li>
+<li>Software loaded TLB (OS)<ul>
+<li>TLB miss is handled like a page fault (trap to OS)</li>
+<li>OS finds the page table entry, loads it into the TLB, and restarts the instruction that caused the miss.</li>
+<li>Must be very fast (20-1000 cycles), so CPU ISA has special instructions to load TLB entries.</li>
+</ul>
+</li>
+</ul>
+<h3 id="context-switching"><a class="toclink" href="#context-switching">Context Switching</a></h3>
 <p>The OS <strong>needs</strong> to ensure TLB and page table are consistent. This is done by invalidating the TLB when the page table changes. When a process is switched, the OS must invalidate/flush the entire TLB, which is a big part of the overhead of context switching (since there will be many TLB misses subsequently). You can also use the PID as part of the TLB lookup to make the TLB "global" (ie. shared between processes). </p>
-<h2 id="functionality-enhanced-by-page-tables">Functionality Enhanced by Page Tables</h2>
+<h2 id="functionality-enhanced-by-page-tables"><a class="toclink" href="#functionality-enhanced-by-page-tables">Functionality Enhanced by Page Tables</a></h2>
 <ul>
 <li><strong>Memory Protection</strong>: Each page table entry has a protection bit that specifies the access rights for the page. This is used to prevent unauthorized access to memory. This has the effect of catching errors at the hardware level, which is much faster than catching them at the software level.</li>
 <li><strong>Shared Memory</strong>: Multiple processes can share the same physical page. This is useful for shared libraries and shared memory, and is also used in copy-on-write optimization.</li>
 </ul>
-<h3 id="loading-shared-libraries">Loading Shared Libraries</h3>
+<h3 id="loading-shared-libraries"><a class="toclink" href="#loading-shared-libraries">Loading Shared Libraries</a></h3>
 <ul>
 <li>Shared libraries are loaded into memory by the OS, and the same physical page is mapped into the address space of multiple processes. This is done by the OS, and is transparent to the user.</li>
 <li>It doesn't <em>have</em> to be loaded into the same virtual address, but the OS tries to do this. As a rule of thumb, each library has a preferred virtual address location, which makes loading shared libraries easier.</li>
 <li>Adter a while, might run out of address space to share all libraries. Need to be able to dynamicallly relocate them.</li>
 </ul>
-<h3 id="memory-mapped-files">Memory Mapped Files</h3>
+<h3 id="memory-mapped-files"><a class="toclink" href="#memory-mapped-files">Memory Mapped Files</a></h3>
 <p>Forget about doing reads/writes. Instead, map the file into the address space. Any time you write to the address space, it writes to the file. Depending on the OS and cache type (write-through vs write-back), the file may be written to immediately or later. This is a very efficient way to read/write files, and is used in many applications.</p>
-<h4 id="soft-page-faults">Soft Page Faults</h4>
+<h4 id="soft-page-faults"><a class="toclink" href="#soft-page-faults">Soft Page Faults</a></h4>
 <p>Fault on a page that are actually in memory, but the PTE was marked as invalid. Resolving soft faults is relatively cheap. This can be used whenever you need to wake up the OS to do something on reference to a page (for instance, a debugger watch point). Windows uses soft faults in its page replacement strategy.</p>
             </div>
             <div class="tags">

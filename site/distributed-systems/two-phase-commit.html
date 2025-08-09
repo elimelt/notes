@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Two Phase Commit", "dateModified": "2025-02-11T16:42:08.210547", "description": "Explains the concept of two phase commit in distributed systems and its implications.", "articleSection": "Distributed Systems", "keywords": "two-phase commit,distributed transactions,atomicity,durability,consistency,isolation,deadlock prevention,distributed systems"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Two Phase Commit", "dateModified": "2025-02-11T16:42:08.210547", "description": "Explains the concept of two phase commit in distributed systems and its implications.", "url": "https://notes.elimelt.com/distributed-systems/two-phase-commit.html", "articleSection": "Distributed Systems", "keywords": "two-phase commit,distributed transactions,atomicity,durability,consistency,isolation,deadlock prevention,distributed systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Two Phase Commit
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="two-phase-commit">Two Phase Commit</h1>
-<h2 id="acid">ACID</h2>
+                <h1 id="two-phase-commit"><a class="toclink" href="#two-phase-commit">Two Phase Commit</a></h1>
+<h2 id="acid"><a class="toclink" href="#acid">ACID</a></h2>
 <p>For updates that span multiple keys, or even multiple updates across different storage systems, we need all-or-nothing semantics so errors can be properly handled. Two-phase commit (2PC) is a protocol that ensures <strong>distributed transactions</strong>, i.e. groups of operations, are atomic, consistent, isolated, and durable (ACID).</p>
 <table>
 <thead>
@@ -127,21 +124,21 @@
 </tr>
 </tbody>
 </table>
-<h2 id="two-phase-locking-2pl-consistency-and-isolation">Two Phase Locking (2PL) - Consistency and Isolation</h2>
+<h2 id="two-phase-locking-2pl-consistency-and-isolation"><a class="toclink" href="#two-phase-locking-2pl-consistency-and-isolation">Two Phase Locking (2PL) - Consistency and Isolation</a></h2>
 <p>In <strong>2PL</strong>, locks are acquired on all structures touched during the transaction, and are only released upon commit or abort. This provides isolation and consistency for multi-key transactions.</p>
 <pre><code class="language-plaintext">- start transaction -
 Phase 1: acquire locks
 - commit or abort -
 Phase 2: release locks
 </code></pre>
-<h2 id="redo-logging-atomicity-and-durability">Redo Logging - Atomicity and Durability</h2>
+<h2 id="redo-logging-atomicity-and-durability"><a class="toclink" href="#redo-logging-atomicity-and-durability">Redo Logging - Atomicity and Durability</a></h2>
 <p>Log all changes to disk, followed by a log commit. If there is a crash before the log commit, abandon the transaction. If it was committed in the log, we can just redo the changes.</p>
-<h2 id="deadlock">Deadlock</h2>
+<h2 id="deadlock"><a class="toclink" href="#deadlock">Deadlock</a></h2>
 <p>Deadlock is when two or more transactions are waiting for locks held by each other in a cycle. To solve this you can stop one of the transactions to break the cycle.</p>
 <p>Deadlock prevention is generally a better idea, and you can achieve it by always ordering lock acquisition consistently.</p>
-<h2 id="distributed-transactions">Distributed Transactions</h2>
+<h2 id="distributed-transactions"><a class="toclink" href="#distributed-transactions">Distributed Transactions</a></h2>
 <p>From the <em>two generals problem</em>, it is theoretically impossible to agree on performing some action at the same time. Instead, we agree in <strong>virtual time</strong> when an operation happens.</p>
-<h3 id="atomic-commit-protocol-acp">Atomic Commit Protocol (ACP)</h3>
+<h3 id="atomic-commit-protocol-acp"><a class="toclink" href="#atomic-commit-protocol-acp">Atomic Commit Protocol (ACP)</a></h3>
 <ul>
 <li>Every node arrives at the same decision</li>
 <li>Once a node decides, it never changes</li>
@@ -149,33 +146,31 @@ Phase 2: release locks
 <li>If all processes vote yes the transaction is usually committed</li>
 <li>If all failures are eventually repaired, the transaction is eventually either committed or aborted</li>
 </ul>
-<h2 id="2pc-in-detail">2PC in Detail</h2>
+<h2 id="2pc-in-detail"><a class="toclink" href="#2pc-in-detail">2PC in Detail</a></h2>
 <p><strong>2PC</strong> is a blocking protocol, meaning that it makes no progress if some participants are unavailable. It has fault tolerance, but is not highly available, which is a fundamental limit of the protocol.</p>
 <ul>
 <li>For a given transaction a central coordinator sends a prepare</li>
-<li>Participants commit to commit<ul>
+<li>Participants commit to commit</li>
 <li>Acquires locks, prevent/delay conflicting operations</li>
 <li>Abort if deadlock or if any of the operations cannot be completed</li>
-</ul>
-</li>
 <li>Central coordinator decides and tells everyone, then releases all locks</li>
 </ul>
-<h3 id="handling-failures">Handling Failures</h3>
-<h4 id="participant-fails-before-sending-response">Participant Fails Before Sending Response</h4>
+<h3 id="handling-failures"><a class="toclink" href="#handling-failures">Handling Failures</a></h3>
+<h4 id="participant-fails-before-sending-response"><a class="toclink" href="#participant-fails-before-sending-response">Participant Fails Before Sending Response</a></h4>
 <p>You can maintain a timer on the coordinator to retry prepares. If some threshold is reached, just log a no and abort</p>
 <p>If the participant then comes back online, they will need to ask the coordinator for the decision, at which point the coordinator sends an abort to the participant</p>
-<h4 id="participant-fails-before-after-sending-vote">Participant Fails Before After Sending Vote</h4>
+<h4 id="participant-fails-before-after-sending-vote"><a class="toclink" href="#participant-fails-before-after-sending-vote">Participant Fails Before After Sending Vote</a></h4>
 <p>If the participant crashes immediately after sending their response. Then either they come back online before the commit is sent, at which point the protocol continues, or they will need to check their log and request the decision from the coordinator, which will resent the commit and the protocol continues.</p>
-<h4 id="coordinator-fails-before-sending-prepare">Coordinator Fails Before Sending Prepare</h4>
+<h4 id="coordinator-fails-before-sending-prepare"><a class="toclink" href="#coordinator-fails-before-sending-prepare">Coordinator Fails Before Sending Prepare</a></h4>
 <p>They would have logged the prepare request, so when they come back online and execute the transaction.</p>
-<h4 id="coordinator-fails-after-sending-prepare">Coordinator Fails After Sending Prepare</h4>
+<h4 id="coordinator-fails-after-sending-prepare"><a class="toclink" href="#coordinator-fails-after-sending-prepare">Coordinator Fails After Sending Prepare</a></h4>
 <p>If the coordinator fails after sending prepares, but before receiving responses, they must have logged the prepared already, and they need to be resent.</p>
-<h3 id="roles">Roles</h3>
+<h3 id="roles"><a class="toclink" href="#roles">Roles</a></h3>
 <ul>
 <li>Participants: Nodes that must update data relevant to the transaction</li>
 <li>Coordinator: node responsible for executing the protocol (might also be a participant)</li>
 </ul>
-<h3 id="messages">Messages</h3>
+<h3 id="messages"><a class="toclink" href="#messages">Messages</a></h3>
 <ul>
 <li>Prepare: Can you commit the transaction?</li>
 <li>Commit: commit the transaction</li>

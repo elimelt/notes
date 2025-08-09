@@ -7,7 +7,7 @@
     <title>Batch Processing Systems and MapReduce Fundamentals | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce programming model, and various join techniques in distributed environments. The document also discusses applications of batch processing in search indexing and recommendation systems.">
+    <meta name="description" content="This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce program">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Batch Processing Systems and MapReduce Fundamentals">
-    <meta property="og:description" content="This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce programming model, and various join techniques in distributed environments. The document also discusses applications of batch processing in search indexing and recommendation systems.">
+    <meta property="og:description" content="This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce program">
     <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Batch Processing Systems and MapReduce Fundamentals">
-    <meta name="twitter:description" content="This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce programming model, and various join techniques in distributed environments. The document also discusses applications of batch processing in search indexing and recommendation systems.">
+    <meta name="twitter:description" content="This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce program">
 
     <meta name="keywords" content="batch processing,mapreduce,distributed filesystems,data analysis,etl">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Batch Processing Systems and MapReduce Fundamentals", "dateModified": "2025-01-01T04:30:57.100612", "description": "This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce programming model, and various join techniques in distributed environments. The document also discusses applications of batch processing in search indexing and recommendation systems.", "articleSection": "Distributed Systems", "keywords": "batch processing,mapreduce,distributed filesystems,data analysis,etl"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Batch Processing Systems and MapReduce Fundamentals", "dateModified": "2025-01-01T04:30:57.100612", "description": "This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce program", "url": "https://notes.elimelt.com/designing-data-intensive-applications/part-3-derived-data/ch10-batch-processing.html", "articleSection": "Distributed Systems", "keywords": "batch processing,mapreduce,distributed filesystems,data analysis,etl"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Batch Processing Systems and MapReduce Fundamentals
@@ -98,12 +95,12 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="chapter-10">Chapter 10</h1>
-<h2 id="batch-processing">Batch Processing</h2>
+                <h1 id="chapter-10"><a class="toclink" href="#chapter-10">Chapter 10</a></h1>
+<h2 id="batch-processing"><a class="toclink" href="#batch-processing">Batch Processing</a></h2>
 <p><strong>Services</strong> (<em>online systems</em>) are design to handle requests from users or other services. Performance is measured in <em>requests per second</em> and <em>response time</em>.</p>
 <p><strong>Batch processing</strong> (<em>offline systems</em>) run scheduled jobs periodically that process accumulated data. Performance is measured in <em>throughput</em>.</p>
 <p><strong>Stream processing</strong> (<em>near-real-time systems</em>) are a hybrid of online and offline systems. Performance is measured in <em>latency</em>, and they usually take in a stream of <em>events</em> and calculate <em>aggregates</em> in real time, as opposed to running calculations on accumulated data.</p>
-<h3 id="batch-processing-with-unix-tools">Batch Processing with Unix Tools</h3>
+<h3 id="batch-processing-with-unix-tools"><a class="toclink" href="#batch-processing-with-unix-tools">Batch Processing with Unix Tools</a></h3>
 <p><strong>Log analysis</strong> is a common batch processing task. Applications append log entries to a file, and a batch job periodically processes the log file and generates a report.</p>
 <pre><code class="language-bash">cat /var/log/&lt;application&gt;/&lt;logfile&gt; |  # read the log file
     awk '{print $&lt;url_idx&gt;}' |          # extract the 7th field (URL)
@@ -211,7 +208,7 @@ map_events(event):
     payload = { dob: user.date_of_birth, event: event.event_type }
     emit(user_id, payload)
 </code></pre>
-<h3 id="output-of-batch-workflows">Output of Batch Workflows</h3>
+<h3 id="output-of-batch-workflows"><a class="toclink" href="#output-of-batch-workflows">Output of Batch Workflows</a></h3>
 <p><strong>Search indexes</strong> are used to make data searchable. Often, you can use batch processing to build indexes from a datasource. For example, building search indexes for a massive collection of documents would look something like this:</p>
 <ol>
 <li>Extract the text from each document</li>

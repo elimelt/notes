@@ -7,7 +7,7 @@
     <title>Tree Properties and Proof of Edge Count | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.">
+    <meta name="description" content="This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outli">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Tree Properties and Proof of Edge Count">
-    <meta property="og:description" content="This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.">
+    <meta property="og:description" content="This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outli">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/tree-intro.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Tree Properties and Proof of Edge Count">
-    <meta name="twitter:description" content="This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.">
+    <meta name="twitter:description" content="This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outli">
 
     <meta name="keywords" content="trees,acyclic graphs,connected graphs,induction proofs,graph properties">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tree Properties and Proof of Edge Count", "dateModified": "2025-05-10T14:41:36.603975", "description": "This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.", "articleSection": "Algorithms", "keywords": "trees,acyclic graphs,connected graphs,induction proofs,graph properties"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tree Properties and Proof of Edge Count", "dateModified": "2025-05-10T14:41:36.603975", "description": "This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outli", "url": "https://notes.elimelt.com/algorithms/tree-intro.html", "articleSection": "Algorithms", "keywords": "trees,acyclic graphs,connected graphs,induction proofs,graph properties"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Tree Properties and Proof of Edge Count
@@ -98,16 +95,16 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="trees">Trees</h1>
-<h3 id="lemma-acyclic-and-connected">Lemma: acyclic and connected</h3>
+                <h1 id="trees"><a class="toclink" href="#trees">Trees</a></h1>
+<h3 id="lemma-acyclic-and-connected"><a class="toclink" href="#lemma-acyclic-and-connected">Lemma: acyclic and connected</a></h3>
 <p>A graph is a tree if and only if it is acyclic and connected.</p>
-<h2 id="claim-every-tree-with-n-vertices-has-n-1-edges">Claim: Every tree with $n$ vertices has $n - 1$ edges.</h2>
+<h2 id="claim-every-tree-with-n-vertices-has-n-1-edges"><a class="toclink" href="#claim-every-tree-with-n-vertices-has-n-1-edges">Claim: Every tree with $n$ vertices has $n - 1$ edges.</a></h2>
 <p>Proof by induction.</p>
 <p>Base case: $n = 1$. A tree with 1 vertex has 0 edges.</p>
 <p>IH: Suppose every tree with $n - 1$ vertices has $n - 2$ edges ($P(n - 1)$).</p>
 <p>IS: Let $T$ be a tree with $n$ vertices.</p>
 <p>$T$ must have a vertex of degree 1 (since it is by definition acyclic). Remove this vertex and its edge to get a tree $T'$ with $n - 1$ vertices. By IH, $T'$ has $n - 2$ edges. Adding back the vertex and edge, we get $n - 1$ edges.</p>
-<h2 id="properties-of-trees">Properties of Trees</h2>
+<h2 id="properties-of-trees"><a class="toclink" href="#properties-of-trees">Properties of Trees</a></h2>
 <p>Any graph $G$ that satisfies two of the following properties must satisfy the third (and thus be a tree):</p>
 <ul>
 <li>$G$ is connected</li>

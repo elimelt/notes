@@ -7,7 +7,7 @@
     <title>Data Models and Relationships in Database Systems | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusing on how they handle relationships between data. The chapter also covers query languages, data locality, and the concept of MapReduce for data processing.">
+    <meta name="description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Data Models and Relationships in Database Systems">
-    <meta property="og:description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusing on how they handle relationships between data. The chapter also covers query languages, data locality, and the concept of MapReduce for data processing.">
+    <meta property="og:description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin">
     <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Data Models and Relationships in Database Systems">
-    <meta name="twitter:description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusing on how they handle relationships between data. The chapter also covers query languages, data locality, and the concept of MapReduce for data processing.">
+    <meta name="twitter:description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin">
 
     <meta name="keywords" content="relational databases,document databases,graph databases,data modeling,query languages">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Data Models and Relationships in Database Systems", "dateModified": "2025-02-11T21:02:34.409361", "description": "This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusing on how they handle relationships between data. The chapter also covers query languages, data locality, and the concept of MapReduce for data processing.", "articleSection": "Database Systems", "keywords": "relational databases,document databases,graph databases,data modeling,query languages"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Data Models and Relationships in Database Systems", "dateModified": "2025-02-11T21:02:34.409361", "description": "This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin", "url": "https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html", "articleSection": "Database Systems", "keywords": "relational databases,document databases,graph databases,data modeling,query languages"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Data Models and Relationships in Database Systems
@@ -98,13 +95,13 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="chapter-2">Chapter 2</h1>
-<h2 id="data-models-and-query-languages">Data Models and Query Languages</h2>
+                <h1 id="chapter-2"><a class="toclink" href="#chapter-2">Chapter 2</a></h1>
+<h2 id="data-models-and-query-languages"><a class="toclink" href="#data-models-and-query-languages">Data Models and Query Languages</a></h2>
 <p><strong>Relational Model</strong> We all know SQL</p>
 <p><strong>Document Model</strong> As well as NoSQL</p>
-<h3 id="mismatch-between-relational-model-and-oop">Mismatch between Relational Model and OOP</h3>
+<h3 id="mismatch-between-relational-model-and-oop"><a class="toclink" href="#mismatch-between-relational-model-and-oop">Mismatch between Relational Model and OOP</a></h3>
 <p>Awkward translation between objects and relations leads to middleware, oftentimes a <strong>object-relational mapping (ORM)</strong></p>
-<h3 id="relationships">Relationships</h3>
+<h3 id="relationships"><a class="toclink" href="#relationships">Relationships</a></h3>
 <p>It is useful to use ids to refer to related data, rather than embedding it. It never changes, and it is often much smaller.</p>
 <p><strong>One-to-many</strong> relationships are by far the most common type of relationship in databases.</p>
 <pre><code class="language-sql">CREATE TABLE users (
@@ -163,17 +160,17 @@ WHERE group_name = 'devops';
 </code></pre>
 <p><strong>Network model</strong> is a generalization of the hierarchical model, in which a child record may have several parents. It is a graph of records, connected by links.</p>
 <p><strong>Graph model</strong> is a further generalization, in which edges can have properties as well as vertices.</p>
-<h3 id="choosing-a-data-model">Choosing a data model</h3>
+<h3 id="choosing-a-data-model"><a class="toclink" href="#choosing-a-data-model">Choosing a data model</a></h3>
 <p><strong>Schema-on-write</strong> is the traditional approach of defining a relational schema for your data, and then writing data that conforms to the schema. It is good for ensuring data quality, and it is also good for performance. However, it is inflexible.</p>
 <p><strong>Schema-on-read</strong> is the approach of not enforcing a schema ahead of time, but only reading it when you read from the database. It is good for handling data with rapidly changing requirements, and for cases where you need to load data from many different applications.</p>
 <p>Choose whichever model simplifies your application code the most, and matches your access patterns.</p>
-<h3 id="data-locality">Data locality</h3>
+<h3 id="data-locality"><a class="toclink" href="#data-locality">Data locality</a></h3>
 <p>is the collocation of related data items on the same storage device (e.g. disk block, server node, etc.). It is important for performance.</p>
 <p><strong>Locality in query execution</strong> is the collocation of data items that are accessed together in the same query. It is important for performance.</p>
 <p>For document databases, you need to load the entire document, even if you only need a small portion of it. Keep documents small.</p>
 <p><strong>Examples</strong>: Google Spanner uses nested data structures, and it allows secondary indexes on nested fields. MongoDB and Elastic search allow you to index nested fields, but they don't allow secondary indexes on nested fields. Column family databases such as BigTable, HBase, and Cassandra.</p>
 <p>Many relational databases also have XML and JSON data types, which allow you to store documents within a row of a table.</p>
-<h3 id="mapreduce-querying">MapReduce Querying</h3>
+<h3 id="mapreduce-querying"><a class="toclink" href="#mapreduce-querying">MapReduce Querying</a></h3>
 <p><strong>MapReduce</strong> is a programming model for processing large amounts of data in bulk across many machines, popularized by Google. It is a two-step process:</p>
 <ol>
 <li>
@@ -220,7 +217,7 @@ db.observations.aggregate([
  } }
 ]);
 </code></pre>
-<h4 id="property-graphs">Property Graphs</h4>
+<h4 id="property-graphs"><a class="toclink" href="#property-graphs">Property Graphs</a></h4>
 <p>Each <strong>vertex/node</strong> consists of:</p>
 <ul>
 <li>A unique identifier</li>
@@ -255,7 +252,7 @@ CREATE INDEX edges_tails ON edges (tail_vertex);
 CREATE INDEX edges_heads ON edges (head_vertex);
 </code></pre>
 <p>In practice, graph databases are usually implemented differently, because the above model is not very efficient. Specialized query languages are used to traverse the graph in an imperative style.</p>
-<h4 id="triple-stores-and-sparql">Triple-Stores and SPARQL</h4>
+<h4 id="triple-stores-and-sparql"><a class="toclink" href="#triple-stores-and-sparql">Triple-Stores and SPARQL</a></h4>
 <p>Consists of <strong>three-part statements</strong> of the form <code>(subject, predicate, object)</code>. The subject and object are vertices, and the predicate is an edge.</p>
 <p>```sql</p>
             </div>

@@ -7,9 +7,7 @@
     <title>Parallelism | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="title: Parallelism in LLM Serving Systems
-category: Machine Learning Systems
-tags: parallelism, performance, throughput, latency, llm, serving systems, machine...">
+    <meta name="description" content="title: Parallelism in LLM Serving Systems category: Machine Learning Systems tags: parallelism, performance, throughput, latency, llm, serving systems, machi...">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -18,22 +16,18 @@ tags: parallelism, performance, throughput, latency, llm, serving systems, machi
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Parallelism">
-    <meta property="og:description" content="title: Parallelism in LLM Serving Systems
-category: Machine Learning Systems
-tags: parallelism, performance, throughput, latency, llm, serving systems, machine...">
+    <meta property="og:description" content="title: Parallelism in LLM Serving Systems category: Machine Learning Systems tags: parallelism, performance, throughput, latency, llm, serving systems, machi...">
     <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/parallelism.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Parallelism">
-    <meta name="twitter:description" content="title: Parallelism in LLM Serving Systems
-category: Machine Learning Systems
-tags: parallelism, performance, throughput, latency, llm, serving systems, machine...">
+    <meta name="twitter:description" content="title: Parallelism in LLM Serving Systems category: Machine Learning Systems tags: parallelism, performance, throughput, latency, llm, serving systems, machi...">
 
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Parallelism", "dateModified": "2025-05-25T17:30:00.257139", "description": "title: Parallelism in LLM Serving Systems\ncategory: Machine Learning Systems\ntags: parallelism, performance, throughput, latency, llm, serving systems, machine..."}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Parallelism", "dateModified": "2025-05-25T17:30:00.257139", "description": "title: Parallelism in LLM Serving Systems category: Machine Learning Systems tags: parallelism, performance, throughput, latency, llm, serving systems, machi...", "url": "https://notes.elimelt.com/llm-serving-systems/parallelism.html"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -83,10 +77,7 @@ tags: parallelism, performance, throughput, latency, llm, serving systems, machi
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » Parallelism
@@ -107,51 +98,53 @@ category: Machine Learning Systems
 tags: parallelism, performance, throughput, latency, llm, serving systems, machine learning
 description: Overview of parallelism techniques in LLM serving systems, focusing on theoretical foundations and practical applications.</p>
 <hr />
-<h1 id="parallelism-in-llm-serving-systems">Parallelism in LLM Serving Systems</h1>
+<h1 id="parallelism-in-llm-serving-systems"><a class="toclink" href="#parallelism-in-llm-serving-systems">Parallelism in LLM Serving Systems</a></h1>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
-<h2 id="introduction-motivation">Introduction &amp; Motivation</h2>
-<h3 id="limits-to-gpu-based-scaling">Limits to GPU-based Scaling</h3>
-<h4 id="compute-limitations">Compute Limitations</h4>
+<h2 id="introduction-motivation"><a class="toclink" href="#introduction-motivation">Introduction &amp; Motivation</a></h2>
+<h3 id="limits-to-gpu-based-scaling"><a class="toclink" href="#limits-to-gpu-based-scaling">Limits to GPU-based Scaling</a></h3>
+<h4 id="compute-limitations"><a class="toclink" href="#compute-limitations">Compute Limitations</a></h4>
 <ul>
 <li>
 <p>GPU improvements have included:</p>
-<ul>
-<li>Number formats (FP32    o FP16  o Int8)</li>
+</li>
+<li>
+<p>Number formats (FP32    o FP16  o Int8)</p>
+</li>
 <li>Specialized instructions (DP4A, HMMA, IMMA)</li>
 <li>Process nodes (28nm     o 5nm)</li>
 <li>Sparsity support</li>
 <li>Still, single GPU performance remains fundamentally limited.</li>
 <li>Supercomputers can reach <strong>exaflop</strong> scales, but LLMs continue to push hardware constraints.</li>
 </ul>
-</li>
-</ul>
-<h4 id="memory-limitations">Memory Limitations</h4>
+<h4 id="memory-limitations"><a class="toclink" href="#memory-limitations">Memory Limitations</a></h4>
 <ul>
 <li>Model sizes are growing exponentially:
   ELMo (94M)    o GPT-2 (1.5B)  o GPT-3 (175B)  o MT-NLG (530B)</li>
 <li><strong>A single GPU cannot hold full model weights or intermediate activations.</strong></li>
 </ul>
-<h3 id="solution-multi-gpu-multi-machine-parallelism">Solution: Multi-GPU, Multi-Machine Parallelism</h3>
-<h4 id="network-infrastructure">Network Infrastructure</h4>
+<h3 id="solution-multi-gpu-multi-machine-parallelism"><a class="toclink" href="#solution-multi-gpu-multi-machine-parallelism">Solution: Multi-GPU, Multi-Machine Parallelism</a></h3>
+<h4 id="network-infrastructure"><a class="toclink" href="#network-infrastructure">Network Infrastructure</a></h4>
 <ul>
 <li>
 <p><strong>Intra-node (within machine)</strong>:</p>
-<ul>
-<li>NVLink 3.0: 600 GB/s</li>
+</li>
+<li>
+<p>NVLink 3.0: 600 GB/s</p>
+</li>
 <li>PCIe 4.0: 32 GB/s</li>
-<li><strong>Inter-node (between machines)</strong>:</li>
-</ul>
-<ul>
-<li>InfiniBand HDR: 25 GB/s</li>
-</ul>
+<li>
+<p><strong>Inter-node (between machines)</strong>:</p>
+</li>
+<li>
+<p>InfiniBand HDR: 25 GB/s</p>
 </li>
 </ul>
 <p><strong>Goal</strong>: Distribute compute and memory across devices efficiently.</p>
 <hr />
-<h2 id="collective-communication-primitives">Collective Communication Primitives</h2>
-<h3 id="key-operations">Key Operations</h3>
+<h2 id="collective-communication-primitives"><a class="toclink" href="#collective-communication-primitives">Collective Communication Primitives</a></h2>
+<h3 id="key-operations"><a class="toclink" href="#key-operations">Key Operations</a></h3>
 <ul>
 <li><strong>AllReduce</strong>: Aggregates data across devices.</li>
 <li><strong>Broadcast</strong>: Sends data from one device to all others.</li>
@@ -160,8 +153,8 @@ description: Overview of parallelism techniques in LLM serving systems, focusing
 </ul>
 <p><strong>AllReduce can be implemented as ReduceScatter + AllGather</strong>, which is bandwidth-optimal.</p>
 <hr />
-<h2 id="key-concepts-in-ml-trainingserving">Key Concepts in ML Training/Serving</h2>
-<h3 id="state-classifications">State Classifications</h3>
+<h2 id="key-concepts-in-ml-trainingserving"><a class="toclink" href="#key-concepts-in-ml-trainingserving">Key Concepts in ML Training/Serving</a></h2>
+<h3 id="state-classifications"><a class="toclink" href="#state-classifications">State Classifications</a></h3>
 <ul>
 <li><strong>Model Parameters</strong>: Learned weights (used in both training &amp; serving).</li>
 <li><strong>Gradients</strong>: For updating parameters during training.</li>
@@ -170,82 +163,82 @@ description: Overview of parallelism techniques in LLM serving systems, focusing
 <li><strong>KV Cache</strong>: Used in serving for autoregressive models to avoid recomputing past tokens.</li>
 </ul>
 <hr />
-<h2 id="parallelism-strategies">Parallelism Strategies</h2>
-<h3 id="goals">Goals</h3>
+<h2 id="parallelism-strategies"><a class="toclink" href="#parallelism-strategies">Parallelism Strategies</a></h2>
+<h3 id="goals"><a class="toclink" href="#goals">Goals</a></h3>
 <ul>
 <li>Scale with <strong>batch size</strong> (data)</li>
 <li>Scale with <strong>model size</strong> (parameters)</li>
 </ul>
 <hr />
-<h2 id="data-parallelism">Data Parallelism</h2>
-<h3 id="concept">Concept</h3>
+<h2 id="data-parallelism"><a class="toclink" href="#data-parallelism">Data Parallelism</a></h2>
+<h3 id="concept"><a class="toclink" href="#concept">Concept</a></h3>
 <ul>
 <li>Each GPU has a <strong>full model copy</strong>.</li>
 <li>Batches split across GPUs.</li>
 <li>Gradients are <strong>aggregated</strong> post-backward.</li>
 </ul>
-<h3 id="implementations">Implementations</h3>
-<h4 id="parameter-server-centralized">Parameter Server (Centralized)</h4>
+<h3 id="implementations"><a class="toclink" href="#implementations">Implementations</a></h3>
+<h4 id="parameter-server-centralized"><a class="toclink" href="#parameter-server-centralized">Parameter Server (Centralized)</a></h4>
 <ul>
 <li>Gradients sent to central server; updated params broadcast.</li>
 <li><strong>Scalability bottleneck</strong>: Central point of failure and bandwidth.</li>
 </ul>
-<h4 id="allreduce-based-decentralized">AllReduce-based (Decentralized)</h4>
+<h4 id="allreduce-based-decentralized"><a class="toclink" href="#allreduce-based-decentralized">AllReduce-based (Decentralized)</a></h4>
 <ul>
 <li>
 <p>Peer-to-peer gradient aggregation:</p>
-<ul>
-<li>Ring, Tree, Butterfly, or ReduceScatter + AllGather.</li>
-</ul>
+</li>
+<li>
+<p>Ring, Tree, Butterfly, or ReduceScatter + AllGather.</p>
 </li>
 </ul>
-<h3 id="limitations">Limitations</h3>
+<h3 id="limitations"><a class="toclink" href="#limitations">Limitations</a></h3>
 <ul>
 <li>Full model + gradients + optimizer state on each GPU.</li>
 <li>Does <strong>not scale</strong> to models larger than a single GPU's memory.</li>
 </ul>
 <hr />
-<h2 id="pipeline-parallelism">Pipeline Parallelism</h2>
-<h3 id="concept_1">Concept</h3>
+<h2 id="pipeline-parallelism"><a class="toclink" href="#pipeline-parallelism">Pipeline Parallelism</a></h2>
+<h3 id="concept_1"><a class="toclink" href="#concept_1">Concept</a></h3>
 <ul>
 <li>Split model <strong>vertically</strong> across layers into pipeline stages.</li>
 <li>Each stage runs on a separate GPU.</li>
 </ul>
-<h3 id="execution">Execution</h3>
+<h3 id="execution"><a class="toclink" href="#execution">Execution</a></h3>
 <ul>
 <li>Forward pass: left to right</li>
 <li>Backward pass: right to left</li>
 <li>GPUs exchange <strong>activations</strong>, not parameters.</li>
 </ul>
-<h3 id="scheduling-strategies">Scheduling Strategies</h3>
-<h4 id="gpipe">GPipe</h4>
+<h3 id="scheduling-strategies"><a class="toclink" href="#scheduling-strategies">Scheduling Strategies</a></h3>
+<h4 id="gpipe"><a class="toclink" href="#gpipe">GPipe</a></h4>
 <ul>
 <li>Microbatching to improve utilization.</li>
 <li><strong>Trade-off</strong>: More memory needed to store microbatches.</li>
 </ul>
-<h4 id="1f1b-one-forward-one-backward">1F1B (One Forward, One Backward)</h4>
+<h4 id="1f1b-one-forward-one-backward"><a class="toclink" href="#1f1b-one-forward-one-backward">1F1B (One Forward, One Backward)</a></h4>
 <ul>
 <li>Keeps pipeline full during steady state.</li>
 <li>Phases: warm-up   o alternating   o drain.</li>
 </ul>
-<h4 id="zero-bubble-pipeline-zbp">Zero Bubble Pipeline (ZBP)</h4>
+<h4 id="zero-bubble-pipeline-zbp"><a class="toclink" href="#zero-bubble-pipeline-zbp">Zero Bubble Pipeline (ZBP)</a></h4>
 <ul>
 <li>
 <p>Splits backward pass into:</p>
-<ol>
-<li>Activation gradients</li>
-<li>Weight gradients (can be delayed)
-* Eliminates pipeline idle time.</li>
-</ol>
 </li>
+<li>
+<p>Activation gradients</p>
+</li>
+<li>Weight gradients (can be delayed)</li>
+<li>Eliminates pipeline idle time.</li>
 </ul>
-<h3 id="analysis">Analysis</h3>
-<h4 id="bubble-ratio">Bubble Ratio</h4>
+<h3 id="analysis"><a class="toclink" href="#analysis">Analysis</a></h3>
+<h4 id="bubble-ratio"><a class="toclink" href="#bubble-ratio">Bubble Ratio</a></h4>
 <ul>
 <li>\$(p - 1)/m\$ where \$p\$ = stages, \$m\$ = microbatches</li>
 <li>Larger \$m\$ reduces bubble size.</li>
 </ul>
-<h3 id="characteristics">Characteristics</h3>
+<h3 id="characteristics"><a class="toclink" href="#characteristics">Characteristics</a></h3>
 <p><strong>Advantages</strong>:</p>
 <ul>
 <li>Shards model (less memory per GPU)</li>
@@ -257,14 +250,14 @@ description: Overview of parallelism techniques in LLM serving systems, focusing
 <li><strong>Pipeline bubbles</strong> without careful scheduling</li>
 </ul>
 <hr />
-<h2 id="tensor-parallelism">Tensor Parallelism</h2>
-<h3 id="concept_2">Concept</h3>
+<h2 id="tensor-parallelism"><a class="toclink" href="#tensor-parallelism">Tensor Parallelism</a></h2>
+<h3 id="concept_2"><a class="toclink" href="#concept_2">Concept</a></h3>
 <ul>
 <li>Split model <strong>horizontally</strong>: partition within layers.</li>
 <li>Each GPU holds <strong>part of a layer</strong>.</li>
 </ul>
-<h3 id="matrix-ops-decomposition">Matrix Ops Decomposition</h3>
-<h4 id="mlp-example">MLP Example:</h4>
+<h3 id="matrix-ops-decomposition"><a class="toclink" href="#matrix-ops-decomposition">Matrix Ops Decomposition</a></h3>
+<h4 id="mlp-example"><a class="toclink" href="#mlp-example">MLP Example:</a></h4>
 <p>\$Z = \text{Dropout}(\text{GeLU}(XA)B)\$</p>
 <ul>
 <li><strong>Column-split A</strong>: \$Y_i = \text{GeLU}(XA_i)\$
@@ -272,18 +265,18 @@ description: Overview of parallelism techniques in LLM serving systems, focusing
 <li><strong>Row-split B</strong>: \$Z_i = Y_i B_i\$
     o <strong>AllReduce</strong> to combine \$Z = \sum Z_i\$</li>
 </ul>
-<h4 id="self-attention-example">Self-Attention Example</h4>
+<h4 id="self-attention-example"><a class="toclink" href="#self-attention-example">Self-Attention Example</a></h4>
 <ul>
 <li>Split heads: \$Q = [Q_1, Q_2]\$, etc.</li>
 <li>Each GPU processes subset of heads.</li>
 <li><strong>AllReduce</strong> after attention for combined output.</li>
 </ul>
-<h3 id="communication-patterns">Communication Patterns</h3>
+<h3 id="communication-patterns"><a class="toclink" href="#communication-patterns">Communication Patterns</a></h3>
 <ul>
 <li>Forward: Identity     o AllReduce</li>
 <li>Backward: AllReduce   o Identity</li>
 </ul>
-<h3 id="characteristics_1">Characteristics</h3>
+<h3 id="characteristics_1"><a class="toclink" href="#characteristics_1">Characteristics</a></h3>
 <p><strong>Advantages</strong>:</p>
 <ul>
 <li>No pipeline bubbles</li>
@@ -294,16 +287,16 @@ description: Overview of parallelism techniques in LLM serving systems, focusing
 <ul>
 <li>
 <p>High communication volume:</p>
-<ul>
-<li>Pipeline: \$bsh\$ (point-to-point)</li>
+</li>
+<li>
+<p>Pipeline: \$bsh\$ (point-to-point)</p>
+</li>
 <li>Tensor: \~\$8bsh\$ (AllReduce-heavy)</li>
 <li>Needs fast intra-node links (e.g., NVLink)</li>
 </ul>
-</li>
-</ul>
 <hr />
-<h2 id="memory-optimization-activations">Memory Optimization: Activations</h2>
-<h3 id="formula">Formula</h3>
+<h2 id="memory-optimization-activations"><a class="toclink" href="#memory-optimization-activations">Memory Optimization: Activations</a></h2>
+<h3 id="formula"><a class="toclink" href="#formula">Formula</a></h3>
 <p>$\text{Memory per layer} = sbh\left(34 + 5\frac{as}{h}\right)$</p>
 <p>Where:</p>
 <ul>
@@ -312,15 +305,15 @@ description: Overview of parallelism techniques in LLM serving systems, focusing
 <li>\$h\$ = hidden size</li>
 <li>\$a\$ = attention heads</li>
 </ul>
-<h3 id="optimization-techniques">Optimization Techniques</h3>
-<h4 id="checkpointing-vs-stashing">Checkpointing vs Stashing</h4>
+<h3 id="optimization-techniques"><a class="toclink" href="#optimization-techniques">Optimization Techniques</a></h3>
+<h4 id="checkpointing-vs-stashing"><a class="toclink" href="#checkpointing-vs-stashing">Checkpointing vs Stashing</a></h4>
 <ul>
 <li><strong>Stashing</strong>: Stores all activations (high memory, faster)</li>
 <li><strong>Checkpointing</strong>: Stores minimal; recomputes during backward pass
     o <strong>Memory savings</strong> at cost of \~33% throughput hit
     o Enables larger batch sizes</li>
 </ul>
-<h3 id="tensor-parallelism-impact">Tensor Parallelism Impact</h3>
+<h3 id="tensor-parallelism-impact"><a class="toclink" href="#tensor-parallelism-impact">Tensor Parallelism Impact</a></h3>
 <p>With \$t\$ tensor-parallel units:
 $\text{Memory per layer} = sbh\left(10 + \frac{24}{t} + 5\frac{as}{ht}\right)$</p>
 <ul>
@@ -328,18 +321,18 @@ $\text{Memory per layer} = sbh\left(10 + \frac{24}{t} + 5\frac{as}{ht}\right)$</
 <li>Remaining terms shrink with larger \$t\$</li>
 </ul>
 <hr />
-<h2 id="sequence-parallelism">Sequence Parallelism</h2>
-<h3 id="motivation">Motivation</h3>
+<h2 id="sequence-parallelism"><a class="toclink" href="#sequence-parallelism">Sequence Parallelism</a></h2>
+<h3 id="motivation"><a class="toclink" href="#motivation">Motivation</a></h3>
 <ul>
 <li>The 10sbh term includes pointwise ops     o <strong>can be split along sequence</strong></li>
 </ul>
-<h3 id="implementation">Implementation</h3>
+<h3 id="implementation"><a class="toclink" href="#implementation">Implementation</a></h3>
 <ul>
 <li>Split LayerNorm, Dropout, and Input activations along sequence</li>
 <li>All-Gather before MLP to reassemble</li>
 <li>Results in <strong>true linear memory scaling</strong> with device count</li>
 </ul>
-<h3 id="memory-scaling-comparison">Memory Scaling Comparison</h3>
+<h3 id="memory-scaling-comparison"><a class="toclink" href="#memory-scaling-comparison">Memory Scaling Comparison</a></h3>
 <table>
 <thead>
 <tr>
@@ -363,96 +356,108 @@ $\text{Memory per layer} = sbh\left(10 + \frac{24}{t} + 5\frac{as}{ht}\right)$</
 </tbody>
 </table>
 <hr />
-<h2 id="zero-optimization-fsdp">ZeRO Optimization / FSDP</h2>
-<h3 id="memory-breakdown-for-psi-params">Memory Breakdown (for \$\Psi\$ params)</h3>
+<h2 id="zero-optimization-fsdp"><a class="toclink" href="#zero-optimization-fsdp">ZeRO Optimization / FSDP</a></h2>
+<h3 id="memory-breakdown-for-psi-params"><a class="toclink" href="#memory-breakdown-for-psi-params">Memory Breakdown (for \$\Psi\$ params)</a></h3>
 <ul>
 <li>FP16 params: \$2\Psi\$</li>
 <li>Gradients: \$2\Psi\$</li>
 <li>FP32 optimizer: \$16\Psi\$
     o Total per GPU (naive): \$20\Psi\$</li>
 </ul>
-<h3 id="zero-stages">ZeRO Stages</h3>
+<h3 id="zero-stages"><a class="toclink" href="#zero-stages">ZeRO Stages</a></h3>
 <ul>
-<li><strong>Stage 1</strong>: Shard optimizer state</li>
-</ul>
-<ul>
-<li><strong>Stage 2</strong>: Shard gradients</li>
-</ul>
-<ul>
-<li><strong>Stage 3</strong>: Shard model parameters
-    o Total memory: \$\frac{(2 + 2 + K)\Psi}{N_d}\$</li>
-</ul>
-<ul>
-<li>Reduces memory linearly with number of devices \$N_d\$</li>
-</ul>
-<ul>
-<li>Used in <strong>Fully Sharded Data Parallel (FSDP)</strong></li>
+<li>
+<p><strong>Stage 1</strong>: Shard optimizer state</p>
+</li>
+<li>
+<p><strong>Stage 2</strong>: Shard gradients</p>
+</li>
+<li>
+<p><strong>Stage 3</strong>: Shard model parameters
+    o Total memory: \$\frac{(2 + 2 + K)\Psi}{N_d}\$</p>
+</li>
+<li>
+<p>Reduces memory linearly with number of devices \$N_d\$</p>
+</li>
+<li>
+<p>Used in <strong>Fully Sharded Data Parallel (FSDP)</strong></p>
+</li>
 </ul>
 <hr />
-<h2 id="3d-parallelism-strategy">3D Parallelism Strategy</h2>
-<h3 id="deployment-phases">Deployment Phases</h3>
+<h2 id="3d-parallelism-strategy"><a class="toclink" href="#3d-parallelism-strategy">3D Parallelism Strategy</a></h2>
+<h3 id="deployment-phases"><a class="toclink" href="#deployment-phases">Deployment Phases</a></h3>
 <ol>
 <li>
 <p><strong>Fit model on memory</strong></p>
-<ul>
-<li>Use <strong>tensor parallel</strong> within node</li>
-<li>Use <strong>pipeline parallel</strong> across nodes</li>
-</ul>
+</li>
+<li>
+<p>Use <strong>tensor parallel</strong> within node</p>
+</li>
+<li>
+<p>Use <strong>pipeline parallel</strong> across nodes</p>
 </li>
 <li>
 <p><strong>Scale compute</strong></p>
-<ul>
-<li>Add <strong>data parallelism</strong></li>
-<li>Use gradient accumulation to improve communication efficiency</li>
-</ul>
 </li>
+<li>
+<p>Add <strong>data parallelism</strong></p>
+</li>
+<li>Use gradient accumulation to improve communication efficiency</li>
 </ol>
-<h3 id="example-8-imes8-gpu-nodes">Example: 8  imes8 GPU nodes</h3>
+<h3 id="example-8-imes8-gpu-nodes"><a class="toclink" href="#example-8-imes8-gpu-nodes">Example: 8  imes8 GPU nodes</a></h3>
 <ul>
 <li>Tensor: 8-way intra-node</li>
 <li>Pipeline: 8-way across nodes</li>
 <li>Data: Across groups of nodes</li>
 </ul>
-<h3 id="considerations">Considerations</h3>
+<h3 id="considerations"><a class="toclink" href="#considerations">Considerations</a></h3>
 <ul>
 <li>Batch size must be large enough for efficient pipeline use</li>
 <li>Tensor size should align with bandwidth (avoid over-splitting)</li>
 <li>Best setup depends on model, hardware, and latency/bandwidth topology</li>
 </ul>
 <hr />
-<h2 id="summary">Summary</h2>
-<h3 id="takeaways">Takeaways</h3>
+<h2 id="summary"><a class="toclink" href="#summary">Summary</a></h2>
+<h3 id="takeaways"><a class="toclink" href="#takeaways">Takeaways</a></h3>
 <ol>
 <li>
 <p><strong>Three main parallelism forms</strong>:</p>
-<ul>
-<li>Data: scale batch size</li>
+</li>
+<li>
+<p>Data: scale batch size</p>
+</li>
 <li>Pipeline: scale model depth</li>
-<li>Tensor: scale width</li>
-</ul>
+<li>
+<p>Tensor: scale width</p>
 </li>
 <li>
 <p><strong>Communication varies</strong>:</p>
-<ul>
-<li>Data: gradient AllReduce</li>
+</li>
+<li>
+<p>Data: gradient AllReduce</p>
+</li>
 <li>Pipeline: point-to-point activations</li>
-<li>Tensor: AllReduce per layer</li>
-</ul>
+<li>
+<p>Tensor: AllReduce per layer</p>
 </li>
 <li>
 <p><strong>Memory optimization is essential</strong>:</p>
-<ul>
-<li>Activation dominates for large models</li>
-<li>Checkpointing and sequence parallel reduce cost</li>
-</ul>
+</li>
+<li>
+<p>Activation dominates for large models</p>
+</li>
+<li>
+<p>Checkpointing and sequence parallel reduce cost</p>
 </li>
 <li>
 <p><strong>Hardware-aware deployment</strong>:</p>
-<ul>
-<li>Use fast interconnects for tensor parallel</li>
+</li>
+<li>
+<p>Use fast interconnects for tensor parallel</p>
+</li>
 <li>Use pipeline across slower links</li>
-<li>Match parallel strategy to topology</li>
-</ul>
+<li>
+<p>Match parallel strategy to topology</p>
 </li>
 <li>
 <p><strong>Combine all three (3D parallelism)</strong> for optimal scale and efficiency.</p>

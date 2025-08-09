@@ -7,7 +7,7 @@
     <title>Power Dissipation In a Resistor | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage and current sources. Provides a detailed example circuit and discusses the key concepts of power dissipation, voltage, and current in resistive circuits.">
+    <meta name="description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Power Dissipation In a Resistor">
-    <meta property="og:description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage and current sources. Provides a detailed example circuit and discusses the key concepts of power dissipation, voltage, and current in resistive circuits.">
+    <meta property="og:description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage">
     <meta property="og:url" content="https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-4.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Power Dissipation In a Resistor">
-    <meta name="twitter:description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage and current sources. Provides a detailed example circuit and discusses the key concepts of power dissipation, voltage, and current in resistive circuits.">
+    <meta name="twitter:description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage">
 
     <meta name="keywords" content="power dissipation,resistor,kvl,voltage source,current source">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Power Dissipation In a Resistor", "dateModified": "2025-05-10T14:45:08.886674", "description": "Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage and current sources. Provides a detailed example circuit and discusses the key concepts of power dissipation, voltage, and current in resistive circuits.", "articleSection": "Hardware", "keywords": "power dissipation,resistor,kvl,voltage source,current source"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Power Dissipation In a Resistor", "dateModified": "2025-05-10T14:45:08.886674", "description": "Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage", "url": "https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-4.html", "articleSection": "Hardware", "keywords": "power dissipation,resistor,kvl,voltage source,current source"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Power Dissipation In a Resistor
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="lecture-4">Lecture 4</h1>
-<h2 id="power-dissipation-in-a-resistor">Power Dissipation In a Resistor</h2>
+                <h1 id="lecture-4"><a class="toclink" href="#lecture-4">Lecture 4</a></h1>
+<h2 id="power-dissipation-in-a-resistor"><a class="toclink" href="#power-dissipation-in-a-resistor">Power Dissipation In a Resistor</a></h2>
 <p>When a resistor starts getting warm, it is leaking power.</p>
 <pre><code class="language-math">P = V * I = I^2 * R = V^2/R
 </code></pre>
-<h2 id="kvl">KVL</h2>
+<h2 id="kvl"><a class="toclink" href="#kvl">KVL</a></h2>
 <p>Voltage: The sum of all the voltages on any path around a circuit are equal to zero.</p>
 <p>Current: The current arriving at any node is the same as the current leaving that node.</p>
-<h2 id="example">Example</h2>
+<h2 id="example"><a class="toclink" href="#example">Example</a></h2>
 <pre><code>      R_1 = 1 Ohm
   +--/\/\/|--+
   |          |
@@ -126,12 +123,12 @@ $$V_2 = I * R_2$$</p>
 <p>$$I_1 = V_1 / R_1 = (V - V_L) / R_1$$</p>
 <p>$$= (120 - 109) / 1 = 11 A$$</p>
 <p>$$P_1 = I_1^2 *  R_1 = 11^2 * 1 = 121 W$$</p>
-<h2 id="sources">Sources</h2>
+<h2 id="sources"><a class="toclink" href="#sources">Sources</a></h2>
 <p>A voltage source produces a <em>constant</em> voltage, regardless of current (an idealistic assumption).</p>
 <p>A current source delivers <em>constant</em> current to a circuit. Current by load resistance (impedence)</p>
-<h2 id="situation">Situation</h2>
+<h2 id="situation"><a class="toclink" href="#situation">Situation</a></h2>
 <p>We previously estimated an iPhone in standby draws a current of 7.55 mA from its 3.8 V Lithium battery. </p>
-<h2 id="circuit">Circuit</h2>
+<h2 id="circuit"><a class="toclink" href="#circuit">Circuit</a></h2>
 <pre><code class="language-txt">
 ground
   ^

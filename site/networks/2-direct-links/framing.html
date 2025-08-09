@@ -7,7 +7,7 @@
     <title>Framing in Network Protocols | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.">
+    <meta name="description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It d">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Framing in Network Protocols">
-    <meta property="og:description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.">
+    <meta property="og:description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It d">
     <meta property="og:url" content="https://notes.elimelt.com/networks/2-direct-links/framing.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Framing in Network Protocols">
-    <meta name="twitter:description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.">
+    <meta name="twitter:description" content="An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It d">
 
     <meta name="keywords" content="byte-oriented protocols,point-to-point protocol,bisync,ddcmp,ppp,bit-oriented protocols,hdlc,bit stuffing">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Framing in Network Protocols", "dateModified": "2025-02-11T20:46:29.306079", "description": "An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.", "articleSection": "Networks", "keywords": "byte-oriented protocols,point-to-point protocol,bisync,ddcmp,ppp,bit-oriented protocols,hdlc,bit stuffing"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Framing in Network Protocols", "dateModified": "2025-02-11T20:46:29.306079", "description": "An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It d", "url": "https://notes.elimelt.com/networks/2-direct-links/framing.html", "articleSection": "Networks", "keywords": "byte-oriented protocols,point-to-point protocol,bisync,ddcmp,ppp,bit-oriented protocols,hdlc,bit stuffing"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Framing in Network Protocols
@@ -98,82 +95,82 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="byte-oriented-protocols-point-to-point-protocol-ppp">Byte Oriented Protocols, Point-to-point protocol (PPP)</h1>
-<h2 id="byte-oriented-framing">Byte-Oriented Framing</h2>
+                <h1 id="byte-oriented-protocols-point-to-point-protocol-ppp"><a class="toclink" href="#byte-oriented-protocols-point-to-point-protocol-ppp">Byte Oriented Protocols, Point-to-point protocol (PPP)</a></h1>
+<h2 id="byte-oriented-framing"><a class="toclink" href="#byte-oriented-framing">Byte-Oriented Framing</a></h2>
 <ul>
 <li>Oldest approach, viewing frames as collections of bytes.</li>
 <li>Examples: BISYNC by IBM, DDCMP in DECNET, PPP.</li>
 </ul>
-<h2 id="length-field-approach">Length Field Approach</h2>
+<h2 id="length-field-approach"><a class="toclink" href="#length-field-approach">Length Field Approach</a></h2>
 <ul>
 <li>Include frame byte count in header (DDCMP approach).</li>
 <li>Risk: Transmission error corrupting count field; framing error.</li>
 </ul>
-<h2 id="sentinel-based-approachbyte-stuffing">Sentinel-based Approach/Byte Stuffing</h2>
+<h2 id="sentinel-based-approachbyte-stuffing"><a class="toclink" href="#sentinel-based-approachbyte-stuffing">Sentinel-based Approach/Byte Stuffing</a></h2>
 <ul>
 <li>Use special characters (SYN, STX, ETX) to indicate frame boundaries.</li>
 <li>Challenge: Special characters in data; overcome by character stuffing or escape sequences similar to C.</li>
 </ul>
-<h2 id="ppp-frame-format">PPP Frame Format</h2>
+<h2 id="ppp-frame-format"><a class="toclink" href="#ppp-frame-format">PPP Frame Format</a></h2>
 <ul>
 <li>Used for IP packet transmission over point-to-point links.</li>
 <li>Start-of-text character (Flag field: 01111110).</li>
 <li>Negotiable field sizes, CRC used for checksum.</li>
 </ul>
-<h2 id="lcp-protocol-and-negotiation">LCP Protocol and Negotiation</h2>
+<h2 id="lcp-protocol-and-negotiation"><a class="toclink" href="#lcp-protocol-and-negotiation">LCP Protocol and Negotiation</a></h2>
 <ul>
 <li>Link Control Protocol (LCP) negotiates field sizes in PPP.</li>
 <li>Controls encapsulated in PPP frames.</li>
 <li>Involvement in link establishment between peers.</li>
 </ul>
-<h1 id="bit-oriented-protocols-hdlc">Bit Oriented Protocols (HDLC)</h1>
-<h2 id="bit-oriented-framing">Bit-Oriented Framing</h2>
+<h1 id="bit-oriented-protocols-hdlc"><a class="toclink" href="#bit-oriented-protocols-hdlc">Bit Oriented Protocols (HDLC)</a></h1>
+<h2 id="bit-oriented-framing"><a class="toclink" href="#bit-oriented-framing">Bit-Oriented Framing</a></h2>
 <ul>
 <li>Views frames as a bit stream, not concerned with byte boundaries.</li>
 <li>Examples: SDLC developed by IBM, standardized as HDLC by ISO.</li>
 </ul>
-<h2 id="hdlc-frame-format">HDLC Frame Format</h2>
+<h2 id="hdlc-frame-format"><a class="toclink" href="#hdlc-frame-format">HDLC Frame Format</a></h2>
 <ul>
 <li>Denotes frame start and end with bit sequence 01111110.</li>
 <li>Uses sentinel approach, similar to byte-oriented protocols.</li>
 <li>Bit stuffing employed to handle the sequence within the frame.</li>
 </ul>
-<h3 id="bit-stuffing-in-hdlc">Bit Stuffing in HDLC</h3>
+<h3 id="bit-stuffing-in-hdlc"><a class="toclink" href="#bit-stuffing-in-hdlc">Bit Stuffing in HDLC</a></h3>
 <ul>
 <li>Inserts 0 after five consecutive 1s during transmission.</li>
 <li>Receiver removes stuffed 0 based on the next bit.</li>
 <li>Distinguishes between end-of-frame marker and errors.</li>
 </ul>
-<h2 id="frame-size-dependency">Frame Size Dependency</h2>
+<h2 id="frame-size-dependency"><a class="toclink" href="#frame-size-dependency">Frame Size Dependency</a></h2>
 <ul>
 <li>Frame size depends on payload data; not all frames can be the same size.</li>
 <li>Challenges with ensuring consistent frame size discussed in the next subsection.</li>
 </ul>
-<h1 id="clock-based-protocols-sonet">Clock-Based Protocols (SONET)</h1>
-<h2 id="clock-based-framing-in-sonet">Clock-Based Framing in SONET</h2>
+<h1 id="clock-based-protocols-sonet"><a class="toclink" href="#clock-based-protocols-sonet">Clock-Based Protocols (SONET)</a></h1>
+<h2 id="clock-based-framing-in-sonet"><a class="toclink" href="#clock-based-framing-in-sonet">Clock-Based Framing in SONET</a></h2>
 <ul>
 <li>Exemplified by Synchronous Optical Network (SONET) standard.</li>
 <li>Addresses framing, encoding, and multiplexing for data over optical fiber.</li>
 </ul>
-<h2 id="sonet-frame-structure">SONET Frame Structure</h2>
+<h2 id="sonet-frame-structure"><a class="toclink" href="#sonet-frame-structure">SONET Frame Structure</a></h2>
 <ul>
 <li>SONET frame has special information for start and end.</li>
 <li>No bit stuffing used; frame length independent of data.</li>
 <li>Special bit pattern in STS-1 frame helps receiver locate frame boundaries.</li>
 </ul>
-<h2 id="overhead-and-payload">Overhead and Payload</h2>
+<h2 id="overhead-and-payload"><a class="toclink" href="#overhead-and-payload">Overhead and Payload</a></h2>
 <ul>
 <li>SONET complexity due to overhead bytes and network-level considerations.</li>
 <li>Payload bytes scrambled for clock recovery.</li>
 <li>SONET supports multiplexing of low-speed links.</li>
 </ul>
-<h2 id="multiplexing-in-sonet">Multiplexing in SONET</h2>
+<h2 id="multiplexing-in-sonet"><a class="toclink" href="#multiplexing-in-sonet">Multiplexing in SONET</a></h2>
 <ul>
 <li>SONET links run at rates ranging from STS-1 to STS-768.</li>
 <li>A single SONET frame can contain subframes for multiple lower-rate channels.</li>
 <li>STS-N frame consists of N interleaved STS-1 frames.</li>
 </ul>
-<h2 id="concatenation-in-sonet">Concatenation in SONET</h2>
+<h2 id="concatenation-in-sonet"><a class="toclink" href="#concatenation-in-sonet">Concatenation in SONET</a></h2>
 <ul>
 <li>STS-N signal used to multiplex N STS-1 frames; payload may be concatenated.</li>
 <li>Denoted as STS-Nc for concatenated links.</li>

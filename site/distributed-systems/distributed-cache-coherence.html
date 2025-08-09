@@ -7,7 +7,7 @@
     <title>Linearizable Caches | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.">
+    <meta name="description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copi">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Linearizable Caches">
-    <meta property="og:description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.">
+    <meta property="og:description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copi">
     <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/distributed-cache-coherence.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Linearizable Caches">
-    <meta name="twitter:description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.">
+    <meta name="twitter:description" content="A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copi">
 
     <meta name="keywords" content="cache coherence,consistency models,distributed systems">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Linearizable Caches", "dateModified": "2025-02-11T16:42:07.824900", "description": "A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copies of data are consistent with each other, even in the presence of failures or network partitions.", "articleSection": "Distributed Systems", "keywords": "cache coherence,consistency models,distributed systems"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Linearizable Caches", "dateModified": "2025-02-11T16:42:07.824900", "description": "A linearizable cache is a cache that provides strong consistency guarantees for reads and writes. It is a type of cache coherence protocol that ensures all copi", "url": "https://notes.elimelt.com/distributed-systems/distributed-cache-coherence.html", "articleSection": "Distributed Systems", "keywords": "cache coherence,consistency models,distributed systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Linearizable Caches
@@ -98,12 +95,12 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="distributed-cache-coherence">Distributed Cache Coherence</h1>
+                <h1 id="distributed-cache-coherence"><a class="toclink" href="#distributed-cache-coherence">Distributed Cache Coherence</a></h1>
 <p>When linearizability is a concern, any duplication of mutable data across multiple nodes must be kept consistent. This is the problem of cache coherence: ensuring that all nodes in a distributed system have the same view of the data.</p>
-<h2 id="distributed-caching-with-leases">Distributed Caching with Leases</h2>
+<h2 id="distributed-caching-with-leases"><a class="toclink" href="#distributed-caching-with-leases">Distributed Caching with Leases</a></h2>
 <p>A <strong>lease</strong> is a time-limited right to do something. In the context of distributed caching, our lease gives us a right to cache some data.</p>
 <p>If a node holding the lease fails, we just wait for the lease to expire. Leases can be renewed by the holder, so long as the node is still up.</p>
-<h3 id="cache-reads">Cache Reads</h3>
+<h3 id="cache-reads"><a class="toclink" href="#cache-reads">Cache Reads</a></h3>
 <ol>
 <li>Cache obtains a lease containing the data</li>
 <li>No one can modify the data until the lease either expires or is revoked. Thus, a server/service needs to track who has which data and for how long</li>
@@ -111,99 +108,79 @@
 </ol>
 <p>This approach is both linearizable and fault tolerant, since the lease will eventually expire if the node holding it fails, allowing another node to take over. However, this approach is not very scalable, since the server needs to maintain state for every cached item.</p>
 <p>Clients are also able to cache values, and you can do this by forwarding the lease along with the data to the client.</p>
-<h3 id="cache-updates">Cache Updates</h3>
+<h3 id="cache-updates"><a class="toclink" href="#cache-updates">Cache Updates</a></h3>
 <p>Leases allow the server to reclaim a single copy, regardless of whether caches are up or not. A naive approach would be to wait for all copies to timeout any time you want to update.</p>
 <p>An optimized version would be to use a callback, preventing the need for timeouts if no error occurs. When the server receives an update for a cached value, it forwards an invalidation/revoke to all nodes with a copy of the data, and waits for a response from all (or for the lease to timeout), after which it can proceed with the update.</p>
 <p>The key insight however is that in order for your system to be linearizable, you <strong>must</strong> have only one copy of the data while updating.</p>
-<h3 id="lease-timeouts">Lease Timeouts</h3>
+<h3 id="lease-timeouts"><a class="toclink" href="#lease-timeouts">Lease Timeouts</a></h3>
 <p>If we use the same timeout value for all leases, then we need to track less state at our server, and this also reduces the total time needed to reclaim all leases. On the other hand, if we use different timeouts, then caches will all ask for a new lease at staggered times, preventing an overwhelming number of requests at once.</p>
-<h2 id="weaknesses-of-linearizable-caches">Weaknesses of Linearizable Caches</h2>
+<h2 id="weaknesses-of-linearizable-caches"><a class="toclink" href="#weaknesses-of-linearizable-caches">Weaknesses of Linearizable Caches</a></h2>
 <ul>
 <li>We need to keep track of a ton of state at a single server, growing linearly with the number of cached items</li>
 <li>While data is updated, nobody can read anything, which can potentially be for a long time leading to high latency</li>
 <li>With more copies, the likelihood of failure, and thus needing to wait for the whole lease time to pass for updates grows</li>
 </ul>
-<h2 id="caching-widely-shared-data">Caching Widely Shared Data</h2>
+<h2 id="caching-widely-shared-data"><a class="toclink" href="#caching-widely-shared-data">Caching Widely Shared Data</a></h2>
 <p>It's often okay to use snapshot read consistency, allowing for reads to return stale data. Much of the web follows this model.</p>
 <p>Usually this would look like having many read only caches and a single copy that is writable, for which updates are propagated from to the caches.</p>
-<h2 id="examples">Examples</h2>
-<h3 id="sun-network-file-system-nfs">Sun Network File System (NFS)</h3>
+<h2 id="examples"><a class="toclink" href="#examples">Examples</a></h2>
+<h3 id="sun-network-file-system-nfs"><a class="toclink" href="#sun-network-file-system-nfs">Sun Network File System (NFS)</a></h3>
 <ul>
 <li>Protocol for accessing remote shared file system</li>
 <li>Appears like a local directory (via mount in Unix)</li>
-<li>Open, close, read, write are RPCs to a remote server<ul>
+<li>Open, close, read, write are RPCs to a remote server</li>
 <li>Instead of maintaining some implicit state about the position in the file, reads/writes are block oriented such that no state needs to be maintained and the operation is idempotent</li>
-</ul>
-</li>
-<li>Entirely stateless server, such that if the server crashes, a client just needs to wait until it reboots, after which the operation is resent<ul>
+<li>Entirely stateless server, such that if the server crashes, a client just needs to wait until it reboots, after which the operation is resent</li>
 <li>At least once RPC semantics</li>
 <li>No callbacks</li>
 <li>Client applications don't need error handling</li>
-</ul>
-</li>
 <li>Locally caches file metadata and data, which is eventually consistent</li>
-<li>Each cache entry has a TTL<ul>
+<li>Each cache entry has a TTL</li>
 <li>Revalidate local copy on next access when TTL expires (3-30 sec)</li>
 <li>Updates sent back to remote file system after delay (3-30 sec)</li>
-</ul>
-</li>
 <li>Metadata (e.g. directories, file status) uses shorter TTL</li>
 <li>File data uses longer TTL</li>
 <li>This works well when resources aren't shared, i.e. when everyone works in their own directory</li>
 </ul>
-<h3 id="domain-name-system-dns">Domain Name System (DNS)</h3>
+<h3 id="domain-name-system-dns"><a class="toclink" href="#domain-name-system-dns">Domain Name System (DNS)</a></h3>
 <ul>
 <li>Protocol for translating domain names to IP addresses</li>
 <li>Servers are stateless; at least once semantics to fetch data from name servers</li>
-<li>Hierarchical name resolution<ul>
+<li>Hierarchical name resolution</li>
 <li>Allow each domain to manage its own names</li>
 <li>Ask root: what is the IP address of <code>com</code>, then <code>google.com</code>, then <code>www.google.com</code></li>
-</ul>
-</li>
-<li>Eventually consistent in that updates are propagated among servers<ul>
+<li>Eventually consistent in that updates are propagated among servers</li>
 <li>Clients cache at each level, and updates go directly to the relevant name server.</li>
 <li>Clients only discover changes after TTL expires</li>
 <li>TTLs are set by the domain owner (can vary widely, even allowing infinite TTL)</li>
 <li>CDN servers typically have short TTLs so that they can be updated quickly in the event of a server failure</li>
 </ul>
-</li>
-</ul>
-<h3 id="caching-terminology">Caching Terminology</h3>
+<h3 id="caching-terminology"><a class="toclink" href="#caching-terminology">Caching Terminology</a></h3>
 <ul>
-<li><strong>Write Through</strong>:  Cache holds read-only data<ul>
+<li><strong>Write Through</strong>:  Cache holds read-only data</li>
 <li>Write sent to store, and store revokes copies</li>
 <li>Exploits locality for reads</li>
-</ul>
-</li>
-<li><strong>Write Back</strong>: Cache holds read-write data, i.e. updates happen client side too (like NFS)<ul>
+<li><strong>Write Back</strong>: Cache holds read-write data, i.e. updates happen client side too (like NFS)</li>
 <li>Writes to cache, and cache asks store to revoke copies</li>
 <li>Exploits locality for reads and writes</li>
 </ul>
-</li>
-</ul>
-<h4 id="write-back-cache-coherence">Write Back Cache Coherence</h4>
+<h4 id="write-back-cache-coherence"><a class="toclink" href="#write-back-cache-coherence">Write Back Cache Coherence</a></h4>
 <ul>
-<li>On write:<ul>
+<li>On write:</li>
 <li>Send invalidations to all caches</li>
 <li>Each cache invalidates, responds (possibly with updated data)</li>
 <li>Wait for all invalidations</li>
 <li>Return</li>
-</ul>
-</li>
 <li>Reads can proceed when there is a local copy</li>
 <li>Requests at server need to be ordered to avoid deadlock</li>
 </ul>
 <p>However, with write back caching, durability becomes an issue since a failure might lose writes.</p>
 <ul>
-<li>Option 1: period distributed checkpoint, restart from checkpoint if any cache fails<ul>
+<li>Option 1: period distributed checkpoint, restart from checkpoint if any cache fails</li>
 <li>appropriate for long running/background computations</li>
-</ul>
-</li>
-<li>Option 2: send log of changes to replicated storage<ul>
+<li>Option 2: send log of changes to replicated storage</li>
 <li>if cache fails, read its log from storage</li>
 <li>e.g. if primary fails, backup can take over by replaying log</li>
-</ul>
-</li>
 </ul>
             </div>
             <div class="tags">

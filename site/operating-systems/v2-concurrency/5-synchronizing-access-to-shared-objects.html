@@ -7,7 +7,7 @@
     <title>Synchronizing Access to Shared Objects | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.">
+    <meta name="description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Synchronizing Access to Shared Objects">
-    <meta property="og:description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.">
+    <meta property="og:description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, ">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Synchronizing Access to Shared Objects">
-    <meta name="twitter:description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.">
+    <meta name="twitter:description" content="Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, ">
 
     <meta name="keywords" content="mutual exclusion,locks,thread-safe,bounded queue,atomic operation">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Synchronizing Access to Shared Objects", "dateModified": "2025-02-11T20:49:40.375953", "description": "Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.", "articleSection": "Operating Systems", "keywords": "mutual exclusion,locks,thread-safe,bounded queue,atomic operation"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Synchronizing Access to Shared Objects", "dateModified": "2025-02-11T20:49:40.375953", "description": "Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, ", "url": "https://notes.elimelt.com/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects.html", "articleSection": "Operating Systems", "keywords": "mutual exclusion,locks,thread-safe,bounded queue,atomic operation"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Synchronizing Access to Shared Objects
@@ -98,19 +95,17 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="synchronizing-access-to-shared-objects">Synchronizing Access to Shared Objects</h1>
-<h2 id="locks-mutual-exclusion">Locks: Mutual Exclusion</h2>
+                <h1 id="synchronizing-access-to-shared-objects"><a class="toclink" href="#synchronizing-access-to-shared-objects">Synchronizing Access to Shared Objects</a></h1>
+<h2 id="locks-mutual-exclusion"><a class="toclink" href="#locks-mutual-exclusion">Locks: Mutual Exclusion</a></h2>
 <p>Locks enable mutual exclusion with two operations: <code>acquire</code> and <code>release</code>.</p>
 <ul>
 <li>A lock can be in one of two states: <code>BUSY</code> or <code>FREE</code>.</li>
 <li>Initially, the lock is <code>FREE</code>.</li>
-<li><code>acquire</code> waits until the lock is <code>FREE</code>, then sets it to <code>BUSY</code>.<ul>
+<li><code>acquire</code> waits until the lock is <code>FREE</code>, then sets it to <code>BUSY</code>.</li>
 <li>This needs to be an atomic operation, and is typically implemented to be so in hardware.</li>
-</ul>
-</li>
 <li><code>release</code> sets the lock to <code>FREE</code>. If there are processes waiting to acquire the lock, one of them is able to proceed after the lock is released.</li>
 </ul>
-<h3 id="formal-properties">Formal Properties</h3>
+<h3 id="formal-properties"><a class="toclink" href="#formal-properties">Formal Properties</a></h3>
 <table>
 <thead>
 <tr>
@@ -133,7 +128,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="case-study-thread-safe-bounded-queue">Case Study: Thread-Safe Bounded Queue</h3>
+<h3 id="case-study-thread-safe-bounded-queue"><a class="toclink" href="#case-study-thread-safe-bounded-queue">Case Study: Thread-Safe Bounded Queue</a></h3>
 <pre><code class="language-cpp">// Thread-safe queue interface
 const int MAX = 10;
 class ConcurrentQueue {
@@ -250,7 +245,7 @@ void release(lock) {
   lock-&gt;held = 0;
 }
 </code></pre>
-<h2 id="queuing-locks">Queuing Locks</h2>
+<h2 id="queuing-locks"><a class="toclink" href="#queuing-locks">Queuing Locks</a></h2>
 <p>Sometimes want to accommodate both short and long critical sections while still minimizing overhead. It is not possible to completely avoid busy waiting on a multiprocessor, but you can minimize it by using a queuing lock.</p>
 <p>With a queuing lock, access to the underlying data structure is controlled by a spinlock. On <code>acquire</code>, if the lock is <code>FREE</code>, the process can proceed. If the lock is <code>BUSY</code>, the process is added to a queue and suspended. When the lock is released, the next process in the queue is resumed.</p>
 <p>To suspend a thread on a multiprocessor using this type of lock, first need to disable interrupts so it isn't preempted while holding the ready lists spinlock. Then, acquire the ready list spinlock, and then release the queuing lock's spinlock. Finally, switch to the next thread in the ready list and release the ready list spinlock.</p>
@@ -360,7 +355,7 @@ void Scheduler::makeReady(TCB *thread) {
   ...
  }
  ```</p>
-<h2 id="condition-variables">Condition Variables</h2>
+<h2 id="condition-variables"><a class="toclink" href="#condition-variables">Condition Variables</a></h2>
 <p>Condition variables are used to wait for a particular condition to become true. They are used in conjunction with locks to provide a way for a thread to be woken up when a condition becomes true. The condition variable is associated with a lock, and the lock must be held when waiting on the condition variable.</p>
             </div>
             <div class="tags">

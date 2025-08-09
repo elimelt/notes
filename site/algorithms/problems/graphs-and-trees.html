@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Graphs and Trees", "dateModified": "2025-02-11T16:41:49.585394", "description": "A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.", "articleSection": "Algorithms", "keywords": "graphs,trees,induction,proof by contradiction,cycle detection"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Graphs and Trees", "dateModified": "2025-02-11T16:41:49.585394", "description": "A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.", "url": "https://notes.elimelt.com/algorithms/problems/graphs-and-trees.html", "articleSection": "Algorithms", "keywords": "graphs,trees,induction,proof by contradiction,cycle detection"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Graphs and Trees
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="graphs-and-trees">Graphs and Trees</h1>
-<h2 id="problem-1">Problem 1</h2>
+                <h1 id="graphs-and-trees"><a class="toclink" href="#graphs-and-trees">Graphs and Trees</a></h1>
+<h2 id="problem-1"><a class="toclink" href="#problem-1">Problem 1</a></h2>
 <p>Let $G$ be a tree. Use induction to prove that the number of leaves of $G$ is at least the number of vertices of degree at least $3$ in $G$.</p>
-<h4 id="solution">Solution</h4>
+<h4 id="solution"><a class="toclink" href="#solution">Solution</a></h4>
 <p>$P(n)$: The number of leaves of any graph $G$ with $n$ vertices is at least the number of vertices of degree at least $3$ in $G$.</p>
-<h4 id="base-case-p1">Base Case: $P(1)$</h4>
+<h4 id="base-case-p1"><a class="toclink" href="#base-case-p1">Base Case: $P(1)$</a></h4>
 <p>A tree with one vertex has no leaves or vertices of degree at least $3$, so the base case holds.</p>
-<h4 id="ih-assume-pk-holds-for-some-k-ge-1">IH: Assume $P(k)$ holds for some $k \ge 1$.</h4>
-<h4 id="is-we-want-to-show-that-pk-1-holds">IS: We want to show that $P(k + 1)$ holds.</h4>
+<h4 id="ih-assume-pk-holds-for-some-k-ge-1"><a class="toclink" href="#ih-assume-pk-holds-for-some-k-ge-1">IH: Assume $P(k)$ holds for some $k \ge 1$.</a></h4>
+<h4 id="is-we-want-to-show-that-pk-1-holds"><a class="toclink" href="#is-we-want-to-show-that-pk-1-holds">IS: We want to show that $P(k + 1)$ holds.</a></h4>
 <p>Let $G = (V, E)$ be a tree with $|V| = k + 1$.</p>
 <p>Choose some arbitrary leaf $l \in V$, and $(l, p) \in E$. Removing $l$ (and its corresponding edge) from $G$ results in a tree $G' = (V', E')$ with $|V'| = k$. By the IH, $G'$ satisfies $P(k)$.</p>
 <p><strong>Case 1</strong>: $p$ has degree $1$ in $G'$.</p>
@@ -116,9 +113,9 @@
 <p><strong>Case 3</strong>: $p$ has degree at least $3$ in $G'$.</p>
 <p>Then $p$ is a vertex of degree at least $3$ in $G$, and $G$ has the same number of vertices of degree greater than or equal to $3$ as $G'$. Since we only add a leaf to $G'$ to get $G$, the number of leaves in $G$ is at least the number of leaves in $G'$, which is at least the number of vertices of degree at least $3$ in $G'$.</p>
 <p>In all cases, $G$ has at least as many leaves as vertices of degree at least $3$, so $P(k + 1)$ holds.</p>
-<h2 id="problem-2">Problem 2</h2>
+<h2 id="problem-2"><a class="toclink" href="#problem-2">Problem 2</a></h2>
 <p>Let $G$ be a graph with $n$ vertices and at least $n$ edges. Show that $G$ has a cycle.</p>
-<h4 id="solution_1">Solution</h4>
+<h4 id="solution_1"><a class="toclink" href="#solution_1">Solution</a></h4>
 <p>Let $G$ be a graph with $n$ vertices and at least $n$ edges. Suppose for the sake of contradiction that $G$ has no cycles.</p>
 <p>Since $G$ has no cycles, it is a tree.</p>
 <p>Claim: The sum of the degrees of all vertices in a graph is equal to twice the number of edges.</p>

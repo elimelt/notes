@@ -7,9 +7,7 @@
     <title>Pairing Algorithm | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program
-Given $s$ signups, form pairs for all the students based on the following constraints:
--...">
+    <meta name="description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -18,22 +16,18 @@ Given $s$ signups, form pairs for all the students based on the following constr
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Pairing Algorithm">
-    <meta property="og:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program
-Given $s$ signups, form pairs for all the students based on the following constraints:
--...">
+    <meta property="og:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...">
     <meta property="og:url" content="https://notes.elimelt.com/tmp/pairing-algorithm.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Pairing Algorithm">
-    <meta name="twitter:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program
-Given $s$ signups, form pairs for all the students based on the following constraints:
--...">
+    <meta name="twitter:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...">
 
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Pairing Algorithm", "dateModified": "2024-03-22T16:17:00.468784", "description": "Formalizing the Pairing Algorithm for the SWECC Mock Interview Program\nGiven $s$ signups, form pairs for all the students based on the following constraints:\n-..."}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Pairing Algorithm", "dateModified": "2024-03-22T16:17:00.468784", "description": "Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...", "url": "https://notes.elimelt.com/tmp/pairing-algorithm.html"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -83,10 +77,7 @@ Given $s$ signups, form pairs for all the students based on the following constr
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » Pairing Algorithm
@@ -101,12 +92,12 @@ Given $s$ signups, form pairs for all the students based on the following constr
                 </time>
             </div>
             <div class=content>
-                <h2 id="formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program">Formalizing the Pairing Algorithm for the SWECC Mock Interview Program</h2>
+                <h2 id="formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program"><a class="toclink" href="#formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program">Formalizing the Pairing Algorithm for the SWECC Mock Interview Program</a></h2>
 <p>Given $s$ signups, form pairs for all the students based on the following constraints:
 - Each student should be paired with exactly one other student. If there are an odd number of students, one student will be left unpaired.
 - A valid pair <strong>must</strong> have at least two 1-hour time slots in common in their availability. The number of common time slots is factored into the score of the pair.
 - Each student responds to a form while signing up. The responses are vectorized, and pairings are made based on the similarity of the responses.</p>
-<h3 id="statement-of-the-problem">Statement of the Problem</h3>
+<h3 id="statement-of-the-problem"><a class="toclink" href="#statement-of-the-problem">Statement of the Problem</a></h3>
 <p>Let $T^{7 \times 24}<em i_j_k="i,j,k">i$ be a bit-matrix of 1-hour time slots in a week for student $i$. The value of $T</em>$ is 1 if student $i$ is available at time slot $(j,k)$, and 0 otherwise.</p>
 <p>$$
 T_i = \begin{bmatrix}

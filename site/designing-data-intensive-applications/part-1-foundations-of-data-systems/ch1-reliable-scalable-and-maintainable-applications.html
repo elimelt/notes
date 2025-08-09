@@ -7,7 +7,7 @@
     <title>Fundamentals of Data-Intensive Application Design and Scalability | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses various aspects of system design, including handling different types of faults, measuring and managing load, and ensuring long-term system health through good operational practices and simplicity.">
+    <meta name="description" content="This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses vari">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Fundamentals of Data-Intensive Application Design and Scalability">
-    <meta property="og:description" content="This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses various aspects of system design, including handling different types of faults, measuring and managing load, and ensuring long-term system health through good operational practices and simplicity.">
+    <meta property="og:description" content="This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses vari">
     <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Fundamentals of Data-Intensive Application Design and Scalability">
-    <meta name="twitter:description" content="This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses various aspects of system design, including handling different types of faults, measuring and managing load, and ensuring long-term system health through good operational practices and simplicity.">
+    <meta name="twitter:description" content="This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses vari">
 
     <meta name="keywords" content="reliability,scalability,maintainability,data systems,performance">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Fundamentals of Data-Intensive Application Design and Scalability", "dateModified": "2025-01-01T04:28:35.608844", "description": "This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses various aspects of system design, including handling different types of faults, measuring and managing load, and ensuring long-term system health through good operational practices and simplicity.", "articleSection": "Software Engineering", "keywords": "reliability,scalability,maintainability,data systems,performance"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Fundamentals of Data-Intensive Application Design and Scalability", "dateModified": "2025-01-01T04:28:35.608844", "description": "This document explores the key principles of designing data-intensive applications, focusing on reliability, scalability, and maintainability. It discusses vari", "url": "https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications.html", "articleSection": "Software Engineering", "keywords": "reliability,scalability,maintainability,data systems,performance"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » Fundamentals of Data-Intensive Application Design and Scalability
@@ -98,9 +95,9 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="chapter-1">Chapter 1</h1>
-<h2 id="reliable-scalable-and-maintainable-applications">Reliable, Scalable, and Maintainable Applications</h2>
-<h3 id="data-intensive-vs-computer-intensive">"Data intensive" vs. "Computer intensive"</h3>
+                <h1 id="chapter-1"><a class="toclink" href="#chapter-1">Chapter 1</a></h1>
+<h2 id="reliable-scalable-and-maintainable-applications"><a class="toclink" href="#reliable-scalable-and-maintainable-applications">Reliable, Scalable, and Maintainable Applications</a></h2>
+<h3 id="data-intensive-vs-computer-intensive"><a class="toclink" href="#data-intensive-vs-computer-intensive">"Data intensive" vs. "Computer intensive"</a></h3>
 <p>A data-intensive application is typically built from standard building blocks:</p>
 <ul>
 <li>Store data so that they, or another application, can find it again later (databases)</li>
@@ -110,7 +107,7 @@
 <li>Periodically crunch a large amount of accumulated data (batch processing)</li>
 </ul>
 <p><img alt="image" src="./sc.png" /></p>
-<h3 id="reliability">Reliability</h3>
+<h3 id="reliability"><a class="toclink" href="#reliability">Reliability</a></h3>
 <p>A fault is usually defined as one component of the system deviating from its spec, whereas a failure is when the system as a whole stops providing the required service to the user.</p>
 <p><strong>Hardware faults (hard disk crashes, RAM errors, etc.)</strong>
 ...</p>
@@ -131,19 +128,19 @@ load. Load can be described with a few numbers that are easy to measure:</p>
 - Concurrent users</p>
 <p>When you increase a load parameter and keep the system resources (CPU, memory, network bandwidth, etc.) unchanged, how is the performance of your system affected?</p>
 <p>When you increase a load parameter, how much do you need to increase the resources if you want to keep performance unchanged?</p>
-<h4 id="latency-and-response-time">Latency and Response Time</h4>
+<h4 id="latency-and-response-time"><a class="toclink" href="#latency-and-response-time">Latency and Response Time</a></h4>
 <p><strong>Latency</strong> is the duration that a request is waiting to be handled-during which it is latent, awaiting service. <strong>Response time</strong> is the delay between a client sending a request and receiving a response.</p>
-<h4 id="when-measuring-load">When Measuring Load</h4>
+<h4 id="when-measuring-load"><a class="toclink" href="#when-measuring-load">When Measuring Load</a></h4>
 <p>Use percentiles. Look at the median (p50), the 95th percentile (p95), and the 99th percentile (p99).</p>
 <p>When making multiple backend calls to external services, take special care to measure the p99 of the overall request latency (not just the p99 of each individual service call). This prevents latency amplification that would potentially impact users.</p>
-<h4 id="coping-with-load">Coping with Load</h4>
+<h4 id="coping-with-load"><a class="toclink" href="#coping-with-load">Coping with Load</a></h4>
 <ul>
 <li>Scaling up (vertical scaling): moving to a more powerful machine</li>
 <li>Scaling out (horizontal scaling): distributing the load across multiple smaller machines</li>
 <li>Elasticity: automatically add computing resources when they detect a load increase, and remove resources when the load decreases</li>
 </ul>
 <p>There is no generic solution. Scale based on access patterns, not on data size.</p>
-<h3 id="maintainability">Maintainability</h3>
+<h3 id="maintainability"><a class="toclink" href="#maintainability">Maintainability</a></h3>
 <p><strong>Operability:</strong> make it easy for operations teams to keep the system running smoothly. Make common tasks easy, and preferably automatic. Good monitoring is also crucial.</p>
 <p><strong>Simplicity:</strong> make it easy for new engineers to understand the system, by removing as much complexity as possible from the system. Manage complexity with abstraction.</p>
 <p><strong>Evolvability:</strong> make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change. Good abstractions and modularity allow components to be replaced, and the overall system architecture to be modified, without complete reimplementation.</p>

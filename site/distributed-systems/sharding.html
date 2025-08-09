@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Sharding", "dateModified": "2025-02-11T16:42:07.824937", "description": "Explains the concept of sharding in distributed systems, its approaches and implications.", "articleSection": "Distributed Systems", "keywords": "sharding,consistent hashing,indirection tables,load balancing,data distribution"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sharding", "dateModified": "2025-02-11T16:42:07.824937", "description": "Explains the concept of sharding in distributed systems, its approaches and implications.", "url": "https://notes.elimelt.com/distributed-systems/sharding.html", "articleSection": "Distributed Systems", "keywords": "sharding,consistent hashing,indirection tables,load balancing,data distribution"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Sharding
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="sharding">Sharding</h1>
-<h2 id="consistent-hashing">Consistent Hashing</h2>
+                <h1 id="sharding"><a class="toclink" href="#sharding">Sharding</a></h1>
+<h2 id="consistent-hashing"><a class="toclink" href="#consistent-hashing">Consistent Hashing</a></h2>
 <p>A classic approach is to maintain a modular space of hashed keys, and use the regions between shards to assign keys. This is known as <strong>consistent hashing</strong>. It works, but has some drawbacks:</p>
 <ul>
 <li><strong>Load Imbalance</strong>: If the keys are not evenly distributed, some shards will be more heavily loaded than others.</li>
 <li><strong>Hotspots</strong>: If the keys are not evenly distributed, some shards will be more heavily loaded than others.</li>
 <li><strong>Data Migration</strong>: When adding a new shard, keys need to be moved around, which can be expensive.</li>
 </ul>
-<h2 id="indirection-tables">Indirection Tables</h2>
+<h2 id="indirection-tables"><a class="toclink" href="#indirection-tables">Indirection Tables</a></h2>
 <p>A cooler approach in my opinion. Just put a table of <code>hash(key) -&gt; server address</code> on every client, and assign fewer table entries to buckets with more keys. This way, the load is more evenly distributed. You can then broadcast any changes to the table to every client server.</p>
             </div>
             <div class="tags">

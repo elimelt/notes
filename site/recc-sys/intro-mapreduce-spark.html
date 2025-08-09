@@ -7,7 +7,7 @@
     <title>Distributed Computing for Data Mining | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used to process large datasets. It compares the performance of these technologies using a word count example, providing insight into their strengths and weaknesses. The document also discusses the differences between Spark and Hadoop + MapReduce for data mining applications.">
+    <meta name="description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Distributed Computing for Data Mining">
-    <meta property="og:description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used to process large datasets. It compares the performance of these technologies using a word count example, providing insight into their strengths and weaknesses. The document also discusses the differences between Spark and Hadoop + MapReduce for data mining applications.">
+    <meta property="og:description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used">
     <meta property="og:url" content="https://notes.elimelt.com/recc-sys/intro-mapreduce-spark.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Distributed Computing for Data Mining">
-    <meta name="twitter:description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used to process large datasets. It compares the performance of these technologies using a word count example, providing insight into their strengths and weaknesses. The document also discusses the differences between Spark and Hadoop + MapReduce for data mining applications.">
+    <meta name="twitter:description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used">
 
     <meta name="keywords" content="data mining,distributed file systems,commodity hardware,mapreduce,hadoop,storage infrastructure,computation infrastructure">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Computing for Data Mining", "dateModified": "2025-02-11T19:55:38.830984", "description": "Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used to process large datasets. It compares the performance of these technologies using a word count example, providing insight into their strengths and weaknesses. The document also discusses the differences between Spark and Hadoop + MapReduce for data mining applications.", "articleSection": "Distributed Systems", "keywords": "data mining,distributed file systems,commodity hardware,mapreduce,hadoop,storage infrastructure,computation infrastructure"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Computing for Data Mining", "dateModified": "2025-02-11T19:55:38.830984", "description": "Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used", "url": "https://notes.elimelt.com/recc-sys/intro-mapreduce-spark.html", "articleSection": "Distributed Systems", "keywords": "data mining,distributed file systems,commodity hardware,mapreduce,hadoop,storage infrastructure,computation infrastructure"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Distributed Computing for Data Mining
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="distributed-computing-for-data-mining">Distributed Computing for Data Mining</h1>
+                <h1 id="distributed-computing-for-data-mining"><a class="toclink" href="#distributed-computing-for-data-mining">Distributed Computing for Data Mining</a></h1>
 <p>How can we extract knowledge from large data sets?</p>
 <ul>
 <li><strong>Data mining</strong>: the process of extracting actionable information from (usually) very large datasets.</li>
@@ -117,7 +114,7 @@
 <li><strong>Master Node</strong>: AKA name node in Hadoop HDFS. Stores metadata about where files are stored, might be replicated.</li>
 <li><strong>Client Libraries</strong>: A library that communicates with the master node to read/write data.</li>
 </ul>
-<h2 id="mapreduce">MapReduce</h2>
+<h2 id="mapreduce"><a class="toclink" href="#mapreduce">MapReduce</a></h2>
 <p><strong>MapReduce</strong> is a style of programming that is designed for
 - Easy parallelization
 - Invisible management of hardware/software failures
@@ -125,18 +122,14 @@
 - Very little required memory (since data is read and written to disk)</p>
 <p>There are several implementations of MapReduce, including <strong>Hadoop</strong> and <strong>Spark</strong>.</p>
 <ul>
-<li><strong>Map</strong>: Apply a user-written function to each element of a list, producing a new list.<ul>
+<li><strong>Map</strong>: Apply a user-written function to each element of a list, producing a new list.</li>
 <li><strong>Mapper</strong> applies the map function to a single element. Mapny mappers grouped in a <strong>Map task</strong> (the main unit of parallelism).</li>
-</ul>
-</li>
-<li><strong>Group by key</strong>: Sorts and shuffles the output of the mappers so that all values for a given key are grouped together.<ul>
+<li><strong>Group by key</strong>: Sorts and shuffles the output of the mappers so that all values for a given key are grouped together.</li>
 <li>Output is a list of key to list of value pairs</li>
-</ul>
-</li>
 <li><strong>Reduce</strong>: Apply a user-written function to each key and its associated list of values, producing a new list.</li>
 </ul>
 <p>It is important that your distribution of keys outputted by the map function is semi-uniform. Skew in keys leads to skew in the workload of reducers associated with those keys.</p>
-<h3 id="example-word-count">Example: Word Count</h3>
+<h3 id="example-word-count"><a class="toclink" href="#example-word-count">Example: Word Count</a></h3>
 <p>You have a huge text document and you want to count the number of times each word appears (ie analyzing a log file).</p>
 <p><strong>Map</strong>: For each word in the document, output a key-value pair where the key is the word and the value is 1.</p>
 <pre><code class="language-python">def map(doc):
@@ -153,28 +146,28 @@
 <pre><code class="language-python">def reduce(key, values):
     yield (key, sum(values))
 </code></pre>
-<h2 id="spark">Spark</h2>
+<h2 id="spark"><a class="toclink" href="#spark">Spark</a></h2>
 <p>The two major limitations of MapReduce are
 - Rigid programming model
 - Performance bottleneck due to disk I/O</p>
 <p><strong>Spark</strong> is a general-purpose cluster computing system that addresses these limitations. It is instead <em>dataflow</em> based, where you define a series of transformations on data, and Spark figures out how to execute them in parallel. It is meant to be a more expressive and efficient than MapReduce. There are higher-level APIs like dataframes and SQL that make it easier to work with data.</p>
-<h3 id="resilient-distributed-datasets-rdds">Resilient Distributed Datasets (RDDs)</h3>
+<h3 id="resilient-distributed-datasets-rdds"><a class="toclink" href="#resilient-distributed-datasets-rdds">Resilient Distributed Datasets (RDDs)</a></h3>
 <p>The core data structure in Spark. They are immutable, distributed collections of objects. You can perform transformations on RDDs to create new RDDs, and Spark will optimize the execution of these transformations.</p>
 <p>They are essentially a partitioned collection of records that can be cached in memory across machines. They are fault-tolerant, meaning if a partition is lost, it can be recomputed from the original source.</p>
 <ul>
 <li><strong>Transformations</strong>: Create a new RDD from an existing one. They are lazy, meaning they don't compute the result right away (eg <code>map</code>, <code>filter</code>, <code>reduce</code>, <code>join</code>, <code>union</code>, <code>intersection</code>, <code>distinct</code>).</li>
 <li><strong>Actions</strong>: Compute a result from an RDD. They trigger the computation of the DAG (eg <code>collect</code>, <code>count</code>, <code>reduce</code>, <code>saveAsTextFile</code>).</li>
 </ul>
-<h4 id="task-scheduling">Task Scheduling</h4>
+<h4 id="task-scheduling"><a class="toclink" href="#task-scheduling">Task Scheduling</a></h4>
 <p>Spark supports general DAGs of tasks, where each task is a unit of work that is sent to a worker. The DAG scheduler breaks the computation into stages, where each stage is a set of tasks that can be executed in parallel. The task scheduler then schedules tasks within each stage. Functions are pipelined together when possible, and tasks are scheduled in both a cache aware and partition aware manner.</p>
-<h4 id="libraries">Libraries</h4>
+<h4 id="libraries"><a class="toclink" href="#libraries">Libraries</a></h4>
 <ul>
 <li><strong>MLlib</strong>: Scalable machine learning lib</li>
 <li><strong>GraphX</strong>: Graph processing lib</li>
 <li><strong>Spark Streaming</strong>: Real-time stream processing</li>
 <li><strong>Spark SQL</strong>: SQL interface for Spark</li>
 </ul>
-<h2 id="spark-vs-hadoop-mapreduce">Spark vs. Hadoop + MapReduce</h2>
+<h2 id="spark-vs-hadoop-mapreduce"><a class="toclink" href="#spark-vs-hadoop-mapreduce">Spark vs. Hadoop + MapReduce</a></h2>
 <ul>
 <li><strong>Performance</strong>: Spark is normally faster, with caveats. Spark requires memory, so the benefits are less pronounced on commodity hardware. MR is better when you are running on compute that is shared with other processes.</li>
 <li><strong>Ease of Use</strong>: Spark is more expressive and easier to use.</li>

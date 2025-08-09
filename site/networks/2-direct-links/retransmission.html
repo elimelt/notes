@@ -7,7 +7,7 @@
     <title>Automatic Repeat reQuest (ARQ) | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeouts, sequence numbers, and the limitations of stop-and-wait ARQ. Provides an overview of different ARQ schemes, including sliding window ARQ and go-back-N ARQ, and their trade-offs in terms of bandwidth utilization and robustness to errors.">
+    <meta name="description" content="Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeou">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Automatic Repeat reQuest (ARQ)">
-    <meta property="og:description" content="Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeouts, sequence numbers, and the limitations of stop-and-wait ARQ. Provides an overview of different ARQ schemes, including sliding window ARQ and go-back-N ARQ, and their trade-offs in terms of bandwidth utilization and robustness to errors.">
+    <meta property="og:description" content="Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeou">
     <meta property="og:url" content="https://notes.elimelt.com/networks/2-direct-links/retransmission.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Automatic Repeat reQuest (ARQ)">
-    <meta name="twitter:description" content="Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeouts, sequence numbers, and the limitations of stop-and-wait ARQ. Provides an overview of different ARQ schemes, including sliding window ARQ and go-back-N ARQ, and their trade-offs in terms of bandwidth utilization and robustness to errors.">
+    <meta name="twitter:description" content="Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeou">
 
     <meta name="keywords" content="automatic repeat request,stop-and-wait arq,sliding window arq,go-back-n arq,sequence numbers,timeouts,bandwidth-delay product">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Automatic Repeat reQuest (ARQ)", "dateModified": "2025-02-11T20:47:33.750403", "description": "Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeouts, sequence numbers, and the limitations of stop-and-wait ARQ. Provides an overview of different ARQ schemes, including sliding window ARQ and go-back-N ARQ, and their trade-offs in terms of bandwidth utilization and robustness to errors.", "articleSection": "Networks", "keywords": "automatic repeat request,stop-and-wait arq,sliding window arq,go-back-n arq,sequence numbers,timeouts,bandwidth-delay product"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Automatic Repeat reQuest (ARQ)", "dateModified": "2025-02-11T20:47:33.750403", "description": "Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeou", "url": "https://notes.elimelt.com/networks/2-direct-links/retransmission.html", "articleSection": "Networks", "keywords": "automatic repeat request,stop-and-wait arq,sliding window arq,go-back-n arq,sequence numbers,timeouts,bandwidth-delay product"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Automatic Repeat reQuest (ARQ)
@@ -98,25 +95,25 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="retransmission">Retransmission</h1>
+                <h1 id="retransmission"><a class="toclink" href="#retransmission">Retransmission</a></h1>
 <p>Reliability is a key feature of a network, and there are measures in place accross the entire stack to ensure it.</p>
-<h2 id="automatic-repeat-request-arq">Automatic Repeat reQuest (ARQ)</h2>
+<h2 id="automatic-repeat-request-arq"><a class="toclink" href="#automatic-repeat-request-arq">Automatic Repeat reQuest (ARQ)</a></h2>
 <p>Often used when errors are common or must be corrected (e.g. wireless links). Receiver automatically acknowledges correct frames, and sender retransmits frames that are not acknowledged by a certain timeout.</p>
 <ul>
 <li><strong>Stop and Wait ARQ</strong>: Sender sends one frame, waits for an ACK, and then sends the next frame.</li>
 <li><strong>Sliding Window ARQ</strong>: Sender can send multiple frames before waiting for an ACK. For a window size of $n$, the sender can send $n$ frames per RTT.</li>
 <li><strong>Go-Back-N ARQ</strong>: Sender can send multiple frames before waiting for an ACK, but if a frame is lost, the sender must retransmit all frames from the lost frame onwards.</li>
 </ul>
-<h3 id="timeouts">Timeouts</h3>
+<h3 id="timeouts"><a class="toclink" href="#timeouts">Timeouts</a></h3>
 <p>They need to be not too long (link is idle), but also not too short (link is busy). Timeouts are easy to set in a LAN, but harder over the internet where latency can vary greatly.</p>
-<h3 id="sequence-numbers">Sequence Numbers</h3>
+<h3 id="sequence-numbers"><a class="toclink" href="#sequence-numbers">Sequence Numbers</a></h3>
 <p>Both frames and ACKs are numbered, so that the sender knows which frames are acknowledged. In <strong>stop and wait ARQ</strong>, the sequence number is 0 or 1. In <strong>go-back-N ARQ</strong> and <strong>sliding-window ARQ</strong>, the sequence number is a number modulo $2^k$.</p>
-<h3 id="limitations-of-stop-and-wait-arq">Limitations of Stop and Wait ARQ</h3>
+<h3 id="limitations-of-stop-and-wait-arq"><a class="toclink" href="#limitations-of-stop-and-wait-arq">Limitations of Stop and Wait ARQ</a></h3>
 <ul>
 <li>Allows for only a single frame to be outstanding at a time.</li>
 <li>Good for LAN, but bad for networks with high BD product (<em>bandwidth-delay product</em>).</li>
 </ul>
-<h3 id="examples">Examples</h3>
+<h3 id="examples"><a class="toclink" href="#examples">Examples</a></h3>
 <p>(These are just pseudocode examples)</p>
 <pre><code class="language-python"># Stop and Wait ARQ
 def sender():

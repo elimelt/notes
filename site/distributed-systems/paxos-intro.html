@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Paxos Introduction", "dateModified": "2025-02-11T16:42:07.858276", "description": "Explains the Paxos consensus algorithm for ensuring consistency in a distributed system.", "articleSection": "Distributed Systems", "keywords": "paxos,consensus algorithm,distributed systems,asynchronous systems,state machine replication"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Paxos Introduction", "dateModified": "2025-02-11T16:42:07.858276", "description": "Explains the Paxos consensus algorithm for ensuring consistency in a distributed system.", "url": "https://notes.elimelt.com/distributed-systems/paxos-intro.html", "articleSection": "Distributed Systems", "keywords": "paxos,consensus algorithm,distributed systems,asynchronous systems,state machine replication"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Paxos Introduction
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="paxos-introduction">Paxos Introduction</h1>
-<h2 id="flp-impossibility-result">FLP Impossibility Result</h2>
+                <h1 id="paxos-introduction"><a class="toclink" href="#paxos-introduction">Paxos Introduction</a></h1>
+<h2 id="flp-impossibility-result"><a class="toclink" href="#flp-impossibility-result">FLP Impossibility Result</a></h2>
 <p>It's impossible for a deterministic protocol to guarantee consensus in bounded time in an asynchronous distributed system. The progress and safety of a system are at odds with each other.</p>
 <p>Paxos makes the decision to always be safe, and is able to make progress and avoid blocking as long as the majority of nodes are up and there aren't further failures.</p>
-<h2 id="state-machine-replication">State Machine Replication</h2>
+<h2 id="state-machine-replication"><a class="toclink" href="#state-machine-replication">State Machine Replication</a></h2>
 <p>Order events/operations into an append-only log. Consensus is easy if only one client request is handled at a time.</p>
 <p>Select a leader for clients to send requests to, and define the ordering at that leader. If any leader fails or is slow, elect a new leader (can keep doing this repeatedly). Then, each leader proposes a value that all nodes should agree on.</p>
 <p>Leader election is where Paxos comes in.</p>
-<h2 id="paxos-the-algorithm">Paxos, the algorithm</h2>
+<h2 id="paxos-the-algorithm"><a class="toclink" href="#paxos-the-algorithm">Paxos, the algorithm</a></h2>
 <pre><code class="language-plaintext">Proposer:
   Prepare(n) -&gt; Promise(n, n', v')
   Accept(n, v) -&gt; Accepted(n, v)
@@ -115,16 +112,14 @@ Acceptor:
   Promise(n, n', v') -&gt; Prepare(n)
   Accepted(n, v) -&gt; Accept(n, v)
 </code></pre>
-<h3 id="phase-1-prepare">Phase 1: Prepare</h3>
+<h3 id="phase-1-prepare"><a class="toclink" href="#phase-1-prepare">Phase 1: Prepare</a></h3>
 <ul>
 <li>Proposer selects a proposal number $n$ and sends <code>Prepare(n)</code> to all (or a majority) of acceptors.</li>
-<li>Acceptors respond with <code>Promise(n, n', v')</code> where $n'$ is the highest proposal number it has accepted, and $v'$ is the value associated with that proposal number.<ul>
+<li>Acceptors respond with <code>Promise(n, n', v')</code> where $n'$ is the highest proposal number it has accepted, and $v'$ is the value associated with that proposal number.</li>
 <li>If $n &gt; n'$, the acceptor promises not to accept any proposal with a number less than $n$.</li>
 <li>Proposer must wait for a majority of responses before proceeding.</li>
 </ul>
-</li>
-</ul>
-<h3 id="phase-2-accept">Phase 2: Accept</h3>
+<h3 id="phase-2-accept"><a class="toclink" href="#phase-2-accept">Phase 2: Accept</a></h3>
 <ul>
 <li>If the proposer receives a majority of promises, it sends <code>Accept(n_max, v_max)</code> to all acceptors (the maximal value received in reply).</li>
 <li>Each acceptor that is able to accept the proposal responds with <code>Accepted(n_max, v_max)</code>.</li>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Mutual Exclusion", "dateModified": "2025-02-11T16:42:07.796406", "description": "Explains a distributed mutual exclusion algorithm using timestamps and sequence numbers.", "articleSection": "Distributed Systems", "keywords": "distributed systems,mutual exclusion,locking,ordering,consistency"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Mutual Exclusion", "dateModified": "2025-02-11T16:42:07.796406", "description": "Explains a distributed mutual exclusion algorithm using timestamps and sequence numbers.", "url": "https://notes.elimelt.com/distributed-systems/mutual-exclusion.html", "articleSection": "Distributed Systems", "keywords": "distributed systems,mutual exclusion,locking,ordering,consistency"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Distributed Mutual Exclusion
@@ -98,9 +95,9 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="distributed-mutual-exclusion">Distributed Mutual Exclusion</h1>
+                <h1 id="distributed-mutual-exclusion"><a class="toclink" href="#distributed-mutual-exclusion">Distributed Mutual Exclusion</a></h1>
 <p>We want the same old mutual exclusion via locking, but in a distributed system. The trick is to keep a consistent ordering of locking events on every node in the system.</p>
-<h2 id="implementation">Implementation</h2>
+<h2 id="implementation"><a class="toclink" href="#implementation">Implementation</a></h2>
 <p>Each message carries a timestamp $T_m$, and a sequence number $s$.</p>
 <p>There are three message types:</p>
 <ul>
@@ -130,12 +127,10 @@
 <p>To acquire the lock:</p>
 <ul>
 <li>Broadcast <code>request</code> message</li>
-<li>Acquired once...<ul>
+<li>Acquired once...</li>
 <li><code>request</code> at head of queue</li>
 <li>Everyone else has sent a later-timestamped message</li>
 <li>so <code>request</code> is the earliest in the queue</li>
-</ul>
-</li>
 </ul>
             </div>
             <div class="tags">

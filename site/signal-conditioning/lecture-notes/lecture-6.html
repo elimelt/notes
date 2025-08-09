@@ -7,7 +7,7 @@
     <title>Capacitors | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex numbers and their application to analyzing AC signals using phasors. Discusses the concept of impedance and its importance in understanding the behavior of capacitive and inductive components in electrical circuits.">
+    <meta name="description" content="Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex num">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Capacitors">
-    <meta property="og:description" content="Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex numbers and their application to analyzing AC signals using phasors. Discusses the concept of impedance and its importance in understanding the behavior of capacitive and inductive components in electrical circuits.">
+    <meta property="og:description" content="Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex num">
     <meta property="og:url" content="https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-6.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Capacitors">
-    <meta name="twitter:description" content="Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex numbers and their application to analyzing AC signals using phasors. Discusses the concept of impedance and its importance in understanding the behavior of capacitive and inductive components in electrical circuits.">
+    <meta name="twitter:description" content="Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex num">
 
     <meta name="keywords" content="capacitance,inductance,impedance,complex numbers,phasors,energy storage,ac/dc signals">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Capacitors", "dateModified": "2025-05-10T14:42:02.274045", "description": "Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex numbers and their application to analyzing AC signals using phasors. Discusses the concept of impedance and its importance in understanding the behavior of capacitive and inductive components in electrical circuits.", "articleSection": "Hardware", "keywords": "capacitance,inductance,impedance,complex numbers,phasors,energy storage,ac/dc signals"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Capacitors", "dateModified": "2025-05-10T14:42:02.274045", "description": "Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex num", "url": "https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-6.html", "articleSection": "Hardware", "keywords": "capacitance,inductance,impedance,complex numbers,phasors,energy storage,ac/dc signals"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Capacitors
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h2 id="capacitors">Capacitors</h2>
+                <h2 id="capacitors"><a class="toclink" href="#capacitors">Capacitors</a></h2>
 <p>Stores energy in electric field between two plates.</p>
 <p>Passes AC, blocks DC. "High pass filter"</p>
 <p>Capacitance is the ratio of charge to voltage, measured in Farads.
@@ -115,7 +112,7 @@ $$</p>
 <p>$$
 I_C = C\frac{dV}{dt}
 $$</p>
-<h2 id="inductors">Inductors</h2>
+<h2 id="inductors"><a class="toclink" href="#inductors">Inductors</a></h2>
 <p>Stores energy in magnetic field around a coil of wire due to current flowing through it. Units are Henrys (H).</p>
 <p>Passes DC, blocks AC. "Low pass filter"</p>
 <p>Energy stored in an inductor is
@@ -125,7 +122,7 @@ $$</p>
 <p>$$
 V_L = L\frac{dI}{dt}
 $$</p>
-<h2 id="complex-numbers-review">Complex Numbers Review</h2>
+<h2 id="complex-numbers-review"><a class="toclink" href="#complex-numbers-review">Complex Numbers Review</a></h2>
 <p>$$e = 2.71828...$$</p>
 <p>$$
 j \cdot j = -1 \to j = \sqrt{-1}
@@ -133,7 +130,7 @@ $$</p>
 <p>$$
 e^{jq} = \cos(q) + j\sin(q)
 $$</p>
-<h2 id="complex-numbers-for-ac-signals">Complex Numbers for AC Signals</h2>
+<h2 id="complex-numbers-for-ac-signals"><a class="toclink" href="#complex-numbers-for-ac-signals">Complex Numbers for AC Signals</a></h2>
 <ul>
 <li>Pretend signals are complex during analysis, then take real part at the end.</li>
 <li>Multiplying by real number is scaling (magnitude/amplitude)</li>
@@ -144,7 +141,7 @@ $$</p>
 <p>$$
 cos(2\pi ft + \phi) = e^{j\phi}e^{j2\pi ft}
 $$</p>
-<h2 id="impedance">Impedance</h2>
+<h2 id="impedance"><a class="toclink" href="#impedance">Impedance</a></h2>
 <p>The AC version of resistance.</p>
 <p>$$
 Z_{cap} = \frac{1}{j\omega C}
@@ -155,7 +152,7 @@ $$</p>
 <p>$$
 Z_{res} = R
 $$</p>
-<h2 id="phasors">Phasors</h2>
+<h2 id="phasors"><a class="toclink" href="#phasors">Phasors</a></h2>
 <p>Complex numbers that represent the amplitude and phase of a sinusoidal signal. Can be used to represent AC signals and greatly simplify analysis by </p>
             </div>
             <div class="tags">

@@ -7,7 +7,7 @@
     <title>Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between connectionless datagram and connection-oriented virtual circuit approaches, including their impact on routing, forwarding tables, and connection establishment. Provides an overview of the key concepts and tradeoffs involved in these fundamental networking architectures.">
+    <meta name="description" content="Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between conne">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits">
-    <meta property="og:description" content="Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between connectionless datagram and connection-oriented virtual circuit approaches, including their impact on routing, forwarding tables, and connection establishment. Provides an overview of the key concepts and tradeoffs involved in these fundamental networking architectures.">
+    <meta property="og:description" content="Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between conne">
     <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/networking-services.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits">
-    <meta name="twitter:description" content="Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between connectionless datagram and connection-oriented virtual circuit approaches, including their impact on routing, forwarding tables, and connection establishment. Provides an overview of the key concepts and tradeoffs involved in these fundamental networking architectures.">
+    <meta name="twitter:description" content="Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between conne">
 
     <meta name="keywords" content="store-and-forward packet switching,datagrams,virtual circuits,routing,forwarding table,connection-oriented,connectionless">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits", "dateModified": "2025-02-11T20:48:05.696093", "description": "Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between connectionless datagram and connection-oriented virtual circuit approaches, including their impact on routing, forwarding tables, and connection establishment. Provides an overview of the key concepts and tradeoffs involved in these fundamental networking architectures.", "articleSection": "Networks", "keywords": "store-and-forward packet switching,datagrams,virtual circuits,routing,forwarding table,connection-oriented,connectionless"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits", "dateModified": "2025-02-11T20:48:05.696093", "description": "Covers the implementation of store-and-forward packet switching, datagrams, and virtual circuits in networking services. Discusses the differences between conne", "url": "https://notes.elimelt.com/networks/3-network/networking-services.html", "articleSection": "Networks", "keywords": "store-and-forward packet switching,datagrams,virtual circuits,routing,forwarding table,connection-oriented,connectionless"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits
@@ -98,14 +95,14 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="networking-services">Networking Services</h1>
-<h2 id="store-and-forward-packet-switching">Store-and-Forward Packet Switching</h2>
+                <h1 id="networking-services"><a class="toclink" href="#networking-services">Networking Services</a></h1>
+<h2 id="store-and-forward-packet-switching"><a class="toclink" href="#store-and-forward-packet-switching">Store-and-Forward Packet Switching</a></h2>
 <ul>
 <li>Routers receive a complete packet, storing it temporarily if necessary, before forwarding it to the next hop.</li>
 <li>Use statistical multiplexing to share link bandwidth over time.</li>
 <li>Switching element has internal buffering for contention. Buffer is typically a FIFO queue, where if full, packets are dropped.</li>
 </ul>
-<h2 id="datagrams-vs-virtual-circuits">Datagrams vs. Virtual Circuits</h2>
+<h2 id="datagrams-vs-virtual-circuits"><a class="toclink" href="#datagrams-vs-virtual-circuits">Datagrams vs. Virtual Circuits</a></h2>
 <p><strong>Datagrams</strong> are a connectionless service that sends packets from one host to another. Like postal letters. Each packet is independent and can take a different route to the destination. This is the most common service on the internet. Each packet contains destination address. Routers use this to forward packets, maybe on different paths for each subsequent message. Each router has a forwarding table keyed by destination address. The table contains the next hop for each destination, but the entries change over time as the network topology changes.</p>
 <p><strong>Virtual Circuits</strong> are a connection-oriented service that sets up a path between the source and destination before sending packets. Like a phone call. Each packet follows the same path and is identified by a connection ID. This is less common on the internet, but is used in technologies like ATM and Frame Relay.</p>
 <table>

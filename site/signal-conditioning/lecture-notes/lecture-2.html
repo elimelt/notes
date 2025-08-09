@@ -7,7 +7,7 @@
     <title>Electricity | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC). Discusses the unit of electric charge, the Coulomb, and how energy and power are defined in electrical systems. Provides an overview of different circuit types, both constant and time-varying.">
+    <meta name="description" content="Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC).">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Electricity">
-    <meta property="og:description" content="Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC). Discusses the unit of electric charge, the Coulomb, and how energy and power are defined in electrical systems. Provides an overview of different circuit types, both constant and time-varying.">
+    <meta property="og:description" content="Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC).">
     <meta property="og:url" content="https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-2.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Electricity">
-    <meta name="twitter:description" content="Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC). Discusses the unit of electric charge, the Coulomb, and how energy and power are defined in electrical systems. Provides an overview of different circuit types, both constant and time-varying.">
+    <meta name="twitter:description" content="Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC).">
 
     <meta name="keywords" content="electricity,current,voltage,power,alternating current,direct current,coulomb">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Electricity", "dateModified": "2025-02-11T20:50:03.718158", "description": "Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC). Discusses the unit of electric charge, the Coulomb, and how energy and power are defined in electrical systems. Provides an overview of different circuit types, both constant and time-varying.", "articleSection": "Teaching", "keywords": "electricity,current,voltage,power,alternating current,direct current,coulomb"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Electricity", "dateModified": "2025-02-11T20:50:03.718158", "description": "Covers the fundamental concepts of electricity, including current, voltage, power, and the distinction between alternating current (AC) and direct current (DC).", "url": "https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-2.html", "articleSection": "Teaching", "keywords": "electricity,current,voltage,power,alternating current,direct current,coulomb"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/teaching.html">Teaching</a> » Electricity
@@ -98,13 +95,13 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="lecture-2">Lecture 2</h1>
+                <h1 id="lecture-2"><a class="toclink" href="#lecture-2">Lecture 2</a></h1>
 <p><em>Reminders</em>:</p>
 <ul>
 <li>Lab 1 - Tuesday room 137 (pick up kit @ EE store window 3:30)</li>
 <li>HW 1 posted on canvas Monday</li>
 </ul>
-<h2 id="electricity">Electricity</h2>
+<h2 id="electricity"><a class="toclink" href="#electricity">Electricity</a></h2>
 <pre><code>+-------------+------+----------+
 |1.5 V Battery|      |Light Bulb|
 +-------------+------+----------+
@@ -112,29 +109,29 @@
 </code></pre>
 <p>Current is the amount of water flowing through the pipe, and Voltage is like the water pressure through the pipe.</p>
 <p>If the "pressure" was 0, then the "flow" would be 0, and the same for the electrons. Battery is essentially using its chemical potential energy to push the electrons through the circuit to create a current.</p>
-<h4 id="current-i">Current (I)</h4>
+<h4 id="current-i"><a class="toclink" href="#current-i">Current (I)</a></h4>
 <ul>
 <li>Rate of flow of electrons.</li>
 <li>Unit Amperes (A) (amps) - the rate of flow of 1 Coulomb of electrons/sec</li>
 </ul>
-<h4 id="coulomb">Coulomb</h4>
+<h4 id="coulomb"><a class="toclink" href="#coulomb">Coulomb</a></h4>
 <ul>
 <li>The unit of <em>charge</em> (how many electrons) <strong>Q</strong></li>
 <li>1 Coulomb is 6.24 * 10^17 electrons</li>
 </ul>
-<h4 id="energy">Energy</h4>
+<h4 id="energy"><a class="toclink" href="#energy">Energy</a></h4>
 <ul>
 <li>Energy in circuit is the charge multiplied by the voltage, ie</li>
 </ul>
 <p>Energy = Q * V -&gt; Joules (J)</p>
-<h4 id="power">Power</h4>
+<h4 id="power"><a class="toclink" href="#power">Power</a></h4>
 <p>The rate of change of energy, measured in Joules/sec -&gt; Watts (W)</p>
 <p>Or the work done by the circuit</p>
 <pre><code class="language-txt">P = V * I
 P = I^2 * R
 P = V^2 / R
 </code></pre>
-<h3 id="units">Units</h3>
+<h3 id="units"><a class="toclink" href="#units">Units</a></h3>
 <p>10^3 -&gt; kilo K
 10^6 -&gt; mega M
 10^9 -&gt; giga G</p>
@@ -142,7 +139,7 @@ P = V^2 / R
 10^-6 -&gt; micro \mu
 10^-9 -&gt; nano n
 10^-12 -&gt; pico p</p>
-<h3 id="constant-vs-time-varying-circuits">Constant vs. Time Varying Circuits</h3>
+<h3 id="constant-vs-time-varying-circuits"><a class="toclink" href="#constant-vs-time-varying-circuits">Constant vs. Time Varying Circuits</a></h3>
 <p><strong>Direct Current</strong> (DC): Voltages &amp; Currents are constant, e.g. 1.5 V</p>
 <p><strong>Alternating Current</strong> (AC): Voltages and Currents are changing with time. e.g. Home power</p>
 <pre><code class="language-txt">General formula:
@@ -153,7 +150,7 @@ AC Line Voltage (wall power):
 V(t) = 120 * cos(2 * pi * 60 Hz * t)
 </code></pre>
 <p>Can use nodal analysis to break down and black box circuits. Mathematically represent each node in a circuit, and then use abstraction to model complicated circuits.</p>
-<h2 id="problems">Problems</h2>
+<h2 id="problems"><a class="toclink" href="#problems">Problems</a></h2>
 <p>(1.a) An iPhone contains a Lithium Battery with a voltage of 3.8 V, and a capacity of 2900 mAH (milli-Amp-hours). How much energy is stored in the battery? In Joules, and Watt-Hours.</p>
 <p>2900 mAH * 3.8 V = 11,020 mWH = 11.02 WH</p>
 <p>11.02 WH * 3600 sec/H = 39.67 kJ</p>

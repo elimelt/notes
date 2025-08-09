@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Classification with Multinomial Naive Bayes", "dateModified": "2025-02-12T15:23:20.176602", "description": "Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.", "articleSection": "Natural Language Processing", "keywords": "classification,naive bayes,multinomial naive bayes,text classification,bag of words,laplace smoothing"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Classification with Multinomial Naive Bayes", "dateModified": "2025-02-12T15:23:20.176602", "description": "Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.", "url": "https://notes.elimelt.com/natural-language-processing/reading/classification.html", "articleSection": "Natural Language Processing", "keywords": "classification,naive bayes,multinomial naive bayes,text classification,bag of words,laplace smoothing"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Classification with Multinomial Naive Bayes
@@ -98,11 +95,11 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="classification">Classification</h1>
+                <h1 id="classification"><a class="toclink" href="#classification">Classification</a></h1>
 <p>Take an input $x$ and a fixed set of output classes $Y = {y_1, y_2, \ldots, y_M}$ and return a predicted class $y \in Y$.</p>
 <p>Text classification sometimes uses $c$ for class instead of $y$ as output, and $d$ for document instead of $x$ as input.</p>
 <p>In the supervised situation we have a training set of $N$ documents that have each been hand labeled with a class: ${(d_1, c_1),....,(d_N, c_N)}$. Our goal is to learn a classifier that is capable of mapping from a new document $d$ to its correct class $c \in C$, where $C$ is some set of useful document classes.</p>
-<h2 id="multinomial-naive-bayes">Multinomial Naive Bayes</h2>
+<h2 id="multinomial-naive-bayes"><a class="toclink" href="#multinomial-naive-bayes">Multinomial Naive Bayes</a></h2>
 <p>Represent text as <strong>bag of words</strong>. For a document $d$ out of all all classes $c \in C$, outputs $\hat{c}$ that maximizes $P(c|d)$.</p>
 <p>$$
 \begin{aligned}
@@ -114,7 +111,7 @@ $$</p>
 <p>$$
 \hat{c} = \arg \max_{c \in C} P(f_1, f_2, \ldots, f_n | c)P(c)
 $$</p>
-<h3 id="naive-bayes-assumption">Naive Bayes Assumption</h3>
+<h3 id="naive-bayes-assumption"><a class="toclink" href="#naive-bayes-assumption">Naive Bayes Assumption</a></h3>
 <p>$$
 P(f_1, f_2, \ldots, f_n | c) = \prod_{i=1}^n P(f_i | c)
 $$</p>
@@ -128,7 +125,7 @@ $$</p>
 A = B \
 \Rightarrow \log A = \log B
 $$</p>
-<h3 id="training">Training</h3>
+<h3 id="training"><a class="toclink" href="#training">Training</a></h3>
 <p>Estimate $P(c)$: the prior probability of each class.</p>
 <p>$$
 \hat{P}(w_i | c) = \frac{count(w_i, c) + 1}{\sum_{w \in V} count(w, c) + |V|}
@@ -160,7 +157,7 @@ function TEST_NAIVE_BAYES(testdoc, logprior, loglikelihood, C, V) returns best_c
 
   return argmax_c sum[c]
 </code></pre>
-<h3 id="evaluation">Evaluation</h3>
+<h3 id="evaluation"><a class="toclink" href="#evaluation">Evaluation</a></h3>
 <p>Use a confusion matrix, precision, recall, and F1 score.</p>
             </div>
             <div class="tags">

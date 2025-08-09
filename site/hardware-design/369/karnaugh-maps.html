@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Karnaugh Maps", "dateModified": "2025-02-11T16:42:51.458735", "description": "Method for simplifying Boolean expressions", "articleSection": "Hardware", "keywords": "karnaugh maps,truth tables,graph theory,computer science"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Karnaugh Maps", "dateModified": "2025-02-11T16:42:51.458735", "description": "Method for simplifying Boolean expressions", "url": "https://notes.elimelt.com/hardware-design/369/karnaugh-maps.html", "articleSection": "Hardware", "keywords": "karnaugh maps,truth tables,graph theory,computer science"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Karnaugh Maps
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="karnaugh-maps">Karnaugh Maps</h1>
+                <h1 id="karnaugh-maps"><a class="toclink" href="#karnaugh-maps">Karnaugh Maps</a></h1>
 <p>Goal: Find neighboring subsets of the On set to eliminate variables and simplify expressions.</p>
 <p>A <code>K-map</code> is a method of representing a truth table to help visualize adjacencies into $\le$ 4 dimensions.</p>
 <ol>
@@ -108,12 +105,12 @@
 <li>Group 1s in powers of two (can be in multiple dimensions, and also wraps around the map).</li>
 <li>Left over 1s are corner cases and should be grouped with any adjacent 1s if possible.</li>
 </ol>
-<h2 id="7-segment-display-in-verilog">7 Segment Display in Verilog</h2>
-<h3 id="procedural-blocks">Procedural Blocks</h3>
+<h2 id="7-segment-display-in-verilog"><a class="toclink" href="#7-segment-display-in-verilog">7 Segment Display in Verilog</a></h2>
+<h3 id="procedural-blocks"><a class="toclink" href="#procedural-blocks">Procedural Blocks</a></h3>
 <ul>
 <li><code>assign</code>: continuous assignment. Statement should hold true for ALL time</li>
 <li><code>initial</code>: executes once at time zero. Only exists in test benches (since t = 0 isn't real)</li>
-<li><code>always</code>: loop to execute over and over again.<ul>
+<li><code>always</code>: loop to execute over and over again.</li>
 <li>Block gets triggered by <em>sensitivity list</em> (list of signals that trigger the block)</li>
 <li>Any object that is assigned a value in an <code>always</code> statement must be declared as a variable (<code>reg/logic</code>).</li>
 <li>EX:<ul>
@@ -122,8 +119,6 @@
 </ul>
 </li>
 <li><code>always_comb</code>: like <code>always @ (*)</code>, but only triggered when any of the signals change.</li>
-</ul>
-</li>
 </ul>
             </div>
             <div class="tags">

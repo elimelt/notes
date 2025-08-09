@@ -7,7 +7,7 @@
     <title>Performance Modeling for LLM Serving Systems | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?">
+    <meta name="description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters fo">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Performance Modeling for LLM Serving Systems">
-    <meta property="og:description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?">
+    <meta property="og:description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters fo">
     <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/performance-modeling.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Performance Modeling for LLM Serving Systems">
-    <meta name="twitter:description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?">
+    <meta name="twitter:description" content="How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters fo">
 
     <meta name="keywords" content="performance,roofline,arithmetic intensity,machine learning">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Performance Modeling for LLM Serving Systems", "dateModified": "2025-05-25T17:30:13.127561", "description": "How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?", "articleSection": "Machine Learning Systems", "keywords": "performance,roofline,arithmetic intensity,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Performance Modeling for LLM Serving Systems", "dateModified": "2025-05-25T17:30:13.127561", "description": "How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters fo", "url": "https://notes.elimelt.com/llm-serving-systems/performance-modeling.html", "articleSection": "Machine Learning Systems", "keywords": "performance,roofline,arithmetic intensity,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Performance Modeling for LLM Serving Systems
@@ -98,31 +95,31 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="performance-modeling-for-llm-serving-systems">Performance Modeling for LLM Serving Systems</h1>
+                <h1 id="performance-modeling-for-llm-serving-systems"><a class="toclink" href="#performance-modeling-for-llm-serving-systems">Performance Modeling for LLM Serving Systems</a></h1>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
-<h3 id="performance-analysis">Performance Analysis</h3>
+<h3 id="performance-analysis"><a class="toclink" href="#performance-analysis">Performance Analysis</a></h3>
 <ul>
 <li><strong>Roofline model</strong> - Based on the Roofline paper and Google's scaling book</li>
 <li><strong>Detailed model of Transformer performance</strong></li>
 </ul>
 <hr />
-<h2 id="the-roofline-model">The Roofline Model</h2>
-<h3 id="core-concept">Core Concept</h3>
+<h2 id="the-roofline-model"><a class="toclink" href="#the-roofline-model">The Roofline Model</a></h2>
+<h3 id="core-concept"><a class="toclink" href="#core-concept">Core Concept</a></h3>
 <p><strong>Operational Intensity</strong> = $\frac{\text{# of Operations}}{\text{# of Bytes Moved}}$</p>
 <ul>
 <li><strong>Operations</strong>: E.g., FLOPs/Sec</li>
 <li><strong>Bytes Moved</strong>: E.g., Bytes/sec (Memory or Network Bandwidth)</li>
 </ul>
-<h3 id="key-components">Key Components</h3>
-<h4 id="computational-ceilings">Computational Ceilings</h4>
+<h3 id="key-components"><a class="toclink" href="#key-components">Key Components</a></h3>
+<h4 id="computational-ceilings"><a class="toclink" href="#computational-ceilings">Computational Ceilings</a></h4>
 <ul>
 <li><strong>Memory Bound</strong>: Low operational intensity region</li>
 <li><strong>Compute Bound</strong>: High operational intensity region</li>
 <li><strong>Roofline</strong>: The boundary between memory and compute limitations</li>
 </ul>
-<h4 id="performance-optimization-strategies">Performance Optimization Strategies</h4>
+<h4 id="performance-optimization-strategies"><a class="toclink" href="#performance-optimization-strategies">Performance Optimization Strategies</a></h4>
 <p><strong>Compute optimizations:</strong></p>
 <ul>
 <li>Multithreading</li>
@@ -135,41 +132,41 @@
 <li>Memory affinity (NUMA effect)</li>
 <li>Software prefetching</li>
 </ul>
-<h3 id="critical-operational-intensity">Critical Operational Intensity</h3>
+<h3 id="critical-operational-intensity"><a class="toclink" href="#critical-operational-intensity">Critical Operational Intensity</a></h3>
 <p>$$\text{Intensity(Computation)} = \text{Intensity(Accelerator)}$$</p>
 <p>$$\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} = \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$$</p>
 <p><strong>Compute-Bound</strong>: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} &gt; \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$</p>
 <p><strong>Memory-Bound</strong>: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} &lt; \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$</p>
 <hr />
-<h2 id="example-nvidia-h100-analysis">Example: NVIDIA H100 Analysis</h2>
-<h3 id="hardware-specifications">Hardware Specifications</h3>
+<h2 id="example-nvidia-h100-analysis"><a class="toclink" href="#example-nvidia-h100-analysis">Example: NVIDIA H100 Analysis</a></h2>
+<h3 id="hardware-specifications"><a class="toclink" href="#hardware-specifications">Hardware Specifications</a></h3>
 <ul>
 <li><strong>Peak FP16 Tensor TFLOPS</strong>: 1000/2000 TFLOPs (with sparsity/no sparsity)</li>
 <li><strong>Memory bandwidth</strong>: 3000 GB/s</li>
 <li><strong>Critical intensity</strong>: $(1000 \times 10^{12}) / (3000 \times 10^9) = 333$ FLOPs/Byte</li>
 </ul>
 <p><strong>Rule</strong>: If kernel has higher operational intensity than 333 FLOPs/Byte    o compute-bound, otherwise memory-bound</p>
-<h3 id="example-operations">Example Operations</h3>
-<h4 id="fp32-dot-product">FP32 Dot Product</h4>
+<h3 id="example-operations"><a class="toclink" href="#example-operations">Example Operations</a></h3>
+<h4 id="fp32-dot-product"><a class="toclink" href="#fp32-dot-product">FP32 Dot Product</a></h4>
 <p><strong>Compute</strong>: $N$ multiplications, $N$ additions = $2N$ FLOPs</p>
 <p><strong>Memory</strong>: $2 \times 4N$ bytes read + $4$ bytes written back</p>
 <p><strong>Operational Intensity</strong>: $\frac{2N}{4N + 4} \approx \frac{1}{2}$</p>
 <p><strong>Result</strong>: FP32 dot product on H100 is <strong>memory-bound</strong></p>
-<h4 id="matrix-multiplication-with-fp16">Matrix Multiplication with FP16</h4>
+<h4 id="matrix-multiplication-with-fp16"><a class="toclink" href="#matrix-multiplication-with-fp16">Matrix Multiplication with FP16</a></h4>
 <p>For $[M,N] \times [N,K] \rightarrow [M,K]$:</p>
 <p><strong>Memory</strong>: $2MN + 2NK$ bytes read, $2MK$ bytes written back</p>
 <p><strong>Compute</strong>: $2MNK$ FLOPs</p>
 <p><strong>Operational Intensity</strong>: $\frac{2MNK}{2MN + 2NK + 2MK} \approx M$</p>
 <p><strong>Result</strong>: Matrix multiplication on H100 is compute-bound if $M &gt; 333$</p>
 <hr />
-<h2 id="numa-effect-with-gpus">NUMA Effect with GPUs</h2>
+<h2 id="numa-effect-with-gpus"><a class="toclink" href="#numa-effect-with-gpus">NUMA Effect with GPUs</a></h2>
 <p>Modern GPU clusters show significant bandwidth variations:
 - <strong>GPU memory bandwidth</strong>: 900 GB/s
 - <strong>Network bandwidth</strong>: 200 Gb/s = 25 GB/s</p>
 <p>This creates hierarchical memory access patterns affecting performance modeling.</p>
 <hr />
-<h2 id="performance-modeling-framework">Performance Modeling Framework</h2>
-<h3 id="key-hardware-factors">Key Hardware Factors</h3>
+<h2 id="performance-modeling-framework"><a class="toclink" href="#performance-modeling-framework">Performance Modeling Framework</a></h2>
+<h3 id="key-hardware-factors"><a class="toclink" href="#key-hardware-factors">Key Hardware Factors</a></h3>
 <ul>
 <li><strong>$N_{GPU}$</strong>: number of GPUs</li>
 <li><strong>MemBW</strong> (GB/s): aggregate GPU memory bandwidth</li>
@@ -177,7 +174,7 @@
 <li><strong>Compute</strong> (GFLOPS/s): aggregate GPU compute capacity</li>
 <li><strong>NetBW</strong> (GB/s): aggregate GPU interconnect bandwidth</li>
 </ul>
-<h3 id="key-model-configuration-factors">Key Model Configuration Factors</h3>
+<h3 id="key-model-configuration-factors"><a class="toclink" href="#key-model-configuration-factors">Key Model Configuration Factors</a></h3>
 <ul>
 <li><strong>$D_{model}$</strong>: hidden dimension size (hidden_dim)</li>
 <li><strong>$L$</strong>: number of layers</li>
@@ -185,7 +182,7 @@
 <li><strong>$R_{GQA}$</strong>: group size of GQA (group_size)</li>
 <li><strong>$S_{Type}$</strong>: Model parameters' data size in bytes (e.g., 2 for FP16)</li>
 </ul>
-<h3 id="key-user-statistics">Key User Statistics</h3>
+<h3 id="key-user-statistics"><a class="toclink" href="#key-user-statistics">Key User Statistics</a></h3>
 <ul>
 <li><strong>$p$</strong>: average number of tokens in prompts to be prefilled</li>
 <li><strong>$d$</strong>: average number of tokens in output to be decoded</li>
@@ -194,14 +191,14 @@
 <li><strong>Decoding throughput</strong>: $d \frac{\text{Throughput}_{total}}{p + d}$</li>
 </ul>
 <hr />
-<h2 id="execution-time-models">Execution Time Models</h2>
-<h3 id="memory-centric-execution-time">Memory-Centric Execution Time</h3>
+<h2 id="execution-time-models"><a class="toclink" href="#execution-time-models">Execution Time Models</a></h2>
+<h3 id="memory-centric-execution-time"><a class="toclink" href="#memory-centric-execution-time">Memory-Centric Execution Time</a></h3>
 <p>$$T_{memory} = \frac{GPU_{mem}}{MemBW}$$</p>
 <p><strong>Assumption</strong>: Entire contents of GPU memory loaded once during one iteration</p>
-<h3 id="compute-centric-execution-time">Compute-Centric Execution Time</h3>
+<h3 id="compute-centric-execution-time"><a class="toclink" href="#compute-centric-execution-time">Compute-Centric Execution Time</a></h3>
 <p>$$T_{compute} = \frac{2B_{dense}P_{model}}{Compute}$$</p>
 <p><strong>Logic</strong>: All dense operations require $2B_{dense}P_{model}$ FLOPs total</p>
-<h3 id="network-centric-execution-time">Network-Centric Execution Time</h3>
+<h3 id="network-centric-execution-time"><a class="toclink" href="#network-centric-execution-time">Network-Centric Execution Time</a></h3>
 <p>$$T_{net} = \frac{4(N_{GPU} - 1)D_{model}B_{dense}S_{type}L}{NetBw}$$</p>
 <p><strong>Components</strong>:</p>
 <ul>
@@ -210,11 +207,11 @@
 <li>All-Reduce approx 2   imes All-Gather</li>
 </ul>
 <hr />
-<h2 id="performance-analysis-results">Performance Analysis Results</h2>
-<h3 id="compute-vs-network">Compute vs Network</h3>
+<h2 id="performance-analysis-results"><a class="toclink" href="#performance-analysis-results">Performance Analysis Results</a></h2>
+<h3 id="compute-vs-network"><a class="toclink" href="#compute-vs-network">Compute vs Network</a></h3>
 <p>$$\frac{T_{net}}{T_{compute}} = 2(N_{GPU} - 1)\frac{D_{model}L}{P_{model}} \frac{S_{type} \cdot Compute}{NetBw}$$</p>
 <p><strong>Key Finding</strong>: LLM Serving is more <strong>compute-bound</strong> than <strong>network-bound</strong></p>
-<h3 id="compute-vs-memory">Compute vs Memory</h3>
+<h3 id="compute-vs-memory"><a class="toclink" href="#compute-vs-memory">Compute vs Memory</a></h3>
 <p>$$\frac{T_{memory}}{T_{compute}} = \frac{Compute \cdot GPU_{mem}}{MemBW \cdot 2B_{dense}P_{model}}$$</p>
 <p><strong>Factors affecting the balance</strong>:</p>
 <ul>
@@ -224,32 +221,32 @@
 </ul>
 <p><strong>Key Finding</strong>: LLM serving is more <strong>compute-bound</strong> than <strong>memory-bound</strong></p>
 <hr />
-<h2 id="grouped-query-attention-gqa">Grouped Query Attention (GQA)</h2>
-<h3 id="concept">Concept</h3>
+<h2 id="grouped-query-attention-gqa"><a class="toclink" href="#grouped-query-attention-gqa">Grouped Query Attention (GQA)</a></h2>
+<h3 id="concept"><a class="toclink" href="#concept">Concept</a></h3>
 <ul>
 <li><strong>Traditional</strong>: Each attention head has its own Key-Value cache</li>
 <li><strong>GQA</strong>: Multiple attention heads share Key-Value pairs</li>
 <li><strong>Group size</strong>: Number of heads sharing the same K-V pairs</li>
 </ul>
-<h3 id="impact-on-performance">Impact on Performance</h3>
+<h3 id="impact-on-performance"><a class="toclink" href="#impact-on-performance">Impact on Performance</a></h3>
 <ul>
 <li><strong>Reduces KV cache memory requirements</strong> by factor of group size</li>
 <li><strong>Allows increasing batch size</strong> by factor of group size</li>
 <li><strong>Shifts workload toward compute-bound</strong> rather than memory-bound</li>
 </ul>
 <hr />
-<h2 id="optimal-throughput-analysis">Optimal Throughput Analysis</h2>
-<h3 id="theoretical-maximum">Theoretical Maximum</h3>
+<h2 id="optimal-throughput-analysis"><a class="toclink" href="#optimal-throughput-analysis">Optimal Throughput Analysis</a></h2>
+<h3 id="theoretical-maximum"><a class="toclink" href="#theoretical-maximum">Theoretical Maximum</a></h3>
 <p>$$\text{Throughput} = \frac{B_{dense}}{T_{compute}} = \frac{B_{dense}}{\frac{2B_{dense}P_{model}}{Compute}} = \frac{Compute}{2P_{model}}$$</p>
 <p><strong>Example</strong>: LLaMA 70B on A100  o <strong>1857 tokens/s/GPU</strong></p>
-<h3 id="performance-gap">Performance Gap</h3>
+<h3 id="performance-gap"><a class="toclink" href="#performance-gap">Performance Gap</a></h3>
 <p>Current serving frameworks show significant gaps to optimal throughput:
 - <strong>vLLM</strong>: ~494-552 tokens/s
 - <strong>DeepSpeed-FastGen</strong>: ~372-513 tokens/s
 - <strong>TensorRT-LLM</strong>: ~636-817 tokens/s</p>
 <p><strong>Key Insight</strong>: There is a <strong>large gap to optimal throughput</strong> - high GPU compute utilization is critical for LLM serving performance.</p>
 <hr />
-<h2 id="key-takeaways">Key Takeaways</h2>
+<h2 id="key-takeaways"><a class="toclink" href="#key-takeaways">Key Takeaways</a></h2>
 <ol>
 <li><strong>Roofline model</strong> provides framework for understanding compute vs memory bounds</li>
 <li><strong>Critical operational intensity</strong> determines performance bottlenecks</li>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Design Philosophy of DARPA Internet Protocols", "dateModified": "2025-03-05T03:27:52.455700", "description": "A summary of the design philosophy of the DARPA internet protocols.", "articleSection": "Networks", "keywords": "internet,design,systems"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Design Philosophy of DARPA Internet Protocols", "dateModified": "2025-03-05T03:27:52.455700", "description": "A summary of the design philosophy of the DARPA internet protocols.", "url": "https://notes.elimelt.com/systems-research/internet-design-philosophy.html", "articleSection": "Networks", "keywords": "internet,design,systems"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Design Philosophy of DARPA Internet Protocols
@@ -98,10 +95,10 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h6 id="design-philosophy-of-the-darpa-internet-protocols"><a href="http://ccr.sigcomm.org/archive/1995/jan95/ccr-9501-clark.pdf">Design Philosophy of the DARPA Internet Protocols</a></h6>
+                <h6 id="design-philosophy-of-the-darpa-internet-protocols"><a class="toclink" href="#design-philosophy-of-the-darpa-internet-protocols"><a href="http://ccr.sigcomm.org/archive/1995/jan95/ccr-9501-clark.pdf">Design Philosophy of the DARPA Internet Protocols</a></a></h6>
 <hr />
-<h3 id="what-is-the-problem">What is the Problem?</h3>
-<h3 id="summary">Summary</h3>
+<h3 id="what-is-the-problem"><a class="toclink" href="#what-is-the-problem">What is the Problem?</a></h3>
+<h3 id="summary"><a class="toclink" href="#summary">Summary</a></h3>
 <p><strong>Fundamental Goal</strong>: develop effective technique for <strong>multiplexed</strong> utilization of <strong>interconnected</strong> networks.</p>
 <p><strong>Multiplexing</strong>: single channel used by many communicating parties
 - Circuit-switching: dedicated channel for each pair of communicating parties, i.e. point-to-point comms
@@ -117,32 +114,44 @@
 <li>Continue despite failure</li>
 <li>Multiple types of communication</li>
 <li>Variety of networks</li>
-<li>Distributed management of resources
-    - Any centralized control would be a bottleneck
-    - Each network should be able to manage its own resources</li>
-<li>Cost effective</li>
-<li>Host attachment
-    - Hosts should be able to connect to the network without requiring changes to the network</li>
-<li>Accountability
-    - Hosts should be able to identify themselves to the network
-    - Quality of service should be able to be enforced</li>
+<li>Distributed management of resources<ul>
+<li>Any centralized control would be a bottleneck</li>
+<li>Each network should be able to manage its own resources</li>
 </ul>
-<h4 id="datagrams">Datagrams</h4>
+</li>
+<li>Cost effective</li>
+<li>Host attachment<ul>
+<li>Hosts should be able to connect to the network without requiring changes to the network</li>
+</ul>
+</li>
+<li>Accountability<ul>
+<li>Hosts should be able to identify themselves to the network</li>
+<li>Quality of service should be able to be enforced</li>
+</ul>
+</li>
+</ul>
+<h4 id="datagrams"><a class="toclink" href="#datagrams">Datagrams</a></h4>
 <ul>
-<li>Connectionless service
-    - no state established ahead of time</li>
+<li>Connectionless service<ul>
+<li>no state established ahead of time</li>
+</ul>
+</li>
 <li>Key building block for switching</li>
-<li>UDP is app-level interface to datagram service of the internet
-    - building block for other protocols (TCP)</li>
+<li>UDP is app-level interface to datagram service of the internet<ul>
+<li>building block for other protocols (TCP)</li>
+</ul>
+</li>
 <li>Each packet is independent</li>
 </ul>
-<h4 id="tcp-vs-udp">TCP vs. UDP</h4>
+<h4 id="tcp-vs-udp"><a class="toclink" href="#tcp-vs-udp">TCP vs. UDP</a></h4>
 <ul>
 <li>TCP: connection-oriented, reliable, in-order delivery</li>
-<li>UDP: connectionless, unreliable, unordered delivery (loss is OK)
-    - No QoS guarantees in lower-level</li>
+<li>UDP: connectionless, unreliable, unordered delivery (loss is OK)<ul>
+<li>No QoS guarantees in lower-level</li>
 </ul>
-<h4 id="supporting-variety-of-networks">Supporting Variety of Networks</h4>
+</li>
+</ul>
+<h4 id="supporting-variety-of-networks"><a class="toclink" href="#supporting-variety-of-networks">Supporting Variety of Networks</a></h4>
 <p>"Thin waist" of the internet/hourglass model: IP at the network layer, TCP/UDP at the transport layer.</p>
 <ul>
 <li>IP: provides a common interface for all networks</li>
@@ -154,20 +163,20 @@
     - Workarounds: ECN, dpdk
     - Parallels in storage, e.g. direct access, spdk
 - Can't evolve interface of IP without changing everything above it</p>
-<h4 id="fate-sharing">Fate Sharing</h4>
+<h4 id="fate-sharing"><a class="toclink" href="#fate-sharing">Fate Sharing</a></h4>
 <p>Move state to endpoints for <strong>survivability</strong>. If a network fails, the endpoints can reestablish the connection.</p>
-<h3 id="strengths">Strengths</h3>
+<h3 id="strengths"><a class="toclink" href="#strengths">Strengths</a></h3>
 <ul>
 <li>Simple idea of datagrams</li>
 <li>Scalable/distributed</li>
 <li>It works!</li>
 </ul>
-<h3 id="weaknesses">Weaknesses</h3>
+<h3 id="weaknesses"><a class="toclink" href="#weaknesses">Weaknesses</a></h3>
 <ul>
 <li>Narrow IP interface hurts innovation at IP level</li>
 <li>Hiding secrets can hurt efficiency</li>
 </ul>
-<h3 id="further-reading">Further Reading</h3>
+<h3 id="further-reading"><a class="toclink" href="#further-reading">Further Reading</a></h3>
 <ul>
 <li><a href="https://ocw.mit.edu/courses/res-6-004-principles-of-computer-system-design-an-introduction-spring-2009/pages/online-textbook/">Principles of Computer System Design</a></li>
 </ul>

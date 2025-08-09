@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Quantization in LLM Serving Systems", "dateModified": "2025-05-25T17:30:22.420033", "description": "Overview of quantization techniques for LLM serving systems, focusing on theoretical foundations and practical applications.", "articleSection": "Machine Learning Systems", "keywords": "quantization,low precision,performance,memory efficiency,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Quantization in LLM Serving Systems", "dateModified": "2025-05-25T17:30:22.420033", "description": "Overview of quantization techniques for LLM serving systems, focusing on theoretical foundations and practical applications.", "url": "https://notes.elimelt.com/llm-serving-systems/quantization.html", "articleSection": "Machine Learning Systems", "keywords": "quantization,low precision,performance,memory efficiency,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Quantization in LLM Serving Systems
@@ -98,12 +95,12 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="quantization">Quantization</h1>
+                <h1 id="quantization"><a class="toclink" href="#quantization">Quantization</a></h1>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
-<h2 id="fundamentals">Fundamentals</h2>
-<h3 id="what-is-quantization">What is Quantization?</h3>
+<h2 id="fundamentals"><a class="toclink" href="#fundamentals">Fundamentals</a></h2>
+<h3 id="what-is-quantization"><a class="toclink" href="#what-is-quantization">What is Quantization?</a></h3>
 <p><strong>Quantization</strong> is the process of reducing the precision of numerical representations to achieve:</p>
 <ul>
 <li><strong>Reduced memory footprint</strong></li>
@@ -111,78 +108,76 @@
 <li><strong>Decreased energy consumption</strong></li>
 <li><strong>Compact representation</strong></li>
 </ul>
-<h3 id="key-idea">Key Idea</h3>
+<h3 id="key-idea"><a class="toclink" href="#key-idea">Key Idea</a></h3>
 <p>Convert high-precision floating-point numbers (FP32) to lower-precision representations (INT4, INT8) while maintaining acceptable accuracy.</p>
-<h3 id="energy-motivation">Energy Motivation</h3>
+<h3 id="energy-motivation"><a class="toclink" href="#energy-motivation">Energy Motivation</a></h3>
 <ul>
 <li><strong>Energy scales quadratically</strong> with bit-width</li>
 <li><strong>4x bit width</strong>  o <strong>~16x energy consumption</strong></li>
 <li><strong>Memory access costs</strong> (DRAM: 640pJ vs 8b Add: 0.03pJ)</li>
 </ul>
-<h3 id="why-quantization-works">Why Quantization Works</h3>
+<h3 id="why-quantization-works"><a class="toclink" href="#why-quantization-works">Why Quantization Works</a></h3>
 <ul>
 <li><strong>Activation ranges are well-defined</strong> in neural networks</li>
 <li><strong>Even distributions</strong> lead to better training outcomes</li>
 <li><strong>Proper initialization</strong> prevents activation divergence and gradient instability</li>
 </ul>
 <hr />
-<h2 id="floating-point-representations">Floating Point Representations</h2>
-<h3 id="fp32-full-precision">FP32 (Full Precision)</h3>
+<h2 id="floating-point-representations"><a class="toclink" href="#floating-point-representations">Floating Point Representations</a></h2>
+<h3 id="fp32-full-precision"><a class="toclink" href="#fp32-full-precision">FP32 (Full Precision)</a></h3>
 <ul>
 <li><strong>Sign</strong>: 1 bit</li>
 <li><strong>Exponent</strong>: 8 bits</li>
 <li><strong>Significand/Mantissa</strong>: 23 bits</li>
 <li><strong>Total</strong>: 32 bits</li>
 </ul>
-<h3 id="fp16-half-precision">FP16 (Half Precision)</h3>
+<h3 id="fp16-half-precision"><a class="toclink" href="#fp16-half-precision">FP16 (Half Precision)</a></h3>
 <ul>
 <li><strong>Sign</strong>: 1 bit</li>
 <li><strong>Exponent</strong>: 5 bits</li>
 <li><strong>Significand/Mantissa</strong>: 10 bits</li>
 <li><strong>Total</strong>: 16 bits</li>
 </ul>
-<h3 id="dynamic-range-vs-precision-trade-offs">Dynamic Range vs Precision Trade-offs</h3>
+<h3 id="dynamic-range-vs-precision-trade-offs"><a class="toclink" href="#dynamic-range-vs-precision-trade-offs">Dynamic Range vs Precision Trade-offs</a></h3>
 <ul>
 <li><strong>Dynamic Range</strong>: Range of representable numbers (better for training)</li>
 <li><strong>Precision</strong>: Distance between neighboring values (better for inference)</li>
 <li><strong>INT8</strong>: Limited dynamic range (-127 to 127) but consistent precision</li>
 </ul>
 <hr />
-<h2 id="linear-quantization">Linear Quantization</h2>
-<h3 id="mathematical-formulation">Mathematical Formulation</h3>
+<h2 id="linear-quantization"><a class="toclink" href="#linear-quantization">Linear Quantization</a></h2>
+<h3 id="mathematical-formulation"><a class="toclink" href="#mathematical-formulation">Mathematical Formulation</a></h3>
 <p><strong>Quantization</strong>: $q = \text{clip}(\text{round}(r/S + Z), -2^{b-1}, 2^{b-1})$</p>
 <p><strong>Dequantization</strong>: $r = S(q - Z)$</p>
 <p>Where:
 - $S = \frac{r_{max} - r_{min}}{q_{max} - q_{min}}$ (scaling factor)
 - $Z$ = zero point
 - $b$ = bit width</p>
-<h3 id="sources-of-error">Sources of Error</h3>
+<h3 id="sources-of-error"><a class="toclink" href="#sources-of-error">Sources of Error</a></h3>
 <ol>
 <li><strong>Rounding Error</strong>: Bounded by [-S/2, S/2]</li>
 <li><strong>Clipping Error</strong>: Values outside representable range</li>
 </ol>
-<h3 id="symmetric-vs-asymmetric-quantization">Symmetric vs Asymmetric Quantization</h3>
+<h3 id="symmetric-vs-asymmetric-quantization"><a class="toclink" href="#symmetric-vs-asymmetric-quantization">Symmetric vs Asymmetric Quantization</a></h3>
 <ul>
 <li><strong>Symmetric</strong>: Zero point Z = 0 (simpler computation)</li>
 <li><strong>Asymmetric</strong>: Non-zero Z (more flexible, better for skewed distributions like ReLU outputs)</li>
 </ul>
-<h3 id="matrix-multiplication-with-quantization">Matrix Multiplication with Quantization</h3>
+<h3 id="matrix-multiplication-with-quantization"><a class="toclink" href="#matrix-multiplication-with-quantization">Matrix Multiplication with Quantization</a></h3>
 <p>$$Y = S_W S_X [q_W q_X - q_W Z_X - q_X Z_W + Z_W Z_X]$$</p>
 <p><strong>Symmetric quantization</strong> eliminates the overhead terms when $Z_W = Z_X = 0$.</p>
 <hr />
-<h2 id="non-linear-quantization">Non-Linear Quantization</h2>
-<h3 id="clustering-based-approach">Clustering-Based Approach</h3>
+<h2 id="non-linear-quantization"><a class="toclink" href="#non-linear-quantization">Non-Linear Quantization</a></h2>
+<h3 id="clustering-based-approach"><a class="toclink" href="#clustering-based-approach">Clustering-Based Approach</a></h3>
 <ul>
 <li><strong>Use case</strong>: Skewed weight distributions</li>
 <li><strong>Method</strong>: K-means clustering to determine quantization levels</li>
-<li><strong>Storage</strong>:<ul>
+<li><strong>Storage</strong>:</li>
 <li>Indices: $\log_2(N)$ bits per weight</li>
 <li>Codebook: N centroids in original precision</li>
 <li><strong>Example</strong>: 3.2x compression for 4-bit quantization</li>
 </ul>
-</li>
-</ul>
-<h3 id="granularity-options">Granularity Options</h3>
+<h3 id="granularity-options"><a class="toclink" href="#granularity-options">Granularity Options</a></h3>
 <ol>
 <li><strong>Per-Tensor</strong>: Single scale/zero-point for entire tensor</li>
 <li><strong>Per-Channel/Vector</strong>: Scale per channel (more precise)</li>
@@ -190,47 +185,47 @@
 </ol>
 <p><strong>Trade-off</strong>: Finer granularity    o Higher precision but increased overhead</p>
 <hr />
-<h2 id="training-workflows">Training Workflows</h2>
-<h3 id="post-training-quantization-ptq">Post-Training Quantization (PTQ)</h3>
+<h2 id="training-workflows"><a class="toclink" href="#training-workflows">Training Workflows</a></h2>
+<h3 id="post-training-quantization-ptq"><a class="toclink" href="#post-training-quantization-ptq">Post-Training Quantization (PTQ)</a></h3>
 <ul>
 <li><strong>Training</strong>: Uses full precision (FP32/BF16)</li>
 <li><strong>Inference</strong>: Applies quantization to weights and/or activations</li>
 <li><strong>Simplest approach</strong> but may have accuracy degradation</li>
 </ul>
-<h3 id="quantization-aware-training-qat">Quantization-Aware Training (QAT)</h3>
+<h3 id="quantization-aware-training-qat"><a class="toclink" href="#quantization-aware-training-qat">Quantization-Aware Training (QAT)</a></h3>
 <ul>
 <li><strong>Training</strong>: Simulates quantization effects during training</li>
 <li><strong>Method</strong>: Quantize  o Dequantize in forward pass</li>
 <li><strong>Backpropagation</strong>: Uses Straight-Through Estimator (STE) for differentiability</li>
 <li><strong>Results</strong>: Generally outperforms PTQ</li>
 </ul>
-<h3 id="straight-through-estimator-ste">Straight-Through Estimator (STE)</h3>
+<h3 id="straight-through-estimator-ste"><a class="toclink" href="#straight-through-estimator-ste">Straight-Through Estimator (STE)</a></h3>
 <ul>
 <li><strong>Problem</strong>: Step function derivative is 0 or infty</li>
 <li><strong>Solution</strong>: Use identity function gradient: $\frac{\partial}{\partial x}\text{quantize}(x) \approx 1$</li>
 </ul>
 <hr />
-<h2 id="llm-specific-quantization-challenges">LLM-Specific Quantization Challenges</h2>
-<h3 id="outlier-problem">Outlier Problem</h3>
+<h2 id="llm-specific-quantization-challenges"><a class="toclink" href="#llm-specific-quantization-challenges">LLM-Specific Quantization Challenges</a></h2>
+<h3 id="outlier-problem"><a class="toclink" href="#outlier-problem">Outlier Problem</a></h3>
 <ul>
 <li><strong>Observation</strong>: Quantization accuracy drops significantly for large models (&gt;6.7B parameters)</li>
 <li><strong>Cause</strong>: Emergence of outlier features in activations</li>
 <li><strong>Impact</strong>: Sharp accuracy degradation with standard quantization</li>
 </ul>
-<h3 id="modern-llm-context">Modern LLM Context</h3>
+<h3 id="modern-llm-context"><a class="toclink" href="#modern-llm-context">Modern LLM Context</a></h3>
 <p><strong>Example - DeepSeek V3</strong>:</p>
 <ul>
 <li><strong>FP8 quantization</strong>: 671B parameters     imes 1 byte = 671 GB (fits ~5 H200s)</li>
 <li><strong>BF16 weights</strong>: 671B parameters     imes 2 bytes = 1.3 TB</li>
 </ul>
 <hr />
-<h2 id="advanced-llm-quantization-methods">Advanced LLM Quantization Methods</h2>
-<h3 id="llmint8">LLM.int8()</h3>
+<h2 id="advanced-llm-quantization-methods"><a class="toclink" href="#advanced-llm-quantization-methods">Advanced LLM Quantization Methods</a></h2>
+<h3 id="llmint8"><a class="toclink" href="#llmint8">LLM.int8()</a></h3>
 <p><strong>Key Ideas</strong>:
 1. <strong>Vector-wise quantization</strong> for better outlier handling
 2. <strong>Mixed precision</strong>: Keep outliers in FP16, quantize regular values to INT8
 3. <strong>Decomposition</strong>: Separate outlier and regular computations</p>
-<h3 id="smoothquant-w8a8">SmoothQuant (W8A8)</h3>
+<h3 id="smoothquant-w8a8"><a class="toclink" href="#smoothquant-w8a8">SmoothQuant (W8A8)</a></h3>
 <p><strong>Motivation</strong>: Outliers typically in activations, not weights</p>
 <p><strong>Core Concept</strong>: Migrate quantization difficulty</p>
 <ul>
@@ -239,7 +234,7 @@
 <li><strong>Optimal alpha</strong>: Empirically found to be 0.5</li>
 </ul>
 <p><strong>Benefits</strong>: Balances quantization difficulty between weights and activations</p>
-<h3 id="awq-activation-aware-weight-only-quantization">AWQ (Activation-Aware Weight-Only Quantization)</h3>
+<h3 id="awq-activation-aware-weight-only-quantization"><a class="toclink" href="#awq-activation-aware-weight-only-quantization">AWQ (Activation-Aware Weight-Only Quantization)</a></h3>
 <p><strong>Target</strong>: Low-batch scenarios where activation quantization is prohibitive</p>
 <p><strong>Key Insights</strong>:
 1. <strong>Weight-only quantization</strong> (W4) for memory efficiency
@@ -251,15 +246,15 @@
 <li>Fuse inverse scaling with previous operations (e.g., LayerNorm)</li>
 </ul>
 <hr />
-<h2 id="quantization-performance-impact">Quantization Performance Impact</h2>
-<h3 id="accuracy-vs-bit-width">Accuracy vs Bit-width</h3>
+<h2 id="quantization-performance-impact"><a class="toclink" href="#quantization-performance-impact">Quantization Performance Impact</a></h2>
+<h3 id="accuracy-vs-bit-width"><a class="toclink" href="#accuracy-vs-bit-width">Accuracy vs Bit-width</a></h3>
 <ul>
 <li><strong>High variance</strong> across models and quantization levels</li>
 <li><strong>INT8</strong>: Generally acceptable accuracy loss</li>
 <li><strong>INT4</strong>: Requires careful techniques (AWQ, etc.)</li>
 <li><strong>INT3/INT2</strong>: Significant accuracy challenges</li>
 </ul>
-<h3 id="rounding-schemes-impact">Rounding Schemes Impact</h3>
+<h3 id="rounding-schemes-impact"><a class="toclink" href="#rounding-schemes-impact">Rounding Schemes Impact</a></h3>
 <table>
 <thead>
 <tr>
@@ -287,7 +282,7 @@
 </tbody>
 </table>
 <hr />
-<h2 id="summary">Summary</h2>
+<h2 id="summary"><a class="toclink" href="#summary">Summary</a></h2>
 <p><strong>Quantization</strong> is essential for efficient LLM serving, providing:</p>
 <ul>
 <li><strong>Memory reduction</strong> (2-8x compression)</li>

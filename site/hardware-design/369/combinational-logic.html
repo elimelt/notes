@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Combinational Logic", "dateModified": "2025-02-11T16:42:51.457186", "description": "Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.", "articleSection": "Hardware", "keywords": "combinational logic,sequential logic,boolean algebra,logic gates,minimization"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Combinational Logic", "dateModified": "2025-02-11T16:42:51.457186", "description": "Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.", "url": "https://notes.elimelt.com/hardware-design/369/combinational-logic.html", "articleSection": "Hardware", "keywords": "combinational logic,sequential logic,boolean algebra,logic gates,minimization"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Combinational Logic
@@ -98,19 +95,19 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="combinational-logic">Combinational Logic</h1>
-<h2 id="combinational-logic-vs-sequential-logic">Combinational Logic vs. Sequential Logic</h2>
+                <h1 id="combinational-logic"><a class="toclink" href="#combinational-logic">Combinational Logic</a></h1>
+<h2 id="combinational-logic-vs-sequential-logic"><a class="toclink" href="#combinational-logic-vs-sequential-logic">Combinational Logic vs. Sequential Logic</a></h2>
 <ul>
-<li><strong>Combinational Logic</strong>:<ul>
+<li><strong>Combinational Logic</strong>:</li>
 <li>Output depends only on the current input.</li>
 <li>No feedback.</li>
 <li>Examples: Multiplexers, decoders, adders, etc.</li>
+<li><strong>Sequential Logic</strong>:<ul>
+<li>Output depends on the current input and the state of the circuit.</li>
 </ul>
 </li>
-<li><strong>Sequential Logic</strong>:
-    - Output depends on the current input and the state of the circuit.</li>
 </ul>
-<h2 id="representation">Representation</h2>
+<h2 id="representation"><a class="toclink" href="#representation">Representation</a></h2>
 <p>Can represent logic with text, circuits, truth tables, or equations.</p>
 <p>For example:</p>
 <p>Door is ajar if driver door is open OR passenger door is open.</p>
@@ -121,12 +118,12 @@ DoorAjar = DriverDoorOpen OR PassengerDoorOpen</p>
 ```plaintext```
 SeatBeltLight = (NOT DriverSeatBeltFastened) OR (NOT PassengerSeatBeltFastened AND PassengerPresent)
 </code></pre>
-<h2 id="translating-truth-table-to-boolean-expressions">Translating Truth Table to Boolean Expressions</h2>
+<h2 id="translating-truth-table-to-boolean-expressions"><a class="toclink" href="#translating-truth-table-to-boolean-expressions">Translating Truth Table to Boolean Expressions</a></h2>
 <ul>
 <li><strong>Sum of products</strong>: Take the rows where the output is 1 and OR the inputs.</li>
 <li><strong>Product of sums</strong>: Take the rows where the output is 0 and AND the complements of the inputs.</li>
 </ul>
-<h2 id="boolean-identities">Boolean Identities</h2>
+<h2 id="boolean-identities"><a class="toclink" href="#boolean-identities">Boolean Identities</a></h2>
 <table>
 <thead>
 <tr>
@@ -169,7 +166,7 @@ SeatBeltLight = (NOT DriverSeatBeltFastened) OR (NOT PassengerSeatBeltFastened A
 </tr>
 </tbody>
 </table>
-<h2 id="logic-minimalization">Logic Minimalization</h2>
+<h2 id="logic-minimalization"><a class="toclink" href="#logic-minimalization">Logic Minimalization</a></h2>
 <p>It is nice to reduce complexity at the gate level. This allows us to build smaller and faster hardware. We care about...</p>
 <ul>
 <li>number of gates: fewer gates is better</li>
@@ -217,7 +214,7 @@ SeatBeltLight = (NOT DriverSeatBeltFastened) OR (NOT PassengerSeatBeltFastened A
 </tbody>
 </table>
 <p>You can recreate EVERY gate type using just NAND and NOR (universal gates). e.g. <code>AND = NAND(NAND(A, B))</code></p>
-<h2 id="demorgans-law">DeMorgan's Law</h2>
+<h2 id="demorgans-law"><a class="toclink" href="#demorgans-law">DeMorgan's Law</a></h2>
 <pre><code class="language-plaintext">NOT(A AND B) = NOT(A) OR NOT(B)
 NOT(A OR B) = NOT(A) AND NOT(B)
 </code></pre>

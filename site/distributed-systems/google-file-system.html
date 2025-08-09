@@ -7,7 +7,7 @@
     <title>Google File System (GFS) Overview | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.">
+    <meta name="description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across man">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Google File System (GFS) Overview">
-    <meta property="og:description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.">
+    <meta property="og:description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across man">
     <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/google-file-system.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Google File System (GFS) Overview">
-    <meta name="twitter:description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.">
+    <meta name="twitter:description" content="An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across man">
 
     <meta name="keywords" content="cloud storage,distributed systems,google cloud">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Google File System (GFS) Overview", "dateModified": "2025-02-11T16:42:07.809631", "description": "An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across many commodity hardware nodes.", "articleSection": "Distributed Systems", "keywords": "cloud storage,distributed systems,google cloud"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Google File System (GFS) Overview", "dateModified": "2025-02-11T16:42:07.809631", "description": "An overview of the Google File System (GFS), a highly scalable and fault-tolerant distributed storage system designed to handle large amounts of data across man", "url": "https://notes.elimelt.com/distributed-systems/google-file-system.html", "articleSection": "Distributed Systems", "keywords": "cloud storage,distributed systems,google cloud"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Google File System (GFS) Overview
@@ -98,39 +95,37 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="google-file-system-gfs">Google File System (GFS)</h1>
+                <h1 id="google-file-system-gfs"><a class="toclink" href="#google-file-system-gfs">Google File System (GFS)</a></h1>
 <p><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf">reading</a></p>
-<h2 id="introduction">Introduction</h2>
+<h2 id="introduction"><a class="toclink" href="#introduction">Introduction</a></h2>
 <p>GFS differs from more traditional file systems in a lot of ways. Particularly...</p>
 <ul>
 <li>Fault tolerance/expecting failures as the common case, since it runs on commodity hardware</li>
 <li>Huge (multi-GB) files are the norm</li>
 <li>Read/Append access patterns are common, while updates and random writes are rare. Particularly, the system is optimized for large streaming (sequential) reads and appends.</li>
 </ul>
-<h2 id="design-overview">Design Overview</h2>
-<h3 id="assumptions">Assumptions</h3>
+<h2 id="design-overview"><a class="toclink" href="#design-overview">Design Overview</a></h2>
+<h3 id="assumptions"><a class="toclink" href="#assumptions">Assumptions</a></h3>
 <ul>
 <li>Built with commodity hardware, and is thus failure prone and needs to constantly monitor, detect, and tolerate failures</li>
 <li>Typically storing a modest number of large files. Anywhere from a few million ~100 MB files, to multi-GB files. The system should be optimized for working with these large files.</li>
-<li>Two types of workloads:<ul>
+<li>Two types of workloads:</li>
 <li>large streaming reads spanning &gt; 1 MB</li>
 <li>smaller random reads (which are often batched)</li>
-</ul>
-</li>
 <li>Well defined semantics and easy concurrency control for concurrent appends are essential. A common application of GFS is to be used as a producer-consumer queue</li>
 <li>High sustained bandwidth takes precedence over latency</li>
 </ul>
-<h3 id="interface">Interface</h3>
+<h3 id="interface"><a class="toclink" href="#interface">Interface</a></h3>
 <p>Although familiar, GFS is not POSIX compliant. Files are organized hierarchically in directories and identified by path names, supporting <em>create, delete, open, close, read,</em> and <em>write</em>. Additionally, supports <em>snapshot</em> and <em>record append</em>. Snapshot creates a copy of a file or directory tree. Record append allows multiple clients to append data to the same file concurrently while guaranteeing the atomicity of each individual record.</p>
-<h3 id="architecture">Architecture</h3>
+<h3 id="architecture"><a class="toclink" href="#architecture">Architecture</a></h3>
 <p>A GFS cluster is composed of a single <em>master</em>, and multiple <em>chunkservers</em>, and is accessed by multiple <em>clients</em>. Each component is typically run on a commodity Linux machine running a user-level server process, and it isn't uncommon to run both a client and chunkserver on the same machine (although this comes at a reliability cost).</p>
 <p>Files are made of fixed-size <em>chunks</em>, identified by an immutable and globally unique 64 bit <em>chunk handle</em> which is assigned by the master at the time of creation. Chunkservers store chunks as Linux files on local disk, and read/write to specified chunk handle and byte ranges. Each chunk is replicated on multiple chunkservers (by default with three replicas, but is configurable).</p>
 <p>The master maintains all filesystem metadata, including the namespace, access control information, file to chunk and chunk to server mappings, etc. The master communicates with chunkservers through a <em>HeartBeat</em>, which is a two-way message that allows the master to monitor and instruct the chunkservers and chunkservers to report their status.</p>
 <p>GFS client libraries are linked in each application. All metadata updates go through the master, but simple data-bearing communication goes directly to the respective chunkserver.There is no need to go through something like the Linux vnode layer, which is a major benefit of not supporting POSIX.</p>
 <p>Neither clients nor chunkservers cache file data, but clients will typically cache metadata. Technically, chunkservers do cache file data in that they use Linux files, and thus have a buffer cache for frequently accessed data in memory, but this is transparent to GFS.</p>
-<h3 id="single-master">Single Master</h3>
+<h3 id="single-master"><a class="toclink" href="#single-master">Single Master</a></h3>
 <p>Using a single master architecture vastly simplifies things, since we can use global knowledge of the filesystem at the master for replication and chunk placement. To help this scale, the master's level of involvement in reads/writes needs to be minimized.</p>
-<h4 id="common-case-read">Common Case Read</h4>
+<h4 id="common-case-read"><a class="toclink" href="#common-case-read">Common Case Read</a></h4>
 <ol>
 <li>Client translates file name and byte offset to chunk index locally</li>
 <li>Requests chunk handle and replica locations from master</li>
@@ -138,10 +133,10 @@
 <li>Client chooses replica (often the closest) and reads/writes while their cache entry is still valid</li>
 </ol>
 <p>Note that for almost no extra cost, steps 1 and 2 can be batched for many files/chunks.</p>
-<h3 id="chunk-size">Chunk Size</h3>
+<h3 id="chunk-size"><a class="toclink" href="#chunk-size">Chunk Size</a></h3>
 <p>GFS uses 64 MB lazily allocated (to mitigate internal fragmentation) chunks, each of which are stored as a plain Linux file. Using such large chunks has many benefits, including allowing clients to cache plenty of metadata, reducing network overhead/load of metadata acquisition, and allows for in-memory metadata at the master.</p>
 <p>Large chunk sizes also have their disadvantages, including leading to hotspots for chunkservers with many smaller files. One such example is when you have an executable stored in GFS that you want to concurrently read and execute across many hundreds of machines, this leads to a temporary overload of those chunk servers. This was fixed by using a higher replication factor, and staggering starting times. <strong>Extension</strong>: peer to peer sharing (between clients) is a possible solution to hotspots.</p>
-<h3 id="metadata">Metadata</h3>
+<h3 id="metadata"><a class="toclink" href="#metadata">Metadata</a></h3>
 <p>There are three main types of metadata, all of which is stored in-memory in the master.</p>
 <ul>
 <li>File and chunk namespaces</li>
@@ -149,27 +144,23 @@
 <li>Location of each chunk's replicas</li>
 </ul>
 <p>The first two are also persisted in an <em>operation log</em> stored on the master's local disk. The last however, is not persisted, and instead on startup/when a new chunkserver joins the cluster, the master requests metadata about the chunks stored locally.</p>
-<h4 id="in-memory-data-structures">In-Memory Data Structures</h4>
+<h4 id="in-memory-data-structures"><a class="toclink" href="#in-memory-data-structures">In-Memory Data Structures</a></h4>
 <p>The master stores metadata in memory and goes fast! Additionally, this allows it to quickly scan through its entire state, making things like garbage collection, re-replication on failures, and migration for load balancing possible.</p>
 <p>"b-b-bbbut that's nOt sCaLabLE" - someone right now probably</p>
 <p>In reality, if the metadata were a limiting factor for your system, you would have a MASSIVE amount of data, and would need to be using a very under-specced machine as the master. Each 64 MB chunk only requires ~64 bytes of metadata, and namespace metadata is compressed using prefix compression (which is very effective for filesystems). Therefore, adding even an extra few GB of memory to your master would allow you to store a huge amount of additional metadata.</p>
-<h4 id="chunk-locations">Chunk Locations</h4>
+<h4 id="chunk-locations"><a class="toclink" href="#chunk-locations">Chunk Locations</a></h4>
 <p>As stated previously, the master doesn't persist the location of chunks, instead opting to poll chunkservers on startup. This design choice simplifies things greatly, and is a general approach to fault tolerance, in that it would have been an uphill battle trying to maintain a globally consistent and persistent view of the system, since chunkservers can partially fail, and they ultimately know best which chunks they have.</p>
-<h4 id="operation-log">Operation Log</h4>
+<h4 id="operation-log"><a class="toclink" href="#operation-log">Operation Log</a></h4>
 <p>The operation log is not only the sole persistent metadata in the system, but also defines the order in which concurrent operations are executed. The log is replicated remotely, and changes are batched and flushed to disk. The log is replayed on startup, but is also kept small by being checkpointed with a memory-serializable compact B-tree structure, making recovery faster. The master can create a checkpoint in a separate background thread, allowing concurrent operations to be executed. Once created, the checkpoint is written to disk both locally and remotely.</p>
-<h3 id="consistency-model">Consistency Model</h3>
-<h4 id="guarantees-by-gfs">Guarantees by GFS</h4>
+<h3 id="consistency-model"><a class="toclink" href="#consistency-model">Consistency Model</a></h3>
+<h4 id="guarantees-by-gfs"><a class="toclink" href="#guarantees-by-gfs">Guarantees by GFS</a></h4>
 <p>File namespace mutations are atomic through being done exclusively at the master with locking. File mutations have looser guarantees, particularly at the level of defined, and undefined regions</p>
 <ul>
-<li>Defined:<ul>
+<li>Defined:</li>
 <li>After a data mutation, the file is in a consistent state and the mutation was universally applied without being interrupted</li>
-</ul>
-</li>
-<li>Undefined:<ul>
+<li>Undefined:</li>
 <li>All clients will see the same data, but the data may not be consistent with any single mutation (i.e. interleaved)</li>
 <li>Successful concurrent mutations leave a region consistent but undefined, whereas failed concurrent mutations leave it undefined and inconsistent.</li>
-</ul>
-</li>
 </ul>
 <p>After a sequence of successful mutations, the file is guaranteed to be defined and to contain the data written by the last mutation. GFS achieves this by...</p>
 <ul>
@@ -178,10 +169,10 @@
 </ul>
 <p>Once a chunk becomes stale, it is no longer returned to the client, and is garbage collected ASAP. Since clients cache chunk metadata, there is a window of time in which a client will read from stale chunks, but this typically presents as reading a premature end of chunk (in the case of append workloads).</p>
 <p>Component failures can lead to corrupted or destroyed data, but this is mitigated by checksumming files. Once a problem is detected, the data is restored from a valid replica if possible. In the (uncommon) case where all replicas are lost before the master can react, the data is unavailable, but corrupted data is never returned.</p>
-<h4 id="implications-for-applications">Implications for Applications</h4>
+<h4 id="implications-for-applications"><a class="toclink" href="#implications-for-applications">Implications for Applications</a></h4>
 <p>Long story short, you should always prefer appends over random writes. Note that GFS has "append at least once" semantics, and can also insert arbitrary padding between appends. It is thus important to use techniques like structuring your data and using unique identifiers for non-idempotent log entries.</p>
-<h2 id="system-interactions">System Interactions</h2>
-<h3 id="lease-and-mutation-order">Lease and Mutation Order</h3>
+<h2 id="system-interactions"><a class="toclink" href="#system-interactions">System Interactions</a></h2>
+<h3 id="lease-and-mutation-order"><a class="toclink" href="#lease-and-mutation-order">Lease and Mutation Order</a></h3>
 <p>A mutation is any change to the contents of a chunk. Each mutation is performed at all replicas. Mutations are carried out as follows:</p>
 <ol>
 <li>Master grants a <em>lease</em> (~60 sec) to one of the replicas, making it the <em>primary</em></li>

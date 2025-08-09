@@ -7,7 +7,7 @@
     <title>JVM Performance with State Pattern Optimizations | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and examines JVM-specific optimizations, including the use of atomic references and lazy evaluation. Presents code blocks to test the performance impact of these techniques in a multithreaded environment.">
+    <meta name="description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="JVM Performance with State Pattern Optimizations">
-    <meta property="og:description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and examines JVM-specific optimizations, including the use of atomic references and lazy evaluation. Presents code blocks to test the performance impact of these techniques in a multithreaded environment.">
+    <meta property="og:description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ">
     <meta property="og:url" content="https://notes.elimelt.com/performance-engineering/efficiently-implementing-state-pattern-JVM.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="JVM Performance with State Pattern Optimizations">
-    <meta name="twitter:description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and examines JVM-specific optimizations, including the use of atomic references and lazy evaluation. Presents code blocks to test the performance impact of these techniques in a multithreaded environment.">
+    <meta name="twitter:description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ">
 
     <meta name="keywords" content="jvm,state pattern,performance optimization,multithreading,atomic reference,lazy evaluation">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "JVM Performance with State Pattern Optimizations", "dateModified": "2025-02-11T20:49:57.925264", "description": "Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and examines JVM-specific optimizations, including the use of atomic references and lazy evaluation. Presents code blocks to test the performance impact of these techniques in a multithreaded environment.", "articleSection": "Performance Engineering", "keywords": "jvm,state pattern,performance optimization,multithreading,atomic reference,lazy evaluation"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "JVM Performance with State Pattern Optimizations", "dateModified": "2025-02-11T20:49:57.925264", "description": "Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ", "url": "https://notes.elimelt.com/performance-engineering/efficiently-implementing-state-pattern-JVM.html", "articleSection": "Performance Engineering", "keywords": "jvm,state pattern,performance optimization,multithreading,atomic reference,lazy evaluation"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/performance%20engineering.html">Performance Engineering</a> » JVM Performance with State Pattern Optimizations
@@ -98,66 +95,54 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="jvm-performance-with-state-pattern-optimizations">JVM Performance with State Pattern Optimizations</h1>
+                <h1 id="jvm-performance-with-state-pattern-optimizations"><a class="toclink" href="#jvm-performance-with-state-pattern-optimizations">JVM Performance with State Pattern Optimizations</a></h1>
 <p>I was reading some interesting code at AWS and came across an implementation of the state pattern written by one of the senior engineers on our team. If you aren't already familiar, read <a href="https://refactoring.guru/design-patterns/state">this</a>. While the problem I would usually reach to the state pattern to solve is one more concerned with logical complexity and structure, (without revealing anything in particular about the code I was reading) I was intrigued by the performance implications of the underlying implementations, especially in a multi-threaded environment.</p>
-<h2 id="the-implementations">The Implementations</h2>
+<h2 id="the-implementations"><a class="toclink" href="#the-implementations">The Implementations</a></h2>
 <ol>
 <li><strong>Optimized State Pattern Using Enums</strong>: In <code>InlineStatePattern</code>, states are represented as enums with direct in-line transitions. State changes are handled by a simple check and assignment operation.</li>
 <li><strong>Generic State Pattern with Lazy Transitions</strong>: In <code>PolymorphicStatePattern</code>, state changes are managed with a generic context using an <code>AtomicReference</code> for thread-safe transitions. Lazy evaluation allows the state to change only if necessary, reducing the overhead in <em>certain cases</em> (emphasis on <em>certain</em>).</li>
 </ol>
-<h2 id="when-might-i-reach-for-either">When might I reach for either?</h2>
+<h2 id="when-might-i-reach-for-either"><a class="toclink" href="#when-might-i-reach-for-either">When might I reach for either?</a></h2>
 <ol>
-<li>
-<p><strong>Inline State Pattern</strong>:</p>
-<ul>
+<li><strong>Inline State Pattern</strong>:</li>
 <li>Use when state transitions are simple and predictable.</li>
-<li>Ideal for low contention scenarios where synchronization overhead is a concern. For example, in a high-throughput system with little locking overhead, like a cache or a message queue.</li>
-</ul>
+<li>
+<p>Ideal for low contention scenarios where synchronization overhead is a concern. For example, in a high-throughput system with little locking overhead, like a cache or a message queue.</p>
 </li>
 <li>
 <p><strong>Generic State Pattern</strong>:</p>
-<ul>
+</li>
 <li>Use when state transitions are complex or require additional logic.</li>
 <li>Ideal for high contention scenarios where synchronization is necessary. For example, in a shared resource or a asynchronous/distributed system. Note that while I'm saying high contention, this is not a hard and fast rule. It's more about the nature of the contention and the nature of the state transitions, e.g. if the state transitions are complex and the contention is low, you might still want to use the generic state patter for the sake of readability maintainability.</li>
-</ul>
-</li>
 </ol>
-<h3 id="jvm-optimizations-and-overheads">JVM Optimizations and Overheads</h3>
+<h3 id="jvm-optimizations-and-overheads"><a class="toclink" href="#jvm-optimizations-and-overheads">JVM Optimizations and Overheads</a></h3>
 <ol>
-<li>
-<p><strong>Enum-Based State Handling (Inlined Transitions)</strong>:</p>
-<ul>
+<li><strong>Enum-Based State Handling (Inlined Transitions)</strong>:</li>
 <li>Enums offer low-level performance wins by making state transitions in-line without additional method calls or object creation. OpenJDK initial</li>
-<li>In this setup, each <code>DocumentState</code> enum implements its own <code>handle</code> and <code>nextState</code> methods. Transitioning states here is a simple assignment with little locking overhead, so the JVM can optimize by inlining these transitions at runtime.</li>
-</ul>
+<li>
+<p>In this setup, each <code>DocumentState</code> enum implements its own <code>handle</code> and <code>nextState</code> methods. Transitioning states here is a simple assignment with little locking overhead, so the JVM can optimize by inlining these transitions at runtime.</p>
 </li>
 <li>
 <p><strong>Generic Interface with <code>AtomicReference</code></strong>:</p>
-<ul>
+</li>
 <li><code>AtomicReference</code> ensures thread safety for transitions, but adds some overhead due to its CAS (Compare-and-Swap) operations, which are costly under high contention.</li>
 <li>With lazy state transition, this implementation could theoretically avoid unnecessary state updates, which may be beneficial under lower contention.</li>
-</ul>
-</li>
 </ol>
-<h2 id="predictions-and-testing">Predictions and Testing</h2>
+<h2 id="predictions-and-testing"><a class="toclink" href="#predictions-and-testing">Predictions and Testing</a></h2>
 <p>Based on JVM behaviors, here are our predictions:</p>
 <ol>
+<li><strong>Single-threaded Performance</strong>:</li>
 <li>
-<p><strong>Single-threaded Performance</strong>:</p>
-<ul>
-<li><code>InlineStatePattern</code> should outperform <code>PolymorphicStatePattern</code> in single-threaded scenarios due to reduced overhead from <code>AtomicReference</code>.</li>
-</ul>
+<p><code>InlineStatePattern</code> should outperform <code>PolymorphicStatePattern</code> in single-threaded scenarios due to reduced overhead from <code>AtomicReference</code>.</p>
 </li>
 <li>
 <p><strong>Multi-threaded Performance</strong>:</p>
-<ul>
+</li>
 <li>At lower levels of contention, <code>InlineStatePattern</code> should still perform better due to fewer synchronization requirements.</li>
 <li>Under high contention, the <code>AtomicReference</code> CAS operations in <code>PolymorphicStatePattern</code> may actually limit performance due to frequent retries.</li>
-</ul>
-</li>
 </ol>
 <p>To verify these assumptions, let’s test using the following code blocks. You can add these into the <code>main</code> method to see the results.</p>
-<h3 id="code-blocks-to-test-performance">Code Blocks to Test Performance</h3>
+<h3 id="code-blocks-to-test-performance"><a class="toclink" href="#code-blocks-to-test-performance">Code Blocks to Test Performance</a></h3>
 <ol>
 <li><strong>Single-Threaded Performance Test</strong>:</li>
 </ol>
@@ -251,7 +236,7 @@ for (int i = 0; i &lt; 8; i++) {
 }
 </code></pre>
 <p>With more threads, we expect contention to impact <code>PolymorphicStatePattern</code> more due to frequent CAS retries in AtomicReference.</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion"><a class="toclink" href="#conclusion">Conclusion</a></h2>
 <p>The low-level optimizations in <code>InlineStatePattern</code> using enums make it ideal for performance-critical, low-contention use cases. <code>PolymorphicStatePattern</code>, with its AtomicReference, offers better safety for concurrent environments but incurs a trade-off in performance due to CAS operations. Testing under these scenarios confirms that the right implementation depends on your application’s specific threading needs.</p>
             </div>
             <div class="tags">

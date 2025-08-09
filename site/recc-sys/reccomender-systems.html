@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Recommender Systems", "dateModified": "2025-05-10T15:55:06.961479", "description": "A brief overview of recommender systems, including their challenges, approaches, and applications.", "articleSection": "Machine Learning Systems", "keywords": "recommender systems,collaborative filtering,matrix factorization,matrix completion,personalization,cold-start problem"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Recommender Systems", "dateModified": "2025-05-10T15:55:06.961479", "description": "A brief overview of recommender systems, including their challenges, approaches, and applications.", "url": "https://notes.elimelt.com/recc-sys/reccomender-systems.html", "articleSection": "Machine Learning Systems", "keywords": "recommender systems,collaborative filtering,matrix factorization,matrix completion,personalization,cold-start problem"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Recommender Systems
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h2 id="recommender-systems">Recommender Systems</h2>
+                <h2 id="recommender-systems"><a class="toclink" href="#recommender-systems">Recommender Systems</a></h2>
 <p><strong>Personalization and Data Sparsity</strong>
 - Personalization leverages user data (preferences, activities) to recommend items users might like.
 - Challenge: User-item interaction data is sparse-most users rate only a few items.
@@ -112,7 +109,7 @@
 - Changing interests: User preferences and item popularity shift over time.
 - Scalability: Need algorithms that efficiently handle millions of users/items.</p>
 <hr />
-<h2 id="approaches-to-recommendation">Approaches to Recommendation</h2>
+<h2 id="approaches-to-recommendation"><a class="toclink" href="#approaches-to-recommendation">Approaches to Recommendation</a></h2>
 <p><strong>Popularity-Based</strong>
 - Recommend most popular items (no personalization).</p>
 <p><strong>Classifier-Based</strong>
@@ -130,7 +127,7 @@
   \text{Score}(X) = \frac{C_{XA} + C_{XB}}{2}
   $$</p>
 <hr />
-<h2 id="matrix-factorization-and-completion">Matrix Factorization and Completion</h2>
+<h2 id="matrix-factorization-and-completion"><a class="toclink" href="#matrix-factorization-and-completion">Matrix Factorization and Completion</a></h2>
 <p><strong>Matrix Factorization Model</strong>
 - Represent user $ u$ and item $ v$ with feature vectors $ L_u$ and $ R_v$.
 - Predicted rating:
@@ -157,7 +154,7 @@
   \min_{L, R} \sum_{(u,v): r_{uv} \text{ observed}} (L_u^T R_v - r_{uv})^2 + \lambda (|L_u|^2 + |R_v|^2)
   $$</p>
 <hr />
-<h2 id="extensions-cold-start-solutions">Extensions &amp; Cold-Start Solutions</h2>
+<h2 id="extensions-cold-start-solutions"><a class="toclink" href="#extensions-cold-start-solutions">Extensions &amp; Cold-Start Solutions</a></h2>
 <p><strong>Feature-Based Linear Models</strong>
 - Represent items by feature vector $ \phi(v)$, learn global weights $ w$:
   $$
@@ -180,13 +177,13 @@
   $$
 - Can be optimized with coordinate descent or gradient descent.</p>
 <hr />
-<h2 id="applications">Applications</h2>
+<h2 id="applications"><a class="toclink" href="#applications">Applications</a></h2>
 <ul>
 <li><strong>Localization</strong>: Matrix completion can infer missing entries in distance matrices, exploiting low-rank structure due to spatial constraints.</li>
 <li><strong>Text Data</strong>: Matrix factorization can uncover latent topics in document-word matrices, similar to topic modeling.</li>
 </ul>
 <hr />
-<h2 id="summary-table-approaches-comparison">Summary Table: Approaches Comparison</h2>
+<h2 id="summary-table-approaches-comparison"><a class="toclink" href="#summary-table-approaches-comparison">Summary Table: Approaches Comparison</a></h2>
 <table>
 <thead>
 <tr>

@@ -7,7 +7,7 @@
     <title>Dynamo: Amazon's Highly Available Key-value Store | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resolution.">
+    <meta name="description" content="A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resoluti">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Dynamo: Amazon's Highly Available Key-value Store">
-    <meta property="og:description" content="A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resolution.">
+    <meta property="og:description" content="A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resoluti">
     <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/dynamo-db.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Dynamo: Amazon's Highly Available Key-value Store">
-    <meta name="twitter:description" content="A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resolution.">
+    <meta name="twitter:description" content="A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resoluti">
 
     <meta name="keywords" content="key-value store,database design,high availability,consistency,object versioning,conflict resolution">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamo: Amazon's Highly Available Key-value Store", "dateModified": "2025-02-11T18:55:33.751704", "description": "A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resolution.", "articleSection": "Distributed Systems", "keywords": "key-value store,database design,high availability,consistency,object versioning,conflict resolution"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamo: Amazon's Highly Available Key-value Store", "dateModified": "2025-02-11T18:55:33.751704", "description": "A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resoluti", "url": "https://notes.elimelt.com/distributed-systems/dynamo-db.html", "articleSection": "Distributed Systems", "keywords": "key-value store,database design,high availability,consistency,object versioning,conflict resolution"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Dynamo: Amazon's Highly Available Key-value Store
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="dynamo-amazons-highly-available-key-value-store">Dynamo: Amazon's Highly Available Key-value Store</h1>
+                <h1 id="dynamo-amazons-highly-available-key-value-store"><a class="toclink" href="#dynamo-amazons-highly-available-key-value-store">Dynamo: Amazon's Highly Available Key-value Store</a></h1>
 <p><a href="https://dl-acm-org.offcampus.lib.washington.edu/doi/pdf/10.1145/1323293.1294281">reading</a></p>
 <p>Dynamo is a highly available key-value storage system that sacrifices consistency under certain failure conditions, making extensive use of object versioning and application assisted conflict resolution.</p>
             </div>

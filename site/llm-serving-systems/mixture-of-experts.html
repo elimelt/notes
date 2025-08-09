@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-05-25T17:29:27.795148", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-05-25T17:29:27.795148", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "url": "https://notes.elimelt.com/llm-serving-systems/mixture-of-experts.html", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Intro to Mixture of Experts (MoE) in LLM Serving Systems
@@ -98,13 +95,13 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="mixture-of-experts-moe">Mixture of Experts (MoE)</h1>
+                <h1 id="mixture-of-experts-moe"><a class="toclink" href="#mixture-of-experts-moe">Mixture of Experts (MoE)</a></h1>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
-<h2 id="overview">Overview</h2>
+<h2 id="overview"><a class="toclink" href="#overview">Overview</a></h2>
 <p><strong>Mixture of Experts (MoE)</strong> is an architecture that replaces large feedforward networks with multiple expert networks and a selector/routing layer. The key advantage is that <strong>you can increase the number of experts without affecting FLOPs</strong>, enabling massive parameter scaling with constant computational cost.</p>
-<h3 id="popular-moe-models">Popular MoE Models</h3>
+<h3 id="popular-moe-models"><a class="toclink" href="#popular-moe-models">Popular MoE Models</a></h3>
 <ul>
 <li><strong>GPT-4</strong> (rumored to use MoE)</li>
 <li><strong>Mixtral</strong> by Mistral AI</li>
@@ -113,61 +110,61 @@
 <li><strong>Qwen MoE</strong></li>
 <li><strong>OlMoE</strong> (open source)</li>
 </ul>
-<h2 id="why-moes-are-getting-popular">Why MoEs Are Getting Popular</h2>
-<h3 id="1-same-flop-more-parameters-better-performance">1. Same FLOP, More Parameters = Better Performance</h3>
+<h2 id="why-moes-are-getting-popular"><a class="toclink" href="#why-moes-are-getting-popular">Why MoEs Are Getting Popular</a></h2>
+<h3 id="1-same-flop-more-parameters-better-performance"><a class="toclink" href="#1-same-flop-more-parameters-better-performance">1. Same FLOP, More Parameters = Better Performance</a></h3>
 <ul>
 <li>MoE models achieve better performance with the same computational cost</li>
 <li><strong>Switch Transformers</strong> showed clear scaling benefits with more experts</li>
 <li><strong>8x more parameters</strong> for same accuracy using MoE</li>
 </ul>
-<h3 id="2-faster-training">2. Faster Training</h3>
+<h3 id="2-faster-training"><a class="toclink" href="#2-faster-training">2. Faster Training</a></h3>
 <ul>
 <li><strong>7x speedup</strong> compared to dense models</li>
 <li>More efficient parameter utilization during training</li>
 <li><strong>DeepSpeed-MoE</strong>: 5x lower training cost vs dense models for same accuracy</li>
 </ul>
-<h3 id="3-competitive-performance">3. Competitive Performance</h3>
+<h3 id="3-competitive-performance"><a class="toclink" href="#3-competitive-performance">3. Competitive Performance</a></h3>
 <ul>
 <li><strong>DeepSeek V2</strong> demonstrates MoE models can match or exceed dense model performance</li>
 <li><strong>Mixtral 8x7B</strong>: Matches LLaMA 2 70B performance with 5x fewer active parameters</li>
 <li>Efficient scaling to very large parameter counts (600B+ total parameters)</li>
 </ul>
-<h2 id="core-moe-architecture">Core MoE Architecture</h2>
-<h3 id="dense-vs-sparse-model-comparison">Dense vs Sparse Model Comparison</h3>
+<h2 id="core-moe-architecture"><a class="toclink" href="#core-moe-architecture">Core MoE Architecture</a></h2>
+<h3 id="dense-vs-sparse-model-comparison"><a class="toclink" href="#dense-vs-sparse-model-comparison">Dense vs Sparse Model Comparison</a></h3>
 <pre><code>Dense Model: FFN    o Single large feedforward network
 Sparse Model: MoE Layer     o Multiple expert FFNs + Router
 </code></pre>
-<h3 id="key-components">Key Components</h3>
+<h3 id="key-components"><a class="toclink" href="#key-components">Key Components</a></h3>
 <ul>
 <li><strong>Router/Gating Function</strong>: Decides which expert(s) to use for each token</li>
 <li><strong>Expert Networks</strong>: Multiple specialized feedforward networks</li>
 <li><strong>Routing Strategy</strong>: How tokens are assigned to experts</li>
 </ul>
-<h3 id="architecture-variations">Architecture Variations</h3>
-<h4 id="what-varies-across-moe-models">What Varies Across MoE Models</h4>
+<h3 id="architecture-variations"><a class="toclink" href="#architecture-variations">Architecture Variations</a></h3>
+<h4 id="what-varies-across-moe-models"><a class="toclink" href="#what-varies-across-moe-models">What Varies Across MoE Models</a></h4>
 <ol>
 <li><strong>Routing Function</strong>: How tokens are assigned to experts</li>
 <li><strong>Expert Sizes</strong>: Size and number of expert networks</li>
 <li><strong>Training Objectives</strong>: Load balancing and auxiliary losses</li>
 </ol>
-<h4 id="common-patterns">Common Patterns</h4>
+<h4 id="common-patterns"><a class="toclink" href="#common-patterns">Common Patterns</a></h4>
 <ul>
 <li><strong>Most Common</strong>: Replace MLP layers with MoE layers</li>
 <li><strong>Less Common</strong>: MoE for attention heads (e.g., JetMoE)</li>
 </ul>
-<h2 id="routing-mechanisms">Routing Mechanisms</h2>
-<h3 id="top-k-routing-most-popular">Top-K Routing (Most Popular)</h3>
+<h2 id="routing-mechanisms"><a class="toclink" href="#routing-mechanisms">Routing Mechanisms</a></h2>
+<h3 id="top-k-routing-most-popular"><a class="toclink" href="#top-k-routing-most-popular">Top-K Routing (Most Popular)</a></h3>
 <p><strong>Formula</strong>: For each token, select top-k experts based on routing scores</p>
 <p>$$h_t^l = \sum_{i=1}^{N} g_{i,t} \cdot \text{FFN}_i^{(l)}(u_t) + u_t$$</p>
 <p>Where:
 - $g_{i,t}$ = gating weight for expert $i$ and token $t$
 - $s_{i,t} = \text{Softmax}_i(u_t^T W_g)$ (routing scores)</p>
-<h3 id="routing-strategies">Routing Strategies</h3>
+<h3 id="routing-strategies"><a class="toclink" href="#routing-strategies">Routing Strategies</a></h3>
 <ol>
 <li><strong>Token Choice</strong>: Each token selects top-k experts</li>
 <li><strong>Expert Choice</strong>: Each expert selects which tokens to process</li>
 </ol>
-<h3 id="popular-routing-configurations">Popular Routing Configurations</h3>
+<h3 id="popular-routing-configurations"><a class="toclink" href="#popular-routing-configurations">Popular Routing Configurations</a></h3>
 <table>
 <thead>
 <tr>
@@ -216,18 +213,18 @@ Sparse Model: MoE Layer     o Multiple expert FFNs + Router
 </tr>
 </tbody>
 </table>
-<h2 id="training-challenges-and-solutions">Training Challenges and Solutions</h2>
-<h3 id="major-challenge-non-differentiable-routing">Major Challenge: Non-Differentiable Routing</h3>
+<h2 id="training-challenges-and-solutions"><a class="toclink" href="#training-challenges-and-solutions">Training Challenges and Solutions</a></h2>
+<h3 id="major-challenge-non-differentiable-routing"><a class="toclink" href="#major-challenge-non-differentiable-routing">Major Challenge: Non-Differentiable Routing</a></h3>
 <p><strong>Problem</strong>: Sparse gating decisions break gradient flow - only selected experts receive gradients.</p>
-<h3 id="solutions">Solutions:</h3>
+<h3 id="solutions"><a class="toclink" href="#solutions">Solutions:</a></h3>
 <ol>
 <li><strong>Reinforcement Learning</strong>: Use REINFORCE to optimize routing policies</li>
 <li><strong>Stochastic Perturbations</strong>: Add noise to make routing more robust</li>
 <li><strong>Heuristic Balancing Losses</strong>: Force balanced expert usage</li>
 </ol>
-<h3 id="load-balancing-loss">Load Balancing Loss</h3>
+<h3 id="load-balancing-loss"><a class="toclink" href="#load-balancing-loss">Load Balancing Loss</a></h3>
 <p><strong>Critical Issue</strong>: Without load balancing, models collapse to using only 2 experts.</p>
-<h4 id="switch-transformer-load-balancing-loss">Switch Transformer Load Balancing Loss</h4>
+<h4 id="switch-transformer-load-balancing-loss"><a class="toclink" href="#switch-transformer-load-balancing-loss">Switch Transformer Load Balancing Loss</a></h4>
 <p><strong>Purpose</strong>: Systems efficiency requires using experts evenly to avoid bottlenecks.</p>
 <p>$$\mathcal{L}<em i="1">{\text{aux}} = \alpha \cdot N \cdot \sum</em> f_i \cdot P_i$$}^{N</p>
 <p>Where:
@@ -236,8 +233,8 @@ Sparse Model: MoE Layer     o Multiple expert FFNs + Router
 - $N$ = number of experts
 - $T$ = number of tokens in batch $B$</p>
 <p><strong>Key insight</strong>: The derivative with respect to $P_i$ is $\frac{\alpha N}{T}\sum \mathbf{1}_{\text{argmax } p(x)=i}$, so more frequent use leads to stronger downweighting.</p>
-<h3 id="deepseek-moe-balancing-variations">DeepSeek MoE Balancing Variations</h3>
-<h4 id="deepseek-v1-v2-dual-balancing">DeepSeek v1-v2: Dual Balancing</h4>
+<h3 id="deepseek-moe-balancing-variations"><a class="toclink" href="#deepseek-moe-balancing-variations">DeepSeek MoE Balancing Variations</a></h3>
+<h4 id="deepseek-v1-v2-dual-balancing"><a class="toclink" href="#deepseek-v1-v2-dual-balancing">DeepSeek v1-v2: Dual Balancing</a></h4>
 <ul>
 <li><strong>Per-expert balancing</strong>: Same as Switch Transformer</li>
 <li><strong>Per-device balancing</strong>: Aggregates the objective by device to balance communication</li>
@@ -246,72 +243,66 @@ Sparse Model: MoE Layer     o Multiple expert FFNs + Router
 $$\mathcal{L}<em i="1">{\text{DevBal}} = \alpha_2 \sum</em> f_i^d P_i^d$$}^{D</p>
 <p>Communication balancing loss (v2):
 $$\mathcal{L}<em i="1">{\text{CommBal}} = \alpha_3 \sum</em>$$}^{D} f_i^{in} P_i^{out</p>
-<h4 id="deepseek-v3-auxiliary-loss-free-balancing">DeepSeek v3: Auxiliary Loss-Free Balancing</h4>
+<h4 id="deepseek-v3-auxiliary-loss-free-balancing"><a class="toclink" href="#deepseek-v3-auxiliary-loss-free-balancing">DeepSeek v3: Auxiliary Loss-Free Balancing</a></h4>
 <ul>
 <li>Uses <strong>per-expert biases</strong> with online learning</li>
 <li>Adjusts routing scores: $g'<em i_t="i,t">{i,t} = \begin{cases} s</em>$}, &amp; \text{if } s_{i,t} + b_i \in \text{TopK} \ 0, &amp; \text{otherwise} \end{cases</li>
 <li><strong>Sigmoid+Softmax routing</strong>: $s_{i,t} = \text{Sigmoid}(u_t^T e_i)$</li>
 </ul>
-<h2 id="deepseek-moe-architecture-evolution">DeepSeek MoE Architecture Evolution</h2>
-<h3 id="deepseek-v1-16b-total-28b-active">DeepSeek v1 (16B total, 2.8B active)</h3>
+<h2 id="deepseek-moe-architecture-evolution"><a class="toclink" href="#deepseek-moe-architecture-evolution">DeepSeek MoE Architecture Evolution</a></h2>
+<h3 id="deepseek-v1-16b-total-28b-active"><a class="toclink" href="#deepseek-v1-16b-total-28b-active">DeepSeek v1 (16B total, 2.8B active)</a></h3>
 <ul>
 <li><strong>Architecture</strong>: Shared (2) + Fine-grained (64/4) experts, 6 active</li>
 <li><strong>Routing</strong>: Standard top-k routing</li>
 <li><strong>Balancing</strong>: Standard auxiliary loss (Expert + Device)</li>
 </ul>
-<h3 id="deepseek-v2-236b-total-21b-active">DeepSeek v2 (236B total, 21B active)</h3>
+<h3 id="deepseek-v2-236b-total-21b-active"><a class="toclink" href="#deepseek-v2-236b-total-21b-active">DeepSeek v2 (236B total, 21B active)</a></h3>
 <ul>
 <li><strong>Architecture</strong>: Shared (2) + Fine-grained (160/10) experts, 6 active</li>
-<li><strong>New features</strong>:<ul>
+<li><strong>New features</strong>:</li>
 <li><strong>Top-M device routing</strong>: Limits tokens to at most M devices</li>
 <li><strong>Communication balancing loss</strong>: Balances both inbound and outbound communication</li>
 </ul>
-</li>
-</ul>
-<h3 id="deepseek-v3-671b-total-37b-active">DeepSeek v3 (671B total, 37B active)</h3>
+<h3 id="deepseek-v3-671b-total-37b-active"><a class="toclink" href="#deepseek-v3-671b-total-37b-active">DeepSeek v3 (671B total, 37B active)</a></h3>
 <ul>
 <li><strong>Architecture</strong>: Shared (1) + Fine-grained (258) experts, 8 active</li>
-<li><strong>New features</strong>:<ul>
+<li><strong>New features</strong>:</li>
 <li><strong>Sigmoid+Softmax routing</strong></li>
 <li><strong>Aux-loss-free</strong>: No auxiliary balancing losses needed</li>
 <li><strong>Top-M device routing</strong>: Enhanced routing strategy</li>
 </ul>
-</li>
-</ul>
-<h4 id="fine-grained-expert-architecture">Fine-Grained Expert Architecture</h4>
+<h4 id="fine-grained-expert-architecture"><a class="toclink" href="#fine-grained-expert-architecture">Fine-Grained Expert Architecture</a></h4>
 <ul>
 <li><strong>DeepSeek/Qwen approach</strong>: Many small experts + shared experts</li>
 <li><strong>Shared experts</strong>: Always active for all tokens</li>
 <li><strong>Routed experts</strong>: Conditionally activated based on routing</li>
 </ul>
-<h2 id="training-methods-upcycling">Training Methods: Upcycling</h2>
+<h2 id="training-methods-upcycling"><a class="toclink" href="#training-methods-upcycling">Training Methods: Upcycling</a></h2>
 <p><strong>Concept</strong>: Initialize MoE models from pre-trained dense language models.</p>
-<h3 id="process">Process</h3>
+<h3 id="process"><a class="toclink" href="#process">Process</a></h3>
 <ol>
 <li>Take a pre-trained dense model</li>
 <li>Copy weights to initialize multiple experts</li>
 <li>Add routing mechanism from scratch</li>
 <li>Continue training with additional data</li>
 </ol>
-<h3 id="qwen-moe-example">Qwen MoE Example</h3>
+<h3 id="qwen-moe-example"><a class="toclink" href="#qwen-moe-example">Qwen MoE Example</a></h3>
 <ul>
 <li><strong>Base</strong>: Initialized from Qwen 1.8B model</li>
 <li><strong>Configuration</strong>: Top-k=4, 60 experts with 4 shared</li>
 <li><strong>Results</strong>: One of the first confirmed successful upcycling approaches</li>
 <li><strong>Performance</strong>: Achieves competitive results with significantly fewer active parameters</li>
 </ul>
-<h2 id="system-optimizations">System Optimizations</h2>
-<h3 id="training-optimizations">Training Optimizations</h3>
-<h4 id="expert-parallelism">Expert Parallelism</h4>
+<h2 id="system-optimizations"><a class="toclink" href="#system-optimizations">System Optimizations</a></h2>
+<h3 id="training-optimizations"><a class="toclink" href="#training-optimizations">Training Optimizations</a></h3>
+<h4 id="expert-parallelism"><a class="toclink" href="#expert-parallelism">Expert Parallelism</a></h4>
 <ul>
 <li><strong>Expert parameters</strong>: Partitioned across devices (like model parallelism)</li>
-<li><strong>Communication</strong>: Two All-to-All operations per forward/backward pass<ol>
+<li><strong>Communication</strong>: Two All-to-All operations per forward/backward pass</li>
 <li><strong>Dispatch</strong>: Route tokens to their assigned experts</li>
 <li><strong>Combine</strong>: Gather results back to original positions</li>
-</ol>
-</li>
 </ul>
-<h4 id="all-to-all-communication-pattern">All-to-All Communication Pattern</h4>
+<h4 id="all-to-all-communication-pattern"><a class="toclink" href="#all-to-all-communication-pattern">All-to-All Communication Pattern</a></h4>
 <p><strong>Purpose</strong>: Scatter/gather distinct messages from each participant to every other participant.</p>
 <pre><code>GPU0: [A0, A1, A2, A3]  o GPU0: [A0, B0, C0, D0]
 GPU1: [B0, B1, B2, B3]  o GPU1: [A1, B1, C1, D1]
@@ -322,38 +313,38 @@ GPU3: [D0, D1, D2, D3]  o GPU3: [A3, B3, C3, D3]
 1. <strong>Dispatch phase</strong>: Layout transformation    o Group tokens by target expert     o First All-to-All
 2. <strong>Expert compute</strong>: Each expert processes its assigned tokens
 3. <strong>Combine phase</strong>: Second All-to-All     o Layout transformation     o Restore original positions</p>
-<h3 id="communication-bottlenecks">Communication Bottlenecks</h3>
+<h3 id="communication-bottlenecks"><a class="toclink" href="#communication-bottlenecks">Communication Bottlenecks</a></h3>
 <p><strong>Problem</strong>: All-to-All operations consume significant time:</p>
 <ul>
 <li>Average <strong>34.1%</strong> of total step time in DeepSeek V3</li>
 <li>Synchronous and blocking operation with large data transfers</li>
 <li>Slowdown varies: Median 2x, Maximum ~4x when overlapping with other operations</li>
 </ul>
-<h3 id="training-optimizations-lina">Training Optimizations: Lina</h3>
-<h4 id="core-strategy">Core Strategy</h4>
+<h3 id="training-optimizations-lina"><a class="toclink" href="#training-optimizations-lina">Training Optimizations: Lina</a></h3>
+<h4 id="core-strategy"><a class="toclink" href="#core-strategy">Core Strategy</a></h4>
 <p><strong>Intuition</strong>: Always prioritize All-to-All and avoid bandwidth sharing.</p>
 <p><strong>Techniques</strong>:
 1. <strong>Tensor Partitioning</strong>: Break AllReduce into micro-operations
 2. <strong>Priority Scheduling</strong>: Give All-to-All operations higher priority
 3. <strong>Pipelining</strong>: Overlap computation with All-to-All communication</p>
 <p><strong>Results</strong>: Up to 2.4x speedup in MoE layer execution</p>
-<h2 id="deployment-strategies">Deployment Strategies</h2>
-<h3 id="memory-requirements">Memory Requirements</h3>
+<h2 id="deployment-strategies"><a class="toclink" href="#deployment-strategies">Deployment Strategies</a></h2>
+<h3 id="memory-requirements"><a class="toclink" href="#memory-requirements">Memory Requirements</a></h3>
 <p><strong>Mixtral 8x7B Example</strong>:</p>
 <ul>
 <li>Attention layers: ~3.5GB</li>
 <li>Expert layers: ~90GB</li>
 <li><strong>Total</strong>: ~93.5GB (doesn't fit on single GPU)</li>
 </ul>
-<h3 id="inference-optimizations">Inference Optimizations</h3>
-<h4 id="1-offloading-approaches">1. Offloading Approaches</h4>
+<h3 id="inference-optimizations"><a class="toclink" href="#inference-optimizations">Inference Optimizations</a></h3>
+<h4 id="1-offloading-approaches"><a class="toclink" href="#1-offloading-approaches">1. Offloading Approaches</a></h4>
 <ul>
 <li><strong>FlexGen</strong>: Throughput-oriented datacenter solution</li>
 <li><strong>Mixtral-Offload</strong>: Caching and prefetching focused</li>
 <li><strong>DeepSpeed Zero-Offload</strong>: Training-focused</li>
 <li><strong>Problem</strong>: High overhead from frequent weight copying (&gt;50ms vs ~2ms execution)</li>
 </ul>
-<h4 id="2-cpu-compute-fiddler">2. CPU Compute (Fiddler)</h4>
+<h4 id="2-cpu-compute-fiddler"><a class="toclink" href="#2-cpu-compute-fiddler">2. CPU Compute (Fiddler)</a></h4>
 <p><strong>Core Idea</strong>: Compute experts on CPU instead of copying weights to GPU.</p>
 <p><strong>Strategy</strong>:
 1. <strong>Initialization</strong>: Keep attention weights on GPU, profile expert popularity
@@ -363,35 +354,35 @@ GPU3: [D0, D1, D2, D3]  o GPU3: [A3, B3, C3, D3]
 <p><strong>Latency Model</strong>:
 $$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert}} (n_\text{input}<em _text_cpu="\text{cpu">i \times \text{latency}</em>}}), \sum_{i \in \text{gpu_expert}} ((1 - \text{is_on_gpu<em _text_gpu="\text{gpu">i) \times \text{latency}</em>)\right)$$}</p>
 <p><strong>Performance</strong>: 8.2-10.1x faster than Mixtral-Offloading, 19.4-22.5x faster than DeepSpeed MII</p>
-<h4 id="3-expert-popularity-profiling">3. Expert Popularity Profiling</h4>
+<h4 id="3-expert-popularity-profiling"><a class="toclink" href="#3-expert-popularity-profiling">3. Expert Popularity Profiling</a></h4>
 <p><strong>Challenge</strong>: During inference, expert popularity differs from training due to load balancing losses.</p>
 <p><strong>Solution</strong>:
 1. Collect expert selection patterns during training (after load balancing converges)
 2. Create expert selection paths across layers
 3. Use this profile to predict resource allocation during inference
 4. Allocate more resources to popular experts</p>
-<h3 id="deepseek-v3-deployment">DeepSeek V3 Deployment</h3>
-<h4 id="training-infrastructure">Training Infrastructure</h4>
+<h3 id="deepseek-v3-deployment"><a class="toclink" href="#deepseek-v3-deployment">DeepSeek V3 Deployment</a></h3>
+<h4 id="training-infrastructure"><a class="toclink" href="#training-infrastructure">Training Infrastructure</a></h4>
 <ul>
 <li><strong>32-way Expert Parallelism</strong> (8 experts per GPU)</li>
 <li><strong>All-to-all communication</strong> optimizations</li>
 <li><strong>Redundant experts</strong> for load balancing</li>
 </ul>
-<h4 id="prefill-stage-32-way-expert-parallelism">Prefill Stage (32-way Expert Parallelism)</h4>
+<h4 id="prefill-stage-32-way-expert-parallelism"><a class="toclink" href="#prefill-stage-32-way-expert-parallelism">Prefill Stage (32-way Expert Parallelism)</a></h4>
 <ul>
 <li><strong>Total experts</strong>: 256 (8 experts per GPU)</li>
 <li><strong>Communication optimization</strong>: Reduce InfiniBand traffic by limiting node transmission</li>
 <li><strong>Redundancy</strong>: Each GPU hosts one additional redundant expert for high-load experts</li>
 </ul>
-<h4 id="decode-stage-320-gpus-across-40-nodes">Decode Stage (320 GPUs across 40 nodes)</h4>
+<h4 id="decode-stage-320-gpus-across-40-nodes"><a class="toclink" href="#decode-stage-320-gpus-across-40-nodes">Decode Stage (320 GPUs across 40 nodes)</a></h4>
 <ul>
 <li><strong>Attention</strong>: TP4+SP, DP80</li>
 <li><strong>Experts</strong>: EP320 (each GPU stores only one expert)</li>
 <li><strong>Redundancy</strong>: 64 GPUs handle redundant and shared experts</li>
 <li><strong>Optimization</strong>: Overlap attention micro-batches with expert layer micro-batches</li>
 </ul>
-<h3 id="batching-moe-computation">Batching MoE Computation</h3>
-<h4 id="groupgemm-approach">GroupGemm Approach</h4>
+<h3 id="batching-moe-computation"><a class="toclink" href="#batching-moe-computation">Batching MoE Computation</a></h3>
+<h4 id="groupgemm-approach"><a class="toclink" href="#groupgemm-approach">GroupGemm Approach</a></h4>
 <p><strong>Process</strong>:
 1. <strong>Routing</strong>: Determine expert assignments for each token
 2. <strong>Permutation</strong>: Group tokens by target expert using prefix sum
@@ -399,7 +390,7 @@ $$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert
 4. <strong>Un-permutation</strong>: Restore tokens to original positions
 5. <strong>Mixing</strong>: Combine expert outputs with routing weights</p>
 <p><strong>Efficiency</strong>: Single GPU kernel with batching benefits across all experts.</p>
-<h4 id="permutation-index-generation">Permutation Index Generation</h4>
+<h4 id="permutation-index-generation"><a class="toclink" href="#permutation-index-generation">Permutation Index Generation</a></h4>
 <p><strong>Method</strong>: Use prefix sum (scan) operations for efficient parallel permutation index calculation:</p>
 <ul>
 <li>Convert expert selection to binary mask</li>
@@ -407,27 +398,27 @@ $$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert
 <li>Reshape to get permutation indices</li>
 <li>Highly parallelizable on GPU</li>
 </ul>
-<h2 id="performance-results">Performance Results</h2>
-<h3 id="training-efficiency">Training Efficiency</h3>
+<h2 id="performance-results"><a class="toclink" href="#performance-results">Performance Results</a></h2>
+<h3 id="training-efficiency"><a class="toclink" href="#training-efficiency">Training Efficiency</a></h3>
 <ul>
 <li><strong>DeepSpeed-MoE</strong>: 5x lower training cost vs dense models for same accuracy</li>
 <li><strong>Switch Transformers</strong>: Clear scaling benefits with more experts</li>
 <li><strong>Mixtral 8x7B</strong>: 5x lower training cost for same accuracy as LLaMA 2 70B</li>
 </ul>
-<h3 id="inference-improvements">Inference Improvements</h3>
+<h3 id="inference-improvements"><a class="toclink" href="#inference-improvements">Inference Improvements</a></h3>
 <ul>
 <li><strong>Fiddler</strong>: 8.2x faster than Mixtral-Offloading</li>
 <li><strong>Lina</strong>: Up to 2.4x speedup in MoE layer execution</li>
 <li><strong>Expert popularity prediction</strong>: Approaches ideal performance with perfect knowledge</li>
 </ul>
-<h3 id="benchmark-performance">Benchmark Performance</h3>
+<h3 id="benchmark-performance"><a class="toclink" href="#benchmark-performance">Benchmark Performance</a></h3>
 <p><strong>Mixtral 8x7B vs Dense Models</strong>:</p>
 <ul>
 <li>Matches LLaMA 2 70B performance with 5x fewer active parameters</li>
 <li>Competitive or superior performance across MMLU, Knowledge, Reasoning, and Comprehension tasks</li>
 <li>Demonstrates substantial efficiency gains in both parameter count and training cost</li>
 </ul>
-<h2 id="key-takeaways">Key Takeaways</h2>
+<h2 id="key-takeaways"><a class="toclink" href="#key-takeaways">Key Takeaways</a></h2>
 <ol>
 <li><strong>MoEs enable parameter scaling without proportional FLOP increases</strong></li>
 <li><strong>Load balancing is critical</strong> - models collapse without it</li>

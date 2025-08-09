@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Sum Counting Algorithm", "dateModified": "2025-02-11T21:54:13.428236", "description": "An algorithm for counting the number of interval sums between a given range in an array of intervals.", "articleSection": "Algorithms", "keywords": "interval sums,binary search,prefix sum,suffix sum"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Interval Sum Counting Algorithm", "dateModified": "2025-02-11T21:54:13.428236", "description": "An algorithm for counting the number of interval sums between a given range in an array of intervals.", "url": "https://notes.elimelt.com/algorithms/practice/4.html", "articleSection": "Algorithms", "keywords": "interval sums,binary search,prefix sum,suffix sum"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Interval Sum Counting Algorithm
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="problem-set-4">Problem Set 4</h1>
-<h2 id="problem-1">Problem 1</h2>
+                <h1 id="problem-set-4"><a class="toclink" href="#problem-set-4">Problem Set 4</a></h1>
+<h2 id="problem-1"><a class="toclink" href="#problem-1">Problem 1</a></h2>
 <p>$I = [(0, 1), (0, 3), (4, 5), (2, 5)]$</p>
 <p>These intervals are already sorted by finish time.</p>
 <ol>
@@ -122,8 +119,8 @@ I_0  +-----+     +-----------------+  I_3
      +-----+-----+-----+-----+-----+
      0     1     2     3     4     5
 </code></pre>
-<h2 id="problem-2">Problem 2</h2>
-<h3 id="algorithm">Algorithm</h3>
+<h2 id="problem-2"><a class="toclink" href="#problem-2">Problem 2</a></h2>
+<h3 id="algorithm"><a class="toclink" href="#algorithm">Algorithm</a></h3>
 <ul>
 <li>Let $S$ be the (initially empty) set of pairs</li>
 <li>Sort $A = a_1, a_2, \ldots, a_n$ in increasing order to get $B = b_1, b_2, \ldots, b_n$.</li>
@@ -143,9 +140,9 @@ def min_max_pairs(A):
     r -= 1
   return res
 </code></pre>
-<h3 id="running-time">Running Time</h3>
+<h3 id="running-time"><a class="toclink" href="#running-time">Running Time</a></h3>
 <p>Sorting takes $O(n\log(n))$. Then, we perform $\frac{n}{2}$ iterations of our while loop, each requiring constant work. This gives us an overall runtime of $O(n\log(n))$</p>
-<h3 id="correctness-greedy-stays-ahead">Correctness: Greedy Stays Ahead</h3>
+<h3 id="correctness-greedy-stays-ahead"><a class="toclink" href="#correctness-greedy-stays-ahead">Correctness: Greedy Stays Ahead</a></h3>
 <p>For notational convenience, let $a_1, a_2, \ldots, a_n$ be sorted. Let $G$ be my algorithm, and $X$ be the optimum, and for the sake of contradiction, suppose $X$ chooses pairs differently from $G$, e.g. not of the form $(a_i, a_{n - i})$ as $G$ does.</p>
 <p>Let $g(a_i)$ be a function that outputs the "choice" of partner for any $a_i$ by $G$, so $g(a_i) = a_{n - i}$, and let $x(a_i)$ mean the same for $X$.</p>
 <p>Define $P(n)$ as...</p>
@@ -165,28 +162,20 @@ $$</p>
 <p>Consider an arbitrary pair chosen by $G$ on $A'$, $(a_i, a_j)$, with $a_i \le a_j$. By our sort order, we have $a_1 \le a_i \le a_j \le a_k$. Now, consider the ways we could swap elements between these two pairs</p>
 <p><strong>Case 1</strong>: $a_1 + a_k &gt; a_i + a_j$</p>
 <ul>
-<li>$(a_1, a_j), (a_i, a_k)$<ul>
+<li>$(a_1, a_j), (a_i, a_k)$</li>
 <li>$a_i + a_k \ge a_1 + a_k$, since $a_i \ge a_1$</li>
-</ul>
-</li>
-<li>$(a_1, a_i), (a_k, a_j)$<ul>
+<li>$(a_1, a_i), (a_k, a_j)$</li>
 <li>$a_k + a_j \ge a_1 + a_k$, since $a_j \ge a_i$</li>
-</ul>
-</li>
 </ul>
 <p><strong>Case 2</strong>: $a_1 + a_k \le a_i + a_j$</p>
 <ul>
-<li>$(a_1, a_j), (a_i, a_k)$<ul>
+<li>$(a_1, a_j), (a_i, a_k)$</li>
 <li>$a_i + a_k \ge a_i + a_j$, since $a_k \ge a_j$</li>
-</ul>
-</li>
-<li>$(a_1, a_i), (a_k, a_j)$<ul>
+<li>$(a_1, a_i), (a_k, a_j)$</li>
 <li>$a_k + a_j \ge a_i + a_j$, since $a_k \ge a_i$</li>
 </ul>
-</li>
-</ul>
 <p>In either of the above cases, we are increasing the max of the two sums by swapping elements, and this holds for an arbitrary $a_i, a_j$ chosen by $G'$, which is at least as good as the optimum. Since we know $X'<em max="max">{max} \ge G'</em>$, and so $P(k)$ holds.}$, and also that any pairing other than the one picked by $G$ ($a_1, a_k$) leads to an increased sum, it must be the case that $G_{max} \le X_{max</p>
-<h2 id="problem-3">Problem 3</h2>
+<h2 id="problem-3"><a class="toclink" href="#problem-3">Problem 3</a></h2>
 <p><strong>Lemma (1)</strong>: For any two trees $T_1$ and $T_2$ with $v \in T_1$ and $u \in T_2$, if we add the edge $(u, v)$ between the two trees, we get a new tree $T_3$.</p>
 <p><strong>Proof</strong>:</p>
 <p>Let $n$ be the number of vertices in $T_1$, and $m$ be the number of vertices in $T_2$. Since they are both trees, we have $n - 1$ edges in $T_1$, and $m - 1$ edges in $T_2$. Connecting $T_1$ and $T_2$ on $(u, v)$ then results in a graph with $m + n$ vertices, and $m - 1 + n - 1 = m + n - 1$ edges.</p>
@@ -210,9 +199,9 @@ $$</p>
 <p>Cutting $T_2$ on $f$ to get $T_2'$, we have two connected components $K_1$, $K_2$, both of which are trees. Now, we can add $e$ to $T_2'$, and by (1), we get a tree, since $K_1$ and $K_2$ are both trees, with $u \in K_1$ and $v \in K_2$.</p>
 <p>Similarly, adding $f = (x, y)$ to $T_1'$, we also get a tree by (1), since $C_1$ is a tree with $x \in C_1$, and $C_2$ is a tree with $y \in C_2$.</p>
 <p>Therefore, we have both $T_1 - e + f$ and $T_2 - f + e$ are trees.</p>
-<h2 id="problem-5">Problem 5</h2>
+<h2 id="problem-5"><a class="toclink" href="#problem-5">Problem 5</a></h2>
 <p>Call my algorithm $S(A, l, u)$.</p>
-<h3 id="correctness">Correctness</h3>
+<h3 id="correctness"><a class="toclink" href="#correctness">Correctness</a></h3>
 <p><strong>Claim</strong>: Given a list of $n$ numbers $A = a_1, a_n, \ldots a_n$, the number of interval sums in $\lbrack  l, u  \rbrack$ is correctly calculated by $S(A, l, u) = R + L + C$, where they are defined as...</p>
 <p>$$L = S([a_1, \ldots, a_{\lceil n/2 \rceil - 1}], l, u)$$</p>
 <p>i.e. the number of interval sums in the first half of $A$ $\lbrack  l, u  \rbrack$.</p>

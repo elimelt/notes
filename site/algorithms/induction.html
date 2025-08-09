@@ -7,7 +7,7 @@
     <title>Mathematical Induction and Pigeonhole Principle Proofs | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.">
+    <meta name="description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Mathematical Induction and Pigeonhole Principle Proofs">
-    <meta property="og:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.">
+    <meta property="og:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/induction.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Mathematical Induction and Pigeonhole Principle Proofs">
-    <meta name="twitter:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.">
+    <meta name="twitter:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num">
 
     <meta name="keywords" content="induction,pigeonhole principle,proof techniques">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Mathematical Induction and Pigeonhole Principle Proofs", "dateModified": "2025-05-10T14:42:09.251543", "description": "This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.", "articleSection": "Algorithms", "keywords": "induction,pigeonhole principle,proof techniques"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Mathematical Induction and Pigeonhole Principle Proofs", "dateModified": "2025-05-10T14:42:09.251543", "description": "This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num", "url": "https://notes.elimelt.com/algorithms/induction.html", "articleSection": "Algorithms", "keywords": "induction,pigeonhole principle,proof techniques"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Mathematical Induction and Pigeonhole Principle Proofs
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="induction">Induction</h1>
+                <h1 id="induction"><a class="toclink" href="#induction">Induction</a></h1>
 <p>Prove...</p>
 <p>$$
 \forall n \in \mathbb{N}, \sum^{n}_{i = 1} i = \frac{n(n + 1)}{2}
@@ -106,28 +103,28 @@ $$</p>
 <p>$$
 P(n) = \sum^{n}_{i = 1} i = \frac{n(n + 1)}{2}
 $$</p>
-<h3 id="base-case">Base Case</h3>
+<h3 id="base-case"><a class="toclink" href="#base-case">Base Case</a></h3>
 <p>$$
 P(1) = 1 = \frac{1(1 + 2)}{2}
 $$</p>
-<h3 id="ih">IH</h3>
+<h3 id="ih"><a class="toclink" href="#ih">IH</a></h3>
 <p>Assume $P(n)$ for some $n \ge 2$</p>
-<h3 id="is">IS</h3>
+<h3 id="is"><a class="toclink" href="#is">IS</a></h3>
 <p>$$
 1 + \ldots + n - 1 + n = \frac{(n - 1)(n)}{2} + n = \frac{n(n + 1)}{2}
 $$</p>
-<h1 id="pigeon-hole-principle">Pigeon Hole Principle</h1>
+<h1 id="pigeon-hole-principle"><a class="toclink" href="#pigeon-hole-principle">Pigeon Hole Principle</a></h1>
 <p>Suppose that we put $n + 1$ balls into $n$ bins. Prove that there is a bin with at least $2$ balls.</p>
 <p>$P(n) :=$ <em>For any possible way to put $n + 1$ balls into $n$ bins, there exists a bin with $\ge 2$ balls.</em></p>
-<h2 id="base-case_1">Base Case</h2>
+<h2 id="base-case_1"><a class="toclink" href="#base-case_1">Base Case</a></h2>
 <p>duh...</p>
-<h2 id="ih_1">IH</h2>
+<h2 id="ih_1"><a class="toclink" href="#ih_1">IH</a></h2>
 <p>Assume $P(n - 1)$ holds for some $n \ge 2$</p>
-<h2 id="is_1">IS</h2>
+<h2 id="is_1"><a class="toclink" href="#is_1">IS</a></h2>
 <p>Suppose we are given $n + 1$ balls <em>arbitrarily</em> placed into $n$ bins, labeled $b_1, \ldots, b_{n}$.</p>
 <p>Consider $b_1$. If $b_1$ has 2 balls in it, we are done. If it has 1 ball, then throw away $b_1$ and call $P(n - 1)$ for $b_2, \ldots, b_{n}, so we are done.</p>
 <p>Finally, if $b_1$ has no balls, throw away an arbitrary ball and call $P(n - 1)$ on $b_2, \ldots, b_n$</p>
-<h3 id="generally">Generally</h3>
+<h3 id="generally"><a class="toclink" href="#generally">Generally</a></h3>
 <p>With this type of induction, start with $P(n)$, and reduce to $P(n - 1)$.</p>
             </div>
             <div class="tags">

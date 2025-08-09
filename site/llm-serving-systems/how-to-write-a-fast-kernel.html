@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "How to write a fast kernel", "dateModified": "2025-05-25T16:32:00.802099", "description": "Techniques to write fast CUDA kernels, including coalesced memory access and shared memory usage.", "articleSection": "Machine Learning Systems", "keywords": "cuda,gpu,pytorch,kernel"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "How to write a fast kernel", "dateModified": "2025-05-25T16:32:00.802099", "description": "Techniques to write fast CUDA kernels, including coalesced memory access and shared memory usage.", "url": "https://notes.elimelt.com/llm-serving-systems/how-to-write-a-fast-kernel.html", "articleSection": "Machine Learning Systems", "keywords": "cuda,gpu,pytorch,kernel"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » How to write a fast kernel
@@ -98,9 +95,9 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="how-to-write-a-fast-kernel">How to write a fast kernel?</h1>
-<h2 id="matrix-transpose-kernel">Matrix Transpose Kernel</h2>
-<h3 id="basic-way-with-torch">Basic way with Torch</h3>
+                <h1 id="how-to-write-a-fast-kernel"><a class="toclink" href="#how-to-write-a-fast-kernel">How to write a fast kernel?</a></h1>
+<h2 id="matrix-transpose-kernel"><a class="toclink" href="#matrix-transpose-kernel">Matrix Transpose Kernel</a></h2>
+<h3 id="basic-way-with-torch"><a class="toclink" href="#basic-way-with-torch">Basic way with Torch</a></h3>
 <pre><code class="language-py">import torch
 
 num_rows = num_cols = 8192
@@ -125,9 +122,9 @@ time_per_iter = elapsed_time / 100
 print(f&quot;Elapsed time: {elapsed_time} ms&quot;)
 print(f&quot;Time per iteration: {time_per_iter} ms&quot;)
 </code></pre>
-<h3 id="how-can-we-optimize">How can we optimize?</h3>
+<h3 id="how-can-we-optimize"><a class="toclink" href="#how-can-we-optimize">How can we optimize?</a></h3>
 <p>Row-based partitioning in a CUDA kernel? But arrays can be very long. We can't load all the data into the shared memory. So, we need to partition the data into smaller chunks per-thread (since we have at most 1024 threads per block).</p>
-<h3 id="cuda-kernel">CUDA Kernel</h3>
+<h3 id="cuda-kernel"><a class="toclink" href="#cuda-kernel">CUDA Kernel</a></h3>
 <pre><code class="language-cpp">#include &lt;torch/extension.h&gt;
 #include &lt;stdio.h&gt;
 
@@ -144,7 +141,7 @@ __global__ void transpose(float* input, float* output, int num_rows, int num_col
 }
 
 </code></pre>
-<h2 id="coallesced-memory-access">Coallesced Memory Access</h2>
+<h2 id="coallesced-memory-access"><a class="toclink" href="#coallesced-memory-access">Coallesced Memory Access</a></h2>
 <ul>
 <li>Inside one warp, if memory accesses are coalesced, then the memory access is fast because it can be batched</li>
 <li>Data can then be retrieved in a single memory transaction</li>

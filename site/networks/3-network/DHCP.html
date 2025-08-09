@@ -7,7 +7,7 @@
     <title>Dynamic Host Configuration Protocol (DHCP) | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network configuration parameters to devices on a network. Describes the key components of a DHCP system, including the DHCP server, DHCP client, and DHCP relay, and their respective roles in the IP address assignment process using the User Datagram Protocol (UDP).">
+    <meta name="description" content="Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network co">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Dynamic Host Configuration Protocol (DHCP)">
-    <meta property="og:description" content="Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network configuration parameters to devices on a network. Describes the key components of a DHCP system, including the DHCP server, DHCP client, and DHCP relay, and their respective roles in the IP address assignment process using the User Datagram Protocol (UDP).">
+    <meta property="og:description" content="Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network co">
     <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/DHCP.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Dynamic Host Configuration Protocol (DHCP)">
-    <meta name="twitter:description" content="Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network configuration parameters to devices on a network. Describes the key components of a DHCP system, including the DHCP server, DHCP client, and DHCP relay, and their respective roles in the IP address assignment process using the User Datagram Protocol (UDP).">
+    <meta name="twitter:description" content="Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network co">
 
     <meta name="keywords" content="networks,dhcp,udp,ip address">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Host Configuration Protocol (DHCP)", "dateModified": "2025-02-11T20:47:50.428679", "description": "Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network configuration parameters to devices on a network. Describes the key components of a DHCP system, including the DHCP server, DHCP client, and DHCP relay, and their respective roles in the IP address assignment process using the User Datagram Protocol (UDP).", "articleSection": "Networks", "keywords": "networks,dhcp,udp,ip address"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Host Configuration Protocol (DHCP)", "dateModified": "2025-02-11T20:47:50.428679", "description": "Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network co", "url": "https://notes.elimelt.com/networks/3-network/DHCP.html", "articleSection": "Networks", "keywords": "networks,dhcp,udp,ip address"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Dynamic Host Configuration Protocol (DHCP)
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="dynamic-host-configuration-protocol-dhcp">Dynamic Host Configuration Protocol (DHCP)</h1>
+                <h1 id="dynamic-host-configuration-protocol-dhcp"><a class="toclink" href="#dynamic-host-configuration-protocol-dhcp">Dynamic Host Configuration Protocol (DHCP)</a></h1>
 <p><strong>DHCP</strong> is the protocol used to assign IP addresses within a given network. Unlike MAC addresses, IPs are not hard-coded or unique to a device, and can be reassigned to different devices over time. This gives the network much needed flexibility, but also requires a way to manage the assignment of IPs. This is where DHCP comes in.</p>
 <p>DHCP sits on top of the <strong>UDP</strong> protocol, and uses <strong>port 67</strong> for the server, and <strong>port 68</strong> for the client.</p>
-<h2 id="dhcp-server">DHCP Server</h2>
+<h2 id="dhcp-server"><a class="toclink" href="#dhcp-server">DHCP Server</a></h2>
 <p>The <strong>DHCP Server</strong> is a device that assigns IP addresses to devices on the network. It is typically a router or a server, and is responsible for managing a pool of IP addresses. When a device connects to the network, it broadcasts a <strong>DHCP Discover</strong> message to the network (sending to addr of all 1s). The DHCP server listens for these messages, and responds with a <strong>DHCP Offer</strong> message. This message contains an IP address that the server is willing to assign to the device. The device then sends a <strong>DHCP Request</strong> message to the server, and the server responds with a <strong>DHCP Ack</strong> message, confirming the assignment of the IP address.</p>
 <p>The protocol also supports replicated DHCP servers, which can be used to provide fault tolerance. If a DHCP server fails, the client can simply request an IP from another server.</p>
-<h2 id="dhcp-client">DHCP Client</h2>
+<h2 id="dhcp-client"><a class="toclink" href="#dhcp-client">DHCP Client</a></h2>
 <p><strong>DHCP</strong> clients are pretty ubiquitous, and are built into most devices that connect to a network. To renew an IP address, the client sends a <strong>DHCP Request</strong> message to the server, and the server responds with a <strong>DHCP Ack</strong> message, confirming the renewal.</p>
-<h2 id="dhcp-relay">DHCP Relay</h2>
+<h2 id="dhcp-relay"><a class="toclink" href="#dhcp-relay">DHCP Relay</a></h2>
 <p>Not all networks have a running DHCP server. In this case, a <strong>DHCP Relay</strong> can be used to forward DHCP messages to a server on another network. The relay listens for <strong>DHCP Discover</strong> messages, and forwards them to the server. The server then responds with a <strong>DHCP Offer</strong> message, and the relay forwards it to the client.</p>
             </div>
             <div class="tags">

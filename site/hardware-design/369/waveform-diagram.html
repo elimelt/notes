@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-05-07T16:15:38.687200", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-05-07T16:15:38.687200", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "url": "https://notes.elimelt.com/hardware-design/369/waveform-diagram.html", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Waveform Diagrams
@@ -98,16 +95,16 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="waveform-diagrams">Waveform Diagrams</h1>
+                <h1 id="waveform-diagrams"><a class="toclink" href="#waveform-diagrams">Waveform Diagrams</a></h1>
 <p>Group bits of values into a <strong>bus</strong> or a <strong>bit vector</strong>. You can view the state of your system as slices of a waveform for each bit, corresponding to a number.</p>
-<h2 id="circuit-timing-behavior">Circuit Timing Behavior</h2>
+<h2 id="circuit-timing-behavior"><a class="toclink" href="#circuit-timing-behavior">Circuit Timing Behavior</a></h2>
 <p>Every gate has some fixed delay. In reality, you can look them up in their data sheet. However, for simplicity assume delay of all gates is 1 ns ( = 3 ticks).</p>
-<h1 id="verilog-stuff">Verilog stuff</h1>
-<h2 id="verilog-bus">Verilog bus</h2>
+<h1 id="verilog-stuff"><a class="toclink" href="#verilog-stuff">Verilog stuff</a></h1>
+<h2 id="verilog-bus"><a class="toclink" href="#verilog-bus">Verilog bus</a></h2>
 <p>Defining them: <code>[n-1:0]</code> is an $n$-bit bus. Access with array syntax. Can access sub-bus using <code>bus[start:size]</code>.</p>
-<h2 id="multi-bit-constants">Multi-bit constants</h2>
+<h2 id="multi-bit-constants"><a class="toclink" href="#multi-bit-constants">Multi-bit constants</a></h2>
 <p><code>n'b#...#</code> is a constant with width $n$.</p>
-<h2 id="concat">Concat</h2>
+<h2 id="concat"><a class="toclink" href="#concat">Concat</a></h2>
 <p><code>{A, B, C, ...}</code></p>
 <pre><code class="language-verilog">// SystemVerilog code for AND-OR-INVERT circuit
 module AOI (F, A, B, C, D);
@@ -120,7 +117,7 @@ module AOI (F, A, B, C, D);
     assign F = ~w[2];
 endmodule
 </code></pre>
-<h2 id="test-benches">Test Benches</h2>
+<h2 id="test-benches"><a class="toclink" href="#test-benches">Test Benches</a></h2>
 <p>Create emulated inputs for all of the FPGA's physical connections.</p>
 <pre><code class="language-verilog">module MUX2_tb ();
     logic SEL, I, J; // simulated inputs

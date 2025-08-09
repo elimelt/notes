@@ -7,7 +7,7 @@
     <title>Windows Memory Management | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby, modified, modified no-write, rom, bad), and local and global page replacement algorithms like LRU and FIFO. Discusses a major problem with page replacement in early Windows versions and an interesting exam question from 2013 related to this topic.">
+    <meta name="description" content="Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Windows Memory Management">
-    <meta property="og:description" content="Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby, modified, modified no-write, rom, bad), and local and global page replacement algorithms like LRU and FIFO. Discusses a major problem with page replacement in early Windows versions and an interesting exam question from 2013 related to this topic.">
+    <meta property="og:description" content="Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/windows-memory-management.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Windows Memory Management">
-    <meta name="twitter:description" content="Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby, modified, modified no-write, rom, bad), and local and global page replacement algorithms like LRU and FIFO. Discusses a major problem with page replacement in early Windows versions and an interesting exam question from 2013 related to this topic.">
+    <meta name="twitter:description" content="Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby">
 
     <meta name="keywords" content="page frame number database,active,transition,free,zeroed,standby,modified,modified no-write,rom,bad,local and global page replacement,lru list,fifo list,working set,cache manager">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Windows Memory Management", "dateModified": "2025-02-11T20:49:12.669134", "description": "Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby, modified, modified no-write, rom, bad), and local and global page replacement algorithms like LRU and FIFO. Discusses a major problem with page replacement in early Windows versions and an interesting exam question from 2013 related to this topic.", "articleSection": "Operating Systems", "keywords": "page frame number database,active,transition,free,zeroed,standby,modified,modified no-write,rom,bad,local and global page replacement,lru list,fifo list,working set,cache manager"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Windows Memory Management", "dateModified": "2025-02-11T20:49:12.669134", "description": "Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/windows-memory-management.html", "articleSection": "Operating Systems", "keywords": "page frame number database,active,transition,free,zeroed,standby,modified,modified no-write,rom,bad,local and global page replacement,lru list,fifo list,working set,cache manager"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Windows Memory Management
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="windows-memory-management">Windows Memory Management</h1>
+                <h1 id="windows-memory-management"><a class="toclink" href="#windows-memory-management">Windows Memory Management</a></h1>
 <p>Pages have one of the following states defined in the <strong>page frame number (PFN) database</strong>:</p>
 <ul>
 <li><strong>Active</strong>: The page is in use and its contents are valid.</li>
@@ -112,9 +109,9 @@
 <li><strong>Bad</strong>: The page is defective and cannot be used.</li>
 </ul>
 <p>Windows uses a mixture of local and global page replacement, and maintains an LRU list of pages on top of a FIFO list. The LRU list is used to select pages for replacement (working set), and the FIFO list (standby list) is used to select pages for trimming. The LRU list is maintained by the memory manager, and the FIFO list is maintained by the cache manager.</p>
-<h2 id="a-major-problem-with-page-replacement-in-early-windows">A Major Problem with Page Replacement in Early Windows</h2>
+<h2 id="a-major-problem-with-page-replacement-in-early-windows"><a class="toclink" href="#a-major-problem-with-page-replacement-in-early-windows">A Major Problem with Page Replacement in Early Windows</a></h2>
 <p>Using a <strong>working set</strong> model for page replacement, when a user's process goes idle for long periods of time, all of the pages used by the process are removed from memory. Background processes like antivirus and indexing services exacerbate this problem. When the user returns to the process, it must wait for the pages to be read back into memory from disk.</p>
-<h2 id="an-interesting-exam-question-from-2013">An Interesting Exam Question from 2013</h2>
+<h2 id="an-interesting-exam-question-from-2013"><a class="toclink" href="#an-interesting-exam-question-from-2013">An Interesting Exam Question from 2013</a></h2>
 <p>Examine how long it takes a user mode program writing to an array of integers using various access patterns. Assume the entire array fits into memory, and that the system is idle besides this program. The <strong>Stride</strong> is the number of elements between each access. The array is a constant size of <code>PGSIZE</code> (4096 bytes).</p>
 <pre><code class="language-cpp">int access(int* arr, int size, int stride);
 </code></pre>

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Spring Boot Quickstart Guide", "dateModified": "2025-02-11T16:42:33.899135", "description": "A step-by-step guide to creating a Spring Boot application with Rest Repositories", "articleSection": "Software Engineering", "keywords": "spring boot,quick start,spring web,rest repositories"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Spring Boot Quickstart Guide", "dateModified": "2025-02-11T16:42:33.899135", "description": "A step-by-step guide to creating a Spring Boot application with Rest Repositories", "url": "https://notes.elimelt.com/cheatsheets/java-spring-boot/running.html", "articleSection": "Software Engineering", "keywords": "spring boot,quick start,spring web,rest repositories"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » Spring Boot Quickstart Guide
@@ -98,23 +95,23 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="quickstart">Quickstart</h1>
+                <h1 id="quickstart"><a class="toclink" href="#quickstart">Quickstart</a></h1>
 <p>Create a zip file with (start.spring.io)[https://start.spring.io/] including the following dependencies:</p>
 <ul>
 <li>Spring Web</li>
 <li>Rest Repositories</li>
 </ul>
-<h2 id="unzip-the-file">Unzip the file</h2>
+<h2 id="unzip-the-file"><a class="toclink" href="#unzip-the-file">Unzip the file</a></h2>
 <pre><code class="language-bash">unzip helloworld.zip
 </code></pre>
 <p>Open the project in IntelliJ. Start the server and verify that the application is running by visiting http://localhost:8080/hello</p>
-<h2 id="running-the-application">Running the application</h2>
+<h2 id="running-the-application"><a class="toclink" href="#running-the-application">Running the application</a></h2>
 <pre><code class="language-bash">./gradlew bootRun
 </code></pre>
-<h2 id="building-the-application">Building the application</h2>
+<h2 id="building-the-application"><a class="toclink" href="#building-the-application">Building the application</a></h2>
 <pre><code class="language-bash">./gradlew build
 </code></pre>
-<h2 id="deploying-the-application">Deploying the application</h2>
+<h2 id="deploying-the-application"><a class="toclink" href="#deploying-the-application">Deploying the application</a></h2>
 <pre><code class="language-bash">./gradlew build
 cp build/libs/&lt;JAR_NAME&gt;.jar &lt;DEPLOYMENT_DIRECTORY&gt;
 </code></pre>

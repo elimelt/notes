@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Exokernel: An Operating System Architecture for Application-Level Resource Management", "dateModified": "2025-05-10T14:44:40.720911", "description": "Paper review for the classic exokernel paper", "articleSection": "Operating Systems", "keywords": "operating systems,exokernel,resource management"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Exokernel: An Operating System Architecture for Application-Level Resource Management", "dateModified": "2025-05-10T14:44:40.720911", "description": "Paper review for the classic exokernel paper", "url": "https://notes.elimelt.com/systems-research/exokernel.html", "articleSection": "Operating Systems", "keywords": "operating systems,exokernel,resource management"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Exokernel: An Operating System Architecture for Application-Level Resource Management
@@ -98,51 +95,43 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h3 id="what-is-the-problem">What is the Problem?</h3>
+                <h3 id="what-is-the-problem"><a class="toclink" href="#what-is-the-problem">What is the Problem?</a></h3>
 <p>Operating systems with monolithic kernels prescribe interfaces of key OS abstractions like virtual memory, filesystem, but with these prescriptions come side-effects, particularly in the realm of performance. Applications cannot modify or optimize these abstractions for their specific needs, forcing them to work within the limitations of a "one-size fits all" implementation, which typically prioritizes generality over performance for any specific application.</p>
-<h3 id="summary">Summary</h3>
+<h3 id="summary"><a class="toclink" href="#summary">Summary</a></h3>
 <p>The paper covers the exokernel architecture, which aims to minimize the "mechanism" role as much as possible, opting to leave implementations to the client, e.g. to the user's choice of library operating system. The key design choice here is to separate resource protection from management, e.g. to provide secure bindings to access a device, without necessarily understanding the use case.</p>
 <p>The authors were able to realize significant (orders of magnitude) speedups on most primitive tasks compared to a more mature OS (Ultraix) by focusing almost solely on efficiently multiplexing hardware, and by minimizing the number of required system calls during regular operation.</p>
-<h4 id="download-code">Download Code</h4>
+<h4 id="download-code"><a class="toclink" href="#download-code">Download Code</a></h4>
 <p>Download code into exokernel from lib os (similar to eBPF today)</p>
-<h3 id="key-insights">Key Insights</h3>
+<h3 id="key-insights"><a class="toclink" href="#key-insights">Key Insights</a></h3>
 <ul>
-<li>General-purpose abstractions in monolithic kernels can lead to performance overhead<ul>
+<li>General-purpose abstractions in monolithic kernels can lead to performance overhead</li>
 <li>Resource management is next-to-impossible since most resources are completely abstracted. Instead the kernel interface should be as close to hardware as possible, opting to use physical addresses, etc.</li>
 <li>Applications will oftentimes be working against built in "features" of the OS, e.g. databases slowed down by filesystems, non-zero-copy networking</li>
-</ul>
-</li>
 <li>Applications must frequently defer to the kernel for operations that could be done in user space, incurring context switching overhead</li>
 </ul>
-<h3 id="notable-design-detailsstrengths">Notable Design Details/Strengths</h3>
+<h3 id="notable-design-detailsstrengths"><a class="toclink" href="#notable-design-detailsstrengths">Notable Design Details/Strengths</a></h3>
 <ul>
 <li>The interface provided by the kernel should be as close to hardware as possible, so as to directly expose hardware resources to applications in a safe manner</li>
 <li>Library operating systems can be tailored to specific use cases, avoiding the overhead of general-purpose abstractions usually found in monolithic kernels</li>
-<li>kernel interface with limited scope leads to better overall design<ul>
+<li>kernel interface with limited scope leads to better overall design</li>
 <li>completeness: optimizing the hell out of what little it does is a lot easier</li>
 <li>simplicity: less code to maintain, less code to break</li>
 <li>extensibility: easier to add new features via library OSes than to modify the kernel</li>
 </ul>
-</li>
-</ul>
-<h3 id="limitationsweaknesses">Limitations/Weaknesses</h3>
+<h3 id="limitationsweaknesses"><a class="toclink" href="#limitationsweaknesses">Limitations/Weaknesses</a></h3>
 <ul>
-<li>Compatibility between system-level software and dependencies has been kicked into user space, likely leading to less stability/reliability, or at the very least more work for the application developer and end user<ul>
+<li>Compatibility between system-level software and dependencies has been kicked into user space, likely leading to less stability/reliability, or at the very least more work for the application developer and end user</li>
 <li>Third party library OSes are very suspect</li>
 <li>Unless standards are not only developed but widely adopted for all OS components in user space, this could be a major issue</li>
-</ul>
-</li>
 <li>Cross-platform compatibility is not a priority, and additional work would be needed to port all upstream library OSes to a new exokernel to port an application</li>
 </ul>
-<h3 id="summary-of-key-results">Summary of Key Results</h3>
+<h3 id="summary-of-key-results"><a class="toclink" href="#summary-of-key-results">Summary of Key Results</a></h3>
 <ul>
-<li>Many primitives are 1-2 orders of magnitude faster than Ultraix<ul>
+<li>Many primitives are 1-2 orders of magnitude faster than Ultraix</li>
 <li>Exception handling, virtual memory, IPC, etc. faster than Ultraix, and in some cases faster than SOTA implementations</li>
 <li>Primarily due to reduced context switching, low-overhead multiplexing of hardware, and specialized implementations of aforementioned systems in user space</li>
 </ul>
-</li>
-</ul>
-<h3 id="open-questions">Open Questions</h3>
+<h3 id="open-questions"><a class="toclink" href="#open-questions">Open Questions</a></h3>
 <ul>
 <li>Why didn't this work out? I was fully bought in by the end of the paper, but they were clearly never adopted.</li>
 <li>Can this approach be applied to modern, and particularly datacenter, workloads?</li>

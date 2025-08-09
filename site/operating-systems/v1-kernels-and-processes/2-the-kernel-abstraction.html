@@ -7,7 +7,7 @@
     <title>The Kernel Abstraction | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.">
+    <meta name="description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memo">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="The Kernel Abstraction">
-    <meta property="og:description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.">
+    <meta property="og:description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memo">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="The Kernel Abstraction">
-    <meta name="twitter:description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.">
+    <meta name="twitter:description" content="Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memo">
 
     <meta name="keywords" content="operating systems,kernel,process abstraction,process control block,privileged mode">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Kernel Abstraction", "dateModified": "2025-02-11T20:49:30.713163", "description": "Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.", "articleSection": "Operating Systems", "keywords": "operating systems,kernel,process abstraction,process control block,privileged mode"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "The Kernel Abstraction", "dateModified": "2025-02-11T20:49:30.713163", "description": "Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memo", "url": "https://notes.elimelt.com/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction.html", "articleSection": "Operating Systems", "keywords": "operating systems,kernel,process abstraction,process control block,privileged mode"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » The Kernel Abstraction
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="chapter-2-the-kernel-abstraction">Chapter 2 - The Kernel Abstraction</h1>
+                <h1 id="chapter-2-the-kernel-abstraction"><a class="toclink" href="#chapter-2-the-kernel-abstraction">Chapter 2 - The Kernel Abstraction</a></h1>
 <p>"A central role of operating systems is protection - the isolation of potentially misbehaving applications and users so that they do not corrupt other applications or the operating system itself."</p>
 <p><strong>Kernel</strong>: The lowest level of software running on the operating system. It is the first program loaded on boot, and it remains in memory until the system is shut down. It is responsible for all interactions with the hardware, and it is the only program that runs in privileged mode.</p>
 <p><strong>Process</strong>: The execution of an application program with restricted access to the operating system and hardware. Processes are managed by the kernel, and they need to request access to resources from the kernel.</p>
-<h2 id="the-process-abstraction">The Process Abstraction</h2>
+<h2 id="the-process-abstraction"><a class="toclink" href="#the-process-abstraction">The Process Abstraction</a></h2>
 <p>In the same way an object instantiates a class in OOP, a process instantiates a program. In most OS's, a programs instructions are stored once in a file on disk. The user edits the file, then compiles the file into a binary executable. When a user runs the executable, the OS creates a new process including program data, heap, and stack, loads the executable into memory, and starts the process.</p>
 <p>The OS keeps track of all processes in a process control block (PCB). The PCB contains the process ID, the process state, the program counter, the stack pointer, the memory management information, and the accounting information. The OS uses the PCB to keep track of all processes, and it uses the program counter to keep track of the next instruction to execute.</p>
 <p><em>Digging Deeper:</em> in Linux, the PCB is called the <code>task</code> struct, and is a doubly linked list of processes, starting off with the <code>init task</code> which has a <code>pid</code> of 0. Users can view processes using the <code>ps</code> command, or could view the data directly in <code>/proc</code> for the system, or <code>/proc/&lt;pid&gt;</code> for a specific process.</p>
-<h2 id="dual-mode-operation">Dual-Mode Operation</h2>
+<h2 id="dual-mode-operation"><a class="toclink" href="#dual-mode-operation">Dual-Mode Operation</a></h2>
 <p>There is a single bit in the CPU that determines whether the CPU is in user mode or kernel mode. When the CPU is in user mode, checks for privileged instructions are enabled that stop the program from executing anything that could harm the system. When in kernel mode, these checks are turned off.</p>
 <p>The <strong>principal of least privilege</strong> states that a process should only have access to the resources it needs to do its job. This is enforced by the CPU by only allowing processes to access resources in user mode. Some operating system code runs in their own user-level processes, for example the window manager. Code that runs in Kernel mode <em>needs</em> to be trusted, because it has access to all of the hardware.</p>
 <p>The hardware must be able to switch between user and kernel mode safely, and must support the following restrictions for user mode:</p>
@@ -134,23 +131,23 @@
 </table>
 <p>This "kernel bit" is just one of many flags set in the CPU. These flags aren't directly accessible to application code, but the <strong>process status register</strong> (PSR) is has corresponding flags that are set when the processor switches between user and kernel mode. This register works similarly to other registers (like arithmetic condition codes in assembly).</p>
 <p>Intel x86 processors actually support 4 privilege levels, but none of MacOS, Windows or Linux make use of the extra 2 levels.</p>
-<h3 id="user-and-kernel-memory">User and Kernel Memory</h3>
+<h3 id="user-and-kernel-memory"><a class="toclink" href="#user-and-kernel-memory">User and Kernel Memory</a></h3>
 <p>In physical memory, the kernel is stored at the top of memory, and the user program is stored at the bottom. The kernel is stored at the top because it needs to be able to access all of memory, and the user program is stored at the bottom because it needs to be able to access all of its own memory. The kernel is stored in a fixed location in memory, and the user program is loaded into memory at runtime.</p>
-<h2 id="virtual-memory">Virtual Memory</h2>
+<h2 id="virtual-memory"><a class="toclink" href="#virtual-memory">Virtual Memory</a></h2>
 <p>In a naiive implementation (like MS-DOS), the OS directly loads the program into memory and gives it access to the entire memory space. This is problematic for a few reasons, including security, fragmentation of memory, difficulty in growing the stack/heap. <strong>Virtual memory</strong> solves these problems by giving each process its own virtual address space in which their memory starts at 0. The OS maps the virtual address space to physical memory, usually in fixed size chunks called <strong>pages</strong>. The OS can then swap pages in and out of memory as needed for each process. Modern OS's often also use address randomization to prevent attacks.</p>
-<h2 id="timer-interrupts">Timer Interrupts</h2>
+<h2 id="timer-interrupts"><a class="toclink" href="#timer-interrupts">Timer Interrupts</a></h2>
 <p>The CPU's <strong>hardware timer</strong> is a timer that runs periodically (either by time or number of instructions) sends an interrupt to the CPU to switch back to kernel mode. Each core has its own timer. Usually, processes will only be stopped by a timer if the user signals the OS to stop the process.</p>
 <p>Older versions of MacOS lacked the ability to forcibly stop a process, so if a process was stuck, the user would have to reboot the system. This was due to their <strong>preemtive scheduling</strong> algorithm, that instead of using an interrupt at the hardware level, would instead rely on processes to voluntarily poll the OS to see if they should stop. When a runaway process was stuck in a loop, it would never poll the OS, and the OS would never stop it, leading to those forever spinning beach balls.</p>
-<h2 id="types-of-mode-transfer">Types of Mode Transfer</h2>
+<h2 id="types-of-mode-transfer"><a class="toclink" href="#types-of-mode-transfer">Types of Mode Transfer</a></h2>
 <p>In a high performance server, the CPU may switch from kernel to user mode thousands of times every second. It is thus important for this switch to be fast and secure.</p>
-<h3 id="user-to-kernel">User to Kernel</h3>
+<h3 id="user-to-kernel"><a class="toclink" href="#user-to-kernel">User to Kernel</a></h3>
 <p>There are three main ways: <strong>system calls</strong>, <strong>exceptions</strong>, and <strong>interrupts</strong>. <em>Trapping</em> is the process of syncronously switching from user to kernel mode.</p>
 <p><strong>Interrupts</strong> are the most common way to switch from user to kernel mode. They are triggered by an external event, like a hardware device or another process signal. The CPU finished any user instructions, saves the state, and then switches to kernel mode and calls the corresponding interrupt handler. On a multicore system, only one core will handle the interrupt. An alternative to interrupts would be the kernel <strong>polling</strong> IO devices, but this is inefficient.</p>
 <p>To enable high performance IO, the OS uses <strong>direct memory access</strong> (DMA), and a circular queue of requests for each IO device to handle. Each entry in the queue is called a <strong>buffer descriptor</strong>.</p>
 <p><strong>Exceptions</strong> are triggered by internal events, like a page fault or a divide by zero error. The CPU finishes any user instructions, saves the state, and then switches to kernel mode and calls the corresponding exception handler. Another common use case is in debuggers. A breakpoint is just a modified instruction that traps into kernel mode when it is executed. The kernel then reloads the instruction and transfers control to the debugger.</p>
 <p>Exceptions are extremely useful for virtualization, and are often used as a signal for the host OS to emulate some hardware functionality, or to execute an operation of behalf of the guest OS. In this way, a VM can run in user mode, and the host OS can handle all of the privileged instructions.</p>
 <p><strong>System Calls</strong> allow the user program to voluntarily request the OS to execute something on its behalf. Most processors have a special <code>syscall</code> or <code>trap</code> instruction to do this. Each call invokes some code at a <em>pre-defined</em> address in the kernel. To see a table of system calls on Linux, run <code>man syscalls</code>.</p>
-<h3 id="kernel-to-user">Kernel to User</h3>
+<h3 id="kernel-to-user"><a class="toclink" href="#kernel-to-user">Kernel to User</a></h3>
 <p>There are several reasons why the kernel would want to switch to user mode.</p>
 <table>
 <thead>
@@ -178,14 +175,14 @@
 </tr>
 </tbody>
 </table>
-<h2 id="implementing-safe-mode-transfer">Implementing Safe Mode Transfer</h2>
+<h2 id="implementing-safe-mode-transfer"><a class="toclink" href="#implementing-safe-mode-transfer">Implementing Safe Mode Transfer</a></h2>
 <p><strong>Limited Entry Into Kernel</strong></p>
 <p>The kernel needs to be able to switch to user mode at any time, but the user program should not be able to switch to kernel mode. User programs should only be able to request privileged operations through paths defined by the OS/kernel. If the user program violates any built in rules, the kernel should be able to stop the program and switch back to user mode by returning an error code.</p>
 <p><strong>Atomic Changes to Processor State</strong></p>
 <p>When switching between modes, there needs to be distinction between the state of memory; kernel code has access to its local memory and registers as well as the program's memory and registers, whereas user code should be isolated. The switch between these two contexts needs to be atomic.</p>
 <p><strong>Transparent, Restartable Execution</strong></p>
 <p>The kernel needs to be able to stop a user program in the middle of execution at any point, and to resume execution with <em>exactly</em> the same state later. User processes shouldn't need to know that they are being interrupted. On interrupt, the processor saves the current state to memory, defers further events, changes to kernel mode, then jumps to the correct handler. After execution of the handler, the same is done in reverse to resume the user program.</p>
-<h3 id="interrupt-vector-table">Interrupt Vector Table</h3>
+<h3 id="interrupt-vector-table"><a class="toclink" href="#interrupt-vector-table">Interrupt Vector Table</a></h3>
 <table>
 <thead>
 <tr>
@@ -213,7 +210,7 @@
 </tbody>
 </table>
 <p>On modern, multicore systems, interrup routing has become increasingly programmable at the kernel level. This is especially important for IO-heavy systems like web servers. The kernel can route interrupts to the core that is handling the IO, helping to avoid cache misses.</p>
-<h3 id="interrupt-stack">Interrupt Stack</h3>
+<h3 id="interrupt-stack"><a class="toclink" href="#interrupt-stack">Interrupt Stack</a></h3>
 <p>Each core has its own <strong>interrupt stack</strong>. When an interrupt occurs, the processor pushes the current state onto the interrupt stack, and then switches to kernel mode. The interrupt handler then runs on the interrupt stack. When the handler is finished, the processor pops the state off the interrupt stack and resumes execution of the user program.</p>
 <p>Most OS's allocate a <strong>kernel interrupt stack</strong> (KIS) for every user process. When a process is running, the hardware interrupt stack points to the processes' kernel interrupt stack (which should be empty if being run in User Mode). This makes it easy for the kernel to switch between processes inside an interrupt or syscall handler.</p>
 <ul>
@@ -221,23 +218,23 @@
 <li>when preempted (ready but not running), KIS contains the state of the process when it was interrupted</li>
 <li>when waiting for IO in syscall, KIS contains the process state as well as the syscall handler and IO Driver</li>
 </ul>
-<h3 id="interrupt-masking">Interrupt Masking</h3>
+<h3 id="interrupt-masking"><a class="toclink" href="#interrupt-masking">Interrupt Masking</a></h3>
 <p>Hardware provides a privileged instruction to disable interrupts. This is useful for critical sections of code that should not be interrupted. On X86, disable interrupts defers interrupts until an enable interrupt instruction is executed. While they are deferred, interrupts are queued, but will be lost if this queue fills up. Generally, hardware will buffer one interrupt of each type, and will drop any additional interrupts of that type. Interrupts are disabled with <code>%CLI</code> and enabled with <code>%STI</code>, which only applies to the current CPU (for multi-core systems).</p>
 <p>Different devices all have their own interrupt buffer, and also assign priotiries to each type of interrupt that they handle.</p>
-<h3 id="hardware-support-for-saving-and-restoring-registers">Hardware Support for Saving and Restoring Registers</h3>
+<h3 id="hardware-support-for-saving-and-restoring-registers"><a class="toclink" href="#hardware-support-for-saving-and-restoring-registers">Hardware Support for Saving and Restoring Registers</a></h3>
 <p>For x86...</p>
 <ul>
 <li>If processor in user mode, push interrupted process's stack pointer onto kernel interrupt stack, then switches to kernel stack</li>
 <li>Pushes interrupted process's instruction pointer</li>
 <li>Pushes x86 <em>processor status word</em>, which includes control bits and condition codes (which are needed to restore state of current execution)</li>
 </ul>
-<h3 id="more-on-interrup-handlers">More on Interrup Handlers</h3>
+<h3 id="more-on-interrup-handlers"><a class="toclink" href="#more-on-interrup-handlers">More on Interrup Handlers</a></h3>
 <ul>
 <li>Often part of the <strong>device driver</strong></li>
 <li><strong>non-blocking</strong> ~ runs to completion: any waiting must be limited duration ~ Wake up other threads to do any real work (Linux: semaphore)</li>
 <li>Rest of device driver runs as a kernel thread</li>
 </ul>
-<h2 id="putting-it-all-together-x86-mode-transfers">Putting It All Together: x86 Mode Transfers</h2>
+<h2 id="putting-it-all-together-x86-mode-transfers"><a class="toclink" href="#putting-it-all-together-x86-mode-transfers">Putting It All Together: x86 Mode Transfers</a></h2>
 <p>"First, we provide some background on the x86 architecture. The x86 is segmented, so
 pointers come in two parts: (i) a segment, a region of memory such as code, data, or stack,
 and (ii) an offset within that segment. The current user-level instruction is a combination of
@@ -259,7 +256,7 @@ interrupts are masked or not"</p>
 <p>The interrupt handle also saves some registers to its own stack before executing any code that might overwrite the processor state (callee-saved registers).</p>
 <p>Once finished executing, the callee then pops the registers off the stack, restoring the interrupted process state, excluding the program counter, execution flags, and stack pointer. The interrupt handler then executes a <code>iret</code> instruction, which restores those aforementioned elements of state, fully restoring the interrupted process.</p>
 <p><em>Note...</em> for exceptions that signal instructions in the kernel, the handler will modify the program counter to point to the instruction <strong>after</strong> the exception occurred, so as to prevent an infinite loop.</p>
-<h2 id="implementing-secure-system-calls">Implementing Secure System Calls</h2>
+<h2 id="implementing-secure-system-calls"><a class="toclink" href="#implementing-secure-system-calls">Implementing Secure System Calls</a></h2>
 <p>OS kernel constructs restricted enviornment for process execution. Any time a process needs to execute something outside of its <em>protection domain</em>, it requests the OS do so on its behalf using a <strong>system call</strong>.</p>
 <p><strong>System calls</strong> are the primary interface between user programs and the OS. When the user program makes a call, the library code will <em>trap</em> into kernel mode, and the kernel will execute the system call handler. System calls generally try to appear as a normal function call thorughout a library and often use <strong>stubs</strong> to mediate between the user program and the kernel. This allows the following flow:</p>
 <ol>
@@ -313,7 +310,7 @@ interrupts are masked or not"</p>
     return Kernel_Open(localCopy);
 }
 </code></pre>
-<h2 id="starting-a-new-process">Starting a New Process</h2>
+<h2 id="starting-a-new-process"><a class="toclink" href="#starting-a-new-process">Starting a New Process</a></h2>
 <p>At a high level, before running a program the kernel must...</p>
 <ul>
 <li>Allocate and initialize the process control block (PCB)</li>
@@ -333,9 +330,9 @@ interrupts are masked or not"</p>
     exit();
 }
 </code></pre>
-<h2 id="implementing-upcalls">Implementing Upcalls</h2>
+<h2 id="implementing-upcalls"><a class="toclink" href="#implementing-upcalls">Implementing Upcalls</a></h2>
 <p><strong>Upcalls</strong> are a way for the kernel to notify the user program of an event. They are similar to interrupts, but are initiated by the kernel rather than hardware. These are called <em>signals</em> in Unix, and <em>asynchronous events</em> in Windows, and are crucial for virtualization.</p>
-<h4 id="applications">Applications:</h4>
+<h4 id="applications"><a class="toclink" href="#applications">Applications:</a></h4>
 <table>
 <thead>
 <tr>
@@ -367,7 +364,7 @@ interrupts are masked or not"</p>
 </tbody>
 </table>
 <p>Upcalls aren't always needed, and many programs get by with an event loop model. In fact, Windows didn't support immediate delivery of upcalls to user-level programs until recently.</p>
-<h3 id="unix-signals">Unix Signals</h3>
+<h3 id="unix-signals"><a class="toclink" href="#unix-signals">Unix Signals</a></h3>
 <ul>
 <li>The kernel defines a fixed number of signal types that a process can receive.</li>
 <li>Processes define their own handlers for each type, or the kernel invokes a default handler.</li>
@@ -375,13 +372,13 @@ interrupts are masked or not"</p>
 <li>While a given signal handler is executing, the OS blocks delivery of the same signal to any other process. OS also provides a syscall to mask signals as needed.</li>
 <li>The kernel copies registers onto the signal stack before invoking the handler, and restores them after the handler returns.</li>
 </ul>
-<h2 id="booting-an-operating-system-kernel">Booting an Operating System Kernel</h2>
+<h2 id="booting-an-operating-system-kernel"><a class="toclink" href="#booting-an-operating-system-kernel">Booting an Operating System Kernel</a></h2>
 <p>Systems typically use a special read only memory (Boot ROM) to store boot instructions. On most x86 computers, this is stored in the BIOS (Basic Input/Output System).</p>
 <p>ROM memory is relatively slow and expensive, and typically never changes, whereas kernel code needs to be updated often, so it is preferable to keep to BIOS minimal.</p>
 <p>BIOS provides indirection between hardware and OS. It reads a fixed-size block of data from a fixed location on disk (or flash RAM) called the bootloader into memory. Some newer bootloaders also store a cryptographic signature to verify the bootloader's integrity.</p>
 <p>Then, the bootloader loads the kernel into memory and transfers control to it. The kernel then initializes the hardware, loads the rest of the OS, and starts the first process.</p>
-<h2 id="virtual-machines">Virtual Machines</h2>
-<h3 id="to-boot">To Boot</h3>
+<h2 id="virtual-machines"><a class="toclink" href="#virtual-machines">Virtual Machines</a></h2>
+<h3 id="to-boot"><a class="toclink" href="#to-boot">To Boot</a></h3>
 <ol>
 <li>Host OS loads guest bootloader from virtual disk into memory and starts running it.</li>
 <li>Guest bootloader loads guest kernel into memory and starts running it.</li>
@@ -390,7 +387,7 @@ interrupts are masked or not"</p>
 <li>When the guest kernel starts the process, it issues instructions to resume execution at user level (ie <code>iret</code> on x86). This traps into the host kernel.</li>
 <li>Host kernel validates the request and then simulates the requested mode transfer exactly as if the processor had directly executed it.</li>
 </ol>
-<h3 id="user-level-system-call">User Level System Call</h3>
+<h3 id="user-level-system-call"><a class="toclink" href="#user-level-system-call">User Level System Call</a></h3>
 <ol>
 <li>Host kernel saves registers onto interrupt stack of guest operating system.</li>
 <li>Host kernel transfers control to the guest kernel at start of interrupt handler with guest kernel running in user-mode.</li>
@@ -398,57 +395,63 @@ interrupts are masked or not"</p>
 <li>When guest kernel returns from syscall, triggers processor exception, dropping into host kernel.</li>
 <li>Host kernel restores user state as if guest OS had returned directly.</li>
 </ol>
-<h3 id="processor-exceptions">Processor Exceptions</h3>
+<h3 id="processor-exceptions"><a class="toclink" href="#processor-exceptions">Processor Exceptions</a></h3>
 <p>Handles them similarly to user level system calls, but the host kernel tracks what privilege level the guest kernel is running at, and delegates exception handling to the guest kernel if it is running in kernel mode.</p>
-<h3 id="timer-interrupts_1">Timer Interrupts</h3>
+<h3 id="timer-interrupts_1"><a class="toclink" href="#timer-interrupts_1">Timer Interrupts</a></h3>
 <p>Host kernel returns from the interrupt to the interrupt handler for the guest kernel. The guest kernel may in turn switch guest processes; its iret will cause a processor exception, returning to the host kernel, which can then resume the correct guest process.</p>
-<h3 id="io-interrupts">I/O Interrupts</h3>
+<h3 id="io-interrupts"><a class="toclink" href="#io-interrupts">I/O Interrupts</a></h3>
 <p>Simulation of virtual devices doesn't need to be anything like a real device. For example, when the guest OS writes to a virtual disk (ie writing to the buffer descriptor ring for the device), the host OS can read these and perform the actual write to the real disk however it wants. The guest kernel then receives an interrupt when the write is complete, which is handled similarly to a timer interrupt, but executes the guest disk interrupt handler instead of the guest timer interrupt handler.</p>
-<h2 id="exercises">Exercises</h2>
+<h2 id="exercises"><a class="toclink" href="#exercises">Exercises</a></h2>
 <ol>
-<li><strong>Kernel Stack and User Process Interruption</strong></li>
-</ol>
-<ul>
-<li>When a user process is interrupted or causes a processor exception, the x86 hardware switches the stack pointer to a kernel stack. This is done before saving the current process state to ensure that sensitive kernel data is not overwritten or corrupted by user-level processes.</li>
-</ul>
-<ol>
-<li><strong>Screen Buffer Memory Protection</strong></li>
-</ol>
-<ul>
-<li>The screen's buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.</li>
-</ul>
-<ol>
-<li><strong>Dual-mode Operation Mechanisms</strong></li>
-</ol>
-<ul>
-<li>Without <strong>privileged instructions</strong>: User processes might be able to execute sensitive operations.</li>
+<li>
+<p><strong>Kernel Stack and User Process Interruption</strong></p>
+</li>
+<li>
+<p>When a user process is interrupted or causes a processor exception, the x86 hardware switches the stack pointer to a kernel stack. This is done before saving the current process state to ensure that sensitive kernel data is not overwritten or corrupted by user-level processes.</p>
+</li>
+<li>
+<p><strong>Screen Buffer Memory Protection</strong></p>
+</li>
+<li>
+<p>The screen's buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.</p>
+</li>
+<li>
+<p><strong>Dual-mode Operation Mechanisms</strong></p>
+</li>
+<li>
+<p>Without <strong>privileged instructions</strong>: User processes might be able to execute sensitive operations.</p>
+</li>
 <li>Without <strong>memory protection</strong>: User processes could access and modify kernel memory directly.</li>
-<li>Without <strong>timer interrupts</strong>: User processes could monopolize the CPU, leading to a denial-of-service situation.</li>
-</ul>
-<ol>
-<li><strong>Security Checks for Web Browser</strong></li>
-</ol>
-<ul>
-<li>To ensure executing buggy or malicious scripts cannot corrupt or crash the browser, checks like script sandboxing, code validation, resource limitations, and privilege separation should be implemented.</li>
-</ul>
-<ol>
-<li><strong>Types of User-Mode to Kernel-Mode Transfers</strong></li>
-</ol>
-<ul>
-<li>Software Interrupts</li>
+<li>
+<p>Without <strong>timer interrupts</strong>: User processes could monopolize the CPU, leading to a denial-of-service situation.</p>
+</li>
+<li>
+<p><strong>Security Checks for Web Browser</strong></p>
+</li>
+<li>
+<p>To ensure executing buggy or malicious scripts cannot corrupt or crash the browser, checks like script sandboxing, code validation, resource limitations, and privilege separation should be implemented.</p>
+</li>
+<li>
+<p><strong>Types of User-Mode to Kernel-Mode Transfers</strong></p>
+</li>
+<li>
+<p>Software Interrupts</p>
+</li>
 <li>System Calls</li>
-<li>Exceptions</li>
-</ul>
-<ol>
-<li><strong>Types of Kernel-Mode to User-Mode Transfers</strong></li>
-</ol>
-<ul>
-<li>Returning from an interrupt</li>
+<li>
+<p>Exceptions</p>
+</li>
+<li>
+<p><strong>Types of Kernel-Mode to User-Mode Transfers</strong></p>
+</li>
+<li>
+<p>Returning from an interrupt</p>
+</li>
 <li>Returning from a system call</li>
 <li>Resuming execution after an exception</li>
-<li>Context switching</li>
-</ul>
-<ol>
+<li>
+<p>Context switching</p>
+</li>
 <li>
 <p><strong>IRET Instruction in OS</strong>
 a. The <code>iret</code> instruction is used in the interrupt service routine (ISR) to return from an interrupt, transitioning the mode from kernel-mode back to user-mode.
@@ -468,49 +471,49 @@ b. Modifying the hardware to provide consistent behavior for instructions like <
 <li>
 <p><strong>Initial Value in Program Counter</strong></p>
 </li>
-</ol>
-<ul>
-<li>The boot ROM is responsible for loading the initial value in the program counter for an application program before it starts running.</li>
-</ul>
-<ol>
-<li><strong>Safe Access to Virtualized I/O Devices</strong></li>
-</ol>
-<ul>
-<li>To enable safe access to virtualized I/O devices, hardware support like I/O MMU, device assignment, and software support like device emulation, device drivers, and hypervisor integration are essential.</li>
-</ul>
-<ol>
-<li><strong>System Calls vs. Procedure Calls</strong></li>
-</ol>
-<ul>
-<li>System calls are generally more expensive than procedure calls due to the overhead of mode switching, trap handling, and potential context switches. A test program can be designed to measure and compare the time required for each type of call.</li>
-</ul>
-<ol>
-<li><strong>Substitute for Traps</strong></li>
-</ol>
-<ul>
-<li>Without a trap instruction, a combination of interrupts and exceptions can be used as a substitute for traps, allowing the operating system to handle events and transitions effectively.</li>
-</ul>
-<ol>
-<li><strong>Substitute for Interrupts</strong></li>
-</ol>
-<ul>
-<li>Without interrupts, a combination of exceptions and traps can be utilized to handle events and transitions within the operating system, although it may introduce additional complexity and overhead.</li>
-</ul>
-<ol>
-<li><strong>Steps for CPU Interrupt Handling</strong></li>
-</ol>
-<ul>
-<li>The operating system typically follows steps like saving the current state, identifying the interrupt source, invoking the appropriate interrupt handler, performing the required processing, and restoring the saved state.</li>
-</ul>
-<ol>
-<li><strong>Operating System Stack for System Calls</strong></li>
-</ol>
-<ul>
-<li>The operating system stack for handling system calls should be separate from the application stack to ensure isolation and prevent potential stack-related vulnerabilities or conflicts.</li>
-</ul>
-<ol>
-<li><strong>Verifying Rogue System Calls</strong>
-- Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.</li>
+<li>
+<p>The boot ROM is responsible for loading the initial value in the program counter for an application program before it starts running.</p>
+</li>
+<li>
+<p><strong>Safe Access to Virtualized I/O Devices</strong></p>
+</li>
+<li>
+<p>To enable safe access to virtualized I/O devices, hardware support like I/O MMU, device assignment, and software support like device emulation, device drivers, and hypervisor integration are essential.</p>
+</li>
+<li>
+<p><strong>System Calls vs. Procedure Calls</strong></p>
+</li>
+<li>
+<p>System calls are generally more expensive than procedure calls due to the overhead of mode switching, trap handling, and potential context switches. A test program can be designed to measure and compare the time required for each type of call.</p>
+</li>
+<li>
+<p><strong>Substitute for Traps</strong></p>
+</li>
+<li>
+<p>Without a trap instruction, a combination of interrupts and exceptions can be used as a substitute for traps, allowing the operating system to handle events and transitions effectively.</p>
+</li>
+<li>
+<p><strong>Substitute for Interrupts</strong></p>
+</li>
+<li>
+<p>Without interrupts, a combination of exceptions and traps can be utilized to handle events and transitions within the operating system, although it may introduce additional complexity and overhead.</p>
+</li>
+<li>
+<p><strong>Steps for CPU Interrupt Handling</strong></p>
+</li>
+<li>
+<p>The operating system typically follows steps like saving the current state, identifying the interrupt source, invoking the appropriate interrupt handler, performing the required processing, and restoring the saved state.</p>
+</li>
+<li>
+<p><strong>Operating System Stack for System Calls</strong></p>
+</li>
+<li>
+<p>The operating system stack for handling system calls should be separate from the application stack to ensure isolation and prevent potential stack-related vulnerabilities or conflicts.</p>
+</li>
+<li>
+<p><strong>Verifying Rogue System Calls</strong></p>
+</li>
+<li>Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.</li>
 </ol>
             </div>
             <div class="tags">

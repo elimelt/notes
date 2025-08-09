@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Remote Procedure Call (RPC)", "dateModified": "2025-02-11T16:42:08.126420", "description": "A discussion on the challenges of message passing in a distributed system, including the two generals problem.", "articleSection": "Distributed Systems", "keywords": "distributed systems,communication,concurrency"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Remote Procedure Call (RPC)", "dateModified": "2025-02-11T16:42:08.126420", "description": "A discussion on the challenges of message passing in a distributed system, including the two generals problem.", "url": "https://notes.elimelt.com/distributed-systems/RPC.html", "articleSection": "Distributed Systems", "keywords": "distributed systems,communication,concurrency"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Remote Procedure Call (RPC)
@@ -98,106 +95,134 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="look-into">Look Into</h1>
+                <h1 id="look-into"><a class="toclink" href="#look-into">Look Into</a></h1>
 <ul>
 <li>Remote Direct Memory Access (RDMA)</li>
 <li>Network File System (NFS)</li>
 </ul>
-<h1 id="remote-procedure-call-rpc">Remote Procedure Call (RPC)</h1>
+<h1 id="remote-procedure-call-rpc"><a class="toclink" href="#remote-procedure-call-rpc">Remote Procedure Call (RPC)</a></h1>
 <p>A request from a client to execute a function on a server/different machine.
 - To the client, looks like a local function call.
 - To the server, looks like an implementation of a function call.</p>
 <p>Google handles $10^{10}$ RPCs per second.</p>
-<h2 id="local-procedure-call">Local Procedure Call</h2>
+<h2 id="local-procedure-call"><a class="toclink" href="#local-procedure-call">Local Procedure Call</a></h2>
 <ul>
-<li>Caller invokes function by name with args.
-    - Pass args in register, push others onto stack.
-    - Push return program counter (%rip) onto stack.
-    - Jump to first instruction (entry point) of callee.</li>
-<li>Callee executes function, returns to caller.
-    - Reads params from registers/stack.
-    - Computes the function, possibly updating state.
-    - Jump back to next instruction after call.</li>
+<li>Caller invokes function by name with args.<ul>
+<li>Pass args in register, push others onto stack.</li>
+<li>Push return program counter (%rip) onto stack.</li>
+<li>Jump to first instruction (entry point) of callee.</li>
+</ul>
+</li>
+<li>Callee executes function, returns to caller.<ul>
+<li>Reads params from registers/stack.</li>
+<li>Computes the function, possibly updating state.</li>
+<li>Jump back to next instruction after call.</li>
+</ul>
+</li>
 </ul>
 <p>The compiler defines the protocol for the call above.</p>
-<h2 id="remote-procedure-call">Remote Procedure Call</h2>
+<h2 id="remote-procedure-call"><a class="toclink" href="#remote-procedure-call">Remote Procedure Call</a></h2>
 <ul>
-<li>On client, implements a function that looks like a local call.
-    - Parameters are <em>marshalled</em> into a message (arbitrary types)
-    - Message is sent to server (possibly in multiple packets).
-    - Client waits for response.</li>
-<li>On server, implements the function.
-    - <em>Unmarshals</em> (parses) the message.
-    - Computes the function, possibly updating state.
-    - <em>Marshals</em> the return value into a message (possibly into multiple packets).
-    - Sends the message back to the client.</li>
+<li>On client, implements a function that looks like a local call.<ul>
+<li>Parameters are <em>marshalled</em> into a message (arbitrary types)</li>
+<li>Message is sent to server (possibly in multiple packets).</li>
+<li>Client waits for response.</li>
+</ul>
+</li>
+<li>On server, implements the function.<ul>
+<li><em>Unmarshals</em> (parses) the message.</li>
+<li>Computes the function, possibly updating state.</li>
+<li><em>Marshals</em> the return value into a message (possibly into multiple packets).</li>
+<li>Sends the message back to the client.</li>
+</ul>
+</li>
 </ul>
 <p>Client/server implementation is usually auto-generated from procedure spec, e.g. Google's Protocol Buffers/Protobuf.</p>
-<h2 id="rpc-vs-local-procedure-call">RPC vs. Local Procedure Call</h2>
-<h3 id="binding">Binding</h3>
+<h2 id="rpc-vs-local-procedure-call"><a class="toclink" href="#rpc-vs-local-procedure-call">RPC vs. Local Procedure Call</a></h2>
+<h3 id="binding"><a class="toclink" href="#binding">Binding</a></h3>
 <ul>
 <li>Client needs a connection to the server.</li>
 <li>Server must implement the required function</li>
 <li>Server needs to be running a compatible version/implementation of the function.</li>
 </ul>
-<h3 id="service-discovery-service">Service Discovery Service</h3>
+<h3 id="service-discovery-service"><a class="toclink" href="#service-discovery-service">Service Discovery Service</a></h3>
 <ul>
 <li>A process that keeps track of all available services, including versions, schemas, locations, etc.</li>
 </ul>
-<h3 id="interface-description-language-idl-eg-protobuf">Interface Description Language (IDL, e.g. Protobuf)</h3>
+<h3 id="interface-description-language-idl-eg-protobuf"><a class="toclink" href="#interface-description-language-idl-eg-protobuf">Interface Description Language (IDL, e.g. Protobuf)</a></h3>
 <p><strong>Serialization is important!</strong></p>
 <ul>
-<li>Generate client/server serialization/deserialization stubs automatically based on the IDL.
-    - Procedue args can be values or pointers, which need to be assembled into a single linear message in a transportable format (not always just a string, e.g. Protobuf using binary format).</li>
+<li>Generate client/server serialization/deserialization stubs automatically based on the IDL.<ul>
+<li>Procedue args can be values or pointers, which need to be assembled into a single linear message in a transportable format (not always just a string, e.g. Protobuf using binary format).</li>
 </ul>
-<h3 id="failures">Failures</h3>
+</li>
+</ul>
+<h3 id="failures"><a class="toclink" href="#failures">Failures</a></h3>
 <ul>
 <li>Packets can be lost, reordered, or duplicated.</li>
 <li>Client/server can crash at any time (before, during, or after the call).</li>
 <li>Server/network can be slow, and client can time out.</li>
 </ul>
 <p>Some of the network issues can be mitigated by TCP, but sockets can fail and messages aren't always transmitted over TCP anyways.</p>
-<h2 id="fault-model">Fault Model</h2>
+<h2 id="fault-model"><a class="toclink" href="#fault-model">Fault Model</a></h2>
 <ul>
-<li><strong>Asynchronous fail stop nodes</strong>
-    - Computer may be arbitrarily slow while still working.
-    - Nodes should always fail by stopping, before transmitting garbage data/forgetting state. This is a strong assumption. For non-fail-stop/arbitrarily behaving nodes, see <em>Byzantine Fault Tolerance</em>.</li>
-<li><strong>Network model</strong>
-    - Messages can be lost, delayed, reordered, or duplicated. Messages can be arbitrarily delayed while the network still works correctly.
-    - Messages won't be corrupted (bit flips). This is another strong assumption. See error detection and correction for working without this assumption.
-    - Network may partition some nodes from eachother.
-        - Possible for nodes to be in isolated groups without a connection between them.
-    - Network is (1) commutative and (2) transitive.
-        - (1) If A can talk to B, B can talk to A.
-        - (2) If A can talk to B and B can talk to C, then A can talk to C.</li>
+<li><strong>Asynchronous fail stop nodes</strong><ul>
+<li>Computer may be arbitrarily slow while still working.</li>
+<li>Nodes should always fail by stopping, before transmitting garbage data/forgetting state. This is a strong assumption. For non-fail-stop/arbitrarily behaving nodes, see <em>Byzantine Fault Tolerance</em>.</li>
+</ul>
+</li>
+<li><strong>Network model</strong><ul>
+<li>Messages can be lost, delayed, reordered, or duplicated. Messages can be arbitrarily delayed while the network still works correctly.</li>
+<li>Messages won't be corrupted (bit flips). This is another strong assumption. See error detection and correction for working without this assumption.</li>
+<li>Network may partition some nodes from eachother.<ul>
+<li>Possible for nodes to be in isolated groups without a connection between them.</li>
+</ul>
+</li>
+<li>Network is (1) commutative and (2) transitive.<ul>
+<li>(1) If A can talk to B, B can talk to A.</li>
+<li>(2) If A can talk to B and B can talk to C, then A can talk to C.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li>Clients only make one RPC request at a time, a very strong assumption.</li>
 </ul>
-<h2 id="naive-rpc">Naive RPC</h2>
+<h2 id="naive-rpc"><a class="toclink" href="#naive-rpc">Naive RPC</a></h2>
 <ul>
-<li><strong>Nodes</strong>
-    - Any number of stateless clients and servers.
-    - Servers perform some computation when they recieve a message, and then reply.</li>
-<li><strong>Messages</strong>
-    - Client request, server response
-    - Client reqyest contains IP addr of client and server, name of procedure, arguments.
-    - Server response contains IP addr of client and server, and results of the procedure.</li>
+<li><strong>Nodes</strong><ul>
+<li>Any number of stateless clients and servers.</li>
+<li>Servers perform some computation when they recieve a message, and then reply.</li>
 </ul>
-<h2 id="client-timeout-and-retry">Client timeout and retry</h2>
+</li>
+<li><strong>Messages</strong><ul>
+<li>Client request, server response</li>
+<li>Client reqyest contains IP addr of client and server, name of procedure, arguments.</li>
+<li>Server response contains IP addr of client and server, and results of the procedure.</li>
+</ul>
+</li>
+</ul>
+<h2 id="client-timeout-and-retry"><a class="toclink" href="#client-timeout-and-retry">Client timeout and retry</a></h2>
 <p>If a request or reply message is dropped, the client will wait forever for the response. This can be fixed with client timer/retransmission, where the client sends the request again if it doesn't get a response in a certain amount of time. This leads to duplication and reordering of messages at the server.</p>
 <p>We can handle this with a unique request ID. Include a message ID in each request/reply. When the client retransmits, it uses the same message ID. The server can then ignore duplicate requests.</p>
-<h3 id="rpc-semantics">RPC Semantics</h3>
+<h3 id="rpc-semantics"><a class="toclink" href="#rpc-semantics">RPC Semantics</a></h3>
 <ul>
-<li><strong>At least once</strong>
-    - Client resends on timeout, server executes every copy of requests that arrive
-    - If client gets a response, it knows the server executed the request at least once. Otherwise, it doesn't know if the server executed the request(s) or not.</li>
-<li><strong>At most once</strong>
-    - Execute only the first copy that arrives at the server.
-    - If client gets a reply, it knows the server executed the request exactly once. Otherwise, it doesn't know if the server executed the request or not (but it knows it didn't execute it more than once).</li>
-<li><strong>Exactly once</strong>
-    - Execute the request exactly once.
-    - Requires a unique request ID, and the server to remember the request ID and the result of the request.</li>
+<li><strong>At least once</strong><ul>
+<li>Client resends on timeout, server executes every copy of requests that arrive</li>
+<li>If client gets a response, it knows the server executed the request at least once. Otherwise, it doesn't know if the server executed the request(s) or not.</li>
 </ul>
-<h4 id="at-least-once">At least once</h4>
+</li>
+<li><strong>At most once</strong><ul>
+<li>Execute only the first copy that arrives at the server.</li>
+<li>If client gets a reply, it knows the server executed the request exactly once. Otherwise, it doesn't know if the server executed the request or not (but it knows it didn't execute it more than once).</li>
+</ul>
+</li>
+<li><strong>Exactly once</strong><ul>
+<li>Execute the request exactly once.</li>
+<li>Requires a unique request ID, and the server to remember the request ID and the result of the request.</li>
+</ul>
+</li>
+</ul>
+<h4 id="at-least-once"><a class="toclink" href="#at-least-once">At least once</a></h4>
 <p>Client should do a finite number of retries, eventually giving up and returning an error to the caller.</p>
 <p>This only works if the server is <strong>idempotent</strong>, meaning it has the same effect if it's executed multiple times. All read-only operations are idempotent, but not all write operations are. For example, icrementing a counter is not idempotent, but setting the counter to a value is.</p>
 <p>Does TCP handle this? Not really despite being reliable. Most RPCs are sent over TCP, and it guarantees in-order delivery with retransmission and duplicate detection. However, it doesn't guarantee exactly-once semantics. If the server crashes after processing the request but before sending the response, the client will retransmit the request, and the server will execute it again.</p>
@@ -209,7 +234,7 @@
 | MapReduce | The Map phase is idempotent since it is a pure function |
 | NFS | If the client maintains offset, reading/writing a block is idempotent |</p>
 <p>Importantly, in situations with multiple clients, operations like <code>Put(k, v)</code> are not idempotent, since the value of <code>k</code> can change between the time the client reads the value and the time it writes the value.</p>
-<h2 id="two-generals-problem">Two Generals Problem</h2>
+<h2 id="two-generals-problem"><a class="toclink" href="#two-generals-problem">Two Generals Problem</a></h2>
 <p>Just a thought experiment to emphasize the difficulty of message passing in a distributed system. Two generals are trying to coordinate an attack on a city. They are separated by a valley, and can only communicate by messenger. The messenger can be captured by the city, and the generals don't know if the message was delivered. The generals need to agree on a time to attack, but they can't be sure the message was delivered. They can only attack if they both agree on the time.</p>
 <p>The problem boils down to the fact that at any point in time, if we sent a message, we don't know if it was delivered. Regardless of how many round trips you make to confirm, the last message sent could always have been dropped. This is a fundamental and central problem in distributed systems.</p>
             </div>

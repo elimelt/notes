@@ -7,7 +7,7 @@
     <title>Hardware Modes | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the processor switches between privileged kernel mode and restricted user mode to provide protection with restrictions. Explains the use of the EFLAGS register in x86 systems and the status register in MIPS architectures to control and monitor the current hardware mode.">
+    <meta name="description" content="Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the p">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Hardware Modes">
-    <meta property="og:description" content="Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the processor switches between privileged kernel mode and restricted user mode to provide protection with restrictions. Explains the use of the EFLAGS register in x86 systems and the status register in MIPS architectures to control and monitor the current hardware mode.">
+    <meta property="og:description" content="Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the p">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/kernel-abstraction.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Hardware Modes">
-    <meta name="twitter:description" content="Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the processor switches between privileged kernel mode and restricted user mode to provide protection with restrictions. Explains the use of the EFLAGS register in x86 systems and the status register in MIPS architectures to control and monitor the current hardware mode.">
+    <meta name="twitter:description" content="Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the p">
 
     <meta name="keywords" content="hardware modes,kernel mode,user mode,dual mode operation,eflags register,mips status register">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Hardware Modes", "dateModified": "2025-02-11T20:48:58.415910", "description": "Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the processor switches between privileged kernel mode and restricted user mode to provide protection with restrictions. Explains the use of the EFLAGS register in x86 systems and the status register in MIPS architectures to control and monitor the current hardware mode.", "articleSection": "Operating Systems", "keywords": "hardware modes,kernel mode,user mode,dual mode operation,eflags register,mips status register"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Hardware Modes", "dateModified": "2025-02-11T20:48:58.415910", "description": "Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the p", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/kernel-abstraction.html", "articleSection": "Operating Systems", "keywords": "hardware modes,kernel mode,user mode,dual mode operation,eflags register,mips status register"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Hardware Modes
@@ -98,12 +95,12 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="lecture-2-">Lecture 2 -</h1>
-<h2 id="hardware-modes">Hardware Modes</h2>
+                <h1 id="lecture-2-"><a class="toclink" href="#lecture-2-">Lecture 2 -</a></h1>
+<h2 id="hardware-modes"><a class="toclink" href="#hardware-modes">Hardware Modes</a></h2>
 <p><em>Who actually gets to control the hardware?</em></p>
 <p><em>The application</em>? It would be simple and quick, but isn't safe at all.</p>
 <p><em>The OS</em>? Can act on behalf of the application, which gives us protection.</p>
-<h3 id="challenge-protection-with-restrictions">Challenge: Protection with Restrictions</h3>
+<h3 id="challenge-protection-with-restrictions"><a class="toclink" href="#challenge-protection-with-restrictions">Challenge: Protection with Restrictions</a></h3>
 <p><em>How do we execute code with restricted privileges?</em></p>
 <p><strong>Hardware Support: Dual Mode Operation</strong></p>
 <ul>

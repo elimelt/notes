@@ -1,603 +1,103 @@
-<div class="section">
 
-
-    <ul>
-        <li><b>HISTORICAL PERSPECTIVE</b>
-            <ul>
-                <li>A historical prospective on the advancements leading to the Internet:<br>
-                    <a href="http://www.amazon.com/exec/obidos/ASIN/1575000881//ref=sr_1_6_1/107-6517080-5232559">
-                        <i>NERDS - A Brief History Of The Internet</i></a>,
-                    Stephen Segaller, Nov 1999.
-                </li>
-                <li> Brian Pinkerton's history of <a
-                        href="http://www.thinkpink.com/bp/WebCrawler/History.html">WebCrawler</a>,
-                    the first Internet Search Engine. (A project in my class!).
-
-                </li>
-                <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/web2.html">Web 2.0</a>
-
-                </li>
-            </ul>
-            <!--
-          <li>Networking Essentials
-    <ul>
-      <li>A comprehensive book on networking (and expensive too):<br>
-          <a href="http://www.amazon.com/exec/obidos/ASIN/1558605142//ref=sr_1_10_1/107-6517080-5232559">
-          <i>Computer Networks - A Systems Approach</i></a>,
-          Larry Peterson and Bruce Davie, 2nd edition, 1999.
-      </li>
-      <li>Informal introduction to the Domain Name System (a.k.a. DNS):<br>
-          <a href="http://hotwired.lycos.com/webmonkey/geektalk/97/03/index4a.html">
-          <i>Exploring the Domain Name Space; DNS in Action</i></a>,
-          Kristin Windbigler, Jan 1997.
-      </li>
-      <li>Informal introduction to the HTTP protocol or What happens when you click on a link?<br>
-    
-          <a href="http://hotwired.lycos.com/webmonkey/geektalk/97/06/index4a.html">
-          <i>HTTP Transactions and You; One Click = Several Requests</i></a>,
-          Dean Gaudet, Feb 1997.
-      </li>
-      <li>A comprehensive guide on how to write HTTP clients and servers:<br>
-          <a href="http://www.jmarshall.com/easy/http/">
-          <i>HTTP Made Really Easy: A Practical Guide To Writing Clients And Servers</i></a>,
-          James Marshall, Apr 1997. 
-      </li>
-    </ul>
-    -->
-        </li>
-        <li> <b> GIANT-SCALE SERVICES </b>
-            <ul>
-                <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/GiantScale-IEEE.pdf">Lessons from Giant-Scale
-                        Services</a> by Eric Brewer, IEEE Computer, 2001.
-
-                </li>
-                <li> <a
-                        href="http://static.googleusercontent.com/media/research.google.com/en//archive/googlecluster-ieee.pdf">Web
-                        Search for a Planet: The Google Cluster Architecture</a>,
-                    Luiz Barroso, Jeffrey Dean, and Urs Hoelzle
-
-                </li>
-                <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/mapreduce-osdi04.pdf">MapReduce: Simplified Data Processing on Large Clusters</a>,
-                    Jeffrey Dean and Sanjay Ghemawat
-
-                </li>
-                <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/fox97clusterbased.pdf">Cluster-Based Scalable
-                        Network Services</a> by Armando Fox, Steven D. Gribble, Yatin
-                    Chawathe, Eric A. Brewer, and Paul Gauthier. Symposium on Operating
-                    Systems Principles (SOSP) 1997.
-
-                </li>
-                <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/ft_gateway.cfm.pdf">The Google File System</a> by
-                    Sanjay Ghemawat et al. SOSP 2003.
-
-                </li>
-                <li> Peer-to-Peer Systems
-                    <ul>
-
-                        <li> <a href="http://www-db.stanford.edu/peers/">Stanford</a> page on the
-                            topic. Links to presentations and papers.
-
-                        </li>
-                        <li> Research paper on Berkeley's <a href="http://pdos.csail.mit.edu/chord/">CHORD</a>
-
-                        </li>
-                        <li> A survey of <a href="http://www.bearcave.com/misl/misl_tech/msdrm/darknet.htm">Darknets</a>
-
-
-                        </li>
-                    </ul>
-
-                </li>
-            </ul>
-
-
-
-
-
-        </li>
-        <li> <b>WEB CRAWLERS and SPIDERS </b>
-            <ul>
-                <li> A brief summary of your <a href="robots.html">responsibilities</a> when operating a crawler
-                    in this course
-
-
-                </li>
-                <li>The best overview of a crawler:<br>
-                    <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/mercator.pdf"><i>Mercator: A Scalable, Extensible Web
-                            Crawler</i></a>,
-                    Allan Heydon and Mark Najork, Compaq SRC, June 1999.
-
-                </li>
-                <li> This 2004 paper is probably an excellent overview on the
-                    holistic search engine (crawler, indexing plus query) process
-                    <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/brewer-search-engines.pdf">Combining Systems and Databases: A Search Engine
-                        Retrospective</a> by Eric Brewer, co-founder of Inktomi.
-
-                </li>
-                <li>A careful paper describing a variety of architectures for
-                    building <a href="http://www2002.org/CDROM/refereed/108/index.html">parallel
-                        crawlers</a>. The authors propose metrics to evaluate a parallel crawler, and
-                    compare the proposed architectures using 40 million pages collected
-                    from the Web. The results clarify the relative merits of each
-                    architecture and provide a good guideline on when to adopt which
-                    architecture.
-
-
-                </li>
-                <li> A description of the ancestor of the crawler which we used in
-                    the 2002 project: Robert
-                    Miller's <a href="http://www-2.cs.cmu.edu/~rcm/websphinx/#doc">WebSphinx</a>,
-                    implemented at CMU and originally reported in a <a
-                        href="http://www-2.cs.cmu.edu/~rcm/https://courses.cs.washington.edu/courses/cse454/15au/papers/www7/">paper in
-                        WWW7</a>.
-                </li>
-                <li>What order a crawler should use when following links?<br>
-
-                    <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/cho-order.pdf">
-                        <i>Efficient Crawling Through URL Ordering</i></a>,
-                    Junghoo Cho, Hector Garcia-Molina and Lawrence Page, Stanford University, 1998.
-                </li>
-                <li>Topic-specific crawling:<br>
-                    <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/chakrabarti99focused.pdf">
-                        <i>Focused Crawling: A New Approach To Topic-Specific Web Resource Discovery</i></a>,
-                    Soumen Chakrabarti, Martin van den Berg and Byron Dom, Elsevier Science B.V., 1999.
-
-                </li>
-                <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/bharat03who.pdf">Who links to who?</a> a study
-                    of web link structure, which includes "Kevin Bacon"-style analysis.
-
-
-                </li>
-            </ul>
-
-
-
-
-        </li>
-        <li> <b>SEARCH ENGINES, INVERTED FILES, PAGERANK </b>
-            <ul>
-
-                <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/Dirty Little Secrets.pdf">The Dirty Little
-                        Secrets of Search</a> by David Segal, New York Times.
-
-                </li>
-                <li> Online
-                    textbook on <a href="http://www-nlp.stanford.edu/IR-book/">Information Retrieval</a> by Manning,
-                    Raghavan, and Schutze (also available in
-                    hardcover).
-
-                </li>
-                <li> Good textbook <a
-                        href="http://www.amazon.com/Search-Engines-Information-Retrieval-Practice/dp/0136072240">Search
-                        Engines: Information Retrieval in Practice</a> but it costs $73.
-
-                </li>
-                <li>Basic IR textbook<br>
-                    <a
-                        href="http://www.amazon.com/exec/obidos/ASIN/020139829X/qid=1011894349/sr=2-1/104-7684984-2165529">
-                        <i>Modern Information Retrieval</i></a>,
-                    R. Baeza-Yates and B. Ribeiro-Neto, Addison Wesley, 1999. <br>
-                    Covers vector space model (section 2), precision/recall (3), inverted
-                    files (8), and inverted file compression (7.4.5) Not as up to date, but
-                    half the price.
-                </li>
-
-
-                <li>The "Google" paper:<br>
-                    <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/google.pdf">
-                        <i>The Anatomy Of A Large-Scale Hypertextual Web Search Engine</i></a>,
-                    Sergey Brin and Lawrence Page, Stanford University, 1999. An
-                    extended version of the WWW-98 paper.
-
-
-                </li>
-                <li><a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/p11-henzinger.pdf"> Challenges in Web Search Engines </a>, by Henzinger, Motwani,
-                    and Silverstein. ACM SIGIR Forum 36(2), 2002.
-
-                </li>
-                <li> How to implement PageRank <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/fast-pagerank.pdf">Efficiently</a>
-
-
-                </li>
-                <li>Discussion of Latent Semantic Indexing<br>
-                    <a href="http://nlp.stanford.edu/IR-book/html/htmledition/latent-semantic-indexing-1.html">How
-                        LSI Works</a>
-                    <br>
-                    <a href="http://setosa.io/ev/principal-component-analysis/">Visual
-                        introduction to principal components analysis (used in lsi)</a>
-                </li>
-                <li>The authority and hubs model:<br>
-                    <a href="http://www.cs.cornell.edu/home/kleinber/auth.pdf">
-                        <i>Authoritative Sources in a Hyperlinked Environment</i></a>,
-                    Jon Kleinberg, Proc. 9th ACM-SIAM Symposium on Discrete Algorithms, 1998. Extended version in
-                    Journal of the ACM 46(1999). Also appears as IBM Research Report RJ 10076, May 1997.
-                </li>
-                <li>On the stability of PageRank and HITS and the connection to LSI,<br>
-
-                    <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/ng-ijcai01.pdf">
-                        <i>Link Analysis, Eigenvectors and Stability</i></a>,
-                    A. Ng, A. Zheng, and M. Jordan. IJCAI-01.
-                    <br> Requires some linear algebra and math bravery, but very good.
-                </li>
-
-                <li>The "search engine"-related web site:<br>
-
-                    <a href="http://searchenginewatch.com/">
-                        <i>Search Engine Watch</i></a>,
-                    Danny Sulivan.
-                </li>
-
-                <li> A short paper on <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/p206-delort.html">snippet generation</a>
-
-                </li>
-            </ul>
-
-
-
-
-
-
-        </li>
-    </ul>
-    <li> <b>INFORMATION EXTRACTION</b>
-
-        <ul>
-            <li> <a href="http://cs.nyu.edu/grishman/tarragona.pdf">Survey on Information Extraction</a> by Ralph
-                Grishman
-
-            </li>
-            <li> Named Entity Linking
-                <ul>
-                    <li> Good intro paper: <a
-                            href="http://www.cs.waikato.ac.nz/~ihw/https://courses.cs.washington.edu/courses/cse454/15au/papers/08-DNM-IHW-LearningToLinkWithWikipedia.pdf">Milne
-                            &amp; Witten CIKM-08</a>
-                    </li>
-                    <li> Great paper, but technical, by <a
-                            href="http://www.cc.gatech.edu/~zha/CSE8801/query-annotation/p457-kulkarni.pdf">Kulkarni et
-                            al</a>
-                    </li>
-                    <li> A longer paper
-                        which <a href="http://benhachey.info/pubs/hachey-aij12-evaluating.pdf">compares
-                            three approaches to NEL</a>, offering ideas for how to improve them.
-                    </li>
-                    <li> A very handy <a href="http://nlp.stanford.edu/pubs/crosswikis.pdf">resource</a> for NEL,
-                        derived from a Google crawl of hyperlinks to Wikipedia
-                    </li>
-                    <li> A very clear paper on
-                        the <a href="http://www.mitpressjournals.org/doi/pdf/10.1162/COLI_a_00152">Stanford
-                            Coreference System</a> - a task which is related to NEL.
-                    </li>
-                    <li> Valentin I. Spitkovsky, and Angel X. Chang. 2012.
-                        A Cross-Lingual Dictionary for English Wikipedia Concepts. [<a
-                            href="http://nlp.stanford.edu/pubs/crosswikis.pdf">pdf</a> <a
-                            href="http://nlp.stanford.edu/pubs/crosswikis-data.tar.bz2">data</a>]
-                        In Proceedings of the Eighth International Conference on Language Resources and Evaluation (LREC
-                        2012).</li>
-                </ul>
-
-            </li>
-            <li> TAC KBP Competition Systems
-                <ul>
-                    <li>
-                        Analysis of the <a href="http://www.lrec-conf.org/proceedings/lrec2012/pdf/256_Paper.pdf">2010
-                            KBP competition systems</a>
-                    </li>
-                    <li> Paper describing <a href="http://www.aclweb.org/anthology/P11-1115.pdf">successful approaches
-                            &amp; challenges</a> after the 2010 competition.
-                    </li>
-                    <li>
-                        The <a href="http://nlp.stanford.edu/pubs/kbp2011-slotfilling.pdf">Stanford
-                            slot-filling system</a> emphasizes distant supervision.
-                    </li>
-                    <li>
-                        the <a href="http://www.cs.nyu.edu/~min/index_files/NYU.notebook.pdf">NYU
-                            slot-filling system</a>, which won the 2012 competition. (Probably
-                        not as helpful a paper for 454 readers though).
-                    </li>
-                </ul>
-            </li>
-            <li> Machine Learning Approaches
-                <ul>
-                    <li> The Mintz/Jurafsky
-                        paper on <a href="http://www.stanford.edu/~jurafsky/mintz.pdf">distant
-                            supervision</a> - a simple approach to distant supervision.
-                    </li>
-                    <li> The <a href="http://www.cs.washington.edu/sites/default/files/ai/https://courses.cs.washington.edu/courses/cse454/15au/papers/tmpeO3jAM.pdf">MultiR
-                            system</a>, which is much better (but a bit complicated), built here at UW. Code is
-                        available.
-                    </li>
-                    <li> Another small improvement is described
-                        by <a href="http://surdeanu.info/mihai/https://courses.cs.washington.edu/courses/cse454/15au/papers/emnlp2012-mimlre.pdf">Mihai
-                            Surdeanu</a>; by using logistic regression with regularization,
-                        the system maybe doesn't overfit as badly? Code is available
-                        for <a href="http://nlp.stanford.edu/software/mimlre.shtml">download</a>. See
-                        also Mihai's <a href="http://surdeanu.info/mihai/https://courses.cs.washington.edu/courses/cse454/15au/papers/emnlp2012-mimlre-notes.pdf">notes
-                            on negative examples</a>.
-                    </li>
-                    <li> ML Features for Relation Extraction <a name="features"></a>
-                        <ul>
-                            <li> A 2007 paper <a href="http://sifaka.cs.uiuc.edu/czhai/pub/hlt07-rel.pdf">Systematic
-                                    exploration of the feature space for relation extraction</a> by Jiang &amp; Zhai.
-                            </li>
-                            <li> The Mintz/Jurafsky
-                                paper on <a href="http://www.stanford.edu/~jurafsky/mintz.pdf">distant
-                                    supervision</a> which defines a set of features which have been
-                                widely adopted (tho they are likely not that great).
-                            </li>
-                            <li> The Stanford <a href="http://nlp.stanford.edu/software/sutime.shtml">SU Time System</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-
-            </li>
-            <li> Useful technologies
-                <ul>
-                    <li> Very clear paper on a high-performance yet simple <a
-                            href="http://www.mitpressjournals.org/doi/pdf/10.1162/COLI_a_00152">Coreference</a>
-                        disambigaution system.
-                    </li>
-                    <li> L. R. Rabiner, <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/tutorial.pdf">A Tutorial on
-                            Hidden Markov Models and Selected Applications in Speech
-                            Recognition</a>, IEEE-1989.
-
-                    </li>
-                    <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/crf-tutorial.pdf">An Introduction to
-                            Conditional Random Fields for Relational Learning.</a> Charles
-                        Sutton and Andrew
-                        McCallum. Book chapter in
-                        Introduction to Statistical Relational Learning. Edited by Lise Getoor
-                        and Ben Taskar. MIT Press. 2006.
-
-
-                    </li>
-                    <li> D. Freitag and A. McCallum, <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/iehill.pdf">Information extraction with HMM
-                            structures
-                            learned by stochastic optimization</a> AAAI-2000.
-                    </li>
-                </ul>
-
-            </li>
-            <li>Question Answering on the Web
-                <ul>
-                    <li> The <a href="http://www.cs.washington.edu/homes/weld/https://courses.cs.washington.edu/courses/cse454/15au/papers/mulder-www10.pdf">Mulder
-                            paper</a>
-                    </li>
-                    <li> The <a href="http://www2002.org/CDROM/refereed/19/index.html">NSIR</a>
-                    </li>
-                </ul>
-
-
-            </li>
-            <li> The UW <a href="http://www.cs.washington.edu/research/knowitall/">KnowItAll</a> Project
-
-            </li>
-            <li> Etzioni, O., Cafarella, M., Downey, D., Kok, S., Popescu, A-M.,
-                Shaked, T., Soderland, S., Weld, D. and Yates, A., <a
-                    href="http://www.cs.washington.edu/homes/weld/https://courses.cs.washington.edu/courses/cse454/15au/papers/knowitall-aij05.pdf">"Unsupervised
-                    Named-Entity Extraction from the Web: An Experimental Study"</a>
-                <i>Artificial Intelligence</i>, <b>165</b>(1)91-134, 2005.
-
-            </li>
-        </ul>
-
-
-    </li>
-    <li><b>LEARNING, DATA MINING, PERSONALIZATION</b>
-        <ul>
-            <li><a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/sawzall-sciprog.pdf">Interpreting the Data: Parallel Analysis with Sawzall (Draft)</a>,
-                Rob Pike, Sean Dorward, Robert Griesemer, and Sean Quinlan
-            </li>
-            <li>The best reference for machine learning (alas it is very expensive, so
-                you might wish to go to the library or ask me to xerox pages for you): <br>
-                <a
-                    href="http://www.amazon.com/exec/obidos/ASIN/0070428077/qid=1013191333/sr=8-1/ref=sr_8_67_1/103-4253291-6023066">Machine
-                    Learning</a>, T. Mitchell, McGraw-Hill, 1997.
-
-            </li>
-            <li>The <a href="http://www.engr.uvic.ca/~seng474/sprintPaper.pdf">SPRINT</a>
-                paper, which explains how to scale a decision tree learner to handle data
-                which is much longer than memory.
-
-            </li>
-            <li> Chumki Basu, Haym Hirsh, and William&nbsp;W. Cohen (1998).<br>
-
-                <a href="https://www.aaai.org/https://courses.cs.washington.edu/courses/cse454/15au/papers/Workshops/1998/WS-98-08/WS98-08-002.pdf">
-                    Recommendation as Classification:
-                    Using Social and Content-Based Information in Recommendation.</a> (AAAI98)
-
-            </li>
-            <li>The original paper describing <a
-                    href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.50.8204">RIPPER</a>, a fast
-                rule learner which has proven to be a good tool for learning from
-                unstructured text.
-            </li>
-            <li>Two approaches to organizing web search results:
-                <ul>
-
-                    <li> <a href="http://research.microsoft.com/~sdumais/sigir00.pdf">Hierarchical
-                            Classification of Web Content</a> (this is Sue Dumais work at Microsoft)
-                    </li>
-                    <li>
-                        <a href="http://www8.org/w8-https://courses.cs.washington.edu/courses/cse454/15au/papers/3a-search-query/dynamic/dynamic.html">
-                            <i>A Dynamic Clustering Interface to Web Search Results</i></a>,
-                        Zamir, O. and Etzioni, O., WWW-8, 1999.
-                    </li>
-                </ul>
-
-            </li>
-        </ul>
-
-        <!--
-          <li>Web Services & XML protocols
-    <ul>
-     <li> An
-    overview of <a href="http://www.xml.com/pub/a/2001/04/04/webservices/">Web
-     Services </a> 
-    <ul>
-     <li> XML itself: a <a
-    href="http://iwsun3.infoworld.com/cgi-bin/displayTC.pl?/990719analysis.htm">A
-    high-level introduction</a> and the  detailed <a href="http://www.w3.org/TR/REC-xml">specification </a> (W3C Recommendation)
-     <li> Details on <a href="http://www.ibiblio.org/xml/books/bible/updates/">XSL,
-    XLinks, and XPointers </a> 
-     <li> A tutorial on <a href="http://www.w3schools.com/soap/default.asp">SOAP</a> 
-     <li> Both overview and technical material on <a href="http://www.xml.org/xml/resources_focus_uddi.shtml">UDDI</a> 
-     <li> Introduction to <a href="http://www.learnxmlws.com/tutors/wsdl/wsdl.aspx">WSDL</a> 
-    
-    </ul>
-    
-    <li> Examples of Web Services:
-    <ul>
-     <li> 
-      <a
-      href="http://associates.amazon.com/exec/panama/associates/ntg/browse/-/567634/102-3920373-1956143">Amazon</a>
-      <ul> 
-      <li> <a href="http://www.kokogiak.com/amazon/"> Amazon Light</a>
-      <li> <a href="http://www.pmbrowser.info/amazon.html">The Amazon
-      Browser</a>
-    
-      <li> <a href="http://digicams.php9.com/digicams.php">Digital Camera
-      Comparison Shopper</a>
-      <li> <a
-      href="http://story.news.yahoo.com/news?tmpl=story&ncid=582&e=1&cid=582&u=/nm/20021110/wr_nm/column_nettrends_dc">Overview news article</a>
-    
-     </ul>
-     <li> 
-      <a href="http://www.google.com/apis/">Google</a>
-    
-    
-    </ul>
-    
-    <li> A good introduction to data integration
-    
-    <li> A high-level vision for the <a href="http://www.sciam.com/article.cfm?articleID=00048144-10D2-1C70-84A9809EC588EF21">Semantic Web</a> 
-    
-       </ul>
-    
-    -->
-
-
-    </li>
-    <li> <b>USABILITY &amp; INTERFACES </b>
-        <ul>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/p959-kohavi.pdf">
-                    Practical guide to controlled experiments on the web: listen to your
-                    customers not to the HiPPO</a> by Kohavi, Henne, and
-                Sommerfield. KDD-07.
-            </li>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/yee-chi03.pdf">Faceted metadata for image search and
-                    browsing</a> by Ka-Ping Yee, Kirsten Swearingen, Kevin Li and Marti
-                Hearst. CHI-03. 2003.
-
-            </li>
-            <li> AJAX:
-                <ul>
-                    <li> <a href="http://en.wikipedia.org/wiki/AJAX">Wikipedia entry</a>
-                    </li>
-                    <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/xml-http-request.html">Very Dynamic Web Interfaces</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-
-
-
-
-    </li>
-    <li> <b>ADVERTISING </b>
-        <ul>
-            <li> <a href="http://www2006.org/programme/files/pdf/533.pdf">Finding
-                    Advertising Keywords on Web Pages</a>
-                Yih, Goodman, and Carvalho. WWW-06, Scotland, 2006.
-
-            </li>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/p959-kohavi.pdf">
-                    Practical guide to controlled experiments on the web: listen to your
-                    customers not to the HiPPO</a> by Kohavi, Henne, and
-                Sommerfield. KDD-07.
-            </li>
-        </ul>
-
-
-    </li>
-    <li> <b>SOCIAL COMPUTING</b>
-        <ul>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/balloon.pdf">DARPA Network Challenge Final Report</a>
-                DARPA, Feb 16, 2010
-
-
-            </li>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/esp-game.pdf">Labeling Images with a Computer
-                    Game</a> von Ahn and Dabbish, CHI-04.
-            </li>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/cityville1.pdf">CityVille Explained, Part 1</a>
-                and <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/cityville2.pdf">Part 2</a> by
-                Tadhg Kelly, Gamasutra. Why Zynga's Cityville Gained 70M
-                users in 4 weeks.
-            </li>
-        </ul>
-
-
-    </li>
-    <li><b>SECURITYu &amp; E-COMMERCE </b>
-        <ul>
-            <li> A great <a href="http://www.michaelnielsen.org/ddi/how-the-bitcoin-protocol-actually-works/">Bitcoin
-                    Primer</a>
-
-            </li>
-            <li> The <a href="https://bitcoin.org/bitcoin.pdf">original bitcoin paper</a> - short and sweet.
-
-            </li>
-            <li> A more <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/bitcoin-765.pdf">technical analysis</a> of the bitcoin protocol.
-
-
-            </li>
-            <li> Kevin Fu, Emil Sit, Kendra Smith, and Nick Feamster, <a
-                    href="https://pdos.csail.mit.edu/https://courses.cs.washington.edu/courses/cse454/15au/papers/webauth:sec10.pdf">Dos and Don'ts of Client Authentication
-                    on the Web</a>, MIT Tech Report 818, May 2001.
-
-            </li>
-            <li> The classic (1978) paper by Rivest, Shamir and Adleman on public
-                key cryptography: <a href="https://people.csail.mit.edu/rivest/Rsapaper.pdf">
-
-                    A Method for Obtaining Digital Signatures and Public-Key
-                    Cryptosystems</a>. Still a good read.
-
-            </li>
-            <li> A <a href="http://www.nordugrid.org/documents/rsalabs_faq41.pdf">Cryptography FAQ</a> by RSA Data
-                Security.
-
-            </li>
-            <li> The <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/id-theft.htm">Black market for credit cards and identities</a>
-            </li>
-        </ul>
-
-
-    </li>
-    <li> <b>HAZARDS: SPAM, VIRUSES, SPYWARE and the like</b>
-        <ul>
-
-            <li> The <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/econ-ling.cfm.htm">Linguistics of Link Spam</a>
-
-            </li>
-            <li> A <a href="http://www.cs.washington.edu/homes/gribble/https://courses.cs.washington.edu/courses/cse454/15au/papers/spyware.pdf">Measurement
-                    and Analysis of Spyware in a University Environment</a>: Stefan Saroiu,
-                Steven D. Gribble, and Henry M. Levy. Proceedings of the First
-                Symposium on Networked Systems Design and Implementation (NSDI), March
-                2004.
-
-            </li>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/spycrawler.pdf">A Crawler-based Study of Spyware
-                    on the Web</a>: Alexander Moschuk, Tanya Bragin, Steven D. Gribble,
-                and Henry M. Levy
-
-
-            </li>
-            <li> <a href="https://courses.cs.washington.edu/courses/cse454/15au/papers/personal-data.htm">Personal data for the taking</a>
-
-
-            </li>
-        </ul>
-        <!--end HTML content-->
-    </li>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cse 454 Reading | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Page: Cse 454 Reading">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/papers/cse-454-reading.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Cse 454 Reading">
+    <meta property="og:description" content="Page: Cse 454 Reading">
+    <meta property="og:url" content="https://notes.elimelt.com/papers/cse-454-reading.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Cse 454 Reading">
+    <meta name="twitter:description" content="Page: Cse 454 Reading">
+
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Cse 454 Reading", "dateModified": "2024-02-18T13:32:39.606013", "description": "Page: Cse 454 Reading", "url": "https://notes.elimelt.com/papers/cse-454-reading.html"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » Cse 454 Reading
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Cse 454 Reading</h1>
+            <div class="meta">
+                <time datetime="2024-02-18T13:32:39.606013">
+                    Last modified: 2024-02-18
+                </time>
+            </div>
+            <div class=content>
+                
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

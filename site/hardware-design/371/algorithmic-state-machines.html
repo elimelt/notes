@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Algorithmic State Machines", "dateModified": "2025-05-07T16:15:38.687185", "description": "What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?", "articleSection": "Hardware", "keywords": "systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Algorithmic State Machines", "dateModified": "2025-05-07T16:15:38.687185", "description": "What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?", "url": "https://notes.elimelt.com/hardware-design/371/algorithmic-state-machines.html", "articleSection": "Hardware", "keywords": "systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Algorithmic State Machines
@@ -98,15 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="algorithmic-state-machines">Algorithmic State Machines</h1>
-<h2 id="review-finite-state-machines-fsms">Review: Finite State Machines (FSMs)</h2>
+                <h1 id="algorithmic-state-machines"><a class="toclink" href="#algorithmic-state-machines">Algorithmic State Machines</a></h1>
+<h2 id="review-finite-state-machines-fsms"><a class="toclink" href="#review-finite-state-machines-fsms">Review: Finite State Machines (FSMs)</a></h2>
 <p>State machines are defined as a set of states, transitions, and outputs. You can use them to model the behavior of systems with <strong>finite, discrete states</strong>. They are pretty much the bread and butter of hardware design, but can also be used in software (e.g. state machines pattern).</p>
-<h3 id="mealy-vs-moore">Mealy vs. Moore</h3>
+<h3 id="mealy-vs-moore"><a class="toclink" href="#mealy-vs-moore">Mealy vs. Moore</a></h3>
 <ul>
 <li><strong>Mealy</strong>: Outputs depend on both the current state and the input. This means that the output can change as soon as the input changes, even without a state transition.</li>
 <li><strong>Moore</strong>: Outputs depend only on the current state. This means that the output can only change when the state changes.</li>
 </ul>
-<h3 id="mathematical-definition">Mathematical Definition</h3>
+<h3 id="mathematical-definition"><a class="toclink" href="#mathematical-definition">Mathematical Definition</a></h3>
 <p>More concisely, a finite state machine is defined as a 5-tuple:</p>
 <p>$$
 FSM = (S, I, O, T, s_0)
@@ -119,36 +116,28 @@ $$</p>
 <li>$T$ is the transition function, which maps a state and an input to a new state</li>
 <li>$s_0$ is the initial state</li>
 </ul>
-<h2 id="so-what-is-an-algorithmic-state-machine">So what is an Algorithmic State Machine?</h2>
+<h2 id="so-what-is-an-algorithmic-state-machine"><a class="toclink" href="#so-what-is-an-algorithmic-state-machine">So what is an Algorithmic State Machine?</a></h2>
 <p>An Algorithmic State Machine (ASM) is basically an extended framework for designing and implementing synchronous (clocked) digital systems using finite state machines. At the highest level, you divide the design two parts:</p>
 <ol>
-<li><strong>Control</strong>: The part that manages the state transitions and controls the flow of the algorithm.<ul>
+<li><strong>Control</strong>: The part that manages the state transitions and controls the flow of the algorithm.</li>
 <li>This is typically implemented using a finite state machine (FSM).</li>
 <li>The control unit generates control signals based on the current state and inputs.</li>
 <li>It determines which operations to perform and when to perform them.</li>
-</ul>
-</li>
-<li><strong>Data Path</strong>: The part that performs the actual computations and data manipulations.<ul>
+<li><strong>Data Path</strong>: The part that performs the actual computations and data manipulations.</li>
 <li>This is typically implemented using combinational and sequential logic.</li>
 <li>The data path consists of registers, multiplexers, arithmetic units, and other components that perform the required operations.</li>
 <li>It processes the data based on the signals generated by the control unit.</li>
-</ul>
-</li>
 </ol>
 <p>For my more software-brained readers, it's sort of like the data path is the model/view of a web application, while the control unit is the frontend controller (please don't read too far into this analogy...).</p>
-<h2 id="register-transfer-level-rtl-design">Register Transfer Level (RTL) Design</h2>
+<h2 id="register-transfer-level-rtl-design"><a class="toclink" href="#register-transfer-level-rtl-design">Register Transfer Level (RTL) Design</a></h2>
 <ul>
-<li>Sequential algorithms:<ul>
+<li>Sequential algorithms:</li>
 <li>Variables used as symbolic memory locations</li>
 <li>Sequential execution dictates the ordering of operations</li>
-</ul>
-</li>
-<li>Hardware implementation:<ul>
+<li>Hardware implementation:</li>
 <li>Registers store intermediate data (variables)</li>
 <li>Datapath implements all necessary register operations (computations attached to register inputs)</li>
 <li>A control path FSM specifies the ordering of register operations</li>
-</ul>
-</li>
 <li>This design scheme sometimes referred to as
   register-transfer level (RTL) design</li>
 </ul>
@@ -166,54 +155,40 @@ $$</p>
 <li>$r_{1} \leftarrow 0$ means clear register 1 (set it to 0).</li>
 <li>$y \leftarrow a * a$ means that the value in register $a$ is multiplied by itself, and the result is stored in register $y$.</li>
 </ul>
-<h3 id="timing-interpretation">Timing Interpretation</h3>
+<h3 id="timing-interpretation"><a class="toclink" href="#timing-interpretation">Timing Interpretation</a></h3>
 <ul>
 <li>After the clock edge, the outputs of all registers update simultaneously and become available</li>
 <li>During the rest of the clock cycle, these outputs propagate through the combinational logic that performs $f$</li>
 <li>At the <em>next</em> clock edge, the result is stored into $r_{\text{dest}}$ and the process repeats</li>
 </ul>
-<h2 id="asm-diagram-asmd">ASM Diagram (ASMD)</h2>
+<h2 id="asm-diagram-asmd"><a class="toclink" href="#asm-diagram-asmd">ASM Diagram (ASMD)</a></h2>
 <p>An ASM diagram is a graphical representation of an algorithmic state machine. It consists of:</p>
 <ul>
-<li><strong>State boxes</strong>: Represent the different states of the machine.<ul>
+<li><strong>State boxes</strong>: Represent the different states of the machine.</li>
 <li>Rectangular boxes, containing the state name and the output signals (Moore type).</li>
-</ul>
-</li>
 <li><strong>Transition arrows</strong>: Represent the transitions between states.</li>
-<li><strong>Decision boxes</strong>: Represent the conditions that determine state transitions.<ul>
+<li><strong>Decision boxes</strong>: Represent the conditions that determine state transitions.</li>
 <li>Diamond-shaped boxes, containing a condition with a $0$ and $1$ transition.</li>
-</ul>
-</li>
-<li><strong>Conditional output box</strong>: Represent the outputs that depend on the current state and the input conditions.<ul>
+<li><strong>Conditional output box</strong>: Represent the outputs that depend on the current state and the input conditions.</li>
 <li>Box with rounded corners, containing the output signals (Mealy type).</li>
 <li>Must be output of decision box.</li>
-</ul>
-</li>
-<li><strong>ASM Block</strong>: A rectangular box that groups together a set of states and transitions.<ul>
+<li><strong>ASM Block</strong>: A rectangular box that groups together a set of states and transitions.</li>
 <li>A single state box grouped with all decision and conditional output boxes that are part of the state.</li>
 <li>NO overlap between ASM blocks, and NO internal feedback loops (just make the ASM block smaller so the feedback loop goes outside the box).</li>
 <li>All changes happen within the ASM block in a single clock cycle, <strong>particularly at state exit</strong> rather than entrance (important!).</li>
 </ul>
-</li>
-</ul>
-<h2 id="asmd-design-procedure">ASMD Design Procedure</h2>
+<h2 id="asmd-design-procedure"><a class="toclink" href="#asmd-design-procedure">ASMD Design Procedure</a></h2>
 <p>Given some sequential algorithm:</p>
 <ol>
-<li>Identify <strong>datapath</strong> components and <strong>operations</strong><ul>
+<li>Identify <strong>datapath</strong> components and <strong>operations</strong></li>
 <li>Registers, ALUs, multiplexers, etc.</li>
 <li>Operations: addition, subtraction, multiplication, etc.</li>
-</ul>
-</li>
-<li>Identify <strong>states</strong> and <strong>signals</strong> that cause state transitions<ul>
+<li>Identify <strong>states</strong> and <strong>signals</strong> that cause state transitions</li>
 <li>external inputs, status signals, etc. based on sequence of operations</li>
-</ul>
-</li>
-<li>Name the control signals<ul>
+<li>Name the control signals</li>
 <li>Outputs of the control unit and inputs to the datapath</li>
-</ul>
-</li>
 </ol>
-<h2 id="systemverilog-controller-module">SystemVerilog Controller Module</h2>
+<h2 id="systemverilog-controller-module"><a class="toclink" href="#systemverilog-controller-module">SystemVerilog Controller Module</a></h2>
 <pre><code class="language-verilog">module controller(
     input logic clk, reset, // (input signals, e.g. start)
     // input logic (status signals, e.g. x_le_y, i_eq_z)
@@ -254,7 +229,7 @@ $$</p>
 
 endmodule // controller
 </code></pre>
-<h2 id="systemverilog-datapath-module">SystemVerilog Datapath Module</h2>
+<h2 id="systemverilog-datapath-module"><a class="toclink" href="#systemverilog-datapath-module">SystemVerilog Datapath Module</a></h2>
 <pre><code class="language-verilog">
 module datapath #(parameter W=4)(
     input logic clk,

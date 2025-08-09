@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Pattern", "dateModified": "2025-02-11T16:41:49.790872", "description": "A technical exploration of the sliding window pattern in algorithms, focusing on its applications and variations.", "articleSection": "Algorithms", "keywords": "sliding window,fixed size window,dynamic size window,streaming algorithms,array problems,contiguous subarray,linear data structure"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Pattern", "dateModified": "2025-02-11T16:41:49.790872", "description": "A technical exploration of the sliding window pattern in algorithms, focusing on its applications and variations.", "url": "https://notes.elimelt.com/algorithms/patterns/sliding-window.html", "articleSection": "Algorithms", "keywords": "sliding window,fixed size window,dynamic size window,streaming algorithms,array problems,contiguous subarray,linear data structure"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Sliding Window Pattern
@@ -98,23 +95,21 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="sliding-window">Sliding Window</h1>
+                <h1 id="sliding-window"><a class="toclink" href="#sliding-window">Sliding Window</a></h1>
 <p>Sliding window is a useful pattern when you need to maintain a contiguous subarray of elements within a linear data structure. Problems typically fall into one of two categories:</p>
 <ol>
 <li><strong>Fixed Size Window</strong>: The window size is fixed and does not change as you iterate through the data structure. These are typically easier to solve.</li>
 <li><strong>Variable Size Window</strong>: The window size changes as you iterate through the data structure. These are typically harder to solve, since you need to dynamically adjust the window size depending on the state of your algorithm.</li>
 </ol>
-<h2 id="fixed-size-window">Fixed Size Window</h2>
+<h2 id="fixed-size-window"><a class="toclink" href="#fixed-size-window">Fixed Size Window</a></h2>
 <p>Any time you are given a linear data structure and are asked to find some minimal or maximal contiguous subset of elements, you should immediately think of using a fixed size sliding window.</p>
 <p>A typical algorithm might look like this:</p>
 <ul>
 <li>Initialize the window state with the first $k$ elements.</li>
-<li>Iterate through the array, from index $k$ to $n - 1$.<ul>
+<li>Iterate through the array, from index $k$ to $n - 1$.</li>
 <li>At each step, update the window state by removing the first element of your current window and adding the next element.</li>
 <li>(Sometimes conditionally) update the result based on the window state.</li>
 <li>Move the window boundries to the right by one element.</li>
-</ul>
-</li>
 <li>Return result based on the window state.</li>
 </ul>
 <p>To design such an algorithm, you need to identify the following:
@@ -125,10 +120,10 @@
 - How and when do you update the result based on the window state?
   - For minimum/maximum problems, often your state is <code>Comparable</code>, so you can easily update the result by comparing the current state with the result.</p>
 <p>Some problems will require you to <code>map</code> (as in apply a function to each element of a collection) over all windows of a fixed size, outputting some linear data structe of results based on each iteration's window state. In this case, you can use the same algorithm, but instead of updating a single result, you can append the result of each iteration to a <code>list</code>. In others, you can update a single result in more of a "streaming" fashion. You should always look for the streaming approach if your final result only depends on a single window state.</p>
-<h2 id="dynamic-size-window">Dynamic Size Window</h2>
+<h2 id="dynamic-size-window"><a class="toclink" href="#dynamic-size-window">Dynamic Size Window</a></h2>
 <p>Dynamic size windows often involve more complicated logic within each iteration, since at any given step you need to decide whether to expand or contract the window, on top of how to update the window state for each case.</p>
-<h2 id="a-typical-algorithm-might-look-like-this">A typical algorithm might look like this:</h2>
-<h2 id="practice-problems">Practice Problems</h2>
+<h2 id="a-typical-algorithm-might-look-like-this"><a class="toclink" href="#a-typical-algorithm-might-look-like-this">A typical algorithm might look like this:</a></h2>
+<h2 id="practice-problems"><a class="toclink" href="#practice-problems">Practice Problems</a></h2>
 <ul>
 <li><a href="https://leetcode.com/problems/minimum-size-subarray-sum/">minimum-size-subarray-sum</a></li>
 <li><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters">longest-substring-without-repeating-characters</a></li>

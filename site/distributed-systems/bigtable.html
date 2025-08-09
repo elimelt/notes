@@ -7,7 +7,7 @@
     <title>Bigtable, A Distributed Storage System for Structured Data | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.">
+    <meta name="description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity har">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Bigtable, A Distributed Storage System for Structured Data">
-    <meta property="og:description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.">
+    <meta property="og:description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity har">
     <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/bigtable.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Bigtable, A Distributed Storage System for Structured Data">
-    <meta name="twitter:description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.">
+    <meta name="twitter:description" content="A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity har">
 
     <meta name="keywords" content="bigtable,distributed storage,google">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Bigtable, A Distributed Storage System for Structured Data", "dateModified": "2025-02-11T16:42:08.249516", "description": "A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity hardware and software to provide low-latency, high-throughput access to large amounts of data.", "articleSection": "Distributed Systems", "keywords": "bigtable,distributed storage,google"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Bigtable, A Distributed Storage System for Structured Data", "dateModified": "2025-02-11T16:42:08.249516", "description": "A highly scalable, reliable, and fault-tolerant distributed storage system designed for structured data. Built by Google, it uses a combination of commodity har", "url": "https://notes.elimelt.com/distributed-systems/bigtable.html", "articleSection": "Distributed Systems", "keywords": "bigtable,distributed storage,google"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Bigtable, A Distributed Storage System for Structured Data
@@ -98,25 +95,25 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="bigtable-a-distributed-storage-system-for-structured-data">Bigtable: A Distributed Storage System for Structured Data</h1>
+                <h1 id="bigtable-a-distributed-storage-system-for-structured-data"><a class="toclink" href="#bigtable-a-distributed-storage-system-for-structured-data">Bigtable: A Distributed Storage System for Structured Data</a></h1>
 <p><a href="https://static.googleusercontent.com/media/research.google.com/en//archive/bigtable-osdi06.pdf">Bigtable Paper</a></p>
-<h2 id="introduction">Introduction</h2>
+<h2 id="introduction"><a class="toclink" href="#introduction">Introduction</a></h2>
 <p>Bigtable is a widely applicable, scalable, highly performant, and highly available database that is used by many of Google's services including Personalized Search, Google Earth, Google Analytics, and more (as of 2006). It is able to handle various workloads, ranging from throughput-oriented batch processing jobs, to latency sensitive end user applications, and it is able to scale up to petabytes of data across thousands of commodity machines.</p>
 <p>Bigtable supports a simple data model that supports dynamic control over data layout and format, allowing clients to reason about the locality of their data in the underlying storage. It indexes data by row and column names which are arbitrary strings, and data is stored as uninterpreted strings. Clients are able to control the locality and storage location (in memory or from disk) via their schema design.</p>
-<h2 id="data-model">Data Model</h2>
+<h2 id="data-model"><a class="toclink" href="#data-model">Data Model</a></h2>
 <p>Under the hood, Bigtable is a sparse, distributed, persistent multi-dimensional sorted map. The map is indexed by a row key, column key, and a timestamp; each cell in the map is indexed by these three keys. The row key is a string, the column key is a pair of strings (column family and column qualifier), and the timestamp is a 64-bit integer. The value of the cell is an uninterpreted array of bytes.</p>
 <p><code>(row:string, column:string, time:int64) -&gt; string</code></p>
-<h3 id="rows">Rows</h3>
+<h3 id="rows"><a class="toclink" href="#rows">Rows</a></h3>
 <p>Row keys are arbitrary strings up to 64KB in size. Every read/write of a single row key is atomic, making it easier to reason about concurrent updates to the same row.</p>
 <p>Bigtable maintains data in lexicographic order by row key. The row range for a table is dynamically partitioned, each range being called a <em>tablet</em>, which is the unit of distribution/load balancing. This makes reads over short row ranges efficient, usually only requiring communication with a small number of machines to complete. This property can and should be exploited by users to make their regular access patterns more efficient. For instance, storing webpage content indexed via reversed domain groups all shared subdomains closer together, making host and domain analyses more efficient.</p>
-<h3 id="column-families">Column Families</h3>
+<h3 id="column-families"><a class="toclink" href="#column-families">Column Families</a></h3>
 <p>Column <em>keys</em> are grouped into sets called column <em>families</em>. All data stored in the same family is usually of the same type, although this isn't constrained by the system. Whereas tables can have an unbounded number of columns, the number of column families should remain relatively small (in the hundreds at most).</p>
 <p>Column keys are defined as <code>&lt;family&gt;:&lt;qualifier&gt;</code>, both of which are strings, although family names must be printable.</p>
-<h3 id="timestamps">Timestamps</h3>
+<h3 id="timestamps"><a class="toclink" href="#timestamps">Timestamps</a></h3>
 <p>Each cell maintains multiple versions of your data indexed by timestamp. You can either assign timestamps yourself, or let Bigtable do it at execution time, in which case they represent "real time" in microseconds. Versions are stored in decreasing order, such that you always have the most recent version as the highest locality version.</p>
 <p>You can also specify garbage collection conditions, like only keeping the last <code>n</code> versions of a cell, or only keeping versions within a certain time range. Furthermore, you can intersect, union, and nest garbage collection rulesets.</p>
 <p><strong>Extension</strong>: it would be nice if you could define rules for keeping progressively sparser "snapshots" as records get older, similar to an LSM tree.</p>
-<h2 id="api">API</h2>
+<h2 id="api"><a class="toclink" href="#api">API</a></h2>
 <p>Applications can interact with Bigtable through a wide variety of client libraries, but the base API  provides functions for...</p>
 <ul>
 <li>Reading and writing individual and multiple cells</li>
@@ -129,7 +126,7 @@
 <li>Cells as integer counters</li>
 <li>Input source and output sink for MapReduce jobs</li>
 </ul>
-<h2 id="building-blocks">Building Blocks</h2>
+<h2 id="building-blocks"><a class="toclink" href="#building-blocks">Building Blocks</a></h2>
 <p>Bigtable uses Google's distributed filesystem, <em>GFS</em>, for storing log and data files. The <em>SSTable</em> file format is used for storing data on disk, which provides a persistent, ordered immutable map from keys to values, where both keys and values are arbitrary byte strings. You can look up a specific key, as well as iterate over all kv pairs in a specified key range. Internally, each SSTable contains a sequence of blocks (typically 64KB in size, but configurable), with indices stored at the end of the table and loaded into memory when the SSTable is opened. After loading the index, lookups can be done with a single disk seek, or the table can optionally be loaded entirely into memory to avoid needing to go to disk at all. First, the block containing the key is found by binary search, then the block is read and scanned linearly for the key.</p>
 <p>Additionally, Bigtable uses <em>Chubby</em>, Google's distributed lock service, which is running a 5 active node paxos group under the hood, one of which is leader and serves requests. Chubby provides a simple API for creating and managing locks, and for storing small files. It uses Chubby for a wide variety of tasks, including...</p>
 <ul>
@@ -138,7 +135,7 @@
 <li>Discover and reconfigure/finalize deaths of tablet servers</li>
 <li>Store schema information and access control metadata</li>
 </ul>
-<h2 id="implementation">Implementation</h2>
+<h2 id="implementation"><a class="toclink" href="#implementation">Implementation</a></h2>
 <p>Made up of three major components:</p>
 <ul>
 <li>A client library</li>
@@ -147,13 +144,13 @@
 </ul>
 <p>Most clients rarely ever communicate with the master since their data is accessed through tablet servers, so it is under relatively small load, and doesn't become a bottleneck.</p>
 <p>A Bigtable <em>cluster</em> stores a number of tables, each consisting of a set of tablets, each tablet containing all the data associated with a row range. Initially, each table is just one tablet, but it grows, automatically splitting and load balancing to each tablet being ~100-200 MB by default.</p>
-<h3 id="tablet-location">Tablet Location</h3>
+<h3 id="tablet-location"><a class="toclink" href="#tablet-location">Tablet Location</a></h3>
 <p>Bigtable uses a three-level hierarchy similar to a B+ tree to store tablet location information. The <em>root tablet</em> is the first level, and its location is stored in a Chubby file. The root tablet stores the location of all tablets in a special <code>METADATA</code> table, and each <code>METADATA</code> tablet contains the location of a set of user tablets. The root tablet is really just the first tablet in the <code>METADATA</code> table, and it is treated specially to never be split so there are only ever three levels of indirection.</p>
 <p>The next level of indirection in the hierarchy is the rest of the <code>METADATA</code> table, which stores the location of an end tablet under a row key which encodes the tablet's table identifier and end row.</p>
 <p>This scheme is sufficient to store $2^{34}$ tablets, or $2^{61}$ bytes in 128 MB tablets.</p>
 <p>The client library caches tablet locations, and on cache miss recursively moves up the tablet location hierarchy searching for said tablet. If the cache is empty, the location algorithm requires three network round trips, including a read to Chubby. Additionally, the client library prefetches entries from the <code>METADATA</code> table to try and reduce the number of cache misses.</p>
 <p>Finally, the <code>METADATA</code> table contains secondary information, including a log of all events pertaining to each tablet.</p>
-<h3 id="tablet-assignment">Tablet Assignment</h3>
+<h3 id="tablet-assignment"><a class="toclink" href="#tablet-assignment">Tablet Assignment</a></h3>
 <p>Each tablet is assigned to a single tablet server at a time, and the master manages the assignment of tablets to servers. When there is an unassigned tablet and a tablet server with adequate room, the master assigns the tablet by sending a <em>tablet load</em> request to the server.</p>
 <p>Bigtable uses Chubby to keep track of tablet servers. On tablet server startup it creates and acquires an exclusive lock on a uniquely named file in Chubby in the <em>servers</em> directory. The master monitors this directory to discover new tablet servers. Tablet servers use Chubby sessions, and continue to function until the file no longer exists, at which point they kill themselves. When tablet servers are manually removed in reconfiguration, the server will attempt to release its lock gracefully so the master reassigns its tablets more quickly.</p>
 <p>The master periodically polls the tablet servers' lock status, and if it detects any issues it reassigns the offending server's tablets. At this point, the master also checks Chubby to see if there are any issues apart from the tablet server itself, and if not then the master deletes the tablet server's file, effectively dooming it.</p>
@@ -166,50 +163,46 @@
 </ol>
 <p>The set of tablets only ever changes when one is created or deleted, or when they are merged or split. The leader does all but merges, and merges are handled by the tablet server writing directly to the <code>METADATA</code> table.</p>
 <p>Also, the master kills itself if its session with Chubby ever expires, but this doesn't change the assignment of tablets to tablet servers.</p>
-<h3 id="tablet-serving">Tablet Serving</h3>
+<h3 id="tablet-serving"><a class="toclink" href="#tablet-serving">Tablet Serving</a></h3>
 <p>The persistent state of each tablet is stored in GFS. Updates are stored in a <em>commit log</em>, with the most recently committed updates being stored in-memory in a <em>memtable</em>, and older updates being stored in a sequence of SSTables.</p>
 <p>On a read operation, the authorization is checked via a Chubby file, and then the SSTables for the tablet are scanned and merged to form the result of the read. Write operations are first checked for authorization, and then get added to the commit log using <em>group commit</em>, after which the contents are inserted into the memtable.</p>
-<h3 id="compactions">Compactions</h3>
+<h3 id="compactions"><a class="toclink" href="#compactions">Compactions</a></h3>
 <p>The memtable grows on each write operation until a certain threshold, at which point the memtable is frozen and converted to an SSTable and written to GFS, being replaced by a new memtable. This <em>minor compaction</em> process both shrinks memory usage of tablet servers, and reduces the amount of data needed to be read from the commit log during recovery.</p>
 <p>Periodically, <em>major compaction</em> takes place, where all SSTables are merged into a single SSTable containing no deleted data.</p>
-<h2 id="refinements">Refinements</h2>
-<h3 id="locality-groups">Locality Groups</h3>
+<h2 id="refinements"><a class="toclink" href="#refinements">Refinements</a></h2>
+<h3 id="locality-groups"><a class="toclink" href="#locality-groups">Locality Groups</a></h3>
 <p>Clients can group multiple column families into a <em>locality group</em>, each of which get their own SSTable. Tuning characteristics like loading SSTables into memory can be specified for locality groups, which is a feature used on the <code>METADATA</code> table.</p>
-<h3 id="compression">Compression</h3>
+<h3 id="compression"><a class="toclink" href="#compression">Compression</a></h3>
 <p>Clients can control whether or not, and if so how SSTables for locality groups are compressed. Compression schemes are applied to each SSTable block. Many clients use a two pass approach, which first uses <em>Bentley and McIlroy's</em> scheme, compressing long common strings across a large window. In the second pass, repetitions in a small window (16 KB) are searched for and compressed. This compression scheme prioritizes speed over size, although it does well at both metrics.</p>
-<h3 id="caching-for-read-performance">Caching for read performance</h3>
+<h3 id="caching-for-read-performance"><a class="toclink" href="#caching-for-read-performance">Caching for read performance</a></h3>
 <p>Tablet servers use two levels of caching:</p>
 <ul>
-<li>Scan cache<ul>
+<li>Scan cache</li>
 <li>Caches kv pairs returned by the SSTable</li>
 <li>Useful for repeated reads</li>
-</ul>
-</li>
-<li>Block cache<ul>
+<li>Block cache</li>
 <li>Caches SSTable blocks read from GFS</li>
 <li>Useful for locality/sequential reads</li>
 </ul>
-</li>
-</ul>
-<h3 id="bloom-filters">Bloom filters</h3>
+<h3 id="bloom-filters"><a class="toclink" href="#bloom-filters">Bloom filters</a></h3>
 <p>Clients can specify that SSTables be created with a bloom filter in the tablet server's memory, reducing the number of disk accesses required for read operations by preventing many lookups for non-existent rows</p>
-<h3 id="commit-log-implementation">Commit-log implementation</h3>
+<h3 id="commit-log-implementation"><a class="toclink" href="#commit-log-implementation">Commit-log implementation</a></h3>
 <p>The commit logs for different tablets are all actually a single commit log on the tablet server, preventing us from needing to concurrently write to many different files in GFS.</p>
 <p>On recovery, instead of reading the entire log to find only the tablets assigned to you, the log is sorted by keys <code>(table, row name, log sequence number)</code>. This sorting is parallelized by partitioning the log file into 64 MB segments which are each sorted in parallel on different tablet servers, being coordinated by the master.</p>
 <p>To mitigate GFS writing latency spikes, two separate threads are maintained, writing to two different files. If one is performing badly, the other one starts, but only one writes at a time.</p>
-<h3 id="speeding-up-tablet-recovery">Speeding up tablet recovery</h3>
+<h3 id="speeding-up-tablet-recovery"><a class="toclink" href="#speeding-up-tablet-recovery">Speeding up tablet recovery</a></h3>
 <p>Before the master moves a tablet, the source tablet server does an initial minor compaction on the tablet, after which it stops serving the tablet, performing one more minor compaction to eliminate any state in the log that came in after the first compaction, and then the tablet is unloaded on this server and loaded onto the other server.</p>
-<h3 id="exploiting-immutability">Exploiting immutability</h3>
+<h3 id="exploiting-immutability"><a class="toclink" href="#exploiting-immutability">Exploiting immutability</a></h3>
 <p>Since SSTables are immutable, no synchronization needs to be done when reading from SSTables, and concurrent row accesses can be implemented efficiently. The only mutable concurrently accessed data structure is the memtable, which is optimized with row copy-on-write, allowing parallel reads and writes.</p>
 <p>To permanently remove deleted data, the table is  mark and sweep garbage collected.</p>
 <p>Additionally, since SSTables are immutable, when splitting tablets the children can continue to rely on the parent's SSTable, not needing to create two new SSTables.</p>
-<h2 id="performance-evaluation">Performance Evaluation</h2>
+<h2 id="performance-evaluation"><a class="toclink" href="#performance-evaluation">Performance Evaluation</a></h2>
 <p>Although scaling relatively well, it is not perfectly linear with the number of servers in the cluster. In particular, for random reads from disk, increasing the number of servers from 1 to 500 only increased the throughput by a factor of ~100. For random reads in particular, transferring 64KB blocks over the network for every read ends up saturating the network link, becoming a bottleneck. Random reads from memory on the other had saw a ~300 times increase in throughput.</p>
-<h2 id="real-applications">Real Applications</h2>
-<h3 id="google-analytics">Google Analytics</h3>
+<h2 id="real-applications"><a class="toclink" href="#real-applications">Real Applications</a></h2>
+<h3 id="google-analytics"><a class="toclink" href="#google-analytics">Google Analytics</a></h3>
 <p><em>Google Analytics</em> (analytics.google.com) is a service that helps analyze traffic patterns to websites. To enable the service, a small JavaScript program is embedded in a web page, which is invoked whenever the page is visited. It records various information like a user identifier, information about the page, etc., and the data is made available in Google Analytics to the website owner.</p>
 <p>Two of the tables stored in Bigtable used by this service are the raw click table, which maintains a row for each end-user session, and the summary table, containing various predefined summaries for each website. The summary table is periodically computed via a Map-Reduce job over the raw click table. The click table's schema is designed so that sessions that visit the same website are contiguous and sorted chronologically, and the table is able to be compressed to 14% its original size (~200 TB). The summary table is able to be compressed to 29% of its original size (~20 TB).</p>
-<h3 id="google-earth">Google Earth</h3>
+<h3 id="google-earth"><a class="toclink" href="#google-earth">Google Earth</a></h3>
 <p>The data used by both Google Maps (maps.google.com) and Google Earth (earth.google.com) are partially stored in Bigtable. The system uses one table to preprocess data, and another set of tables for serving client data.</p>
 <p>The preprocessing pipeline uses one table to store raw image data (with compression turned off since it is handled manually). During preprocessing, the images are cleaned and consolidated into the final serving data. Each row in the preprocessing table corresponds to a single geographic segment, and rows are named so that adjacent geographic segments are stored near eachother. This preprocessing pipeline relies heavily on MapReduce over Bigtable.</p>
 <p>The serving system uses a single table to index data stored in GFS. Although its relatively small (500 GB), it serves tens of thousands of queries per second, so it is hosted on hundreds of tablet servers to load balance, each containing in-memory column families.</p>

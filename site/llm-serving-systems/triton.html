@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Kernel Programming with Triton and CUDA", "dateModified": "2025-05-25T16:32:00.765660", "description": "Overview of programming GPU kernels with Triton and CUDA", "articleSection": "Machine Learning Systems", "keywords": "gpu,triton,cuda"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Kernel Programming with Triton and CUDA", "dateModified": "2025-05-25T16:32:00.765660", "description": "Overview of programming GPU kernels with Triton and CUDA", "url": "https://notes.elimelt.com/llm-serving-systems/triton.html", "articleSection": "Machine Learning Systems", "keywords": "gpu,triton,cuda"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » GPU Kernel Programming with Triton and CUDA
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="triton">Triton</h1>
+                <h1 id="triton"><a class="toclink" href="#triton">Triton</a></h1>
 <p>Avoids allocating and deallocating lots of memory, and instead uses a single memory pool for all allocations and uses register file for temporary storage.</p>
 <pre><code class="language-py">import torch
 import triton
@@ -146,33 +143,37 @@ print(&quot;with triton&quot;)
 print(f'bandwidth: {num * 4 * 3 / time_total / 1000)} MB/s')
 print(f'total time: {time_total} s')
 </code></pre>
-<h1 id="cuda">CUDA</h1>
+<h1 id="cuda"><a class="toclink" href="#cuda">CUDA</a></h1>
 <ul>
-<li>Memory allocation and deallocation is done explicitly
-    - cudaMalloc, cudaFree, cudaMallocHost</li>
-<li>Memory movement and setting
-    - cudaMemcpy, cudaMemcpyAsync, cudaMemsset, cudaMemsetAsync</li>
+<li>Memory allocation and deallocation is done explicitly<ul>
+<li>cudaMalloc, cudaFree, cudaMallocHost</li>
 </ul>
-<h2 id="cuda-kernels">CUDA Kernels</h2>
+</li>
+<li>Memory movement and setting<ul>
+<li>cudaMemcpy, cudaMemcpyAsync, cudaMemsset, cudaMemsetAsync</li>
+</ul>
+</li>
+</ul>
+<h2 id="cuda-kernels"><a class="toclink" href="#cuda-kernels">CUDA Kernels</a></h2>
 <ul>
 <li>Declare a kernel: <code>__global__ void kernel_name(args...)</code></li>
 <li>Declare device "helper" function: <code>__device__ void helper_name(args...)</code></li>
 <li>Args are on host, pointers to device memory also on host</li>
 </ul>
-<h2 id="launching-kernels">Launching Kernels</h2>
+<h2 id="launching-kernels"><a class="toclink" href="#launching-kernels">Launching Kernels</a></h2>
 <ul>
 <li>Define block shapes, e.g. <code>dim3 block(dim_x, dim_y, dim_z)</code></li>
 <li>Define thread shapes, e.g. <code>dim3 thread(thread_x, thread_y, thread_z)</code></li>
 <li>Launch kernel: <code>kernel_name&lt;&lt;&lt;block, thread&gt;&gt;&gt;(args...)</code></li>
 </ul>
-<h2 id="synchronization-and-error-handling">Synchronization and Error Handling</h2>
+<h2 id="synchronization-and-error-handling"><a class="toclink" href="#synchronization-and-error-handling">Synchronization and Error Handling</a></h2>
 <ul>
 <li>Thread synchronization: <code>__syncthreads()</code> -&gt; device function</li>
 <li>Block synchronization: usually not feasible, except for "cooperative launch"</li>
 <li>Device synchronization: <code>cudaDeviceSynchronize()</code> -&gt; host function</li>
 <li>Error handling: <code>cudaGetLastError()</code>, <code>cudaGetErrorString()</code></li>
 </ul>
-<h2 id="cuda-addition-kernel">CUDA Addition Kernel</h2>
+<h2 id="cuda-addition-kernel"><a class="toclink" href="#cuda-addition-kernel">CUDA Addition Kernel</a></h2>
 <pre><code class="language-python">#include &lt;cuda_runtime.h&gt;
 #include &lt;stdio.h&gt;
 
@@ -233,7 +234,7 @@ int main() {
     }
 }
 </code></pre>
-<h3 id="compile">Compile</h3>
+<h3 id="compile"><a class="toclink" href="#compile">Compile</a></h3>
 <p>use <code>nvcc</code> to compile the CUDA code</p>
 <pre><code class="language-sh"># compile
 nvcc addition.cu -o addition
@@ -241,12 +242,12 @@ nvcc addition.cu -o addition
 # run
 ./addition
 </code></pre>
-<h2 id="tuning">tuning</h2>
+<h2 id="tuning"><a class="toclink" href="#tuning">tuning</a></h2>
 <p>Some things you can try to tune your CUDA code:
 - Increase block size
 - Increase number of blocks
 - Load more things per thread</p>
-<h2 id="additional-cuda-features-on-modern-gpus">Additional CUDA features on modern GPUs</h2>
+<h2 id="additional-cuda-features-on-modern-gpus"><a class="toclink" href="#additional-cuda-features-on-modern-gpus">Additional CUDA features on modern GPUs</a></h2>
 <ul>
 <li>Unified memory addressing (P100+)</li>
 <li>NvLink (P100+)</li>

@@ -7,7 +7,7 @@
     <title>Motivation behind the Network Layer | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing and forwarding. Discusses hierarchical addressing, the IP protocol, congestion control, quality of service, and routing as key topics addressed by the network layer to enable reliable and efficient communication across interconnected networks.">
+    <meta name="description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Motivation behind the Network Layer">
-    <meta property="og:description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing and forwarding. Discusses hierarchical addressing, the IP protocol, congestion control, quality of service, and routing as key topics addressed by the network layer to enable reliable and efficient communication across interconnected networks.">
+    <meta property="og:description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an">
     <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/motivation.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Motivation behind the Network Layer">
-    <meta name="twitter:description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing and forwarding. Discusses hierarchical addressing, the IP protocol, congestion control, quality of service, and routing as key topics addressed by the network layer to enable reliable and efficient communication across interconnected networks.">
+    <meta name="twitter:description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an">
 
     <meta name="keywords" content="network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Motivation behind the Network Layer", "dateModified": "2025-02-11T20:48:02.162658", "description": "Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing and forwarding. Discusses hierarchical addressing, the IP protocol, congestion control, quality of service, and routing as key topics addressed by the network layer to enable reliable and efficient communication across interconnected networks.", "articleSection": "Networks", "keywords": "network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Motivation behind the Network Layer", "dateModified": "2025-02-11T20:48:02.162658", "description": "Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an", "url": "https://notes.elimelt.com/networks/3-network/motivation.html", "articleSection": "Networks", "keywords": "network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Motivation behind the Network Layer
@@ -98,39 +95,43 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="motivation-behind-the-network-layer">Motivation behind the Network Layer</h1>
+                <h1 id="motivation-behind-the-network-layer"><a class="toclink" href="#motivation-behind-the-network-layer">Motivation behind the Network Layer</a></h1>
 <p>We can already build networks using the link layer using packet forwarding, but this doesn't scale well. The network layer allows you to connect multiple networks together, allowing for transparent communication between different link layer technologies.</p>
-<h2 id="shortcomings-of-the-link-layer">Shortcomings of the Link Layer</h2>
+<h2 id="shortcomings-of-the-link-layer"><a class="toclink" href="#shortcomings-of-the-link-layer">Shortcomings of the Link Layer</a></h2>
 <ul>
 <li><strong>No global addressing</strong>: Link layer addresses are only meaningful on the local network. We need a way to address hosts on different networks.</li>
 <li><strong>Doesn't scale well</strong>: It is infeasable to maintain a routing table for every host on the internet locally.</li>
 <li><strong>Only one technology</strong>: Link layer technologies are not interoperable. We need a way to connect different link layer technologies together.</li>
 <li><strong>Limited traffic control</strong>: Link layer technologies are not designed to handle congestion or route around failures. Should also be able to control the bandwidth used by different applications.</li>
 </ul>
-<h2 id="network-layer-approach">Network Layer Approach</h2>
+<h2 id="network-layer-approach"><a class="toclink" href="#network-layer-approach">Network Layer Approach</a></h2>
 <ul>
 <li><strong>Scaling</strong>: Hierarchical addressing in the form of prefixes.</li>
 <li><strong>Heterogeneity</strong>: Uses IP as a common protocol to connect different link layer technologies.</li>
 <li><strong>Bandwidth control</strong>: Uses congestion control and lowest-cost routing to control traffic. Also allows for quality of service (QoS) to be implemented.</li>
 </ul>
-<h2 id="routing-vs-forwarding">Routing vs. Forwarding</h2>
+<h2 id="routing-vs-forwarding"><a class="toclink" href="#routing-vs-forwarding">Routing vs. Forwarding</a></h2>
 <ul>
 <li><strong>Routing</strong> is the process of deciding which path to send traffic. Happens on a global scale.</li>
 <li><strong>Forwarding</strong> is the process of actually sending the packet from one node to another.</li>
 </ul>
-<h2 id="topics">Topics</h2>
+<h2 id="topics"><a class="toclink" href="#topics">Topics</a></h2>
 <ul>
-<li>Network Service Model
-    - Datagrams (packets)
-    - Virtual Circuits</li>
-<li>IP
-    - Internetworking
-    - Forwarding (Longest Prefix Match)
-    - Helpers: ARP and DHCP
-    - Fragmentation and MTU discovery
-    - Errors: ICMP
-    - IPv6, scaling IP to the world
-    - NAT and "middleboxes"</li>
+<li>Network Service Model<ul>
+<li>Datagrams (packets)</li>
+<li>Virtual Circuits</li>
+</ul>
+</li>
+<li>IP<ul>
+<li>Internetworking</li>
+<li>Forwarding (Longest Prefix Match)</li>
+<li>Helpers: ARP and DHCP</li>
+<li>Fragmentation and MTU discovery</li>
+<li>Errors: ICMP</li>
+<li>IPv6, scaling IP to the world</li>
+<li>NAT and "middleboxes"</li>
+</ul>
+</li>
 <li>Routing Algorithms</li>
 </ul>
             </div>

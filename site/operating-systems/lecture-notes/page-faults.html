@@ -7,7 +7,7 @@
     <title>How the Operating System Handles Page Faults | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.">
+    <meta name="description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="How the Operating System Handles Page Faults">
-    <meta property="og:description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.">
+    <meta property="og:description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, ">
     <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/page-faults.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="How the Operating System Handles Page Faults">
-    <meta name="twitter:description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.">
+    <meta name="twitter:description" content="Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, ">
 
     <meta name="keywords" content="page fault,virtual memory,page replacement,page table,i/o,process management">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "How the Operating System Handles Page Faults", "dateModified": "2025-02-11T20:49:00.952709", "description": "Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.", "articleSection": "Operating Systems", "keywords": "page fault,virtual memory,page replacement,page table,i/o,process management"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "How the Operating System Handles Page Faults", "dateModified": "2025-02-11T20:49:00.952709", "description": "Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, ", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/page-faults.html", "articleSection": "Operating Systems", "keywords": "page fault,virtual memory,page replacement,page table,i/o,process management"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » How the Operating System Handles Page Faults
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="page-fautls">Page Fautls</h1>
-<h2 id="how-does-the-os-handle-a-page-fault">How does the OS handle a page fault?</h2>
+                <h1 id="page-fautls"><a class="toclink" href="#page-fautls">Page Fautls</a></h1>
+<h2 id="how-does-the-os-handle-a-page-fault"><a class="toclink" href="#how-does-the-os-handle-a-page-fault">How does the OS handle a page fault?</a></h2>
 <p>On fault, an interrupt causes the CPU to jump to the page fault handler:</p>
 <ul>
 <li>find or create (evict another page) a page frame to load the new page into</li>
@@ -107,7 +104,7 @@
 <li>fix up PTE by marking it as "valid", set "referenced" and "modified" bits to false, set protection bits appropriately, point to correct page frame</li>
 <li>add process to ready queue</li>
 </ul>
-<h3 id="finding-the-page-on-disk">Finding the page on disk</h3>
+<h3 id="finding-the-page-on-disk"><a class="toclink" href="#finding-the-page-on-disk">Finding the page on disk</a></h3>
 <ul>
 <li>processor makes process ID and faulting virtual address available to page fault handler</li>
 <li>process ID gets you to the base of the page table</li>
@@ -116,58 +113,68 @@
 <li>at this point, it's just a simple matter of I/O</li>
 <li>must be positive that the target page frame remains available!</li>
 </ul>
-<h3 id="find-or-create-a-page-frame">Find or create a page frame</h3>
+<h3 id="find-or-create-a-page-frame"><a class="toclink" href="#find-or-create-a-page-frame">Find or create a page frame</a></h3>
 <ul>
 <li>run page replacement algorithm</li>
 <li>free page frame</li>
 <li>assigned but unmodified ("clean") page frame</li>
 <li>assigned and modified ("dirty") page frame</li>
-<li>assigned but "clean"<ul>
+<li>assigned but "clean"</li>
 <li>find PTE (may be a different process!)</li>
 <li>mark as invalid (disk address must be available for subsequent reload)</li>
+<li>assigned and "dirty"<ul>
+<li>find PTE (may be a different process!)</li>
+<li>mark as invalid</li>
+<li>write it out</li>
 </ul>
 </li>
-<li>assigned and "dirty"
-    - find PTE (may be a different process!)
-    - mark as invalid
-    - write it out</li>
-<li>OS may speculatively maintain lists of clean and dirty frames selected for replacement
-    - May also speculatively clean the dirty pages (by writing them to
+<li>OS may speculatively maintain lists of clean and dirty frames selected for replacement<ul>
+<li>May also speculatively clean the dirty pages (by writing them to
 disk)</li>
 </ul>
-<h2 id="issues-with-page-faults">Issues with Page Faults</h2>
-<h3 id="memory-reference-overhead">Memory reference overhead</h3>
+</li>
+</ul>
+<h2 id="issues-with-page-faults"><a class="toclink" href="#issues-with-page-faults">Issues with Page Faults</a></h2>
+<h3 id="memory-reference-overhead"><a class="toclink" href="#memory-reference-overhead">Memory reference overhead</a></h3>
 <p>There are 2 references to memory for every memory access: one to the page table, and one to the actual memory. This can be mitigated by using a TLB (Translation Lookaside Buffer), which is essentially a cache for the page table.</p>
-<h3 id="memory-required-to-hold-a-page-table-can-be-large">Memory required to hold a page table can be large</h3>
+<h3 id="memory-required-to-hold-a-page-table-can-be-large"><a class="toclink" href="#memory-required-to-hold-a-page-table-can-be-large">Memory required to hold a page table can be large</a></h3>
 <ul>
 <li>need one PTE per page in the virtual address space</li>
-<li>32 bit AS with 4KB pages = 220 PTEs = 1,048,576 PTEs. 4 bytes/PTE = 4MB per page table
-    - OS's typically have separate page tables per process
-    - 25 processes = 100MB of page tables</li>
+<li>32 bit AS with 4KB pages = 220 PTEs = 1,048,576 PTEs. 4 bytes/PTE = 4MB per page table<ul>
+<li>OS's typically have separate page tables per process</li>
+<li>25 processes = 100MB of page tables</li>
+</ul>
+</li>
 <li>48 bit AS, same assumptions, 64GB per page table!</li>
 </ul>
-<h4 id="old-solution-paging-the-page-table">Old Solution: Paging the page table</h4>
+<h4 id="old-solution-paging-the-page-table"><a class="toclink" href="#old-solution-paging-the-page-table">Old Solution: Paging the page table</a></h4>
 <p>Can be solved by paging the page table! (ie. have a page table for the page table). Keep the "system" page table in physical memory, and the "user" page table in virtual memory. This is no longer done in practice.</p>
-<h4 id="new-solution-multi-level-page-tables">New Solution: Multi-level page tables</h4>
+<h4 id="new-solution-multi-level-page-tables"><a class="toclink" href="#new-solution-multi-level-page-tables">New Solution: Multi-level page tables</a></h4>
 <p>Simply add another level of indirection. Instead of having a single page table, have a page table of page tables. This works well because the page table is sparsely populated in practice, so it is a waste to have a PTE mapped for every page in the address space.</p>
 <p><strong>This is the solution used in modern operating systems.</strong></p>
-<h5 id="two-level-page-table">Two-level page table</h5>
+<h5 id="two-level-page-table"><a class="toclink" href="#two-level-page-table">Two-level page table</a></h5>
 <ul>
-<li>VA has 3 parts:
-    - master page number, secondary page number, offset</li>
+<li>VA has 3 parts:<ul>
+<li>master page number, secondary page number, offset</li>
+</ul>
+</li>
 <li>master PT maps master PN to secondary PT</li>
 <li>secondary PT maps secondary PN to page frame number</li>
 <li>offset and PFN yield physical address</li>
 </ul>
-<h4 id="other-alternatives">Other Alternatives</h4>
+<h4 id="other-alternatives"><a class="toclink" href="#other-alternatives">Other Alternatives</a></h4>
 <ul>
-<li>Hashed page tables
-    - VPN used as a hash
-    - collision resolved because elements in linked list at the hash index include the VPN as well as the PFN</li>
-<li>Inverted page tables (really reduces space)
-    - one entry per page frame
-    - includes the VPN and the PID of the process
-    - hard to search (but IBM PC/RT actually did it)</li>
+<li>Hashed page tables<ul>
+<li>VPN used as a hash</li>
+<li>collision resolved because elements in linked list at the hash index include the VPN as well as the PFN</li>
+</ul>
+</li>
+<li>Inverted page tables (really reduces space)<ul>
+<li>one entry per page frame</li>
+<li>includes the VPN and the PID of the process</li>
+<li>hard to search (but IBM PC/RT actually did it)</li>
+</ul>
+</li>
 </ul>
             </div>
             <div class="tags">

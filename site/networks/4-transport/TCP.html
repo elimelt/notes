@@ -7,7 +7,7 @@
     <title>Transmission Control Protocol (TCP) | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.">
+    <meta name="description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Transmission Control Protocol (TCP)">
-    <meta property="og:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.">
+    <meta property="og:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ">
     <meta property="og:url" content="https://notes.elimelt.com/networks/4-transport/TCP.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Transmission Control Protocol (TCP)">
-    <meta name="twitter:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.">
+    <meta name="twitter:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ">
 
     <meta name="keywords" content="connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Transmission Control Protocol (TCP)", "dateModified": "2025-02-11T20:48:15.008380", "description": "The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.", "articleSection": "Networks", "keywords": "connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Transmission Control Protocol (TCP)", "dateModified": "2025-02-11T20:48:15.008380", "description": "The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ", "url": "https://notes.elimelt.com/networks/4-transport/TCP.html", "articleSection": "Networks", "keywords": "connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Transmission Control Protocol (TCP)
@@ -98,10 +95,10 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="transmission-control-protocol-tcp">Transmission Control Protocol (TCP)</h1>
-<h2 id="connection-establishment">Connection Establishment</h2>
+                <h1 id="transmission-control-protocol-tcp"><a class="toclink" href="#transmission-control-protocol-tcp">Transmission Control Protocol (TCP)</a></h1>
+<h2 id="connection-establishment"><a class="toclink" href="#connection-establishment">Connection Establishment</a></h2>
 <p>Both sender and receiver must be ready to transfer data, and they need to agree on parameters like max segment size.</p>
-<h3 id="three-way-handshake">Three-Way Handshake</h3>
+<h3 id="three-way-handshake"><a class="toclink" href="#three-way-handshake">Three-Way Handshake</a></h3>
 <p>Opens up connection between client and server. Each side probes the other with a fresh <strong>Initial Sequence Number (ISN)</strong>. Sends on a SYNchronize segment, and echos on ACKnowledge segment. This gives us robustness, but requires extra overhead.</p>
 <ul>
 <li>Client sends SYN(x)</li>
@@ -109,27 +106,27 @@
 <li>Client replies with ACK(y+1)</li>
 <li>SYNs are retransmitted if lost</li>
 </ul>
-<h3 id="connection-release">Connection Release</h3>
+<h3 id="connection-release"><a class="toclink" href="#connection-release">Connection Release</a></h3>
 <p>TCP requires a two-way close. Client and server both finish sending all their data and send a FIN segment. Each FIN closes one direction of the connection.</p>
 <ul>
 <li>Active sends FIN(x), passive ACKs</li>
 <li>Passive sends FIN(y), active ACKs</li>
 <li>FINs are retransmitted if lost</li>
 </ul>
-<h3 id="time_wait-state">TIME_WAIT State</h3>
+<h3 id="time_wait-state"><a class="toclink" href="#time_wait-state">TIME_WAIT State</a></h3>
 <p>Wait a long time afer sending all segments before actually closing (2 x max segment lifetime). This is because the final ACK may be lost, and we need to make sure the other side has received it. Otherwise it might interfere with a new connection.</p>
-<h3 id="timeout-problem">Timeout Problem</h3>
+<h3 id="timeout-problem"><a class="toclink" href="#timeout-problem">Timeout Problem</a></h3>
 <p>If you set it too small, you will retransmit too often. If you set it too large, you will wait too long to detect a failure. Setting the timeout of TCP is a difficult problem because RTT varies widely (due to queueing, routing, etc).</p>
 <p>TCP uses <strong>adaptive timeout</strong>. It smooths the estimates and variance of the RTT using a moving average.</p>
 <p>$$SRTT_{N + 1} = (1 - \alpha) \cdot SRTT_N + \alpha \cdot RTT_{N + 1}$$</p>
 <p>$$Svar_{N + 1} = (1 - \beta) \cdot Svar_N + \beta \cdot |RTT_{N + 1} - SRTT_{N + 1}|$$</p>
 <p>Set the timeout to be a multiple of the smoothed RTT, plus a margin for error. Adaptive timeout works well in practice, but it's not perfect. It can be thrown off by a sudden change in RTT, and it can be exploited by an attacker to cause a DoS attack.</p>
-<h2 id="network-congestion">Network Congestion</h2>
+<h2 id="network-congestion"><a class="toclink" href="#network-congestion">Network Congestion</a></h2>
 <p>Think about a "traffic jam" in the network. The network is temporarily overloaded and can't handle all the traffic. This can lead to packet loss, increased latency, and decreased throughput. Want to push as close to being congested as possible without actually being congested, which is a high level function of TCP.</p>
 <p>Switches and routers have <em>internal buffers</em> to store packets, which essentially act like a queue for each port. When working normally, queues are able to absorb bursts of traffic. However, if the input rate is persistently higher than the output rate, the queue will eventually fill up and packets will be dropped.</p>
 <p>Congestion is a function of traffic patterns, and it can even occur even when the network isn't at full capacity. We would like it if the throughput increased linearly, or even logarithmically towards the capacity of the network as you increase the load on a system. In practice, there is a sharp dropoff in throughput past a certain point of load where congestion collapse occurs.</p>
 <p>Connection collapse is when packets are dropped/time out, and so the sender retransmits the packets, which only makes the problem worse. This is a positive feedback loop that can lead to a complete breakdown of the network.</p>
-<h2 id="tcp-tahoereno">TCP Tahoe/Reno</h2>
+<h2 id="tcp-tahoereno"><a class="toclink" href="#tcp-tahoereno">TCP Tahoe/Reno</a></h2>
 <p>Has the following extensions/features:</p>
 <ul>
 <li>AIMD</li>
@@ -138,12 +135,12 @@
 <li>Fast retransmit</li>
 <li>Fast recovery</li>
 </ul>
-<h3 id="bandwidth-allocation">Bandwidth Allocation</h3>
-<h4 id="fairness">Fairness</h4>
+<h3 id="bandwidth-allocation"><a class="toclink" href="#bandwidth-allocation">Bandwidth Allocation</a></h3>
+<h4 id="fairness"><a class="toclink" href="#fairness">Fairness</a></h4>
 <p>Kind of a weird problem. Just think about it like scheduling threads and processes. You want to give each process a fair share of the CPU, but simply allocating bandwidth equally to each thread in the process is not fair. You want to allocate bandwidth to each connection fairly, but you also want to allocate bandwidth to each user fairly, and you also want to allocate bandwidth to each application fairly.</p>
-<h4 id="equal-per-flow-fairness">Equal per Flow Fairness</h4>
+<h4 id="equal-per-flow-fairness"><a class="toclink" href="#equal-per-flow-fairness">Equal per Flow Fairness</a></h4>
 <p>The <strong>bottleneck</strong> for a flow of traffic is the link that limits its bandwidth. TCP tries to allocate bandwidth fairly to each flow by sharing the bottleneck bandwidth equally among the flows that traverse it.</p>
-<h4 id="max-min-fairness">Max-Min Fairness</h4>
+<h4 id="max-min-fairness"><a class="toclink" href="#max-min-fairness">Max-Min Fairness</a></h4>
 <p>Intuitively, flows bottlenecked on a link get an equal share of that link. A max-min fair allocation is one that maximizes the minimum bandwidth allocated to any flow. To find it given a network, you can imagine "pouring water" into the network and seeing how much each flow gets. You can then adjust the flow rates to maximize the minimum flow rate.</p>
 <p>When flows start and stop, need to rerun the algorithm to find new allocation.</p>
 <p>TCP needs to allocate bandwidth of a network fairly and efficiently (which are conflicting goals). The network witnesses congestion and provides direct feedback to the transport layer. Then, the transport layer can decrease its sending rate to avoid congestion.</p>
@@ -182,7 +179,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="additive-increase-multiplicative-decrease-aimd">Additive Increase, Multiplicative Decrease (AIMD)</h4>
+<h4 id="additive-increase-multiplicative-decrease-aimd"><a class="toclink" href="#additive-increase-multiplicative-decrease-aimd">Additive Increase, Multiplicative Decrease (AIMD)</a></h4>
 <p>A control law hosts use to reach a good allocation. Hosts additively increase rate while network isn't congested, and multiplicitively decrease rate when congestion is detected.</p>
 <p>Let $x$ be the allocated bandwidth to H1, and $y$ be the allocated bandwidth to H2. Assumming a capacity $1$, a fair allocation would be $x = y$, but an efficient allocation would be $x + y = 1$.</p>
 <p>On the plot of x and y, the algorithn is as follows:</p>
@@ -191,44 +188,52 @@
 <li>When the network is congested, decrease the rate by a large amount, corresponding to the line from the current allocation point to the origin.</li>
 </ul>
 <p>This guarantees that the allocation converges to the intersection of the "fair" line and the "efficient" line. Also creates a "sawtooth" pattern of sending rate over time.</p>
-<h3 id="slow-start-with-tcp-additive-increase">Slow Start with TCP (Additive Increase)</h3>
+<h3 id="slow-start-with-tcp-additive-increase"><a class="toclink" href="#slow-start-with-tcp-additive-increase">Slow Start with TCP (Additive Increase)</a></h3>
 <p>Sender uses <strong>congestion window (cwnd)</strong> to set its rate (cwnd/RTT), and packet loss as a signal.</p>
 <p>You want to quickly converge to the ideal window size, but you also don't want to cause congestion. Solution is to increase exponentially until you hit a packet loss, then set the window size to half of the current window size. Then, switch to additive increase.</p>
 <ul>
-<li><strong>Slow Start Doubling</strong>: First send one packet. Then, on ACK, send two packets. Then, on two ACKs, send four packets. Keep this doubling until you hit a packet loss.</li>
+<li>
+<p><strong>Slow Start Doubling</strong>: First send one packet. Then, on ACK, send two packets. Then, on two ACKs, send four packets. Keep this doubling until you hit a packet loss.</p>
+</li>
+<li>
+<p><strong>Additive Increase</strong>: After slow start, increase the window size by one packet per RTT/ACK.</p>
+</li>
 </ul>
+<h3 id="tcp-tahoe"><a class="toclink" href="#tcp-tahoe">TCP Tahoe</a></h3>
 <ul>
-<li><strong>Additive Increase</strong>: After slow start, increase the window size by one packet per RTT/ACK.</li>
+<li>Initial slow-start phase<ul>
+<li>Start with cwnd = 1 (or another small val)</li>
+<li>cwnd += 1 for each ACK</li>
 </ul>
-<h3 id="tcp-tahoe">TCP Tahoe</h3>
-<ul>
-<li>Initial slow-start phase
-    - Start with cwnd = 1 (or another small val)
-    - cwnd += 1 for each ACK</li>
-<li>After packet loss, additively increase cwnd
-    - cwnd += 1/cwnd for each ACK
-    - roughly add 1 packet per RTT</li>
-<li>Switching threshold
-    - Switch to AI when cwnd &gt; ssthresh
-    - set ssthresh = cwnd / 2 on packet loss
-    - begin slow start again</li>
+</li>
+<li>After packet loss, additively increase cwnd<ul>
+<li>cwnd += 1/cwnd for each ACK</li>
+<li>roughly add 1 packet per RTT</li>
+</ul>
+</li>
+<li>Switching threshold<ul>
+<li>Switch to AI when cwnd &gt; ssthresh</li>
+<li>set ssthresh = cwnd / 2 on packet loss</li>
+<li>begin slow start again</li>
+</ul>
+</li>
 </ul>
 <p>Need to go back to cwnd = 1 on packet loss because we lost the ack clock. This is conservative but not very efficient.</p>
-<h3 id="fast-recovery">Fast Recovery</h3>
-<h4 id="infering-packet-loss">Infering Packet Loss</h4>
+<h3 id="fast-recovery"><a class="toclink" href="#fast-recovery">Fast Recovery</a></h3>
+<h4 id="infering-packet-loss"><a class="toclink" href="#infering-packet-loss">Infering Packet Loss</a></h4>
 <p>Reciever sends duplicate ACKs when it receives out-of-order packets. The sender can infer that the packet was lost and retransmit it. If the reciever is stuck on an out of order packet, the subsequently sent packets will still be buffered, but the duplicate ack indicates where to retransmit on the client side.</p>
 <p>Need to be able to infer loss of packets before timeout actually occurs. TCP uses a <strong>cumulative ACK</strong>, which carries the highest in-order sequence number received. If you receive three duplicate ACKs, you can infer that the packet was lost and retransmit it.</p>
 <p>Sender decreases cwnd by half on packet loss, but it can also retransmit the lost packet immediately. This is called <strong>fast retransmit</strong>.</p>
-<h4 id="inferring-non-loss-from-acks">Inferring Non-Loss from ACKs</h4>
+<h4 id="inferring-non-loss-from-acks"><a class="toclink" href="#inferring-non-loss-from-acks">Inferring Non-Loss from ACKs</a></h4>
 <p>Each duplicate ACK indicates that a packet was received, but not in order. This means that the network is still capable of transmitting packets, and so the sender can increase its sending rate. This is called <strong>fast recovery</strong>.</p>
 <p>If multiple packets are lost in a row, this will not work and the sender will go back to slow start cwnd = 1.</p>
-<h3 id="tcp-reno-newreno-sack">TCP Reno, NewReno, SACK</h3>
+<h3 id="tcp-reno-newreno-sack"><a class="toclink" href="#tcp-reno-newreno-sack">TCP Reno, NewReno, SACK</a></h3>
 <ul>
 <li>Reno can repair one loss per RTT. Multiple losses cause timeout</li>
 <li>NewReno repairs multiple losses without timeout</li>
 <li>Selective ACKs (SACK) sends ACK ranges so that sender can retransmit multiple packets at once</li>
 </ul>
-<h3 id="explicit-congestion-notification-ecn">Explicit Congestion Notification (ECN)</h3>
+<h3 id="explicit-congestion-notification-ecn"><a class="toclink" href="#explicit-congestion-notification-ecn">Explicit Congestion Notification (ECN)</a></h3>
 <ul>
 <li>Commonly used in data centers</li>
 <li>Routers deliver clear signal to hosts when congestion occurs</li>
@@ -237,7 +242,7 @@
 <li>Routers need to support ECN, and they have more work to do.</li>
 <li>Hosts need to support ECN, and they have more work to do.</li>
 </ul>
-<h3 id="random-early-detection-red">Random Early Detection (RED)</h3>
+<h3 id="random-early-detection-red"><a class="toclink" href="#random-early-detection-red">Random Early Detection (RED)</a></h3>
 <p>Instead of marking pakets, just randomly drop packets to throttle senders. The probablity of dropping a packet increases as the queue fills up.</p>
             </div>
             <div class="tags">

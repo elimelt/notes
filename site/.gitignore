@@ -1,6 +1,0 @@
-*.swp
-*~
-.vscode
-.DS_Store
-venv
-*.pyc

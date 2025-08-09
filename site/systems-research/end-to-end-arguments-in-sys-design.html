@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "End-to-End Arguments in System Design", "dateModified": "2025-03-05T03:27:48.911894", "description": "Paper review of \"End-to-End Arguments in System Design\" by Saltzer, Reed, and Clark", "articleSection": "System Design", "keywords": "system design,end-to-end,design,networking"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "End-to-End Arguments in System Design", "dateModified": "2025-03-05T03:27:48.911894", "description": "Paper review of \"End-to-End Arguments in System Design\" by Saltzer, Reed, and Clark", "url": "https://notes.elimelt.com/systems-research/end-to-end-arguments-in-sys-design.html", "articleSection": "System Design", "keywords": "system design,end-to-end,design,networking"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/system%20design.html">System Design</a> » End-to-End Arguments in System Design
@@ -98,31 +95,35 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h6 id="end-to-end-arguments-in-system-design"><a href="https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf">End-to-End Arguments in System Design</a></h6>
+                <h6 id="end-to-end-arguments-in-system-design"><a class="toclink" href="#end-to-end-arguments-in-system-design"><a href="https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf">End-to-End Arguments in System Design</a></a></h6>
 <hr />
-<h3 id="what-is-the-problem">What is the Problem?</h3>
+<h3 id="what-is-the-problem"><a class="toclink" href="#what-is-the-problem">What is the Problem?</a></h3>
 <ul>
-<li>Placing functions at lower levels of a system may not be beneficial
-    - Functions generally know best, and error checking can therefore be redundant
-    - Low level function placement may be costly</li>
-<li>A correct comms system can only be built with endpoints
-    - Ex: detecting crashes, delivering/sequencing messages, etc.</li>
+<li>Placing functions at lower levels of a system may not be beneficial<ul>
+<li>Functions generally know best, and error checking can therefore be redundant</li>
+<li>Low level function placement may be costly</li>
 </ul>
-<h3 id="summary">Summary</h3>
-<h4 id="low-level-functionality">Low Level Functionality</h4>
+</li>
+<li>A correct comms system can only be built with endpoints<ul>
+<li>Ex: detecting crashes, delivering/sequencing messages, etc.</li>
+</ul>
+</li>
+</ul>
+<h3 id="summary"><a class="toclink" href="#summary">Summary</a></h3>
+<h4 id="low-level-functionality"><a class="toclink" href="#low-level-functionality">Low Level Functionality</a></h4>
 <ul>
 <li>Paper argues that low-level functionality is mainly a performance optimization</li>
 <li>If the probability of an error is low, doesn't make sense to add error checking in the middle of the system. Instead, let the endpoints handle it</li>
 </ul>
-<h3 id="weakness">Weakness</h3>
+<h3 id="weakness"><a class="toclink" href="#weakness">Weakness</a></h3>
 <ul>
 <li>Maintainability (checks missing in the middle)</li>
 <li>Certain systems ought to have intermediate checks (e.g. comms over lossy media)</li>
 <li>Catching errors can take longer, needs to make it all the way to an endpoint to detect</li>
 </ul>
-<h3 id="open-questions">Open Questions</h3>
-<h2 id="-">-</h2>
-<h3 id="further-reading">Further Reading</h3>
+<h3 id="open-questions"><a class="toclink" href="#open-questions">Open Questions</a></h3>
+<h2 id="-"><a class="toclink" href="#-">-</a></h2>
+<h3 id="further-reading"><a class="toclink" href="#further-reading">Further Reading</a></h3>
             </div>
             <div class="tags">
                 Tags:

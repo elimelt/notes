@@ -7,7 +7,7 @@
     <title>Thevenin's Theorem | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the Thevenin and Norton equivalent circuits, consisting of a voltage source and series resistor, or a current source and parallel resistor, respectively. Discusses the application of Kirchhoff's laws and the use of these theorems to simplify complex circuits into an equivalent form for further analysis.">
+    <meta name="description" content="Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the T">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Thevenin's Theorem">
-    <meta property="og:description" content="Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the Thevenin and Norton equivalent circuits, consisting of a voltage source and series resistor, or a current source and parallel resistor, respectively. Discusses the application of Kirchhoff's laws and the use of these theorems to simplify complex circuits into an equivalent form for further analysis.">
+    <meta property="og:description" content="Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the T">
     <meta property="og:url" content="https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-5.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Thevenin's Theorem">
-    <meta name="twitter:description" content="Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the Thevenin and Norton equivalent circuits, consisting of a voltage source and series resistor, or a current source and parallel resistor, respectively. Discusses the application of Kirchhoff's laws and the use of these theorems to simplify complex circuits into an equivalent form for further analysis.">
+    <meta name="twitter:description" content="Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the T">
 
     <meta name="keywords" content="thevenin's theorem,norton's theorem,equivalent circuit,resistor,voltage source,current source,kirchhoff's laws">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Thevenin's Theorem", "dateModified": "2025-02-11T20:50:13.490031", "description": "Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the Thevenin and Norton equivalent circuits, consisting of a voltage source and series resistor, or a current source and parallel resistor, respectively. Discusses the application of Kirchhoff's laws and the use of these theorems to simplify complex circuits into an equivalent form for further analysis.", "articleSection": "Algorithms", "keywords": "thevenin's theorem,norton's theorem,equivalent circuit,resistor,voltage source,current source,kirchhoff's laws"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Thevenin's Theorem", "dateModified": "2025-02-11T20:50:13.490031", "description": "Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the T", "url": "https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-5.html", "articleSection": "Algorithms", "keywords": "thevenin's theorem,norton's theorem,equivalent circuit,resistor,voltage source,current source,kirchhoff's laws"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Thevenin's Theorem
@@ -98,18 +95,18 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h2 id="thevenins-theorem">Thevenin's Theorem</h2>
+                <h2 id="thevenins-theorem"><a class="toclink" href="#thevenins-theorem">Thevenin's Theorem</a></h2>
 <p>Any two-terminal circuit with only linear elements (resistors) and sources can be replaced by an equivalent circuit consisting of a voltage source in series with a resistor.</p>
 <p>Voltage source represented as $V_{th}$, and resistor as $R_{th}$.</p>
-<h3 id="algorithm">Algorithm</h3>
+<h3 id="algorithm"><a class="toclink" href="#algorithm">Algorithm</a></h3>
 <ol>
 <li>Find $V_{th}$, the open circuit voltage from A to B using KCL and KVL.</li>
 <li>Find $R_{th}$, the equiv resistance between A and B by replacing voltage sources with short circuits and current sources with open circuits.</li>
 </ol>
-<h2 id="nortons-theorem">Norton's Theorem</h2>
+<h2 id="nortons-theorem"><a class="toclink" href="#nortons-theorem">Norton's Theorem</a></h2>
 <p>Any two-terminal circuit with only linear elements (resistors) and sources can be replaced by an equivalent circuit consisting of a current source in parallel with a resistor.</p>
 <p>Current source represented as $I_{no}$, and resistor as $R_{no}$.</p>
-<h3 id="algorithm_1">Algorithm</h3>
+<h3 id="algorithm_1"><a class="toclink" href="#algorithm_1">Algorithm</a></h3>
 <ol>
 <li>find $I_{no}$, the short circuit current from A to B using KCL and KVL.</li>
 <li>find $R_{no}$, the equiv shunt (parallel with source) resistance between A and B by replacing voltage sources with short circuits and current sources with open circuits.</li>

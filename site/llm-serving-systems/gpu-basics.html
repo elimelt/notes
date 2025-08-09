@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-05-25T17:17:02.087821", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-05-25T17:17:02.087821", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "url": "https://notes.elimelt.com/llm-serving-systems/gpu-basics.html", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » GPU Architecture and Programming
@@ -98,25 +95,25 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="gpu-architecture-and-introduction-to-gpu-programming">GPU Architecture and Introduction to GPU Programming</h1>
+                <h1 id="gpu-architecture-and-introduction-to-gpu-programming"><a class="toclink" href="#gpu-architecture-and-introduction-to-gpu-programming">GPU Architecture and Introduction to GPU Programming</a></h1>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
 <hr />
-<h3 id="training-vs-inference">Training vs Inference</h3>
+<h3 id="training-vs-inference"><a class="toclink" href="#training-vs-inference">Training vs Inference</a></h3>
 <ul>
 <li><strong>Training</strong>: Learning from existing data</li>
 <li><strong>Inference</strong>: Applying capability to new data</li>
 </ul>
-<h3 id="serving">Serving</h3>
+<h3 id="serving"><a class="toclink" href="#serving">Serving</a></h3>
 <p><strong>ML model serving</strong> is about building a system to efficiently and scalably perform inference with:</p>
 <ul>
 <li>High throughput</li>
 <li>Low latency</li>
 <li>Compliance with diverse Service Level Objectives (SLOs)</li>
 </ul>
-<h2 id="llm-applications-and-market-context">LLM Applications and Market Context</h2>
-<h3 id="applications-enabled-by-llms">Applications Enabled by LLMs</h3>
+<h2 id="llm-applications-and-market-context"><a class="toclink" href="#llm-applications-and-market-context">LLM Applications and Market Context</a></h2>
+<h3 id="applications-enabled-by-llms"><a class="toclink" href="#applications-enabled-by-llms">Applications Enabled by LLMs</a></h3>
 <ul>
 <li><strong>AI Assistants</strong> (ChatGPT, Google Bard)</li>
 <li><strong>Text-to-Image</strong> (DALLcdotE, MidJourney)</li>
@@ -125,12 +122,12 @@
 <li><strong>Text-to-Speech &amp; Audio</strong> (Descript, Synthesia)</li>
 </ul>
 <p><strong>Key principle</strong>: Batching user requests and aiming for optimal throughput are key</p>
-<h3 id="market-demand">Market Demand</h3>
+<h3 id="market-demand"><a class="toclink" href="#market-demand">Market Demand</a></h3>
 <ul>
 <li>ChatGPT monthly visits grew from ~500M (Dec 2022) to ~2000M (Jan 2024)</li>
 <li>Users frequently encounter "We're experiencing exceptionally high demand" messages</li>
 </ul>
-<h3 id="infrastructure-costs">Infrastructure Costs</h3>
+<h3 id="infrastructure-costs"><a class="toclink" href="#infrastructure-costs">Infrastructure Costs</a></h3>
 <p><strong>Large-scale H100 investments in 2024:</strong></p>
 <ul>
 <li>Meta: 300K units</li>
@@ -144,15 +141,15 @@
 <li>High operating cost: Up to ~10,000W</li>
 <li>Long lead time</li>
 </ul>
-<h2 id="gpu-fundamentals">GPU Fundamentals</h2>
-<h3 id="what-is-a-gpu">What is a GPU?</h3>
+<h2 id="gpu-fundamentals"><a class="toclink" href="#gpu-fundamentals">GPU Fundamentals</a></h2>
+<h3 id="what-is-a-gpu"><a class="toclink" href="#what-is-a-gpu">What is a GPU?</a></h3>
 <ul>
 <li><strong>Graphics Processing Unit</strong></li>
 <li>Originally designed for accelerated graphics rendering</li>
 <li>Now handles scientific computing and machine learning</li>
 <li>Come with software stacks: CUDA (NVIDIA), ROCm (AMD)</li>
 </ul>
-<h3 id="cpu-vs-gpu-architecture">CPU vs GPU Architecture</h3>
+<h3 id="cpu-vs-gpu-architecture"><a class="toclink" href="#cpu-vs-gpu-architecture">CPU vs GPU Architecture</a></h3>
 <table>
 <thead>
 <tr>
@@ -184,7 +181,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="example-specifications">Example Specifications</h3>
+<h3 id="example-specifications"><a class="toclink" href="#example-specifications">Example Specifications</a></h3>
 <table>
 <thead>
 <tr>
@@ -232,21 +229,21 @@
 <li><strong>GPU HBM</strong>: Higher bandwidth, structured batch access</li>
 </ul>
 <hr />
-<h2 id="gpu-hardware-architecture">GPU Hardware Architecture</h2>
-<h3 id="data-center-context">Data Center Context</h3>
+<h2 id="gpu-hardware-architecture"><a class="toclink" href="#gpu-hardware-architecture">GPU Hardware Architecture</a></h2>
+<h3 id="data-center-context"><a class="toclink" href="#data-center-context">Data Center Context</a></h3>
 <ul>
 <li>GPUs are deployed in server clusters</li>
 <li>Connected via high-speed networks (NVLink: 900 GB/s)</li>
 <li>Network connectivity: 200 Gb/s = 25 GB/s to data center network</li>
 </ul>
-<h3 id="gpu-memory-hierarchy">GPU Memory Hierarchy</h3>
+<h3 id="gpu-memory-hierarchy"><a class="toclink" href="#gpu-memory-hierarchy">GPU Memory Hierarchy</a></h3>
 <ul>
 <li><strong>Global Memory (HBM)</strong>: 80 GB, 3TB/s bandwidth</li>
 <li><strong>L2 Cache</strong>: 50MB, ~10TB/s bandwidth</li>
 <li><strong>Shared Memory ("Smem")</strong>: 228 KB per SM, ~20TB/s bandwidth</li>
 <li><strong>Registers</strong>: 64K    imes 32 Bit per SM, ~600TB/s bandwidth</li>
 </ul>
-<h3 id="streaming-multiprocessors-sms">Streaming Multiprocessors (SMs)</h3>
+<h3 id="streaming-multiprocessors-sms"><a class="toclink" href="#streaming-multiprocessors-sms">Streaming Multiprocessors (SMs)</a></h3>
 <p><strong>Components:</strong></p>
 <ul>
 <li><strong>CUDA Cores</strong>: Scalar computation</li>
@@ -254,8 +251,8 @@
 <li><strong>Shared/Constant Memory</strong>: High bandwidth temp buffer</li>
 </ul>
 <hr />
-<h2 id="gpu-programming-model">GPU Programming Model</h2>
-<h3 id="hierarchy-of-execution-units">Hierarchy of Execution Units</h3>
+<h2 id="gpu-programming-model"><a class="toclink" href="#gpu-programming-model">GPU Programming Model</a></h2>
+<h3 id="hierarchy-of-execution-units"><a class="toclink" href="#hierarchy-of-execution-units">Hierarchy of Execution Units</a></h3>
 <table>
 <thead>
 <tr>
@@ -297,23 +294,21 @@
 </tr>
 </tbody>
 </table>
-<h3 id="key-concepts">Key Concepts</h3>
+<h3 id="key-concepts"><a class="toclink" href="#key-concepts">Key Concepts</a></h3>
 <ul>
 <li><strong>32 threads form a warp</strong></li>
-<li><strong>Threads in a warp run in parallel</strong> with:<ul>
+<li><strong>Threads in a warp run in parallel</strong> with:</li>
 <li>Same instructions</li>
 <li>Same pace</li>
 <li>Different data at register level</li>
-</ul>
-</li>
 <li><strong>4 warps run on one SM simultaneously</strong></li>
 <li><strong>Scheduler swaps warps on and off SM</strong></li>
 <li><strong>Blocks operate independently</strong></li>
 <li><strong>Block-Block communication via L2/Global memory</strong></li>
 </ul>
 <hr />
-<h2 id="gpu-programming-approaches">GPU Programming Approaches</h2>
-<h3 id="1-pytorch-easiest">1. PyTorch (Easiest)</h3>
+<h2 id="gpu-programming-approaches"><a class="toclink" href="#gpu-programming-approaches">GPU Programming Approaches</a></h2>
+<h3 id="1-pytorch-easiest"><a class="toclink" href="#1-pytorch-easiest">1. PyTorch (Easiest)</a></h3>
 <pre><code class="language-python">import torch
 
 def add_tensors(a, b):
@@ -338,7 +333,7 @@ if __name__ == &quot;__main__&quot;:
     result = result.cpu()
     print(&quot;Result of addition:&quot;, result)
 </code></pre>
-<h3 id="2-triton-intermediate">2. Triton (Intermediate)</h3>
+<h3 id="2-triton-intermediate"><a class="toclink" href="#2-triton-intermediate">2. Triton (Intermediate)</a></h3>
 <ul>
 <li><strong>Compiler framework from OpenAI</strong></li>
 <li><strong>Python interface with automated thread management</strong></li>
@@ -358,13 +353,13 @@ def add_kernel(x_ptr, y_ptr, output_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
 
     tl.store(output_ptr + offsets, output, mask=mask)
 </code></pre>
-<h3 id="3-cuda-most-control">3. CUDA (Most Control)</h3>
+<h3 id="3-cuda-most-control"><a class="toclink" href="#3-cuda-most-control">3. CUDA (Most Control)</a></h3>
 <ul>
 <li><strong>Bare-bone, one-to-one mapping to hardware</strong></li>
 <li><strong>Highest performance</strong></li>
 <li><strong>Heavy implementation burden</strong></li>
 </ul>
-<h4 id="cuda-memory-management">CUDA Memory Management</h4>
+<h4 id="cuda-memory-management"><a class="toclink" href="#cuda-memory-management">CUDA Memory Management</a></h4>
 <pre><code class="language-cpp">// Memory allocation
 cudaMalloc          // device memory allocation  
 cudaMallocHost      // pinned host memory allocation
@@ -376,7 +371,7 @@ cudaMemcpyAsync     // asynchronous copy
 cudaMemset          // synchronous set
 cudaMemsetAsync     // asynchronous set
 </code></pre>
-<h4 id="cuda-kernel-structure">CUDA Kernel Structure</h4>
+<h4 id="cuda-kernel-structure"><a class="toclink" href="#cuda-kernel-structure">CUDA Kernel Structure</a></h4>
 <pre><code class="language-cpp">// Kernel declaration
 __global__ void kernel_name(args...)
 
@@ -393,7 +388,7 @@ __global__ void add(int *a, int *b, int *c, size_t num) {
     }
 }
 </code></pre>
-<h4 id="cuda-kernel-launch">CUDA Kernel Launch</h4>
+<h4 id="cuda-kernel-launch"><a class="toclink" href="#cuda-kernel-launch">CUDA Kernel Launch</a></h4>
 <pre><code class="language-cpp">// Define block and thread dimensions
 dim3 block(x, y, z);
 dim3 thread(x, y, z);
@@ -401,7 +396,7 @@ dim3 thread(x, y, z);
 // Launch kernel
 kernel_name&lt;&lt;&lt;block, thread&gt;&gt;&gt;(args);
 </code></pre>
-<h4 id="cuda-synchronization">CUDA Synchronization</h4>
+<h4 id="cuda-synchronization"><a class="toclink" href="#cuda-synchronization">CUDA Synchronization</a></h4>
 <pre><code class="language-cpp">__syncthreads()           // Thread synchronization (device function)
 cudaDeviceSynchronize()   // Device synchronization (host function)
 
@@ -410,20 +405,20 @@ cudaGetLastError()        // Get last error
 cudaGetErrorString()      // Get error description
 </code></pre>
 <hr />
-<h2 id="performance-analysis">Performance Analysis</h2>
-<h3 id="timing-considerations">Timing Considerations</h3>
+<h2 id="performance-analysis"><a class="toclink" href="#performance-analysis">Performance Analysis</a></h2>
+<h3 id="timing-considerations"><a class="toclink" href="#timing-considerations">Timing Considerations</a></h3>
 <ul>
 <li><strong>PyTorch dispatches kernels non-blocking</strong></li>
 <li>CPU continues execution before GPU finishes</li>
 <li><strong>Must use CUDA events for accurate GPU timing</strong></li>
 </ul>
-<h3 id="profiling-tools">Profiling Tools</h3>
+<h3 id="profiling-tools"><a class="toclink" href="#profiling-tools">Profiling Tools</a></h3>
 <ul>
 <li><strong>Torch.profiler</strong>: Good at showing CPU activity, slow processing</li>
 <li><strong>Nsight Systems (nsys)</strong>: High performance system-level profiling</li>
 <li><strong>Nsight Compute (ncu)</strong>: Tailored for intra-kernel profiling</li>
 </ul>
-<h3 id="cuda-streams">CUDA Streams</h3>
+<h3 id="cuda-streams"><a class="toclink" href="#cuda-streams">CUDA Streams</a></h3>
 <ul>
 <li><strong>Multiple streams may execute in parallel</strong></li>
 <li>Depends on kernels and schedulers</li>
@@ -432,8 +427,8 @@ cudaGetErrorString()      // Get error description
 <li><code>cudaStreamWaitEvent</code> for synchronization</li>
 </ul>
 <hr />
-<h2 id="modern-gpu-features">Modern GPU Features</h2>
-<h3 id="advanced-cuda-features">Advanced CUDA Features</h3>
+<h2 id="modern-gpu-features"><a class="toclink" href="#modern-gpu-features">Modern GPU Features</a></h2>
+<h3 id="advanced-cuda-features"><a class="toclink" href="#advanced-cuda-features">Advanced CUDA Features</a></h3>
 <ul>
 <li><strong>Unified memory address</strong> (P100+)</li>
 <li><strong>NvLink</strong> (P100+)</li>
@@ -443,32 +438,28 @@ cudaGetErrorString()      // Get error description
 <li><strong>FP4 and FP6 precision</strong> (B100+)</li>
 </ul>
 <hr />
-<h2 id="summary">Summary</h2>
-<h3 id="key-takeaways">Key Takeaways</h3>
+<h2 id="summary"><a class="toclink" href="#summary">Summary</a></h2>
+<h3 id="key-takeaways"><a class="toclink" href="#key-takeaways">Key Takeaways</a></h3>
 <ol>
-<li>
-<p><strong>GPU Architecture Understanding</strong></p>
-<ul>
+<li><strong>GPU Architecture Understanding</strong></li>
 <li>Parallel processing focus</li>
-<li>SMs, blocks, threads hierarchy</li>
-</ul>
+<li>
+<p>SMs, blocks, threads hierarchy</p>
 </li>
 <li>
 <p><strong>Programming Approaches</strong></p>
-<ul>
+</li>
 <li><strong>PyTorch</strong>: Easiest, high-level</li>
 <li><strong>Triton</strong>: Balance of control and ease</li>
-<li><strong>CUDA</strong>: Maximum control and performance</li>
-</ul>
+<li>
+<p><strong>CUDA</strong>: Maximum control and performance</p>
 </li>
 <li>
 <p><strong>Performance Analysis</strong></p>
-<ul>
+</li>
 <li>Proper timing with CUDA events</li>
 <li>Profiling tools for optimization</li>
 <li>Understanding memory hierarchy impact</li>
-</ul>
-</li>
 </ol>
 <p><strong>Core Principle</strong>: Batching user requests and aiming for optimal throughput are key to effective LLM serving systems.</p>
             </div>

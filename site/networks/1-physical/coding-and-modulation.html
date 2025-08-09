@@ -7,7 +7,7 @@
     <title>Coding and Modulation | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester encoding, scrambling, ASK, FSK, PSK, channel properties, latency, and bandwidth-delay product. The document covers the design of codes for error detection and correction, types of modulation schemes used for data transmission, and characteristics of communication channels that affect signal quality.">
+    <meta name="description" content="Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester ">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Coding and Modulation">
-    <meta property="og:description" content="Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester encoding, scrambling, ASK, FSK, PSK, channel properties, latency, and bandwidth-delay product. The document covers the design of codes for error detection and correction, types of modulation schemes used for data transmission, and characteristics of communication channels that affect signal quality.">
+    <meta property="og:description" content="Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester ">
     <meta property="og:url" content="https://notes.elimelt.com/networks/1-physical/coding-and-modulation.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Coding and Modulation">
-    <meta name="twitter:description" content="Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester encoding, scrambling, ASK, FSK, PSK, channel properties, latency, and bandwidth-delay product. The document covers the design of codes for error detection and correction, types of modulation schemes used for data transmission, and characteristics of communication channels that affect signal quality.">
+    <meta name="twitter:description" content="Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester ">
 
     <meta name="keywords" content="nrz,rz,clock recovery,manchester encoding,scrambling">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Coding and Modulation", "dateModified": "2025-02-11T20:03:40.598533", "description": "Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester encoding, scrambling, ASK, FSK, PSK, channel properties, latency, and bandwidth-delay product. The document covers the design of codes for error detection and correction, types of modulation schemes used for data transmission, and characteristics of communication channels that affect signal quality.", "articleSection": "Hardware", "keywords": "nrz,rz,clock recovery,manchester encoding,scrambling"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Coding and Modulation", "dateModified": "2025-02-11T20:03:40.598533", "description": "Describes technical concepts related to coding and modulation techniques in hardware applications, specifically focusing on NRZ, RZ, clock recovery, Manchester ", "url": "https://notes.elimelt.com/networks/1-physical/coding-and-modulation.html", "articleSection": "Hardware", "keywords": "nrz,rz,clock recovery,manchester encoding,scrambling"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Coding and Modulation
@@ -98,20 +95,20 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="coding-and-modulation">Coding and Modulation</h1>
+                <h1 id="coding-and-modulation"><a class="toclink" href="#coding-and-modulation">Coding and Modulation</a></h1>
 <p><em>How information sent over a link?</em></p>
-<h2 id="coding">Coding</h2>
-<h3 id="none-return-to-zero-nrz">None-return-to-zero (NRZ)</h3>
+<h2 id="coding"><a class="toclink" href="#coding">Coding</a></h2>
+<h3 id="none-return-to-zero-nrz"><a class="toclink" href="#none-return-to-zero-nrz">None-return-to-zero (NRZ)</a></h3>
 <p>1 is represented by a high voltage and a 0 is represented by a low voltage. This can however lead to problems with long runs of 1s or 0s.</p>
 <ul>
 <li><strong>Long runs of 1s</strong>: The receiver might lose track of the clock, and the signal might be corrupted.</li>
 <li><strong>baseline wander</strong>: The receiver keeps an average of the signal to determine the threshold for 1s and 0s. If there are long runs of 1s or 0s, the average might drift, and the receiver might start to misinterpret the signal.</li>
 </ul>
-<h3 id="clock-recovery">Clock Recovery</h3>
+<h3 id="clock-recovery"><a class="toclink" href="#clock-recovery">Clock Recovery</a></h3>
 <p>It is difficult to recover the clock from a NRZ signal that doesn't transition often. This is because the receiver doesn't know when to sample the signal. Several techniques are used to solve this problem, including manchester and scrambling. </p>
-<h3 id="return-to-zero-rz">Return-to-Zero (RZ)</h3>
+<h3 id="return-to-zero-rz"><a class="toclink" href="#return-to-zero-rz">Return-to-Zero (RZ)</a></h3>
 <p>After each bit, the signal returns to zero. This makes it easier to recover the clock, since the receiver can sample the signal after each return to zero.</p>
-<h3 id="designing-codes">Designing Codes</h3>
+<h3 id="designing-codes"><a class="toclink" href="#designing-codes">Designing Codes</a></h3>
 <p>One can design codes that are more robust to noise, or that have better clock recovery properties. In general, you map one set of bits to another set of bits, and then send the new bits over the link.</p>
 <p>For example, in 4b/5b, we let $S$ be the set of all possible 4-bit sequences, and let $C$ be the set of all possible 5-bit sequences. Then we can define a code $f: S \to C$:</p>
 <p>$$
@@ -121,26 +118,26 @@ f(0010) = 10100 \
 \vdots
 $$</p>
 <p>One can then choose a set $C$ such that there aren't long runs of 1s or 0s, or such that the clock can be recovered easily. Since there are left over symbols in $C$, we can use them to represent control information, such as the start of a frame.</p>
-<h2 id="modulation">Modulation</h2>
+<h2 id="modulation"><a class="toclink" href="#modulation">Modulation</a></h2>
 <p><strong>Modulation</strong> transmits a digital signal over an analog channel by modulating a carrier. <strong>Baseband</strong> is the original signal, and <strong>passband</strong> is the modulated signal. <strong>Keying</strong> is the digital form of modulation (equivalent to coding, but using modulation instead).</p>
-<h3 id="amplitude-shift-keying-ask">Amplitude Shift Keying (ASK)</h3>
+<h3 id="amplitude-shift-keying-ask"><a class="toclink" href="#amplitude-shift-keying-ask">Amplitude Shift Keying (ASK)</a></h3>
 <p>In ASK, the amplitude of the carrier is changed to represent the digital signal. For example, a 1 might be represented by a high amplitude, and a 0 by a low amplitude. This faces the same problem as NRZ, in that it is difficult to recover the clock.</p>
-<h3 id="frequency-shift-keying-fsk">Frequency Shift Keying (FSK)</h3>
+<h3 id="frequency-shift-keying-fsk"><a class="toclink" href="#frequency-shift-keying-fsk">Frequency Shift Keying (FSK)</a></h3>
 <p>In FSK, the frequency of the carrier is changed to represent the digital signal. For example, a 1 might be represented by a high frequency, and a 0 by a low frequency. This is more robust to noise than ASK.</p>
-<h3 id="phase-shift-keying-psk">Phase Shift Keying (PSK)</h3>
+<h3 id="phase-shift-keying-psk"><a class="toclink" href="#phase-shift-keying-psk">Phase Shift Keying (PSK)</a></h3>
 <p>In PSK, the phase of the carrier is changed to represent the digital signal. For example, a 1 might be represented by a phase of 0 degrees, and a 0 by a phase of 180 degrees. PSK can support more bits per symbol than ASK or FSK, leading to higher data rates.</p>
-<h2 id="link-model">Link Model</h2>
+<h2 id="link-model"><a class="toclink" href="#link-model">Link Model</a></h2>
 <ul>
 <li><strong>Transmitter</strong>: Converts digital signal to analog signal.</li>
 <li><strong>Channel</strong>: The medium over which the signal is sent.</li>
 <li><strong>Receiver</strong>: Converts analog signal to digital signal.</li>
 </ul>
-<h3 id="properties-of-the-channel">Properties of the Channel</h3>
+<h3 id="properties-of-the-channel"><a class="toclink" href="#properties-of-the-channel">Properties of the Channel</a></h3>
 <ul>
 <li><strong>Rate</strong> (or bandwidth): The number of bits per second that can be sent over the channel.</li>
 <li><strong>Delay</strong>: The time it takes for a signal to travel from the transmitter to the receiver. Usually, the delay is proportional to the distance between the transmitter and the receiver.</li>
 </ul>
-<h3 id="latency">Latency</h3>
+<h3 id="latency"><a class="toclink" href="#latency">Latency</a></h3>
 <p>The delay in sending a signal from the transmitter to the receiver. This is the sum of the <strong>propagation delay</strong> and the <strong>transmission delay</strong>.</p>
 <ul>
 <li><strong>Propagation delay</strong>: The time it takes for a signal to travel from the transmitter to the receiver.</li>
@@ -158,7 +155,7 @@ $$</p>
 <p>$$
 L = \frac{M}{R} + D_{\text{propagation}}
 $$</p>
-<h3 id="bandwidth-delay-product">Bandwidth-Delay Product</h3>
+<h3 id="bandwidth-delay-product"><a class="toclink" href="#bandwidth-delay-product">Bandwidth-Delay Product</a></h3>
 <p>Messages take up space on the wire, and the wire can only hold so many bits at a time. The <strong>bandwidth-delay product</strong> is the maximum number of bits that can be in transit at any time.</p>
 <p>$$
 \text{Bandwidth-Delay Product} = BD = R \cdot D_{\text{propagation}}

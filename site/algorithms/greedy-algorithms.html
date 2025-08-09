@@ -7,7 +7,7 @@
     <title>Greedy Algorithms for Interval Scheduling and Partitioning | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Python implementations, and presents rigorous proofs of correctness using techniques such as "Greedy Stays Ahead" and exchange arguments.">
+    <meta name="description" content="This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Pytho">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Greedy Algorithms for Interval Scheduling and Partitioning">
-    <meta property="og:description" content="This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Python implementations, and presents rigorous proofs of correctness using techniques such as "Greedy Stays Ahead" and exchange arguments.">
+    <meta property="og:description" content="This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Pytho">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/greedy-algorithms.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Greedy Algorithms for Interval Scheduling and Partitioning">
-    <meta name="twitter:description" content="This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Python implementations, and presents rigorous proofs of correctness using techniques such as "Greedy Stays Ahead" and exchange arguments.">
+    <meta name="twitter:description" content="This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Pytho">
 
     <meta name="keywords" content="algorithms,interval,scheduling,partitioning,greedy">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Greedy Algorithms for Interval Scheduling and Partitioning", "dateModified": "2025-02-03T13:21:06.697369", "description": "This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Python implementations, and presents rigorous proofs of correctness using techniques such as \"Greedy Stays Ahead\" and exchange arguments.", "articleSection": "Algorithm Analysis", "keywords": "algorithms,interval,scheduling,partitioning,greedy"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Greedy Algorithms for Interval Scheduling and Partitioning", "dateModified": "2025-02-03T13:21:06.697369", "description": "This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Pytho", "url": "https://notes.elimelt.com/algorithms/greedy-algorithms.html", "articleSection": "Algorithm Analysis", "keywords": "algorithms,interval,scheduling,partitioning,greedy"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a> » Greedy Algorithms for Interval Scheduling and Partitioning
@@ -98,9 +95,9 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="greedy-algorithms">Greedy Algorithms</h1>
+                <h1 id="greedy-algorithms"><a class="toclink" href="#greedy-algorithms">Greedy Algorithms</a></h1>
 <p>Choose the most attractive choice at each step, and hope that this will lead to the optimal solution. Proofs of correctness are particularly important for greedy algorithms.</p>
-<h2 id="interval-scheduling">Interval Scheduling</h2>
+<h2 id="interval-scheduling"><a class="toclink" href="#interval-scheduling">Interval Scheduling</a></h2>
 <p>Job $j$ starts at $s(j)$ and finishes at $f(j)$. Two jobs are compatible if they don't overlap. The goal is to schedule as many jobs as possible without overlapping.</p>
 <p>Start by sorting the jobs with $f(j)$, and iterate over the jobs in order and choose as many jobs as you can.</p>
 <pre><code class="language-python">def interval_scheduling(jobs):
@@ -113,7 +110,7 @@
       last = job[1]
   return S
 </code></pre>
-<h3 id="greedy-stays-ahead-proof">Greedy Stays Ahead Proof</h3>
+<h3 id="greedy-stays-ahead-proof"><a class="toclink" href="#greedy-stays-ahead-proof">Greedy Stays Ahead Proof</a></h3>
 <p>Suppose the above algorithm has chosen jobs $f(i_1) \le f(i_2) \le \ldots \le f(i_k)$, and suppose $f(j_1) \le f(j_2) \le \ldots \le f(j_m)$.</p>
 <p><em>Goal:</em> $m \le k$</p>
 <p><em>Lemma</em>: $\forall r$, $f(i_r) \le f(j_r)$</p>
@@ -128,10 +125,10 @@ $$</p>
 <p>So $j_r$ is a candidate for $i_r$. However, greedy chose $i_r$, which implies $f(i_r) \le $f(j_r)$. (induction over)</p>
 <p>Now, we want to show that $m \le k$. Suppose for contradiction that $m &gt; k$.</p>
 <p>We know $f(i_k) \le f(j_k) \le s(j_{k + 1})$, so greedy could have executed $j_{k + 1}$ after $i_k$, which is a contradiction.</p>
-<h3 id="exchange-argument">Exchange Argument</h3>
+<h3 id="exchange-argument"><a class="toclink" href="#exchange-argument">Exchange Argument</a></h3>
 <p>Make the optimal solution similar to greedy without changing its value.</p>
 <p>This would look like removing $j_1$ from the optimal solution, adding $i_1$ instead. Then this optimal solution still has the same number of jobs, and is thus still optimal, but also shares $i_1$ in common with the greedy solution. Continue this into the general case where the first $k$ jobs are in common, and we can use the previous lemma to show that we can continue this exchange, until the greedy solution becomes the optimal.</p>
-<h2 id="interval-partitioning">Interval Partitioning</h2>
+<h2 id="interval-partitioning"><a class="toclink" href="#interval-partitioning">Interval Partitioning</a></h2>
 <p>Given a set of intervals $I$, partition them into the minimum number of sets $S_1, S_2, \ldots, S_k$ such that each $S_i$ contains no overlapping intervals.</p>
 <pre><code class="language-python">def partition_intervals(I: list[tuple[int, int]]):
   # sort by start time
@@ -150,7 +147,7 @@ $$</p>
       d += 1
   return S
 </code></pre>
-<h3 id="proof-of-correctness">Proof of Correctness</h3>
+<h3 id="proof-of-correctness"><a class="toclink" href="#proof-of-correctness">Proof of Correctness</a></h3>
 <p><strong>Observation</strong>: The algorithm never schedules two incompatible lectures in the same classroom.</p>
 <p><strong>Lemma</strong>: The algorithm is optimal.</p>
 <p><strong>Proof</strong>: using structural property</p>

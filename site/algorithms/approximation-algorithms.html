@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Approximation Algorithms", "dateModified": "2025-02-11T16:41:49.510067", "description": "A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.", "articleSection": "Algorithms", "keywords": "approximation,algorithms,vertex cover,set cover"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Approximation Algorithms", "dateModified": "2025-02-11T16:41:49.510067", "description": "A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.", "url": "https://notes.elimelt.com/algorithms/approximation-algorithms.html", "articleSection": "Algorithms", "keywords": "approximation,algorithms,vertex cover,set cover"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Approximation Algorithms
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="approximation-algorithms">Approximation Algorithms</h1>
+                <h1 id="approximation-algorithms"><a class="toclink" href="#approximation-algorithms">Approximation Algorithms</a></h1>
 <p>When faced with a problem that can be reduced to some NP-Complete problem, you (most probably) cannot generally solve it in polynomial time. For example:</p>
 <ul>
 <li>Set Cover</li>
@@ -113,18 +110,18 @@
 <li>Find the optimal solution to some specially structured input</li>
 <li>Find as close to optimal solution as possible, with upper/lower bounds even on the worst case</li>
 </ul>
-<h2 id="approximation-ratio">Approximation Ratio</h2>
+<h2 id="approximation-ratio"><a class="toclink" href="#approximation-ratio">Approximation Ratio</a></h2>
 <p>$$
 \alpha = \frac{\text{computed solution}}{\text{optimum solution}}
 $$</p>
 <p>If we can prove some upper or lower bound on $\alpha$, then we might be able to use and reason about a given approximation algorithm. Finding better approximations is an open problem.</p>
-<h2 id="a-survey-of-approximation-algorithms">A Survey of Approximation Algorithms</h2>
+<h2 id="a-survey-of-approximation-algorithms"><a class="toclink" href="#a-survey-of-approximation-algorithms">A Survey of Approximation Algorithms</a></h2>
 <p>The following two examples are the best known general approximation algorithms for their respective problems.</p>
-<h3 id="2-approximation-for-vertex-cover">2-Approximation for Vertex Cover</h3>
+<h3 id="2-approximation-for-vertex-cover"><a class="toclink" href="#2-approximation-for-vertex-cover">2-Approximation for Vertex Cover</a></h3>
 <p><strong>Problem</strong>: find the minimal subset $S$ of vertices in a graph such that every edge is connected to some vertex in $S$.
 <strong>Algorithm</strong>: For every edge $(u, v)$, add $u$ and $v$ to $S$</p>
 <p>By a 2-approximation, it means that $\alpha = 2$. Since we are minimizing the set, we have that that for any graph $G$, it must be the case that $OPT(G) \le ALG(G) \le 2 \cdot OPT(G)$</p>
-<h3 id="logn-approximation-for-set-cover">log(n) approximation for Set Cover</h3>
+<h3 id="logn-approximation-for-set-cover"><a class="toclink" href="#logn-approximation-for-set-cover">log(n) approximation for Set Cover</a></h3>
 <p><strong>Problem</strong>: Given some number of sets $S_1, S_2, \ldots, S_n$ with $S_i \subseteq U$, choose the minimum number of sets that cover all elements of $U$
 <strong>Algorithm</strong>: While there are remaining elements, choose the set that maximizes the number of new elements covered.</p>
 <p>If the optimal solution has $k$ sets, this algorithm always selects at most $k log(n)$ sets. This is because there is at least a set that covers $\frac{1}{k}$ of the remaining elements, so after $t$ steps we have $ \le n(1 - \frac{1}{k})^t \le n \cdot e^{-\frac{t}{k}}$ remaining elements. Therefore, after $t = k\ln(n)$ steps, we have $&lt; 1$ uncovered element remaining.</p>

@@ -1,56 +1,103 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300">
-  <!-- Background -->
-  <rect width="500" height="300" fill="#fff" stroke="#000" stroke-width="2"/>
-  
-  <!-- Primary Database -->
-  <rect x="200" y="50" width="120" height="70" rx="5" ry="5" fill="#e74c3c" stroke="#000" stroke-width="2"/>
-  <text x="220" y="85" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">Primary</text>
-  <text x="220" y="105" font-family="Arial" font-size="12" fill="#fff">Master DB</text>
-  
-  <!-- Replicas -->
-  <rect x="50" y="180" width="120" height="70" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
-  <text x="80" y="215" font-family="Arial" font-size="14" fill="#fff">Replica 1</text>
-  <text x="85" y="235" font-family="Arial" font-size="12" fill="#fff">Read-Only</text>
-  
-  <rect x="200" y="180" width="120" height="70" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
-  <text x="230" y="215" font-family="Arial" font-size="14" fill="#fff">Replica 2</text>
-  <text x="235" y="235" font-family="Arial" font-size="12" fill="#fff">Read-Only</text>
-  
-  <rect x="350" y="180" width="120" height="70" rx="5" ry="5" fill="#3498db" stroke="#000" stroke-width="2"/>
-  <text x="380" y="215" font-family="Arial" font-size="14" fill="#fff">Replica 3</text>
-  <text x="385" y="235" font-family="Arial" font-size="12" fill="#fff">Read-Only</text>
-  
-  <!-- Replication Arrows -->
-  <path d="M220,120 L120,180" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <path d="M260,120 L260,180" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <path d="M300,120 L400,180" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrowhead)"/>
-  
-  <!-- Labels -->
-  <text x="150" y="150" font-family="Arial" font-size="12" fill="#2ecc71">Replication</text>
-  <text x="265" y="150" font-family="Arial" font-size="12" fill="#2ecc71">Replication</text>
-  <text x="380" y="150" font-family="Arial" font-size="12" fill="#2ecc71">Replication</text>
-  
-  <!-- Write Operation -->
-  <path d="M260,20 L260,50" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrowhead)"/>
-  <text x="265" y="35" font-family="Arial" font-size="12" fill="#e74c3c">Write</text>
-  
-  <!-- Read Operations -->
-  <path d="M80,170 L80,140" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5" marker-start="url(#arrowhead-inv)"/>
-  <text x="50" y="150" font-family="Arial" font-size="12" fill="#3498db">Read</text>
-  
-  <path d="M260,170 L260,140" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5" marker-start="url(#arrowhead-inv)"/>
-  <text x="265" y="150" font-family="Arial" font-size="12" fill="#3498db">Read</text>
-  
-  <path d="M410,170 L410,140" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5" marker-start="url(#arrowhead-inv)"/>
-  <text x="415" y="150" font-family="Arial" font-size="12" fill="#3498db">Read</text>
-  
-  <!-- Arrowhead markers -->
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#000"/>
-    </marker>
-    <marker id="arrowhead-inv" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-      <polygon points="10 0, 0 3.5, 10 7" fill="#3498db"/>
-    </marker>
-  </defs>
-</svg>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Replication | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Page: Replication">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/slides/assets/replication.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Replication">
+    <meta property="og:description" content="Page: Replication">
+    <meta property="og:url" content="https://notes.elimelt.com/slides/assets/replication.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Replication">
+    <meta name="twitter:description" content="Page: Replication">
+
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Replication", "dateModified": "2025-03-05T23:46:30.044726", "description": "Page: Replication", "url": "https://notes.elimelt.com/slides/assets/replication.html"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » Replication
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Replication</h1>
+            <div class="meta">
+                <time datetime="2025-03-05T23:46:30.044726">
+                    Last modified: 2025-03-05
+                </time>
+            </div>
+            <div class=content>
+                
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

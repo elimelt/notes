@@ -7,7 +7,7 @@
     <title>Switched Ethernet | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.">
+    <meta name="description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorith">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Switched Ethernet">
-    <meta property="og:description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.">
+    <meta property="og:description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorith">
     <meta property="og:url" content="https://notes.elimelt.com/networks/2-direct-links/switching.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Switched Ethernet">
-    <meta name="twitter:description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.">
+    <meta name="twitter:description" content="Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorith">
 
     <meta name="keywords" content="ethernet,switching,mac address,forwarding table,bridge">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Switched Ethernet", "dateModified": "2025-02-11T20:47:36.718632", "description": "Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.", "articleSection": "Networks", "keywords": "ethernet,switching,mac address,forwarding table,bridge"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Switched Ethernet", "dateModified": "2025-02-11T20:47:36.718632", "description": "Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorith", "url": "https://notes.elimelt.com/networks/2-direct-links/switching.html", "articleSection": "Networks", "keywords": "ethernet,switching,mac address,forwarding table,bridge"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Switched Ethernet
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="switching">Switching</h1>
-<h2 id="switched-ethernet">Switched Ethernet</h2>
+                <h1 id="switching"><a class="toclink" href="#switching">Switching</a></h1>
+<h2 id="switched-ethernet"><a class="toclink" href="#switched-ethernet">Switched Ethernet</a></h2>
 <p><strong>L2 Switches</strong> are used within enterprise and university networks to connect multiple devices on the same network. Historically, they were used as a "<em>bridge</em>" to connect multiple Ethernet segments, but are now typically used in a "<em>point-to-point</em>" configuration.</p>
 <p><strong>Learning Switches</strong> are a type of L2 switch that learns the MAC addresses of devices connected to it. When a device sends a frame to the switch, the switch records the source MAC address and the port into its forwarding table. When a device sends a frame to the switch, the switch looks up the destination MAC address in its forwarding table and forwards the frame to the appropriate port. If the destination MAC address is not in the table, the switch floods the frame to all ports except the one it was received on.</p>
 <pre><code class="language-c">#define BRIDGE_TAB_SIZE   1024  /* max size of bridging table */
@@ -142,7 +139,7 @@ updateTable (MacAddr src, int inif)
     b-&gt;ifnumber = inif;
 }
 </code></pre>
-<h3 id="distributed-spanning-tree-algorithm">Distributed Spanning Tree Algorithm</h3>
+<h3 id="distributed-spanning-tree-algorithm"><a class="toclink" href="#distributed-spanning-tree-algorithm">Distributed Spanning Tree Algorithm</a></h3>
 <p>Initially, all switches assume they are the root of the tree. Switches <em>broadcast</em> <strong>configuration messages</strong> that contain the `following:</p>
 <ul>
 <li>The ID of the sender</li>
@@ -202,17 +199,17 @@ broadcast(struct message* m)
             send(i, m);
 }
 </code></pre>
-<h2 id="implementation">Implementation</h2>
+<h2 id="implementation"><a class="toclink" href="#implementation">Implementation</a></h2>
 <p>To create a switch, all you need to do is buy a general-purpose processor and equip it with multiple network interfaces. However, switches that deliver high-end performance typically take advantage of additional hardware acceleration. These are referred to as hardware switches, although both approaches obviously include a combination of hardware and software.</p>
 <p>The implementation of switches and routers have so much in common that a network administrator typically buys a single forwarding box and then configures it to be an L2 switch, an L3 router, or some combination of the two.</p>
-<h3 id="software-switches">Software Switches</h3>
+<h3 id="software-switches"><a class="toclink" href="#software-switches">Software Switches</a></h3>
 <p>The performance of switches is limited by the need to pass packets through main memory. This can be a bottleneck, especially for short packets. The cost of processing each packet, such as parsing its header and making forwarding decisions, can also be a limiting factor. Non-trivial algorithms used by switches, like the spanning tree algorithm, are not directly part of the per-packet forwarding decision. Table lookups are often the most costly routine executed on a per-packet basis.</p>
-<h3 id="bare-metal-switches">Bare-Metal Switches</h3>
+<h3 id="bare-metal-switches"><a class="toclink" href="#bare-metal-switches">Bare-Metal Switches</a></h3>
 <p>The distinction between the control plane (background processing) and the data plane (per-packet processing) is important. Recent advances in domain-specific processors have made it possible to build high-performance switches that combine the performance of ASICs with the agility of software. These switches can be programmed to be L2 switches, L3 routers, or a hybrid.</p>
 <p>Bare-metal switches using Network Processing Units (NPUs) have become popular. NPUs are optimized for processing packet headers and making forwarding decisions. They can process packets at rates measured in Terabits per second (Tbps). The exact programming of an NPU depends on the chip vendor.</p>
 <p>Internally, an NPU utilizes fast SRAM-based memory, TCAM-based memory for matching bit patterns, and a multi-stage forwarding pipeline. The use of a multi-stage pipeline allows for efficient packet processing and high throughput.</p>
 <p>The networking industry is entering a commoditized world, similar to the computing industry, where standardized components and open source software are available for building high-performance switches.</p>
-<h3 id="software-defined-networks">Software Defined Networks</h3>
+<h3 id="software-defined-networks"><a class="toclink" href="#software-defined-networks">Software Defined Networks</a></h3>
 <p>SDN (Software Defined Networks) decouples the network control plane from the data plane, allowing routing algorithms to run on software and packet forwarding decisions to be made by bare-metal switches. The standard interface between the control and data planes, known as OpenFlow, enables interoperability between different implementations. This concept of disaggregation has led to the trend of using commodity servers and bare-metal switches in network infrastructure.</p>
 <p>Another important aspect of disaggregation is that a logically centralized control plane can be used to control a distributed network data plane. This allows for scalability and availability, as the two planes can be configured and scaled independently. Cloud providers have embraced this approach, using SDN-based solutions within their datacenters and across their backbone networks.</p>
 <p>The Network Operating System (NOS) is a key enabler for SDN's success. It provides high-level abstractions and a Network Map to simplify network control functionality. The NOS detects changes in the network and the control application implements desired behavior on an abstract graph. By centralizing this logic, a globally optimized solution can be achieved.</p>

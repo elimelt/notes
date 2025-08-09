@@ -7,14 +7,7 @@
     <title>System Design | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Patterns for Scalability and Reliability in Systems
-
-Agenda
-
-Client Server Architecture
-Scalability Patterns
-Limitations
-Extending Client Server Architect...">
+    <meta name="description" content="Patterns for Scalability and Reliability in Systems Agenda Client Server Architecture Scalability Patterns Limitations Extending Client Server Architecture A...">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -23,32 +16,18 @@ Extending Client Server Architect...">
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="System Design">
-    <meta property="og:description" content="Patterns for Scalability and Reliability in Systems
-
-Agenda
-
-Client Server Architecture
-Scalability Patterns
-Limitations
-Extending Client Server Architect...">
+    <meta property="og:description" content="Patterns for Scalability and Reliability in Systems Agenda Client Server Architecture Scalability Patterns Limitations Extending Client Server Architecture A...">
     <meta property="og:url" content="https://notes.elimelt.com/slides/system-design.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="System Design">
-    <meta name="twitter:description" content="Patterns for Scalability and Reliability in Systems
-
-Agenda
-
-Client Server Architecture
-Scalability Patterns
-Limitations
-Extending Client Server Architect...">
+    <meta name="twitter:description" content="Patterns for Scalability and Reliability in Systems Agenda Client Server Architecture Scalability Patterns Limitations Extending Client Server Architecture A...">
 
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "System Design", "dateModified": "2025-03-06T03:32:44.688071", "description": "Patterns for Scalability and Reliability in Systems\n\nAgenda\n\nClient Server Architecture\nScalability Patterns\nLimitations\nExtending Client Server Architect..."}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "System Design", "dateModified": "2025-03-06T03:32:44.688071", "description": "Patterns for Scalability and Reliability in Systems Agenda Client Server Architecture Scalability Patterns Limitations Extending Client Server Architecture A...", "url": "https://notes.elimelt.com/slides/system-design.html"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -98,10 +77,7 @@ Extending Client Server Architect...">
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » System Design
@@ -124,9 +100,9 @@ Presentation covering the basics techniques and architectures for solving common
 <!-- color: #fff -->
 <!-- style: normal -->
 
-<h1 id="patterns-for-scalability-and-reliability-in-systems">Patterns for Scalability and Reliability in Systems</h1>
+<h1 id="patterns-for-scalability-and-reliability-in-systems"><a class="toclink" href="#patterns-for-scalability-and-reliability-in-systems">Patterns for Scalability and Reliability in Systems</a></h1>
 <hr />
-<h2 id="agenda">Agenda</h2>
+<h2 id="agenda"><a class="toclink" href="#agenda">Agenda</a></h2>
 <ol>
 <li>Client Server Architecture</li>
 <li>Scalability Patterns</li>
@@ -136,7 +112,7 @@ Presentation covering the basics techniques and architectures for solving common
 <li>Conclusion</li>
 </ol>
 <hr />
-<h2 id="client-server-architecture">Client Server Architecture</h2>
+<h2 id="client-server-architecture"><a class="toclink" href="#client-server-architecture">Client Server Architecture</a></h2>
 <ul>
 <li>Client-server architecture</li>
 <li>RESTful API</li>
@@ -146,38 +122,38 @@ Presentation covering the basics techniques and architectures for solving common
 <!-- alt: Diagram showing client-server architecture -->
 
 <hr />
-<h2 id="scalability-patterns">Scalability Patterns</h2>
-<h3 id="1-load-balancing">1. Load Balancing</h3>
+<h2 id="scalability-patterns"><a class="toclink" href="#scalability-patterns">Scalability Patterns</a></h2>
+<h3 id="1-load-balancing"><a class="toclink" href="#1-load-balancing">1. Load Balancing</a></h3>
 <p>Problem: I have too many requests! My single server can't take it anymore 😭</p>
 <p>Solution: Horizontal scaling with a load balancer -- distribute requests across multiple servers</p>
 <p><img alt="w:900px" src="assets/load-balancer.png" /></p>
 <hr />
-<h2 id="scalability-patterns_1">Scalability Patterns</h2>
-<h3 id="2-caching">2. Caching</h3>
+<h2 id="scalability-patterns_1"><a class="toclink" href="#scalability-patterns_1">Scalability Patterns</a></h2>
+<h3 id="2-caching"><a class="toclink" href="#2-caching">2. Caching</a></h3>
 <p>Problem: My database is slow and can't handle all these reads 😩</p>
 <p>Solution: Cache frequently/recently accessed data to reduce database load</p>
 <p><img alt="w:900px" src="assets/cache.png" /></p>
 <!-- alt: Diagram showing caching mechanism -->
 
 <hr />
-<h2 id="scalability-patterns_2">Scalability Patterns</h2>
-<h3 id="3-database-shardingpartitioning">3. Database Sharding/Partitioning</h3>
+<h2 id="scalability-patterns_2"><a class="toclink" href="#scalability-patterns_2">Scalability Patterns</a></h2>
+<h3 id="3-database-shardingpartitioning"><a class="toclink" href="#3-database-shardingpartitioning">3. Database Sharding/Partitioning</a></h3>
 <p>Problem: My database is massive and can't handle all these writes 😭</p>
 <p>Solution: Split the database into smaller, more manageable pieces. Designate a <em>partition key</em> to determine which shard to write to.</p>
 <p><img alt="w:900p" src="assets/sharding.png" /></p>
 <!-- alt: Diagram showing database sharding -->
 
 <hr />
-<h2 id="scalability-patterns_3">Scalability Patterns</h2>
-<h3 id="3-queueing">3. Queueing</h3>
+<h2 id="scalability-patterns_3"><a class="toclink" href="#scalability-patterns_3">Scalability Patterns</a></h2>
+<h3 id="3-queueing"><a class="toclink" href="#3-queueing">3. Queueing</a></h3>
 <p>Problem: My system is overwhelmed by bursty traffic and can't process requests fast enough 😩</p>
 <p>Solution: Use a message queue to manage requests and process them asynchronously</p>
 <p><img alt="w: auto h: 400px" src="assets/message-queue.png" /></p>
 <!-- alt: Diagram showing database sharding -->
 
 <hr />
-<h2 id="limitations">Limitations</h2>
-<h3 id="sql-databases">SQL Databases</h3>
+<h2 id="limitations"><a class="toclink" href="#limitations">Limitations</a></h2>
+<h3 id="sql-databases"><a class="toclink" href="#sql-databases">SQL Databases</a></h3>
 <p>Problem: SQL databases have limitations on scalability due to ACID properties 😞</p>
 <ul>
 <li>1,000 writes/sec - Use more than one instance (sharding)</li>
@@ -187,16 +163,16 @@ Presentation covering the basics techniques and architectures for solving common
 </ul>
 <p>Solution: Add replicas, shard, or use a different database</p>
 <hr />
-<h2 id="limitations_1">Limitations</h2>
-<h4 id="nosql-databases">NoSQL Databases</h4>
+<h2 id="limitations_1"><a class="toclink" href="#limitations_1">Limitations</a></h2>
+<h4 id="nosql-databases"><a class="toclink" href="#nosql-databases">NoSQL Databases</a></h4>
 <ul>
 <li>Many NoSQL databases scale horizontally and efficiently by default 🥳</li>
 <li>Tradeoff ACID and indexing capabilities for effectively unlimited scalability with the right schema design</li>
 <li>E.g. Cassandra, MongoDB, DynamoDB</li>
 </ul>
 <hr />
-<h2 id="limitations_2">Limitations</h2>
-<h3 id="networks">Networks</h3>
+<h2 id="limitations_2"><a class="toclink" href="#limitations_2">Limitations</a></h2>
+<h3 id="networks"><a class="toclink" href="#networks">Networks</a></h3>
 <p>Problem: At scale, network latency and throughput can become a bottleneck 😱</p>
 <ul>
 <li>50 ms - Good latency over the internet</li>
@@ -205,8 +181,8 @@ Presentation covering the basics techniques and architectures for solving common
 </ul>
 <p>Solution: Add more servers and route network traffic, use CDNs/edge caching</p>
 <hr />
-<h2 id="limitations_3">Limitations</h2>
-<h3 id="single-hosts">Single Hosts</h3>
+<h2 id="limitations_3"><a class="toclink" href="#limitations_3">Limitations</a></h2>
+<h3 id="single-hosts"><a class="toclink" href="#single-hosts">Single Hosts</a></h3>
 <p>Problem: Single hosts have limitations on CPU, memory, and disk I/O 😡</p>
 <ul>
 <li>100 GB working set of data in memory - Consider sharding or partitioning</li>
@@ -215,20 +191,20 @@ Presentation covering the basics techniques and architectures for solving common
 </ul>
 <p>Solution: Partition for write-heavy workloads, cache data upstream for read-heavy workloads to decrease requests</p>
 <hr />
-<h3 id="service-oriented-architecture-soa">Service-Oriented Architecture (SOA)</h3>
+<h3 id="service-oriented-architecture-soa"><a class="toclink" href="#service-oriented-architecture-soa">Service-Oriented Architecture (SOA)</a></h3>
 <p>Problem: My monolithic architecture is hard to maintain and scale 😖</p>
 <p>Solution: Break down the monolith into smaller, more manageable services. Each service is responsible for a specific task and can be scaled independently.</p>
 <p><img alt="w:900px" src="assets/soa.png" /></p>
 <!-- alt: Diagram showing service-oriented architecture -->
 
 <hr />
-<h2 id="extending-client-server-architecture">Extending Client Server Architecture</h2>
-<h3 id="api-gateway">API Gateway</h3>
+<h2 id="extending-client-server-architecture"><a class="toclink" href="#extending-client-server-architecture">Extending Client Server Architecture</a></h2>
+<h3 id="api-gateway"><a class="toclink" href="#api-gateway">API Gateway</a></h3>
 <p>Problem: I have multiple services which are non-uniform, and clients need to access them all 😩</p>
 <p>Solution: Use an API Gateway to route requests to the appropriate service</p>
 <p><img alt="" src="assets/api-gateway.png" /></p>
 <hr />
-<h2 id="availabilityreliability-background">Availability/Reliability Background</h2>
+<h2 id="availabilityreliability-background"><a class="toclink" href="#availabilityreliability-background">Availability/Reliability Background</a></h2>
 <ul>
 <li>Availability: System is operational and accessible</li>
 <li>Reliability: System performs as expected under normal conditions</li>
@@ -241,16 +217,16 @@ Presentation covering the basics techniques and architectures for solving common
 <p>To put it into perspective, AWS EC2's <em>Service Level Agreement</em> is 99.99% uptime, which allows for 52.56 minutes of downtime per year</p>
 <p>So building on top of cloud services still requires going the extra mile to ensure reliability</p>
 <hr />
-<h2 id="reliability-patterns">Reliability Patterns</h2>
-<h3 id="1-replication">1. Replication</h3>
+<h2 id="reliability-patterns"><a class="toclink" href="#reliability-patterns">Reliability Patterns</a></h2>
+<h3 id="1-replication"><a class="toclink" href="#1-replication">1. Replication</a></h3>
 <p>Problem: I have a stateful, purpose-built service that needs to be highly available 😅</p>
 <p>Solution: Primary forwards writes to replicas, which can take over if the primary fails</p>
 <p><img alt="" src="assets/replication.png" /></p>
 <!-- alt: Diagram showing data replication across servers -->
 
 <hr />
-<h2 id="reliability-patterns_1">Reliability Patterns</h2>
-<h3 id="2-circuit-breaker">2. Circuit Breaker</h3>
+<h2 id="reliability-patterns_1"><a class="toclink" href="#reliability-patterns_1">Reliability Patterns</a></h2>
+<h3 id="2-circuit-breaker"><a class="toclink" href="#2-circuit-breaker">2. Circuit Breaker</a></h3>
 <ul>
 <li>Prevents system failures from cascading</li>
 <li>Monitors and isolates failing components</li>
@@ -259,14 +235,14 @@ Presentation covering the basics techniques and architectures for solving common
 <!-- alt: Diagram showing circuit breaker pattern -->
 
 <hr />
-<h2 id="reliability-patterns_2">Reliability Patterns</h2>
-<h3 id="3-graceful-degradation">3. Graceful Degradation</h3>
+<h2 id="reliability-patterns_2"><a class="toclink" href="#reliability-patterns_2">Reliability Patterns</a></h2>
+<h3 id="3-graceful-degradation"><a class="toclink" href="#3-graceful-degradation">3. Graceful Degradation</a></h3>
 <p>Design systems to maintain (at least) partial functionality during failures
 - If a service is down, show cached data
 - If a service is overloaded, timeout gracefully and retry later</p>
 <p>Limit hard dependencies and keep services decoupled</p>
 <hr />
-<h1 id="questions">Questions?</h1>
+<h1 id="questions"><a class="toclink" href="#questions">Questions?</a></h1>
             </div>
         </article>
     </main>

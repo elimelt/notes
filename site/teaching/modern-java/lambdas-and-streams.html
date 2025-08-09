@@ -7,7 +7,7 @@
     <title>A Soft Introduction to Java Streams and Lambdas | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta name="description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="A Soft Introduction to Java Streams and Lambdas">
-    <meta property="og:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta property="og:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for">
     <meta property="og:url" content="https://notes.elimelt.com/teaching/modern-java/lambdas-and-streams.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="A Soft Introduction to Java Streams and Lambdas">
-    <meta name="twitter:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.">
+    <meta name="twitter:description" content="Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for">
 
     <meta name="keywords" content="java,streams,lambdas,functional programming,declarative programming,collections,filtering,iteration">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "A Soft Introduction to Java Streams and Lambdas", "dateModified": "2025-02-11T20:50:31.716179", "description": "Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.", "articleSection": "Software Engineering", "keywords": "java,streams,lambdas,functional programming,declarative programming,collections,filtering,iteration"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "A Soft Introduction to Java Streams and Lambdas", "dateModified": "2025-02-11T20:50:31.716179", "description": "Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for", "url": "https://notes.elimelt.com/teaching/modern-java/lambdas-and-streams.html", "articleSection": "Software Engineering", "keywords": "java,streams,lambdas,functional programming,declarative programming,collections,filtering,iteration"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » A Soft Introduction to Java Streams and Lambdas
@@ -98,8 +95,8 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="a-soft-introduction-to-java-streams-and-lambdas">A Soft Introduction to Java Streams and Lambdas</h1>
-<h2 id="motivation">Motivation</h2>
+                <h1 id="a-soft-introduction-to-java-streams-and-lambdas"><a class="toclink" href="#a-soft-introduction-to-java-streams-and-lambdas">A Soft Introduction to Java Streams and Lambdas</a></h1>
+<h2 id="motivation"><a class="toclink" href="#motivation">Motivation</a></h2>
 <p>If you've been programming in Java for a while (perhaps you're coming out of the 12x/14x series at UW), you're probably familiar with the regular <em>imperative</em> style of programming using loops and conditionals. There's nothing wrong with this, but often times, you'll find yourself writing a lot of code for simple operations.</p>
 <p>For example, consider the following code snippet:</p>
 <pre><code class="language-java">List&lt;User&gt; getAdmins(List&lt;User&gt; users) {
@@ -125,7 +122,7 @@
 </code></pre>
 <p>You've probably written similar code snippets hundreds of times. To reiterate, there's nothing wrong with this style of programming, but for a relatively simple operation, you're writing a lot of code.</p>
 <p>What's arguably better is to use a more <em>declarative</em> style of programming. This is where Java Streams and Lambdas come in.</p>
-<h2 id="java-streams">Java Streams</h2>
+<h2 id="java-streams"><a class="toclink" href="#java-streams">Java Streams</a></h2>
 <p>Java Streams are in some way similar to Iterators, but with a lot more functionality. They allow you to perform operations on a collection of elements in a more compositional way. For example, consider the following code snippet:</p>
 <pre><code class="language-java">List&lt;User&gt; admins = users.stream()
     .filter(user -&gt; user.isAdmin())
@@ -142,7 +139,7 @@ List&lt;User&gt; admins = users.stream().filter(User::isAdmin).toList();
 <li><code>filter(...)</code>: This is an intermediate operation. It takes a predicate (a function that returns a boolean) and filters out elements that don't satisfy the predicate.</li>
 <li><code>collect(...)</code>: This is a terminal operation. It collects the elements of the Stream into a list.</li>
 </ul>
-<h2 id="lambdas">Lambdas</h2>
+<h2 id="lambdas"><a class="toclink" href="#lambdas">Lambdas</a></h2>
 <p>Lambdas are a way of defining functions without having to explicitly define a class or method. They're particularly useful when you want to pass a function as an argument to another function. Here are some different ways you can use lambdas:</p>
 <pre><code class="language-java">// A lambda that takes no arguments and returns void
 Runnable r = () -&gt; System.out.println(&quot;Hello, world!&quot;);
@@ -157,9 +154,9 @@ Function&lt;String, String&gt; toUpperCase = s -&gt; s.toUpperCase();
 Predicate&lt;String&gt; isEmpty = s -&gt; s.isEmpty();
 </code></pre>
 <p>Luckily, you don't need to remember all of these interfaces. More often than not, you're going to define lambdas without ever assigning them to a variable. In cases where you do need to assign them to a variable, you can use the <code>var</code> keyword.</p>
-<h2 id="common-operations">Common Operations</h2>
+<h2 id="common-operations"><a class="toclink" href="#common-operations">Common Operations</a></h2>
 <p>Here are some examples of iterative vs. stream-based operations:</p>
-<h3 id="filtering">Filtering</h3>
+<h3 id="filtering"><a class="toclink" href="#filtering">Filtering</a></h3>
 <pre><code class="language-java">// Imperative
 List&lt;User&gt; admins = new ArrayList&lt;&gt;();
 for (User user : users) {
@@ -173,7 +170,7 @@ List&lt;User&gt; admins = users.stream()
     .filter(User::isAdmin)
     .toList();
 </code></pre>
-<h3 id="mapping">Mapping</h3>
+<h3 id="mapping"><a class="toclink" href="#mapping">Mapping</a></h3>
 <pre><code class="language-java">// Imperative
 List&lt;String&gt; names = new ArrayList&lt;&gt;();
 for (User user : users) {
@@ -183,7 +180,7 @@ for (User user : users) {
 // Declarative
 List&lt;String&gt; names = users.stream().map(User::getName).toList();
 </code></pre>
-<h3 id="all-match">All match</h3>
+<h3 id="all-match"><a class="toclink" href="#all-match">All match</a></h3>
 <pre><code class="language-java">// Imperative
 boolean allAdmins = true;
 for (User user : users) {
@@ -196,7 +193,7 @@ for (User user : users) {
 // Declarative
 boolean allAdmins = users.stream().allMatch(User::isAdmin);
 </code></pre>
-<h3 id="any-match">Any match</h3>
+<h3 id="any-match"><a class="toclink" href="#any-match">Any match</a></h3>
 <pre><code class="language-java">// Imperative
 boolean anyAdmins = false;
 for (User user : users) {
@@ -209,7 +206,7 @@ for (User user : users) {
 // Declarative
 boolean anyAdmins = users.stream().anyMatch(User::isAdmin);
 </code></pre>
-<h3 id="sum">Sum</h3>
+<h3 id="sum"><a class="toclink" href="#sum">Sum</a></h3>
 <pre><code class="language-java">// Imperative
 int sum = 0;
 for (int i : numbers) {
@@ -226,7 +223,7 @@ int sum = numbers.stream().mapToInt(Integer::intValue).sum();
 int sum = numbers.stream().collect(Collectors.summingInt(Integer::intValue));
 
 </code></pre>
-<h3 id="grouping">Grouping</h3>
+<h3 id="grouping"><a class="toclink" href="#grouping">Grouping</a></h3>
 <pre><code class="language-java">// Imperative
 Map&lt;String, List&lt;User&gt;&gt; usersByRole = new HashMap&lt;&gt;();
 for (User user : users) {

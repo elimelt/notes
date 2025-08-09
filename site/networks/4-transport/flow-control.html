@@ -7,7 +7,7 @@
     <title>Flow Control | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.">
+    <meta name="description" content="Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side o">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Flow Control">
-    <meta property="og:description" content="Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.">
+    <meta property="og:description" content="Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side o">
     <meta property="og:url" content="https://notes.elimelt.com/networks/4-transport/flow-control.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Flow Control">
-    <meta name="twitter:description" content="Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.">
+    <meta name="twitter:description" content="Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side o">
 
     <meta name="keywords" content="flow control,sliding window,arq,bandwidth-delay product">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Flow Control", "dateModified": "2025-02-11T21:54:13.738854", "description": "Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.", "articleSection": "Networks", "keywords": "flow control,sliding window,arq,bandwidth-delay product"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Flow Control", "dateModified": "2025-02-11T21:54:13.738854", "description": "Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side o", "url": "https://notes.elimelt.com/networks/4-transport/flow-control.html", "articleSection": "Networks", "keywords": "flow control,sliding window,arq,bandwidth-delay product"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Flow Control
@@ -98,29 +95,29 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="flow-control">Flow Control</h1>
+                <h1 id="flow-control"><a class="toclink" href="#flow-control">Flow Control</a></h1>
 <p>Recall <strong>stop and wait</strong> ARQ. This only allows a single packet to be transmitted at a time. This is inefficient, as the sender is often waiting for the receiver to acknowledge the packet.</p>
 <p>Next recall <strong>sliding window</strong> ARQ. This allows multiple packets to be transmitted at a time. The sender can keep sending packets until the window is full. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. With a window size of $w$, you can send $w$ packets before waiting for an acknowledgement (ie $w$ packets per RTT).</p>
-<h3 id="sliding-window-example">Sliding Window Example</h3>
+<h3 id="sliding-window-example"><a class="toclink" href="#sliding-window-example">Sliding Window Example</a></h3>
 <p>Assuming $10$ kb packets, $R = 1$ Mbps, $d = 50$ ms, what window size $w$ do you need to use the network capacity?</p>
 <p>First, knowing RTT = $2d = 100$ ms, we can calculate the maximum throughput using the bandwidth-delay product:</p>
 <p>BD $= R \times d = 1 \times 10^6 \times 0.05 = 50,000$ bits</p>
 <p>so $100000$ bits per RTT can be stored in the network. Therefore, the window size $w$ is:</p>
 <p>$w = \frac{100000}{10000} = 10$</p>
-<h3 id="sliding-window-sender">Sliding Window Sender</h3>
+<h3 id="sliding-window-sender"><a class="toclink" href="#sliding-window-sender">Sliding Window Sender</a></h3>
 <p>Sender buffers up to $w$ segments until they are acked. LFS (Last Frame Sent) is the sequence number of the last frame sent. LAR (Last Ack Received) is the sequence number of the last frame acked. The sender can send up to $w$ frames, and the receiver can receive up to $w$ frames, where</p>
 <p>$w &gt; LFS - LAR$</p>
-<h3 id="sliding-window-receiver">Sliding Window Receiver</h3>
-<h4 id="go-back-n-arq">Go-Back-N ARQ</h4>
+<h3 id="sliding-window-receiver"><a class="toclink" href="#sliding-window-receiver">Sliding Window Receiver</a></h3>
+<h4 id="go-back-n-arq"><a class="toclink" href="#go-back-n-arq">Go-Back-N ARQ</a></h4>
 <p>In Go-Back-N ARQ, the sender can send multiple packets before waiting for an acknowledgement. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. If a packet is lost, the sender will have to resend all packets from the lost packet onwards.</p>
 <p>The reciever keeps only a single packet buffer for the next segment. (ie keeps LAS = LAST ACK SENT). On receive, if seq number is LAS + 1, then accept, update LAS, and send ACK. Else, discard.</p>
 <p>Uses a single timer to detect lost packets. On timeout, resends buffered packets starting from LAS + 1.</p>
-<h4 id="selective-repeat-arq">Selective Repeat ARQ</h4>
+<h4 id="selective-repeat-arq"><a class="toclink" href="#selective-repeat-arq">Selective Repeat ARQ</a></h4>
 <p>In Selective Repeat ARQ, the sender can send multiple packets before waiting for an acknowledgement. The receiver can acknowledge packets in any order, and the sender can keep sending packets until the window is full. If a packet is lost, the sender will only have to resend the lost packet.</p>
 <p>Receiver buffers $w$ segments, and keeps LAS = LAST ACK SENT. On reeive, buffer segments $\lbrack  LAS + 1, LAS + w  \rbrack$. If seq number is LAS + 1, then accept, update LAS, and send ACK.</p>
 <p>If it receives something out of order, it will buffer it and send an ACK for the last in-order segment. If it receives a duplicate, it will send an ACK for the last in-order segment.</p>
 <p>Uses a timer for each segment. On timeout, resends the segment.</p>
-<h3 id="sequence-numbers">Sequence Numbers</h3>
+<h3 id="sequence-numbers"><a class="toclink" href="#sequence-numbers">Sequence Numbers</a></h3>
 <p>For stop and wait, only need 0/1. For selective repeat, need $w$ numbers for packets, and $w$ numbers for acks of earlier packets. ($2w$ in total). For go-back-n, need $w$ numbers for packets, and 1 number for the ack of the last packet. ($w + 1$ in total).</p>
             </div>
             <div class="tags">

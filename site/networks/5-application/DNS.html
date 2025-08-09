@@ -7,7 +7,7 @@
     <title>Domain Name System (DNS) | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.">
+    <meta name="description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Domain Name System (DNS)">
-    <meta property="og:description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.">
+    <meta property="og:description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It">
     <meta property="og:url" content="https://notes.elimelt.com/networks/5-application/DNS.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Domain Name System (DNS)">
-    <meta name="twitter:description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.">
+    <meta name="twitter:description" content="The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It">
 
     <meta name="keywords" content="domain name system,name resolution,distributed database,top-level domain,name server">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Domain Name System (DNS)", "dateModified": "2025-02-11T20:48:31.151594", "description": "The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.", "articleSection": "Networks", "keywords": "domain name system,name resolution,distributed database,top-level domain,name server"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Domain Name System (DNS)", "dateModified": "2025-02-11T20:48:31.151594", "description": "The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It", "url": "https://notes.elimelt.com/networks/5-application/DNS.html", "articleSection": "Networks", "keywords": "domain name system,name resolution,distributed database,top-level domain,name server"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Domain Name System (DNS)
@@ -98,51 +95,51 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="domain-name-system-dns">Domain Name System (DNS)</h1>
-<h2 id="namespaces">Namespaces</h2>
+                <h1 id="domain-name-system-dns"><a class="toclink" href="#domain-name-system-dns">Domain Name System (DNS)</a></h1>
+<h2 id="namespaces"><a class="toclink" href="#namespaces">Namespaces</a></h2>
 <ul>
 <li><strong>Names</strong> are higher-level, human-readable identifiers for resources.</li>
 <li><strong>Addresses</strong> are lower-level, machine-readable identifiers for resources.</li>
 <li><strong>Resolution/Lookup</strong> is the process of mapping names to addresses.</li>
 </ul>
-<h2 id="before-dns">Before DNS</h2>
+<h2 id="before-dns"><a class="toclink" href="#before-dns">Before DNS</a></h2>
 <p>Machines retrieved a file called <code>hosts.txt</code> from a centralized server to resolve names to addresses. </p>
 <p>This approach was not scalable, as the <code>hosts.txt</code> file would have to be updated on every machine on the network.</p>
-<h2 id="dns">DNS</h2>
+<h2 id="dns"><a class="toclink" href="#dns">DNS</a></h2>
 <p>DNS is a naming service that maps names to IP addresses and vice versa. It is a distributed database implemented in a hierarchy of name servers.</p>
 <ul>
 <li>All DNS names end with a dot, which represents the root of the DNS hierarchy.</li>
 <li>The rightmost part of a DNS name is called the <strong>top-level domain</strong> (TLD).</li>
 <li>The top-level domain is managed by a <strong>registry</strong>.</li>
 </ul>
-<h3 id="dns-zones">DNS Zones</h3>
+<h3 id="dns-zones"><a class="toclink" href="#dns-zones">DNS Zones</a></h3>
 <p>Zones are a way to divide the domain name space into manageable sections. A zone is a contiguous portion of the global DNS namespace. </p>
-<h4 id="example">Example</h4>
+<h4 id="example"><a class="toclink" href="#example">Example</a></h4>
 <ul>
 <li>EDU registry is responsible for the <code>.edu</code> TLD.</li>
 <li>UW is responsible for the <code>washington.edu</code> domain.</li>
 <li>The Allen School is responsible for the <code>cs.washington.edu</code> domain.</li>
 </ul>
 <p>Each zone has one or more <strong>name server</strong> that is authoritative for the zone. The name server is responsible for maintaining the zone's records. For instance, the name server for <code>washingon.edu</code> is responsible for maintaining the records for <code>cs.washington.edu</code>.</p>
-<h3 id="dns-resolution">DNS Resolution</h3>
+<h3 id="dns-resolution"><a class="toclink" href="#dns-resolution">DNS Resolution</a></h3>
 <p>When a client wants to resolve an unknown name to an IP address, it sends a query to a DNS resolver. The resolver then sends a query to a root name server, which responds with the address of a TLD name server. The resolver then sends a query to the TLD name server, which responds with the address of the authoritative name server for the domain. The resolver then sends a query to the authoritative name server, which responds with the IP address of the domain.</p>
-<h3 id="iterative-vs-recursive-resolution">Iterative vs. Recursive Resolution</h3>
+<h3 id="iterative-vs-recursive-resolution"><a class="toclink" href="#iterative-vs-recursive-resolution">Iterative vs. Recursive Resolution</a></h3>
 <ul>
 <li><strong>Recursive queries</strong> are queries in which the DNS resolver asks the name server to return the answer directly.</li>
 <li><strong>Iterative queries</strong> the name server returns the next name server to query.</li>
 </ul>
 <p>Recursive queries are nice because it offloads the client burden for address resolution. Also lets the server cache over a pool of clients.</p>
 <p>Iterative queries are nice because it minimizes the complexity of the server, and is easier to build high load servers. Also gives the client more control over the resolution process.</p>
-<h3 id="dns-caching">DNS Caching</h3>
+<h3 id="dns-caching"><a class="toclink" href="#dns-caching">DNS Caching</a></h3>
 <p>Latency needs to be fairly low for DNS resolution, so caching is important. Nameservers cache query results (including partial/iterative answers) for the duration of their TTL (time to live).</p>
 <p>The caching is hierarchical, with the root servers at the top, and the client at the bottom. This means that the root servers are the most heavily loaded, and the client is the least heavily loaded.</p>
-<h3 id="local-nameservers">Local Nameservers</h3>
+<h3 id="local-nameservers"><a class="toclink" href="#local-nameservers">Local Nameservers</a></h3>
 <p>Local nameservers are the first point of contact for a client's DNS resolution. They are usually provided by the ISP, and are responsible for caching DNS records for a short period of time.   </p>
 <p>They can also run on a host, or at an access point. Alternatively, you can use a public DNS resolver like Google's. Local name servers are typically configured via DHCP.</p>
-<h3 id="root-name-servers">Root Name Servers</h3>
+<h3 id="root-name-servers"><a class="toclink" href="#root-name-servers">Root Name Servers</a></h3>
 <p>Root (.) is served by 13 root servers (labeled <code>a.root-servers.net</code> through <code>m.root-servers.net</code>). These servers are distributed around the world and are operated by 12 independent organizations.</p>
 <p>There are more than 250 distributed server instances to increase the fault tolerance and availability of the root server system. Most servers are reached by <strong>IP anycast</strong>, which means that the same IP address is advertised from multiple locations.</p>
-<h2 id="dns-protocol">DNS Protocol</h2>
+<h2 id="dns-protocol"><a class="toclink" href="#dns-protocol">DNS Protocol</a></h2>
 <p>DNS uses the User Datagram Protocol (UDP) on port 53 to serve requests. Uses ARQ for reliability. Messages are linked by a 16-bit ID field.</p>
 <p>Servers can be replicated to handle load and reliability. Queries can return multiple records, and the client can choose which one to use.</p>
 <p>Security is a major concern for DNS. DNSSEC is a suite of extensions that add security to the DNS protocol by signing DNS data, but it is not widely adopted.</p>

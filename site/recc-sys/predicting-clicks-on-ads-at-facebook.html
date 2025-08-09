@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Practical Lessons from Predicting Clicks on Ads at Facebook", "dateModified": "2025-05-16T16:09:36.384158", "description": "A review/summary of the paper \"Practical Lessons from Predicting Clicks on Ads at Facebook\", covering foundational concepts of ads modeling/ranking systems.", "articleSection": "Machine Learning Systems", "keywords": "recommender systems,machine learning,ads,facebook"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Practical Lessons from Predicting Clicks on Ads at Facebook", "dateModified": "2025-05-16T16:09:36.384158", "description": "A review/summary of the paper \"Practical Lessons from Predicting Clicks on Ads at Facebook\", covering foundational concepts of ads modeling/ranking systems.", "url": "https://notes.elimelt.com/recc-sys/predicting-clicks-on-ads-at-facebook.html", "articleSection": "Machine Learning Systems", "keywords": "recommender systems,machine learning,ads,facebook"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Practical Lessons from Predicting Clicks on Ads at Facebook
@@ -98,14 +95,14 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="practical-lessons-from-predicting-clicks-on-ads-at-facebook">Practical Lessons from Predicting Clicks on Ads at Facebook</h1>
+                <h1 id="practical-lessons-from-predicting-clicks-on-ads-at-facebook"><a class="toclink" href="#practical-lessons-from-predicting-clicks-on-ads-at-facebook">Practical Lessons from Predicting Clicks on Ads at Facebook</a></h1>
 <blockquote>
 <p>Disclaimer: This is not affiliated with my work at Meta. This paper is publicly available at https://research.facebook.com/file/273183074306353/practical-lessons-from-predicting-clicks-on-ads-at-facebook.pdf</p>
 </blockquote>
-<h2 id="background">Background</h2>
+<h2 id="background"><a class="toclink" href="#background">Background</a></h2>
 <p>The overall ads ranking system is composed of two main components: the <strong>ranking</strong> and <strong>bidding</strong>. Ranking is performed by a series of models that increase in complexity and cost as they progress through the pipeline, progressively filtering out the majority of ads, since most are not relevant to the user. Then, an "auction" is performed to determine which ad will be shown to the user based on the bids from advertisers, e.g. how much they are willing to pay for a click.</p>
 <p>This paper is primarily focused on the ranking component, particularly the final layer of the ranking system where higher accuracy over a smaller dataset is required.</p>
-<h2 id="normalized-entropy">Normalized Entropy</h2>
+<h2 id="normalized-entropy"><a class="toclink" href="#normalized-entropy">Normalized Entropy</a></h2>
 <p>Normalized entropy is used to measure the discriminative power of a model. It is defined as:</p>
 <p>$$
 \text{Normalized Entropy} = \frac{H}{H_{\text{max}}}

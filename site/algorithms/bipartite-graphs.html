@@ -7,7 +7,7 @@
     <title>Bipartite Graphs Properties, Proofs, and Detection Algorithm | Elijah's Notes</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.">
+    <meta name="description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The documen">
     <meta name="author" content="Elijah Melton">
     <meta name="robots" content="index, follow">
     <meta name="generator" content="Custom Static Site Generator">
@@ -16,19 +16,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="Bipartite Graphs Properties, Proofs, and Detection Algorithm">
-    <meta property="og:description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.">
+    <meta property="og:description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The documen">
     <meta property="og:url" content="https://notes.elimelt.com/algorithms/bipartite-graphs.html">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Bipartite Graphs Properties, Proofs, and Detection Algorithm">
-    <meta name="twitter:description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.">
+    <meta name="twitter:description" content="A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The documen">
 
     <meta name="keywords" content="bipartite graphs,graph coloring,odd cycles,breadth-first search">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Bipartite Graphs Properties, Proofs, and Detection Algorithm", "dateModified": "2025-05-10T14:41:43.678329", "description": "A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The document presents important lemmas about the relationship between bipartite graphs and odd cycles, along with proofs using BFS layer analysis for bipartite graph detection.", "articleSection": "Algorithms", "keywords": "bipartite graphs,graph coloring,odd cycles,breadth-first search"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Bipartite Graphs Properties, Proofs, and Detection Algorithm", "dateModified": "2025-05-10T14:41:43.678329", "description": "A comprehensive overview of bipartite graphs, including their formal definition and key properties related to vertex coloring and odd-length cycles. The documen", "url": "https://notes.elimelt.com/algorithms/bipartite-graphs.html", "articleSection": "Algorithms", "keywords": "bipartite graphs,graph coloring,odd cycles,breadth-first search"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Bipartite Graphs Properties, Proofs, and Detection Algorithm
@@ -98,17 +95,15 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="bipartite-graphs">Bipartite Graphs</h1>
+                <h1 id="bipartite-graphs"><a class="toclink" href="#bipartite-graphs">Bipartite Graphs</a></h1>
 <ul>
 <li><strong>Definition</strong>: An undirected graph $G = (V, E)$ is bipartite if there exists a partition of $V$ into two sets $V_1$ and $V_2$ such that every edge in $E$ has one endpoint in $V_1$ and the other in $V_2$.</li>
-<li><strong>Applications</strong>:<ul>
+<li><strong>Applications</strong>:</li>
 <li>Scheduling (machines = $V_1$, jobs = $V_2$)</li>
 <li>Stable matching (men = $V_1$, women = $V_2$)</li>
 </ul>
-</li>
-</ul>
 <p>You can tell if a graph is bipartite if there is a proper coloring of vertices, i.e., you can assign one of two colors to each vertex such that no two adjacent vertices have the same color. Many problems become easier if the underlying graph is bipartite graphs.</p>
-<h2 id="odd-length-cycles">Odd-Length Cycles</h2>
+<h2 id="odd-length-cycles"><a class="toclink" href="#odd-length-cycles">Odd-Length Cycles</a></h2>
 <p><strong>Lemma</strong>: If $G$ is bipartite, then it does not contain an odd-length cycle.
 <strong>Proof</strong>: You cannot 2-color an odd cycle, let alone $G$.</p>
 <p><strong>Lemma</strong>: Let $G$ be a connected graph, and let $L_0, \ldots, L_k$ be the layers produced by $BFS(s)$. Then exactly one of the following holds:</p>
@@ -117,7 +112,7 @@
 <li>An edge of $G$ joins two nodes of the same layer, and $G$ contains an odd cycle (and is thus not bipartite).</li>
 </ol>
 <p><strong>Proof</strong>: If an edge joins two nodes of the same layer, then the path from the lowest common ancestor of the two nodes to each node forms an odd length cycle. This must be the case, since any edges between two vertices of the same level connects two paths of the same length back to their LCA of the BFS tree. The length of this cycle is thus $2k + 1$, where $k$ is the length of back to the LCA, and the $1$ comes from the edge between the two nodes in the same level.</p>
-<h2 id="algorithm">Algorithm</h2>
+<h2 id="algorithm"><a class="toclink" href="#algorithm">Algorithm</a></h2>
 <p><strong>Problem</strong>: Given a graph $G$, output <code>true</code> if it is bipartite, <code>false</code> otherwise.</p>
             </div>
             <div class="tags">

@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Disconnected Operation", "dateModified": "2025-02-11T16:42:08.189136", "description": "Explains the concept of disconnected operation in distributed systems and its implications.", "articleSection": "Distributed Systems", "keywords": "disconnected operation,distributed systems,conflict resolution,eventual consistency"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Disconnected Operation", "dateModified": "2025-02-11T16:42:08.189136", "description": "Explains the concept of disconnected operation in distributed systems and its implications.", "url": "https://notes.elimelt.com/distributed-systems/disconnected-operation.html", "articleSection": "Distributed Systems", "keywords": "disconnected operation,distributed systems,conflict resolution,eventual consistency"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Disconnected Operation
@@ -98,41 +95,37 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h1 id="disconnected-operation">Disconnected Operation</h1>
+                <h1 id="disconnected-operation"><a class="toclink" href="#disconnected-operation">Disconnected Operation</a></h1>
 <p>Always available writes inherently pose a problem in distributed systems. To allow for disconnected operation, we need to be able to write to a local copy of the data, and then synchronize it with the rest of the system when we're back online. Many apps today are built to work with intermittent lack of connectivity, for example, file syncing apps/sourcing control systems. In many of these systems, writes can conflict, and need to be resolved either manually or automatically.</p>
-<h2 id="two-models">Two Models</h2>
+<h2 id="two-models"><a class="toclink" href="#two-models">Two Models</a></h2>
 <ul>
-<li>Applications only communicate with the cloud (Coda, SVN)<ul>
+<li>Applications only communicate with the cloud (Coda, SVN)</li>
 <li>Log changes, apply on reconnection</li>
-</ul>
-</li>
-<li>Applications communicate with cloud and other clients (Git)<ul>
+<li>Applications communicate with cloud and other clients (Git)</li>
 <li>Log changes and exchange with other clients</li>
 <li>Remerge changes when connected to a new client</li>
 </ul>
-</li>
-</ul>
-<h2 id="coda">Coda</h2>
+<h2 id="coda"><a class="toclink" href="#coda">Coda</a></h2>
 <p>Coda lets you mount a remote file system as a local directory. The local file system is a partial replica of the global version. It makes extensive use of local caching to reduce latency. While disconnected, it uses a write ahead log to record changes. When reconnected, it replays the log to the server and merges changes atomically.</p>
 <p>When possible, Coda will merge changes automatically. If there are conflicts, i.e. two users edit the same file, Coda will create a conflict file and let the user resolve it.</p>
-<h2 id="gmailgoogle-docs">Gmail/Google Docs</h2>
+<h2 id="gmailgoogle-docs"><a class="toclink" href="#gmailgoogle-docs">Gmail/Google Docs</a></h2>
 <p>Apps like Gmail and Google Docs allow for offline editing by using a local cache and log of changes. When reconnected, the changes are sent to the server and merged. In the case of conflicts, the application specifies a set of rules to resolve them automatically.</p>
 <p>One common general approach is to use a <strong>version vector</strong> to track changes. Each client has a unique ID, and each change is tagged with the client's ID. When changes are merged, the version vector is used to determine which changes are newer.</p>
-<h2 id="source-code-control">Source Code Control</h2>
+<h2 id="source-code-control"><a class="toclink" href="#source-code-control">Source Code Control</a></h2>
 <ul>
 <li>Eventual Consistency with read/write on a local copy, and occasional sync manually</li>
 <li>Track history of changes and metadata</li>
 <li>Multiple clients can edit their own copy of the code and merge changes later</li>
 </ul>
-<h2 id="interesting-application-model">Interesting Application Model</h2>
+<h2 id="interesting-application-model"><a class="toclink" href="#interesting-application-model">Interesting Application Model</a></h2>
 <p>Use local storage engines (like SQLite, LevelDB, etc.) for local writes and sync with the server when online. The key to making this strategy work is the synchronization mechanism, and how conflicts are resolved.</p>
-<h3 id="conflict-resolution">Conflict Resolution</h3>
+<h3 id="conflict-resolution"><a class="toclink" href="#conflict-resolution">Conflict Resolution</a></h3>
 <ul>
 <li><strong>Client wins</strong>: The client's changes are always accepted</li>
 <li><strong>Server wins</strong>: The server's changes are always accepted</li>
 <li><strong>Merge</strong>: Changes are combined, and conflicts are resolved manually or automatically</li>
 </ul>
-<h3 id="merge-strategies">Merge Strategies</h3>
+<h3 id="merge-strategies"><a class="toclink" href="#merge-strategies">Merge Strategies</a></h3>
 <ul>
 <li><strong>Last write wins</strong>: The last write is always accepted. This requires some form of timestamp or versioning.</li>
 <li><strong>Operation based</strong>: Changes are represented as operations (add, delete, etc.) and are applied in order. This is how CRDTs work.</li>

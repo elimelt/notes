@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Prompting Language Models", "dateModified": "2025-03-10T02:57:01.037854", "description": "All about prompting language models.", "articleSection": "Natural Language Processing", "keywords": "language-models,prompting,nlp,llm"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Prompting Language Models", "dateModified": "2025-03-10T02:57:01.037854", "description": "All about prompting language models.", "url": "https://notes.elimelt.com/natural-language-processing/prompting.html", "articleSection": "Natural Language Processing", "keywords": "language-models,prompting,nlp,llm"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -78,10 +78,7 @@
 <body>
     <header>
         <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a>
-<a href="/index.html">Home</a>
-<a href="/categories/index.html">Categories</a>
-<a href="/tags/index.html">Tags</a>
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
         </nav>
         <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
             <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Prompting Language Models
@@ -98,7 +95,7 @@
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
             <div class=content>
-                <h2 id="basic-concepts">Basic Concepts</h2>
+                <h2 id="basic-concepts"><a class="toclink" href="#basic-concepts">Basic Concepts</a></h2>
 <ul>
 <li><strong>Recency Effect</strong>: Place critical instructions at the end of your prompt where they'll have the strongest impact.</li>
 <li><strong>Output Formatting</strong>: Signal your expected response format through examples or explicit instructions. This doesn't work as well for chat-based models, since they're designed outside of the scope of basic auto-completion.</li>
@@ -121,7 +118,7 @@ f&quot;&quot;&quot;&lt;Persona&gt;
 &lt;Response&gt;
 &quot;&quot;&quot;
 </code></pre>
-<h2 id="retrieval-augmented-generation">Retrieval Augmented Generation</h2>
+<h2 id="retrieval-augmented-generation"><a class="toclink" href="#retrieval-augmented-generation">Retrieval Augmented Generation</a></h2>
 <p>Enhance model responses by providing relevant external information:</p>
 <ul>
 <li>Retrieve pertinent documents or data based on the query.</li>
@@ -143,7 +140,7 @@ f&quot;&quot;&quot;&lt;Persona&gt;
 
     {instruction}&quot;&quot;&quot;
 </code></pre>
-<h2 id="chain-of-thought">Chain of Thought</h2>
+<h2 id="chain-of-thought"><a class="toclink" href="#chain-of-thought">Chain of Thought</a></h2>
 <p>Guide the model through complex reasoning:</p>
 <ul>
 <li>Break down problems into logical steps.</li>
@@ -154,7 +151,7 @@ f&quot;&quot;&quot;&lt;Persona&gt;
 
 {'Please think through this step-by-step and explain your reasoning for each step.' if steps_required else 'Solve this problem by showing your work.'}&quot;&quot;&quot;
 </code></pre>
-<h2 id="self-ask">Self-Ask</h2>
+<h2 id="self-ask"><a class="toclink" href="#self-ask">Self-Ask</a></h2>
 <p>Enable recursive problem-solving:</p>
 <ul>
 <li>Instruct the model to decompose complex problems by asking itself sub-questions.</li>
@@ -169,7 +166,7 @@ To solve this problem, I'll break it down into smaller questions and answer them
 
 Let me think through this carefully:&quot;&quot;&quot;
 </code></pre>
-<h2 id="self-improvement">Self Improvement</h2>
+<h2 id="self-improvement"><a class="toclink" href="#self-improvement">Self Improvement</a></h2>
 <p>Create a feedback loop for prompt optimization:</p>
 <ul>
 <li>Use the model to evaluate the effectiveness of existing prompts.</li>

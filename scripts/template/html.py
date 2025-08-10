@@ -96,7 +96,6 @@ BASE_TEMPLATE = """
                     Last modified: {{ modified_date.strftime('%Y-%m-%d') }}
                 </time>
                 {% if category %}
-                <span>Category: <a href="/categories/{{ category|lower|urlencode }}.html">{{ category }}</a></span>
                 <span><a id="parent-link" href="index.html">..</a></span>
                 {% endif %}
             </div>

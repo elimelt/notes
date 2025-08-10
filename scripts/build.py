@@ -480,7 +480,9 @@ class SiteGenerator:
             'style="font-size:24px; color: white;" class="fa">&#xf09b;</a>'
         )
 
-        nav_items.append('<a href="/index.html">Home</a>')
+        # Add home link if not on index page
+        if not current_page.is_index:
+            nav_items.append('<a href="/index.html">Home</a>')
 
         # Add categories link if categories exist
         if self.categories:
@@ -784,7 +786,6 @@ class SiteGenerator:
 
     def _copy_themes(self) -> None:
         """Copy theme files if they exist."""
-        logger.info("copying themes")
         themes_source = self.input_dir / "scripts" / "template" / "themes"
         if not themes_source.exists():
             themes_source = self.input_dir / "themes"

@@ -786,7 +786,7 @@ class SiteGenerator:
 
     def _copy_themes(self) -> None:
         """Copy theme files if they exist."""
-        themes_source = self.input_dir / "scripts" / "template" / "themes"
+        themes_source = Path(__file__).parent / "template" / "themes"
         if not themes_source.exists():
             themes_source = self.input_dir / "themes"
 

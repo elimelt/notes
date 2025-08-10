@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Batching in LLM Serving Systems", "dateModified": "2025-08-09T18:05:18.297385", "description": "Overview of batching techniques in LLM serving systems,", "url": "https://notes.elimelt.com/llm-serving-systems/batching.html", "articleSection": "Machine Learning Systems", "keywords": "batching,performance,throughput,latency,llm,serving systems,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Batching in LLM Serving Systems", "dateModified": "2025-08-09T18:34:27.724471", "description": "Overview of batching techniques in LLM serving systems,", "url": "https://notes.elimelt.com/llm-serving-systems/batching.html", "articleSection": "Machine Learning Systems", "keywords": "batching,performance,throughput,latency,llm,serving systems,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Batching in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-08-09T18:05:18.297385">
+                <time datetime="2025-08-09T18:34:27.724471">
                     Last modified: 2025-08-09
                 </time>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -163,11 +163,11 @@
 <p><strong>GEMM batch size</strong> = $$\frac{p+d}{d+1}B = B + \frac{p-1}{d+1}B$$</p>
 <p><strong>Key relationships</strong>:</p>
 <ul>
-<li>Increasing prefill length     o increases GEMM batch size</li>
-<li>Increasing decode length  o decreases GEMM batch size</li>
+<li>Increasing prefill length o increases GEMM batch size</li>
+<li>Increasing decode length o decreases GEMM batch size</li>
 <li>For large <code>d</code>: GEMM batch size approx $(1 + \frac{p}{d})B$</li>
 </ul>
-<p><strong>Example</strong>: Batch size = 512, p/d = 2  o GEMM batch size = 512 imes3 = 1536</p>
+<p><strong>Example</strong>: Batch size = 512, p/d = 2 o GEMM batch size = 512 imes3 = 1536</p>
 <h3 id="3-chunked-prefill"><a class="toclink" href="#3-chunked-prefill">3. Chunked Prefill</a></h3>
 <p><strong>Problem</strong>: Simple continuous batching creates generation stalls due to variable prefill sizes</p>
 <p><strong>Solution</strong>: Break prefill into fixed-size chunks</p>
@@ -216,13 +216,13 @@
 <h3 id="1-slo-constraints"><a class="toclink" href="#1-slo-constraints">1. SLO Constraints</a></h3>
 <p><strong>For PD Disaggregation</strong>:</p>
 <ul>
-<li>Prefill batch limit   o TTFT constraint</li>
-<li>Decode batch limit    o TPOT constraint: <code>B*attn + GEMM(B) + C &lt; TPOT</code></li>
+<li>Prefill batch limit o TTFT constraint</li>
+<li>Decode batch limit o TPOT constraint: <code>B*attn + GEMM(B) + C &lt; TPOT</code></li>
 </ul>
 <p><strong>For Chunked Prefill</strong>:</p>
 <ul>
-<li>Cycle Time = GEMM(B_dense) + $\frac{d}{p+d}B_{dense}$     imes attn</li>
-<li>Constraints: Cycle time &lt; TPOT, $\frac{p+d}{B_{dense}}$   imes Cycle Time &lt; TTFT</li>
+<li>Cycle Time = GEMM(B<em dense="dense">dense) + $\frac{d}{p+d}B</em>$ imes attn</li>
+<li>Constraints: Cycle time &lt; TPOT, $\frac{p+d}{B_{dense}}$ imes Cycle Time &lt; TTFT</li>
 </ul>
 <h3 id="2-gpu-memory-capacity"><a class="toclink" href="#2-gpu-memory-capacity">2. GPU Memory Capacity</a></h3>
 <p><strong>KV Cache Limitations</strong>:</p>
@@ -242,7 +242,7 @@ $$B = \frac{d_{avg}C}{(pd)<em avg="avg">{avg} + \frac{1}{2}(d^2)</em>$$}</p>
 <li><code>d</code> = decode length</li>
 <li>Longer requests occupy cache longer, reducing effective batch size</li>
 </ul>
-<p><strong>Example</strong>: 1K input, uniform 0-4K output  o effective batch size approx 220</p>
+<p><strong>Example</strong>: 1K input, uniform 0-4K output o effective batch size approx 220</p>
 <h3 id="3-memory-management-strategies"><a class="toclink" href="#3-memory-management-strategies">3. Memory Management Strategies</a></h3>
 <p><strong>Prediction-Based Control</strong>:</p>
 <ul>

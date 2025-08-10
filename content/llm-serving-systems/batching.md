@@ -6,6 +6,7 @@ description: Overview of batching techniques in LLM serving systems,
 ---
 
 # Batching in LLM Serving Systems
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Overview
@@ -68,6 +69,7 @@ Common SLO types in order of difficulty:
 - **Higher decode latency**: Prefill slows concurrent decode
 
 #### Batch Size Calculation
+
 For continuous batching with:
 
 - Decode length `d`
@@ -78,11 +80,11 @@ For continuous batching with:
 
 **Key relationships**:
 
-- Increasing prefill length 	o increases GEMM batch size
-- Increasing decode length 	o decreases GEMM batch size
+- Increasing prefill length o increases GEMM batch size
+- Increasing decode length o decreases GEMM batch size
 - For large `d`: GEMM batch size approx $(1 + \frac{p}{d})B$
 
-**Example**: Batch size = 512, p/d = 2 	o GEMM batch size = 512	imes3 = 1536
+**Example**: Batch size = 512, p/d = 2 o GEMM batch size = 512 imes3 = 1536
 
 ### 3. Chunked Prefill
 
@@ -102,6 +104,7 @@ For continuous batching with:
 - **Higher infrastructure complexity**: Chunking management overhead
 
 #### Fixed Token Budget Approach
+
 - Allocate fixed token budget per iteration
 - Mix decode requests with prefill chunks
 - Maintains constant GEMM batch size
@@ -138,13 +141,13 @@ For continuous batching with:
 
 **For PD Disaggregation**:
 
-- Prefill batch limit 	o TTFT constraint
-- Decode batch limit 	o TPOT constraint: `B*attn + GEMM(B) + C < TPOT`
+- Prefill batch limit o TTFT constraint
+- Decode batch limit o TPOT constraint: `B*attn + GEMM(B) + C < TPOT`
 
 **For Chunked Prefill**:
 
-- Cycle Time = GEMM(B_dense) + $\frac{d}{p+d}B_{dense}$ 	imes attn
-- Constraints: Cycle time < TPOT, $\frac{p+d}{B_{dense}}$ 	imes Cycle Time < TTFT
+- Cycle Time = GEMM(B*dense) + $\frac{d}{p+d}B*{dense}$ imes attn
+- Constraints: Cycle time < TPOT, $\frac{p+d}{B_{dense}}$ imes Cycle Time < TTFT
 
 ### 2. GPU Memory Capacity
 
@@ -169,7 +172,7 @@ Where:
 - `d` = decode length
 - Longer requests occupy cache longer, reducing effective batch size
 
-**Example**: 1K input, uniform 0-4K output 	o effective batch size approx 220
+**Example**: 1K input, uniform 0-4K output o effective batch size approx 220
 
 ### 3. Memory Management Strategies
 
@@ -187,12 +190,12 @@ Where:
 
 ## Performance Comparison
 
-| Method | Throughput | TTFT | TPOT | Infra Complexity |
-|--------|------------|------|------|------------------|
-| Simple | Lowest | Short | Short | Low |
-| Continuous Batching | High | Longer | Long, Unstable | Low |
-| Chunked Prefill | Highest | Longest | Long, Controlled | Medium |
-| PD Disaggregation | Low | Short | Short | High |
+| Method              | Throughput | TTFT    | TPOT             | Infra Complexity |
+| ------------------- | ---------- | ------- | ---------------- | ---------------- |
+| Simple              | Lowest     | Short   | Short            | Low              |
+| Continuous Batching | High       | Longer  | Long, Unstable   | Low              |
+| Chunked Prefill     | Highest    | Longest | Long, Controlled | Medium           |
+| PD Disaggregation   | Low        | Short   | Short            | High             |
 
 ## Advanced Considerations
 

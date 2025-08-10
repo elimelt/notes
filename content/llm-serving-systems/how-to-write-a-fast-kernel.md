@@ -20,6 +20,7 @@ a = torch.randn(num_rows, num_cols)
 res = a.t().contiguous()
 
 start = torch.cuda.Event(enable_timing=True)
+
 end = torch.cuda.Event(enable_timing=True)
 
 start.record()
@@ -60,7 +61,6 @@ __global__ void transpose(float* input, float* output, int num_rows, int num_col
 }
 
 ```
-
 
 ## Coallesced Memory Access
 

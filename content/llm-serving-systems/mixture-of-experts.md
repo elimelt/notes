@@ -6,6 +6,7 @@ description: How do Mixture of Experts (MoE) models achieve these crazy performa
 ---
 
 # Mixture of Experts (MoE)
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Overview
@@ -44,6 +45,7 @@ description: How do Mixture of Experts (MoE) models achieve these crazy performa
 ## Core MoE Architecture
 
 ### Dense vs Sparse Model Comparison
+
 ```
 Dense Model: FFN 	o Single large feedforward network
 Sparse Model: MoE Layer 	o Multiple expert FFNs + Router
@@ -58,6 +60,7 @@ Sparse Model: MoE Layer 	o Multiple expert FFNs + Router
 ### Architecture Variations
 
 #### What Varies Across MoE Models
+
 1. **Routing Function**: How tokens are assigned to experts
 2. **Expert Sizes**: Size and number of expert networks
 3. **Training Objectives**: Load balancing and auxiliary losses
@@ -70,46 +73,55 @@ Sparse Model: MoE Layer 	o Multiple expert FFNs + Router
 ## Routing Mechanisms
 
 ### Top-K Routing (Most Popular)
+
 **Formula**: For each token, select top-k experts based on routing scores
 
 $$h_t^l = \sum_{i=1}^{N} g_{i,t} \cdot \text{FFN}_i^{(l)}(u_t) + u_t$$
 
 Where:
+
 - $g_{i,t}$ = gating weight for expert $i$ and token $t$
 - $s_{i,t} = \text{Softmax}_i(u_t^T W_g)$ (routing scores)
 
 ### Routing Strategies
+
 1. **Token Choice**: Each token selects top-k experts
 2. **Expert Choice**: Each expert selects which tokens to process
 
 ### Popular Routing Configurations
-| Model | Total Experts | Active Experts | Shared Experts | Top-K |
-|-------|---------------|----------------|----------------|--------|
-| Mixtral | 8 | 2 | 0 | 2 |
-| DBRX | 16 | 4 | 0 | 4 |
-| DeepSeek v1 | 64 | 6 | 2 | 6 |
-| DeepSeek v3 | 256 | 8 | 1 | 8 |
-| Qwen 1.5 | 60 | 4 | 4 | 4 |
+
+| Model       | Total Experts | Active Experts | Shared Experts | Top-K |
+| ----------- | ------------- | -------------- | -------------- | ----- |
+| Mixtral     | 8             | 2              | 0              | 2     |
+| DBRX        | 16            | 4              | 0              | 4     |
+| DeepSeek v1 | 64            | 6              | 2              | 6     |
+| DeepSeek v3 | 256           | 8              | 1              | 8     |
+| Qwen 1.5    | 60            | 4              | 4              | 4     |
 
 ## Training Challenges and Solutions
 
 ### Major Challenge: Non-Differentiable Routing
+
 **Problem**: Sparse gating decisions break gradient flow - only selected experts receive gradients.
 
 ### Solutions:
+
 1. **Reinforcement Learning**: Use REINFORCE to optimize routing policies
 2. **Stochastic Perturbations**: Add noise to make routing more robust
 3. **Heuristic Balancing Losses**: Force balanced expert usage
 
 ### Load Balancing Loss
+
 **Critical Issue**: Without load balancing, models collapse to using only 2 experts.
 
 #### Switch Transformer Load Balancing Loss
+
 **Purpose**: Systems efficiency requires using experts evenly to avoid bottlenecks.
 
 $$\mathcal{L}_{\text{aux}} = \alpha \cdot N \cdot \sum_{i=1}^{N} f_i \cdot P_i$$
 
 Where:
+
 - $f_i$ = fraction of tokens dispatched to expert $i$: $f_i = \frac{1}{T}\sum_{x \in B} \mathbf{1}\{\text{argmax } p(x) = i\}$
 - $P_i$ = fraction of router probability allocated for expert $i$: $P_i = \frac{1}{T}\sum_{x \in B} p_i(x)$
 - $N$ = number of experts
@@ -170,6 +182,7 @@ $$\mathcal{L}_{\text{CommBal}} = \alpha_3 \sum_{i=1}^{D} f_i^{in} P_i^{out}$$
 **Concept**: Initialize MoE models from pre-trained dense language models.
 
 ### Process
+
 1. Take a pre-trained dense model
 2. Copy weights to initialize multiple experts
 3. Add routing mechanism from scratch
@@ -194,6 +207,7 @@ $$\mathcal{L}_{\text{CommBal}} = \alpha_3 \sum_{i=1}^{D} f_i^{in} P_i^{out}$$
   2. **Combine**: Gather results back to original positions
 
 #### All-to-All Communication Pattern
+
 **Purpose**: Scatter/gather distinct messages from each participant to every other participant.
 
 ```
@@ -204,9 +218,10 @@ GPU3: [D0, D1, D2, D3] 	o GPU3: [A3, B3, C3, D3]
 ```
 
 **Process**:
-1. **Dispatch phase**: Layout transformation 	o Group tokens by target expert 	o First All-to-All
+
+1. **Dispatch phase**: Layout transformation o Group tokens by target expert o First All-to-All
 2. **Expert compute**: Each expert processes its assigned tokens
-3. **Combine phase**: Second All-to-All 	o Layout transformation 	o Restore original positions
+3. **Combine phase**: Second All-to-All o Layout transformation o Restore original positions
 
 ### Communication Bottlenecks
 
@@ -219,9 +234,11 @@ GPU3: [D0, D1, D2, D3] 	o GPU3: [A3, B3, C3, D3]
 ### Training Optimizations: Lina
 
 #### Core Strategy
+
 **Intuition**: Always prioritize All-to-All and avoid bandwidth sharing.
 
 **Techniques**:
+
 1. **Tensor Partitioning**: Break AllReduce into micro-operations
 2. **Priority Scheduling**: Give All-to-All operations higher priority
 3. **Pipelining**: Overlap computation with All-to-All communication
@@ -231,6 +248,7 @@ GPU3: [D0, D1, D2, D3] 	o GPU3: [A3, B3, C3, D3]
 ## Deployment Strategies
 
 ### Memory Requirements
+
 **Mixtral 8x7B Example**:
 
 - Attention layers: ~3.5GB
@@ -247,23 +265,28 @@ GPU3: [D0, D1, D2, D3] 	o GPU3: [A3, B3, C3, D3]
 - **Problem**: High overhead from frequent weight copying (>50ms vs ~2ms execution)
 
 #### 2. CPU Compute (Fiddler)
+
 **Core Idea**: Compute experts on CPU instead of copying weights to GPU.
 
 **Strategy**:
+
 1. **Initialization**: Keep attention weights on GPU, profile expert popularity
 2. **Placement**: Popular experts on GPU, others on CPU
 3. **Execution**: Decide per token whether to compute on CPU or GPU
 4. **Optimization**: Activation copying <0.1ms vs Weight copying >50ms
 
 **Latency Model**:
+
 $$\arg\min_{\text{cpu\_expert,gpu\_expert}} \max\left(\sum_{i \in \text{cpu\_expert}} (n\_\text{input}_i \times \text{latency}_{\text{cpu}}), \sum_{i \in \text{gpu\_expert}} ((1 - \text{is\_on\_gpu}_i) \times \text{latency}_{\text{gpu}})\right)$$
 
 **Performance**: 8.2-10.1x faster than Mixtral-Offloading, 19.4-22.5x faster than DeepSpeed MII
 
 #### 3. Expert Popularity Profiling
+
 **Challenge**: During inference, expert popularity differs from training due to load balancing losses.
 
 **Solution**:
+
 1. Collect expert selection patterns during training (after load balancing converges)
 2. Create expert selection paths across layers
 3. Use this profile to predict resource allocation during inference
@@ -293,7 +316,9 @@ $$\arg\min_{\text{cpu\_expert,gpu\_expert}} \max\left(\sum_{i \in \text{cpu\_exp
 ### Batching MoE Computation
 
 #### GroupGemm Approach
+
 **Process**:
+
 1. **Routing**: Determine expert assignments for each token
 2. **Permutation**: Group tokens by target expert using prefix sum
 3. **Computation**: Use GroupGemm for efficient batched computation
@@ -303,6 +328,7 @@ $$\arg\min_{\text{cpu\_expert,gpu\_expert}} \max\left(\sum_{i \in \text{cpu\_exp
 **Efficiency**: Single GPU kernel with batching benefits across all experts.
 
 #### Permutation Index Generation
+
 **Method**: Use prefix sum (scan) operations for efficient parallel permutation index calculation:
 
 - Convert expert selection to binary mask
@@ -325,6 +351,7 @@ $$\arg\min_{\text{cpu\_expert,gpu\_expert}} \max\left(\sum_{i \in \text{cpu\_exp
 - **Expert popularity prediction**: Approaches ideal performance with perfect knowledge
 
 ### Benchmark Performance
+
 **Mixtral 8x7B vs Dense Models**:
 
 - Matches LLaMA 2 70B performance with 5x fewer active parameters

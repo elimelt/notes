@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-08-09T18:05:18.297582", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "url": "https://notes.elimelt.com/llm-serving-systems/gpu-basics.html", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-08-09T18:34:31.197420", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "url": "https://notes.elimelt.com/llm-serving-systems/gpu-basics.html", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>GPU Architecture and Programming</h1>
             <div class="meta">
-                <time datetime="2025-08-09T18:05:18.297582">
+                <time datetime="2025-08-09T18:34:31.197420">
                     Last modified: 2025-08-09
                 </time>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -243,7 +243,7 @@
 <li><strong>Global Memory (HBM)</strong>: 80 GB, 3TB/s bandwidth</li>
 <li><strong>L2 Cache</strong>: 50MB, ~10TB/s bandwidth</li>
 <li><strong>Shared Memory ("Smem")</strong>: 228 KB per SM, ~20TB/s bandwidth</li>
-<li><strong>Registers</strong>: 64K    imes 32 Bit per SM, ~600TB/s bandwidth</li>
+<li><strong>Registers</strong>: 64K imes 32 Bit per SM, ~600TB/s bandwidth</li>
 </ul>
 <h3 id="streaming-multiprocessors-sms"><a class="toclink" href="#streaming-multiprocessors-sms">Streaming Multiprocessors (SMs)</a></h3>
 <p><strong>Components:</strong></p>
@@ -363,7 +363,7 @@ def add_kernel(x_ptr, y_ptr, output_ptr, n_elements, BLOCK_SIZE: tl.constexpr):
 </ul>
 <h4 id="cuda-memory-management"><a class="toclink" href="#cuda-memory-management">CUDA Memory Management</a></h4>
 <pre><code class="language-cpp">// Memory allocation
-cudaMalloc          // device memory allocation  
+cudaMalloc          // device memory allocation
 cudaMallocHost      // pinned host memory allocation
 cudaFree            // free memory
 
@@ -377,7 +377,7 @@ cudaMemsetAsync     // asynchronous set
 <pre><code class="language-cpp">// Kernel declaration
 __global__ void kernel_name(args...)
 
-// Device helper function  
+// Device helper function
 __device__ T helper_name(args...)
 
 // Example addition kernel
@@ -445,20 +445,12 @@ cudaGetErrorString()      // Get error description
 <ol>
 <li><strong>GPU Architecture Understanding</strong></li>
 <li>Parallel processing focus</li>
-<li>
-<p>SMs, blocks, threads hierarchy</p>
-</li>
-<li>
-<p><strong>Programming Approaches</strong></p>
-</li>
+<li>SMs, blocks, threads hierarchy</li>
+<li><strong>Programming Approaches</strong></li>
 <li><strong>PyTorch</strong>: Easiest, high-level</li>
 <li><strong>Triton</strong>: Balance of control and ease</li>
-<li>
-<p><strong>CUDA</strong>: Maximum control and performance</p>
-</li>
-<li>
-<p><strong>Performance Analysis</strong></p>
-</li>
+<li><strong>CUDA</strong>: Maximum control and performance</li>
+<li><strong>Performance Analysis</strong></li>
 <li>Proper timing with CUDA events</li>
 <li>Profiling tools for optimization</li>
 <li>Understanding memory hierarchy impact</li>

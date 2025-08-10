@@ -6,11 +6,15 @@ description: Overview of memory management techniques in LLM serving systems, pe
 ---
 
 # Memory Management in LLM Serving Systems
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhuz
+
 ## KV Cache Size Calculation
 
 ### Key Components
+
 The KV cache size depends on:
+
 - **Num KV heads**: Number of key-value attention heads
 - **Head Dim**: Dimension of each attention head
 - **2**: Stores both K and V matrices
@@ -21,16 +25,18 @@ The KV cache size depends on:
 ### Example Calculation - Llama3-8B on H100
 
 - **Total GPU memory**: 80GB
-- **Model weights**: 2	imes8=16GB (assuming FP16)
+- **Model weights**: 2 imes8=16GB (assuming FP16)
 - **Activations**: Negligible during serving
 - **Input/Output**: 1024 input tokens, 1024 output tokens
 
 **KV cache per request**:
+
 ```
 (1024 + 1024/2) 	imes 2 	imes 2 	imes 8 	imes 128 	imes 32 / 1024 / 1024 = 192 MB
 ```
 
 **Maximum batch size**:
+
 ```
 (80 - 16) / (192/1024) = 341 requests
 ```
@@ -40,7 +46,9 @@ Note: Batch size of 333 was needed to reach compute-bound regime on H100.
 ## Memory Allocation Challenges
 
 ### Variable-Length Requests
+
 When serving requests with different output lengths:
+
 - **Min KV cache**: 192 MB (1024 output tokens)
 - **Max KV cache**: 384 MB (4096 output tokens)
 
@@ -60,7 +68,7 @@ When serving requests with different output lengths:
 
 ### Method 2: std::vector-style Allocation
 
-**Approach**: 
+**Approach**:
 
 - Start with small size allocation
 - Double the size when fully occupied
@@ -78,7 +86,7 @@ When serving requests with different output lengths:
 
 **Key Features**:
 
-- **Page size**: 16 tokens' KV = 16	imes2	imes2	imes8	imes128 = 64 KB
+- **Page size**: 16 tokens' KV = 16 imes2 imes2 imes8 imes128 = 64 KB
 - **No fragmentation**: Pages can be allocated non-contiguously
 - **Efficient bandwidth**: Each page large enough for good utilization
 
@@ -87,9 +95,9 @@ When serving requests with different output lengths:
 ### Multi-Level Page Table Structure
 
 ```
-kv_indptr:  [0, 2, 3, 6, 10]  # NumReq + 1 elements
+kv_indptr:  [0, 2, 3, 6, 10]                   # NumReq + 1 elements
 kv_indices: [1, 4, 8, 2, 5, 0, 6, 10, 15, 17]  # NumPage elements
-kv_data:    [actual KV cache data...]  # Max Page elements
+kv_data:    [actual KV cache data...]          # Max Page elements
 ```
 
 **How it works**:
@@ -104,9 +112,9 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 
 **Benefits**:
 
-- **Reduced prefill computation**: n	imesp 	o p (where p = prefix length, n = requests)
-- **Reduced KV cache size**: n	imesp 	o p
-- **Reduced memory bandwidth**: n	imesp 	o p during decoding
+- **Reduced prefill computation**: n imesp o p (where p = prefix length, n = requests)
+- **Reduced KV cache size**: n imesp o p
+- **Reduced memory bandwidth**: n imesp o p during decoding
 - **Asynchronous matching**: Can be performed in background
 
 **Drawbacks**:
@@ -116,6 +124,7 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 ### Use Cases for Prefix Sharing
 
 #### Multi-round Conversations
+
 ```
 1. "You are a helpful assistant. User:Hello, Assistant:Hi!"
 2. "You are a helpful assistant. User:Hello, Assistant:Hi!, User: Solve this problem..."
@@ -131,6 +140,7 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 ### Performance Benefits
 
 Performance gains vary with:
+
 - **Shared prefix length**: Longer prefixes = greater benefits
 - **Batch size**: Higher batch sizes see more improvement
 - **Unique suffix length**: Shorter unique parts = better gains
@@ -144,17 +154,21 @@ Typical improvements: **2-32x speedup** depending on configuration.
 When GPU memory insufficient for full radix tree:
 
 #### Recomputation Approach
-**Time cost**: 
+
+**Time cost**:
 $$T_{recompute} = \frac{2pP_{model}}{Compute}$$
 
-#### Load/Offload Approach  
+#### Load/Offload Approach
+
 **Time cost**:
 $$T_{load} = \frac{2 \times dtype \times \frac{D_{model}}{GQA} \times L \times p}{PCIE\_Bandwidth}$$
 
 #### Comparison Ratio
+
 $$\frac{T_{recompute}}{T_{load}} = \frac{PCIE\_Bandwidth \times P_{compute}}{dtype \times \frac{D_{model}}{GQA} \times L \times Compute}$$
 
 **Example calculation for A100**:
+
 ```
 30GB/s 	imes 8 	imes 10^9 / (2 	imes 1024 	imes 32 	imes 300T) = 12
 ```
@@ -165,10 +179,11 @@ $$\frac{T_{recompute}}{T_{load}} = \frac{PCIE\_Bandwidth \times P_{compute}}{dty
 
 ### Problem with Standard Attention
 
-- **Large intermediate matrices**: Seq_len 	imes Seq_len attention scores
+- **Large intermediate matrices**: Seq_len imes Seq_len attention scores
 - **Memory bottleneck**: Quadratic memory growth with sequence length
 
 ### Softmax Numerical Stability
+
 **Standard softmax**:
 $$sm(x_i) = \frac{e^{x_i}}{\sum_{j=1}^d e^{x_j}}$$
 
@@ -182,6 +197,7 @@ Where c = max(x_i) prevents overflow.
 **Key Innovation**: Tile-based computation with online softmax
 
 **Steps**:
+
 1. **Tiling**: Divide Q, K, V into blocks that fit in SRAM
 2. **Block-wise computation**: Compute attention for each block pair
 3. **Online aggregation**: Maintain running statistics (max, sum) across blocks

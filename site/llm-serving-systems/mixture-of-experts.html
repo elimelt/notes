@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-08-09T18:05:18.298098", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "url": "https://notes.elimelt.com/llm-serving-systems/mixture-of-experts.html", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-08-09T18:35:18.339994", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "url": "https://notes.elimelt.com/llm-serving-systems/mixture-of-experts.html", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Intro to Mixture of Experts (MoE) in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-08-09T18:05:18.298098">
+                <time datetime="2025-08-09T18:35:18.339994">
                     Last modified: 2025-08-09
                 </time>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -158,9 +158,11 @@ Sparse Model: MoE Layer     o Multiple expert FFNs + Router
 <h3 id="top-k-routing-most-popular"><a class="toclink" href="#top-k-routing-most-popular">Top-K Routing (Most Popular)</a></h3>
 <p><strong>Formula</strong>: For each token, select top-k experts based on routing scores</p>
 <p>$$h_t^l = \sum_{i=1}^{N} g_{i,t} \cdot \text{FFN}_i^{(l)}(u_t) + u_t$$</p>
-<p>Where:
-- $g_{i,t}$ = gating weight for expert $i$ and token $t$
-- $s_{i,t} = \text{Softmax}_i(u_t^T W_g)$ (routing scores)</p>
+<p>Where:</p>
+<ul>
+<li>$g_{i,t}$ = gating weight for expert $i$ and token $t$</li>
+<li>$s_{i,t} = \text{Softmax}_i(u_t^T W_g)$ (routing scores)</li>
+</ul>
 <h3 id="routing-strategies"><a class="toclink" href="#routing-strategies">Routing Strategies</a></h3>
 <ol>
 <li><strong>Token Choice</strong>: Each token selects top-k experts</li>
@@ -229,11 +231,13 @@ Sparse Model: MoE Layer     o Multiple expert FFNs + Router
 <h4 id="switch-transformer-load-balancing-loss"><a class="toclink" href="#switch-transformer-load-balancing-loss">Switch Transformer Load Balancing Loss</a></h4>
 <p><strong>Purpose</strong>: Systems efficiency requires using experts evenly to avoid bottlenecks.</p>
 <p>$$\mathcal{L}<em i="1">{\text{aux}} = \alpha \cdot N \cdot \sum</em> f_i \cdot P_i$$}^{N</p>
-<p>Where:
-- $f_i$ = fraction of tokens dispatched to expert $i$: $f_i = \frac{1}{T}\sum_{x \in B} \mathbf{1}{\text{argmax } p(x) = i}$
-- $P_i$ = fraction of router probability allocated for expert $i$: $P_i = \frac{1}{T}\sum_{x \in B} p_i(x)$
-- $N$ = number of experts
-- $T$ = number of tokens in batch $B$</p>
+<p>Where:</p>
+<ul>
+<li>$f_i$ = fraction of tokens dispatched to expert $i$: $f_i = \frac{1}{T}\sum_{x \in B} \mathbf{1}{\text{argmax } p(x) = i}$</li>
+<li>$P_i$ = fraction of router probability allocated for expert $i$: $P_i = \frac{1}{T}\sum_{x \in B} p_i(x)$</li>
+<li>$N$ = number of experts</li>
+<li>$T$ = number of tokens in batch $B$</li>
+</ul>
 <p><strong>Key insight</strong>: The derivative with respect to $P_i$ is $\frac{\alpha N}{T}\sum \mathbf{1}_{\text{argmax } p(x)=i}$, so more frequent use leads to stronger downweighting.</p>
 <h3 id="deepseek-moe-balancing-variations"><a class="toclink" href="#deepseek-moe-balancing-variations">DeepSeek MoE Balancing Variations</a></h3>
 <h4 id="deepseek-v1-v2-dual-balancing"><a class="toclink" href="#deepseek-v1-v2-dual-balancing">DeepSeek v1-v2: Dual Balancing</a></h4>
@@ -311,10 +315,12 @@ GPU1: [B0, B1, B2, B3]  o GPU1: [A1, B1, C1, D1]
 GPU2: [C0, C1, C2, C3]  o GPU2: [A2, B2, C2, D2]
 GPU3: [D0, D1, D2, D3]  o GPU3: [A3, B3, C3, D3]
 </code></pre>
-<p><strong>Process</strong>:
-1. <strong>Dispatch phase</strong>: Layout transformation    o Group tokens by target expert     o First All-to-All
-2. <strong>Expert compute</strong>: Each expert processes its assigned tokens
-3. <strong>Combine phase</strong>: Second All-to-All     o Layout transformation     o Restore original positions</p>
+<p><strong>Process</strong>:</p>
+<ol>
+<li><strong>Dispatch phase</strong>: Layout transformation o Group tokens by target expert o First All-to-All</li>
+<li><strong>Expert compute</strong>: Each expert processes its assigned tokens</li>
+<li><strong>Combine phase</strong>: Second All-to-All o Layout transformation o Restore original positions</li>
+</ol>
 <h3 id="communication-bottlenecks"><a class="toclink" href="#communication-bottlenecks">Communication Bottlenecks</a></h3>
 <p><strong>Problem</strong>: All-to-All operations consume significant time:</p>
 <ul>
@@ -325,10 +331,12 @@ GPU3: [D0, D1, D2, D3]  o GPU3: [A3, B3, C3, D3]
 <h3 id="training-optimizations-lina"><a class="toclink" href="#training-optimizations-lina">Training Optimizations: Lina</a></h3>
 <h4 id="core-strategy"><a class="toclink" href="#core-strategy">Core Strategy</a></h4>
 <p><strong>Intuition</strong>: Always prioritize All-to-All and avoid bandwidth sharing.</p>
-<p><strong>Techniques</strong>:
-1. <strong>Tensor Partitioning</strong>: Break AllReduce into micro-operations
-2. <strong>Priority Scheduling</strong>: Give All-to-All operations higher priority
-3. <strong>Pipelining</strong>: Overlap computation with All-to-All communication</p>
+<p><strong>Techniques</strong>:</p>
+<ol>
+<li><strong>Tensor Partitioning</strong>: Break AllReduce into micro-operations</li>
+<li><strong>Priority Scheduling</strong>: Give All-to-All operations higher priority</li>
+<li><strong>Pipelining</strong>: Overlap computation with All-to-All communication</li>
+</ol>
 <p><strong>Results</strong>: Up to 2.4x speedup in MoE layer execution</p>
 <h2 id="deployment-strategies"><a class="toclink" href="#deployment-strategies">Deployment Strategies</a></h2>
 <h3 id="memory-requirements"><a class="toclink" href="#memory-requirements">Memory Requirements</a></h3>
@@ -348,21 +356,25 @@ GPU3: [D0, D1, D2, D3]  o GPU3: [A3, B3, C3, D3]
 </ul>
 <h4 id="2-cpu-compute-fiddler"><a class="toclink" href="#2-cpu-compute-fiddler">2. CPU Compute (Fiddler)</a></h4>
 <p><strong>Core Idea</strong>: Compute experts on CPU instead of copying weights to GPU.</p>
-<p><strong>Strategy</strong>:
-1. <strong>Initialization</strong>: Keep attention weights on GPU, profile expert popularity
-2. <strong>Placement</strong>: Popular experts on GPU, others on CPU
-3. <strong>Execution</strong>: Decide per token whether to compute on CPU or GPU
-4. <strong>Optimization</strong>: Activation copying &lt;0.1ms vs Weight copying &gt;50ms</p>
-<p><strong>Latency Model</strong>:
-$$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert}} (n_\text{input}<em _text_cpu="\text{cpu">i \times \text{latency}</em>}}), \sum_{i \in \text{gpu_expert}} ((1 - \text{is_on_gpu<em _text_gpu="\text{gpu">i) \times \text{latency}</em>)\right)$$}</p>
+<p><strong>Strategy</strong>:</p>
+<ol>
+<li><strong>Initialization</strong>: Keep attention weights on GPU, profile expert popularity</li>
+<li><strong>Placement</strong>: Popular experts on GPU, others on CPU</li>
+<li><strong>Execution</strong>: Decide per token whether to compute on CPU or GPU</li>
+<li><strong>Optimization</strong>: Activation copying &lt;0.1ms vs Weight copying &gt;50ms</li>
+</ol>
+<p><strong>Latency Model</strong>:</p>
+<p>$$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert}} (n_\text{input}<em _text_cpu="\text{cpu">i \times \text{latency}</em>}}), \sum_{i \in \text{gpu_expert}} ((1 - \text{is_on_gpu<em _text_gpu="\text{gpu">i) \times \text{latency}</em>)\right)$$}</p>
 <p><strong>Performance</strong>: 8.2-10.1x faster than Mixtral-Offloading, 19.4-22.5x faster than DeepSpeed MII</p>
 <h4 id="3-expert-popularity-profiling"><a class="toclink" href="#3-expert-popularity-profiling">3. Expert Popularity Profiling</a></h4>
 <p><strong>Challenge</strong>: During inference, expert popularity differs from training due to load balancing losses.</p>
-<p><strong>Solution</strong>:
-1. Collect expert selection patterns during training (after load balancing converges)
-2. Create expert selection paths across layers
-3. Use this profile to predict resource allocation during inference
-4. Allocate more resources to popular experts</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Collect expert selection patterns during training (after load balancing converges)</li>
+<li>Create expert selection paths across layers</li>
+<li>Use this profile to predict resource allocation during inference</li>
+<li>Allocate more resources to popular experts</li>
+</ol>
 <h3 id="deepseek-v3-deployment"><a class="toclink" href="#deepseek-v3-deployment">DeepSeek V3 Deployment</a></h3>
 <h4 id="training-infrastructure"><a class="toclink" href="#training-infrastructure">Training Infrastructure</a></h4>
 <ul>
@@ -385,12 +397,14 @@ $$\arg\min_{\text{cpu_expert,gpu_expert}} \max\left(\sum_{i \in \text{cpu_expert
 </ul>
 <h3 id="batching-moe-computation"><a class="toclink" href="#batching-moe-computation">Batching MoE Computation</a></h3>
 <h4 id="groupgemm-approach"><a class="toclink" href="#groupgemm-approach">GroupGemm Approach</a></h4>
-<p><strong>Process</strong>:
-1. <strong>Routing</strong>: Determine expert assignments for each token
-2. <strong>Permutation</strong>: Group tokens by target expert using prefix sum
-3. <strong>Computation</strong>: Use GroupGemm for efficient batched computation
-4. <strong>Un-permutation</strong>: Restore tokens to original positions
-5. <strong>Mixing</strong>: Combine expert outputs with routing weights</p>
+<p><strong>Process</strong>:</p>
+<ol>
+<li><strong>Routing</strong>: Determine expert assignments for each token</li>
+<li><strong>Permutation</strong>: Group tokens by target expert using prefix sum</li>
+<li><strong>Computation</strong>: Use GroupGemm for efficient batched computation</li>
+<li><strong>Un-permutation</strong>: Restore tokens to original positions</li>
+<li><strong>Mixing</strong>: Combine expert outputs with routing weights</li>
+</ol>
 <p><strong>Efficiency</strong>: Single GPU kernel with batching benefits across all experts.</p>
 <h4 id="permutation-index-generation"><a class="toclink" href="#permutation-index-generation">Permutation Index Generation</a></h4>
 <p><strong>Method</strong>: Use prefix sum (scan) operations for efficient parallel permutation index calculation:</p>

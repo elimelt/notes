@@ -28,7 +28,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Memory Management in LLM Serving Systems", "dateModified": "2025-08-09T18:05:18.297955", "description": "Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache metho", "url": "https://notes.elimelt.com/llm-serving-systems/memory-management.html", "articleSection": "Machine Learning Systems", "keywords": "memory management,kv cache,prefix sharing,paged attention,flash attention,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Memory Management in LLM Serving Systems", "dateModified": "2025-08-09T18:35:09.233811", "description": "Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache metho", "url": "https://notes.elimelt.com/llm-serving-systems/memory-management.html", "articleSection": "Machine Learning Systems", "keywords": "memory management,kv cache,prefix sharing,paged attention,flash attention,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -91,7 +91,7 @@
         <article>
             <h1>Memory Management in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-08-09T18:05:18.297955">
+                <time datetime="2025-08-09T18:35:09.233811">
                     Last modified: 2025-08-09
                 </time>
                 <span><a id="parent-link" href="index.html">..</a></span>
@@ -103,17 +103,19 @@
 </blockquote>
 <h2 id="kv-cache-size-calculation"><a class="toclink" href="#kv-cache-size-calculation">KV Cache Size Calculation</a></h2>
 <h3 id="key-components"><a class="toclink" href="#key-components">Key Components</a></h3>
-<p>The KV cache size depends on:
-- <strong>Num KV heads</strong>: Number of key-value attention heads
-- <strong>Head Dim</strong>: Dimension of each attention head
-- <strong>2</strong>: Stores both K and V matrices
-- <strong>Stype</strong>: Data type size (e.g., 2 bytes for FP16)
-- <strong>Seqlen</strong>: Sequence length
-- <strong>Layer</strong>: Number of transformer layers</p>
+<p>The KV cache size depends on:</p>
+<ul>
+<li><strong>Num KV heads</strong>: Number of key-value attention heads</li>
+<li><strong>Head Dim</strong>: Dimension of each attention head</li>
+<li><strong>2</strong>: Stores both K and V matrices</li>
+<li><strong>Stype</strong>: Data type size (e.g., 2 bytes for FP16)</li>
+<li><strong>Seqlen</strong>: Sequence length</li>
+<li><strong>Layer</strong>: Number of transformer layers</li>
+</ul>
 <h3 id="example-calculation-llama3-8b-on-h100"><a class="toclink" href="#example-calculation-llama3-8b-on-h100">Example Calculation - Llama3-8B on H100</a></h3>
 <ul>
 <li><strong>Total GPU memory</strong>: 80GB</li>
-<li><strong>Model weights</strong>: 2  imes8=16GB (assuming FP16)</li>
+<li><strong>Model weights</strong>: 2 imes8=16GB (assuming FP16)</li>
 <li><strong>Activations</strong>: Negligible during serving</li>
 <li><strong>Input/Output</strong>: 1024 input tokens, 1024 output tokens</li>
 </ul>
@@ -126,9 +128,11 @@
 <p>Note: Batch size of 333 was needed to reach compute-bound regime on H100.</p>
 <h2 id="memory-allocation-challenges"><a class="toclink" href="#memory-allocation-challenges">Memory Allocation Challenges</a></h2>
 <h3 id="variable-length-requests"><a class="toclink" href="#variable-length-requests">Variable-Length Requests</a></h3>
-<p>When serving requests with different output lengths:
-- <strong>Min KV cache</strong>: 192 MB (1024 output tokens)
-- <strong>Max KV cache</strong>: 384 MB (4096 output tokens)</p>
+<p>When serving requests with different output lengths:</p>
+<ul>
+<li><strong>Min KV cache</strong>: 192 MB (1024 output tokens)</li>
+<li><strong>Max KV cache</strong>: 384 MB (4096 output tokens)</li>
+</ul>
 <p><strong>Key Question</strong>: How to efficiently allocate KV cache for requests with different lengths?</p>
 <h2 id="allocation-methods"><a class="toclink" href="#allocation-methods">Allocation Methods</a></h2>
 <h3 id="method-1-fixed-max-sequence-length"><a class="toclink" href="#method-1-fixed-max-sequence-length">Method 1: Fixed Max Sequence Length</a></h3>
@@ -140,7 +144,7 @@
 <li><strong>Reduced batch size</strong>: Max batch size = (80-16)/(384/1024) = 170</li>
 </ul>
 <h3 id="method-2-stdvector-style-allocation"><a class="toclink" href="#method-2-stdvector-style-allocation">Method 2: std::vector-style Allocation</a></h3>
-<p><strong>Approach</strong>: </p>
+<p><strong>Approach</strong>:</p>
 <ul>
 <li>Start with small size allocation</li>
 <li>Double the size when fully occupied</li>
@@ -156,15 +160,15 @@
 <p><strong>Core Innovation</strong>: Chunk global memory space into small pages</p>
 <p><strong>Key Features</strong>:</p>
 <ul>
-<li><strong>Page size</strong>: 16 tokens' KV = 16 imes2   imes2   imes8   imes128 = 64 KB</li>
+<li><strong>Page size</strong>: 16 tokens' KV = 16 imes2 imes2 imes8 imes128 = 64 KB</li>
 <li><strong>No fragmentation</strong>: Pages can be allocated non-contiguously</li>
 <li><strong>Efficient bandwidth</strong>: Each page large enough for good utilization</li>
 </ul>
 <h2 id="pagedattention-implementation"><a class="toclink" href="#pagedattention-implementation">PagedAttention Implementation</a></h2>
 <h3 id="multi-level-page-table-structure"><a class="toclink" href="#multi-level-page-table-structure">Multi-Level Page Table Structure</a></h3>
-<pre><code>kv_indptr:  [0, 2, 3, 6, 10]  # NumReq + 1 elements
+<pre><code>kv_indptr:  [0, 2, 3, 6, 10]                   # NumReq + 1 elements
 kv_indices: [1, 4, 8, 2, 5, 0, 6, 10, 15, 17]  # NumPage elements
-kv_data:    [actual KV cache data...]  # Max Page elements
+kv_data:    [actual KV cache data...]          # Max Page elements
 </code></pre>
 <p><strong>How it works</strong>:</p>
 <ul>
@@ -176,9 +180,9 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 <p><strong>Concept</strong>: Share common prefixes across multiple requests</p>
 <p><strong>Benefits</strong>:</p>
 <ul>
-<li><strong>Reduced prefill computation</strong>: n    imesp   o p (where p = prefix length, n = requests)</li>
-<li><strong>Reduced KV cache size</strong>: n  imesp   o p</li>
-<li><strong>Reduced memory bandwidth</strong>: n   imesp   o p during decoding</li>
+<li><strong>Reduced prefill computation</strong>: n imesp o p (where p = prefix length, n = requests)</li>
+<li><strong>Reduced KV cache size</strong>: n imesp o p</li>
+<li><strong>Reduced memory bandwidth</strong>: n imesp o p during decoding</li>
 <li><strong>Asynchronous matching</strong>: Can be performed in background</li>
 </ul>
 <p><strong>Drawbacks</strong>:</p>
@@ -198,16 +202,18 @@ kv_data:    [actual KV cache data...]  # Max Page elements
 <li>Common document prefixes</li>
 </ul>
 <h3 id="performance-benefits"><a class="toclink" href="#performance-benefits">Performance Benefits</a></h3>
-<p>Performance gains vary with:
-- <strong>Shared prefix length</strong>: Longer prefixes = greater benefits
-- <strong>Batch size</strong>: Higher batch sizes see more improvement
-- <strong>Unique suffix length</strong>: Shorter unique parts = better gains</p>
+<p>Performance gains vary with:</p>
+<ul>
+<li><strong>Shared prefix length</strong>: Longer prefixes = greater benefits</li>
+<li><strong>Batch size</strong>: Higher batch sizes see more improvement</li>
+<li><strong>Unique suffix length</strong>: Shorter unique parts = better gains</li>
+</ul>
 <p>Typical improvements: <strong>2-32x speedup</strong> depending on configuration.</p>
 <h2 id="memory-management-strategies"><a class="toclink" href="#memory-management-strategies">Memory Management Strategies</a></h2>
 <h3 id="eviction-policies-recomputing-vs-loadoffload"><a class="toclink" href="#eviction-policies-recomputing-vs-loadoffload">Eviction Policies: Recomputing vs Load/Offload</a></h3>
 <p>When GPU memory insufficient for full radix tree:</p>
 <h4 id="recomputation-approach"><a class="toclink" href="#recomputation-approach">Recomputation Approach</a></h4>
-<p><strong>Time cost</strong>: 
+<p><strong>Time cost</strong>:
 $$T_{recompute} = \frac{2pP_{model}}{Compute}$$</p>
 <h4 id="loadoffload-approach"><a class="toclink" href="#loadoffload-approach">Load/Offload Approach</a></h4>
 <p><strong>Time cost</strong>:
@@ -221,7 +227,7 @@ $$T_{load} = \frac{2 \times dtype \times \frac{D_{model}}{GQA} \times L \times p
 <h2 id="flashattention-memory-efficient-attention"><a class="toclink" href="#flashattention-memory-efficient-attention">FlashAttention: Memory-Efficient Attention</a></h2>
 <h3 id="problem-with-standard-attention"><a class="toclink" href="#problem-with-standard-attention">Problem with Standard Attention</a></h3>
 <ul>
-<li><strong>Large intermediate matrices</strong>: Seq_len  imes Seq_len attention scores</li>
+<li><strong>Large intermediate matrices</strong>: Seq_len imes Seq_len attention scores</li>
 <li><strong>Memory bottleneck</strong>: Quadratic memory growth with sequence length</li>
 </ul>
 <h3 id="softmax-numerical-stability"><a class="toclink" href="#softmax-numerical-stability">Softmax Numerical Stability</a></h3>
@@ -232,11 +238,13 @@ $$sm(x_i) = \frac{e^{x_i-c}}{\sum_{j=1}^d e^{x_j-c}}$$</p>
 <p>Where c = max(x_i) prevents overflow.</p>
 <h3 id="flashattention-algorithm"><a class="toclink" href="#flashattention-algorithm">FlashAttention Algorithm</a></h3>
 <p><strong>Key Innovation</strong>: Tile-based computation with online softmax</p>
-<p><strong>Steps</strong>:
-1. <strong>Tiling</strong>: Divide Q, K, V into blocks that fit in SRAM
-2. <strong>Block-wise computation</strong>: Compute attention for each block pair
-3. <strong>Online aggregation</strong>: Maintain running statistics (max, sum) across blocks
-4. <strong>Rescaling</strong>: Properly combine results from different blocks</p>
+<p><strong>Steps</strong>:</p>
+<ol>
+<li><strong>Tiling</strong>: Divide Q, K, V into blocks that fit in SRAM</li>
+<li><strong>Block-wise computation</strong>: Compute attention for each block pair</li>
+<li><strong>Online aggregation</strong>: Maintain running statistics (max, sum) across blocks</li>
+<li><strong>Rescaling</strong>: Properly combine results from different blocks</li>
+</ol>
 <p><strong>Memory hierarchy utilization</strong>:</p>
 <ul>
 <li><strong>SRAM</strong>: Fast, limited capacity for active blocks</li>

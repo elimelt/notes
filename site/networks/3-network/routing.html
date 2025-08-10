@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forwarding Table vs. Routing Table | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Forwarding Table vs. Routing Table</title>
     <meta name="description" content="Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP ">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/3-network/routing.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Forwarding Table vs. Routing Table">
-    <meta property="og:description" content="Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP ">
-    <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/routing.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Forwarding Table vs. Routing Table">
-    <meta name="twitter:description" content="Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP ">
-
-    <meta name="keywords" content="routing table,forwarding table,mac address,routing protocols,network topology">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Forwarding Table vs. Routing Table", "dateModified": "2025-02-11T20:48:08.476199", "description": "Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP ", "url": "https://notes.elimelt.com/networks/3-network/routing.html", "articleSection": "Networks", "keywords": "routing table,forwarding table,mac address,routing protocols,network topology"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Forwarding Table vs. Routing Table", "dateModified": "2025-02-11T20:48:08.476199", "description": "Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP ", "url": "https://notes.elimelt.com/networks/3-network/routing.html", "articleSection": "Networks", "keywords": "routing table,forwarding table,mac address,routing protocols,network topology"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Forwarding Table vs. Routing Table
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Forwarding Table vs. Routing Table</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Forwarding Table vs. Routing Table</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:48:08.476199">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/networks.html">Networks</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="_1"><a class="toclink" href="#_1"></a></h1>
+    <main class="content">
+        <h1>Forwarding Table vs. Routing Table</h1>
+        <h1 id="_1"><a class="toclink" href="#_1"></a></h1>
 <p>Routers are devices within a network that handle forwarding packets out of the network. They use a <strong>routing table</strong> to determine the best path for a packet to reach its destination. The routing table contains information about known networks, including the next hop router to reach them.</p>
 <h2 id="forwarding-table-vs-routing-table"><a class="toclink" href="#forwarding-table-vs-routing-table">Forwarding Table vs. Routing Table</a></h2>
 <p><strong>1. Scope:</strong></p>
@@ -267,19 +189,10 @@ while (N != M):
 <h4 id="metrics"><a class="toclink" href="#metrics">Metrics</a></h4>
 <p>The ARPANET tested different approaches to link-cost calculation. The original metric measured queued packets on each link, but it didn't consider bandwidth or latency. A later version used delay as a measure of load, taking into account link bandwidth and latency. However, it suffered from instability under heavy load and had a large range of link values. A third approach compressed the metric range, accounted for link type, and smoothed the variation over time.</p>
 <p>In real-world network deployments, metrics change rarely, if at all, and only under the control of a network administrator. Static metrics are the norm, with a common approach being to use a constant multiplied by (1/link_bandwidth).</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/forwarding%20table.html">forwarding table</a>
-                <a href="/tags/mac%20address.html">mac address</a>
-                <a href="/tags/network%20topology.html">network topology</a>
-                <a href="/tags/routing%20protocols.html">routing protocols</a>
-                <a href="/tags/routing%20table.html">routing table</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

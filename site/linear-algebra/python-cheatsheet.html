@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Linear Algebra Cheatsheet | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Python Linear Algebra Cheatsheet</title>
     <meta name="description" content="Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and sys">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/linear-algebra/python-cheatsheet.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Python Linear Algebra Cheatsheet">
-    <meta property="og:description" content="Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and sys">
-    <meta property="og:url" content="https://notes.elimelt.com/linear-algebra/python-cheatsheet.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Python Linear Algebra Cheatsheet">
-    <meta name="twitter:description" content="Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and sys">
-
-    <meta name="keywords" content="linear algebra,matrix theory,vector spaces">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Python Linear Algebra Cheatsheet", "dateModified": "2025-02-11T20:00:58.047140", "description": "Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and sys", "url": "https://notes.elimelt.com/linear-algebra/python-cheatsheet.html", "articleSection": "Linear Algebra", "keywords": "linear algebra,matrix theory,vector spaces"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Python Linear Algebra Cheatsheet", "dateModified": "2025-02-11T20:00:58.047140", "description": "Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and sys", "url": "https://notes.elimelt.com/linear-algebra/python-cheatsheet.html", "articleSection": "Linear Algebra", "keywords": "linear algebra,matrix theory,vector spaces"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/linear%20algebra.html">Linear Algebra</a> » Python Linear Algebra Cheatsheet
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/linear%20algebra.html">Linear Algebra</a> » Python Linear Algebra Cheatsheet</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Python Linear Algebra Cheatsheet</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:00:58.047140">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="fundamentals-of-vectors"><a class="toclink" href="#fundamentals-of-vectors">Fundamentals of Vectors</a></h1>
+    <main class="content">
+        <h1>Python Linear Algebra Cheatsheet</h1>
+        <h1 id="fundamentals-of-vectors"><a class="toclink" href="#fundamentals-of-vectors">Fundamentals of Vectors</a></h1>
 <h2 id="working-with-vectors-in-numpy"><a class="toclink" href="#working-with-vectors-in-numpy">Working with Vectors in NumPy</a></h2>
 <pre><code class="language-py">import numpy as np
 </code></pre>
@@ -397,17 +319,10 @@ is_orthonormal_matrix = lambda A: is_orthogonal_matrix(A) and np.allclose(np.lin
 <pre><code class="language-python"># change of basis matrix
 change_of_basis = lambda B, C: np.linalg.inv(C) @ B
 </code></pre>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/linear%20algebra.html">linear algebra</a>
-                <a href="/tags/matrix%20theory.html">matrix theory</a>
-                <a href="/tags/vector%20spaces.html">vector spaces</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mathematical Induction and Pigeonhole Principle Proofs | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Mathematical Induction and Pigeonhole Principle Proofs</title>
     <meta name="description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/algorithms/induction.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Mathematical Induction and Pigeonhole Principle Proofs">
-    <meta property="og:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num">
-    <meta property="og:url" content="https://notes.elimelt.com/algorithms/induction.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Mathematical Induction and Pigeonhole Principle Proofs">
-    <meta name="twitter:description" content="This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num">
-
-    <meta name="keywords" content="induction,pigeonhole principle,proof techniques">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Mathematical Induction and Pigeonhole Principle Proofs", "dateModified": "2025-05-10T14:42:09.251543", "description": "This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num", "url": "https://notes.elimelt.com/algorithms/induction.html", "articleSection": "Algorithms", "keywords": "induction,pigeonhole principle,proof techniques"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Mathematical Induction and Pigeonhole Principle Proofs", "dateModified": "2025-05-10T14:42:09.251543", "description": "This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural num", "url": "https://notes.elimelt.com/algorithms/induction.html", "articleSection": "Algorithms", "keywords": "induction,pigeonhole principle,proof techniques"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Mathematical Induction and Pigeonhole Principle Proofs
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Mathematical Induction and Pigeonhole Principle Proofs</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Mathematical Induction and Pigeonhole Principle Proofs</h1>
-            <div class="meta">
-                <time datetime="2025-05-10T14:42:09.251543">
-                    Last modified: 2025-05-10
-                </time>
-                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="induction"><a class="toclink" href="#induction">Induction</a></h1>
+    <main class="content">
+        <h1>Mathematical Induction and Pigeonhole Principle Proofs</h1>
+        <h1 id="induction"><a class="toclink" href="#induction">Induction</a></h1>
 <p>Prove...</p>
 <p>$$
 \forall n \in \mathbb{N}, \sum^{n}_{i = 1} i = \frac{n(n + 1)}{2}
@@ -126,17 +48,10 @@ $$</p>
 <p>Finally, if $b_1$ has no balls, throw away an arbitrary ball and call $P(n - 1)$ on $b_2, \ldots, b_n$</p>
 <h3 id="generally"><a class="toclink" href="#generally">Generally</a></h3>
 <p>With this type of induction, start with $P(n)$, and reduce to $P(n - 1)$.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/induction.html">induction</a>
-                <a href="/tags/pigeonhole%20principle.html">pigeonhole principle</a>
-                <a href="/tags/proof%20techniques.html">proof techniques</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

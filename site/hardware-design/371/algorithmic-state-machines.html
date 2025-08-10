@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algorithmic State Machines | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Algorithmic State Machines</title>
     <meta name="description" content="What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/hardware-design/371/algorithmic-state-machines.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Algorithmic State Machines">
-    <meta property="og:description" content="What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?">
-    <meta property="og:url" content="https://notes.elimelt.com/hardware-design/371/algorithmic-state-machines.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Algorithmic State Machines">
-    <meta name="twitter:description" content="What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?">
-
-    <meta name="keywords" content="systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Algorithmic State Machines", "dateModified": "2025-05-07T16:15:38.687185", "description": "What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?", "url": "https://notes.elimelt.com/hardware-design/371/algorithmic-state-machines.html", "articleSection": "Hardware", "keywords": "systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Algorithmic State Machines", "dateModified": "2025-05-07T16:15:38.687185", "description": "What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?", "url": "https://notes.elimelt.com/hardware-design/371/algorithmic-state-machines.html", "articleSection": "Hardware", "keywords": "systemverilog,fsm,asmd,state machine,hardware design,datapath,pipeline parallelism"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Algorithmic State Machines
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Algorithmic State Machines</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Algorithmic State Machines</h1>
-            <div class="meta">
-                <time datetime="2025-05-07T16:15:38.687185">
-                    Last modified: 2025-05-07
-                </time>
-                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="algorithmic-state-machines"><a class="toclink" href="#algorithmic-state-machines">Algorithmic State Machines</a></h1>
+    <main class="content">
+        <h1>Algorithmic State Machines</h1>
+        <h1 id="algorithmic-state-machines"><a class="toclink" href="#algorithmic-state-machines">Algorithmic State Machines</a></h1>
 <h2 id="review-finite-state-machines-fsms"><a class="toclink" href="#review-finite-state-machines-fsms">Review: Finite State Machines (FSMs)</a></h2>
 <p>State machines are defined as a set of states, transitions, and outputs. You can use them to model the behavior of systems with <strong>finite, discrete states</strong>. They are pretty much the bread and butter of hardware design, but can also be used in software (e.g. state machines pattern).</p>
 <h3 id="mealy-vs-moore"><a class="toclink" href="#mealy-vs-moore">Mealy vs. Moore</a></h3>
@@ -260,21 +182,10 @@ module datapath #(parameter W=4)(
 
 endmodule // datapath
 </code></pre>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/asmd.html">asmd</a>
-                <a href="/tags/datapath.html">datapath</a>
-                <a href="/tags/fsm.html">fsm</a>
-                <a href="/tags/hardware%20design.html">hardware design</a>
-                <a href="/tags/pipeline%20parallelism.html">pipeline parallelism</a>
-                <a href="/tags/state%20machine.html">state machine</a>
-                <a href="/tags/systemverilog.html">systemverilog</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

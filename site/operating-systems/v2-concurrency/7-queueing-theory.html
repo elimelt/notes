@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Queueing Theory | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Queueing Theory</title>
     <meta name="description" content="Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arriva">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v2-concurrency/7-queueing-theory.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Queueing Theory">
-    <meta property="og:description" content="Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arriva">
-    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v2-concurrency/7-queueing-theory.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Queueing Theory">
-    <meta name="twitter:description" content="Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arriva">
-
-    <meta name="keywords" content="queueing theory,systems,performance analysis">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Queueing Theory", "dateModified": "2025-02-11T20:49:47.785271", "description": "Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arriva", "url": "https://notes.elimelt.com/operating-systems/v2-concurrency/7-queueing-theory.html", "articleSection": "Systems", "keywords": "queueing theory,systems,performance analysis"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Queueing Theory", "dateModified": "2025-02-11T20:49:47.785271", "description": "Covers the fundamental concepts of queueing theory, including definitions, Little's Law, and analysis of response time versus utilization under different arriva", "url": "https://notes.elimelt.com/operating-systems/v2-concurrency/7-queueing-theory.html", "articleSection": "Systems", "keywords": "queueing theory,systems,performance analysis"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » Queueing Theory
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/systems.html">Systems</a> » Queueing Theory</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Queueing Theory</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:49:47.785271">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/systems.html">Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="queueing-theory"><a class="toclink" href="#queueing-theory">Queueing Theory</a></h1>
+    <main class="content">
+        <h1>Queueing Theory</h1>
+        <h1 id="queueing-theory"><a class="toclink" href="#queueing-theory">Queueing Theory</a></h1>
 <p>Simplifying assumptions:</p>
 <ul>
 <li><strong>Work preserving</strong>: The system will eventually process all requests.</li>
@@ -179,17 +101,10 @@ $$</p>
 R = \frac{S}{1 - U}
 $$</p>
 <p>This shows the exponential relationship between response time and utilization. As utilization increases, response time increases very slowly at first, but then increases rapidly as the system approaches overload.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/performance%20analysis.html">performance analysis</a>
-                <a href="/tags/queueing%20theory.html">queueing theory</a>
-                <a href="/tags/systems.html">systems</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

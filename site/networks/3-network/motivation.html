@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motivation behind the Network Layer | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Motivation behind the Network Layer</title>
     <meta name="description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/3-network/motivation.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Motivation behind the Network Layer">
-    <meta property="og:description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an">
-    <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/motivation.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Motivation behind the Network Layer">
-    <meta name="twitter:description" content="Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an">
-
-    <meta name="keywords" content="network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Motivation behind the Network Layer", "dateModified": "2025-02-11T20:48:02.162658", "description": "Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an", "url": "https://notes.elimelt.com/networks/3-network/motivation.html", "articleSection": "Networks", "keywords": "network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Motivation behind the Network Layer", "dateModified": "2025-02-11T20:48:02.162658", "description": "Covers the motivation behind the network layer, including the shortcomings of the link layer, the network layer approach, and the distinction between routing an", "url": "https://notes.elimelt.com/networks/3-network/motivation.html", "articleSection": "Networks", "keywords": "network layer,link layer,hierarchical addressing,ip protocol,congestion control,quality of service,routing,forwarding"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Motivation behind the Network Layer
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Motivation behind the Network Layer</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Motivation behind the Network Layer</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:48:02.162658">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/networks.html">Networks</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="motivation-behind-the-network-layer"><a class="toclink" href="#motivation-behind-the-network-layer">Motivation behind the Network Layer</a></h1>
+    <main class="content">
+        <h1>Motivation behind the Network Layer</h1>
+        <h1 id="motivation-behind-the-network-layer"><a class="toclink" href="#motivation-behind-the-network-layer">Motivation behind the Network Layer</a></h1>
 <p>We can already build networks using the link layer using packet forwarding, but this doesn't scale well. The network layer allows you to connect multiple networks together, allowing for transparent communication between different link layer technologies.</p>
 <h2 id="shortcomings-of-the-link-layer"><a class="toclink" href="#shortcomings-of-the-link-layer">Shortcomings of the Link Layer</a></h2>
 <ul>
@@ -134,22 +56,10 @@
 </li>
 <li>Routing Algorithms</li>
 </ul>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/congestion%20control.html">congestion control</a>
-                <a href="/tags/forwarding.html">forwarding</a>
-                <a href="/tags/hierarchical%20addressing.html">hierarchical addressing</a>
-                <a href="/tags/ip%20protocol.html">ip protocol</a>
-                <a href="/tags/link%20layer.html">link layer</a>
-                <a href="/tags/network%20layer.html">network layer</a>
-                <a href="/tags/quality%20of%20service.html">quality of service</a>
-                <a href="/tags/routing.html">routing</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

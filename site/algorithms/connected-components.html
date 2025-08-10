@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finding Connected Components in Undirected Graphs Using BFS/DFS | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Finding Connected Components in Undirected Graphs Using BFS/DFS</title>
     <meta name="description" content="Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementat">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/algorithms/connected-components.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Finding Connected Components in Undirected Graphs Using BFS/DFS">
-    <meta property="og:description" content="Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementat">
-    <meta property="og:url" content="https://notes.elimelt.com/algorithms/connected-components.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Finding Connected Components in Undirected Graphs Using BFS/DFS">
-    <meta name="twitter:description" content="Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementat">
-
-    <meta name="keywords" content="graph theory,connected components,breadth-first search,depth-first search">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Finding Connected Components in Undirected Graphs Using BFS/DFS", "dateModified": "2025-02-11T16:41:49.790891", "description": "Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementat", "url": "https://notes.elimelt.com/algorithms/connected-components.html", "articleSection": "Algorithms", "keywords": "graph theory,connected components,breadth-first search,depth-first search"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Finding Connected Components in Undirected Graphs Using BFS/DFS", "dateModified": "2025-02-11T16:41:49.790891", "description": "Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementat", "url": "https://notes.elimelt.com/algorithms/connected-components.html", "articleSection": "Algorithms", "keywords": "graph theory,connected components,breadth-first search,depth-first search"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Finding Connected Components in Undirected Graphs Using BFS/DFS
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Finding Connected Components in Undirected Graphs Using BFS/DFS</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Finding Connected Components in Undirected Graphs Using BFS/DFS</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:41:49.790891">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="connected-components"><a class="toclink" href="#connected-components">Connected Components</a></h1>
+    <main class="content">
+        <h1>Finding Connected Components in Undirected Graphs Using BFS/DFS</h1>
+        <h1 id="connected-components"><a class="toclink" href="#connected-components">Connected Components</a></h1>
 <p>Given an undirected graph $G = (V, E)$, you can find partition $V$ into sets of connected components $C_1, C_2, \ldots$ in $O(|V| + |E|)$ using breadth-first search (BFS) or depth-first search (DFS).</p>
 <p>In other words, we can create a data structure from $G$ such that given two vertices $u, v \in V$, we  we answer whether there exists a path from $u \to v$ in $O(1)$ time and $O(|V|)$ space.</p>
 <p>The basic idea is to run a BFS/DFS starting at every vertex, and to assign a label to each vertex we visit during this traversal. We can use an array (if vertices are numbered) or hash map to store the vertex to component set mapping $V \to C_i$</p>
@@ -137,18 +59,10 @@ def component_sets(G):
 </code></pre>
 <h2 id="strategy-for-unconnected-graph"><a class="toclink" href="#strategy-for-unconnected-graph">Strategy for Unconnected Graph</a></h2>
 <p>In general, if you are solving a graph problem you should first assume your graph is fully connected, and then after you've found a solution for connected graphs, you can run your algorithm on all the connected components of your graph.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/breadth-first%20search.html">breadth-first search</a>
-                <a href="/tags/connected%20components.html">connected components</a>
-                <a href="/tags/depth-first%20search.html">depth-first search</a>
-                <a href="/tags/graph%20theory.html">graph theory</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

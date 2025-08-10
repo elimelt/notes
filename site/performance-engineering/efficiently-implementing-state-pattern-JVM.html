@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JVM Performance with State Pattern Optimizations | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>JVM Performance with State Pattern Optimizations</title>
     <meta name="description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/performance-engineering/efficiently-implementing-state-pattern-JVM.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="JVM Performance with State Pattern Optimizations">
-    <meta property="og:description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ">
-    <meta property="og:url" content="https://notes.elimelt.com/performance-engineering/efficiently-implementing-state-pattern-JVM.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="JVM Performance with State Pattern Optimizations">
-    <meta name="twitter:description" content="Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ">
-
-    <meta name="keywords" content="jvm,state pattern,performance optimization,multithreading,atomic reference,lazy evaluation">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "JVM Performance with State Pattern Optimizations", "dateModified": "2025-02-11T20:49:57.925264", "description": "Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ", "url": "https://notes.elimelt.com/performance-engineering/efficiently-implementing-state-pattern-JVM.html", "articleSection": "Performance Engineering", "keywords": "jvm,state pattern,performance optimization,multithreading,atomic reference,lazy evaluation"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "JVM Performance with State Pattern Optimizations", "dateModified": "2025-02-11T20:49:57.925264", "description": "Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and ", "url": "https://notes.elimelt.com/performance-engineering/efficiently-implementing-state-pattern-JVM.html", "articleSection": "Performance Engineering", "keywords": "jvm,state pattern,performance optimization,multithreading,atomic reference,lazy evaluation"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/performance%20engineering.html">Performance Engineering</a> » JVM Performance with State Pattern Optimizations
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/performance%20engineering.html">Performance Engineering</a> » JVM Performance with State Pattern Optimizations</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>JVM Performance with State Pattern Optimizations</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:49:57.925264">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/performance%20engineering.html">Performance Engineering</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="jvm-performance-with-state-pattern-optimizations"><a class="toclink" href="#jvm-performance-with-state-pattern-optimizations">JVM Performance with State Pattern Optimizations</a></h1>
+    <main class="content">
+        <h1>JVM Performance with State Pattern Optimizations</h1>
+        <h1 id="jvm-performance-with-state-pattern-optimizations"><a class="toclink" href="#jvm-performance-with-state-pattern-optimizations">JVM Performance with State Pattern Optimizations</a></h1>
 <p>I was reading some interesting code at AWS and came across an implementation of the state pattern written by one of the senior engineers on our team. If you aren't already familiar, read <a href="https://refactoring.guru/design-patterns/state">this</a>. While the problem I would usually reach to the state pattern to solve is one more concerned with logical complexity and structure, (without revealing anything in particular about the code I was reading) I was intrigued by the performance implications of the underlying implementations, especially in a multi-threaded environment.</p>
 <h2 id="the-implementations"><a class="toclink" href="#the-implementations">The Implementations</a></h2>
 <ol>
@@ -238,20 +160,10 @@ for (int i = 0; i &lt; 8; i++) {
 <p>With more threads, we expect contention to impact <code>PolymorphicStatePattern</code> more due to frequent CAS retries in AtomicReference.</p>
 <h2 id="conclusion"><a class="toclink" href="#conclusion">Conclusion</a></h2>
 <p>The low-level optimizations in <code>InlineStatePattern</code> using enums make it ideal for performance-critical, low-contention use cases. <code>PolymorphicStatePattern</code>, with its AtomicReference, offers better safety for concurrent environments but incurs a trade-off in performance due to CAS operations. Testing under these scenarios confirms that the right implementation depends on your application’s specific threading needs.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/atomic%20reference.html">atomic reference</a>
-                <a href="/tags/jvm.html">jvm</a>
-                <a href="/tags/lazy%20evaluation.html">lazy evaluation</a>
-                <a href="/tags/multithreading.html">multithreading</a>
-                <a href="/tags/performance%20optimization.html">performance optimization</a>
-                <a href="/tags/state%20pattern.html">state pattern</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedforward Neural Networks | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Feedforward Neural Networks</title>
     <meta name="description" content="Overview of neural networks (feedforward), particularly in the context of natural language processing.">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/natural-language-processing/reading/neural-networks.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Feedforward Neural Networks">
-    <meta property="og:description" content="Overview of neural networks (feedforward), particularly in the context of natural language processing.">
-    <meta property="og:url" content="https://notes.elimelt.com/natural-language-processing/reading/neural-networks.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Feedforward Neural Networks">
-    <meta name="twitter:description" content="Overview of neural networks (feedforward), particularly in the context of natural language processing.">
-
-    <meta name="keywords" content="neural networks,machine learning,natural language processing,deep learning,feedforward">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Feedforward Neural Networks", "dateModified": "2025-02-12T12:52:07.314801", "description": "Overview of neural networks (feedforward), particularly in the context of natural language processing.", "url": "https://notes.elimelt.com/natural-language-processing/reading/neural-networks.html", "articleSection": "Natural Language Processing", "keywords": "neural networks,machine learning,natural language processing,deep learning,feedforward"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Feedforward Neural Networks", "dateModified": "2025-02-12T12:52:07.314801", "description": "Overview of neural networks (feedforward), particularly in the context of natural language processing.", "url": "https://notes.elimelt.com/natural-language-processing/reading/neural-networks.html", "articleSection": "Natural Language Processing", "keywords": "neural networks,machine learning,natural language processing,deep learning,feedforward"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Feedforward Neural Networks
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Feedforward Neural Networks</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Feedforward Neural Networks</h1>
-            <div class="meta">
-                <time datetime="2025-02-12T12:52:07.314801">
-                    Last modified: 2025-02-12
-                </time>
-                <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="neural-networks"><a class="toclink" href="#neural-networks">Neural Networks</a></h1>
+    <main class="content">
+        <h1>Feedforward Neural Networks</h1>
+        <h1 id="neural-networks"><a class="toclink" href="#neural-networks">Neural Networks</a></h1>
 <p>Contrasting with MLR, neural networks are a more flexible model that can learn complex patterns in the data, even without hand-crafted features.</p>
 <h2 id="activation-functions"><a class="toclink" href="#activation-functions">Activation Functions</a></h2>
 <p>A single computational unit $z = w \cdot x + b$ is a linear function of the input $x$ with weights $w$ and bias $b$. The output $y$ is a non-linear function of $f(z)$, where $f$ is the activation function (typically one of $\tanh$, $\text{ReLU}$, or $\sigma$).</p>
@@ -246,19 +168,10 @@ $$</p>
 <li>Dropout: randomly (with probability $p$) set some hidden units to 0, then renormalize other inputs to prevent overfitting</li>
 <li>Hyperparameters: learning rate, mini-batch size, number of hidden units, number of layers, choice of activation function, etc.</li>
 </ul>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/deep%20learning.html">deep learning</a>
-                <a href="/tags/feedforward.html">feedforward</a>
-                <a href="/tags/machine%20learning.html">machine learning</a>
-                <a href="/tags/natural%20language%20processing.html">natural language processing</a>
-                <a href="/tags/neural%20networks.html">neural networks</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

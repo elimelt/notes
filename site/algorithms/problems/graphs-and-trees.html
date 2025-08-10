@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphs and Trees | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Graphs and Trees</title>
     <meta name="description" content="A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/algorithms/problems/graphs-and-trees.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Graphs and Trees">
-    <meta property="og:description" content="A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.">
-    <meta property="og:url" content="https://notes.elimelt.com/algorithms/problems/graphs-and-trees.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Graphs and Trees">
-    <meta name="twitter:description" content="A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.">
-
-    <meta name="keywords" content="graphs,trees,induction,proof by contradiction,cycle detection">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Graphs and Trees", "dateModified": "2025-02-11T16:41:49.585394", "description": "A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.", "url": "https://notes.elimelt.com/algorithms/problems/graphs-and-trees.html", "articleSection": "Algorithms", "keywords": "graphs,trees,induction,proof by contradiction,cycle detection"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Graphs and Trees", "dateModified": "2025-02-11T16:41:49.585394", "description": "A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.", "url": "https://notes.elimelt.com/algorithms/problems/graphs-and-trees.html", "articleSection": "Algorithms", "keywords": "graphs,trees,induction,proof by contradiction,cycle detection"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Graphs and Trees
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Graphs and Trees</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Graphs and Trees</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:41:49.585394">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="graphs-and-trees"><a class="toclink" href="#graphs-and-trees">Graphs and Trees</a></h1>
+    <main class="content">
+        <h1>Graphs and Trees</h1>
+        <h1 id="graphs-and-trees"><a class="toclink" href="#graphs-and-trees">Graphs and Trees</a></h1>
 <h2 id="problem-1"><a class="toclink" href="#problem-1">Problem 1</a></h2>
 <p>Let $G$ be a tree. Use induction to prove that the number of leaves of $G$ is at least the number of vertices of degree at least $3$ in $G$.</p>
 <h4 id="solution"><a class="toclink" href="#solution">Solution</a></h4>
@@ -120,19 +42,10 @@
 <p>Since $G$ has no cycles, it is a tree.</p>
 <p>Claim: The sum of the degrees of all vertices in a graph is equal to twice the number of edges.</p>
 <p>Proof: Each edge contributes $1$ to the degree of two vertices, so the sum of the degrees of all vertices is twice the number of edges.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/cycle%20detection.html">cycle detection</a>
-                <a href="/tags/graphs.html">graphs</a>
-                <a href="/tags/induction.html">induction</a>
-                <a href="/tags/proof%20by%20contradiction.html">proof by contradiction</a>
-                <a href="/tags/trees.html">trees</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

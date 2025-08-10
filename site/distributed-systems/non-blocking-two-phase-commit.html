@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Non-Blocking Two Phase Commit | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Non-Blocking Two Phase Commit</title>
     <meta name="description" content="Explains the concept of non-blocking two phase commit using Paxos">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/non-blocking-two-phase-commit.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Non-Blocking Two Phase Commit">
-    <meta property="og:description" content="Explains the concept of non-blocking two phase commit using Paxos">
-    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/non-blocking-two-phase-commit.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Non-Blocking Two Phase Commit">
-    <meta name="twitter:description" content="Explains the concept of non-blocking two phase commit using Paxos">
-
-    <meta name="keywords" content="paxos,two-phase commit,distributed transactions,consistency models">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Non-Blocking Two Phase Commit", "dateModified": "2025-02-11T16:42:07.849895", "description": "Explains the concept of non-blocking two phase commit using Paxos", "url": "https://notes.elimelt.com/distributed-systems/non-blocking-two-phase-commit.html", "articleSection": "Distributed Systems", "keywords": "paxos,two-phase commit,distributed transactions,consistency models"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Non-Blocking Two Phase Commit", "dateModified": "2025-02-11T16:42:07.849895", "description": "Explains the concept of non-blocking two phase commit using Paxos", "url": "https://notes.elimelt.com/distributed-systems/non-blocking-two-phase-commit.html", "articleSection": "Distributed Systems", "keywords": "paxos,two-phase commit,distributed transactions,consistency models"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Non-Blocking Two Phase Commit
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Non-Blocking Two Phase Commit</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Non-Blocking Two Phase Commit</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:42:07.849895">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="non-blocking-two-phase-commit"><a class="toclink" href="#non-blocking-two-phase-commit">Non-Blocking Two Phase Commit</a></h1>
+    <main class="content">
+        <h1>Non-Blocking Two Phase Commit</h1>
+        <h1 id="non-blocking-two-phase-commit"><a class="toclink" href="#non-blocking-two-phase-commit">Non-Blocking Two Phase Commit</a></h1>
 <p>Regular 2PC is blocking because we need to wait for <strong>all</strong> nodes to agree that an operation is commit-able. There are massive performance implications to read-only transactions (could fix with snapshot reads) and lock contention. We can fix this by relying on Paxos.</p>
 <p>We make the coordinator as well as each participant a Paxos group with its own shard, and then we can just wait until all groups agree to an operation.</p>
 <h2 id="2pc-on-paxos"><a class="toclink" href="#2pc-on-paxos">2PC on Paxos</a></h2>
@@ -139,18 +61,10 @@
 <h2 id="googles-bigtable-in-retrospect"><a class="toclink" href="#googles-bigtable-in-retrospect">Google's Bigtable in Retrospect</a></h2>
 <p>Jeff Dean of Google said that not supporting distributed transactions was the biggest mistake in the the design of Bigtable. Incremental updates make it a very important feature, so users really wanted them and often tried to implement it themselves on top of Bigtable</p>
 <p>Spanner, Google's multi-datacenter KV store uses 2PC over Paxos, and is one of the backbones of Google's ad service.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/consistency%20models.html">consistency models</a>
-                <a href="/tags/distributed%20transactions.html">distributed transactions</a>
-                <a href="/tags/paxos.html">paxos</a>
-                <a href="/tags/two-phase%20commit.html">two-phase commit</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

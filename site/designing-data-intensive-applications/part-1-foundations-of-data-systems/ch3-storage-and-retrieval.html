@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Storage and Retrieval Techniques for Database Systems | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Storage and Retrieval Techniques for Database Systems</title>
     <meta name="description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Storage and Retrieval Techniques for Database Systems">
-    <meta property="og:description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and">
-    <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Storage and Retrieval Techniques for Database Systems">
-    <meta name="twitter:description" content="Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and">
-
-    <meta name="keywords" content="data structures,indexing,oltp vs olap,column-oriented storage">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Storage and Retrieval Techniques for Database Systems", "dateModified": "2025-01-01T04:29:39.285544", "description": "Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and", "url": "https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html", "articleSection": "Database Systems", "keywords": "data structures,indexing,oltp vs olap,column-oriented storage"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Storage and Retrieval Techniques for Database Systems", "dateModified": "2025-01-01T04:29:39.285544", "description": "Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and", "url": "https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval.html", "articleSection": "Database Systems", "keywords": "data structures,indexing,oltp vs olap,column-oriented storage"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Storage and Retrieval Techniques for Database Systems
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Storage and Retrieval Techniques for Database Systems</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Storage and Retrieval Techniques for Database Systems</h1>
-            <div class="meta">
-                <time datetime="2025-01-01T04:29:39.285544">
-                    Last modified: 2025-01-01
-                </time>
-                <span>Category: <a href="/categories/database%20systems.html">Database Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="chapter-3"><a class="toclink" href="#chapter-3">Chapter 3</a></h1>
+    <main class="content">
+        <h1>Storage and Retrieval Techniques for Database Systems</h1>
+        <h1 id="chapter-3"><a class="toclink" href="#chapter-3">Chapter 3</a></h1>
 <h2 id="storage-and-retrieval"><a class="toclink" href="#storage-and-retrieval">Storage and Retrieval</a></h2>
 <pre><code class="language-bash">#!/bin/bash
 
@@ -191,18 +113,10 @@ GROUP BY
 <p><strong>Materialized views</strong> are precomputed joins and aggregations. They are good for speeding up queries, but can be expensive to maintain. They are often used in data warehouses, where the data is read-heavy, and the cost of maintaining the materialized views is amortized over many queries.</p>
 <p><strong>Data cubes</strong> are a way to precompute aggregations over multiple dimensions. They are good for speeding up queries, but can be expensive to maintain. Essentially a multi-dimensional array, where each cell is an aggregation over a subset of the dimensions. Very expensive to maintain, and inflexible for queries that aren't covered by the precomputed aggregations.</p>
 <p>Oftentimes, it makes more sense to store raw data, and then benchmark queries to see which ones are slow, and then precompute aggregations for those queries if they need to be faster.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/column-oriented%20storage.html">column-oriented storage</a>
-                <a href="/tags/data%20structures.html">data structures</a>
-                <a href="/tags/indexing.html">indexing</a>
-                <a href="/tags/oltp%20vs%20olap.html">oltp vs olap</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clocks | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Clocks</title>
     <meta name="description" content="Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/clocks.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Clocks">
-    <meta property="og:description" content="Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.">
-    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/clocks.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Clocks">
-    <meta name="twitter:description" content="Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.">
-
-    <meta name="keywords" content="clocks,distributed systems,logical clocks,vector clocks,causality,consistency">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Clocks", "dateModified": "2025-02-11T16:42:07.874013", "description": "Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.", "url": "https://notes.elimelt.com/distributed-systems/clocks.html", "articleSection": "Distributed Systems", "keywords": "clocks,distributed systems,logical clocks,vector clocks,causality,consistency"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Clocks", "dateModified": "2025-02-11T16:42:07.874013", "description": "Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.", "url": "https://notes.elimelt.com/distributed-systems/clocks.html", "articleSection": "Distributed Systems", "keywords": "clocks,distributed systems,logical clocks,vector clocks,causality,consistency"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Clocks
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Clocks</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Clocks</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:42:07.874013">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="clocks"><a class="toclink" href="#clocks">Clocks</a></h1>
+    <main class="content">
+        <h1>Clocks</h1>
+        <h1 id="clocks"><a class="toclink" href="#clocks">Clocks</a></h1>
 <p>There are two main approaches to time in a distributed system: <strong>physical clocks</strong> and <strong>virtual (logical) clocks</strong>.</p>
 <h2 id="physical-clocks"><a class="toclink" href="#physical-clocks">Physical Clocks</a></h2>
 <p>Actual clocks running in most computers drift apart by ~30 ppm due to their temperature sensitivity. Although more accurate clocks (atomic, GPS, etc.) are available, they are expensive and are only <em>maybe</em> present in some data centers.</p>
@@ -193,20 +115,10 @@
   }
 }
 </code></pre>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/causality.html">causality</a>
-                <a href="/tags/clocks.html">clocks</a>
-                <a href="/tags/consistency.html">consistency</a>
-                <a href="/tags/distributed%20systems.html">distributed systems</a>
-                <a href="/tags/logical%20clocks.html">logical clocks</a>
-                <a href="/tags/vector%20clocks.html">vector clocks</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

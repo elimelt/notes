@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distributed Computing for Data Mining | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Distributed Computing for Data Mining</title>
     <meta name="description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/recc-sys/intro-mapreduce-spark.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Distributed Computing for Data Mining">
-    <meta property="og:description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used">
-    <meta property="og:url" content="https://notes.elimelt.com/recc-sys/intro-mapreduce-spark.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Distributed Computing for Data Mining">
-    <meta name="twitter:description" content="Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used">
-
-    <meta name="keywords" content="data mining,distributed file systems,commodity hardware,mapreduce,hadoop,storage infrastructure,computation infrastructure">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Computing for Data Mining", "dateModified": "2025-02-11T19:55:38.830984", "description": "Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used", "url": "https://notes.elimelt.com/recc-sys/intro-mapreduce-spark.html", "articleSection": "Distributed Systems", "keywords": "data mining,distributed file systems,commodity hardware,mapreduce,hadoop,storage infrastructure,computation infrastructure"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Distributed Computing for Data Mining", "dateModified": "2025-02-11T19:55:38.830984", "description": "Focuses on distributed computing approaches for data mining, specifically exploring how MapReduce and Resilient Distributed Datasets (RDDs) in Spark can be used", "url": "https://notes.elimelt.com/recc-sys/intro-mapreduce-spark.html", "articleSection": "Distributed Systems", "keywords": "data mining,distributed file systems,commodity hardware,mapreduce,hadoop,storage infrastructure,computation infrastructure"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Distributed Computing for Data Mining
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Distributed Computing for Data Mining</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Distributed Computing for Data Mining</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T19:55:38.830984">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="distributed-computing-for-data-mining"><a class="toclink" href="#distributed-computing-for-data-mining">Distributed Computing for Data Mining</a></h1>
+    <main class="content">
+        <h1>Distributed Computing for Data Mining</h1>
+        <h1 id="distributed-computing-for-data-mining"><a class="toclink" href="#distributed-computing-for-data-mining">Distributed Computing for Data Mining</a></h1>
 <p>How can we extract knowledge from large data sets?</p>
 <ul>
 <li><strong>Data mining</strong>: the process of extracting actionable information from (usually) very large datasets.</li>
@@ -173,21 +95,10 @@
 <li><strong>Ease of Use</strong>: Spark is more expressive and easier to use.</li>
 <li><strong>Generality</strong>: Spark is more general, with higher-level APIs.</li>
 </ul>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/commodity%20hardware.html">commodity hardware</a>
-                <a href="/tags/computation%20infrastructure.html">computation infrastructure</a>
-                <a href="/tags/data%20mining.html">data mining</a>
-                <a href="/tags/distributed%20file%20systems.html">distributed file systems</a>
-                <a href="/tags/hadoop.html">hadoop</a>
-                <a href="/tags/mapreduce.html">mapreduce</a>
-                <a href="/tags/storage%20infrastructure.html">storage infrastructure</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

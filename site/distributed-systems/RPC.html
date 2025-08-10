@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remote Procedure Call (RPC) | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Remote Procedure Call (RPC)</title>
     <meta name="description" content="A discussion on the challenges of message passing in a distributed system, including the two generals problem.">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/RPC.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Remote Procedure Call (RPC)">
-    <meta property="og:description" content="A discussion on the challenges of message passing in a distributed system, including the two generals problem.">
-    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/RPC.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Remote Procedure Call (RPC)">
-    <meta name="twitter:description" content="A discussion on the challenges of message passing in a distributed system, including the two generals problem.">
-
-    <meta name="keywords" content="distributed systems,communication,concurrency">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Remote Procedure Call (RPC)", "dateModified": "2025-02-11T16:42:08.126420", "description": "A discussion on the challenges of message passing in a distributed system, including the two generals problem.", "url": "https://notes.elimelt.com/distributed-systems/RPC.html", "articleSection": "Distributed Systems", "keywords": "distributed systems,communication,concurrency"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Remote Procedure Call (RPC)", "dateModified": "2025-02-11T16:42:08.126420", "description": "A discussion on the challenges of message passing in a distributed system, including the two generals problem.", "url": "https://notes.elimelt.com/distributed-systems/RPC.html", "articleSection": "Distributed Systems", "keywords": "distributed systems,communication,concurrency"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Remote Procedure Call (RPC)
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Remote Procedure Call (RPC)</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Remote Procedure Call (RPC)</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:42:08.126420">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="look-into"><a class="toclink" href="#look-into">Look Into</a></h1>
+    <main class="content">
+        <h1>Remote Procedure Call (RPC)</h1>
+        <h1 id="look-into"><a class="toclink" href="#look-into">Look Into</a></h1>
 <ul>
 <li>Remote Direct Memory Access (RDMA)</li>
 <li>Network File System (NFS)</li>
@@ -237,17 +159,10 @@
 <h2 id="two-generals-problem"><a class="toclink" href="#two-generals-problem">Two Generals Problem</a></h2>
 <p>Just a thought experiment to emphasize the difficulty of message passing in a distributed system. Two generals are trying to coordinate an attack on a city. They are separated by a valley, and can only communicate by messenger. The messenger can be captured by the city, and the generals don't know if the message was delivered. The generals need to agree on a time to attack, but they can't be sure the message was delivered. They can only attack if they both agree on the time.</p>
 <p>The problem boils down to the fact that at any point in time, if we sent a message, we don't know if it was delivered. Regardless of how many round trips you make to confirm, the last message sent could always have been dropped. This is a fundamental and central problem in distributed systems.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/communication.html">communication</a>
-                <a href="/tags/concurrency.html">concurrency</a>
-                <a href="/tags/distributed%20systems.html">distributed systems</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

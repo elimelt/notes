@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spring Boot Quickstart Guide | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Spring Boot Quickstart Guide</title>
     <meta name="description" content="A step-by-step guide to creating a Spring Boot application with Rest Repositories">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/cheatsheets/java-spring-boot/running.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Spring Boot Quickstart Guide">
-    <meta property="og:description" content="A step-by-step guide to creating a Spring Boot application with Rest Repositories">
-    <meta property="og:url" content="https://notes.elimelt.com/cheatsheets/java-spring-boot/running.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Spring Boot Quickstart Guide">
-    <meta name="twitter:description" content="A step-by-step guide to creating a Spring Boot application with Rest Repositories">
-
-    <meta name="keywords" content="spring boot,quick start,spring web,rest repositories">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Spring Boot Quickstart Guide", "dateModified": "2025-02-11T16:42:33.899135", "description": "A step-by-step guide to creating a Spring Boot application with Rest Repositories", "url": "https://notes.elimelt.com/cheatsheets/java-spring-boot/running.html", "articleSection": "Software Engineering", "keywords": "spring boot,quick start,spring web,rest repositories"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Spring Boot Quickstart Guide", "dateModified": "2025-02-11T16:42:33.899135", "description": "A step-by-step guide to creating a Spring Boot application with Rest Repositories", "url": "https://notes.elimelt.com/cheatsheets/java-spring-boot/running.html", "articleSection": "Software Engineering", "keywords": "spring boot,quick start,spring web,rest repositories"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » Spring Boot Quickstart Guide
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/software%20engineering.html">Software Engineering</a> » Spring Boot Quickstart Guide</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Spring Boot Quickstart Guide</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:42:33.899135">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/software%20engineering.html">Software Engineering</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="quickstart"><a class="toclink" href="#quickstart">Quickstart</a></h1>
+    <main class="content">
+        <h1>Spring Boot Quickstart Guide</h1>
+        <h1 id="quickstart"><a class="toclink" href="#quickstart">Quickstart</a></h1>
 <p>Create a zip file with (start.spring.io)[https://start.spring.io/] including the following dependencies:</p>
 <ul>
 <li>Spring Web</li>
@@ -115,18 +37,10 @@
 <pre><code class="language-bash">./gradlew build
 cp build/libs/&lt;JAR_NAME&gt;.jar &lt;DEPLOYMENT_DIRECTORY&gt;
 </code></pre>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/quick%20start.html">quick start</a>
-                <a href="/tags/rest%20repositories.html">rest repositories</a>
-                <a href="/tags/spring%20boot.html">spring boot</a>
-                <a href="/tags/spring%20web.html">spring web</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

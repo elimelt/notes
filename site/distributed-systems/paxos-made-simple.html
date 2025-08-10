@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paxos Protocol | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Paxos Protocol</title>
     <meta name="description" content="A protocol for achieving consensus in distributed systems">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/paxos-made-simple.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Paxos Protocol">
-    <meta property="og:description" content="A protocol for achieving consensus in distributed systems">
-    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/paxos-made-simple.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Paxos Protocol">
-    <meta name="twitter:description" content="A protocol for achieving consensus in distributed systems">
-
-    <meta name="keywords" content="consensus algorithm,distributed systems,fault-tolerant systems">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Paxos Protocol", "dateModified": "2025-02-11T16:42:07.823973", "description": "A protocol for achieving consensus in distributed systems", "url": "https://notes.elimelt.com/distributed-systems/paxos-made-simple.html", "articleSection": "Distributed Systems", "keywords": "consensus algorithm,distributed systems,fault-tolerant systems"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Paxos Protocol", "dateModified": "2025-02-11T16:42:07.823973", "description": "A protocol for achieving consensus in distributed systems", "url": "https://notes.elimelt.com/distributed-systems/paxos-made-simple.html", "articleSection": "Distributed Systems", "keywords": "consensus algorithm,distributed systems,fault-tolerant systems"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Paxos Protocol
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Paxos Protocol</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Paxos Protocol</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:42:07.823973">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="paxos-made-simple"><a class="toclink" href="#paxos-made-simple">Paxos Made Simple</a></h1>
+    <main class="content">
+        <h1>Paxos Protocol</h1>
+        <h1 id="paxos-made-simple"><a class="toclink" href="#paxos-made-simple">Paxos Made Simple</a></h1>
 <p><a href="https://lamport.azurewebsites.net/pubs/paxos-simple.pdf">reading</a></p>
 <h2 id="the-consensus-algorithm"><a class="toclink" href="#the-consensus-algorithm">The Consensus Algorithm</a></h2>
 <h3 id="the-problem"><a class="toclink" href="#the-problem">The Problem</a></h3>
@@ -167,17 +89,10 @@ $$</p>
 <p>After doing so, the leader can continue proposing any further commands requested by clients. The leader is allowed to propose command $i + \alpha$ before knowing the chosen command for $i$, meaning it can get up to $\alpha - 1$ commands ahead of itself (in the case where all commands less than $i + \alpha$ were dropped).</p>
 <p>Once a leader has finished phase 1 for all commands thus far and afterwards, it only needs to complete phase 2 for each subsequent command requested, which is known to be the minimal algorithm for reaching consensus after phase 1.</p>
 <p>To reiterate what was stated previously, in the case where a single leader is not elected, progress is not guaranteed, but safety is.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/consensus%20algorithm.html">consensus algorithm</a>
-                <a href="/tags/distributed%20systems.html">distributed systems</a>
-                <a href="/tags/fault-tolerant%20systems.html">fault-tolerant systems</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

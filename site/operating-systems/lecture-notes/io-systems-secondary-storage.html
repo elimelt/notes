@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I/O Systems and Secondary Storage | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>I/O Systems and Secondary Storage</title>
     <meta name="description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="I/O Systems and Secondary Storage">
-    <meta property="og:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure">
-    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="I/O Systems and Secondary Storage">
-    <meta name="twitter:description" content="Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure">
-
-    <meta name="keywords" content="i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "I/O Systems and Secondary Storage", "dateModified": "2025-02-11T21:54:13.663995", "description": "Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html", "articleSection": "Operating Systems", "keywords": "i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "I/O Systems and Secondary Storage", "dateModified": "2025-02-11T21:54:13.663995", "description": "Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/io-systems-secondary-storage.html", "articleSection": "Operating Systems", "keywords": "i/o systems,secondary storage,device controllers,dma,system bus,pci bus,programmed i/o,device drivers"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » I/O Systems and Secondary Storage
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » I/O Systems and Secondary Storage</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>I/O Systems and Secondary Storage</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T21:54:13.663995">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="io-systems-and-secondary-storage"><a class="toclink" href="#io-systems-and-secondary-storage">I/O Systems and Secondary Storage</a></h1>
+    <main class="content">
+        <h1>I/O Systems and Secondary Storage</h1>
+        <h1 id="io-systems-and-secondary-storage"><a class="toclink" href="#io-systems-and-secondary-storage">I/O Systems and Secondary Storage</a></h1>
 <h2 id="io-system-hardware-environment"><a class="toclink" href="#io-system-hardware-environment">I/O System Hardware Environment</a></h2>
 <p>I/O devices are typically either <strong>block devices</strong>, which transfer data in fixed-size blocks, or <strong>character devices</strong>, which transfer data one character at a time in a stream.</p>
 <p><strong>Device controllers</strong> are the hardware (a mini-computer) that connects the CPU to the I/O devices. They are responsible for sending commands to the device, and for receiving and sending data to and from the device.</p>
@@ -195,22 +117,10 @@
 <p>With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $\lbrack  0, n  \rbrack$, (ie a contiguous range of blocks to the OS).</p>
 <h3 id="performance-issues"><a class="toclink" href="#performance-issues">Performance Issues</a></h3>
 <p>The HDD's performance is affected by its mechanically moving parts. Limiting the amount of seeking and <strong>defragmenting</strong> help, but only to an extent.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/device%20controllers.html">device controllers</a>
-                <a href="/tags/device%20drivers.html">device drivers</a>
-                <a href="/tags/dma.html">dma</a>
-                <a href="/tags/i/o%20systems.html">i/o systems</a>
-                <a href="/tags/pci%20bus.html">pci bus</a>
-                <a href="/tags/programmed%20i/o.html">programmed i/o</a>
-                <a href="/tags/secondary%20storage.html">secondary storage</a>
-                <a href="/tags/system%20bus.html">system bus</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processes | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Processes</title>
     <meta name="description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/processes.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Processes">
-    <meta property="og:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ">
-    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/processes.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Processes">
-    <meta name="twitter:description" content="Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ">
-
-    <meta name="keywords" content="operating systems,processes,address space,cpu state,namespace">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Processes", "dateModified": "2025-02-11T20:49:05.939934", "description": "Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/processes.html", "articleSection": "Operating Systems", "keywords": "operating systems,processes,address space,cpu state,namespace"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Processes", "dateModified": "2025-02-11T20:49:05.939934", "description": "Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the ", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/processes.html", "articleSection": "Operating Systems", "keywords": "operating systems,processes,address space,cpu state,namespace"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Processes
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Processes</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Processes</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:49:05.939934">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="processes"><a class="toclink" href="#processes">Processes</a></h1>
+    <main class="content">
+        <h1>Processes</h1>
+        <h1 id="processes"><a class="toclink" href="#processes">Processes</a></h1>
 <h2 id="what-is-a-process"><a class="toclink" href="#what-is-a-process">What is a process?</a></h2>
 <p>The OS's abstraction of a running program. A process is a program in execution.</p>
 <p>Simplest case:</p>
@@ -140,19 +62,10 @@
 <li>Operations that create processes (e.g. <code>fork</code>) returns the pid</li>
 <li>Operations on processes take pid as an argument (e.g. <code>kill</code>)</li>
 </ul>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/address%20space.html">address space</a>
-                <a href="/tags/cpu%20state.html">cpu state</a>
-                <a href="/tags/namespace.html">namespace</a>
-                <a href="/tags/operating%20systems.html">operating systems</a>
-                <a href="/tags/processes.html">processes</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

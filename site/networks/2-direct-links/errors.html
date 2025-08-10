@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error Detection and Correction | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Error Detection and Correction</title>
     <meta name="description" content="An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, in">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/2-direct-links/errors.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Error Detection and Correction">
-    <meta property="og:description" content="An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, in">
-    <meta property="og:url" content="https://notes.elimelt.com/networks/2-direct-links/errors.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Error Detection and Correction">
-    <meta name="twitter:description" content="An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, in">
-
-    <meta name="keywords" content="error detection,error correction,redundancy,codewords,probability">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Error Detection and Correction", "dateModified": "2025-02-11T20:46:07.723098", "description": "An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, in", "url": "https://notes.elimelt.com/networks/2-direct-links/errors.html", "articleSection": "Networks", "keywords": "error detection,error correction,redundancy,codewords,probability"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Error Detection and Correction", "dateModified": "2025-02-11T20:46:07.723098", "description": "An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, in", "url": "https://notes.elimelt.com/networks/2-direct-links/errors.html", "articleSection": "Networks", "keywords": "error detection,error correction,redundancy,codewords,probability"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Error Detection and Correction
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Error Detection and Correction</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Error Detection and Correction</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:46:07.723098">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/networks.html">Networks</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="error-detection-and-correction"><a class="toclink" href="#error-detection-and-correction">Error Detection and Correction</a></h1>
+    <main class="content">
+        <h1>Error Detection and Correction</h1>
+        <h1 id="error-detection-and-correction"><a class="toclink" href="#error-detection-and-correction">Error Detection and Correction</a></h1>
 <p>Some bits will inevitably be recieved in error. Noise may flip the bits recieved over the network. We need to be able to...</p>
 <ul>
 <li>detect errors</li>
@@ -222,19 +144,10 @@ $$</p>
 <li>Which is better depends on the pattern of errors. In general, error correction should be used when errors are detected and retransmission is expensive. Error detection should be used when errors are rare/unrecoverable, or when retransmission is cheap. Also used in application layer for physical storage (Reed-Solomon codes for CDs, DVDs, etc).</li>
 </ul>
 <p>Error correction is heavily used in the physical layer. Low Density Parity Check (LDPC) codes are used in 802.11, DVB, WiMAX etc, and convolutional codes are used a lot in practice. On the other hand, detection combined with retranmission is used in the data link layer and above for residual errors.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/codewords.html">codewords</a>
-                <a href="/tags/error%20correction.html">error correction</a>
-                <a href="/tags/error%20detection.html">error detection</a>
-                <a href="/tags/probability.html">probability</a>
-                <a href="/tags/redundancy.html">redundancy</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

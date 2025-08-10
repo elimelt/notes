@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Programming Algorithms and Problem Solutions Guide | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Dynamic Programming Algorithms and Problem Solutions Guide</title>
     <meta name="description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/algorithms/dynamic-programming.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Dynamic Programming Algorithms and Problem Solutions Guide">
-    <meta property="og:description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems">
-    <meta property="og:url" content="https://notes.elimelt.com/algorithms/dynamic-programming.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Dynamic Programming Algorithms and Problem Solutions Guide">
-    <meta name="twitter:description" content="A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems">
-
-    <meta name="keywords" content="dynamic programming,optimization,algorithm analysis">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Programming Algorithms and Problem Solutions Guide", "dateModified": "2025-02-11T18:54:45.969330", "description": "A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems", "url": "https://notes.elimelt.com/algorithms/dynamic-programming.html", "articleSection": "Algorithms", "keywords": "dynamic programming,optimization,algorithm analysis"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Dynamic Programming Algorithms and Problem Solutions Guide", "dateModified": "2025-02-11T18:54:45.969330", "description": "A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems", "url": "https://notes.elimelt.com/algorithms/dynamic-programming.html", "articleSection": "Algorithms", "keywords": "dynamic programming,optimization,algorithm analysis"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Dynamic Programming Algorithms and Problem Solutions Guide
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Dynamic Programming Algorithms and Problem Solutions Guide</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Dynamic Programming Algorithms and Problem Solutions Guide</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T18:54:45.969330">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="dynamic-programming"><a class="toclink" href="#dynamic-programming">Dynamic Programming</a></h1>
+    <main class="content">
+        <h1>Dynamic Programming Algorithms and Problem Solutions Guide</h1>
+        <h1 id="dynamic-programming"><a class="toclink" href="#dynamic-programming">Dynamic Programming</a></h1>
 <p><strong>Dynamic Programming</strong> is an algorithmic paradigm where you break up a problem into a series of <strong>overlapping</strong> sub-problems, building up solutions to progressively larger subproblems until the original answer is obtained. The key efficiency of DP is to <strong>memoize</strong> the answers to sub problems, often yielding a polynomial time algorithm.</p>
 <p>You can design dynamic programming algorithms by induction, with the added construct of somehow memorizing/caching previously solved problems. The key then becomes finding a valid recurrence relation that relates a given instance of the problem to its composite subproblems.</p>
 <h2 id="weighted-interval-scheduling"><a class="toclink" href="#weighted-interval-scheduling">Weighted Interval Scheduling</a></h2>
@@ -715,17 +637,10 @@ $$</p>
 <p>Let $n$ be the number of vertexes in $T$. We start by calculating the levels of each node in a BFS tree rooted at an arbitrary $v$, which takes $O(n + n - 1) = O(n)$ (since $T$ is a tree and therefore has $n - 1$ edges) time.</p>
 <p>For each call to $f(n, k)$, we solve $k \cdot n$ subproblems, each of which take a constant time to compute given that subproblems with a $k' &lt; k$ have already been solved. We only have this constant time computation since the number of children is at most $3$, since otherwise we would need to solve a number of subproblems exponential in the $deg(v)$ to check every subset of children to include. Therefore, each call takes $O(n)$ time.</p>
 <p>Since we call $f(v, k)$ on all vertices in the tree, and each call takes at most $O(n)$ time (but often performs better due to memoized answers from calls on ancestors of $v$), we have an upper bound of $O(n^2)$ on computing the overall answer, which is polynomial</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/algorithm%20analysis.html">algorithm analysis</a>
-                <a href="/tags/dynamic%20programming.html">dynamic programming</a>
-                <a href="/tags/optimization.html">optimization</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

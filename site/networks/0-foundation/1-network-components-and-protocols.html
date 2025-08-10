@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Components and Protocols | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Network Components and Protocols</title>
     <meta name="description" content="Describes the components of a network, including hosts, routers, links, and applications. It also covers the concept of network boundaries and interfaces, and t">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/0-foundation/1-network-components-and-protocols.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Network Components and Protocols">
-    <meta property="og:description" content="Describes the components of a network, including hosts, routers, links, and applications. It also covers the concept of network boundaries and interfaces, and t">
-    <meta property="og:url" content="https://notes.elimelt.com/networks/0-foundation/1-network-components-and-protocols.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Network Components and Protocols">
-    <meta name="twitter:description" content="Describes the components of a network, including hosts, routers, links, and applications. It also covers the concept of network boundaries and interfaces, and t">
-
-    <meta name="keywords" content="network components,network protocols,network layers,osi model,network interfaces,encapsulation,demultiplexing">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Network Components and Protocols", "dateModified": "2025-02-11T20:02:33.859136", "description": "Describes the components of a network, including hosts, routers, links, and applications. It also covers the concept of network boundaries and interfaces, and t", "url": "https://notes.elimelt.com/networks/0-foundation/1-network-components-and-protocols.html", "articleSection": "Networks", "keywords": "network components,network protocols,network layers,osi model,network interfaces,encapsulation,demultiplexing"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Network Components and Protocols", "dateModified": "2025-02-11T20:02:33.859136", "description": "Describes the components of a network, including hosts, routers, links, and applications. It also covers the concept of network boundaries and interfaces, and t", "url": "https://notes.elimelt.com/networks/0-foundation/1-network-components-and-protocols.html", "articleSection": "Networks", "keywords": "network components,network protocols,network layers,osi model,network interfaces,encapsulation,demultiplexing"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Network Components and Protocols
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Network Components and Protocols</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Network Components and Protocols</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:02:33.859136">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/networks.html">Networks</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="network-components"><a class="toclink" href="#network-components">Network Components</a></h1>
+    <main class="content">
+        <h1>Network Components and Protocols</h1>
+        <h1 id="network-components"><a class="toclink" href="#network-components">Network Components</a></h1>
 <h2 id="parts-of-a-network"><a class="toclink" href="#parts-of-a-network">Parts of a network</a></h2>
 <p><strong>Application</strong> (app, user) - The application is the program that is running on the computer. It is the program that is using the network to communicate with other computers. Examples of applications are web browsers, email clients etc.</p>
 <p><strong>Host</strong> (end system, edge device, node) - The host is the computer that is running the application. It is the computer that is using the network to communicate with other computers. Examples of hosts are desktop computers, laptops, mobile phones etc.</p>
@@ -256,21 +178,10 @@ Y &lt;---------------&gt; Y  &lt;- (peers)
 <li><strong>Link</strong>: Sends frames over one or more links</li>
 <li><strong>Physical</strong>: Sends bits using physical signals</li>
 </ul>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/demultiplexing.html">demultiplexing</a>
-                <a href="/tags/encapsulation.html">encapsulation</a>
-                <a href="/tags/network%20components.html">network components</a>
-                <a href="/tags/network%20interfaces.html">network interfaces</a>
-                <a href="/tags/network%20layers.html">network layers</a>
-                <a href="/tags/network%20protocols.html">network protocols</a>
-                <a href="/tags/osi%20model.html">osi model</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

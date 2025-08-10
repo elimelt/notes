@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Global Internet | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>The Global Internet</title>
     <meta name="description" content="Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/3-network/global-internet.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="The Global Internet">
-    <meta property="og:description" content="Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to">
-    <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/global-internet.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="The Global Internet">
-    <meta name="twitter:description" content="Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to">
-
-    <meta name="keywords" content="routing protocols,autonomous systems,inter-domain routing,end-user sites,service providers">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "The Global Internet", "dateModified": "2025-02-11T20:47:57.199213", "description": "Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to", "url": "https://notes.elimelt.com/networks/3-network/global-internet.html", "articleSection": "Networks", "keywords": "routing protocols,autonomous systems,inter-domain routing,end-user sites,service providers"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "The Global Internet", "dateModified": "2025-02-11T20:47:57.199213", "description": "Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to", "url": "https://notes.elimelt.com/networks/3-network/global-internet.html", "articleSection": "Networks", "keywords": "routing protocols,autonomous systems,inter-domain routing,end-user sites,service providers"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » The Global Internet
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » The Global Internet</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>The Global Internet</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:47:57.199213">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/networks.html">Networks</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="the-global-internet"><a class="toclink" href="#the-global-internet">The Global Internet</a></h1>
+    <main class="content">
+        <h1>The Global Internet</h1>
+        <h1 id="the-global-internet"><a class="toclink" href="#the-global-internet">The Global Internet</a></h1>
 <p>It isn't possible to scale to the billions of devices with routing protocols like RIP and OSPF. Both of these would require routers to maintain a complete list of all the networks in the internet, which isn't feasible.</p>
 <p>The modern internet is mainly composed of <em>end-user sites</em> and <em>service providers</em>. The end-user sites are typically collections of devices that are connected to the internet through either a single IP address (NAT in home networks), or switched ethernet in enterprise LAN settings. The service providers are the companies that provide the infrastructure for the internet, and are responsible for routing traffic between end-user sites. Service providers have many high performance routers in metro areas, connected to eachother and other service providers through high-speed links.</p>
 <h2 id="routing-areas"><a class="toclink" href="#routing-areas">Routing Areas</a></h2>
@@ -103,19 +25,10 @@
 <h2 id="inter-domain-routing"><a class="toclink" href="#inter-domain-routing">Inter-Domain Routing</a></h2>
 <p>The internet is a collection of interconnected ASes, which are independently managed and operated organizations. The routers in an AS are responsible for routing traffic within the AS, and the border routers are responsible for routing traffic between ASes. The protocol used to route traffic between ASes is called <strong>BGP</strong> (Border Gateway Protocol).</p>
 <p>See BGP.md</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/autonomous%20systems.html">autonomous systems</a>
-                <a href="/tags/end-user%20sites.html">end-user sites</a>
-                <a href="/tags/inter-domain%20routing.html">inter-domain routing</a>
-                <a href="/tags/routing%20protocols.html">routing protocols</a>
-                <a href="/tags/service%20providers.html">service providers</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

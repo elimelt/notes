@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power Dissipation In a Resistor | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Power Dissipation In a Resistor</title>
     <meta name="description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-4.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Power Dissipation In a Resistor">
-    <meta property="og:description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage">
-    <meta property="og:url" content="https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-4.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Power Dissipation In a Resistor">
-    <meta name="twitter:description" content="Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage">
-
-    <meta name="keywords" content="power dissipation,resistor,kvl,voltage source,current source">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Power Dissipation In a Resistor", "dateModified": "2025-05-10T14:45:08.886674", "description": "Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage", "url": "https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-4.html", "articleSection": "Hardware", "keywords": "power dissipation,resistor,kvl,voltage source,current source"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Power Dissipation In a Resistor", "dateModified": "2025-05-10T14:45:08.886674", "description": "Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage", "url": "https://notes.elimelt.com/signal-conditioning/lecture-notes/lecture-4.html", "articleSection": "Hardware", "keywords": "power dissipation,resistor,kvl,voltage source,current source"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Power Dissipation In a Resistor
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Power Dissipation In a Resistor</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Power Dissipation In a Resistor</h1>
-            <div class="meta">
-                <time datetime="2025-05-10T14:45:08.886674">
-                    Last modified: 2025-05-10
-                </time>
-                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="lecture-4"><a class="toclink" href="#lecture-4">Lecture 4</a></h1>
+    <main class="content">
+        <h1>Power Dissipation In a Resistor</h1>
+        <h1 id="lecture-4"><a class="toclink" href="#lecture-4">Lecture 4</a></h1>
 <h2 id="power-dissipation-in-a-resistor"><a class="toclink" href="#power-dissipation-in-a-resistor">Power Dissipation In a Resistor</a></h2>
 <p>When a resistor starts getting warm, it is leaking power.</p>
 <pre><code class="language-math">P = V * I = I^2 * R = V^2/R
@@ -144,19 +66,10 @@ ground
  phone power consumption
 
 </code></pre>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/current%20source.html">current source</a>
-                <a href="/tags/kvl.html">kvl</a>
-                <a href="/tags/power%20dissipation.html">power dissipation</a>
-                <a href="/tags/resistor.html">resistor</a>
-                <a href="/tags/voltage%20source.html">voltage source</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

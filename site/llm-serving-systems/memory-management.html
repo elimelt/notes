@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Management in LLM Serving Systems | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Memory Management in LLM Serving Systems</title>
     <meta name="description" content="Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache metho">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/memory-management.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Memory Management in LLM Serving Systems">
-    <meta property="og:description" content="Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache metho">
-    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/memory-management.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Memory Management in LLM Serving Systems">
-    <meta name="twitter:description" content="Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache metho">
-
-    <meta name="keywords" content="memory management,kv cache,prefix sharing,paged attention,flash attention,machine learning">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Memory Management in LLM Serving Systems", "dateModified": "2025-05-25T17:28:34.089529", "description": "Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache metho", "url": "https://notes.elimelt.com/llm-serving-systems/memory-management.html", "articleSection": "Machine Learning Systems", "keywords": "memory management,kv cache,prefix sharing,paged attention,flash attention,machine learning"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Memory Management in LLM Serving Systems", "dateModified": "2025-05-25T17:28:34.089529", "description": "Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache metho", "url": "https://notes.elimelt.com/llm-serving-systems/memory-management.html", "articleSection": "Machine Learning Systems", "keywords": "memory management,kv cache,prefix sharing,paged attention,flash attention,machine learning"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Memory Management in LLM Serving Systems
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Memory Management in LLM Serving Systems</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Memory Management in LLM Serving Systems</h1>
-            <div class="meta">
-                <time datetime="2025-05-25T17:28:34.089529">
-                    Last modified: 2025-05-25
-                </time>
-                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="memory-management-in-llm-serving-systems"><a class="toclink" href="#memory-management-in-llm-serving-systems">Memory Management in LLM Serving Systems</a></h1>
+    <main class="content">
+        <h1>Memory Management in LLM Serving Systems</h1>
+        <h1 id="memory-management-in-llm-serving-systems"><a class="toclink" href="#memory-management-in-llm-serving-systems">Memory Management in LLM Serving Systems</a></h1>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhuz</p>
 </blockquote>
@@ -262,20 +184,10 @@ $$sm(x_i) = \frac{e^{x_i-c}}{\sum_{j=1}^d e^{x_j-c}}$$</p>
 <li><strong>FlashAttention enables long sequences</strong> through memory-efficient tiled computation</li>
 <li><strong>Proper memory management is crucial</strong> for maximizing GPU utilization in LLM serving</li>
 </ol>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/flash%20attention.html">flash attention</a>
-                <a href="/tags/kv%20cache.html">kv cache</a>
-                <a href="/tags/machine%20learning.html">machine learning</a>
-                <a href="/tags/memory%20management.html">memory management</a>
-                <a href="/tags/paged%20attention.html">paged attention</a>
-                <a href="/tags/prefix%20sharing.html">prefix sharing</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

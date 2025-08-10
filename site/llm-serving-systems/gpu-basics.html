@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPU Architecture and Programming | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>GPU Architecture and Programming</title>
     <meta name="description" content="Overview of GPU architecture and context behind GPUs for LLM serving systems">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/gpu-basics.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="GPU Architecture and Programming">
-    <meta property="og:description" content="Overview of GPU architecture and context behind GPUs for LLM serving systems">
-    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/gpu-basics.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="GPU Architecture and Programming">
-    <meta name="twitter:description" content="Overview of GPU architecture and context behind GPUs for LLM serving systems">
-
-    <meta name="keywords" content="gpu,architecture,programming,cuda,nvidia,pytorch,triton">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-05-25T17:17:02.087821", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "url": "https://notes.elimelt.com/llm-serving-systems/gpu-basics.html", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "GPU Architecture and Programming", "dateModified": "2025-05-25T17:17:02.087821", "description": "Overview of GPU architecture and context behind GPUs for LLM serving systems", "url": "https://notes.elimelt.com/llm-serving-systems/gpu-basics.html", "articleSection": "Machine Learning Systems", "keywords": "gpu,architecture,programming,cuda,nvidia,pytorch,triton"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » GPU Architecture and Programming
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » GPU Architecture and Programming</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>GPU Architecture and Programming</h1>
-            <div class="meta">
-                <time datetime="2025-05-25T17:17:02.087821">
-                    Last modified: 2025-05-25
-                </time>
-                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="gpu-architecture-and-introduction-to-gpu-programming"><a class="toclink" href="#gpu-architecture-and-introduction-to-gpu-programming">GPU Architecture and Introduction to GPU Programming</a></h1>
+    <main class="content">
+        <h1>GPU Architecture and Programming</h1>
+        <h1 id="gpu-architecture-and-introduction-to-gpu-programming"><a class="toclink" href="#gpu-architecture-and-introduction-to-gpu-programming">GPU Architecture and Introduction to GPU Programming</a></h1>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
@@ -462,21 +384,10 @@ cudaGetErrorString()      // Get error description
 <li>Understanding memory hierarchy impact</li>
 </ol>
 <p><strong>Core Principle</strong>: Batching user requests and aiming for optimal throughput are key to effective LLM serving systems.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/architecture.html">architecture</a>
-                <a href="/tags/cuda.html">cuda</a>
-                <a href="/tags/gpu.html">gpu</a>
-                <a href="/tags/nvidia.html">nvidia</a>
-                <a href="/tags/programming.html">programming</a>
-                <a href="/tags/pytorch.html">pytorch</a>
-                <a href="/tags/triton.html">triton</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

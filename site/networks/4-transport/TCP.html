@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transmission Control Protocol (TCP) | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Transmission Control Protocol (TCP)</title>
     <meta name="description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/4-transport/TCP.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Transmission Control Protocol (TCP)">
-    <meta property="og:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ">
-    <meta property="og:url" content="https://notes.elimelt.com/networks/4-transport/TCP.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Transmission Control Protocol (TCP)">
-    <meta name="twitter:description" content="The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ">
-
-    <meta name="keywords" content="connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Transmission Control Protocol (TCP)", "dateModified": "2025-02-11T20:48:15.008380", "description": "The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ", "url": "https://notes.elimelt.com/networks/4-transport/TCP.html", "articleSection": "Networks", "keywords": "connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Transmission Control Protocol (TCP)", "dateModified": "2025-02-11T20:48:15.008380", "description": "The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describ", "url": "https://notes.elimelt.com/networks/4-transport/TCP.html", "articleSection": "Networks", "keywords": "connection establishment,three-way handshake,connection release,time_wait state,adaptive timeout,rtt,initial sequence number"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Transmission Control Protocol (TCP)
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Transmission Control Protocol (TCP)</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Transmission Control Protocol (TCP)</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T20:48:15.008380">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/networks.html">Networks</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="transmission-control-protocol-tcp"><a class="toclink" href="#transmission-control-protocol-tcp">Transmission Control Protocol (TCP)</a></h1>
+    <main class="content">
+        <h1>Transmission Control Protocol (TCP)</h1>
+        <h1 id="transmission-control-protocol-tcp"><a class="toclink" href="#transmission-control-protocol-tcp">Transmission Control Protocol (TCP)</a></h1>
 <h2 id="connection-establishment"><a class="toclink" href="#connection-establishment">Connection Establishment</a></h2>
 <p>Both sender and receiver must be ready to transfer data, and they need to agree on parameters like max segment size.</p>
 <h3 id="three-way-handshake"><a class="toclink" href="#three-way-handshake">Three-Way Handshake</a></h3>
@@ -244,21 +166,10 @@
 </ul>
 <h3 id="random-early-detection-red"><a class="toclink" href="#random-early-detection-red">Random Early Detection (RED)</a></h3>
 <p>Instead of marking pakets, just randomly drop packets to throttle senders. The probablity of dropping a packet increases as the queue fills up.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/adaptive%20timeout.html">adaptive timeout</a>
-                <a href="/tags/connection%20establishment.html">connection establishment</a>
-                <a href="/tags/connection%20release.html">connection release</a>
-                <a href="/tags/initial%20sequence%20number.html">initial sequence number</a>
-                <a href="/tags/rtt.html">rtt</a>
-                <a href="/tags/three-way%20handshake.html">three-way handshake</a>
-                <a href="/tags/time_wait%20state.html">time_wait state</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

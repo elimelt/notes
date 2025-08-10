@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waveform Diagrams | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Waveform Diagrams</title>
     <meta name="description" content="Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/hardware-design/369/waveform-diagram.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Waveform Diagrams">
-    <meta property="og:description" content="Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.">
-    <meta property="og:url" content="https://notes.elimelt.com/hardware-design/369/waveform-diagram.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Waveform Diagrams">
-    <meta name="twitter:description" content="Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.">
-
-    <meta name="keywords" content="waveform diagrams,bit vectors,bus,circuit timing behavior">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-05-07T16:15:38.687200", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "url": "https://notes.elimelt.com/hardware-design/369/waveform-diagram.html", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Waveform Diagrams", "dateModified": "2025-05-07T16:15:38.687200", "description": "Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.", "url": "https://notes.elimelt.com/hardware-design/369/waveform-diagram.html", "articleSection": "Hardware", "keywords": "waveform diagrams,bit vectors,bus,circuit timing behavior"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Waveform Diagrams
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Waveform Diagrams</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Waveform Diagrams</h1>
-            <div class="meta">
-                <time datetime="2025-05-07T16:15:38.687200">
-                    Last modified: 2025-05-07
-                </time>
-                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="waveform-diagrams"><a class="toclink" href="#waveform-diagrams">Waveform Diagrams</a></h1>
+    <main class="content">
+        <h1>Waveform Diagrams</h1>
+        <h1 id="waveform-diagrams"><a class="toclink" href="#waveform-diagrams">Waveform Diagrams</a></h1>
 <p>Group bits of values into a <strong>bus</strong> or a <strong>bit vector</strong>. You can view the state of your system as slices of a waveform for each bit, corresponding to a number.</p>
 <h2 id="circuit-timing-behavior"><a class="toclink" href="#circuit-timing-behavior">Circuit Timing Behavior</a></h2>
 <p>Every gate has some fixed delay. In reality, you can look them up in their data sheet. However, for simplicity assume delay of all gates is 1 ns ( = 3 ticks).</p>
@@ -135,18 +57,10 @@ endmodule
       end // end of &quot;block&quot; of code
 endmodule // MUX2_tb
 </code></pre>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/bit%20vectors.html">bit vectors</a>
-                <a href="/tags/bus.html">bus</a>
-                <a href="/tags/circuit%20timing%20behavior.html">circuit timing behavior</a>
-                <a href="/tags/waveform%20diagrams.html">waveform diagrams</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

@@ -4,98 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consistent Global State in Distributed Systems | Elijah's Notes</title>
-
-    <!-- SEO Meta Tags -->
+    <title>Consistent Global State in Distributed Systems</title>
     <meta name="description" content="Explains the concept of maintaining a consistent global state in distributed systems and its implications.">
-    <meta name="author" content="Elijah Melton">
-    <meta name="robots" content="index, follow">
-    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/consistent-global-state.html">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Consistent Global State in Distributed Systems">
-    <meta property="og:description" content="Explains the concept of maintaining a consistent global state in distributed systems and its implications.">
-    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/consistent-global-state.html">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Consistent Global State in Distributed Systems">
-    <meta name="twitter:description" content="Explains the concept of maintaining a consistent global state in distributed systems and its implications.">
-
-    <meta name="keywords" content="consistent global state,distributed systems,global predicate evaluation,asynchronous distributed systems">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Consistent Global State in Distributed Systems", "dateModified": "2025-02-11T16:42:07.857531", "description": "Explains the concept of maintaining a consistent global state in distributed systems and its implications.", "url": "https://notes.elimelt.com/distributed-systems/consistent-global-state.html", "articleSection": "Distributed Systems", "keywords": "consistent global state,distributed systems,global predicate evaluation,asynchronous distributed systems"}
-    </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- and it's easy to individually load additional languages -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" href=/css/styles.css>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
-
-    <!-- Configure KaTeX auto-render -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            renderMathInElement(document.body, {
-                delimiters: [
-                    {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
-                    {left: "$", right: "$", display: false},
-                ],
-                preProcess: (math) => {
-                    console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
-                        }
-                        return line;
-                    }).join("\n");
-                    return math;
-                },
-                throwOnError: false
-            });
-        });
-    </script>
-    <!-- Configure Highlight.js -->
-    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Consistent Global State in Distributed Systems", "dateModified": "2025-02-11T16:42:07.857531", "description": "Explains the concept of maintaining a consistent global state in distributed systems and its implications.", "url": "https://notes.elimelt.com/distributed-systems/consistent-global-state.html", "articleSection": "Distributed Systems", "keywords": "consistent global state,distributed systems,global predicate evaluation,asynchronous distributed systems"}</script>
 </head>
 <body>
     <header>
-        <nav role="navigation" aria-label="Main navigation">
-            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
-        </nav>
-        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
-            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Consistent Global State in Distributed Systems
-        </div>
+        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
+        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Consistent Global State in Distributed Systems</div>
     </header>
-    <main role="main">
-        <article>
-            <h1>Consistent Global State in Distributed Systems</h1>
-            <div class="meta">
-                <time datetime="2025-02-11T16:42:07.857531">
-                    Last modified: 2025-02-11
-                </time>
-                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
-                <span><a id="parent-link" href="index.html">..</a></span>
-            </div>
-            <div class=content>
-                <h1 id="consistent-global-state-in-distributed-systems"><a class="toclink" href="#consistent-global-state-in-distributed-systems">Consistent Global State in Distributed Systems</a></h1>
+    <main class="content">
+        <h1>Consistent Global State in Distributed Systems</h1>
+        <h1 id="consistent-global-state-in-distributed-systems"><a class="toclink" href="#consistent-global-state-in-distributed-systems">Consistent Global State in Distributed Systems</a></h1>
 <p><a href="https://courses.cs.washington.edu/courses/csep552/18wi/papers/chapt4.pdf">reading</a></p>
 <h2 id="introduction"><a class="toclink" href="#introduction">Introduction</a></h2>
 <p>Many problems in distributed computing boil down to being able to maintain a consistent global state, and to run predicates on that state in order to trigger events. The true state of a distributed system is the union of all node's states. However, since nodes don't share memory, the actual state must be meaningful when inferred solely based on messages passed among nodes.</p>
@@ -105,18 +27,10 @@
 <p>It is useful to reason about distributed systems with the weakest possible assumptions, such that results hold for arbitrary systems.</p>
 <h2 id="distributed-computations"><a class="toclink" href="#distributed-computations">Distributed Computations</a></h2>
 <p>A distributed computation is the execution of a distributed program over a collection of processes, each of which sequentially process a stream of <em>events</em>. Particularly, for two nodes to communicate, a message $m$ is enqueued on a channel via $send(m)$, and the message is dequeued via $receive(m)$. There is an obvious relationship between the happening of event $send(m)$ at process $p$, and the happening of event $receive(m)$ at process $q$, such that we can be sure $send(m)$ happened before $receive(m)$.</p>
-            </div>
-            <div class="tags">
-                Tags:
-                <a href="/tags/asynchronous%20distributed%20systems.html">asynchronous distributed systems</a>
-                <a href="/tags/consistent%20global%20state.html">consistent global state</a>
-                <a href="/tags/distributed%20systems.html">distributed systems</a>
-                <a href="/tags/global%20predicate%20evaluation.html">global predicate evaluation</a>
-            </div>
-        </article>
     </main>
-    <footer role="contentinfo">
-        <p>2025, authored by Elijah Melton.</p>
+    <footer>
+        <p>&copy; 2025 Notes Site</p>
     </footer>
 </body>
 </html>
+    

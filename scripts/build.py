@@ -481,8 +481,7 @@ class SiteGenerator:
         )
 
         # Add home link if not on index page
-        if not current_page.is_index:
-            nav_items.append('<a href="/index.html">Home</a>')
+        nav_items.append('<a href="/index.html">Home</a>')
 
         # Add categories link if categories exist
         if self.categories:
@@ -492,7 +491,7 @@ class SiteGenerator:
         if self.tags:
             nav_items.append('<a href="/tags/index.html">Tags</a>')
 
-        return " | ".join(nav_items)
+        return "\n".join(nav_items)
 
     def _generate_breadcrumbs(self, page: Page) -> str:
         """Generate breadcrumb navigation for a page."""

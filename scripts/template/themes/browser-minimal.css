@@ -1,0 +1,353 @@
+/* Root variables - Minimal retro theme */
+:root {
+  /* Base colors - Classic HTML look */
+  --text-color: #000000;
+  --text-color-secondary: #000000;
+  --text-color-tertiary: #666666;
+  --background-color: #ffffff;
+  --accent-color: #0000ee;
+  --accent-light: #f0f0f0;
+  --border-color: #000000;
+
+  /* Component backgrounds - Keep it simple */
+  --nav-background: #ffffff;
+  --code-background: #f0f0f0;
+  --blockquote-background: #f9f9f9;
+  --table-header-background: #e0e0e0;
+  --tag-background: #e0e0e0;
+  --card-background: #ffffff;
+  --alphabet-section-background: #f0f0f0;
+  --taxonomy-item-background: #f5f5f5;
+  --search-result-background: #f9f9f9;
+  --katex-background: #f0f0f0;
+
+  /* Borders - Simple black lines */
+  --heading-border-color: #000000;
+  --blockquote-border-color: #666666;
+  --column-rule-color: #000000;
+  --alphabet-section-border-color: #000000;
+
+  /* Text selection - Classic blue */
+  --selection-background: #316ac5;
+  --selection-text-color: #ffffff;
+
+  /* Links - Classic blue and purple */
+  --link-color: #0000ee;
+  --link-hover-color: #551a8b;
+  --link-hover-decoration: underline;
+  --link-gradient: none;
+
+  /* Tags and badges - Simple gray */
+  --tag-color: #000000;
+  --tag-hover-color: #000000;
+  --tag-hover-background: #d0d0d0;
+  --count-badge-background: #666666;
+  --count-badge-color: #ffffff;
+  --category-badge-background: #808080;
+  --category-badge-color: #ffffff;
+
+  /* Animation & transitions - Remove fancy effects */
+  --transition-speed: 0s;
+  --hover-transform: none;
+  --card-hover-transform: none;
+
+  /* Shadow & focus effects - Remove shadows */
+  --focus-outline-color: #000000;
+  --focus-outline-size: 1px;
+  --focus-shadow: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+
+  /* Layout values */
+  --content-width: 100%;
+  --content-max-width: none;
+
+  /* Spacing - Basic spacing */
+  --spacing-sm: 0.5em;
+  --spacing-md: 1em;
+  --spacing-lg: 1.5em;
+  --spacing-xl: 2em;
+  --paragraph-indent: 0em;
+
+  /* Radius - Remove rounded corners */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-pill: 0px;
+
+  /* Typography - Basic system fonts */
+  --font-family-nav: serif;
+  --font-family-content: serif;
+  --font-family-headings: serif;
+  --font-family-code: monospace;
+  --font-family-caption: serif;
+
+  /* Font sizes - Simple scaling */
+  --font-size-xs: 0.8em;
+  --font-size-sm: 0.9em;
+  --font-size-base: 1em;
+  --font-size-md: 1.1em;
+  --font-size-lg: 1.2em;
+  --font-size-xl: 1.4em;
+  --font-size-2xl: 1.6em;
+  --font-size-3xl: 1.8em;
+
+  /* Line heights - Standard HTML spacing */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.4;
+  --line-height-relaxed: 1.6;
+
+  /* Letter spacing - Remove custom spacing */
+  --letter-spacing-tighter: 0em;
+  --letter-spacing-tight: 0em;
+  --letter-spacing-normal: 0em;
+
+  /* Font weights - Basic weights */
+  --font-weight-normal: normal;
+  --font-weight-medium: normal;
+  --font-weight-semibold: bold;
+  --font-weight-bold: bold;
+
+  /* Z-index layers */
+  --z-nav: 10;
+  --z-alphabet-nav: 5;
+}
+
+/* Basic body styling */
+body {
+  font-family: var(--font-family-content);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  margin: 1em;
+  padding: 0;
+}
+
+/* Basic heading styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-headings);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+  margin: 1em 0 0.5em 0;
+  line-height: var(--line-height-tight);
+}
+
+h1 {
+  font-size: var(--font-size-3xl);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+}
+
+h5 {
+  font-size: var(--font-size-md);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+}
+
+/* Basic paragraph styling */
+p {
+  margin: 1em 0;
+  text-indent: var(--paragraph-indent);
+}
+
+/* Basic link styling */
+a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--link-hover-color);
+}
+
+a:hover {
+  text-decoration: var(--link-hover-decoration);
+}
+
+/* Basic list styling */
+ul,
+ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+li {
+  margin: 0.25em 0;
+}
+
+/* Basic code styling */
+code,
+pre {
+  font-family: var(--font-family-code);
+  background-color: var(--code-background);
+}
+
+code {
+  padding: 0.1em 0.3em;
+  border: 1px solid var(--border-color);
+}
+
+pre {
+  padding: 1em;
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+pre code {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+/* Basic blockquote styling */
+blockquote {
+  margin: 1em 2em;
+  padding: 0.5em 1em;
+  border-left: 3px solid var(--blockquote-border-color);
+  background-color: var(--blockquote-background);
+  font-style: italic;
+}
+
+/* Basic table styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+th,
+td {
+  border: 1px solid var(--border-color);
+  padding: 0.5em;
+  text-align: left;
+}
+
+th {
+  background-color: var(--table-header-background);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Basic horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2em 0;
+}
+
+/* Basic image styling */
+img {
+  max-width: 100%;
+  height: auto;
+  border: 0;
+}
+
+/* Basic form elements */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: 1px solid var(--border-color);
+  padding: 0.3em 0.5em;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+button {
+  cursor: pointer;
+  background-color: var(--tag-background);
+}
+
+button:hover {
+  background-color: var(--tag-hover-background);
+}
+
+/* Basic focus styles */
+:focus {
+  outline: var(--focus-outline-size) solid var(--focus-outline-color);
+}
+
+/* Text selection */
+::selection {
+  background-color: var(--selection-background);
+  color: var(--selection-text-color);
+}
+
+/* Basic utility classes for your existing components */
+.tag,
+.badge {
+  display: inline-block;
+  padding: 0.2em 0.5em;
+  background-color: var(--tag-background);
+  color: var(--tag-color);
+  border: 1px solid var(--border-color);
+  text-decoration: none;
+  margin: 0.2em;
+}
+
+.tag:hover,
+.badge:hover {
+  background-color: var(--tag-hover-background);
+  color: var(--tag-hover-color);
+}
+
+.card {
+  border: 1px solid var(--border-color);
+  background-color: var(--card-background);
+  padding: 1em;
+  margin: 1em 0;
+}
+
+/* Navigation styling */
+nav {
+  background-color: var(--nav-background);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.5em 0;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+/* Content width constraint */
+.content {
+  max-width: var(--content-max-width);
+}
+
+/* Basic responsive behavior */
+@media (max-width: 600px) {
+  body {
+    margin: 0.5em;
+  }
+
+  nav li {
+    display: block;
+    margin: 0.25em 0;
+  }
+}

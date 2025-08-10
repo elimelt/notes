@@ -52,7 +52,7 @@ fi
 log_message "Clean script completed successfully"
 
 # Run build script
-if ! python scripts/build.py . site; then
+if ! python scripts/build.py ./content site; then
     log_message "ERROR: Build script failed"
     exit 1
 fi

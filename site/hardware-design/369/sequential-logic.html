@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sequential Logic (SL)</title>
+    <title>Sequential Logic (SL) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains the concept of sequential logic in digital systems and its applications.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/hardware-design/369/sequential-logic.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Sequential Logic (SL)", "dateModified": "2025-02-11T16:42:51.458671", "description": "Explains the concept of sequential logic in digital systems and its applications.", "url": "https://notes.elimelt.com/hardware-design/369/sequential-logic.html", "articleSection": "Hardware", "keywords": "sequential logic,digital systems,finite state machines,flip-flops,clock signals"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Sequential Logic (SL)">
+    <meta property="og:description" content="Explains the concept of sequential logic in digital systems and its applications.">
+    <meta property="og:url" content="https://notes.elimelt.com/hardware-design/369/sequential-logic.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Sequential Logic (SL)">
+    <meta name="twitter:description" content="Explains the concept of sequential logic in digital systems and its applications.">
+
+    <meta name="keywords" content="sequential logic,digital systems,finite state machines,flip-flops,clock signals">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sequential Logic (SL)", "dateModified": "2025-08-09T18:05:18.290042", "description": "Explains the concept of sequential logic in digital systems and its applications.", "url": "https://notes.elimelt.com/hardware-design/369/sequential-logic.html", "articleSection": "Hardware", "keywords": "sequential logic,digital systems,finite state machines,flip-flops,clock signals"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Sequential Logic (SL)</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Sequential Logic (SL)
+        </div>
     </header>
-    <main class="content">
-        <h1>Sequential Logic (SL)</h1>
-        <h1 id="sequential-logic-sl"><a class="toclink" href="#sequential-logic-sl">Sequential Logic (SL)</a></h1>
+    <main role="main">
+        <article>
+            <h1>Sequential Logic (SL)</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.290042">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="sequential-logic-sl"><a class="toclink" href="#sequential-logic-sl">Sequential Logic (SL)</a></h1>
 <p>Whereas in <em>combinational logic</em>, you have outputs which are direct functions of their inputs, with sequential logic the presence of <em>feedback</em> gives circuits the ability to store state. This is the basis for memory and computation in digital systems.</p>
 <p>This helps control the flow of information through blocks of combinational logic, usually synchronizing with a clock signal. One of the major use cases of sequential logic is in <strong>Finite State Machines (FSM)</strong>. Without SL, the output of a combinational circuit would change instantly with every change in input, which can lead to unpredictable behavior within intermediate states, leading to unexpected outputs.</p>
 <h2 id="positive-edge-triggered-d-type-flip-flop"><a class="toclink" href="#positive-edge-triggered-d-type-flip-flop">Positive Edge-Triggered D-type Flip-Flop</a></h2>
@@ -44,10 +122,19 @@ $$</p>
 <p>The maximum frequency you can run your clock at is limited by the amount of time needed to get a correct next state to your registers. We must have...</p>
 <p><code>max_delay = max(clock_to_q + max_cl_delay, max_cl_delay)</code></p>
 <p>Then, <code>min_period = max_delay + t_setup</code>, and <code>max_freq = 1/min_period</code>.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/clock%20signals.html">clock signals</a>
+                <a href="/tags/digital%20systems.html">digital systems</a>
+                <a href="/tags/finite%20state%20machines.html">finite state machines</a>
+                <a href="/tags/flip-flops.html">flip-flops</a>
+                <a href="/tags/sequential%20logic.html">sequential logic</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

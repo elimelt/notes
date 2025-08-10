@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modeling and Scaling Performance with Roofline</title>
+    <title>Modeling and Scaling Performance with Roofline | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well ">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/roofline-reference.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Modeling and Scaling Performance with Roofline", "dateModified": "2025-05-25T16:32:00.750631", "description": "How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well ", "url": "https://notes.elimelt.com/llm-serving-systems/roofline-reference.html", "articleSection": "Machine Learning Systems", "keywords": "roofline,performance,optimization,gpu,bandwidth,compute"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Modeling and Scaling Performance with Roofline">
+    <meta property="og:description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well ">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/roofline-reference.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Modeling and Scaling Performance with Roofline">
+    <meta name="twitter:description" content="How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well ">
+
+    <meta name="keywords" content="roofline,performance,optimization,gpu,bandwidth,compute">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Modeling and Scaling Performance with Roofline", "dateModified": "2025-08-09T18:05:18.302021", "description": "How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well ", "url": "https://notes.elimelt.com/llm-serving-systems/roofline-reference.html", "articleSection": "Machine Learning Systems", "keywords": "roofline,performance,optimization,gpu,bandwidth,compute"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Modeling and Scaling Performance with Roofline</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Modeling and Scaling Performance with Roofline
+        </div>
     </header>
-    <main class="content">
-        <h1>Modeling and Scaling Performance with Roofline</h1>
-        <h1 id="scaling-with-the-roofline-model"><a class="toclink" href="#scaling-with-the-roofline-model">Scaling with the Roofline Model</a></h1>
+    <main role="main">
+        <article>
+            <h1>Modeling and Scaling Performance with Roofline</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.302021">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="scaling-with-the-roofline-model"><a class="toclink" href="#scaling-with-the-roofline-model">Scaling with the Roofline Model</a></h1>
 <blockquote>
 <p><em>"When we run algorithms on hardware, we're bounded by three things: how fast it can do math (OPs/second), the bandwidth available for moving data around (bytes/second), and the total memory available to store data (bytes). These "roofline" constraints let us upper and lower bound the time of a given computation." - <a href="https://jax-ml.github.io/scaling-book/roofline/">How to Scale Your Model - All About Rooflines</a></em></p>
 </blockquote>
@@ -111,10 +189,20 @@ $$</p>
 <p>$$
 T_\text{network} = \frac{4(N_{\text{gpus}} - 1) B_\text{dense} D_\text{model} S_\text{type}L}{\text{NetBW}}
 $$</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/bandwidth.html">bandwidth</a>
+                <a href="/tags/compute.html">compute</a>
+                <a href="/tags/gpu.html">gpu</a>
+                <a href="/tags/optimization.html">optimization</a>
+                <a href="/tags/performance.html">performance</a>
+                <a href="/tags/roofline.html">roofline</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

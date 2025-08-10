@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glossary of Linear Algebra Concepts</title>
+    <title>Glossary of Linear Algebra Concepts | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multip">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/linear-algebra/elementry-linear-algebra.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Glossary of Linear Algebra Concepts", "dateModified": "2025-02-12T12:52:07.373507", "description": "Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multip", "url": "https://notes.elimelt.com/linear-algebra/elementry-linear-algebra.html", "articleSection": "Linear Algebra", "keywords": "gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Glossary of Linear Algebra Concepts">
+    <meta property="og:description" content="Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multip">
+    <meta property="og:url" content="https://notes.elimelt.com/linear-algebra/elementry-linear-algebra.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Glossary of Linear Algebra Concepts">
+    <meta name="twitter:description" content="Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multip">
+
+    <meta name="keywords" content="gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Glossary of Linear Algebra Concepts", "dateModified": "2025-08-09T18:05:18.292777", "description": "Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multip", "url": "https://notes.elimelt.com/linear-algebra/elementry-linear-algebra.html", "articleSection": "Linear Algebra", "keywords": "gaussian elimination,matrix-vector multiplication,linear transformations,matrix-matrix multiplication"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/linear%20algebra.html">Linear Algebra</a> » Glossary of Linear Algebra Concepts</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/linear%20algebra.html">Linear Algebra</a> » Glossary of Linear Algebra Concepts
+        </div>
     </header>
-    <main class="content">
-        <h1>Glossary of Linear Algebra Concepts</h1>
-        <h1 id="elementary-linear-algebra"><a class="toclink" href="#elementary-linear-algebra">Elementary Linear Algebra</a></h1>
+    <main role="main">
+        <article>
+            <h1>Glossary of Linear Algebra Concepts</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.292777">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/linear%20algebra.html">Linear Algebra</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="elementary-linear-algebra"><a class="toclink" href="#elementary-linear-algebra">Elementary Linear Algebra</a></h1>
 <h2 id="systems-of-equations"><a class="toclink" href="#systems-of-equations">Systems of Equations</a></h2>
 <p>Systems of equations are both fundamental and important to actually understanding linear algebra. With that being said, the two primary introductory courses at the University of Washington, Math 208 and (to a much lesser extent) Applied Math 352, spend a significant amount of time on methods for <em>solving</em> systems of equations, something that I have almost no interest in. For the sake of completeness, I will briefly touch on notation and algorithms, but will try to both confine it to this document, and to focus on takeaways that become more useful later on.</p>
 <h3 id="notation"><a class="toclink" href="#notation">Notation</a></h3>
@@ -160,10 +238,18 @@ B = np.random.rand(N, M)
 <pre><code class="language-plaintext">
 </code></pre>
 <p>Matrix multiplication is fundamentally a costly operation, taking $O(n^3)$ time. That being said, libraries like numpy are heavily optimized and can perform matrix multiplication orders of magnitude faster than naive implementations using vectorized operations. In practice you should <strong>never</strong> write your own matrix multiplication.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/gaussian%20elimination.html">gaussian elimination</a>
+                <a href="/tags/linear%20transformations.html">linear transformations</a>
+                <a href="/tags/matrix-matrix%20multiplication.html">matrix-matrix multiplication</a>
+                <a href="/tags/matrix-vector%20multiplication.html">matrix-vector multiplication</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

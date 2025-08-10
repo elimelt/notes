@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scaling Web Services with Distributed Architectures</title>
+    <title>Scaling Web Services with Distributed Architectures | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Explains how to scale web services using distributed architectures">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/distributed-systems/scaling-web-services.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Scaling Web Services with Distributed Architectures", "dateModified": "2025-02-11T16:42:07.825087", "description": "Explains how to scale web services using distributed architectures", "url": "https://notes.elimelt.com/distributed-systems/scaling-web-services.html", "articleSection": "Distributed Systems", "keywords": "distributed systems,two-tier architecture,load balancing,caching,edge computing,service oriented architecture,microservices"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Scaling Web Services with Distributed Architectures">
+    <meta property="og:description" content="Explains how to scale web services using distributed architectures">
+    <meta property="og:url" content="https://notes.elimelt.com/distributed-systems/scaling-web-services.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Scaling Web Services with Distributed Architectures">
+    <meta name="twitter:description" content="Explains how to scale web services using distributed architectures">
+
+    <meta name="keywords" content="distributed systems,two-tier architecture,load balancing,caching,edge computing,service oriented architecture,microservices">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Scaling Web Services with Distributed Architectures", "dateModified": "2025-08-09T18:05:18.043246", "description": "Explains how to scale web services using distributed architectures", "url": "https://notes.elimelt.com/distributed-systems/scaling-web-services.html", "articleSection": "Distributed Systems", "keywords": "distributed systems,two-tier architecture,load balancing,caching,edge computing,service oriented architecture,microservices"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Scaling Web Services with Distributed Architectures</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/distributed%20systems.html">Distributed Systems</a> » Scaling Web Services with Distributed Architectures
+        </div>
     </header>
-    <main class="content">
-        <h1>Scaling Web Services with Distributed Architectures</h1>
-        <h1 id="scaling-web-services-with-distributed-architectures"><a class="toclink" href="#scaling-web-services-with-distributed-architectures">Scaling Web Services with Distributed Architectures</a></h1>
+    <main role="main">
+        <article>
+            <h1>Scaling Web Services with Distributed Architectures</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.043246">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/distributed%20systems.html">Distributed Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="scaling-web-services-with-distributed-architectures"><a class="toclink" href="#scaling-web-services-with-distributed-architectures">Scaling Web Services with Distributed Architectures</a></h1>
 <h2 id="two-tier-architecture"><a class="toclink" href="#two-tier-architecture">Two Tier Architecture</a></h2>
 <p>Many companies adopted the idea of a two tier architecture for web services. The idea was to have a scalable number of frontend servers, mapping clients to one of those servers. Then, you could also have a scaled out backend with multiple storage severs, mapping frontend servers to the data they needed in the storage servers.</p>
 <h3 id="two-tier-restful-web-architecture"><a class="toclink" href="#two-tier-restful-web-architecture">Two-Tier RESTful Web Architecture</a></h3>
@@ -40,10 +118,21 @@
 <h3 id="microservices"><a class="toclink" href="#microservices">Microservices</a></h3>
 <p>Organize complex distributed applications as a large number of independent services communicating through RPC, each using primary/backup or paxos for high availability and fault tolerance.</p>
 <p>This allows for independent development of components of a larger system, where each component can scale independently.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/caching.html">caching</a>
+                <a href="/tags/distributed%20systems.html">distributed systems</a>
+                <a href="/tags/edge%20computing.html">edge computing</a>
+                <a href="/tags/load%20balancing.html">load balancing</a>
+                <a href="/tags/microservices.html">microservices</a>
+                <a href="/tags/service%20oriented%20architecture.html">service oriented architecture</a>
+                <a href="/tags/two-tier%20architecture.html">two-tier architecture</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

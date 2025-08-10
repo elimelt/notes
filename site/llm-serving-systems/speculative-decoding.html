@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speculative Decoding in LLM Serving Systems</title>
+    <title>Speculative Decoding in LLM Serving Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa ">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/llm-serving-systems/speculative-decoding.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Speculative Decoding in LLM Serving Systems", "dateModified": "2025-05-25T17:30:43.516508", "description": "Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa ", "url": "https://notes.elimelt.com/llm-serving-systems/speculative-decoding.html", "articleSection": "Machine Learning Systems", "keywords": "speculative decoding,llm,performance,machine learning"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Speculative Decoding in LLM Serving Systems">
+    <meta property="og:description" content="Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa ">
+    <meta property="og:url" content="https://notes.elimelt.com/llm-serving-systems/speculative-decoding.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Speculative Decoding in LLM Serving Systems">
+    <meta name="twitter:description" content="Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa ">
+
+    <meta name="keywords" content="speculative decoding,llm,performance,machine learning">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Speculative Decoding in LLM Serving Systems", "dateModified": "2025-08-09T18:05:18.302274", "description": "Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa ", "url": "https://notes.elimelt.com/llm-serving-systems/speculative-decoding.html", "articleSection": "Machine Learning Systems", "keywords": "speculative decoding,llm,performance,machine learning"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Speculative Decoding in LLM Serving Systems</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> » Speculative Decoding in LLM Serving Systems
+        </div>
     </header>
-    <main class="content">
-        <h1>Speculative Decoding in LLM Serving Systems</h1>
-        <h2 id="overview"><a class="toclink" href="#overview">Overview</a></h2>
+    <main role="main">
+        <article>
+            <h1>Speculative Decoding in LLM Serving Systems</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.302274">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h2 id="overview"><a class="toclink" href="#overview">Overview</a></h2>
 <blockquote>
 <p>Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu</p>
 </blockquote>
@@ -165,10 +243,18 @@ return sample_output[-1].item()
 - <strong>Tasks with predictable patterns</strong> where draft models can be reasonably accurate
 - <strong>Scenarios requiring maintained output quality</strong> (lossless acceleration)
 - <strong>Real-time applications</strong> where latency reduction is critical</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/llm.html">llm</a>
+                <a href="/tags/machine%20learning.html">machine learning</a>
+                <a href="/tags/performance.html">performance</a>
+                <a href="/tags/speculative%20decoding.html">speculative decoding</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

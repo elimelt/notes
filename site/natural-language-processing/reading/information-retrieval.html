@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Indexing and Information Retrieval</title>
+    <title>Indexing and Information Retrieval | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics su">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/natural-language-processing/reading/information-retrieval.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Indexing and Information Retrieval", "dateModified": "2025-02-11T20:01:21.027963", "description": "Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics su", "url": "https://notes.elimelt.com/natural-language-processing/reading/information-retrieval.html", "articleSection": "Natural Language Processing", "keywords": "tf-idf,inverted index,precision,recall,interpolated_precision_curve,mean_average_precision,dense_vectors,bert"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Indexing and Information Retrieval">
+    <meta property="og:description" content="Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics su">
+    <meta property="og:url" content="https://notes.elimelt.com/natural-language-processing/reading/information-retrieval.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Indexing and Information Retrieval">
+    <meta name="twitter:description" content="Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics su">
+
+    <meta name="keywords" content="tf-idf,inverted index,precision,recall,interpolated_precision_curve,mean_average_precision,dense_vectors,bert">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Indexing and Information Retrieval", "dateModified": "2025-08-09T18:05:18.303923", "description": "Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics su", "url": "https://notes.elimelt.com/natural-language-processing/reading/information-retrieval.html", "articleSection": "Natural Language Processing", "keywords": "tf-idf,inverted index,precision,recall,interpolated_precision_curve,mean_average_precision,dense_vectors,bert"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Indexing and Information Retrieval</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Indexing and Information Retrieval
+        </div>
     </header>
-    <main class="content">
-        <h1>Indexing and Information Retrieval</h1>
-        <h1 id="information-retrieval"><a class="toclink" href="#information-retrieval">Information Retrieval</a></h1>
+    <main role="main">
+        <article>
+            <h1>Indexing and Information Retrieval</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.303923">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="information-retrieval"><a class="toclink" href="#information-retrieval">Information Retrieval</a></h1>
 <p>IR in general is the process of obtaining information based on user queries, and can be applied to pretty much any form of media. Probably the most prevalent form of IR that we use every day is through <strong>search engines</strong>.</p>
 <h2 id="ad-hoc-retrieval"><a class="toclink" href="#ad-hoc-retrieval">Ad Hoc Retrieval</a></h2>
 <p>A user poses a <strong>query</strong> to a retrieval system, which then returns an ordered set of <strong>documents</strong> from some <strong>collection</strong>. A <strong>document</strong> refers to whatever unit of text the system indexes and retrieves (e.g. a webpage, a book, a tweet, etc.). The <strong>collection</strong> is the set of all documents that the system has indexed. A <strong>term</strong> can correspond to either a word, phrase, or some other unit of text which documents are indexed by. A query is therefore a set of terms.</p>
@@ -124,10 +202,22 @@ $$</p>
 \text{score}(q, d) = \text{softmax}(U(z))
 $$</p>
 <p>Note: BERT was trained using <code>[CLS] sen A [SEP] sen B [SEP]</code>. <code>[SEP]</code> is used to help the model distinguish between the two sentences. <code>[CLS]</code> is used to represent the entire sentence.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/bert.html">bert</a>
+                <a href="/tags/dense_vectors.html">dense_vectors</a>
+                <a href="/tags/interpolated_precision_curve.html">interpolated_precision_curve</a>
+                <a href="/tags/inverted%20index.html">inverted index</a>
+                <a href="/tags/mean_average_precision.html">mean_average_precision</a>
+                <a href="/tags/precision.html">precision</a>
+                <a href="/tags/recall.html">recall</a>
+                <a href="/tags/tf-idf.html">tf-idf</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Border Gateway Protocol (BGP)</title>
+    <title>Border Gateway Protocol (BGP) | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous syst">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/3-network/BGP.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Border Gateway Protocol (BGP)", "dateModified": "2025-02-11T20:47:48.085803", "description": "Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous syst", "url": "https://notes.elimelt.com/networks/3-network/BGP.html", "articleSection": "Networks", "keywords": "autonomous systems,border gateway protocol,routing,transit traffic,stub as,multihomed as,transit as"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Border Gateway Protocol (BGP)">
+    <meta property="og:description" content="Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous syst">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/3-network/BGP.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Border Gateway Protocol (BGP)">
+    <meta name="twitter:description" content="Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous syst">
+
+    <meta name="keywords" content="autonomous systems,border gateway protocol,routing,transit traffic,stub as,multihomed as,transit as">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Border Gateway Protocol (BGP)", "dateModified": "2025-08-09T18:05:18.329853", "description": "Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous syst", "url": "https://notes.elimelt.com/networks/3-network/BGP.html", "articleSection": "Networks", "keywords": "autonomous systems,border gateway protocol,routing,transit traffic,stub as,multihomed as,transit as"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Border Gateway Protocol (BGP)</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Border Gateway Protocol (BGP)
+        </div>
     </header>
-    <main class="content">
-        <h1>Border Gateway Protocol (BGP)</h1>
-        <h1 id="border-gateway-protocol-bgp"><a class="toclink" href="#border-gateway-protocol-bgp">Border Gateway Protocol (BGP)</a></h1>
+    <main role="main">
+        <article>
+            <h1>Border Gateway Protocol (BGP)</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.329853">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="border-gateway-protocol-bgp"><a class="toclink" href="#border-gateway-protocol-bgp">Border Gateway Protocol (BGP)</a></h1>
 <p>You can view the internet as a graph of interconnected Autonomous Systems (ASes). Each AS can act on its own, and is responsible for routing traffic within itself. The routers within an AS are typically connected to eachother through high-speed links, and are connected to other ASes through <em>border routers</em>.</p>
 <p>ASes are able to assume the role of a customer, provider, or peer to other ASes.</p>
 <ul>
@@ -53,10 +131,21 @@
 <li>Peer paths should only be advertised to customers, since you stand to gain nothing from letting peers use the path, and you'd have to pay to use the path for providers</li>
 <li>Provider paths should also only be advertised to customers, since you need to pay to use the path of your provider, and you only make money from customers.</li>
 </ul>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/autonomous%20systems.html">autonomous systems</a>
+                <a href="/tags/border%20gateway%20protocol.html">border gateway protocol</a>
+                <a href="/tags/multihomed%20as.html">multihomed as</a>
+                <a href="/tags/routing.html">routing</a>
+                <a href="/tags/stub%20as.html">stub as</a>
+                <a href="/tags/transit%20as.html">transit as</a>
+                <a href="/tags/transit%20traffic.html">transit traffic</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

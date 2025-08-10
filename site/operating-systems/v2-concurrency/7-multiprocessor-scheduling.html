@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiprocessor Scheduling</title>
+    <title>Multiprocessor Scheduling | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and sche">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Multiprocessor Scheduling", "dateModified": "2025-02-11T20:49:42.477502", "description": "Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and sche", "url": "https://notes.elimelt.com/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html", "articleSection": "Operating Systems", "keywords": "multiprocessor scheduling,operating systems,cache coherence,affinity scheduling"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Multiprocessor Scheduling">
+    <meta property="og:description" content="Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and sche">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Multiprocessor Scheduling">
+    <meta name="twitter:description" content="Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and sche">
+
+    <meta name="keywords" content="multiprocessor scheduling,operating systems,cache coherence,affinity scheduling">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Multiprocessor Scheduling", "dateModified": "2025-08-09T18:05:18.344575", "description": "Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and sche", "url": "https://notes.elimelt.com/operating-systems/v2-concurrency/7-multiprocessor-scheduling.html", "articleSection": "Operating Systems", "keywords": "multiprocessor scheduling,operating systems,cache coherence,affinity scheduling"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Multiprocessor Scheduling</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Multiprocessor Scheduling
+        </div>
     </header>
-    <main class="content">
-        <h1>Multiprocessor Scheduling</h1>
-        <h1 id="multiprocessor-scheduling"><a class="toclink" href="#multiprocessor-scheduling">Multiprocessor Scheduling</a></h1>
+    <main role="main">
+        <article>
+            <h1>Multiprocessor Scheduling</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.344575">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="multiprocessor-scheduling"><a class="toclink" href="#multiprocessor-scheduling">Multiprocessor Scheduling</a></h1>
 <p>Modern systems usually have multiple processors, each with multiple cores that all have hyperthreading. Scheduling algorithms for multiprocessor systems need to make use of the parallelism that these systems offer.</p>
 <h3 id="scheduling-sequential-applications-on-multiprocessors"><a class="toclink" href="#scheduling-sequential-applications-on-multiprocessors">Scheduling Sequential Applications on Multiprocessors</a></h3>
 <p>Consider a server application that needs to process a large number of requests. A simple approach would be to maintain a single MFQ, as well as a lock on it so only one processor can access it at a time. When a request needs to do something like I/O, it can reenter the MFQ and let another request run. However, this approach has a few problems:</p>
@@ -51,10 +129,18 @@
 <li><strong>Earliest Deadline First (EDF)</strong>: The task with the earliest deadline is scheduled next. This is optimal for minimizing the number of missed deadlines for CPU-bound tasks. However, mixed workloads can complicate this, since it might be more efficient to start a task with a later deadline to request I/O, and then start a task with an earlier deadline.</li>
 <li><strong>Priority Donation</strong>: <em>priority inversion</em> can lead to infinite waiting times for lower priority tasks. To avoid this, when a high-priority task is waiting for a lock held by a lower priority task, the higher priority task "dontates" some of its priority to the lower priority task. This allows the low priority task to be scheduled to complete the critical section and release the lock, at which point it will return to its original priority and the processor can be given to the high priority task.</li>
 </ul>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/affinity%20scheduling.html">affinity scheduling</a>
+                <a href="/tags/cache%20coherence.html">cache coherence</a>
+                <a href="/tags/multiprocessor%20scheduling.html">multiprocessor scheduling</a>
+                <a href="/tags/operating%20systems.html">operating systems</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

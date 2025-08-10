@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stable Matching Algorithms and Proofs in Computer Science</title>
+    <title>Stable Matching Algorithms and Proofs in Computer Science | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed p">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/algorithms/stable-matching.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Stable Matching Algorithms and Proofs in Computer Science", "dateModified": "2025-05-10T14:39:48.235586", "description": "This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed p", "url": "https://notes.elimelt.com/algorithms/stable-matching.html", "articleSection": "Algorithms", "keywords": "matching,stable matching,gale-shapley,proof techniques,complexity analysis,optimization"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Stable Matching Algorithms and Proofs in Computer Science">
+    <meta property="og:description" content="This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed p">
+    <meta property="og:url" content="https://notes.elimelt.com/algorithms/stable-matching.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Stable Matching Algorithms and Proofs in Computer Science">
+    <meta name="twitter:description" content="This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed p">
+
+    <meta name="keywords" content="matching,stable matching,gale-shapley,proof techniques,complexity analysis,optimization">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Stable Matching Algorithms and Proofs in Computer Science", "dateModified": "2025-08-09T18:05:18.032604", "description": "This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed p", "url": "https://notes.elimelt.com/algorithms/stable-matching.html", "articleSection": "Algorithms", "keywords": "matching,stable matching,gale-shapley,proof techniques,complexity analysis,optimization"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Stable Matching Algorithms and Proofs in Computer Science</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/algorithms.html">Algorithms</a> » Stable Matching Algorithms and Proofs in Computer Science
+        </div>
     </header>
-    <main class="content">
-        <h1>Stable Matching Algorithms and Proofs in Computer Science</h1>
-        <h1 id="stable-matching"><a class="toclink" href="#stable-matching">Stable Matching</a></h1>
+    <main role="main">
+        <article>
+            <h1>Stable Matching Algorithms and Proofs in Computer Science</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.032604">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/algorithms.html">Algorithms</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="stable-matching"><a class="toclink" href="#stable-matching">Stable Matching</a></h1>
 <p>Given a list of $n$ companies $c_1, c_2, \ldots, c_n$, and a list of students $s_1, s_2, \ldots, s_n$, each company ranks the students in order of preference, and each student ranks the companies in order of preference.</p>
 <p>Find a <strong>stable matching</strong> between the companies and students, where no company and student would prefer each other over their current match.</p>
 <ul>
@@ -193,10 +271,20 @@ for i in range(len(res)):
     candidates.append(data[i])
     print(data[i])
 </code></pre>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/complexity%20analysis.html">complexity analysis</a>
+                <a href="/tags/gale-shapley.html">gale-shapley</a>
+                <a href="/tags/matching.html">matching</a>
+                <a href="/tags/optimization.html">optimization</a>
+                <a href="/tags/proof%20techniques.html">proof techniques</a>
+                <a href="/tags/stable%20matching.html">stable matching</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

@@ -4,125 +4,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes</title>
+    <title>Notes | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="A collection of notes and documentation">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/index.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Notes", "dateModified": "2025-08-09T17:05:59.466737", "description": "A collection of notes and documentation", "url": "https://notes.elimelt.com/index.html"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Notes">
+    <meta property="og:description" content="A collection of notes and documentation">
+    <meta property="og:url" content="https://notes.elimelt.com/index.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Notes">
+    <meta name="twitter:description" content="A collection of notes and documentation">
+
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Notes", "dateModified": "2025-08-09T18:07:39.160034", "description": "A collection of notes and documentation", "url": "https://notes.elimelt.com/index.html"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a></div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a>
+        </div>
     </header>
-    <main class="content">
-        <h1>Notes</h1>
-        
-<div class="stats">
-    <p>189 notes, 19 categories, 684 tags</p>
-</div>
+    <main role="main">
+        <article>
+            <h1>Notes</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:07:39.160034">
+                    Last modified: 2025-08-09
+                </time>
+            </div>
+            <div class=content>
+                
+<!-- Main container for the grid layout -->
+<div class="landing-grid">
+    <!-- Stats section at the top -->
+    <div class="stats-section">
+        <div class="stat-item">
+            <div class="stat-number">156</div>
+            <div class="stat-label">Notes</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">21</div>
+            <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">612</div>
+            <div class="stat-label">Tags</div>
+        </div>
 
-<section class="recent-pages">
-    <h2>Recent Pages</h2>
-    <ul>
-        <li>
-            <a href="/llm-serving-systems/optimizing-gpu-kernels.html">Optimizing GPU Kernels</a>
-            <span class="date">2025-05-30</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/transformers.html">Transformer Architecture and Implementation</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/speculative-decoding.html">Speculative Decoding in LLM Serving Systems</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/sparsity-and-pruning.html">Sparsity and Pruning in LLM Serving Systems</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/quantization.html">Quantization in LLM Serving Systems</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/performance-modeling.html">Performance Modeling for LLM Serving Systems</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/parallelism.html">Parallelism</a>
-            <span class="date">2025-05-25</span>
-        </li>
-        <li>
-            <a href="/llm-serving-systems/mixture-of-experts.html">Intro to Mixture of Experts (MoE) in LLM Serving Systems</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/memory-management.html">Memory Management in LLM Serving Systems</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-        <li>
-            <a href="/llm-serving-systems/gpu-basics.html">GPU Architecture and Programming</a>
-            <span class="date">2025-05-25</span>
-<span class="category">Machine Learning Systems</span>        </li>
-    </ul>
-</section>
+    <div class="main-content-wrapper">
+        <!-- Main content area -->
+        <!-- Sidebar area -->
+        <div class="content-area">
+            <!-- Recent posts section -->
+            <div class="recent-section">
+                <h2>Recent</h2>
+                <ul class="recent-posts">
+                    <li>
+                        <a href="/tmp/tst.html">Tst</a>
+                        <span class="date">2025-08-09</span>
+                    </li>
+                    <li>
+                        <a href="/tmp/pairing-algorithm.html">Pairing Algorithm</a>
+                        <span class="date">2025-08-09</span>
+                    </li>
+                    <li>
+                        <a href="/tmp/bench/spec.html">Spec</a>
+                        <span class="date">2025-08-09</span>
+                    </li>
+                    <li>
+                        <a href="/thoughts/social/homelessness.html">Homelessness in Seattle (DRAFT)</a>
+                        <span class="date">2025-08-09</span>
+                        <span class="category">Thoughts</span>
+                    </li>
+                    <li>
+                        <a href="/thoughts/recipe/smore-brownie.html">S’more Blondies</a>
+                        <span class="date">2025-08-09</span>
+                        <span class="category">Recipes</span>
+                    </li>
+                    <li>
+                        <a href="/thoughts/leadership/solitude.html">I'm glad I read Solitude and Leadership</a>
+                        <span class="date">2025-08-09</span>
+                        <span class="category">Thoughts</span>
+                    </li>
+                    <li>
+                        <a href="/thoughts/leadership/applications.html">SWECC Leadership Applications 2025-2026</a>
+                        <span class="date">2025-08-09</span>
+                        <span class="category">Thoughts</span>
+                    </li>
+                    <li>
+                        <a href="/thoughts/engineering/onboarding.html">Onboarding</a>
+                        <span class="date">2025-08-09</span>
+                    </li>
+                    <li>
+                        <a href="/test.html">Test</a>
+                        <span class="date">2025-08-09</span>
+                    </li>
+                    <li>
+                        <a href="/teaching/modern-java/lambdas-and-streams.html">A Soft Introduction to Java Streams and Lambdas</a>
+                        <span class="date">2025-08-09</span>
+                        <span class="category">Software Engineering</span>
+                    </li>
+                </ul>
+            </div>
 
-<section class="categories">
-    <h2>Categories</h2>
-    <ul>
-        <li><a href="/categories/algorithm%20analysis.html">Algorithm Analysis</a> (1)</li>
-        <li><a href="/categories/algorithms.html">Algorithms</a> (22)</li>
-        <li><a href="/categories/computer%20science.html">Computer Science</a> (2)</li>
-        <li><a href="/categories/database%20systems.html">Database Systems</a> (2)</li>
-        <li><a href="/categories/distributed%20systems.html">Distributed Systems</a> (26)</li>
-        <li><a href="/categories/hardware.html">Hardware</a> (18)</li>
-        <li><a href="/categories/linear%20algebra.html">Linear Algebra</a> (3)</li>
-        <li><a href="/categories/machine%20learning%20systems.html">Machine Learning Systems</a> (17)</li>
-        <li><a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> (7)</li>
-        <li><a href="/categories/networks.html">Networks</a> (30)</li>
-        <li><a href="/categories/operating%20systems.html">Operating Systems</a> (27)</li>
-        <li><a href="/categories/performance%20engineering.html">Performance Engineering</a> (1)</li>
-        <li><a href="/categories/recipes.html">Recipes</a> (1)</li>
-        <li><a href="/categories/research.html">Research</a> (3)</li>
-        <li><a href="/categories/software%20engineering.html">Software Engineering</a> (5)</li>
-        <li><a href="/categories/system%20design.html">System Design</a> (2)</li>
-        <li><a href="/categories/systems.html">Systems</a> (4)</li>
-        <li><a href="/categories/teaching.html">Teaching</a> (1)</li>
-        <li><a href="/categories/thoughts.html">Thoughts</a> (3)</li>
-    </ul>
-</section>
-
-<section class="popular-tags">
-    <h2>Popular Tags</h2>
-    <div class="tag-cloud">
-        <a href="/tags/distributed%20systems.html" class="tag-5">distributed systems</a>
-        <a href="/tags/machine%20learning.html" class="tag-5">machine learning</a>
-        <a href="/tags/operating%20systems.html" class="tag-5">operating systems</a>
-        <a href="/tags/systems.html" class="tag-5">systems</a>
-        <a href="/tags/performance.html" class="tag-5">performance</a>
-        <a href="/tags/paxos.html" class="tag-5">paxos</a>
-        <a href="/tags/consistency.html" class="tag-5">consistency</a>
-        <a href="/tags/gpu.html" class="tag-5">gpu</a>
-        <a href="/tags/graph%20theory.html" class="tag-5">graph theory</a>
-        <a href="/tags/kernel.html" class="tag-5">kernel</a>
-        <a href="/tags/optimization.html" class="tag-5">optimization</a>
-        <a href="/tags/power.html" class="tag-5">power</a>
-        <a href="/tags/review.html" class="tag-5">review</a>
-        <a href="/tags/consistency%20models.html" class="tag-4">consistency models</a>
-        <a href="/tags/cuda.html" class="tag-4">cuda</a>
-        <a href="/tags/file%20systems.html" class="tag-4">file systems</a>
-        <a href="/tags/llm.html" class="tag-4">llm</a>
-        <a href="/tags/memory%20management.html" class="tag-4">memory management</a>
-        <a href="/tags/paper.html" class="tag-4">paper</a>
-        <a href="/tags/research.html" class="tag-4">research</a>
+            <!-- Tags section -->
+            <div class="tags-section">
+                <h2>Featured Tags</h2>
+                <div class="tags-cloud">
+                    <a href="/tags/distributed%20systems.html" class="tag-5">
+                        distributed systems <span class="count">(14)</span>
+                    </a>
+                    <a href="/tags/machine%20learning.html" class="tag-5">
+                        machine learning <span class="count">(13)</span>
+                    </a>
+                    <a href="/tags/operating%20systems.html" class="tag-5">
+                        operating systems <span class="count">(10)</span>
+                    </a>
+                    <a href="/tags/systems.html" class="tag-5">
+                        systems <span class="count">(9)</span>
+                    </a>
+                    <a href="/tags/performance.html" class="tag-5">
+                        performance <span class="count">(7)</span>
+                    </a>
+                    <a href="/tags/paxos.html" class="tag-5">
+                        paxos <span class="count">(6)</span>
+                    </a>
+                    <a href="/tags/consistency.html" class="tag-5">
+                        consistency <span class="count">(5)</span>
+                    </a>
+                    <a href="/tags/gpu.html" class="tag-5">
+                        gpu <span class="count">(5)</span>
+                    </a>
+                    <a href="/tags/graph%20theory.html" class="tag-5">
+                        graph theory <span class="count">(5)</span>
+                    </a>
+                    <a href="/tags/kernel.html" class="tag-5">
+                        kernel <span class="count">(5)</span>
+                    </a>
+                    <a href="/tags/optimization.html" class="tag-5">
+                        optimization <span class="count">(5)</span>
+                    </a>
+                    <a href="/tags/power.html" class="tag-5">
+                        power <span class="count">(5)</span>
+                    </a>
+                    <a href="/tags/review.html" class="tag-5">
+                        review <span class="count">(5)</span>
+                    </a>
+                    <a href="/tags/consistency%20models.html" class="tag-4">
+                        consistency models <span class="count">(4)</span>
+                    </a>
+                    <a href="/tags/cuda.html" class="tag-4">
+                        cuda <span class="count">(4)</span>
+                    </a>
+                    <a href="/tags/file%20systems.html" class="tag-4">
+                        file systems <span class="count">(4)</span>
+                    </a>
+                    <a href="/tags/llm.html" class="tag-4">
+                        llm <span class="count">(4)</span>
+                    </a>
+                    <a href="/tags/memory%20management.html" class="tag-4">
+                        memory management <span class="count">(4)</span>
+                    </a>
+                    <a href="/tags/paper.html" class="tag-4">
+                        paper <span class="count">(4)</span>
+                    </a>
+                    <a href="/tags/research.html" class="tag-4">
+                        research <span class="count">(4)</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-</section>
-    
+</div>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

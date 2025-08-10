@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classification with Multinomial Naive Bayes</title>
+    <title>Classification with Multinomial Naive Bayes | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/natural-language-processing/reading/classification.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Classification with Multinomial Naive Bayes", "dateModified": "2025-02-12T15:23:20.176602", "description": "Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.", "url": "https://notes.elimelt.com/natural-language-processing/reading/classification.html", "articleSection": "Natural Language Processing", "keywords": "classification,naive bayes,multinomial naive bayes,text classification,bag of words,laplace smoothing"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Classification with Multinomial Naive Bayes">
+    <meta property="og:description" content="Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.">
+    <meta property="og:url" content="https://notes.elimelt.com/natural-language-processing/reading/classification.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Classification with Multinomial Naive Bayes">
+    <meta name="twitter:description" content="Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.">
+
+    <meta name="keywords" content="classification,naive bayes,multinomial naive bayes,text classification,bag of words,laplace smoothing">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Classification with Multinomial Naive Bayes", "dateModified": "2025-08-09T18:05:18.303728", "description": "Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.", "url": "https://notes.elimelt.com/natural-language-processing/reading/classification.html", "articleSection": "Natural Language Processing", "keywords": "classification,naive bayes,multinomial naive bayes,text classification,bag of words,laplace smoothing"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Classification with Multinomial Naive Bayes</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a> » Classification with Multinomial Naive Bayes
+        </div>
     </header>
-    <main class="content">
-        <h1>Classification with Multinomial Naive Bayes</h1>
-        <h1 id="classification"><a class="toclink" href="#classification">Classification</a></h1>
+    <main role="main">
+        <article>
+            <h1>Classification with Multinomial Naive Bayes</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.303728">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/natural%20language%20processing.html">Natural Language Processing</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="classification"><a class="toclink" href="#classification">Classification</a></h1>
 <p>Take an input $x$ and a fixed set of output classes $Y = {y_1, y_2, \ldots, y_M}$ and return a predicted class $y \in Y$.</p>
 <p>Text classification sometimes uses $c$ for class instead of $y$ as output, and $d$ for document instead of $x$ as input.</p>
 <p>In the supervised situation we have a training set of $N$ documents that have each been hand labeled with a class: ${(d_1, c_1),....,(d_N, c_N)}$. Our goal is to learn a classifier that is capable of mapping from a new document $d$ to its correct class $c \in C$, where $C$ is some set of useful document classes.</p>
@@ -81,10 +159,20 @@ function TEST_NAIVE_BAYES(testdoc, logprior, loglikelihood, C, V) returns best_c
 </code></pre>
 <h3 id="evaluation"><a class="toclink" href="#evaluation">Evaluation</a></h3>
 <p>Use a confusion matrix, precision, recall, and F1 score.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/bag%20of%20words.html">bag of words</a>
+                <a href="/tags/classification.html">classification</a>
+                <a href="/tags/laplace%20smoothing.html">laplace smoothing</a>
+                <a href="/tags/multinomial%20naive%20bayes.html">multinomial naive bayes</a>
+                <a href="/tags/naive%20bayes.html">naive bayes</a>
+                <a href="/tags/text%20classification.html">text classification</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

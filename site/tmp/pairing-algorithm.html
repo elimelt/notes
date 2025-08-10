@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pairing Algorithm | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
+    <link rel="canonical" href="https://notes.elimelt.com/tmp/pairing-algorithm.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Pairing Algorithm">
+    <meta property="og:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...">
+    <meta property="og:url" content="https://notes.elimelt.com/tmp/pairing-algorithm.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pairing Algorithm">
+    <meta name="twitter:description" content="Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...">
+
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Pairing Algorithm", "dateModified": "2025-08-09T18:05:19.118915", "description": "Formalizing the Pairing Algorithm for the SWECC Mock Interview Program Given $s$ signups, form pairs for all the students based on the following constraints:...", "url": "https://notes.elimelt.com/tmp/pairing-algorithm.html"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » Pairing Algorithm
+        </div>
+    </header>
+    <main role="main">
+        <article>
+            <h1>Pairing Algorithm</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:19.118915">
+                    Last modified: 2025-08-09
+                </time>
+            </div>
+            <div class=content>
+                <h2 id="formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program"><a class="toclink" href="#formalizing-the-pairing-algorithm-for-the-swecc-mock-interview-program">Formalizing the Pairing Algorithm for the SWECC Mock Interview Program</a></h2>
+<p>Given $s$ signups, form pairs for all the students based on the following constraints:
+- Each student should be paired with exactly one other student. If there are an odd number of students, one student will be left unpaired.
+- A valid pair <strong>must</strong> have at least two 1-hour time slots in common in their availability. The number of common time slots is factored into the score of the pair.
+- Each student responds to a form while signing up. The responses are vectorized, and pairings are made based on the similarity of the responses.</p>
+<h3 id="statement-of-the-problem"><a class="toclink" href="#statement-of-the-problem">Statement of the Problem</a></h3>
+<p>Let $T^{7 \times 24}<em i_j_k="i,j,k">i$ be a bit-matrix of 1-hour time slots in a week for student $i$. The value of $T</em>$ is 1 if student $i$ is available at time slot $(j,k)$, and 0 otherwise.</p>
+<p>$$
+T_i = \begin{bmatrix}
+    t_{1,1} &amp; t_{1,2} &amp; t_{1,3}&amp; \cdots &amp; t_{1,24} \
+    t_{2,1} &amp; t_{2,2} &amp; t_{2,3}&amp; \cdots &amp; t_{2,24} \
+    \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    t_{7,1} &amp; t_{7,2} &amp; t_{7,3}&amp; \cdots &amp; t_{7,24}
+\end{bmatrix}
+$$</p>
+<p>Let $S$ be the set of students, and $A$ be the set of all possible pairings of students in $S$</p>
+<p>$$
+A = { (i, j) \mid (i, j) \in S \times S, i &lt; j }
+$$</p>
+<p>Now, enforcing a strict and repeatable ordering on the students through sorting, we have a mapping from $s_i \in S$ to $T_i$.</p>
+<p>We use this ordering to define a scoring function $f: A \to \mathbb{R}$ that takes a pair of students and returns the number of common time slots in their availability, or $0$ if it is less than $2$. We then create a matrix $F_{time}$ of the scores of all possible pairings.</p>
+<p>$$
+F_{time} = \begin{bmatrix}
+    f(s_1, s_2) &amp; f(s_1, s_3) &amp; \cdots &amp; f(s_1, s_n) \
+    f(s_2, s_1) &amp; f(s_2, s_3) &amp; \cdots &amp; f(s_2, s_n) \
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    f(s_n, s_1) &amp; f(s_n, s_2) &amp; \cdots &amp; f(s_n, s_{n-1})
+\end{bmatrix}
+$$</p>
+<p>Next, we follow a similar pattern using the responses of the students. Let $R_i$ be the vectorized response of student $i$.</p>
+<p>$$
+R_i = \begin{bmatrix}
+    r_{1} \
+    r_{2} \
+    \vdots \
+    r_{dim(R_i)}
+\end{bmatrix}
+$$</p>
+<p>We define a scoring function $g: A \to \mathbb{R}$ as the euclidean distance between the responses of the students. We then create a matrix $F_{response}$ of the scores of all possible pairings.</p>
+<p>$$
+F_{response} = \begin{bmatrix}
+    g(s_1, s_2) &amp; g(s_1, s_3) &amp; \cdots &amp; g(s_1, s_n) \
+    g(s_2, s_1) &amp; g(s_2, s_3) &amp; \cdots &amp; g(s_2, s_n) \
+    \vdots &amp; \vdots &amp; \ddots &amp; \vdots \
+    g(s_n, s_1) &amp; g(s_n, s_2) &amp; \cdots &amp; g(s_n, s_{n-1})
+\end{bmatrix}
+$$</p>
+<p>Finally, we define a binary matrix $F_{valid}$ of the valid pairings. A valid pairing is one where the students have at least two common time slots in their availability, or rather when $F_{time, i, j} \neq 0$.</p>
+<p>In python, this would look like:</p>
+<pre><code class="language-python"># student_i has availability matrix availabilities[i] and response vector responses[i]
+availabilities = [ ... ] # list of availability matrices. Each matrix is a 7x24 bit-matrix
+responses = [ ... ] # list of response vectors
+
+def f(availability1, availability2):
+    count = 0
+    for i in availability1:
+        for j in availability2:
+            count += np.sum(i &amp; j)
+
+    return count if count &gt;= 2 else 0
+
+def g(response1, response2):
+    return np.linalg.norm(response1 - response2)
+
+F_time = np.zeros((len(students), len(students)))
+F_response = np.zeros((len(students), len(students)))
+F_valid = np.zeros((len(students), len(students)))
+
+for i in range(len(students)):
+    for j in range(len(students)):
+        F_time[i, j] = f(availabilities[i], availabilities[j])
+        F_response[i, j] = g(responses[i], responses[j])
+        F_valid[i, j] = 1 if F_time[i, j] != 0 else 0
+</code></pre>
+<p>Finally, we normalize (min max) F_time and F_response and compute their sum's hadamard product with F_valid to get the final score matrix $F_{final}$.</p>
+<p>$$
+F_{final} = F_{valid} \odot \left( \frac{F_{time} - \min(F_{time})}{\max(F_{time}) - \min(F_{time})} + \frac{F_{response} - \min(F_{response})}{\max(F_{response}) - \min(F_{response})} \right)
+$$</p>
+<pre><code class="language-python">def normalize(matrix):
+    return (matrix - np.min(matrix)) / (np.max(matrix) - np.min(matrix))
+F_final = F_valid * (normalize(F_time) + normalize(F_response))
+</code></pre>
+<p>Finally, using max-min fairness, we repeatedly find the student with the lowest max score for all their pairs, and select that maximal pair. We then update the scores of both students in the pair to be $0$ for all their pairs, and repeat the process until all students are paired.</p>
+<p>```python
+def next_pair(F_final):
+  max_scores = [np.max(F_final[i]) for i in range(len(F_final))]
+  s1, s2 = np.argmin(max_scores), np.argmax(F_final[student])
+  for i in range(len(F_final)):
+    F_final[s1, i] = 0
+    F_final[i, s1] = 0
+    F_final[s2, i] = 0
+    F_final[i, s2] = 0
+  return s1, s2</p>
+<p>def calculate_pairs(F_final):
+  pairs = []
+  unpaired = set(range(len(students)))
+  while len(pairs) &lt; len(students) // 2:
+    pairs.append(next_pair(F_final))
+    unpaired.remove(pairs[-1][0])
+    unpaired.remove(pairs[-1][1])
+  return pairs
+  ```</p>
+            </div>
+        </article>
+    </main>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
+    </footer>
+</body>
+</html>

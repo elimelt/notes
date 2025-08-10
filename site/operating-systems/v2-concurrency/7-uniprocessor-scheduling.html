@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uniprocessor Scheduling</title>
+    <title>Uniprocessor Scheduling | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of common uniprocessor scheduling algorithms, including First In, First Out (FIFO), Shortest Job First (SJF), Round Robin (RR), and Mu">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Uniprocessor Scheduling", "dateModified": "2025-02-11T20:49:50.145404", "description": "Covers the implementation of common uniprocessor scheduling algorithms, including First In, First Out (FIFO), Shortest Job First (SJF), Round Robin (RR), and Mu", "url": "https://notes.elimelt.com/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html", "articleSection": "Operating Systems", "keywords": "uniprocessor scheduling,operating systems,performance metrics"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Uniprocessor Scheduling">
+    <meta property="og:description" content="Covers the implementation of common uniprocessor scheduling algorithms, including First In, First Out (FIFO), Shortest Job First (SJF), Round Robin (RR), and Mu">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Uniprocessor Scheduling">
+    <meta name="twitter:description" content="Covers the implementation of common uniprocessor scheduling algorithms, including First In, First Out (FIFO), Shortest Job First (SJF), Round Robin (RR), and Mu">
+
+    <meta name="keywords" content="uniprocessor scheduling,operating systems,performance metrics">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Uniprocessor Scheduling", "dateModified": "2025-08-09T18:05:18.344904", "description": "Covers the implementation of common uniprocessor scheduling algorithms, including First In, First Out (FIFO), Shortest Job First (SJF), Round Robin (RR), and Mu", "url": "https://notes.elimelt.com/operating-systems/v2-concurrency/7-uniprocessor-scheduling.html", "articleSection": "Operating Systems", "keywords": "uniprocessor scheduling,operating systems,performance metrics"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Uniprocessor Scheduling</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Uniprocessor Scheduling
+        </div>
     </header>
-    <main class="content">
-        <h1>Uniprocessor Scheduling</h1>
-        <h1 id="uniprocessor-scheduling"><a class="toclink" href="#uniprocessor-scheduling">Uniprocessor Scheduling</a></h1>
+    <main role="main">
+        <article>
+            <h1>Uniprocessor Scheduling</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.344904">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="uniprocessor-scheduling"><a class="toclink" href="#uniprocessor-scheduling">Uniprocessor Scheduling</a></h1>
 <h2 id="preface-performance-terminology"><a class="toclink" href="#preface-performance-terminology">Preface: Performance Terminology</a></h2>
 <table>
 <thead>
@@ -142,10 +220,17 @@ $$</p>
 <p>Maintain multiple RR queues, each with a different priority and time quantum. Tasks with higher priority have smaller time quanta and preempt lower priority tasks. Tasks at the same level are scheduled RR.</p>
 <p>Tasks are initially placed in the highest priority queue. If a task uses its entire time quantum, it is demoted to the next lower priority queue. If a task uses less than its entire time quantum, it is either kept in the same queue or moved up. This is a form of SJF within each queue.</p>
 <p>To prevent starvation and achieve max-min fairness, the scheduler monitors process execution time on the CPU. The scheduler then only schedules processes that have yet to recieve their fair share. If a process already got its fair share of the CPU, it is demoted to a lower priority, and if they've yet to get their fair share, they are promoted to a higher priority.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/operating%20systems.html">operating systems</a>
+                <a href="/tags/performance%20metrics.html">performance metrics</a>
+                <a href="/tags/uniprocessor%20scheduling.html">uniprocessor scheduling</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

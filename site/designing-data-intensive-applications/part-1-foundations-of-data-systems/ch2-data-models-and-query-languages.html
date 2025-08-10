@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Models and Relationships in Database Systems</title>
+    <title>Data Models and Relationships in Database Systems | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Data Models and Relationships in Database Systems", "dateModified": "2025-02-11T21:02:34.409361", "description": "This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin", "url": "https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html", "articleSection": "Database Systems", "keywords": "relational databases,document databases,graph databases,data modeling,query languages"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Data Models and Relationships in Database Systems">
+    <meta property="og:description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin">
+    <meta property="og:url" content="https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Data Models and Relationships in Database Systems">
+    <meta name="twitter:description" content="This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin">
+
+    <meta name="keywords" content="relational databases,document databases,graph databases,data modeling,query languages">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Data Models and Relationships in Database Systems", "dateModified": "2025-08-09T18:05:18.039019", "description": "This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusin", "url": "https://notes.elimelt.com/designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages.html", "articleSection": "Database Systems", "keywords": "relational databases,document databases,graph databases,data modeling,query languages"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Data Models and Relationships in Database Systems</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/database%20systems.html">Database Systems</a> » Data Models and Relationships in Database Systems
+        </div>
     </header>
-    <main class="content">
-        <h1>Data Models and Relationships in Database Systems</h1>
-        <h1 id="chapter-2"><a class="toclink" href="#chapter-2">Chapter 2</a></h1>
+    <main role="main">
+        <article>
+            <h1>Data Models and Relationships in Database Systems</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.039019">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/database%20systems.html">Database Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="chapter-2"><a class="toclink" href="#chapter-2">Chapter 2</a></h1>
 <h2 id="data-models-and-query-languages"><a class="toclink" href="#data-models-and-query-languages">Data Models and Query Languages</a></h2>
 <p><strong>Relational Model</strong> We all know SQL</p>
 <p><strong>Document Model</strong> As well as NoSQL</p>
@@ -177,10 +255,19 @@ CREATE INDEX edges_heads ON edges (head_vertex);
 <h4 id="triple-stores-and-sparql"><a class="toclink" href="#triple-stores-and-sparql">Triple-Stores and SPARQL</a></h4>
 <p>Consists of <strong>three-part statements</strong> of the form <code>(subject, predicate, object)</code>. The subject and object are vertices, and the predicate is an edge.</p>
 <p>```sql</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/data%20modeling.html">data modeling</a>
+                <a href="/tags/document%20databases.html">document databases</a>
+                <a href="/tags/graph%20databases.html">graph databases</a>
+                <a href="/tags/query%20languages.html">query languages</a>
+                <a href="/tags/relational%20databases.html">relational databases</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

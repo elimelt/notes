@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electric Circuit Analysis</title>
+    <title>Electric Circuit Analysis | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="In-depth analysis of electric circuits, including short and open circuits, Ohm's law, Kirchoff's laws, impedance, power, and energy. A comprehensive guide for e">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/cheatsheets/circuits/electricity.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Electric Circuit Analysis", "dateModified": "2025-05-10T14:40:13.457837", "description": "In-depth analysis of electric circuits, including short and open circuits, Ohm's law, Kirchoff's laws, impedance, power, and energy. A comprehensive guide for e", "url": "https://notes.elimelt.com/cheatsheets/circuits/electricity.html", "articleSection": "Hardware", "keywords": "electrical engineering,circuits,ohms law,kirchoffs laws,impedance,ac circuits,dc circuits,power,energy"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Electric Circuit Analysis">
+    <meta property="og:description" content="In-depth analysis of electric circuits, including short and open circuits, Ohm's law, Kirchoff's laws, impedance, power, and energy. A comprehensive guide for e">
+    <meta property="og:url" content="https://notes.elimelt.com/cheatsheets/circuits/electricity.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Electric Circuit Analysis">
+    <meta name="twitter:description" content="In-depth analysis of electric circuits, including short and open circuits, Ohm's law, Kirchoff's laws, impedance, power, and energy. A comprehensive guide for e">
+
+    <meta name="keywords" content="electrical engineering,circuits,ohms law,kirchoffs laws,impedance,ac circuits,dc circuits,power,energy">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Electric Circuit Analysis", "dateModified": "2025-08-09T18:05:18.033814", "description": "In-depth analysis of electric circuits, including short and open circuits, Ohm's law, Kirchoff's laws, impedance, power, and energy. A comprehensive guide for e", "url": "https://notes.elimelt.com/cheatsheets/circuits/electricity.html", "articleSection": "Hardware", "keywords": "electrical engineering,circuits,ohms law,kirchoffs laws,impedance,ac circuits,dc circuits,power,energy"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Electric Circuit Analysis</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/hardware.html">Hardware</a> » Electric Circuit Analysis
+        </div>
     </header>
-    <main class="content">
-        <h1>Electric Circuit Analysis</h1>
-        <h1 id="electricity-basics"><a class="toclink" href="#electricity-basics">Electricity Basics</a></h1>
+    <main role="main">
+        <article>
+            <h1>Electric Circuit Analysis</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.033814">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/hardware.html">Hardware</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="electricity-basics"><a class="toclink" href="#electricity-basics">Electricity Basics</a></h1>
 <h2 id="flow-of-electricity"><a class="toclink" href="#flow-of-electricity">Flow of Electricity</a></h2>
 <p>Electricity, being the flow of electrons, is similar to many other types of flow. For prosperity, engineers use <strong>conventional current</strong>, a bad theory made long ago that positive charges flow from high potential to low potential. In reality, electrons are negatively charged and flow from low potentials to high potentials.</p>
 <p><strong>Potential</strong>? What's that? It's the energy per unit charge at a point in space. It's measured in volts, and is the driving force behind the flow of electricity. From this point on I'll refer to potential as voltage, like a true engineer.</p>
@@ -74,10 +152,23 @@ $$</p>
    |       |
    +---O---+
 </code></pre>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/ac%20circuits.html">ac circuits</a>
+                <a href="/tags/circuits.html">circuits</a>
+                <a href="/tags/dc%20circuits.html">dc circuits</a>
+                <a href="/tags/electrical%20engineering.html">electrical engineering</a>
+                <a href="/tags/energy.html">energy</a>
+                <a href="/tags/impedance.html">impedance</a>
+                <a href="/tags/kirchoffs%20laws.html">kirchoffs laws</a>
+                <a href="/tags/ohms%20law.html">ohms law</a>
+                <a href="/tags/power.html">power</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

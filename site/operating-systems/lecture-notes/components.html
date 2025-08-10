@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Components of an OS</title>
+    <title>Components of an OS | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/operating-systems/lecture-notes/components.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Components of an OS", "dateModified": "2025-02-11T20:48:44.915278", "description": "Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/components.html", "articleSection": "Operating Systems", "keywords": "process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Components of an OS">
+    <meta property="og:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/lecture-notes/components.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Components of an OS">
+    <meta name="twitter:description" content="Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys">
+
+    <meta name="keywords" content="process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Components of an OS", "dateModified": "2025-08-09T18:05:18.335284", "description": "Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file sys", "url": "https://notes.elimelt.com/operating-systems/lecture-notes/components.html", "articleSection": "Operating Systems", "keywords": "process operations,memory management,i/o,device drivers,file systems,process creation,process synchronization,virtual memory"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Components of an OS</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Components of an OS
+        </div>
     </header>
-    <main class="content">
-        <h1>Components of an OS</h1>
-        <h1 id="components-of-an-os"><a class="toclink" href="#components-of-an-os">Components of an OS</a></h1>
+    <main role="main">
+        <article>
+            <h1>Components of an OS</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.335284">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="components-of-an-os"><a class="toclink" href="#components-of-an-os">Components of an OS</a></h1>
 <h2 id="process-operations"><a class="toclink" href="#process-operations">Process Operations</a></h2>
 <p>OS provides the following kinds of operations:</p>
 <ul>
@@ -111,10 +189,22 @@
 <li>system processes (servers): provide higher level services (file system, networking, scheduling, etc.)</li>
 </ul>
 <p>Probably slower than monolithic kernel because of all the expensive context switches.</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/device%20drivers.html">device drivers</a>
+                <a href="/tags/file%20systems.html">file systems</a>
+                <a href="/tags/i/o.html">i/o</a>
+                <a href="/tags/memory%20management.html">memory management</a>
+                <a href="/tags/process%20creation.html">process creation</a>
+                <a href="/tags/process%20operations.html">process operations</a>
+                <a href="/tags/process%20synchronization.html">process synchronization</a>
+                <a href="/tags/virtual%20memory.html">virtual memory</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

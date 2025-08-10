@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sliding Window Ack Clock</title>
+    <title>Sliding Window Ack Clock | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/networks/4-transport/ACK-clocking.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Ack Clock", "dateModified": "2025-02-11T20:48:12.244702", "description": "Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive", "url": "https://notes.elimelt.com/networks/4-transport/ACK-clocking.html", "articleSection": "Networks", "keywords": "sliding window,ack clocking,tcp,network congestion control"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Sliding Window Ack Clock">
+    <meta property="og:description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive">
+    <meta property="og:url" content="https://notes.elimelt.com/networks/4-transport/ACK-clocking.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Sliding Window Ack Clock">
+    <meta name="twitter:description" content="Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive">
+
+    <meta name="keywords" content="sliding window,ack clocking,tcp,network congestion control">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Sliding Window Ack Clock", "dateModified": "2025-08-09T18:05:18.330912", "description": "Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receive", "url": "https://notes.elimelt.com/networks/4-transport/ACK-clocking.html", "articleSection": "Networks", "keywords": "sliding window,ack clocking,tcp,network congestion control"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Sliding Window Ack Clock</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/networks.html">Networks</a> » Sliding Window Ack Clock
+        </div>
     </header>
-    <main class="content">
-        <h1>Sliding Window Ack Clock</h1>
-        <h1 id="ack-clocking"><a class="toclink" href="#ack-clocking">ACK Clocking</a></h1>
+    <main role="main">
+        <article>
+            <h1>Sliding Window Ack Clock</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.330912">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/networks.html">Networks</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="ack-clocking"><a class="toclink" href="#ack-clocking">ACK Clocking</a></h1>
 <h2 id="sliding-window-ack-clock"><a class="toclink" href="#sliding-window-ack-clock">Sliding Window Ack CLock</a></h2>
 <p>Each in-order ACK advances the sliding window and lets a new segment enter the network. This prevents queuing buildups at slow links, and thus congestion. Segments are buffered and spread out on slow links.</p>
 <ul>
@@ -30,10 +108,18 @@
 <h2 id="problem-at-the-receiver"><a class="toclink" href="#problem-at-the-receiver">Problem at the Receiver</a></h2>
 <p>Sliding window has pipelining to keep network busy, but what if the receiver is overloaded?</p>
 <p>Consider receiver with $w$ buffers. Application <em>should</em> <code>recv</code> to accept packets, but if it didn't, then</p>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/ack%20clocking.html">ack clocking</a>
+                <a href="/tags/network%20congestion%20control.html">network congestion control</a>
+                <a href="/tags/sliding%20window.html">sliding window</a>
+                <a href="/tags/tcp.html">tcp</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

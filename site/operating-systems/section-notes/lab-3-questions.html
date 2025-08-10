@@ -4,20 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 3 Questions</title>
+    <title>Lab 3 Questions | Elijah's Notes</title>
+
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and th">
+    <meta name="author" content="Elijah Melton">
+    <meta name="robots" content="index, follow">
+    <meta name="generator" content="Custom Static Site Generator">
     <link rel="canonical" href="https://notes.elimelt.com/operating-systems/section-notes/lab-3-questions.html">
-    <link rel="stylesheet" href="/css/styles.css">
-    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Lab 3 Questions", "dateModified": "2025-02-11T20:49:23.471098", "description": "Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and th", "url": "https://notes.elimelt.com/operating-systems/section-notes/lab-3-questions.html", "articleSection": "Operating Systems", "keywords": "malloc,free,sbrk,heap,memory allocation,process management,shell,pipe operator"}</script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Lab 3 Questions">
+    <meta property="og:description" content="Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and th">
+    <meta property="og:url" content="https://notes.elimelt.com/operating-systems/section-notes/lab-3-questions.html">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Lab 3 Questions">
+    <meta name="twitter:description" content="Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and th">
+
+    <meta name="keywords" content="malloc,free,sbrk,heap,memory allocation,process management,shell,pipe operator">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Lab 3 Questions", "dateModified": "2025-08-09T18:05:18.342837", "description": "Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and th", "url": "https://notes.elimelt.com/operating-systems/section-notes/lab-3-questions.html", "articleSection": "Operating Systems", "keywords": "malloc,free,sbrk,heap,memory allocation,process management,shell,pipe operator"}
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/verilog.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href=/css/styles.css>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
+
+    <!-- Configure KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\[", right: "\]", display: true},
+                    {left: "$", right: "$", display: false},
+                ],
+                preProcess: (math) => {
+                    console.log("Pre-processing: " + math);
+                    math = math.split("\n").map((line) => {
+                        if (line.endsWith("\\")) {
+                            return line + "\\";
+                        }
+                        return line;
+                    }).join("\n");
+                    return math;
+                },
+                throwOnError: false
+            });
+        });
+    </script>
+    <!-- Configure Highlight.js -->
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
     <header>
-        <nav><a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a></nav>
-        <div class="breadcrumbs"><a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Lab 3 Questions</div>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://github.com/elimelt/notes" style="font-size:24px; color: white;" class="fa">&#xf09b;</a> | <a href="/index.html">Home</a> | <a href="/categories/index.html">Categories</a> | <a href="/tags/index.html">Tags</a>
+        </nav>
+        <div class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/index.html">Home</a> » <a href="/categories/operating%20systems.html">Operating Systems</a> » Lab 3 Questions
+        </div>
     </header>
-    <main class="content">
-        <h1>Lab 3 Questions</h1>
-        <h1 id="lab-3-questions"><a class="toclink" href="#lab-3-questions">Lab 3 Questions</a></h1>
+    <main role="main">
+        <article>
+            <h1>Lab 3 Questions</h1>
+            <div class="meta">
+                <time datetime="2025-08-09T18:05:18.342837">
+                    Last modified: 2025-08-09
+                </time>
+                <span>Category: <a href="/categories/operating%20systems.html">Operating Systems</a></span>
+                <span><a id="parent-link" href="index.html">..</a></span>
+            </div>
+            <div class=content>
+                <h1 id="lab-3-questions"><a class="toclink" href="#lab-3-questions">Lab 3 Questions</a></h1>
 <h2 id="question-1"><a class="toclink" href="#question-1">Question #1</a></h2>
 <p><em>Q:</em> Why might an application prefer using <code>malloc</code> and <code>free</code> instead of using <code>sbrk</code> directly?</p>
 <p><em>A:</em> Malloc and free are higher-level and don't require the user to think about the details of the heap. Instead of needing to consider the current top of the heap, and how the memory you request is laid out contiguously, malloc and free handle all of that for you. Thus, user programs are able to apply more complex optimizations/strategies for memory allocation like first and best fit, as well as coalescing free blocks to reduce fragmentation, without having to manage the added complexity.</p>
@@ -74,10 +152,22 @@
 <li>struct vpage_info* vpi = va2vpage_info(vr, addr) in trap causes another page fault trap, this time with addr == 24</li>
 <li>infinite loop on above line with addr == 24</li>
 </ul>
+            </div>
+            <div class="tags">
+                Tags:
+                <a href="/tags/free.html">free</a>
+                <a href="/tags/heap.html">heap</a>
+                <a href="/tags/malloc.html">malloc</a>
+                <a href="/tags/memory%20allocation.html">memory allocation</a>
+                <a href="/tags/pipe%20operator.html">pipe operator</a>
+                <a href="/tags/process%20management.html">process management</a>
+                <a href="/tags/sbrk.html">sbrk</a>
+                <a href="/tags/shell.html">shell</a>
+            </div>
+        </article>
     </main>
-    <footer>
-        <p>&copy; 2025 Notes Site</p>
+    <footer role="contentinfo">
+        <p>2025, authored by Elijah Melton.</p>
     </footer>
 </body>
 </html>
-    

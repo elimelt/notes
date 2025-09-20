@@ -694,7 +694,6 @@ footer {
 
 .category-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
 }
 
 .category-card h3 {

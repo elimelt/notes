@@ -443,7 +443,6 @@ footer {
   overflow: auto hidden;
   padding: var(--spacing-md) 0;
   margin: var(--spacing-md) 0;
-  background: var(--katex-background);
   border-radius: var(--radius-md);
   padding: var(--spacing-md);
 }

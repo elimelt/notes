@@ -30,7 +30,6 @@
   /* Slightly darker than background */
   --taxonomy-item-background: rgba(139, 0, 0, 0.05);
   --search-result-background: #e6e3d9;
-  --katex-background: rgba(139, 0, 0, 0.05);
 
   /* Borders */
   --heading-border-color: #d6d3c9;
@@ -167,7 +166,6 @@
     --alphabet-section-background: #3a3832;
     --taxonomy-item-background: rgba(191, 77, 77, 0.1);
     --search-result-background: #3a3832;
-    --katex-background: rgba(191, 77, 77, 0.1);
 
     /* Borders */
     --heading-border-color: #3a3832;

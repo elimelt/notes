@@ -26,7 +26,6 @@
   --alphabet-section-background: var(--border-color);
   --taxonomy-item-background: rgba(192, 12, 12, 0.1);
   --search-result-background: #ffcc00;
-  --katex-background: rgba(192, 12, 12, 0.1);
 
   /* Borders */
   --heading-border-color: var(--border-color);
@@ -162,7 +161,6 @@
     --alphabet-section-background: var(--border-color);
     --taxonomy-item-background: rgba(255, 204, 0, 0.15);
     --search-result-background: var(--border-color);
-    --katex-background: rgba(255, 204, 0, 0.15);
 
     /* Borders */
     --heading-border-color: var(--border-color);

@@ -19,7 +19,6 @@
   --alphabet-section-background: var(--border-color);
   --taxonomy-item-background: var(--accent-light);
   --search-result-background: var(--border-color);
-  --katex-background: var(--accent-light);
 
   /* Borders */
   --heading-border-color: var(--border-color);
@@ -134,7 +133,6 @@
     --alphabet-section-background: var(--border-color);
     --taxonomy-item-background: rgba(96, 165, 250, 0.1);
     --search-result-background: var(--border-color);
-    --katex-background: rgba(96, 165, 250, 0.1);
 
     /* Borders */
     --heading-border-color: var(--border-color);
@@ -145,7 +143,7 @@
     --selection-background: rgba(96, 165, 250, 0.3);
 
     /* Links */
-    --link-color: #58a6ff;
+    --link-color: #1a0dab;
     --link-hover-color: #58a6ff;
     --link-gradient: linear-gradient(transparent calc(100% - 2px), #58a6ff 2px);
 

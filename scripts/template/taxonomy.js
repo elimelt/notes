@@ -198,16 +198,14 @@ function createCategoryCards(items) {
         heading.textContent = item.name;
         
         const count = document.createElement('p');
-        count.innerHTML = `<span class="page-count">${item.count}</span> pages in this category`;
-        
-        const viewAll = document.createElement('a');
-        viewAll.className = 'view-all';
-        viewAll.href = item.url;
-        viewAll.textContent = 'View all →';
+        count.innerHTML = `<span class="page-count">
+          <a href="${item.url}">
+          ${item.count}
+          </a>
+        </span> pages in this category`;
         
         card.appendChild(heading);
         card.appendChild(count);
-        card.appendChild(viewAll);
         
         cardsContainer.appendChild(card);
     });

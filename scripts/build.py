@@ -634,7 +634,7 @@ class SiteGenerator:
         content = self.jinja_env.get_template("index").render(**context)
 
         index_page = Page(
-            title="Notes",
+            title="Elijah's Notes",
             path=Path("index.md"),
             content=content,
             modified_date=datetime.now(),

@@ -164,15 +164,15 @@ function createTagCloud(items) {
         link.href = item.url;
         
         // Calculate font size based on frequency
-        const maxSize = '30%';
-        const minSize = '10%';
+        const maxSize = 30;
+        const minSize = 10;
         let size = minSize;
         if (maxCount > minCount) {
             const ratio = (item.count - minCount) / (maxCount - minCount);
             size = Math.round(ratio * (maxSize - minSize)) + minSize;
         }
         
-        link.style.fontSize = size;
+        link.style.fontSize = size + '%';
         link.textContent = `${item.name} (${item.count})`;
         
         cloudContainer.appendChild(link);

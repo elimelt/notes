@@ -586,9 +586,12 @@ footer {
 
 .category {
   background-color: var(--category-badge-background);
-  border-radius: var(--radius-sm);
   color: var(--category-badge-color);
   padding: 2px 6px;
+  /* no wrapping, even on word break*/
+  word-break: keep-all;
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .top-level-links {

@@ -314,7 +314,6 @@ article {
 .content code {
   font-family: var(--font-family-code);
   font-size: var(--font-size-sm);
-  border-radius: var(--radius-sm);
 }
 
 .content code {

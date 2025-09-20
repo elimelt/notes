@@ -282,6 +282,21 @@ article {
   transition: background-size 0.3s ease-in-out;
 }
 
+/* disable for link in heading */
+.content h1 a,
+.content h2 a,
+.content h3 a,
+.content h4 a,
+.content h5 a,
+.content h6 a {
+  color: var(--text-color);
+  text-decoration: none;
+  background-image: none;
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease-in-out;
+}
+
 .content a:hover {
   background-size: 100% 100%;
   text-decoration: none;

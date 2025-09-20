@@ -54,8 +54,7 @@ function enhanceTaxonomyPage(isCategories) {
         container.appendChild(tagCloud);
     }
     
-    // Create alphabet navigation and sections
-    createAlphabetSections(items, container);
+    // No more alphabet navigation - just show the tag cloud or category cards
     
     // Replace the original content with our enhanced version
     contentDiv.innerHTML = '';
@@ -98,68 +97,16 @@ function createSearchBox(items, container, isCategories) {
 }
 
 function filterItems(query, container, items, isCategories) {
-    // Handle alphabet sections filtering
-    const sections = container.querySelectorAll('.alphabet-section');
-    const alphabetNav = container.querySelector('.alphabet-nav');
-    
-    if (!sections.length) return;
-    
     let anyVisible = false;
     
-    sections.forEach(section => {
-        const letter = section.querySelector('h2').textContent;
-        const listItems = section.querySelectorAll('.taxonomy-list li');
-        let sectionVisible = false;
-        
-        listItems.forEach(item => {
-            const link = item.querySelector('a');
-            const itemText = link.textContent.toLowerCase();
-            
-            if (itemText.includes(query)) {
-                item.style.display = '';
-                sectionVisible = true;
-                anyVisible = true;
-            } else {
-                item.style.display = 'none';
-            }
-        });
-        
-        section.style.display = sectionVisible ? '' : 'none';
-        
-        // Update alphabet nav
-        if (alphabetNav) {
-            const alphabetLink = alphabetNav.querySelector(`a[href="#letter-${letter}"]`);
-            if (alphabetLink) {
-                if (sectionVisible) {
-                    alphabetLink.classList.remove('empty');
-                } else {
-                    alphabetLink.classList.add('empty');
-                }
-            }
-        }
-    });
-    
-    // Show no results message if needed
-    let noResultsMsg = container.querySelector('.no-results');
-    
-    if (!anyVisible) {
-        if (!noResultsMsg) {
-            noResultsMsg = document.createElement('div');
-            noResultsMsg.className = 'no-results';
-            noResultsMsg.textContent = 'No matching results found.';
-            container.appendChild(noResultsMsg);
-        }
-    } else if (noResultsMsg) {
-        noResultsMsg.remove();
-    }
-    
-    // For categories, also filter the category cards if present
+    // For categories, filter the category cards
     if (isCategories) {
         const categoryCards = container.querySelectorAll('.category-card');
         categoryCards.forEach(card => {
             const categoryName = card.querySelector('h3').textContent.toLowerCase();
             if (categoryName.includes(query)) {
                 card.style.display = '';
+                anyVisible = true;
             } else {
                 card.style.display = 'none';
             }
@@ -175,97 +122,29 @@ function filterItems(query, container, items, isCategories) {
                 const tagName = tag.textContent.split(' ')[0].toLowerCase();
                 if (tagName.includes(query)) {
                     tag.style.display = '';
+                    anyVisible = true;
                 } else {
                     tag.style.display = 'none';
                 }
             });
         }
     }
+    
+    // Show no results message if needed
+    let noResultsMsg = container.querySelector('.no-results');
+    
+    if (!anyVisible) {
+        if (!noResultsMsg) {
+            noResultsMsg = document.createElement('div');
+            noResultsMsg.className = 'no-results';
+            noResultsMsg.textContent = 'No matching results found.';
+            container.appendChild(noResultsMsg);
+        }
+    } else if (noResultsMsg) {
+        noResultsMsg.remove();
+    }
 }
 
-function createAlphabetSections(items, container) {
-    // Group items by first letter
-    const groupedItems = {};
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    
-    alphabet.forEach(letter => {
-        groupedItems[letter] = [];
-    });
-    
-    // Add numeric and other categories
-    groupedItems['0-9'] = [];
-    groupedItems['#'] = [];
-    
-    items.forEach(item => {
-        const firstChar = item.name.charAt(0).toUpperCase();
-        if (alphabet.includes(firstChar)) {
-            groupedItems[firstChar].push(item);
-        } else if (/[0-9]/.test(firstChar)) {
-            groupedItems['0-9'].push(item);
-        } else {
-            groupedItems['#'].push(item);
-        }
-    });
-    
-    // Create alphabet navigation
-    const nav = document.createElement('div');
-    nav.className = 'alphabet-nav';
-    
-    const allLetters = ['0-9', '#', ...alphabet];
-    
-    allLetters.forEach(letter => {
-        const hasItems = groupedItems[letter].length > 0;
-        
-        const link = document.createElement('a');
-        link.href = `#letter-${letter}`;
-        link.textContent = letter;
-        
-        if (!hasItems) {
-            link.className = 'empty';
-            link.style.pointerEvents = 'none';
-        }
-        
-        nav.appendChild(link);
-    });
-    
-    container.appendChild(nav);
-    
-    // Create alphabet sections
-    allLetters.forEach(letter => {
-        const items = groupedItems[letter];
-        if (items.length === 0) return;
-        
-        const section = document.createElement('div');
-        section.className = 'alphabet-section';
-        section.id = `letter-${letter}`;
-        
-        const heading = document.createElement('h2');
-        heading.textContent = letter;
-        section.appendChild(heading);
-        
-        const list = document.createElement('ul');
-        list.className = 'taxonomy-list';
-        
-        items.forEach(item => {
-            const li = document.createElement('li');
-            
-            const link = document.createElement('a');
-            link.href = item.url;
-            link.textContent = item.name;
-            
-            const count = document.createElement('span');
-            count.className = 'count';
-            count.textContent = item.count;
-            
-            li.appendChild(link);
-            li.appendChild(count);
-            list.appendChild(li);
-        });
-        
-        section.appendChild(list);
-        container.appendChild(section);
-    });
-}
 
 function createTagCloud(items) {
     const cloudContainer = document.createElement('div');

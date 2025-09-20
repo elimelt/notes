@@ -508,7 +508,6 @@ footer {
   display: block;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  color: var(--accent-color);
 }
 
 .stat-label {
@@ -621,61 +620,6 @@ footer {
   margin: var(--spacing-lg) 0;
 }
 
-.alphabet-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: var(--spacing-lg);
-  position: sticky;
-  top: 60px;
-  background: var(--background-color);
-  padding: var(--spacing-sm) 0;
-  z-index: var(--z-alphabet-nav);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.alphabet-nav a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: var(--radius-sm);
-  background: var(--alphabet-section-background);
-  text-decoration: none;
-  font-weight: var(--font-weight-medium);
-  transition: all var(--transition-speed);
-}
-
-.alphabet-nav a:hover,
-.alphabet-nav a:focus {
-  background: var(--accent-color);
-  color: white;
-  text-decoration: none;
-}
-
-.alphabet-nav a.empty {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.alphabet-nav a.empty:hover {
-  background: var(--alphabet-section-background);
-  color: var(--text-color);
-}
-
-.alphabet-section {
-  margin-bottom: var(--spacing-lg);
-  scroll-margin-top: 120px;
-}
-
-.alphabet-section h2 {
-  font-size: var(--font-size-2xl);
-  padding-bottom: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--alphabet-section-border-color);
-  color: var(--accent-color);
-}
 
 .taxonomy-list {
   list-style: none;
@@ -830,15 +774,6 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .alphabet-nav {
-    gap: 0.3rem;
-  }
-
-  .alphabet-nav a {
-    width: 1.8rem;
-    height: 1.8rem;
-    font-size: 0.9rem;
-  }
 
   .category-cards {
     grid-template-columns: 1fr;

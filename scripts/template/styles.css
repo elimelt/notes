@@ -314,7 +314,6 @@ article {
 .content code {
   font-family: var(--font-family-code);
   font-size: var(--font-size-sm);
-  background-color: var(--code-background);
   border-radius: var(--radius-sm);
 }
 
@@ -857,11 +856,6 @@ footer {
     border-left-color: var(--border-color);
     background-color: var(--card-background);
     color: var(--text-color);
-  }
-
-  .content pre,
-  .content code {
-    background-color: var(--code-background);
   }
 
   .content th,

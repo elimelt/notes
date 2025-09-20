@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,17 +53,17 @@
             renderMathInElement(document.body, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
+                    {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                 ],
                 preProcess: (math) => {
                     console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
+                    math = math.split("\\n").map((line) => {
+                        if (line.endsWith("\\\\")) {
+                            return line + "\\\\";
                         }
                         return line;
-                    }).join("\n");
+                    }).join("\\n");
                     return math;
                 },
                 throwOnError: false

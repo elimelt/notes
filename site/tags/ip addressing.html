@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +26,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: ip addressing", "dateModified": "2025-09-19T23:05:31.249078", "description": "Pages in tag ip addressing", "url": "https://notes.elimelt.com/tags/ip addressing.html"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Tag: ip addressing", "dateModified": "2025-09-19T23:11:06.034529", "description": "Pages in tag ip addressing", "url": "https://notes.elimelt.com/tags/ip addressing.html"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -54,17 +53,17 @@
             renderMathInElement(document.body, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
-                    {left: "\[", right: "\]", display: true},
+                    {left: "\\[", right: "\\]", display: true},
                     {left: "$", right: "$", display: false},
                 ],
                 preProcess: (math) => {
                     console.log("Pre-processing: " + math);
-                    math = math.split("\n").map((line) => {
-                        if (line.endsWith("\\")) {
-                            return line + "\\";
+                    math = math.split("\\n").map((line) => {
+                        if (line.endsWith("\\\\")) {
+                            return line + "\\\\";
                         }
                         return line;
-                    }).join("\n");
+                    }).join("\\n");
                     return math;
                 },
                 throwOnError: false
@@ -90,7 +89,7 @@
         <article>
             <h1>Tag: ip addressing</h1>
             <div class="meta">
-                <time datetime="2025-09-19T23:05:31.249078">
+                <time datetime="2025-09-19T23:11:06.034529">
                     Last modified: 2025-09-19
                 </time>
             </div>

@@ -4,3 +4,13 @@
 .DS_Store
 venv
 *.pyc
+search_index.db
+search_embeddings.jsonl
+site/
+embeddings.jsonl
+*.sqlite
+*.bak
+*.tmp
+*.sed
+*.html
+*.htm

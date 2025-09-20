@@ -1,27 +1,8 @@
 #!/usr/bin/env python3
 """
-rag_embeddings.py
+embed.py
 
-Sophisticated RAG embedding generator and simple vector store.
-
-Features
-- Segments markdown at directory/document/section/sentence levels
-- Normalizes markdown (removes codeblocks optionally, inline markup)
-- Strategy pattern for embedding providers:
-  - Local: sentence-transformers (recommended: all-MiniLM-L6-v2) - works on Mac M3
-  - OpenAI: uses OpenAI embeddings API if API key provided
-- Saves embeddings to a JSONL + numpy .npz bundle or dumps into a simple sqlite DB
-- Includes a tiny k-NN search helper (uses in-memory cosine search)
-
-Usage examples:
-  # local embeddings for a directory (recursively), save to embeddings.jsonl and store in sqlite
-  python rag_embeddings.py --directory docs/ --recursive --output embeddings.jsonl --provider local --model all-MiniLM-L6-v2 --sqlite out.db
-
-  # single file using OpenAI
-  OPENAI_API_KEY=... python rag_embeddings.py --file README.md --provider openai --output readme_embeddings.jsonl
-
-This script is intentionally dependency-friendly: if sentence-transformers is not available
-and provider is 'local' the script will suggest how to install it.
+RAG embedding generator and vector store.
 """
 
 import argparse
@@ -35,11 +16,7 @@ import fnmatch
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass, asdict
 
-# lazy imports (only when needed)
-
 logger = logging.getLogger("rag_embeddings")
-
-# ----------------------------- Utilities -----------------------------
 
 
 def ensure_dir(path: str):
@@ -49,9 +26,6 @@ def ensure_dir(path: str):
 def chunk_text_by_size(
     text: str, max_tokens: int = 250, overlap: int = 50
 ) -> List[str]:
-    """Simple chunker by characters that approximates token sizes.
-    We chunk by words, aiming for ~max_tokens words per chunk.
-    """
     words = text.split()
     if not words:
         return []
@@ -61,7 +35,6 @@ def chunk_text_by_size(
         j = min(i + max_tokens, len(words))
         chunk = " ".join(words[i:j])
         chunks.append(chunk)
-        # overlap
         i = j - overlap if j - overlap > i else j
     return chunks
 
@@ -89,19 +62,13 @@ HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
 def normalize_markdown(markdown_text: str, remove_codeblocks: bool = True) -> str:
-    """Strip codeblocks, HTML tags and normalize whitespace."""
     text = markdown_text
     if remove_codeblocks:
         text = CODEBLOCK_RE.sub(" ", text)
-    # remove inline code but keep contents
     text = INLINE_CODE_RE.sub(lambda m: m.group(1), text)
-    # replace markdown links with link text
     text = MD_LINK_RE.sub(lambda m: m.group(1), text)
-    # remove simple html
     text = HTML_TAG_RE.sub(" ", text)
-    # normalize multiple blank lines
     text = re.sub(r"\n\s*\n+", "\n\n", text)
-    # strip
     return text.strip()
 
 
@@ -120,27 +87,16 @@ class Chunk:
 def segment_markdown(
     markdown_text: str, file_path: str, max_words: int = 200, overlap: int = 40
 ) -> List[Chunk]:
-    """Split a markdown document into hierarchical chunks.
-
-    Strategy:
-      - Find headers and split into sections by headers
-      - For each section, further split into paragraph/sentence chunks
-      - Ensure chunk size controlled by max_words with overlap
-    """
     norm = normalize_markdown(markdown_text)
 
-    # Find headers and their spans
     headers = []
     for m in HEADER_RE.finditer(markdown_text):
         lvl = len(m.group(1))
         title = m.group(2).strip()
         headers.append((m.start(), m.end(), lvl, title))
 
-    sections: List[Tuple[Optional[str], Optional[int], int, int]] = (
-        []
-    )  # (title, lvl, start, end)
+    sections: List[Tuple[Optional[str], Optional[int], int, int]] = []
     if headers:
-        # build sections from headers
         for idx, (h_start, h_end, lvl, title) in enumerate(headers):
             sec_start = h_end
             sec_end = (
@@ -148,11 +104,9 @@ def segment_markdown(
             )
             sections.append((title, lvl, sec_start, sec_end))
     else:
-        # single section representing whole document
         sections.append((None, None, 0, len(markdown_text)))
 
     chunks: List[Chunk] = []
-    # Try to detect a doc title: first H1
     doc_title = None
     for h_start, h_end, lvl, title in headers:
         if lvl == 1:
@@ -162,18 +116,15 @@ def segment_markdown(
     chunk_id = 0
     for title, lvl, s_start, s_end in sections:
         section_text = normalize_markdown(markdown_text[s_start:s_end])
-        # split into paragraphs
         paragraphs = [
             p.strip() for p in re.split(r"\n\s*\n", section_text) if p.strip()
         ]
         for p in paragraphs:
             if not p:
                 continue
-            # further chunk by size
             subchunks = chunk_text_by_size(p, max_tokens=max_words, overlap=overlap)
             for sc in subchunks:
                 cid = f"{os.path.basename(file_path)}::{chunk_id}"
-                # compute approximate start/end by searching in section_text (best-effort)
                 start = section_text.find(sc)
                 if start >= 0:
                     start_abs = s_start + start
@@ -197,7 +148,6 @@ def segment_markdown(
     return chunks
 
 
-# ----------------------------- Embedding Providers (Strategy) -----------------------------
 
 
 class EmbeddingProvider:
@@ -206,10 +156,6 @@ class EmbeddingProvider:
 
 
 class LocalSentenceTransformerProvider(EmbeddingProvider):
-    """Uses sentence-transformers under the hood.
-
-    Model defaults to 'all-MiniLM-L6-v2' (small and high-quality; runs on CPU easily and on macOS M1/M2/M3 with smaller memory).
-    """
 
     def __init__(
         self, model_name: str = "all-MiniLM-L6-v2", device: Optional[str] = None
@@ -229,13 +175,11 @@ class LocalSentenceTransformerProvider(EmbeddingProvider):
         )
 
     def embed_texts(self, texts: List[str]) -> List[List[float]]:
-        # The model returns numpy arrays; convert to list
         embs = self.model.encode(texts, convert_to_numpy=True, show_progress_bar=False)
         return embs.tolist()
 
 
 class OpenAIEmbeddingProvider(EmbeddingProvider):
-    """Uses OpenAI embeddings via openai package. Requires OPENAI_API_KEY in env or passed via client."""
 
     def __init__(
         self, model: str = "text-embedding-3-small", api_key: Optional[str] = None
@@ -249,7 +193,6 @@ class OpenAIEmbeddingProvider(EmbeddingProvider):
             raise
         if api_key:
             openai.api_key = api_key
-        # else the user should have set OPENAI_API_KEY
         self.openai = __import__("openai")
         self.model = model
 
@@ -282,11 +225,9 @@ def get_provider(
         raise ValueError(f"Unknown provider: {name}")
 
 
-# ----------------------------- Persistence -----------------------------
 
 
 def save_embeddings(embeddings: List[Dict[str, Any]], output_file: str):
-    """Save as JSONL where each line is a JSON object with 'meta' and 'embedding' keys."""
     ensure_dir(output_file)
     with open(output_file, "w", encoding="utf-8") as f:
         for item in embeddings:
@@ -305,10 +246,6 @@ def load_embeddings(input_file: str) -> List[Dict[str, Any]]:
 
 
 def dump_embeddings_into_sqlite(embeddings: List[Dict[str, Any]], output_file: str):
-    """Create a simple sqlite DB with schema and store embedding vectors as blobs (JSON).
-
-    This is intentionally simple: for small/medium collections it is fine. For larger datasets use FAISS / PGVector.
-    """
     ensure_dir(output_file)
     conn = sqlite3.connect(output_file)
     cur = conn.cursor()
@@ -358,7 +295,6 @@ def dump_embeddings_into_sqlite(embeddings: List[Dict[str, Any]], output_file: s
     logger.info("Wrote %d rows to sqlite database %s", inserted, output_file)
 
 
-# ----------------------------- Generation Helpers -----------------------------
 
 
 def generate_embeddings_for_file(
@@ -404,7 +340,6 @@ def generate_embeddings_for_directory(
     all_embeddings: List[Dict[str, Any]] = []
     for root, dirs, files in os.walk(directory_path):
         if ignore:
-            # Filter directories using pattern matching
             dirs[:] = [
                 d
                 for d in dirs
@@ -414,7 +349,6 @@ def generate_embeddings_for_directory(
                     for pattern in ignore
                 )
             ]
-            # Filter files using pattern matching
             files[:] = [
                 f
                 for f in files
@@ -439,7 +373,6 @@ def generate_embeddings_for_directory(
     return all_embeddings
 
 
-# ----------------------------- Simple Search -----------------------------
 
 
 def search_embeddings(
@@ -448,17 +381,15 @@ def search_embeddings(
     provider: EmbeddingProvider,
     top_k: int = 5,
 ) -> List[Tuple[float, Dict[str, Any]]]:
-    """Return top_k items sorted by cosine similarity to query."""
     q_emb = provider.embed_texts([query])[0]
     scored = []
     for item in embeddings:
-        sim = cosine_similarity(q_emb, item["embedding"])  # higher is better
+        sim = cosine_similarity(q_emb, item["embedding"])
         scored.append((sim, item))
     scored.sort(key=lambda x: x[0], reverse=True)
     return scored[:top_k]
 
 
-# ----------------------------- CLI / Main -----------------------------
 
 
 def parse_args() -> argparse.Namespace:

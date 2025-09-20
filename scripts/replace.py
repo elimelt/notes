@@ -47,7 +47,7 @@ def replace_chars(input_files, backup, replacements):
         os.replace(output_file, input_file)
 
     os.remove(sed_file_path)
-    print("✅ Replacement done.")
+    print("Replacement done.")
 
 
 def find_non_ascii_characters(input_files):

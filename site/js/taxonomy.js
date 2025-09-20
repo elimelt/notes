@@ -163,18 +163,14 @@ function createTagCloud(items) {
         const link = document.createElement('a');
         link.href = item.url;
         
-        // Calculate size class based on frequency
-        let sizeClass = 'tag-md';
+        // Calculate font size based on frequency
+        let size = '100%';
         if (maxCount > minCount) {
             const ratio = (item.count - minCount) / (maxCount - minCount);
-            if (ratio < 0.2) sizeClass = 'tag-xs';
-            else if (ratio < 0.4) sizeClass = 'tag-sm';
-            else if (ratio < 0.6) sizeClass = 'tag-md';
-            else if (ratio < 0.8) sizeClass = 'tag-lg';
-            else sizeClass = 'tag-xl';
+            size = Math.round(ratio * 100) + '%';
         }
         
-        link.className = sizeClass;
+        link.style.fontSize = size;
         link.textContent = `${item.name} (${item.count})`;
         
         cloudContainer.appendChild(link);

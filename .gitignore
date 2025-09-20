@@ -6,7 +6,7 @@ venv
 *.pyc
 search_index.db
 search_embeddings.jsonl
-site/
+site
 embeddings.jsonl
 *.sqlite
 *.bak

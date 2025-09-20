@@ -47,8 +47,8 @@ description: How do Mixture of Experts (MoE) models achieve these crazy performa
 ### Dense vs Sparse Model Comparison
 
 ```
-Dense Model: FFN 	o Single large feedforward network
-Sparse Model: MoE Layer 	o Multiple expert FFNs + Router
+Dense Model: FFN  - Single large feedforward network
+Sparse Model: MoE Layer - Multiple expert FFNs + Router
 ```
 
 ### Key Components

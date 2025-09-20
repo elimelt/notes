@@ -27,7 +27,7 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-08-09T18:35:18.339994", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "url": "https://notes.elimelt.com/llm-serving-systems/mixture-of-experts.html", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Intro to Mixture of Experts (MoE) in LLM Serving Systems", "dateModified": "2025-09-19T23:42:58.834420", "description": "How do Mixture of Experts (MoE) models achieve these crazy performance improvements?", "url": "https://notes.elimelt.com/llm-serving-systems/mixture-of-experts.html", "articleSection": "Machine Learning Systems", "keywords": "mixture of experts,moe,performance optimization,memory efficiency,machine learning"}
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
@@ -90,8 +90,8 @@
         <article>
             <h1>Intro to Mixture of Experts (MoE) in LLM Serving Systems</h1>
             <div class="meta">
-                <time datetime="2025-08-09T18:35:18.339994">
-                    Last modified: 2025-08-09
+                <time datetime="2025-09-19T23:42:58.834420">
+                    Last modified: 2025-09-19
                 </time>
                 <span><a id="parent-link" href="index.html">..</a></span>
             </div>
@@ -132,8 +132,8 @@
 </ul>
 <h2 id="core-moe-architecture"><a class="toclink" href="#core-moe-architecture">Core MoE Architecture</a></h2>
 <h3 id="dense-vs-sparse-model-comparison"><a class="toclink" href="#dense-vs-sparse-model-comparison">Dense vs Sparse Model Comparison</a></h3>
-<pre><code>Dense Model: FFN    o Single large feedforward network
-Sparse Model: MoE Layer     o Multiple expert FFNs + Router
+<pre><code>Dense Model: FFN  - Single large feedforward network
+Sparse Model: MoE Layer - Multiple expert FFNs + Router
 </code></pre>
 <h3 id="key-components"><a class="toclink" href="#key-components">Key Components</a></h3>
 <ul>

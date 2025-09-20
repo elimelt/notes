@@ -69,8 +69,8 @@
   --paragraph-indent: 0.0rem;
 
   /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
   --radius-pill: 20px;
 
   /* Typography */

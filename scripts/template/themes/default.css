@@ -76,7 +76,7 @@
   /* Typography */
   --font-family-nav: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   --font-family-content: 'Merriweather', Georgia, serif;
-  --font-family-headings: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-headings: 'math', 'serif';
   --font-family-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   --font-family-caption: 'Inter', sans-serif;
 
@@ -144,7 +144,7 @@
 
     /* Links */
     --link-color: #1a0dab;
-    --link-hover-color: #58a6ff;
+    --link-hover-color: #2717d2;
     --link-gradient: linear-gradient(transparent calc(100% - 2px), #58a6ff 2px);
 
     /* Shadow effects */

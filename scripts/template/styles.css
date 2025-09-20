@@ -289,7 +289,7 @@ article {
 .content h4 a,
 .content h5 a,
 .content h6 a {
-  color: var(--text-color);
+  color: unset;
   text-decoration: none;
   background-image: none;
   background-size: 0% 100%;

@@ -733,8 +733,8 @@ class SiteGenerator:
             output_path = self.output_dir / taxonomy_plural / f"{name.lower()}.html"
             self._ensure_parent_directory(output_path)
 
-            # Create content for the taxonomy page
-            content_parts = [f"<h2>{taxonomy_type.title()}: {name}</h2>", "<ul>"]
+            # Create content for the taxonomy page without duplicating the title (H1 already shows it)
+            content_parts = ["<ul>"]
 
             for page in sorted(pages, key=lambda p: p.title.lower()):
                 page_url = f"/{page.path.with_suffix('.html')}"

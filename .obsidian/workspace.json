@@ -1,0 +1,165 @@
+{
+  "main": {
+    "id": "489aa59017e8c3dc",
+    "type": "split",
+    "children": [
+      {
+        "id": "08a00b2a6e3e23c2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d3ad5e32e26e3d85",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "65061ad4da1ac1d7",
+    "type": "split",
+    "children": [
+      {
+        "id": "05a4342eccdea19d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2d28b19fdcc57eb6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "d7faf5c88537fa6d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4a457776d2c82733",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "29f27ccc3d7a14ec",
+    "type": "split",
+    "children": [
+      {
+        "id": "530e1bcdd389e607",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4a87440fa314ec85",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "8ce77a112ae74289",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "a0cb8fb1886375d3",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "859cc0cc8868fe99",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "d3ad5e32e26e3d85",
+  "lastOpenFiles": [
+    "site/css/themes/newspaper.css",
+    "site/css/themes/mcdonalds.css",
+    "site/css/themes/default.css",
+    "site/css/themes/browser-minimal.css",
+    "site/css/themes",
+    "site/tags/etl.html",
+    "site/tags/data analysis.html",
+    "site/tags/distributed filesystems.html",
+    "site/tags/batch processing.html",
+    "site/tags/shared disk architecture.html",
+    "site/tags/shared memory architecture.html",
+    "site/operating-systems/v2-concurrency/threads.png",
+    "site/operating-systems/v2-concurrency/thread-lifecycle-diagram.png",
+    "site/operating-systems/v2-concurrency/asyncio-read-linux.png",
+    "site/operating-systems/v2-concurrency/async-linux-server-select.png",
+    "site/operating-systems/lecture-notes/intel-5-level-paging.png",
+    "site/operating-systems/lecture-notes/windows-page-frame-diagram.png",
+    "site/operating-systems/lecture-notes/paging-diagram.png",
+    "site/operating-systems/lecture-notes/address-translation-page-fault.png",
+    "site/hardware-design/labs/modelsimlab2.png",
+    "site/hardware-design/labs/modelsimlab2-full.png"
+  ]
+}

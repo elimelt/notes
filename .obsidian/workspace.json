@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "08a00b2a6e3e23c2",
+        "id": "3e4b9bdc96e736b7",
         "type": "tabs",
         "children": [
           {
-            "id": "d3ad5e32e26e3d85",
+            "id": "6366d8cef41c9fc2",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -130,15 +130,19 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "obsidian-livesync:P2P Replicator": false,
+      "obsidian-livesync:Show Log": false,
+      "obsidian-livesync:Replicate": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "obsidian-livesync:Show Customization sync": false
     }
   },
-  "active": "d3ad5e32e26e3d85",
+  "active": "6366d8cef41c9fc2",
   "lastOpenFiles": [
     "site/css/themes/newspaper.css",
     "site/css/themes/mcdonalds.css",

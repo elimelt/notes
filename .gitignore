@@ -14,3 +14,6 @@ embeddings.jsonl
 *.sed
 *.html
 *.htm
+
+# Exception: track template HTML files
+!scripts/template/*.html

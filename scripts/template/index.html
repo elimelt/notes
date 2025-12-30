@@ -1,0 +1,35 @@
+<div class="stats">
+    <p>{{ stats.notes }} notes, {{ stats.categories }} categories, {{ stats.tags }} tags</p>
+</div>
+
+<section class="recent-pages">
+    <h2>Recent Pages</h2>
+    <ul>
+    {% for page in recent_pages %}
+        <li>
+            <a href="{{ page.url }}">{{ page.title }}</a>
+            <span class="date">{{ page.date }}</span>
+            {% if page.category %}<span class="category">{{ page.category }}</span>{% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+</section>
+
+<section class="categories">
+    <h2>Categories</h2>
+    <ul>
+    {% for category in categories %}
+        <li><a href="{{ category.url }}">{{ category.name }}</a> ({{ category.count }})</li>
+    {% endfor %}
+    </ul>
+</section>
+
+<section class="popular-tags">
+    <h2>Popular Tags</h2>
+    <div class="tag-cloud">
+    {% for tag in popular_tags %}
+        <a href="{{ tag.url }}" class="tag-{{ tag.size_class }}">{{ tag.name }}</a>
+    {% endfor %}
+    </div>
+</section>
+

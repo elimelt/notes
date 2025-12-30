@@ -55,7 +55,7 @@ except ImportError:
     <p>{{ stats.notes }} notes, {{ stats.categories }} categories, {{ stats.tags }} tags</p>
 </div>
 
-<section class="recent-pages">
+<section class="recent-posts">
     <h2>Recent Pages</h2>
     <ul>
     {% for page in recent_pages %}

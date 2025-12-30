@@ -682,12 +682,14 @@ class SiteGenerator:
             logger.error(f"Failed to generate main index: {str(e)}")
 
     def _get_regular_pages(self) -> List[Page]:
-        """Get all regular pages (excluding special pages)."""
+        """Get all regular pages (excluding special pages, slides, and raw HTML files)."""
         return [
             page
             for page in self.pages.values()
             if not (
-                page.is_index or str(page.path).startswith(("categories/", "tags/"))
+                page.is_index
+                or str(page.path).startswith(("categories/", "tags/", "slides/"))
+                or page.path.suffix == ".html"  # Exclude raw HTML files (auxiliary content)
             )
         ]
 

@@ -44,7 +44,6 @@ except ImportError:
         {{ content|safe }}
     </main>
     <footer>
-        <p>&copy; {{ current_year }} Notes Site</p>
     </footer>
 </body>
 </html>

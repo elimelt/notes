@@ -2,6 +2,7 @@
 title: Algorithmic State Machines
 category: Hardware
 tags: systemverilog, fsm, asmd, state machine, hardware design, datapath, pipeline parallelism
+date: 2025-05-07
 description: What is an Algorithmic State Machine (ASM)? How are they designed and implemented in hardware? Is there anything you can learn from them as a software engineer?
 ---
 

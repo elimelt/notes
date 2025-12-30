@@ -1,3 +1,12 @@
+---
+title: Streaming Data
+category: Performance Engineering
+tags: streaming, memory, bandwidth, throughput, performance, data processing
+date: 2024-12-08
+description: Overview of streaming data processing techniques, focusing on memory efficiency and throughput optimization.
+---
+
+
 # Streaming Data
 
 Streaming is a super common technique. The basic idea is you can't fit the entire dataset in memory, so you process it in a stream of chunks. For example, say we're uploading a massive file to cloud storage like S3. We don't want to read the entire thing into memory, and then pipe it out into the network in what would naturally be chunks. We'd be waiting to upload the entire file (the real bottleneck), while filling up all our memory, causing higher E2E latency while also resulting in a higher memory footprint.
@@ -89,7 +98,7 @@ The streaming constraint (sequential processing, immediate disposal) limits us t
 
 - Parse: `50μs`
 - Filter: `5μs`
-- Enrich: `200μs`  
+- Enrich: `200μs`
 - Aggregate: `20μs`
 
 Total latency is `275μs` per record. But throughput is limited by the slowest stage: `1 ÷ 200μs = 5,000 records/second`. The other stages spend most of their time waiting.
@@ -138,7 +147,7 @@ for (int i = 0; i < 1000; i++) {
 }
 io_uring_submit(ring);  // Single system call
 // Single system call; overhead roughly constant w.r.t N
-// Total data transfer: 4MB  
+// Total data transfer: 4MB
 ```
 
 The difference is dramatic for high-IOPS workloads. But `io_uring` adds complexity - you need to manage ring buffers, track completions, and handle partial reads. For simple sequential reading of large files, the overhead difference might not justify the complexity.
@@ -183,30 +192,30 @@ Java's virtual threads are user-mode threads multiplexed onto carrier threads. E
 public class StreamProcessor {
     private static final int BUFFER_SIZE = 8192;
     private static final int MAX_CONCURRENT = 100;
-    
+
     public void processLargeFile(Path inputPath, Path outputPath) throws Exception {
         try (var input = FileChannel.open(inputPath, StandardOpenOption.READ);
-             var output = FileChannel.open(outputPath, 
+             var output = FileChannel.open(outputPath,
                  StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
-            
+
             Semaphore backpressure = new Semaphore(MAX_CONCURRENT);
             ByteBuffer buffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
-            
+
             long position = 0;
             long fileSize = input.size();
-            
+
             try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
                 while (position < fileSize) {
                     backpressure.acquire();
-                    
+
                     buffer.clear();
                     int bytesRead = input.read(buffer, position);
                     if (bytesRead == -1) break;
-                    
+
                     buffer.flip();
                     byte[] data = new byte[bytesRead];
                     buffer.get(data);
-                    
+
                     long writePosition = position;
                     executor.submit(() -> {
                         try {
@@ -219,13 +228,13 @@ public class StreamProcessor {
                             backpressure.release();
                         }
                     });
-                    
+
                     position += bytesRead;
                 }
             }
         }
     }
-    
+
     private byte[] transform(byte[] data) {
         // transformation logic
         return data;
@@ -251,15 +260,15 @@ class ProcessingStream extends Transform {
         this.activeTransforms = 0;
         this.maxConcurrent = 10;
     }
-    
+
     async _transform(chunk, encoding, callback) {
         // wait if too many transforms in progress
         while (this.activeTransforms >= this.maxConcurrent) {
             await new Promise(resolve => setImmediate(resolve));
         }
-        
+
         this.activeTransforms++;
-        
+
         try {
             const processed = await this.processChunk(chunk);
             callback(null, processed);
@@ -269,7 +278,7 @@ class ProcessingStream extends Transform {
             this.activeTransforms--;
         }
     }
-    
+
     async processChunk(chunk) {
         // async processing
         return chunk;
@@ -297,39 +306,39 @@ class StreamProcessor:
     def __init__(self, max_concurrent=10):
         self.semaphore = asyncio.Semaphore(max_concurrent)
         self.chunk_size = 8192
-        
+
     async def process_file(self, input_path, output_path):
         async with aiofiles.open(input_path, 'rb') as input_file:
             async with aiofiles.open(output_path, 'wb') as output_file:
                 tasks = []
                 position = 0
-                
+
                 while True:
                     chunk = await input_file.read(self.chunk_size)
                     if not chunk:
                         break
-                    
+
                     task = asyncio.create_task(
                         self.process_and_write(chunk, output_file, position)
                     )
                     tasks.append(task)
                     position += len(chunk)
-                    
+
                     # Process in batches to control memory
                     if len(tasks) >= 100:
                         await asyncio.gather(*tasks)
                         tasks = []
-                
+
                 # Process remaining tasks
                 if tasks:
                     await asyncio.gather(*tasks)
-    
+
     async def process_and_write(self, chunk, output_file, position):
         async with self.semaphore:
             processed = await self.transform(chunk)
             await output_file.seek(position)
             await output_file.write(processed)
-    
+
     async def transform(self, data):
         # CPU-intensive work should be in thread pool
         return data.upper()

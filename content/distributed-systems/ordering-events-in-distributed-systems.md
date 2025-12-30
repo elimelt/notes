@@ -2,6 +2,7 @@
 title: Clock Synchronization for Distributed Systems
 category: Distributed Systems
 tags: Distributed Systems, Clock Synchronization, Physical Clocks
+date: 2024-04-07
 description: This response provides a solution to the problem of clock synchronization in distributed systems using physical clocks. It explains the concept of unpredictable delays and how to synchronize clocks in the forward direction.
 ---
 

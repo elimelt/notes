@@ -2,6 +2,7 @@
 title: Processes
 category: Operating Systems
 tags: operating systems, processes, address space, cpu state, namespace
+date: 2024-01-13
 description: Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.
 ---
 

@@ -2,6 +2,7 @@
 title: Finding Connected Components in Undirected Graphs Using BFS/DFS
 category: Algorithms
 tags: graph theory, connected components, breadth-first search, depth-first search
+date: 2024-04-14
 description: Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementation using adjacency lists and demonstrates how to create a data structure that enables O(1) time queries for path existence between vertices.
 ---
 

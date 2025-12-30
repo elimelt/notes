@@ -2,6 +2,7 @@
 title: S’more Blondies
 category: Recipes
 tags: baking, blondies, s'mores
+date: 2025-05-17
 description: An recipe
 ---
 

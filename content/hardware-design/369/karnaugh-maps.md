@@ -2,6 +2,7 @@
 title: Karnaugh Maps
 category: Hardware
 tags: karnaugh maps, truth tables, graph theory, computer science
+date: 2024-04-14
 description: Method for simplifying Boolean expressions
 ---
 

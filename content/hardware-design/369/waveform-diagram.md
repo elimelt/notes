@@ -2,6 +2,7 @@
 title: Waveform Diagrams
 category: Hardware
 tags: waveform diagrams, bit vectors, bus, circuit timing behavior
+date: 2024-04-03
 description: Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.
 ---
 

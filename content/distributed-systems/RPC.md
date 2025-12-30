@@ -2,6 +2,7 @@
 title: Remote Procedure Call (RPC)
 category: Distributed Systems
 tags: Distributed Systems, Communication, Concurrency
+date: 2024-03-26
 description: A discussion on the challenges of message passing in a distributed system, including the two generals problem.
 ---
 

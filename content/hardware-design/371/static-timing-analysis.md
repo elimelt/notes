@@ -2,6 +2,7 @@
 title: Static Timing Analysis
 category: Hardware
 tags: timing analysis, verilog, systemverilog, clock domain crossing, metastability
+date: 2025-05-17
 description: How should you reason about timing in hardware? What are the key thresholds for signal integrity?
 ---
 

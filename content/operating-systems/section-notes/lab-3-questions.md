@@ -2,6 +2,7 @@
 title: Lab 3 Questions
 category: Operating Systems
 tags: malloc, free, sbrk, heap, memory allocation, process management, shell, pipe operator
+date: 2024-02-25
 description: Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and the use of the shell and pipe operator. Includes 10 specific questions related to these technical areas.
 ---
 

@@ -2,6 +2,7 @@
 title: The Unix Timesharing System
 category: Operating Systems
 tags: unix, systems, operating systems
+date: 2025-01-16
 description: Paper review/notes from lecture of Unix Timesharing System
 ---
 

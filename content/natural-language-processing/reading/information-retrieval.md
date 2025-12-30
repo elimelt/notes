@@ -2,6 +2,7 @@
 title: Indexing and Information Retrieval
 category: Natural Language Processing
 tags: tf-idf, inverted index, precision, recall, interpolated_precision_curve, mean_average_precision, dense_vectors, bert
+date: 2025-01-08
 description: Covers indexing and retrieval techniques in Information Retrieval (IR), including term weighting with tf-idf, inverted index construction, evaluation metrics such as MAP, and dense vector-based approaches using BERT. It also touches on ad hoc retrieval, stop words, and precision/recall trade-offs. The focus is on the technical implementation of IR algorithms.
 ---
 

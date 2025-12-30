@@ -2,6 +2,7 @@
 title: Dynamic Host Configuration Protocol (DHCP)
 category: Networks
 tags: networks, DHCP, UDP, IP address
+date: 2024-02-23
 description: Covers the implementation of the Dynamic Host Configuration Protocol (DHCP), a network protocol used for dynamically assigning IP addresses and other network configuration parameters to devices on a network. Describes the key components of a DHCP system, including the DHCP server, DHCP client, and DHCP relay, and their respective roles in the IP address assignment process using the User Datagram Protocol (UDP).
 ---
 

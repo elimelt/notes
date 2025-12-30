@@ -2,6 +2,7 @@
 title: Synchronizing Access to Shared Objects
 category: Operating Systems
 tags: mutual exclusion, locks, thread-safe, bounded queue, atomic operation
+date: 2024-02-21
 description: Covers the implementation of mutual exclusion mechanisms for synchronizing access to shared objects in operating systems. Discusses formal properties of locks, a case study on thread-safe bounded queues, and various lock implementations such as spinlocks and queuing locks. Also introduces condition variables as a synchronization primitive.
 ---
 

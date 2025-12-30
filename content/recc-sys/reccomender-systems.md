@@ -2,6 +2,7 @@
 title: Recommender Systems
 category: Machine Learning Systems
 tags: recommender systems, collaborative filtering, matrix factorization, matrix completion, personalization, cold-start problem
+date: 2025-04-27
 description: A brief overview of recommender systems, including their challenges, approaches, and applications.
 ---
 

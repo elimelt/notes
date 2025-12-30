@@ -2,6 +2,7 @@
 title: Accelerating Padded Encoder-Decoder Transformer Models
 category: Natural Language Processing
 tags: nlp, transformer, encoder-decoder
+date: 2025-03-10
 description: An overview of my research on accelerating inference on encoder-decoder transformer models using OpenAI's Whisper model
 ---
 

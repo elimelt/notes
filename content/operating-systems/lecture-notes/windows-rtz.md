@@ -2,6 +2,7 @@
 title: Hard Lessons Learned: Windows RtlZeroMemory
 category: Operating Systems
 tags: RtlZeroMemory, interrupt handling, Windows optimization, operating system development, memory management
+date: 2024-01-10
 description: Covers the implementation of the RtlZeroMemory function in the Windows operating system, highlighting performance optimizations and the impact on interrupt handling. Discusses the "Gary's Sad Story" case study, which demonstrates the importance of understanding low-level memory management details when optimizing system-level code.
 ---
 

@@ -2,6 +2,7 @@
 title: Modeling and Scaling Performance with Roofline
 category: Machine Learning Systems
 tags: roofline, performance, optimization, gpu, bandwidth, compute
+date: 2025-05-10
 description: How do you characterize performance and bottlenecks when balancing compute and memory bandwidth? How can you quantify the intensity of a workload, and how well an algorithm can utilize resources? What are the scaling challenges of deploying large models for inference?
 ---
 

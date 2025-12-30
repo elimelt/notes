@@ -2,6 +2,7 @@
 title: Electronic Components
 category: Hardware
 tags: Transistors, Op-Amps, Filters, Amplifiers, Comparators
+date: 2024-03-11
 description: A comprehensive overview of electronic components used in electronics devices, including Transistors, Op-Amps, Filters, Amplifiers, and Comparators.
 ---
 

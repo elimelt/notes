@@ -2,6 +2,7 @@
 title: Development of the Domain Name System
 category: Systems
 tags: dns, domain-name-system, networking, systems
+date: 2025-01-19
 description: Paper review of the paper Development of the Domain Name System
 ---
 

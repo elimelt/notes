@@ -2,6 +2,7 @@
 title: Batch Processing Systems and MapReduce Fundamentals
 category: Distributed Systems
 tags: batch processing, mapreduce, distributed filesystems, data analysis, etl
+date: 2023-12-23
 description: This document explores batch processing systems, focusing on MapReduce and distributed filesystems. It covers Unix tools for log analysis, the MapReduce programming model, and various join techniques in distributed environments. The document also discusses applications of batch processing in search indexing and recommendation systems.
 ---
 

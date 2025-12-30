@@ -2,6 +2,7 @@
 title: Distributed Mutual Exclusion
 category: Distributed Systems
 tags: distributed systems, mutual exclusion, locking, ordering, consistency
+date: 2024-04-24
 description: Explains a distributed mutual exclusion algorithm using timestamps and sequence numbers.
 ---
 

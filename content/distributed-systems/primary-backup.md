@@ -2,6 +2,7 @@
 title: Primary Backup
 category: Distributed Systems
 tags: primary backup, distributed systems, consistency, availability, view service, split brain
+date: 2024-03-29
 description: Explains the concept of primary backups in distributed systems, including state machine replication and the view service.
 ---
 

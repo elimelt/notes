@@ -2,6 +2,7 @@
 title: Sliding Window Ack Clock
 category: Networks
 tags: sliding window, ack clocking, tcp, network congestion control
+date: 2024-02-25
 description: Covers the implementation of a sliding window-based acknowledgment (ACK) clocking mechanism for network congestion control. Discusses the problem at the receiver where the receiver's ability to process incoming data can become a bottleneck, leading to buffer buildup and reduced throughput. Describes the sliding window ACK clock approach as a solution to this issue, which aims to pace the transmission of data to match the receiver's processing capacity.
 ---
 

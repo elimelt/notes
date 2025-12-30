@@ -2,6 +2,7 @@
 title: SystemVerilog
 category: Hardware
 tags: system-verilog, hardware, digital electronics, programming languages for hardware
+date: 2024-04-02
 description: Programming language for describing hardware behavior, including modules, primitives, execution, and structural representation
 ---
 

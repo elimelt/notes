@@ -2,6 +2,7 @@
 title: Consistent Global State in Distributed Systems
 category: Distributed Systems
 tags: consistent global state, distributed systems, global predicate evaluation, asynchronous distributed systems
+date: 2024-04-14
 description: Explains the concept of maintaining a consistent global state in distributed systems and its implications.
 ---
 

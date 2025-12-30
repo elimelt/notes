@@ -2,6 +2,7 @@
 title: Components of an OS
 category: Operating Systems
 tags: process operations, memory management, I/O, device drivers, file systems, process creation, process synchronization, virtual memory
+date: 2024-01-13
 description: Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.
 ---
 

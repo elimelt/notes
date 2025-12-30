@@ -2,6 +2,7 @@
 title: Power Dissipation In a Resistor
 category: Hardware
 tags: power dissipation, resistor, kvl, voltage source, current source
+date: 2024-01-10
 description: Covers the power dissipation in a resistor, including the application of Kirchhoff's Voltage Law (KVL) to analyze the behavior of resistors connected to voltage and current sources. Provides a detailed example circuit and discusses the key concepts of power dissipation, voltage, and current in resistive circuits.
 ---
 

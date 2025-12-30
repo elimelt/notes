@@ -2,6 +2,7 @@
 title: Strong Inference
 category: Research
 tags: meta, research, paper, review
+date: 2025-01-06
 description: A review of John R. Platt's paper on the principles of strong inference in scientific research.
 ---
 

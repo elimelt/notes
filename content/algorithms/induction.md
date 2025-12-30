@@ -2,6 +2,7 @@
 title: Mathematical Induction and Pigeonhole Principle Proofs
 category: Algorithms
 tags: induction, pigeonhole principle, proof techniques
+date: 2024-03-29
 description: This document presents detailed proofs using mathematical induction and the pigeonhole principle. It demonstrates the inductive proof for the sum of natural numbers and provides a step-by-step proof of the pigeonhole principle, emphasizing the general approach to inductive reasoning in mathematics.
 ---
 

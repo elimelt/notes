@@ -2,6 +2,7 @@
 title: Measuring Real DRAM Latency
 category: Operating Systems
 tags: memory, DRAM, SRAM, cache, latency, benchmarks, pointer chasing, memory hierarchy
+date: 2025-12-29
 description: An in-depth exploration of DRAM and SRAM memory latency, including the physical principles behind memory cells, row buffers, and how to measure true serial DRAM latency using pointer chasing benchmarks to eliminate memory-level parallelism.
 ---
 

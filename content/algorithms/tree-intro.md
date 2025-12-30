@@ -2,6 +2,7 @@
 title: Tree Properties and Proof of Edge Count
 category: Algorithms
 tags: trees, acyclic graphs, connected graphs, induction proofs, graph properties
+date: 2024-04-03
 description: This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.
 ---
 

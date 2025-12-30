@@ -2,6 +2,7 @@
 title: Practical Lessons from Predicting Clicks on Ads at Facebook
 category: Machine Learning Systems
 tags: recommender systems, machine learning, ads, Facebook
+date: 2025-05-17
 description: A review/summary of the paper "Practical Lessons from Predicting Clicks on Ads at Facebook", covering foundational concepts of ads modeling/ranking systems.
 ---
 

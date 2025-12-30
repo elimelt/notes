@@ -2,6 +2,7 @@
 title: Greedy Algorithms for Interval Scheduling and Partitioning
 category: Algorithm Analysis
 tags: algorithms, interval, scheduling, partitioning, greedy
+date: 2024-04-19
 description: This document explores greedy algorithms for interval scheduling and partitioning problems. It provides detailed explanations of the algorithms, including Python implementations, and presents rigorous proofs of correctness using techniques such as "Greedy Stays Ahead" and exchange arguments.
 ---
 

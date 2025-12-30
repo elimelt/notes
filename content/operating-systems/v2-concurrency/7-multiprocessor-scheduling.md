@@ -2,6 +2,7 @@
 title: Multiprocessor Scheduling
 category: Operating Systems
 tags: multiprocessor scheduling, operating systems, cache coherence, affinity scheduling
+date: 2024-03-04
 description: Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and scheduler activations as methods for efficiently utilizing multiprocessor systems. Examines real-time scheduling considerations for multiprocessor environments.
 ---
 

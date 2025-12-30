@@ -2,6 +2,7 @@
 title: Optimizing GPU Kernels
 category: Machine Learning Systems
 tags: gpu, kernel, optimization, cuda, triton
+date: 2025-05-25
 description: How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.
 ---
 

@@ -2,6 +2,7 @@
 title: Parallel Reductions Benchmarks
 category: Operating Systems
 tags: SIMD, AVX2, ILP, multi-threading, vectorization, memory bandwidth, benchmarks
+date: 2025-12-29
 description: Comprehensive benchmarking of array reduction techniques including ILP with multiple accumulators, SIMD vectorization, and multi-threading, with detailed assembly analysis showing compiler auto-vectorization behavior.
 ---
 

@@ -2,6 +2,7 @@
 title: Power Provisioning for a Warehouse-sized Computer
 category: Hardware
 tags: datacenter, power, provisioning, capacity, utilization
+date: 2025-03-12
 description: A paper review of Power Provisioning for a Warehouse-sized Computer
 ---
 

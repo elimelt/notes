@@ -2,6 +2,7 @@
 title: Data Models and Relationships in Database Systems
 category: Database Systems
 tags: relational databases, document databases, graph databases, data modeling, query languages
+date: 2023-12-19
 description: This document explores various data models including relational, document, and graph databases. It discusses the strengths and weaknesses of each model, focusing on how they handle relationships between data. The chapter also covers query languages, data locality, and the concept of MapReduce for data processing.
 ---
 

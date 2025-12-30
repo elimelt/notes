@@ -2,6 +2,7 @@
 title: How to Read a Paper
 category: Research
 tags: meta, research, paper, review
+date: 2025-01-06
 description: A summary of Keshav's "How to Read a Paper"
 ---
 

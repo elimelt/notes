@@ -1,4 +1,13 @@
-<!-- 
+---
+title: Patterns for Scalability and Reliability in Systems
+category: Distributed Systems
+tags: system design, scalability, reliability, architecture, distributed systems
+date: 2025-03-05
+description: Presentation covering basic techniques and architectures for solving common scalability and reliability problems in systems.
+---
+
+
+<!--
 Presentation covering the basics techniques and architectures for solving common scalability/reliability problems in systems.
  -->
 

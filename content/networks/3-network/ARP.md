@@ -2,6 +2,7 @@
 title: Address Resolution Protocol (ARP)
 category: Networks
 tags: address resolution protocol, arp, discovery protocol, arp table, arp request, arp reply
+date: 2024-02-23
 description: Covers the Address Resolution Protocol (ARP), a discovery protocol used to map network layer addresses (such as IP addresses) to data link layer addresses (such as MAC addresses). Describes the ARP table, which stores the mapping between IP and MAC addresses, and the ARP request and reply process used to dynamically update this table. Discusses the key steps involved in the ARP request and reply mechanism, which allows hosts to determine the MAC address corresponding to a given IP address on the local network.
 ---
 

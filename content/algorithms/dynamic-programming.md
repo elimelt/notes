@@ -2,6 +2,7 @@
 title: Dynamic Programming Algorithms and Problem Solutions Guide
 category: Algorithms
 tags: dynamic programming, optimization, algorithm analysis
+date: 2024-05-10
 description: A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems. Includes detailed explanations of problem-solving approaches, correctness proofs, and runtime analysis for each algorithm, with practical Python implementations.
 ---
 

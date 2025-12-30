@@ -2,6 +2,7 @@
 title: Translation Lookaside Buffer (TLB)
 category: Operating Systems
 tags: virtual memory, address translation, page table, hardware, MMU
+date: 2024-02-16
 description: The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.
 ---
 

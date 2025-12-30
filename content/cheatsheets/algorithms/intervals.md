@@ -2,6 +2,7 @@
 title: Interval Scheduling/Partitioning
 category: Algorithms
 tags: greedy algorithms, interval partitioning, scheduling, time complexity
+date: 2024-04-28
 description: A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.
 ---
 

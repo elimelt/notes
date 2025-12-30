@@ -2,6 +2,7 @@
 title: Classification with Multinomial Naive Bayes
 category: Natural Language Processing
 tags: classification, naive bayes, multinomial naive bayes, text classification, bag of words, laplace smoothing
+date: 2025-02-12
 description: Overview of classification with Multinomial Naive Bayes, including the Naive Bayes assumption, training, and evaluation.
 ---
 

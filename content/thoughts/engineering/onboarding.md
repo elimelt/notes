@@ -1,3 +1,12 @@
+---
+title: How I Onboard
+category: Career
+tags: internship, onboarding, career, professional development, engineering
+date: 2025-03-05
+description: Personal reflections on onboarding strategies and succeeding in internships.
+---
+
+
 # How I Onboard
 
 I was recently asked about succeeding in an internship, and I thought I'd share what's worked for me in the past. I'm writing this for two reasons:

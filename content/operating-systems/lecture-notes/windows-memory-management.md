@@ -2,6 +2,7 @@
 title: Windows Memory Management
 category: Operating Systems
 tags: page frame number database, active, transition, free, zeroed, standby, modified, modified no-write, rom, bad, local and global page replacement, lru list, fifo list, working set, cache manager
+date: 2024-02-21
 description: Covers the implementation of Windows memory management, including the page frame number database, various page states (active, transition, free, zeroed, standby, modified, modified no-write, rom, bad), and local and global page replacement algorithms like LRU and FIFO. Discusses a major problem with page replacement in early Windows versions and an interesting exam question from 2013 related to this topic.
 ---
 

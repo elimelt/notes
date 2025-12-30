@@ -116,11 +116,17 @@ class Page:
     path: Path
     content: str
     modified_date: datetime
+    date: Optional[datetime] = None  # Original creation date from metadata
     category: Optional[str] = None
     tags: List[str] = field(default_factory=list)
     description: Optional[str] = None
     is_index: bool = False
     css_classes: List[str] = field(default_factory=lambda: ["content"])
+
+    @property
+    def display_date(self) -> datetime:
+        """Return the date to use for display/sorting (date if set, else modified_date)."""
+        return self.date if self.date else self.modified_date
 
 
 class JinjaTemplateLoader(BaseLoader):
@@ -265,12 +271,21 @@ class SiteGenerator:
             "category": None,
             "tags": [],
             "description": None,
+            "date": None,
         }
 
         if hasattr(md, "Meta") and md.Meta:
             metadata["title"] = md.Meta.get("title", [default_title])[0]
             metadata["category"] = md.Meta.get("category", [None])[0]
             metadata["description"] = md.Meta.get("description", [None])[0]
+
+            # Process date field (YYYY-MM-DD format)
+            if "date" in md.Meta and md.Meta["date"] and md.Meta["date"][0]:
+                try:
+                    date_str = md.Meta["date"][0].strip()
+                    metadata["date"] = datetime.strptime(date_str, "%Y-%m-%d")
+                except ValueError:
+                    logger.warning(f"Invalid date format in {file_path}: {md.Meta['date'][0]}")
 
             # Process tags
             if "tags" in md.Meta and md.Meta["tags"] and md.Meta["tags"][0]:
@@ -304,6 +319,7 @@ class SiteGenerator:
                 path=relative_path,
                 content=html_content,
                 modified_date=datetime.fromtimestamp(file_path.stat().st_mtime),
+                date=metadata["date"],
                 category=metadata["category"],
                 tags=metadata["tags"],
                 description=metadata["description"],
@@ -631,7 +647,7 @@ class SiteGenerator:
         """Generate the main index page."""
         regular_pages = self._get_regular_pages()
         recent_pages = sorted(
-            regular_pages, key=lambda p: p.modified_date, reverse=True
+            regular_pages, key=lambda p: p.display_date, reverse=True
         )[:10]
 
         # Calculate tag popularity
@@ -691,7 +707,7 @@ class SiteGenerator:
                 {
                     "url": f"/{page.path.with_suffix('.html')}",
                     "title": page.title,
-                    "date": page.modified_date.strftime("%Y-%m-%d"),
+                    "date": page.display_date.strftime("%Y-%m-%d"),
                     "category": page.category,
                 }
                 for page in recent_pages

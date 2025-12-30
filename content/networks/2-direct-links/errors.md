@@ -2,6 +2,7 @@
 title: Error Detection and Correction
 category: Networks
 tags: error detection, error correction, redundancy, codewords, probability
+date: 2024-01-26
 description: An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, internet checksum, and cyclic redundancy check (CRC). The document explains the algorithms for these techniques, including the sender and receiver-side operations. It also discusses the distinction between error detection and error correction capabilities. The content focuses on the technical concepts and implementation details of these network error handling mechanisms.
 ---
 

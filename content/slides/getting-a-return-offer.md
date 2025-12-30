@@ -1,3 +1,12 @@
+---
+title: How to Get a Return Offer
+category: Career
+tags: internship, career, return offer, professional development
+date: 2025-03-05
+description: A non-exhaustive guide to making the most of your internship and securing a return offer.
+---
+
+
 <!--
 How to Get a Return Offer
  -->

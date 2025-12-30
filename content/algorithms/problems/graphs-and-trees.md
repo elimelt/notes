@@ -2,6 +2,7 @@
 title: Graphs and Trees
 category: Algorithms
 tags: graphs, trees, induction, proof by contradiction, cycle detection
+date: 2024-04-14
 description: A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.
 ---
 

@@ -2,6 +2,7 @@
 title: Multinomial Logistic Regression
 category: Natural Language Processing
 tags: classification, multinomial logistic regression, machine learning
+date: 2025-01-05
 description: Explanation of multinomial logistic regression, a classification algorithm used in natural language processing.
 ---
 

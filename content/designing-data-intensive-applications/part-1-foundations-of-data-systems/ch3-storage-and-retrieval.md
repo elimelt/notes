@@ -2,6 +2,7 @@
 title: Storage and Retrieval Techniques for Database Systems
 category: Database Systems
 tags: data structures, indexing, oltp vs olap, column-oriented storage
+date: 2023-12-20
 description: Explores various storage and retrieval techniques for database systems, including log-structured storage, indexing methods, and optimizations. Compares OLTP and OLAP systems, discussing their respective storage strategies and performance considerations.
 ---
 

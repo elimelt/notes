@@ -2,6 +2,7 @@
 title: Application Layer Overview
 category: Networks
 tags: TCP, UDP, application layer, reliability, flow control, overhead
+date: 2024-03-04
 description: Covers the implementation of the application layer, the topmost layer of the TCP/IP network model. Discusses the role of protocols like TCP and UDP in providing reliability, flow control, and overhead management at the application level. Examines the key concepts and design considerations for application layer functionality.
 ---
 

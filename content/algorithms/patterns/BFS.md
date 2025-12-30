@@ -2,6 +2,7 @@
 title: Breadth First Search Pattern
 category: Algorithms
 tags: breadth-first search, graph algorithms, graph traversal, shortest path
+date: 2024-04-14
 description: A technical exploration of the Breadth First Search algorithm, focusing on its key properties and applications in graph problems.
 ---
 

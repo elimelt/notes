@@ -2,6 +2,7 @@
 title: Capacitors
 category: Hardware
 tags: capacitance, inductance, impedance, complex numbers, phasors, energy storage, AC/DC signals
+date: 2024-01-17
 description: Covers the fundamental concepts of capacitors, including capacitance, energy storage, and their behavior in AC and DC circuits. Provides a review of complex numbers and their application to analyzing AC signals using phasors. Discusses the concept of impedance and its importance in understanding the behavior of capacitive and inductive components in electrical circuits.
 ---
 

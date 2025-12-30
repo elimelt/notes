@@ -2,6 +2,7 @@
 title: The Kernel Abstraction
 category: Operating Systems
 tags: operating systems, kernel, process abstraction, process control block, privileged mode
+date: 2023-12-31
 description: Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.
 ---
 

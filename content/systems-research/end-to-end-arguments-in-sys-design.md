@@ -2,6 +2,7 @@
 title: End-to-End Arguments in System Design 
 category: System Design
 tags: system design, end-to-end, design, networking
+date: 2025-01-14
 description: Paper review of "End-to-End Arguments in System Design" by Saltzer, Reed, and Clark
 ---
 

@@ -2,6 +2,7 @@
 title: Concurrency and Threads
 category: Operating Systems
 tags: concurrency, threads, operating systems, I/O devices, CPU utilization, parallel processing
+date: 2024-01-15
 description: Covers the implementation of kernel-level threads, including thread abstraction, life cycle, and data structures. Discusses use cases for threads, such as improving CPU utilization and enabling parallel processing. Examines POSIX thread API and alternatives to threads, including asynchronous I/O and event-driven programming.
 ---
 

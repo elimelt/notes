@@ -2,6 +2,7 @@
 title: How the Operating System Handles Page Faults
 category: Operating Systems
 tags: page fault, virtual memory, page replacement, page table, I/O, process management
+date: 2024-02-16
 description: Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.
 ---
 

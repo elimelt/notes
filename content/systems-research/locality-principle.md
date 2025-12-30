@@ -2,6 +2,7 @@
 title: The Locality Principle
 category: Systems
 tags: os, operating-system, systems, multicore, kernel
+date: 2025-03-05
 description: A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.
 ---
 

@@ -2,6 +2,7 @@
 title: Sequential Logic (SL)
 category: Hardware
 tags: sequential logic, digital systems, finite state machines, flip-flops, clock signals
+date: 2024-05-17
 description: Explains the concept of sequential logic in digital systems and its applications.
 ---
 

@@ -2,6 +2,7 @@
 title: False Sharing Benchmarks
 category: Operating Systems
 tags: false sharing, cache coherence, MESI, multi-threading, cache line, performance, benchmarks
+date: 2025-12-29
 description: Demonstrating the performance impact of false sharing in multi-threaded programs, where threads access different variables that share a cache line, causing excessive coherency traffic and slowdowns.
 ---
 

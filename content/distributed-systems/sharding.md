@@ -2,6 +2,7 @@
 title: Sharding
 category: Distributed Systems
 tags: sharding, consistent hashing, indirection tables, load balancing, data distribution
+date: 2024-05-06
 description: Explains the concept of sharding in distributed systems, its approaches and implications.
 ---
 

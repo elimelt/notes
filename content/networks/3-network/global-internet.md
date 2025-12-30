@@ -2,6 +2,7 @@
 title: The Global Internet
 category: Networks
 tags: routing protocols, autonomous systems, inter-domain routing, end-user sites, service providers
+date: 2024-02-25
 description: Covers the implementation of the global internet, including routing areas and inter-domain routing protocols used by autonomous systems and service providers to connect end-user sites.
 ---
 

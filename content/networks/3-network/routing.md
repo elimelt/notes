@@ -2,6 +2,7 @@
 title: Forwarding Table vs. Routing Table
 category: Networks
 tags: routing table, forwarding table, MAC address, routing protocols, network topology
+date: 2024-02-25
 description: Covers the implementation and differences between forwarding tables and routing tables in network routing. Discusses distance vector routing protocols like RIP and link state routing protocols like OSPF, including concepts like reliable flooding, route calculation, and metrics. Provides technical details on maximum routing table size and route expiration time.
 ---
 

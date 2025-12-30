@@ -2,6 +2,7 @@
 title: Scaling Web Services with Distributed Architectures
 category: Distributed Systems
 tags: distributed systems, two-tier architecture, load balancing, caching, edge computing, service oriented architecture, microservices
+date: 2024-04-26
 description: Explains how to scale web services using distributed architectures
 ---
 

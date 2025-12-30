@@ -2,6 +2,7 @@
 title: Switched Ethernet
 category: Networks
 tags: ethernet, switching, MAC address, forwarding table, bridge
+date: 2024-02-07
 description: Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.
 ---
 

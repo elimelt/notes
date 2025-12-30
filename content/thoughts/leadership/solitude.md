@@ -2,6 +2,7 @@
 title: I'm glad I read Solitude and Leadership
 category: Thoughts
 tags: leadership, solitude, reflection, introspection
+date: 2025-03-05
 description: A reflection on the essay "Solitude and Leadership" by William Deresiewicz, and how it has influenced my thinking on leadership.
 ---
 

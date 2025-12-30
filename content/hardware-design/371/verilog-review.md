@@ -2,6 +2,7 @@
 title: SystemVerilog Review
 category: Hardware
 tags: systemverilog, review, combinational logic, sequential logic, FSM, test benches
+date: 2025-04-03
 description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic concepts for combinational and sequential logic, FSMs, and test benches.
 ---
 

@@ -2,6 +2,7 @@
 title: Flow Control
 category: Networks
 tags: flow control, sliding window, ARQ, bandwidth-delay product
+date: 2024-02-25
 description: Covers the implementation of flow control mechanisms in computer networks, with a focus on the sliding window protocol. Discusses the sender and receiver-side operations of the sliding window, including the use of sequence numbers and the Go-Back-N and Selective Repeat Automatic Repeat Request (ARQ) schemes. Explains the concept of bandwidth-delay product and its importance in determining the appropriate window size for efficient data transfer.
 ---
 

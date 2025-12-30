@@ -2,6 +2,7 @@
 title: Uniprocessor Scheduling
 category: Operating Systems
 tags: uniprocessor scheduling, operating systems, performance metrics
+date: 2024-03-04
 description: Covers the implementation of common uniprocessor scheduling algorithms, including First In, First Out (FIFO), Shortest Job First (SJF), Round Robin (RR), and Multi-level Feedback Queue (MLFQ). Discusses the performance characteristics and tradeoffs of each algorithm, such as bias towards short tasks, overhead of context switching, and handling of mixed workloads. Provides an overview of relevant performance metrics used to evaluate scheduling algorithms.
 ---
 

@@ -2,6 +2,7 @@
 title: Border Gateway Protocol (BGP)
 category: Networks
 tags: autonomous systems, border gateway protocol, routing, transit traffic, stub AS, multihomed AS, transit AS
+date: 2024-02-23
 description: Covers the implementation of the Border Gateway Protocol (BGP), a routing protocol used to exchange routing and reachability information between autonomous systems on the internet. Discusses the relationships between different types of autonomous systems, such as stub, multihomed, and transit ASes, and the policy-based routing decisions made by BGP. Provides a high-level overview of the BGP algorithm and its role in managing transit traffic across the global internet infrastructure.
 ---
 

@@ -1,4 +1,13 @@
-<!-- 
+---
+title: System Design Interviews
+category: Career
+tags: system design, interviews, career, technical interviews
+date: 2025-03-05
+description: Overview of system design interviews, covering format, structure, and basic principles.
+---
+
+
+<!--
 Overview of system design interviews
  -->
 

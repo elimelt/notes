@@ -2,6 +2,7 @@
 title: GPU Architecture and Programming
 category: Machine Learning Systems
 tags: gpu, architecture, programming, cuda, nvidia, pytorch, triton
+date: 2025-05-25
 description: Overview of GPU architecture and context behind GPUs for LLM serving systems
 ---
 

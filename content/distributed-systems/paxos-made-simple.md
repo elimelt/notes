@@ -2,6 +2,7 @@
 title: Paxos Protocol
 category: Distributed Systems
 tags: Consensus Algorithm, Distributed Systems, Fault-Tolerant Systems
+date: 2024-04-24
 description: A protocol for achieving consensus in distributed systems
 ---
 

@@ -2,6 +2,7 @@
 title: Virtual Memory and Paging
 category: Operating Systems
 tags: virtual memory, paging, fragmentation, page table, address translation
+date: 2024-02-07
 description: Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.
 ---
 

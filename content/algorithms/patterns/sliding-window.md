@@ -2,6 +2,7 @@
 title: Sliding Window Pattern
 category: Algorithms
 tags: sliding window, fixed size window, dynamic size window, streaming algorithms, array problems, contiguous subarray, linear data structure
+date: 2024-03-31
 description: A technical exploration of the sliding window pattern in algorithms, focusing on its applications and variations.
 ---
 

@@ -2,6 +2,7 @@
 title: Paxos Introduction
 category: Distributed Systems
 tags: paxos, consensus algorithm, distributed systems, asynchronous systems, state machine replication
+date: 2024-04-24
 description: Explains the Paxos consensus algorithm for ensuring consistency in a distributed system.
 ---
 

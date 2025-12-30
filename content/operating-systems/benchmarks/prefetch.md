@@ -2,6 +2,7 @@
 title: Software Prefetching Benchmarks
 category: Operating Systems
 tags: prefetching, cache, memory latency, hardware prefetcher, performance optimization, benchmarks
+date: 2025-12-29
 description: Comparing hardware and software prefetching effectiveness for sequential and random access patterns, demonstrating when explicit prefetch instructions can outperform automatic hardware prefetching.
 ---
 

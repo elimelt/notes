@@ -2,6 +2,7 @@
 title: Load Balancing
 category: Distributed Systems
 tags: load balancing, distributed systems, paxos, sharding, edge caching, queueing, zipf distribution
+date: 2024-05-06
 description: Explains load balancing strategies and their implications on distributed systems.
 ---
 

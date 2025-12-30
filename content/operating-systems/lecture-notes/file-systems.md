@@ -2,6 +2,7 @@
 title: File Systems
 category: Operating Systems
 tags: file systems, storage, hierarchical structure, programming interface, system calls
+date: 2024-03-04
 description: Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.
 ---
 

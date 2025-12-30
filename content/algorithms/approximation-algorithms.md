@@ -2,6 +2,7 @@
 title: Approximation Algorithms
 category: Algorithms
 tags: approximation, algorithms, vertex cover, set cover
+date: 2024-05-10
 description: A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.
 ---
 

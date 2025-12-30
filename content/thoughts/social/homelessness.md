@@ -2,6 +2,7 @@
 title: Homelessness in Seattle (DRAFT)
 category: Thoughts
 tags: seattle
+date: 2025-03-12
 description: I'm disappointed in the city of Seattle
 ---
 

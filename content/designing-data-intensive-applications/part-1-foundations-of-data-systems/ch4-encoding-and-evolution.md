@@ -2,6 +2,7 @@
 title: Encoding, Evolution, and Data Flow in Distributed Systems
 category: Distributed Systems
 tags: data serialization, schema evolution, compatibility, message passing, encoding formats
+date: 2023-12-19
 description: This document explores various aspects of data encoding and evolution in distributed systems. It covers different serialization formats, schema evolution strategies, and modes of data flow including databases, services, and message passing systems, with a focus on maintaining compatibility as systems change over time.
 ---
 

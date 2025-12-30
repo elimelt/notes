@@ -2,6 +2,7 @@
 title: JVM Performance with State Pattern Optimizations
 category: Performance Engineering
 tags: jvm, state pattern, performance optimization, multithreading, atomic reference, lazy evaluation
+date: 2024-12-08
 description: Covers the implementation of the state pattern and its performance optimizations on the Java Virtual Machine (JVM). Discusses when to use the state pattern and examines JVM-specific optimizations, including the use of atomic references and lazy evaluation. Presents code blocks to test the performance impact of these techniques in a multithreaded environment.
 ---
 

@@ -1,3 +1,12 @@
+---
+title: Cache Line Efficiency Benchmark
+category: Performance Engineering
+tags: cache, memory, benchmark, performance, DRAM, prefetching
+date: 2024-12-08
+description: Benchmark comparing cache line efficiency for sequential and random memory access patterns.
+---
+
+
 # Cache Line Efficiency Benchmark
 
 - **seq8**: Sequential scan, reading only 8 B from each 64 B cache line. Implemented with a single load per line, averaged over multiple passes on a 1 GB buffer. Hardware prefetchers stream lines efficiently, but effective bandwidth is reduced to \~1/8 of peak because most of each line is unused.

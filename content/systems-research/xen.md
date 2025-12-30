@@ -2,6 +2,7 @@
 title: Xen and the Art of Virtualization
 category: Operating Systems
 tags: virtualization, hypervisor, xen, operating system, systems
+date: 2025-01-26
 description: Paper review of Xen and the Art of Virtualization
 ---
 

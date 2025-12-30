@@ -2,6 +2,7 @@
 title: Thevenin's Theorem
 category: Algorithms
 tags: Thevenin's Theorem, Norton's Theorem, Equivalent Circuit, Resistor, Voltage Source, Current Source, Kirchhoff's Laws
+date: 2024-01-17
 description: Covers the implementation of Thevenin's and Norton's Theorems, which are fundamental techniques for analyzing electrical circuits. Describes how to derive the Thevenin and Norton equivalent circuits, consisting of a voltage source and series resistor, or a current source and parallel resistor, respectively. Discusses the application of Kirchhoff's laws and the use of these theorems to simplify complex circuits into an equivalent form for further analysis.
 ---
 

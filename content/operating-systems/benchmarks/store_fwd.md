@@ -1,3 +1,11 @@
+---
+title: Store-to-Load Forwarding Benchmarks
+category: Operating Systems
+tags: store forwarding, store buffer, memory ordering, CPU microarchitecture, performance, benchmarks
+description: Measuring the performance impact of store-to-load forwarding on modern CPUs, showing how aligned stores enable fast forwarding while partial overlaps cause significant stalls.
+---
+
+
 # Store-to-Load Forwarding
 
 ## The Problem

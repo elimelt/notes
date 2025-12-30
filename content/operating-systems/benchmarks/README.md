@@ -1,3 +1,11 @@
+---
+title: Measuring Real DRAM Latency
+category: Operating Systems
+tags: memory, DRAM, SRAM, cache, latency, benchmarks, pointer chasing, memory hierarchy
+description: An in-depth exploration of DRAM and SRAM memory latency, including the physical principles behind memory cells, row buffers, and how to measure true serial DRAM latency using pointer chasing benchmarks to eliminate memory-level parallelism.
+---
+
+
 # Measuring Real DRAM Latency
 
 When you write `int x = array[i]` in C, how long does it actually take? The answer depends on where the data lives in your system's memory hierarchy. Accessing data in DRAM, the legit RAM that you have probably touched/nervously forced into sockets (if you've built a computer), is orders of magnitude slower than accessing data in the CPU's caches (SRAM, e.g. L1, L2, L3)
@@ -7,7 +15,7 @@ When you write `int x = array[i]` in C, how long does it actually take? The answ
 Modern CPUs have multiple levels of storage, each with different speeds. The system I'm testing on looks like this:
 
 - **L1 cache**: ~1-4 ns, 48 KB
-- **L2 cache**: ~10-20 ns, 1.3 MB  
+- **L2 cache**: ~10-20 ns, 1.3 MB
 - **L3 cache**: ~20-40 ns, 25 MB
 - **DRAM**: ~60-100 ns, 96 GB
 
@@ -27,7 +35,7 @@ SRAM is built from standard digital logic. A basic SRAM cell (6T-SRAM) uses 6 tr
   |--+--|
      |
     GND
-    
+
 Access transistors connect to bit lines
 ```
 
@@ -43,7 +51,7 @@ module sram #(
     output reg [DATA_WIDTH-1:0] data
 );
     reg [DATA_WIDTH-1:0] mem [0:(1<<ADDR_WIDTH)-1];
-    
+
     always @(posedge clk) begin
         data <= mem[addr];
     end
@@ -81,7 +89,7 @@ DRAM stores each bit as **charge on a capacitor**. A DRAM cell is just one trans
 
 Like I mentioned earlier, DRAM and SRAM are funamentally different because DRAM is an analog circuit, while SRAM is digital. The capacitor holds a voltage, but capacitors leak charge over time according to RC time constants. Therefore DRAM is **dynamic**; without periodic refresh (every \~64ms), the data disappears.
 
-I don't actually know that much about the low-level internals/implementation of DRAM, because I'm a computer engineer, not an electrical engineer. That being said, there *is* at least a baseline understanding I use to reason about DRAM performance from the perspective of a computer engineer. 
+I don't actually know that much about the low-level internals/implementation of DRAM, because I'm a computer engineer, not an electrical engineer. That being said, there *is* at least a baseline understanding I use to reason about DRAM performance from the perspective of a computer engineer.
 
 It works like this:
 
@@ -103,8 +111,8 @@ Step 1: RAS (Row Address Strobe)
   - All ~1024-8192 cells in that row dump charge onto bit lines
   - Sense amps detect, amplify, and latch values
   - Row buffer now holds the entire row (~1-8 KB)
-  
-Step 2: CAS (Column Address Strobe)  
+
+Step 2: CAS (Column Address Strobe)
   - Select specific column(s) from row buffer
   - Drive data onto output bus
 ```

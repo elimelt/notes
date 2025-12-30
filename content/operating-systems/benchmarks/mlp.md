@@ -1,3 +1,11 @@
+---
+title: Memory-Level Parallelism Benchmarks
+category: Operating Systems
+tags: memory-level parallelism, MLP, pointer chasing, MSHR, latency hiding, benchmarks
+description: Exploring how CPUs hide memory latency through memory-level parallelism, using multiple independent pointer chains to overlap DRAM accesses and achieve near-linear speedup up to hardware limits.
+---
+
+
 # Memory-Level Parallelism (MLP)
 
 ## The Problem

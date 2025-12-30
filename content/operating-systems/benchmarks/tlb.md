@@ -1,3 +1,11 @@
+---
+title: TLB and Page Walk Benchmarks
+category: Operating Systems
+tags: TLB, page table, virtual memory, page walk, huge pages, memory latency, benchmarks
+description: Benchmarking TLB miss penalties and page walk costs on x86-64, demonstrating how access stride affects TLB hit rates and the benefit of hardware page walk caches.
+---
+
+
 # TLB and Page Walks
 
 ## The Problem

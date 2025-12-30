@@ -1,3 +1,11 @@
+---
+title: Memory Bandwidth Benchmarks
+category: Operating Systems
+tags: memory, bandwidth, multi-threading, NUMA, DDR4, DDR5, benchmarks
+description: Benchmarking memory bandwidth scaling across multiple CPU threads, exploring single-core bottlenecks, memory controller saturation, and the gap between theoretical and achieved DDR bandwidth.
+---
+
+
 # Memory Bandwidth
 
 ## The Problem

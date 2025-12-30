@@ -1,3 +1,11 @@
+---
+title: Branch Prediction Benchmarks
+category: Operating Systems
+tags: branch prediction, CPU, pipeline, branchless, performance, benchmarks
+description: Measuring the cost of branch misprediction on modern CPUs, comparing sorted vs random data patterns, and exploring branchless programming techniques to avoid misprediction penalties.
+---
+
+
 # Branch Prediction
 
 ## The Problem

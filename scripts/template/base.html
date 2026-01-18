@@ -46,6 +46,20 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.css">
 
+    <!-- Embed mode detection - runs before DOM renders to prevent flash -->
+    <script>
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('embed') === 'true') {
+                document.documentElement.classList.add('embed-mode');
+            }
+            if (params.get('theme') === 'dark') {
+                document.documentElement.classList.add('theme-dark');
+            }
+        })();
+    </script>
+
+
     <!-- Configure KaTeX auto-render -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {

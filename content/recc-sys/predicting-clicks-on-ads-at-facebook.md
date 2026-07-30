@@ -8,6 +8,8 @@ description: A review/summary of the paper "Practical Lessons from Predicting Cl
 
 # Practical Lessons from Predicting Clicks on Ads at Facebook
 
+This ads-ranking case study is a production example of the objectives and modeling approaches introduced in [[recc-sys/reccomender-systems|Recommender Systems]].
+
 > Disclaimer: This is not affiliated with my work at Meta. This paper is publicly available at https://research.facebook.com/file/273183074306353/practical-lessons-from-predicting-clicks-on-ads-at-facebook.pdf
 
 ## Background

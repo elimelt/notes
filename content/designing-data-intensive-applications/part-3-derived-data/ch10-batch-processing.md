@@ -195,16 +195,7 @@ def query(user_id):
     return result
 ```
 
+## Related notes
 
-
-
-
-
-
-
-
-
-
-
-
-
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval|storage and retrieval]]
+- [[distributed-systems/google-file-system|distributed file systems]]

@@ -8,6 +8,8 @@ description: Techniques to write fast CUDA kernels, including coalesced memory a
 
 # How to write a fast kernel?
 
+The examples here apply the architecture concepts from [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]]; see [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]] for a broader optimization guide.
+
 ## Matrix Transpose Kernel
 
 ### Basic way with Torch

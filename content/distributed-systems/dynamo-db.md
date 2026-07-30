@@ -11,3 +11,9 @@ description: A highly available key-value storage system sacrificing consistency
 
 
 Dynamo is a highly available key-value storage system that sacrifices consistency under certain failure conditions, making extensive use of object versioning and application assisted conflict resolution.
+
+## Related notes
+
+- [[distributed-systems/consistency|consistency]]
+- [[distributed-systems/sharding|sharding]]
+- [[distributed-systems/disconnected-operation|disconnected operation]]

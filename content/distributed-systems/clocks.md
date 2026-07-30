@@ -125,3 +125,8 @@ public class Node {
   }
 }
 ```
+
+## Related notes
+
+- [[distributed-systems/ordering-events-in-distributed-systems|ordering distributed events]]
+- [[distributed-systems/consistent-global-state|consistent global state]]

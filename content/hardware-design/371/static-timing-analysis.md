@@ -51,3 +51,7 @@ Static timing analysis usually happens twice in the FPGA design process: once af
 - **Clock paths** are from device ports or internally-generated clocks to the clock pins of sequential elements
 - **Asynchronous paths** are between inputs and asynchronous set and clear pins of sequential elements
 
+## Related
+
+- [[hardware-design/369/waveform-diagram|Waveform Diagrams]]
+- [[hardware-design/369/sequential-logic|Sequential Logic]]

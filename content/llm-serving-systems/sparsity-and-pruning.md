@@ -7,6 +7,8 @@ description: Overview of techniques in LLM serving systems using sparsity and pr
 ---
 
 # Sparsity and Pruning in LLM Serving Systems
+
+Like [[llm-serving-systems/quantization|Quantization]], sparsity changes the model representation to reduce serving cost, but realizing its gains depends on the hardware bottlenecks described by [[llm-serving-systems/performance-modeling|Performance Modeling]].
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Introduction

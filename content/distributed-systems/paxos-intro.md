@@ -47,3 +47,8 @@ Acceptor:
 - Each acceptor that is able to accept the proposal responds with `Accepted(n_max, v_max)`.
 - If a majority of acceptors respond, the proposal is chosen.
 
+## Related notes
+
+- [[distributed-systems/paxos-made-simple|Paxos Made Simple]]
+- [[distributed-systems/paxos-architecture|Paxos architecture]]
+- [[distributed-systems/ordering-events-in-distributed-systems|event ordering]]

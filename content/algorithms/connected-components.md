@@ -8,7 +8,7 @@ description: Explains how to partition an undirected graph into connected compon
 
 # Connected Components
 
-Given an undirected graph $G = (V, E)$, you can find partition $V$ into sets of connected components $C_1, C_2, \ldots$ in $O(|V| + |E|)$ using breadth-first search (BFS) or depth-first search (DFS).
+Given an undirected graph $G = (V, E)$, you can find partition $V$ into sets of connected components $C_1, C_2, \ldots$ in $O(|V| + |E|)$ using [[algorithms/BFS|breadth-first search (BFS)]] or [[algorithms/DFS|depth-first search (DFS)]].
 
 In other words, we can create a data structure from $G$ such that given two vertices $u, v \in V$, we  we answer whether there exists a path from $u \to v$ in $O(1)$ time and $O(|V|)$ space.
 
@@ -55,3 +55,9 @@ def component_sets(G):
 ## Strategy for Unconnected Graph
 
 In general, if you are solving a graph problem you should first assume your graph is fully connected, and then after you've found a solution for connected graphs, you can run your algorithm on all the connected components of your graph.
+
+## Related notes
+
+- [[algorithms/BFS|breadth-first search]]
+- [[algorithms/DFS|depth-first search]]
+- [[algorithms/graphs-intro|graph fundamentals]]

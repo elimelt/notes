@@ -249,3 +249,7 @@ Looking forward, our work opens up several promising directions for further opti
 **TODO**: Add specific experimental details about which variants of Whisper were tested and with what hyperparameter settings.
 
 **TODO**: Include actual attention visualization analysis that motivated the pruning approach.
+
+## Related
+
+- [[systems-research/sparsity-notes|Faster Causal Self Attention]]

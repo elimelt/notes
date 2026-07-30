@@ -97,3 +97,8 @@ The important part is that two servers can **think** they are the primary, but i
 3. Backup must accept forwarded requests only if view is correct.
 4. Non-primary must reject client requests.
 5. Every operation must be before or after state transfers (not during).
+
+## Related notes
+
+- [[distributed-systems/consistency|consistency]]
+- [[distributed-systems/google-file-system|Google File System]]

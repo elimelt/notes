@@ -39,3 +39,6 @@ Strong inference is essentially to carry out this process at every vertex of the
 - Strong inference is strongly dependent on the actual induction being done when formulating hypotheses. This **needs** to be logically sound.
 - It is a system that **works** if done correctly, as it's essentially the minimum amount of work needed to make a discovery without just getting lucky.
 
+## Related
+
+- [[systems-research/how-to-read-a-paper|How to Read a Paper]]

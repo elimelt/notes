@@ -8,6 +8,8 @@ description: Overview of GPU architecture and context behind GPUs for LLM servin
 
 # GPU Architecture and Introduction to GPU Programming
 
+This architecture overview provides the foundation for [[llm-serving-systems/optimizing-gpu-kernels|GPU Kernel Optimizations]], [[llm-serving-systems/triton|Triton]], and the bottleneck analysis in [[llm-serving-systems/performance-modeling|Performance Modeling]].
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ---

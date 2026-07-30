@@ -126,3 +126,9 @@ def level_order_traversal(graph, start):
         for neighbor in graph[vertex]:
             queue.append((neighbor, level + 1))
 ```
+
+## Related notes
+
+- [[algorithms/graphs-intro|Graph fundamentals]]
+- [[algorithms/DFS|depth-first search]]
+- [[algorithms/connected-components|connected components]]

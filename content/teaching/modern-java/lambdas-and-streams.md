@@ -188,3 +188,6 @@ Map<String, List<User>> usersByRole = users.stream()
     .collect(Collectors.groupingBy(User::getRole));
 ```
 
+## Related
+
+- [[teaching/modern-java/collections-and-records|Creating Collections and Data Types in Modern Java]]

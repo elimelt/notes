@@ -159,3 +159,7 @@ public static void main(String[] args) {
   assert cards.equals(expected);
 }
 ```
+
+## Related
+
+- [[teaching/modern-java/lambdas-and-streams|A Soft Introduction to Java Streams and Lambdas]]

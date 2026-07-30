@@ -27,3 +27,7 @@ Current source represented as $I_{no}$, and resistor as $R_{no}$.
 1. find $I_{no}$, the short circuit current from A to B using KCL and KVL.
 2. find $R_{no}$, the equiv shunt (parallel with source) resistance between A and B by replacing voltage sources with short circuits and current sources with open circuits.
 
+## Related
+
+- [[signal-conditioning/lecture-notes/lecture-3|Resistance]]
+- [[cheatsheets/circuits/electricity|Electric Circuit Analysis]]

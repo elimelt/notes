@@ -98,3 +98,8 @@ Let $d$ be the number of classrooms the greedy algorithm uses. Classroom $d$ is 
 Since we sorted by start time, all these incompatible jobs must have started before $s(j)$, and thus we have $d$ lectures overlapping at time $s(j) + \epsilon$, so our maximum depth is $\ge d$.
 
 Since we have that the optimal solution must schedule at least depth number of classrooms, we have that the greedy algorithm is optimal.
+
+## Related notes
+
+- [[algorithms/dynamic-programming|dynamic programming]]
+- [[algorithms/approximation-algorithms|approximation algorithms]]

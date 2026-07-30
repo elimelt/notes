@@ -52,3 +52,8 @@ Prefer Customer > Peer > Provider, and select the ONE path with the minimum numb
 - Customer paths should be advertised to customers, peers, and providers. This is because customers pay for the service, so it is in the best interest of the provider to advertise this path.
 - Peer paths should only be advertised to customers, since you stand to gain nothing from letting peers use the path, and you'd have to pay to use the path for providers
 - Provider paths should also only be advertised to customers, since you need to pay to use the path of your provider, and you only make money from customers.
+
+## Related notes
+
+- [[networks/3-network/routing|routing]]
+- [[networks/3-network/global-internet|the global Internet]]

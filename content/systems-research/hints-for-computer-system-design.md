@@ -111,3 +111,8 @@ Handle normal and worst cases separately
 
 - MicroLog
 - https://github.com/DPDK/dpdk
+
+## Related
+
+- [[systems-research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]
+- [[systems-research/locality-principle|The Locality Principle]]

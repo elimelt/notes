@@ -85,3 +85,8 @@ Simply add another level of indirection. Instead of having a single page table, 
     - one entry per page frame
     - includes the VPN and the PID of the process
     - hard to search (but IBM PC/RT actually did it)
+
+## Related notes
+
+- [[operating-systems/lecture-notes/paging|paging]]
+- [[operating-systems/lecture-notes/tlb|translation lookaside buffers]]

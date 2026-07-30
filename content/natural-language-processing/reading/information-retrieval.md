@@ -8,6 +8,8 @@ description: Covers indexing and retrieval techniques in Information Retrieval (
 
 # Information Retrieval
 
+Retrieval pipelines depend on [[natural-language-processing/reading/tokenization|tokenized document representations]], while retrieval-augmented systems feed context into the [[natural-language-processing/prompting|prompting]] workflow.
+
 IR in general is the process of obtaining information based on user queries, and can be applied to pretty much any form of media. Probably the most prevalent form of IR that we use every day is through **search engines**.
 
 ## Ad Hoc Retrieval

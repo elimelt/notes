@@ -213,3 +213,7 @@ Consists of **three-part statements** of the form `(subject, predicate, object)`
 
 ```sql
 
+## Related notes
+
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch1-reliable-scalable-and-maintainable-applications|reliable, scalable systems]]
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval|storage and retrieval]]

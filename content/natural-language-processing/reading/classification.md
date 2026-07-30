@@ -8,6 +8,8 @@ description: Overview of classification with Multinomial Naive Bayes, including 
 
 # Classification
 
+The probabilistic classifier developed here is expanded in [[natural-language-processing/reading/multinomial-logistic-regression|Multinomial Logistic Regression]] and contrasted with [[natural-language-processing/reading/neural-networks|Feedforward Neural Networks]].
+
 Take an input $x$ and a fixed set of output classes $Y = \{y_1, y_2, \ldots, y_M\}$ and return a predicted class $y \in Y$.
 
 Text classification sometimes uses $c$ for class instead of $y$ as output, and $d$ for document instead of $x$ as input.

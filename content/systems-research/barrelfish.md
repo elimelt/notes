@@ -48,3 +48,9 @@ The authors proposed a new OS architecture, the Multikernel, that treats the OS 
 
 -
 -
+
+## Related
+
+- [[systems-research/exokernel|Exokernel]]
+- [[systems-research/xen|Xen and the Art of Virtualization]]
+- [[systems-research/locality-principle|The Locality Principle]]

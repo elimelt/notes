@@ -24,5 +24,7 @@ How much time do you use between charges. Device dissipates heat (ROT 10 mW/cm^3
 
 3 key sources: sensing, computing, communication.
 
+## Related
 
-
+- [[signal-conditioning/lecture-notes/lecture-2|Electricity]]
+- [[systems-research/data-center-power-provisioning|Power Provisioning for a Warehouse-sized Computer]]

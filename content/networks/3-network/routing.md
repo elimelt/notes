@@ -215,3 +215,9 @@ OSPF sends Link State Advertisements (LSAs) instead of LSPs. LSAs contain inform
 The ARPANET tested different approaches to link-cost calculation. The original metric measured queued packets on each link, but it didn't consider bandwidth or latency. A later version used delay as a measure of load, taking into account link bandwidth and latency. However, it suffered from instability under heavy load and had a large range of link values. A third approach compressed the metric range, accounted for link type, and smoothed the variation over time.
 
 In real-world network deployments, metrics change rarely, if at all, and only under the control of a network administrator. Static metrics are the norm, with a common approach being to use a constant multiplied by (1/link_bandwidth).
+
+## Related notes
+
+- [[networks/3-network/BGP|BGP]]
+- [[networks/3-network/global-internet|the global Internet]]
+- [[algorithms/graphs-intro|graph fundamentals]]

@@ -8,7 +8,7 @@ description: Explains the concept of sequential logic in digital systems and its
 
 # Sequential Logic (SL)
 
-Whereas in *combinational logic*, you have outputs which are direct functions of their inputs, with sequential logic the presence of *feedback* gives circuits the ability to store state. This is the basis for memory and computation in digital systems.
+Whereas in [[hardware-design/369/combinational-logic|combinational logic]], you have outputs which are direct functions of their inputs, with sequential logic the presence of *feedback* gives circuits the ability to store state. This is the basis for memory and computation in digital systems.
 
 This helps control the flow of information through blocks of combinational logic, usually synchronizing with a clock signal. One of the major use cases of sequential logic is in **Finite State Machines (FSM)**. Without SL, the output of a combinational circuit would change instantly with every change in input, which can lead to unpredictable behavior within intermediate states, leading to unexpected outputs.
 
@@ -46,3 +46,8 @@ The maximum frequency you can run your clock at is limited by the amount of time
 `max_delay = max(clock_to_q + max_cl_delay, max_cl_delay)`
 
 Then, `min_period = max_delay + t_setup`, and `max_freq = 1/min_period`.
+
+## Related
+
+- [[hardware-design/369/waveform-diagram|Waveform Diagrams]]
+- [[hardware-design/371/algorithmic-state-machines|Algorithmic State Machines]]

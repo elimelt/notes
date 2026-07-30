@@ -189,3 +189,9 @@ The goal is to reduce page faults by keeping the working set in memory. **Thrash
 
 - **Hard page fault**: when a page is not in memory, and the OS must read it from disk/backend storage
 - **Soft page fault**: when a page is not in memory, but the OS can find it in the page file, and bring it into memory without reading from the backend storage
+
+## Related notes
+
+- [[operating-systems/lecture-notes/page-faults|page faults]]
+- [[operating-systems/lecture-notes/tlb|translation lookaside buffers]]
+- [[operating-systems/lecture-notes/windows-memory-management|Windows memory management]]

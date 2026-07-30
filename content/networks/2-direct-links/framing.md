@@ -90,3 +90,8 @@ description: An overview of byte-oriented and bit-oriented network protocols, wi
 - STS-N signal used to multiplex N STS-1 frames; payload may be concatenated.
 - Denoted as STS-Nc for concatenated links.
 - Simplifies clock synchronization across carriers' networks.
+
+## Related notes
+
+- [[networks/2-direct-links/errors|error detection]]
+- [[networks/2-direct-links/multiple-access|multiple access]]

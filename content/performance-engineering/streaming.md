@@ -9,6 +9,8 @@ description: Overview of streaming data processing techniques, focusing on memor
 
 # Streaming Data
 
+The cache-line effects behind the bandwidth examples are measured directly in the [[performance-engineering/streaming_benchmarks/cache_line_efficiency/README|Cache Line Efficiency Benchmark]].
+
 Streaming is a super common technique. The basic idea is you can't fit the entire dataset in memory, so you process it in a stream of chunks. For example, say we're uploading a massive file to cloud storage like S3. We don't want to read the entire thing into memory, and then pipe it out into the network in what would naturally be chunks. We'd be waiting to upload the entire file (the real bottleneck), while filling up all our memory, causing higher E2E latency while also resulting in a higher memory footprint.
 
 A lot of the time, you can rely on libraries to do this for you. For example, `Node.js` `stream`, Java `Stream` APIs, and such. Luckily, these are usually pretty efficient and optimized, but it's still fun, and sometimes necessary, to think about what's going on under the hood.

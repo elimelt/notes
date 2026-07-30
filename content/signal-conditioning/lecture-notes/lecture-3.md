@@ -60,5 +60,7 @@ $$I_t = I_1 + I_2 + \ldots + I_n$$
 
 $$I_t = V_t/R_t = V_t/(1/(1/R_1 + 1/R_2 + \ldots + 1/R_n)) = V_t/(R_1 + R_2 + \ldots + R_n) = V_t/R_1 + V_t/R_2 + \ldots + V_t/R_n = I_1 + I_2 + \ldots + I_n$$
 
+## Related
 
-
+- [[signal-conditioning/lecture-notes/lecture-4|Power Dissipation in a Resistor]]
+- [[signal-conditioning/lecture-notes/lecture-5|Thevenin’s Theorem]]

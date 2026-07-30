@@ -118,3 +118,9 @@ def build_adjacency_matrix(n: int, edges: List[Tuple[int, int]]) -> List[List[in
     return adj
 
 ```
+
+## Related notes
+
+- [[algorithms/BFS|breadth-first search]]
+- [[algorithms/DFS|depth-first search]]
+- [[algorithms/tree-intro|trees]]

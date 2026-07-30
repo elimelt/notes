@@ -116,8 +116,7 @@ Power = 3.8 V * 7.552 mA = 28.7 mW
 
 360,000,000 / 2000 J/sec = 180,000 sec = 50 hours
 
+## Related
 
-
-
-
-
+- [[signal-conditioning/lecture-notes/lecture-3|Resistance]]
+- [[cheatsheets/circuits/electricity|Electric Circuit Analysis]]

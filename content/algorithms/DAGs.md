@@ -50,3 +50,8 @@ def topological_sort(G):
 
   return order
 ```
+
+## Related notes
+
+- [[algorithms/DFS|depth-first search]]
+- [[algorithms/dynamic-programming|dynamic programming]]

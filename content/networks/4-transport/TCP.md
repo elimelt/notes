@@ -177,3 +177,9 @@ If multiple packets are lost in a row, this will not work and the sender will go
 ### Random Early Detection (RED)
 
 Instead of marking pakets, just randomly drop packets to throttle senders. The probablity of dropping a packet increases as the queue fills up.
+
+## Related notes
+
+- [[networks/4-transport/flow-control|flow control]]
+- [[networks/4-transport/ACK-clocking|ACK clocking]]
+- [[networks/2-direct-links/retransmission|retransmission]]

@@ -51,3 +51,7 @@ Key design goal is simplicity. Everything is hierarchical. Everything is a file.
 -
 -
 
+## Related
+
+- [[systems-research/exokernel|Exokernel]]
+- [[systems-research/xen|Xen and the Art of Virtualization]]

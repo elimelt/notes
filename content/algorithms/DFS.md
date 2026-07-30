@@ -47,3 +47,8 @@ DFS visits every vertex within the starting vertex's connected component, so you
 
 However, unlike BFS, the DFS tree has the property that every non-tree edge joins a vertex to one of its ancestors/decedents in the tree. We can thus still use DFS to find cycles in a graph.
 
+## Related notes
+
+- [[algorithms/graphs-intro|Graph fundamentals]]
+- [[algorithms/BFS|breadth-first search]]
+- [[algorithms/DAGs|directed acyclic graphs]]

@@ -1,0 +1,21 @@
+// Site-specific Quartz overrides. Quartz owns the layout and component styles;
+// keep this file intentionally small so upgrades remain straightforward.
+:root {
+  --content-width: 760px;
+}
+
+.page-title a {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+article img,
+article video {
+  border-radius: 0.4rem;
+}
+
+article table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}

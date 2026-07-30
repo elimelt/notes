@@ -796,3 +796,9 @@ Let $n$ be the number of vertexes in $T$. We start by calculating the levels of 
 For each call to $f(n, k)$, we solve $k \cdot n$ subproblems, each of which take a constant time to compute given that subproblems with a $k' < k$ have already been solved. We only have this constant time computation since the number of children is at most $3$, since otherwise we would need to solve a number of subproblems exponential in the $deg(v)$ to check every subset of children to include. Therefore, each call takes $O(n)$ time.
 
 Since we call $f(v, k)$ on all vertices in the tree, and each call takes at most $O(n)$ time (but often performs better due to memoized answers from calls on ancestors of $v$), we have an upper bound of $O(n^2)$ on computing the overall answer, which is polynomial
+
+## Related notes
+
+- [[algorithms/divide-and-conquer|divide and conquer]]
+- [[algorithms/DAGs|directed acyclic graphs]]
+- [[algorithms/induction|induction]]

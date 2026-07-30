@@ -271,3 +271,8 @@ void Scheduler::makeReady(TCB *thread) {
 ## Condition Variables
 
 Condition variables are used to wait for a particular condition to become true. They are used in conjunction with locks to provide a way for a thread to be woken up when a condition becomes true. The condition variable is associated with a lock, and the lock must be held when waiting on the condition variable.
+
+## Related notes
+
+- [[operating-systems/v2-concurrency/4-concurrency-and-threads|concurrency and threads]]
+- [[operating-systems/benchmarks/false_sharing|false sharing]]

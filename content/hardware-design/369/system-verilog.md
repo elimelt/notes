@@ -116,3 +116,9 @@ module MUX2 (V, SEL, I, J);
     not G3 (V, VN);
 endmodule
 ```
+
+## Related
+
+- [[hardware-design/369/combinational-logic|Combinational Logic]]
+- [[hardware-design/369/sequential-logic|Sequential Logic]]
+- [[hardware-design/369/quartus-workflow|the Quartus and ModelSim workflow]]

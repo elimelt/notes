@@ -42,3 +42,8 @@ The author details the history of virtual memory and the development and evoluti
 
 - Can malicious actors exploit systems that design for the common case of locality, somehow executing a DOS attack?
 - Is designing a system for high throughput sequential reads directly at odds with designing for locality? Or can the two be targeted simultaneously?
+
+## Related
+
+- [[systems-research/barrelfish|The Multikernel]]
+- [[systems-research/hints-for-computer-system-design|Hints for Computer System Design]]

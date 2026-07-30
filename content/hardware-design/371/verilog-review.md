@@ -110,3 +110,8 @@ description: SystemVerilog review for EE271/CSE371 Spring 2025, covering basic c
   - Level-sensitive: `wait(<expression>)`
 - Output test results using `$display` and related system tasks
 - Format specifiers for output: `%h` (hex), `%d` (decimal), `%b` (binary), etc.
+
+## Related
+
+- [[hardware-design/369/system-verilog|SystemVerilog]]
+- [[hardware-design/371/algorithmic-state-machines|Algorithmic State Machines]]

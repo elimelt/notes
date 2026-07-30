@@ -187,3 +187,8 @@ The data used by both Google Maps (maps.google.com) and Google Earth (earth.goog
 The preprocessing pipeline uses one table to store raw image data (with compression turned off since it is handled manually). During preprocessing, the images are cleaned and consolidated into the final serving data. Each row in the preprocessing table corresponds to a single geographic segment, and rows are named so that adjacent geographic segments are stored near eachother. This preprocessing pipeline relies heavily on MapReduce over Bigtable.
 
 The serving system uses a single table to index data stored in GFS. Although its relatively small (500 GB), it serves tens of thousands of queries per second, so it is hosted on hundreds of tablet servers to load balance, each containing in-memory column families.
+
+## Related notes
+
+- [[distributed-systems/google-file-system|Google File System]]
+- [[distributed-systems/sharding|sharding]]

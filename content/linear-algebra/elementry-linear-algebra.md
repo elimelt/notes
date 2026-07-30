@@ -8,6 +8,8 @@ description: Provides an overview of basic linear algebra concepts and technique
 
 # Elementary Linear Algebra
 
+This introduction is complemented by the broader [[linear-algebra/cheatsheet|Matrix Theory reference]] and its practical [[linear-algebra/python-cheatsheet|NumPy companion]].
+
 ## Systems of Equations
 
 Systems of equations are both fundamental and important to actually understanding linear algebra. With that being said, the two primary introductory courses at the University of Washington, Math 208 and (to a much lesser extent) Applied Math 352, spend a significant amount of time on methods for *solving* systems of equations, something that I have almost no interest in. For the sake of completeness, I will briefly touch on notation and algorithms, but will try to both confine it to this document, and to focus on takeaways that become more useful later on.

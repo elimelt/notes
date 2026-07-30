@@ -8,6 +8,8 @@ description: All about prompting language models.
 
 ## Basic Concepts
 
+Prompt behavior begins with how text is represented, so [[natural-language-processing/reading/tokenization|tokenization]] is useful background; retrieval-augmented prompting also builds on [[natural-language-processing/reading/information-retrieval|information retrieval]].
+
 - **Recency Effect**: Place critical instructions at the end of your prompt where they'll have the strongest impact.
 - **Output Formatting**: Signal your expected response format through examples or explicit instructions. This doesn't work as well for chat-based models, since they're designed outside of the scope of basic auto-completion.
 - **Persona Invocation**: Direct the model to adopt a specific expertise or perspective.

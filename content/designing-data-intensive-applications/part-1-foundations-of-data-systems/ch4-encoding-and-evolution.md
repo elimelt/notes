@@ -159,3 +159,8 @@ The same message passing system is used for communication between actors on the 
 - **Akka** uses Java's serialization by default, but can be configured to use protobuf for rolling upgrades.
 - **Orleans** uses custom encoding by default, and can be configured to use other encodings. Need to set up and shut down clusters when migrating schemas/versioning.
 - **Erlang OTP** experimental support for mapping Erlang data types to protobuf. Still need to be careful about schema evolution.
+
+## Related notes
+
+- [[designing-data-intensive-applications/part-2-distributed-data/ch5-replication|replication]]
+- [[distributed-systems/RPC|RPC]]

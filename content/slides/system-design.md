@@ -224,3 +224,8 @@ Limit hard dependencies and keep services decoupled
 ---
 
 # Questions?
+
+## Related
+
+- [[slides/system-design-interviews|System Design Interviews]]
+- [[systems-research/hints-for-computer-system-design|Hints for Computer System Design]]

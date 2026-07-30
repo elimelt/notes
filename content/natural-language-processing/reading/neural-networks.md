@@ -9,6 +9,8 @@ source: https://web.stanford.edu/~jurafsky/slp3/7.pdf
 
 # Neural Networks
 
+These networks generalize the linear decision boundaries in [[natural-language-processing/reading/multinomial-logistic-regression|Multinomial Logistic Regression]] while solving the same [[natural-language-processing/reading/classification|classification]] problems.
+
 Contrasting with MLR, neural networks are a more flexible model that can learn complex patterns in the data, even without hand-crafted features.
 
 

@@ -19,6 +19,8 @@ In a load balancing systems, we want the following:
 
 ## Scaling Paxos with Sharding
 
+This design combines [[distributed-systems/paxos-intro|Paxos consensus]] with [[distributed-systems/sharding|sharding]].
+
 Use Paxos to define the order of a state machine running on a set of servers. For a key value store, we can split the key space into multiple shards, assigning some set of keys to a given shard. The Paxos group that performs this is known as the **shard master**. Then, each shard is a Paxos group that runs the state machine for its subset of keys.
 
 This has the advantage of spreading load across multiple servers, as well as distributing the data.
@@ -53,3 +55,8 @@ The **Zipf distribution** says that the $k$th most popular item follows some cur
 - Friends on a social network
 
 We can cope with popular keys using **power of two choices**. Keys can be hashed to multiple (in this case two, but generalizes to $k$) servers, and requests are forwarded to whichever server is under less load.
+
+## Related notes
+
+- [[distributed-systems/scaling-web-services|scaling web services]]
+- [[distributed-systems/sharding|sharding]]

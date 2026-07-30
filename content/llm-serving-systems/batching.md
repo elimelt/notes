@@ -8,6 +8,8 @@ description: Overview of batching techniques in LLM serving systems,
 
 # Batching in LLM Serving Systems
 
+Batching exposes the tradeoff between the latency and throughput models in [[llm-serving-systems/performance-modeling|Performance Modeling]] and the per-request KV-cache costs discussed in [[llm-serving-systems/memory-management|Memory Management]].
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Overview

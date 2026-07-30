@@ -96,3 +96,8 @@ Root servers must be highly available and distributed geographically.
 
 - What level of security was considered in the design of DNS, and how has this evolved over time?
 - Are type/class fields still over-allocated? If so, could it be possible to introduce some sort of versioning within these fields?
+
+## Related
+
+- [[systems-research/internet-design-philosophy|Design Philosophy of DARPA Internet Protocols]]
+- [[systems-research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]

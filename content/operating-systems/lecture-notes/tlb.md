@@ -51,3 +51,9 @@ Forget about doing reads/writes. Instead, map the file into the address space. A
 #### Soft Page Faults
 
 Fault on a page that are actually in memory, but the PTE was marked as invalid. Resolving soft faults is relatively cheap. This can be used whenever you need to wake up the OS to do something on reference to a page (for instance, a debugger watch point). Windows uses soft faults in its page replacement strategy.
+
+## Related notes
+
+- [[operating-systems/lecture-notes/paging|paging]]
+- [[operating-systems/lecture-notes/page-faults|page faults]]
+- [[operating-systems/benchmarks/tlb|TLB benchmarks]]

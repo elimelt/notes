@@ -8,6 +8,8 @@ description: InfLLM is a training-free, memory-based method that enables LLMs to
 
 ###### [InfLLM: Training-Free Long-Context Extrapolation for LLMs with an Efficient Context Memory](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/31922851/d1880b1e-f732-4c87-b694-7d3a457724fc/inf-llm.pdf)
 
+InfLLM's external context store addresses the same long-context KV-cache pressure introduced in [[llm-serving-systems/memory-management|Memory Management in LLM Serving Systems]].
+
 ---
 
 ### What is the Problem?

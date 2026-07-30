@@ -9,7 +9,7 @@ description: Personal reflections on onboarding strategies and succeeding in int
 
 # How I Onboard
 
-I was recently asked about succeeding in an internship, and I thought I'd share what's worked for me in the past. I'm writing this for two reasons:
+I was recently asked about succeeding in an internship, and I thought I'd share what's worked for me in the past. This complements my practical advice on [[slides/getting-a-return-offer|getting a return offer]]. I'm writing this for two reasons:
 
 1. To create an artifact in case I'm asked this question again
 2. To reflect on what's worked well, in order to improve my process

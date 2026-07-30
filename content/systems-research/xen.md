@@ -42,3 +42,8 @@ Xen is a hypervisor that allows multiple OSes to run on the same hardware throug
 
 - Is there a way to automatically/programmatically port guest OSes to be hypervisor-aware? Is there some way we could make implementing a new OS conform to an interface that complies with the hypervisor automatically?
 - Has there been any work in detecting "hot spots" for routines that that are called a lot, for which we could automatically register a fast handler in the hypervisor?
+
+## Related
+
+- [[systems-research/exokernel|Exokernel]]
+- [[systems-research/barrelfish|The Multikernel]]

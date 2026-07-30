@@ -158,3 +158,7 @@ Future improvements
 ---
 
 # [Part 2](system-design.html)
+
+## Related
+
+- [[slides/system-design|Patterns for Scalability and Reliability in Systems]]

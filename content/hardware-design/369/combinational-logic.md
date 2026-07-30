@@ -96,3 +96,9 @@ $$
 $$
 
 In a circuit, the more general rule is that if you have an AND or OR gate with some inverted terminals, to apply demorgans law, you just change the type of gate (ie AND to OR or OR to AND) and invert the inputs (ie change all the points that are inverted to not inverted and vice versa).
+
+## Related
+
+- [[hardware-design/369/karnaugh-maps|Karnaugh Maps]]
+- [[hardware-design/369/sequential-logic|Sequential Logic]]
+- [[hardware-design/369/system-verilog|SystemVerilog]]

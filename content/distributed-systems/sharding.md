@@ -19,3 +19,9 @@ A classic approach is to maintain a modular space of hashed keys, and use the re
 ## Indirection Tables
 
 A cooler approach in my opinion. Just put a table of `hash(key) -> server address` on every client, and assign fewer table entries to buckets with more keys. This way, the load is more evenly distributed. You can then broadcast any changes to the table to every client server.
+
+## Related notes
+
+- [[distributed-systems/scaling-web-services|scaling web services]]
+- [[distributed-systems/load-balancing|load balancing]]
+- [[distributed-systems/dynamo-db|Dynamo]]

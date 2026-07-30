@@ -26,3 +26,7 @@ description: A documentation on the Spring Boot annotations used for configurati
     used to map web requests onto specific handler classes and/or handler methods.
 - `@RequestParam`:
     used to bind the web request parameter to a method parameter.
+
+## Related
+
+- [[cheatsheets/java-spring-boot/running|Spring Boot Quickstart Guide]]

@@ -8,6 +8,8 @@ description: Overview of tokenization techniques in Natural Language Processing 
 
 # Tokenization
 
+Tokenization defines the terms consumed by [[natural-language-processing/reading/information-retrieval|information retrieval]] systems and the model inputs used throughout [[natural-language-processing/prompting|prompting]].
+
 ## Old-School Unix
 
 ```bash

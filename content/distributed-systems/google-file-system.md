@@ -138,3 +138,8 @@ A write can be carried out through the following:
 5. The primary forwards the write request to all secondary replica, and the replicas apply the mutations in the same order defined by the primary.
 6. The secondaries ack that they completed the operation
 7. The primary replies to the client, and any errors are reported to the client. Errors leave the region in an inconsistent state, but the failed mutation is usually retried multiple times, until eventually falling back to redoing the entire write.
+
+## Related notes
+
+- [[distributed-systems/bigtable|Bigtable]]
+- [[distributed-systems/primary-backup|primary-backup replication]]

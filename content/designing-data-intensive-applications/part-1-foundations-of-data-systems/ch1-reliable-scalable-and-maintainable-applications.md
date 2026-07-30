@@ -73,3 +73,8 @@ There is no generic solution. Scale based on access patterns, not on data size.
 **Simplicity:** make it easy for new engineers to understand the system, by removing as much complexity as possible from the system. Manage complexity with abstraction.
 
 **Evolvability:** make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change. Good abstractions and modularity allow components to be replaced, and the overall system architecture to be modified, without complete reimplementation.
+
+## Related notes
+
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages|data models and query languages]]
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval|storage and retrieval]]

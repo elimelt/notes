@@ -8,6 +8,8 @@ description: How do you characterize performance and bottlenecks when balancing 
 
 # Scaling with the Roofline Model
 
+This is the compact reference for the roofline analysis developed in [[llm-serving-systems/performance-modeling|Performance Modeling]] and applied in [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]].
+
 > *"When we run algorithms on hardware, we're bounded by three things: how fast it can do math (OPs/second), the bandwidth available for moving data around (bytes/second), and the total memory available to store data (bytes). These "roofline" constraints let us upper and lower bound the time of a given computation." - [How to Scale Your Model - All About Rooflines](https://jax-ml.github.io/scaling-book/roofline/)*
 
 ---

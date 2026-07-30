@@ -7,6 +7,8 @@ description: Overview of parallelism techniques in LLM serving systems, focusing
 ---
 
 # Parallelism in LLM Serving Systems
+
+Parallel execution becomes necessary when the model or KV cache exceeds one device; compare [[llm-serving-systems/memory-management|memory constraints]] and the routing-specific case in [[llm-serving-systems/mixture-of-experts|Mixture of Experts]].
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Introduction & Motivation

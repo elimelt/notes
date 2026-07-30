@@ -8,6 +8,8 @@ description: Covers fundamental concepts and operations in linear algebra using 
 
 # Fundamentals of Vectors
 
+For the mathematical definitions behind these NumPy operations, see [[linear-algebra/elementry-linear-algebra|Elementary Linear Algebra]] and the more comprehensive [[linear-algebra/cheatsheet|Matrix Theory reference]].
+
 ## Working with Vectors in NumPy
 
 ```py

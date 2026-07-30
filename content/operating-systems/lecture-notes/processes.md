@@ -60,3 +60,8 @@ A processes address space (idealized):
 - The PID namespace is global to the OS
 - Operations that create processes (e.g. `fork`) returns the pid
 - Operations on processes take pid as an argument (e.g. `kill`)
+
+## Related notes
+
+- [[operating-systems/lecture-notes/kernel-abstraction|kernel abstractions]]
+- [[operating-systems/v2-concurrency/4-concurrency-and-threads|concurrency and threads]]

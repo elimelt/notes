@@ -7,6 +7,7 @@ tags:
   - implicit feedback
   - matrix factorization
   - bpr
+  - counterfactual evaluation
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen

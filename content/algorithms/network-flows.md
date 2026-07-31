@@ -4,6 +4,7 @@ category: Algorithms
 tags:
   - max flow min cut
   - ford-fulkerson algorithm
+  - bipartite graphs
   - bipartite matching
   - vertex cover
   - independent set
@@ -11,6 +12,8 @@ date: 2024-05-17
 updated: 2026-07-30
 status: needs-review
 description: Max-flow and min-cut, the Ford-Fulkerson algorithm with runtime analysis, the reduction from bipartite matching, image segmentation via min-cut, and four worked reduction problems. Two of the problem writeups lean on results from course section handouts not reproduced here.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

@@ -5,6 +5,7 @@ aliases:
 category: Networks
 tags:
   - content-delivery-networks
+  - application-layer
   - web-caching
   - proxy-servers
   - edge-locations

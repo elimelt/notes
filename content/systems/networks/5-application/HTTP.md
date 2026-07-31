@@ -5,6 +5,7 @@ aliases:
 category: Networks
 tags:
   - http
+  - application-layer
   - tcp
   - web
   - caching

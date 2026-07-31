@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Iterable
@@ -40,6 +41,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Include notes with archive: true in counts.",
     )
+    parser.add_argument(
+        "--suggest-tag-propagation",
+        action="store_true",
+        help="For sparse tags, suggest notes whose text likely covers the concept but lacks the tag.",
+    )
+    parser.add_argument(
+        "--max-propagation-suggestions",
+        type=int,
+        default=50,
+        help="Maximum number of sparse tags to print propagation suggestions for.",
+    )
     return parser.parse_args()
 
 
@@ -70,6 +82,16 @@ def normalized_tag(tag: str) -> str:
     return " ".join(tag.lower().replace("-", " ").split())
 
 
+def build_tag_pattern(tag: str) -> re.Pattern[str] | None:
+    tokens = [re.escape(token) for token in normalized_tag(tag).split()]
+    if not tokens:
+        return None
+    if len(tokens) == 1:
+        return re.compile(rf"(?<![a-z0-9]){tokens[0]}(?![a-z0-9])", re.IGNORECASE)
+    joined = r"[-\s]+".join(tokens)
+    return re.compile(rf"(?<![a-z0-9]){joined}(?![a-z0-9])", re.IGNORECASE)
+
+
 def main() -> int:
     args = parse_args()
 
@@ -82,6 +104,8 @@ def main() -> int:
         lambda: defaultdict(list)
     )
     scanned = 0
+    note_texts: dict[Path, str] = {}
+    note_norm_tags: dict[Path, set[str]] = {}
 
     for path in iter_note_files():
         data = load_frontmatter(path)
@@ -93,6 +117,8 @@ def main() -> int:
             continue
 
         scanned += 1
+        text = path.read_text(encoding="utf-8")
+        note_texts[path] = text
         category = data.get("category")
         if isinstance(category, str) and category:
             category_counts[category] += 1
@@ -101,12 +127,14 @@ def main() -> int:
         tags = data.get("tags")
         if not isinstance(tags, list):
             continue
+        note_norm_tags[path] = set()
         for raw_tag in tags:
             if not isinstance(raw_tag, str) or not raw_tag.strip():
                 continue
             tag_counts[raw_tag] += 1
             tag_files[raw_tag].append(path)
             norm = normalized_tag(raw_tag)
+            note_norm_tags[path].add(norm)
             variant_counts[norm][raw_tag] += 1
             variant_files[norm][raw_tag].append(path)
 
@@ -173,6 +201,41 @@ def main() -> int:
             print(f"  {norm} [{total}]")
             for detail in details:
                 print(f"    - {detail}")
+
+    if args.suggest_tag_propagation:
+        suggestions: list[tuple[str, list[Path]]] = []
+        for tag, count in sorted(sparse_tags, key=lambda item: (item[1], item[0])):
+            pattern = build_tag_pattern(tag)
+            if pattern is None:
+                continue
+            norm = normalized_tag(tag)
+            candidates: list[Path] = []
+            for path, text in note_texts.items():
+                if norm in note_norm_tags.get(path, set()):
+                    continue
+                if pattern.search(text):
+                    candidates.append(path)
+            if candidates:
+                suggestions.append((tag, candidates))
+
+        print()
+        print("Sparse tag propagation suggestions")
+        if not suggestions:
+            print("  none")
+        else:
+            for tag, candidates in suggestions[: args.max_propagation_suggestions]:
+                candidate_list = ", ".join(
+                    path.relative_to(ROOT).as_posix() for path in candidates[:8]
+                )
+                if len(candidates) > 8:
+                    candidate_list += f", ... {len(candidates) - 8} more"
+                print(f"  {tag}: {candidate_list}")
+            if len(suggestions) > args.max_propagation_suggestions:
+                print(
+                    "  "
+                    f"... {len(suggestions) - args.max_propagation_suggestions} more sparse tags "
+                    "with propagation candidates"
+                )
 
     return 0
 

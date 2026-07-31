@@ -6,10 +6,13 @@ tags:
   - shortest paths
   - graph theory
   - complexity analysis
+  - bipartite graphs
 date: 2024-04-03
 updated: 2026-07-30
 status: evergreen
 description: BFS pseudocode and Python implementations, the O(|V| + |E|) runtime analysis, and proofs that BFS levels differ by at most one across any edge and equal shortest path distances.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

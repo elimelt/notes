@@ -8,6 +8,7 @@ tags:
   - trees
   - bfs
   - dfs
+  - bipartite graphs
   - topological-sort
   - minimum-spanning-tree
   - disjoint-sets
@@ -15,6 +16,8 @@ date: 2024-04-27
 updated: 2026-07-30
 status: evergreen
 description: Reference facts and proof sketches for undirected graphs, trees, BFS, DFS, DAGs, cuts, MSTs, and disjoint sets.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 Reference facts and proof sketches for graphs, kept terse. The BFS pattern gets a fuller treatment in [[algorithms/patterns/BFS|Breadth First Search Pattern]].

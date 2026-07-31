@@ -19,9 +19,6 @@ A data-intensive application is typically built from standard building blocks:
 - Send a message to another process, to be handled asynchronously (stream processing)
 - Periodically crunch a large amount of accumulated data (batch processing)
 
-![image](./sc.png)
-
-
 ### Reliability
 A fault is usually defined as one component of the system deviating from its spec, whereas a failure is when the system as a whole stops providing the required service to the user.
 
@@ -73,3 +70,8 @@ There is no generic solution. Scale based on access patterns, not on data size.
 **Simplicity:** make it easy for new engineers to understand the system, by removing as much complexity as possible from the system. Manage complexity with abstraction.
 
 **Evolvability:** make it easy for engineers to make changes to the system in the future, adapting it for unanticipated use cases as requirements change. Good abstractions and modularity allow components to be replaced, and the overall system architecture to be modified, without complete reimplementation.
+
+## Related notes
+
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages|data models and query languages]]
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval|storage and retrieval]]

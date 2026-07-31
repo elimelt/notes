@@ -8,6 +8,8 @@ description: A brief overview of recommender systems, including their challenges
 
 ## Recommender Systems
 
+For a production ranking case study, see [[recc-sys/predicting-clicks-on-ads-at-facebook|Predicting Clicks on Ads at Facebook]]; its data scale motivates [[recc-sys/intro-mapreduce-spark|distributed data-mining techniques]].
+
 **Personalization and Data Sparsity**
 - Personalization leverages user data (preferences, activities) to recommend items users might like.
 - Challenge: User-item interaction data is sparse-most users rate only a few items.

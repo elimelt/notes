@@ -433,3 +433,9 @@ In general, with data parallel programming you specify the operation to be perfo
 This is useful in a wide variety of areas, and is often a source of major optimizations within programs. For instance, SQL databases can take in a query and then identify which parts of the query can be parallelized, leading to a significant speedup. This is also often used in combination with specialized hardware, like GPUs. Multimedia streaming, for example, uses SIMD instructions to decode and encode video.
 
 A large scale example of this is the MapReduce programming model, which is used by Google and Hadoop. The idea is to split a large dataset into smaller pieces, and then apply a function to each piece in parallel. The results are then combined together.
+
+## Related notes
+
+- [[operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects|synchronization]]
+- [[operating-systems/v2-concurrency/7-uniprocessor-scheduling|uniprocessor scheduling]]
+- [[operating-systems/v2-concurrency/7-multiprocessor-scheduling|multiprocessor scheduling]]

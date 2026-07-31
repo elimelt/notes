@@ -8,6 +8,8 @@ description: Covers fundamental concepts in linear algebra and matrix theory, in
 
 # Fundamentals of Vectors
 
+For a shorter introduction to the computational basics, start with [[linear-algebra/elementry-linear-algebra|Elementary Linear Algebra]]; the corresponding NumPy operations are collected in the [[linear-algebra/python-cheatsheet|Python Linear Algebra Cheatsheet]].
+
 ## Geometric Basics
 
 ### Definition and Representation

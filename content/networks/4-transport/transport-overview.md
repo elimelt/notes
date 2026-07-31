@@ -10,6 +10,10 @@ description: Covers the implementation of the transport layer in computer networ
 
 The transport layer provides end-to-end connectivity accross the network. Segments carry application data, which are carried within packets, which are carried within frames. 
 
-The two main services are **messages (datagram, UDP)** and **bytestreams (streams, TCP)**. Messages are discrete units of data, while bytestreams are continuous streams of data. 
+The two main services are **messages (datagram, UDP)** and **bytestreams (streams, TCP)**. Messages are discrete units of data, while bytestreams are continuous streams of data.
 
+## Related notes
 
+- [[networks/4-transport/TCP|TCP]]
+- [[networks/4-transport/UDP|UDP]]
+- [[networks/0-foundation/3-performance|network performance]]

@@ -108,3 +108,7 @@ Connected side by side, on two branches that originate from the same point. The 
    |       |
    +---O---+
 ```
+
+## Related
+
+- [[cheatsheets/circuits/components|Electronic Components]]

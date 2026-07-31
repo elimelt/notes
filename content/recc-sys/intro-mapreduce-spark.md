@@ -8,6 +8,8 @@ description: Focuses on distributed computing approaches for data mining, specif
 
 # Distributed Computing for Data Mining
 
+These distributed primitives provide the scalable data-processing foundation required by large [[recc-sys/reccomender-systems|recommender systems]].
+
 How can we extract knowledge from large data sets?
 
 - **Data mining**: the process of extracting actionable information from (usually) very large datasets.

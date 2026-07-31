@@ -8,6 +8,8 @@ description: Explanation of multinomial logistic regression, a classification al
 
 # Multinomial Logistic Regression
 
+This model is a concrete extension of the [[natural-language-processing/reading/classification|classification]] framework; [[natural-language-processing/reading/neural-networks|Feedforward Neural Networks]] provide a nonlinear alternative.
+
 ## Classification
 
 Input can be anything (document, image, etc.) and output is a class label from the finite set $\mathcal{L}$.

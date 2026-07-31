@@ -37,3 +37,8 @@ description: Paper review of "End-to-End Arguments in System Design" by Saltzer,
 -
 
 ### Further Reading
+
+## Related
+
+- [[systems-research/internet-design-philosophy|Design Philosophy of DARPA Internet Protocols]]
+- [[systems-research/hints-for-computer-system-design|Hints for Computer System Design]]

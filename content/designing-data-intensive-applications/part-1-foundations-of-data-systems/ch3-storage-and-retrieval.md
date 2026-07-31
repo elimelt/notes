@@ -154,3 +154,8 @@ These optimizations are good for reads and make sense in a data-warehouse, but c
 **Data cubes** are a way to precompute aggregations over multiple dimensions. They are good for speeding up queries, but can be expensive to maintain. Essentially a multi-dimensional array, where each cell is an aggregation over a subset of the dimensions. Very expensive to maintain, and inflexible for queries that aren't covered by the precomputed aggregations.
 
 Oftentimes, it makes more sense to store raw data, and then benchmark queries to see which ones are slow, and then precompute aggregations for those queries if they need to be faster.
+
+## Related notes
+
+- [[designing-data-intensive-applications/part-1-foundations-of-data-systems/ch2-data-models-and-query-languages|data models]]
+- [[designing-data-intensive-applications/part-2-distributed-data/ch5-replication|replication]]

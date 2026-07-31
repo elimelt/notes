@@ -31,3 +31,9 @@ Any graph $G$ that satisfies two of the following properties must satisfy the th
 - $G$ is connected
 - $G$ is acyclic
 - $G$ has $|V| - 1$ edges
+
+## Related notes
+
+- [[algorithms/graphs-intro|graph fundamentals]]
+- [[algorithms/BFS|breadth-first search]]
+- [[algorithms/DFS|depth-first search]]

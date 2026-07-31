@@ -7,6 +7,8 @@ description: How do you model and optimize performance for LLM serving systems? 
 ---
 
 # Performance Modeling for LLM Serving Systems
+
+For a compact version of the core model, see the [[llm-serving-systems/roofline-reference|Roofline reference]]. The same model guides [[llm-serving-systems/optimizing-gpu-kernels|kernel optimization]] and system-level choices such as [[llm-serving-systems/batching|batching]].
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ### Performance Analysis

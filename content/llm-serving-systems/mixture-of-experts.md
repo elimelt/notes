@@ -8,6 +8,8 @@ description: How do Mixture of Experts (MoE) models achieve these crazy performa
 
 # Mixture of Experts (MoE)
 
+Because expert routing spreads model computation and parameters across devices, MoE serving builds on [[llm-serving-systems/parallelism|parallel execution]] and the cost model in [[llm-serving-systems/performance-modeling|Performance Modeling]].
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Overview

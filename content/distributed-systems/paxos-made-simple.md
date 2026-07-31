@@ -114,3 +114,8 @@ After doing so, the leader can continue proposing any further commands requested
 Once a leader has finished phase 1 for all commands thus far and afterwards, it only needs to complete phase 2 for each subsequent command requested, which is known to be the minimal algorithm for reaching consensus after phase 1.
 
 To reiterate what was stated previously, in the case where a single leader is not elected, progress is not guaranteed, but safety is.
+
+## Related notes
+
+- [[distributed-systems/paxos-intro|Paxos introduction]]
+- [[distributed-systems/paxos-architecture|Paxos architecture]]

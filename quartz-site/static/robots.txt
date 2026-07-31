@@ -1,1 +1,4 @@
+User-agent: *
+Allow: /
+
 Sitemap: https://notes.elimelt.com/sitemap.xml

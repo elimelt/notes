@@ -6,223 +6,151 @@ date: 2025-03-05
 description: A non-exhaustive guide to making the most of your internship and securing a return offer.
 ---
 
-
-<!--
-How to Get a Return Offer
- -->
-
-<!-- backgroundColor: #121212 -->
-<!-- color: #fff -->
-<!-- style: normal -->
-
-# How to Get a Return Offer
-*A non-exhaustive guide to making the most of your internship*
-
 [wiki entry](https://wiki.swecc.org/member-resources/succeeding-at-your-internship/0-overview/)
 
----
+This is a condensed checklist for making the most of an internship and maximizing your chances of getting a return offer.
 
-# Overview
+## Overview
 
-- Before you start
-- Onboarding
-- Planning your project
-- Getting feedback
-- Hitting your stride
-- Wrapping up
+- Prepare before the first day.
+- Onboard deliberately.
+- Keep your project tightly scoped.
+- Ask for feedback early and often.
+- Build momentum without disappearing.
+- End with a clean handoff.
 
----
+## Before You Start
 
-# Before You Start
+### Gather Information
 
-## Gather Information
-- List technologies you'll encounter
-- Research company's tech stack
-- Connect with your manager/mentor
+- List the technologies, tools, and domains you expect to encounter.
+- Research the company's tech stack and the product area you will be working in.
+- Reach out to your manager or mentor early if there are useful docs or setup steps to review beforehand.
 
----
+### Identify Gaps
 
-# Before You Start
+- Focus on the few languages, frameworks, or systems that will matter immediately.
+- Target unfamiliar concepts that are likely to slow you down during onboarding.
+- Avoid trying to learn everything in advance.
 
-## Identify Gaps
-- Focus on new languages/frameworks
-- Target unfamiliar concepts
-- Don't try to learn everything
+### Prepare
 
----
+- Read the core documentation you are most likely to rely on.
+- Build one or two small practice projects if the stack is new to you.
+- Learn enough about the business or product domain to ask better questions.
 
-# Before You Start
+## Onboarding
 
-## Prepare
-- Read core documentation
-- Build small practice projects
-- Research the domain
+### Day 1
 
----
+- Meet your team and manager.
+- Get your development environment working.
+- Learn the communication and project-management tools.
+- Take detailed notes as you go.
 
-# Onboarding: Day 1
+### Week 1
 
-- Meet your team and manager
-- Set up development environment
-- Learn company tools
-- Take detailed notes
+- Explore the codebase and surrounding docs.
+- Shadow a teammate through a real contribution if possible.
+- Submit a small change early to exercise the workflow.
+- Schedule recurring one-on-ones with your mentor or manager.
 
----
+## Planning Your Project
 
-# Onboarding: Week 1
+### Communicate Early
 
-- Explore the codebase
-- Shadow an experienced teammate
-- Submit a small change
-- Schedule one-on-ones
+- Keep a regular check-in cadence with your mentor.
+- Do not disappear for days while blocked.
+- Ask questions while they are still cheap.
 
----
+### Align on Success
 
-# Planning Your Project
+- Define what success looks like before implementation gets deep.
+- Understand stakeholder needs and constraints.
+- Know why your project matters to the team.
 
-## Communication
-- Regular check-ins with mentor
-- Don't disappear for days
-- Ask questions early
+### Break It Down
 
----
+- Split the project into manageable chunks.
+- Identify dependencies and risky unknowns.
+- Ask for help estimating the hard parts.
 
-# Planning Your Project
+### Document Scope
 
-## Alignment & Big Picture
-- Define success criteria
-- Understand stakeholder needs
-- Know why your project matters
-- Identify constraints
+- Write down decisions, tradeoffs, and open questions.
+- Be realistic about timelines.
+- Favor small and complete over large and unfinished.
 
----
+## Getting Feedback
 
-# Planning Your Project
+### Be Proactive
 
-## Break It Down
-- Create manageable chunks
-- Identify dependencies
-- Get help with estimations
+- State your goals clearly.
+- Ask for feedback by week two, not week ten.
+- Create a rhythm for feedback rather than waiting for surprises.
 
----
+### Ask Better Questions
 
-# Planning Your Project
+- Be specific when you request feedback.
+- Ask about concrete artifacts such as a design review, a PR, or a debugging approach.
+- Use criticism to refine your process, not just the current task.
 
-## Document & Scope
-- Record decisions and alternatives
-- List open questions
-- Be realistic about timelines
-- Small and complete > large and unfinished
+### Apply Feedback Visibly
 
----
+- Show that you listened.
+- Incorporate suggestions quickly when they are actionable.
+- Avoid repeating the same mistakes.
 
-# Getting Feedback
+## Hitting Your Stride
 
-## Be Proactive
-- State your goals clearly
-- Ask for feedback by week 2
-- Weekly feedback check-ins
+### What Good Progress Looks Like
 
----
+- You understand the project and the codebase better each week.
+- You can solve more problems independently.
+- Your day-to-day workflow becomes more efficient.
 
-# Getting Feedback
+### Maintain Momentum
 
-## Ask Better Questions
-- Be specific in your requests
-- "How was my design presentation?"
-- "Is there a better debugging approach?"
+- Structure your day intentionally.
+- Reduce unnecessary context switching.
+- Surface blockers early.
+- Keep a secondary task ready when one stream stalls.
 
----
+### Go Beyond the Ticket
 
-# Getting Feedback
+- Attend relevant talks or demos.
+- Learn what adjacent teams are doing.
+- Build relationships across the org.
+- Use the internship to grow your network as well as your project output.
 
-## Handle Criticism Well
-- Self-evaluate first
-- Don't get defensive
-- Thank people for honesty
-- Ask for clarification
+## Wrapping Up
 
----
+### Plan the Transition
 
-# Getting Feedback
+- Review status with your manager two to three weeks before the end.
+- Reprioritize remaining tasks around impact.
+- Prepare a clean handoff plan.
 
-## Apply Feedback Visibly
-- Show you're listening
-- Implement suggestions quickly
-- Don't repeat mistakes
-- Reference feedback in your work
+### Leave Useful Documentation
 
----
+- Update design docs and READMEs.
+- Document deployment and troubleshooting steps.
+- Make it easy for someone else to continue the work.
 
-# Hitting Your Stride
+### Finish Strong
 
-## Signs of Good Progress
-- Solid project understanding
-- Codebase familiarity
-- Independent problem-solving
-- Efficient workflow
+- Give a concise final presentation.
+- Highlight business impact and technical learnings.
+- Ask for recommendations or next-step guidance.
 
----
+## Key Takeaways
 
-# Hitting Your Stride
+- Communicate proactively.
+- Seek and apply feedback.
+- Break complex work into clear milestones.
+- Document what matters.
+- End with a strong handoff.
 
-## Maintain Momentum
-- Structure your day
-- Minimize context switching
-- Identify and resolve blockers
-- Work on multiple tasks
+## Related
 
----
-
-# Hitting Your Stride
-
-## Beyond Your Project
-- Attend tech talks
-- Explore other teams' work
-- Build your network
-- Use all available resources
-
----
-
-# Wrapping Up
-
-## Plan Your Transition
-- Review status with manager (2-3 weeks before end)
-- Prioritize remaining tasks
-- Create handoff plan
-
----
-
-# Wrapping Up
-
-## Documentation
-- Update design docs
-- Create/update READMEs
-- Document deployment process
-- Prepare troubleshooting guides
-
----
-
-# Wrapping Up
-
-## Final Steps
-- Deliver concise presentation
-- Focus on business impact
-- Highlight your learnings
-- Request recommendations
-
----
-
-# Key Takeaways
-
-- Communicate proactively
-- Seek and apply feedback
-- Break down complex work
-- Document thoroughly
-- End with a strong handoff
-
----
-
-# Thank You!
-
-Questions?
+- [[thoughts/engineering/onboarding|How I Onboard]]

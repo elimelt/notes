@@ -164,3 +164,8 @@ def hamming_encode(data):
 - Which is better depends on the pattern of errors. In general, error correction should be used when errors are detected and retransmission is expensive. Error detection should be used when errors are rare/unrecoverable, or when retransmission is cheap. Also used in application layer for physical storage (Reed-Solomon codes for CDs, DVDs, etc).
 
 Error correction is heavily used in the physical layer. Low Density Parity Check (LDPC) codes are used in 802.11, DVB, WiMAX etc, and convolutional codes are used a lot in practice. On the other hand, detection combined with retranmission is used in the data link layer and above for residual errors.
+
+## Related notes
+
+- [[networks/2-direct-links/retransmission|retransmission]]
+- [[networks/1-physical/coding-and-modulation|coding and modulation]]

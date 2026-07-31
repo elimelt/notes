@@ -33,4 +33,6 @@ A `K-map` is a method of representing a truth table to help visualize adjacencie
     - `always @ (*)` implicitly contains all read signals within a block
   - `always_comb`: like `always @ (*)`, but only triggered when any of the signals change.
 
+## Related
 
+- [[hardware-design/369/combinational-logic|Combinational Logic]]

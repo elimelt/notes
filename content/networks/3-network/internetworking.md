@@ -126,3 +126,8 @@ for each entry in the forwarding table:
   - [IP Datagram Forwarding](#ip-datagram-forwarding)
       - [Longest Prefix Match](#longest-prefix-match)
 
+## Related notes
+
+- [[networks/3-network/routing|routing]]
+- [[networks/3-network/ARP|ARP]]
+- [[networks/3-network/ICMP|ICMP]]

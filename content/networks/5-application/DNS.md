@@ -77,3 +77,8 @@ DNS uses the User Datagram Protocol (UDP) on port 53 to serve requests. Uses ARQ
 Servers can be replicated to handle load and reliability. Queries can return multiple records, and the client can choose which one to use.
 
 Security is a major concern for DNS. DNSSEC is a suite of extensions that add security to the DNS protocol by signing DNS data, but it is not widely adopted.
+
+## Related notes
+
+- [[networks/5-application/HTTP|HTTP]]
+- [[networks/3-network/global-internet|the global Internet]]

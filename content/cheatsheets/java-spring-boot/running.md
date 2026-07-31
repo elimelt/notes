@@ -40,3 +40,6 @@ Open the project in IntelliJ. Start the server and verify that the application i
 cp build/libs/<JAR_NAME>.jar <DEPLOYMENT_DIRECTORY>
 ```
 
+## Related
+
+- [[cheatsheets/java-spring-boot/reference|Spring Boot Annotations]]

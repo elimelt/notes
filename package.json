@@ -1,0 +1,12 @@
+{
+  "name": "elijah-notes",
+  "private": true,
+  "scripts": {
+    "build": "bash scripts/quartz.sh build",
+    "dev": "bash scripts/quartz.sh serve",
+    "sync:quartz": "bash scripts/quartz.sh sync"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -8,7 +8,7 @@ description: Explains the concept of non-blocking two phase commit using Paxos
 
 # Non-Blocking Two Phase Commit
 
-Regular 2PC is blocking because we need to wait for **all** nodes to agree that an operation is commit-able. There are massive performance implications to read-only transactions (could fix with snapshot reads) and lock contention. We can fix this by relying on Paxos.
+Regular [[distributed-systems/two-phase-commit|two-phase commit (2PC)]] is blocking because we need to wait for **all** nodes to agree that an operation is commit-able. There are massive performance implications to read-only transactions (could fix with snapshot reads) and lock contention. We can fix this by relying on [[distributed-systems/paxos-intro|Paxos]].
 
 We make the coordinator as well as each participant a Paxos group with its own shard, and then we can just wait until all groups agree to an operation.
 
@@ -58,3 +58,8 @@ Deadlocks can be an issue in sharded systems when moving shards across groups.
 Jeff Dean of Google said that not supporting distributed transactions was the biggest mistake in the the design of Bigtable. Incremental updates make it a very important feature, so users really wanted them and often tried to implement it themselves on top of Bigtable
 
 Spanner, Google's multi-datacenter KV store uses 2PC over Paxos, and is one of the backbones of Google's ad service.
+
+## Related notes
+
+- [[distributed-systems/two-phase-commit|two-phase commit]]
+- [[distributed-systems/paxos-intro|Paxos]]

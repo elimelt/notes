@@ -194,3 +194,8 @@ s.t.,   & \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into} v} x_e & \forall
 ~       & x_e \ge 0 & \forall e
 \end{array}
 $$
+
+## Related notes
+
+- [[algorithms/network-flows|network flows]]
+- [[algorithms/approximation-algorithms|approximation algorithms]]

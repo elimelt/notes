@@ -40,3 +40,8 @@ description: A template for reviewing research papers
 
 -
 -
+
+## Related
+
+- [[systems-research/how-to-read-a-paper|How to Read a Paper]]
+- [[systems-research/strong-inference|Strong Inference]]

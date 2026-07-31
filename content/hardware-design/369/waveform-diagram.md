@@ -63,3 +63,8 @@ module MUX2_tb ();
       end // end of "block" of code
 endmodule // MUX2_tb
 ```
+
+## Related
+
+- [[hardware-design/371/static-timing-analysis|Static Timing Analysis]]
+- [[hardware-design/369/quartus-workflow|the Quartus and ModelSim workflow]]

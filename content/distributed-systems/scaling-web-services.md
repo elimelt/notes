@@ -51,3 +51,9 @@ Services define external interfaces, and often requires distributed systems that
 Organize complex distributed applications as a large number of independent services communicating through RPC, each using primary/backup or paxos for high availability and fault tolerance.
 
 This allows for independent development of components of a larger system, where each component can scale independently.
+
+## Related notes
+
+- [[distributed-systems/load-balancing|load balancing]]
+- [[distributed-systems/sharding|sharding]]
+- [[distributed-systems/distributed-cache-coherence|distributed caching]]

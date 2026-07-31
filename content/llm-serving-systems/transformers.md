@@ -8,6 +8,8 @@ description: Overview of transformer architecture (specifically Llama) and its i
 
 ## Transformer Architecture Overview
 
+This model-level overview supplies the attention and KV-cache context used by [[llm-serving-systems/memory-management|Memory Management]], [[llm-serving-systems/quantization|Quantization]], and [[llm-serving-systems/speculative-decoding|Speculative Decoding]].
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ### Prefill vs. Decode Phases

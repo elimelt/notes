@@ -95,3 +95,8 @@ If the coordinator fails after sending prepares, but before receiving responses,
 - Prepare: Can you commit the transaction?
 - Commit: commit the transaction
 - Abort: abort the transaction
+
+## Related notes
+
+- [[distributed-systems/non-blocking-two-phase-commit|non-blocking two-phase commit]]
+- [[distributed-systems/consistent-global-state|consistent global state]]

@@ -17,7 +17,7 @@ description: Comprehensive overview of network flow algorithms, including Max Fl
 - **Image Segmentation**: partitioning an image into regions
 - **Data Mining**: clustering and classification
 
-Typically, you use min cut when you are looking for some partition of objects into two sets such that some cost is minimized. You use max flow typically in problems involving optimal routing. Note that if there is some natural ordering associated with objects, you should also try dynamic programming. Additionally, problems on trees can sometimes be solved with greedy (using induction on the leaves), or dynamic programming on sub-trees.
+Typically, you use min cut when you are looking for some partition of objects into two sets such that some cost is minimized. You use max flow typically in problems involving optimal routing. Note that if there is some natural ordering associated with objects, you should also try [[algorithms/dynamic-programming|dynamic programming]]. Additionally, problems on trees can sometimes be solved with greedy (using induction on the leaves), or dynamic programming on sub-trees.
 
 Given a graph $G$ and vertices $s, t$, the min flow/max cut problem is to find the minimum capacity of a flow from $s$ to $t$ in the graph. This is equivalent to finding the maximum capacity of a cut that separates $s$ from $t$.
 
@@ -308,3 +308,9 @@ Let $I \subseteq V$ be the maximum independent set of $G$, and $k$ be the maximu
 
 - $|I| \le k$: Since $I$ is an independent set, no two vertices in $I$ are adjacent. Therefore, no two knights placed on cells corresponding to vertices in $I$ would attack each other. Since we defined $k$ as the maximum number of knights that can be placed on the board such that no two knights attack each other, we have $|I| \le k$.
 - $|I| \ge k$: Suppose for the sake of contradiction that $|I| < k$.  Then there must exist some set of valid placements $P = (i_1, j_1), \ldots, (i_k, j_k)$ in which we can place knights such that none of the knights attack each other. By construction of $G$, we would therefore have no edges between any of the vertices corresponding to pairs in $P$, and so said vertices would form an independent set, say $I'$. Since $|I| < k$, we have $|I'| > |I|$, which is a contradiction to $I$ being a maximum independent set.
+
+## Related notes
+
+- [[algorithms/graphs-intro|graph fundamentals]]
+- [[algorithms/bipartite-graphs|bipartite graphs]]
+- [[algorithms/linear-programming|linear programming]]

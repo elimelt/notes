@@ -94,3 +94,8 @@ Move state to endpoints for **survivability**. If a network fails, the endpoints
 ### Further Reading
 
 - [Principles of Computer System Design](https://ocw.mit.edu/courses/res-6-004-principles-of-computer-system-design-an-introduction-spring-2009/pages/online-textbook/)
+
+## Related
+
+- [[systems-research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]
+- [[systems-research/development-of-the-dns|Development of the Domain Name System]]

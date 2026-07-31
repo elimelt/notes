@@ -16,3 +16,8 @@ description: Describes a structured approach to testing and verifying digital ci
   - Start ModelSim and perform "do runlab.do." Fix any errors the compiler finds.
   - When it complains about a missing *_wave.do file, set up the Wave pane by drag-and dropping signals from the Object pane. Save the waveform setup using File -> "Save Formatting", then perform "do runlab.do" again.
   - Check the simulation results, correct errors, and iterate until the module works as intended.This process has two major features: First, it has you test every module before you work on the larger  modules that call this unit. This will significantly simplify the design process. Second, you have a separate *_wave.do file for each Verilog file. This keeps a formatted test window for each module, which can help when you discover a fresh bug in a larger design later on. You can always go back and test a submodule by simply editing the runlab.do file to point to the testbench and *_wave.do file for the unit you want to test
+
+## Related
+
+- [[hardware-design/369/system-verilog|SystemVerilog]]
+- [[hardware-design/369/waveform-diagram|Waveform Diagrams]]

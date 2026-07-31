@@ -1,8 +1,0 @@
-#!/bin/bash
-# Simple alias script for the notes CLI
-
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Run the Python CLI with all arguments
-python3 "$SCRIPT_DIR/scripts/cli.py" "$@"

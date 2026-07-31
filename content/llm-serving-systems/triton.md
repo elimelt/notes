@@ -8,6 +8,8 @@ description: Overview of programming GPU kernels with Triton and CUDA
 
 # Triton
 
+Triton exposes the kernel concepts introduced in [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]] at a higher level; [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]] discusses how to tune the resulting programs.
+
 Avoids allocating and deallocating lots of memory, and instead uses a single memory pool for all allocations and uses register file for temporary storage.
 
 ```py

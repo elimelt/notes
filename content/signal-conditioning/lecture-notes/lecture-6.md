@@ -90,4 +90,9 @@ $$
 
 ## Phasors
 
-Complex numbers that represent the amplitude and phase of a sinusoidal signal. Can be used to represent AC signals and greatly simplify analysis by 
+Complex numbers that represent the amplitude and phase of a sinusoidal signal. Can be used to represent AC signals and greatly simplify analysis by
+
+## Related
+
+- [[cheatsheets/circuits/components|Electronic Components]]
+- [[cheatsheets/circuits/electricity|Electric Circuit Analysis]]

@@ -191,3 +191,7 @@ Ideal Op-Amps have 3 terminals: the inverting input (-), the non-inverting input
 ### Non-Ideal Op-Amps
 
 In practice, real Op-Amps have two additional terminals for a positive supply and ground (or negative supply). The output voltage is limited to the range between the positive and negative supply voltages. The gain is limited by this maximum output voltage.
+
+## Related
+
+- [[cheatsheets/circuits/electricity|Electric Circuit Analysis]]

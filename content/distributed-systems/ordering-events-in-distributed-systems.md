@@ -146,3 +146,8 @@ Now, define the following rules for our physical clocks:
 
 1. $\forall i$ if $P_i$ does not receive a message at physical time $t$, then $C_i$ is differentiable at $t$ and $\frac{dC_i(t)}{dt} > 0$.
 2. If $P_i$ sends a message $,$ at physical time $t$, then $m$ contains a timestamp $T_m = C_i(t)$. Upon receiving a message $m$ at physical time $t'$, $P_j$ sets $C_j(t') = \max(\lim_{\delta \to 0} C_j(t' - \delta), T_m + \mu_m)$.
+
+## Related notes
+
+- [[distributed-systems/clocks|distributed clocks]]
+- [[distributed-systems/consistent-global-state|consistent global state]]

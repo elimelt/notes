@@ -32,3 +32,7 @@ You can tell if a graph is bipartite if there is a proper coloring of vertices, 
 
 **Problem**: Given a graph $G$, output `true` if it is bipartite, `false` otherwise.
 
+## Related notes
+
+- [[algorithms/BFS|breadth-first search]]
+- [[algorithms/network-flows|network flows]]

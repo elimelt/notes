@@ -84,3 +84,8 @@ ground
  phone power consumption
 
 ```
+
+## Related
+
+- [[signal-conditioning/lecture-notes/lecture-3|Resistance]]
+- [[signal-conditioning/lecture-notes/lecture-5|Thevenin’s Theorem]]

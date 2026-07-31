@@ -198,3 +198,9 @@ def closest_points(P):
   return cp_recursive(sorted(P, key = lambda x: x[0]))
 
 ```
+
+## Related notes
+
+- [[algorithms/induction|induction]]
+- [[algorithms/runtime|runtime analysis]]
+- [[algorithms/dynamic-programming|dynamic programming]]

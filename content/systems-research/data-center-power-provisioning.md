@@ -37,3 +37,7 @@ The authors present a 6-month study of power usage patterns across large-scale w
 ### Open Questions
 - Does the flat-tax assumption hold up across all datasets?
 - Is there a general framework system designers can use to decrease their idle power consumption to near-zero?
+
+## Related
+
+- [[signal-conditioning/lecture-notes/lecture-1|C-SWAP: Cost, Size, Weight and Power]]

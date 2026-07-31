@@ -7,6 +7,8 @@ description: Using speculative decoding to accelerate large language model infer
 ---
 
 ## Overview
+
+Speculative decoding changes the decode workload and acceptance-dependent throughput, complementing the scheduling tradeoffs in [[llm-serving-systems/batching|Batching]] and the baseline model in [[llm-serving-systems/performance-modeling|Performance Modeling]].
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 **Speculative Decoding** is a technique to accelerate large language model inference by using a smaller, faster model to generate candidate tokens that are then verified by the larger target model in parallel.

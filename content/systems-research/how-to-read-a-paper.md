@@ -49,3 +49,7 @@ Understand the paper in depth. You should *virtually re-implement* the paper, fo
 
 After this pass, you should be able to reconstruct the paper's structure from memory. You should also be able to critique the paper and pinpoint implicit assumptions, limitations, and potential improvements.
 
+## Related
+
+- [[systems-research/paper-review-template|Paper Review Template]]
+- [[systems-research/strong-inference|Strong Inference]]

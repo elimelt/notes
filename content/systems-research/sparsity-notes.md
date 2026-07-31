@@ -104,3 +104,7 @@ This paper introduces MoA (Mixture of Attention), a novel method for compressing
 - Could explore non-linear elastic rules
 
 The paper demonstrates that automatically discovering heterogeneous attention patterns can significantly improve both the efficiency and capabilities of LLMs in handling long contexts, while maintaining model performance.
+
+## Related
+
+- [[systems-research/padded-encoder-decoder|Accelerating Padded Encoder-Decoder Transformer Models]]

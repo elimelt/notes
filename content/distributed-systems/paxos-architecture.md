@@ -29,3 +29,8 @@ The following workflow is used to implement leases:
 3. If the primary doesn't renew the lease (i.e. fails), a lease is granted to the next primary
 
 This design pattern is used in BigTable, Chubby, and ZooKeeper. It prevents split brain if the clock drift is within epsilon. We also only need to service reads on the primary, including logic for cache invalidation. Additionally, we can use write ahead logging, and instead of explicitly maintaining a backup, just replace the primary by executing the log on a new primary.
+
+## Related notes
+
+- [[distributed-systems/paxos-intro|Paxos introduction]]
+- [[distributed-systems/paxos-made-simple|Paxos Made Simple]]

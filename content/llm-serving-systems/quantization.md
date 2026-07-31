@@ -8,6 +8,8 @@ description: Overview of quantization techniques for LLM serving systems, focusi
 
 # Quantization
 
+Quantization changes both arithmetic throughput and model-memory demand, so its serving impact is best interpreted with [[llm-serving-systems/performance-modeling|Performance Modeling]] and [[llm-serving-systems/memory-management|Memory Management]].
+
 > Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
 
 ## Fundamentals

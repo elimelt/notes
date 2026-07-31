@@ -187,3 +187,9 @@ module datapath #(parameter W=4)(
 
 endmodule // datapath
 ```
+
+## Related
+
+- [[hardware-design/369/sequential-logic|Sequential Logic]]
+- [[hardware-design/371/verilog-review|SystemVerilog Review]]
+- [[hardware-design/371/static-timing-analysis|Static Timing Analysis]]

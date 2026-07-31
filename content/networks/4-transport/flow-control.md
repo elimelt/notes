@@ -57,4 +57,7 @@ Uses a timer for each segment. On timeout, resends the segment.
 
 For stop and wait, only need 0/1. For selective repeat, need $w$ numbers for packets, and $w$ numbers for acks of earlier packets. ($2w$ in total). For go-back-n, need $w$ numbers for packets, and 1 number for the ack of the last packet. ($w + 1$ in total).
 
+## Related notes
 
+- [[networks/4-transport/TCP|TCP]]
+- [[networks/4-transport/ACK-clocking|ACK clocking]]

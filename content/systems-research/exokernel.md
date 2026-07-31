@@ -1,5 +1,5 @@
 ---
-title: Exokernel: An Operating System Architecture for Application-Level Resource Management
+title: "Exokernel: An Operating System Architecture for Application-Level Resource Management"
 category: Operating Systems
 tags: operating systems, exokernel, resource management
 date: 2025-01-14
@@ -54,3 +54,9 @@ Download code into exokernel from lib os (similar to eBPF today)
 - Why didn't this work out? I was fully bought in by the end of the paper, but they were clearly never adopted.
 - Can this approach be applied to modern, and particularly datacenter, workloads?
 - How can malicious/destructive library OSes be prevented?
+
+## Related
+
+- [[systems-research/unix-timesharing-system|The Unix Timesharing System]]
+- [[systems-research/xen|Xen and the Art of Virtualization]]
+- [[systems-research/barrelfish|The Multikernel]]

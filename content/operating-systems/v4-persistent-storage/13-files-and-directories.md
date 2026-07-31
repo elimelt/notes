@@ -110,3 +110,7 @@ It is widely used because it is simple. In addition to simple storage technologi
 
 **ZFS**: Uses **copy-on-write**, writing new versions of files to free disk space instead of overwriting old versions. This optimizes for reliability and write performance
 
+## Related notes
+
+- [[operating-systems/v4-persistent-storage/11-file-systems-overview|file-system overview]]
+- [[operating-systems/lecture-notes/file-systems|file systems]]

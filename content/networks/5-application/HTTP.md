@@ -92,5 +92,8 @@ The general workflow for a proxy is:
 
 This places an intermediary between the pool of clients and the server, which can be useful for load balancing, security, and privacy. Has the added benefit of being able to improve physical locality of data to be closer to clients while in the cache. Benefits are limited by secure/dynamic content, and the "long tail" of resources that are rarely accessed.
 
+## Related notes
 
-
+- [[networks/5-application/DNS|DNS]]
+- [[networks/5-application/CDNs|content delivery networks]]
+- [[networks/4-transport/TCP|TCP]]

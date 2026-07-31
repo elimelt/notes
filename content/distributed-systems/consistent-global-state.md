@@ -26,3 +26,7 @@ It is useful to reason about distributed systems with the weakest possible assum
 
 A distributed computation is the execution of a distributed program over a collection of processes, each of which sequentially process a stream of *events*. Particularly, for two nodes to communicate, a message $m$ is enqueued on a channel via $send(m)$, and the message is dequeued via $receive(m)$. There is an obvious relationship between the happening of event $send(m)$ at process $p$, and the happening of event $receive(m)$ at process $q$, such that we can be sure $send(m)$ happened before $receive(m)$.
 
+## Related notes
+
+- [[distributed-systems/clocks|distributed clocks]]
+- [[distributed-systems/ordering-events-in-distributed-systems|event ordering]]

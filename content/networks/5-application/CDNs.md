@@ -25,3 +25,8 @@ A proxy server is a server that sits between a client application, such as a web
 A CDN is a system of distributed servers that deliver web content to a user based on the geographic locations of the user. Each region will have a number of edge locations, which are data centers that cache the content of the main server.
 
 The DNS resolution of a CDN URL will direct the user to the nearest edge location, which will then deliver the cached content. This process reduces the load on the original server and speeds up the delivery of the content to the user.
+
+## Related notes
+
+- [[networks/5-application/HTTP|HTTP]]
+- [[networks/5-application/DNS|DNS]]

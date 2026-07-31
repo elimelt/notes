@@ -1,28 +1,35 @@
 ---
 title: Feedforward Neural Networks
 category: Natural Language Processing
-tags: neural networks, machine learning, natural language processing, deep learning, feedforward
+tags:
+  - neural networks
+  - machine learning
+  - natural language processing
+  - deep learning
+  - feedforward
 date: 2025-01-14
-description: Overview of neural networks (feedforward), particularly in the context of natural language processing.
-source: https://web.stanford.edu/~jurafsky/slp3/7.pdf
+updated: 2026-07-30
+status: evergreen
+description: Feedforward neural networks for NLP, covering activation functions, the XOR problem, layer notation and dimensionality, cross-entropy loss, and backpropagation.
+sources:
+  - title: Jurafsky & Martin, Speech and Language Processing (3rd ed. draft), Neural Networks chapter
+    url: https://web.stanford.edu/~jurafsky/slp3/7.pdf
+    type: textbook
 ---
 
-# Neural Networks
+## Purpose
 
-These networks generalize the linear decision boundaries in [[natural-language-processing/reading/multinomial-logistic-regression|Multinomial Logistic Regression]] while solving the same [[natural-language-processing/reading/classification|classification]] problems.
-
-Contrasting with MLR, neural networks are a more flexible model that can learn complex patterns in the data, even without hand-crafted features.
-
+Covers feedforward neural networks as classifiers for NLP. It works through units and activation functions, why nonlinearity is needed at all (the XOR problem), the matrix notation for multi-layer computation, and training with cross-entropy loss and backpropagation. These networks generalize the linear decision boundaries of [[natural-language-processing/reading/multinomial-logistic-regression|multinomial logistic regression]] on the same [[natural-language-processing/reading/classification|classification]] problems, and they can learn complex patterns without hand-crafted features. Follows [SLP3 ch. 7](https://web.stanford.edu/~jurafsky/slp3/7.pdf).
 
 ## Activation Functions
 
-A single computational unit $z = w \cdot x + b$ is a linear function of the input $x$ with weights $w$ and bias $b$. The output $y$ is a non-linear function of $f(z)$, where $f$ is the activation function (typically one of $\tanh$, $\text{ReLU}$, or $\sigma$).
+A single computational unit $z = w \cdot x + b$ is a linear function of the input $x$ with weights $w$ and bias $b$. The output $y$ is a non-linear function $f(z)$, where $f$ is the activation function (typically one of $\tanh$, $\text{ReLU}$, or $\sigma$).
 
 $$
 y = \sigma(w \cdot x + b) = \frac{1}{1 + e^{-(w \cdot x + b)}}
 $$
 
-In practice, $\sigma$ is rarely the best choice, and $\tanh$ is similar yet almost always better. $\tanh$ is a scaled version of $\sigma$ that ranges from $-1$ to $1$.
+In practice $\sigma$ is rarely the best choice. SLP3 notes that $\tanh$, a scaled version of $\sigma$ ranging from $-1$ to $1$, is similar and almost always works better.
 
 $$
 y = \tanh(w \cdot x + b) = \frac{e^{w \cdot x + b} - e^{-(w \cdot x + b)}}{e^{w \cdot x + b} + e^{-(w \cdot x + b)}}
@@ -34,11 +41,11 @@ $$
 y = \text{ReLU}(w \cdot x + b) = \max(0, w \cdot x + b)
 $$
 
-A potential upside with ReLU is that it is computationally efficient, and also prevents the vanishing gradient problem, e.g. when the gradient is $\approx 0$, and the network stops learning.
+ReLU is cheap to compute, and it doesn't saturate for large positive inputs the way $\sigma$ and $\tanh$ do. Saturation causes the vanishing gradient problem, where gradients near $0$ stop the network from learning.
 
 ## The XOR Problem
 
-It can be shown that a single computational unit cannot solve XOR, as it is a non-linear problem. However, a two-layer network can solve XOR, as it can learn to represent the input in a higher-dimensional space where the problem is linearly separable.
+A single computational unit cannot solve XOR, because a single unit draws a linear decision boundary and XOR is not linearly separable. A two-layer network can solve it, since the hidden layer re-represents the input in a space where the problem becomes linearly separable.
 
 $$
 y = \begin{cases}
@@ -47,25 +54,25 @@ y = \begin{cases}
 \end{cases}
 $$
 
-XOR turns out to be a simple example of a problem that is not linearly separable in the input space, since the inputs $(x_1, x_2) = (0, 0)$ and $(1, 1)$ are in the same class, while $(0, 1)$ and $(1, 0)$ are in the other class. It is not possible to draw a straight line that separates the two classes.
+To see why XOR is not linearly separable, look at the four inputs. $(x_1, x_2) = (0, 0)$ and $(1, 1)$ are in one class, while $(0, 1)$ and $(1, 0)$ are in the other. No straight line separates the two classes.
 
 ## Feedforward Neural Networks
 
-A feedforward NN is a multi-layer network where the output of each layer is the input to the next layer, all with no cycles. They are sometimes called multilayer perceptrons (MLPs), although this term is technically only applicable to networks with a single step function as their activation function.
+A feedforward NN is a multi-layer network where the output of each layer is the input to the next layer, with no cycles. They are sometimes called multilayer perceptrons (MLPs), although that term technically applies only to networks whose units use a step function as the activation.
 
-The network has three different types of nodes:
+The network has three types of nodes.
 
 ### Input units
 
-vector of input units is $x$. One node for each feature in the input.
+The vector of input units is $x$, with one node for each feature of the input.
 
 ### Hidden layers
 
-one or more layers of hidden units, each with a non-linear activation function. In the standard architecture, each node is connected with all nodes in the previous layer. Thus, each hidden unit sums over all input values.
+One or more layers of hidden units, each with a non-linear activation function. In the standard architecture, each node is connected to all nodes in the previous layer, so each hidden unit sums over all input values.
 
-For a given hidden layer $h$, we combine the weights $w$ and bias $b$ for each computational unit into a weight matrix $W$ and bias vector $b$. Each element $W_{ij}$ of the weight matrix is the weight from the $i$th input unit $x_i$ to the $j$th hidden unit $h_j$.
+For a given hidden layer, combine the weights $w$ and bias $b$ for each computational unit into a weight matrix $W$ and bias vector $b$. Each element $W_{ji}$ of the weight matrix is the weight from the $i$th input unit $x_i$ to the $j$th hidden unit $h_j$.
 
-Thus, the output for a given hidden layer with activation function $f$ is:
+The output of a hidden layer with activation function $f$ is:
 
 $$
 h = f(W \cdot x + b)
@@ -73,9 +80,9 @@ $$
 
 #### Dimensionality
 
-Referring to the input layer as layer $0$, and $n_0$ as the number of input units, we have an input $x \in \mathbb{R}^{n_0}$, e.g. a column vector with dimension $n_0 \times 1$.
+Call the input layer, layer $0$, and let $n_0$ be the number of input units, so the input is a column vector $x \in \mathbb{R}^{n_0}$ with dimension $n_0 \times 1$.
 
-The first hidden layer $h^{(1)}$ has $n_1$ hidden units, so $W \in \mathbb{R}^{n_1 \times n_0}$, and $b \in \mathbb{R}^{n_1}$.
+The first hidden layer $h^{(1)}$ has $n_1$ hidden units, so $W \in \mathbb{R}^{n_1 \times n_0}$ and $b \in \mathbb{R}^{n_1}$.
 
 $$
 h_j = f\left(\sum_{i=1}^{n_0} W_{ji} x_i + b_j\right)
@@ -83,31 +90,31 @@ $$
 
 ### Output units
 
-one or more output units, each with a non-linear activation function. The output layer is the final layer of the network, and the output $y$ with $dim(y) = n_{\text{output}}$ is an estimate for the probability distribution of the correct class/output.
+The output layer is the final layer of the network. Its output $y$, with $\dim(y) = n_{\text{output}}$, is an estimate of the probability distribution over classes.
 
 #### Normalization
 
-In order to get that probability distribution, we normalize the output of the network using the softmax function.
+To get a probability distribution, normalize the output of the network with the softmax function:
 
 $$
 y = \text{softmax}(W \cdot h + b)
 $$
 
 $$
-\text{softmax}(z) = \frac{e^z}{\sum_{i=1}^n e^{z_i}}
+\text{softmax}(z)_i = \frac{e^{z_i}}{\sum_{j=1}^n e^{z_j}}
 $$
-
 
 ### Comparison with MLR
 
-A NN is like MLR but with with a few differences:
+A NN is like MLR with a few differences:
+
 - many layers, since a deep NN is like layer after layer of MLR classifiers
-- intermediate layers have non-linear activation functions. In fact, without these, the network would just be a linear classifier since the composition of linear functions is still linear
+- intermediate layers have non-linear activation functions. Without these, the network would just be a linear classifier, since the composition of linear functions is still linear
 - instead of feature selection, previous layers build up a representation of the input that is useful for the final layer
 
 ### Details/Notation
 
-- $*^{[l]}$ denotes a quantity associated with the $l$th layer, e.g. $W^{[l]}$ is the weight matrix for the $l$th layer. Note that these indices are 1-indexed.
+- $*^{[l]}$ denotes a quantity associated with the $l$th layer, e.g. $W^{[l]}$ is the weight matrix for the $l$th layer. These indices are 1-indexed.
 - $n_l$ is the number of units in layer $l$.
 - $g(.)$ is the activation function, which tends to be $\tanh$ or ReLU for hidden layers, and softmax for the output layer.
 - $a^{[l]}$ is the output from layer $l$
@@ -128,15 +135,13 @@ $$
 
 ### Feedforward Computation
 
-$$
-\begin{aligned}
-\text{for } l = 1, \ldots, L: \\
-z^{[l]} &= W^{[l]} \cdot a^{[l-1]} + b^{[l]} \\
-a^{[l]} &= g^{[l]}(z^{[l]})\\
+For $l = 1, \ldots, L$:
 
-\text{return } \hat{y} = a^{[L]}
-\end{aligned}
 $$
+z^{[l]} = W^{[l]} \cdot a^{[l-1]} + b^{[l]}, \qquad a^{[l]} = g^{[l]}(z^{[l]})
+$$
+
+then return $\hat{y} = a^{[L]}$.
 
 ```python
 def feedforward(x):
@@ -149,21 +154,21 @@ def feedforward(x):
 
 ### Replacing the Bias
 
-Often, the bias term is included in the weight matrix, by adding a column of $1$s to the input vector $x$.
+Often the bias term is folded into the weight matrix by appending a constant $1$ to the input vector.
 
-With $a^{[0]}_0 = 1$, we can write $z^{[l]} = W^{[l]} \cdot a^{[l-1]}$.
+With $a^{[0]}_0 = 1$, we can write $z^{[l]} = W^{[l]} \cdot a^{[l-1]}$, where the column of $W$ that multiplies the constant plays the role of $b$:
 
 $$
-h_j = f\left(\sum_{i=1}^{n_0} W_{ji} x_i\right)
+h_j = f\left(\sum_{i=0}^{n_0} W_{ji} x_i\right)
 $$
 
 ## FF networks for NLP: Classification
 
-Instead of manually designed features, use words as embeddings (e.g. word2vec, GloVe). This constitutes "pre-training", i.e. relying on already computed values/embeddings. One simple method of representing a sentence is to sum the embeddings of the words in the sentence, or to average them.
+Instead of manually designed features, use word embeddings (e.g. word2vec, GloVe). This constitutes "pre-training", i.e. relying on already computed values/embeddings. One simple way to represent a sentence is to sum the embeddings of its words, or to average them.
 
-To classify many examples at once, pack inputs into a single matrix $X$ where each row $i$ is an input vector $x^{(i)}$. If our input has $d$ features, then $X \in \mathbb{R}^{m \times d}$ where $m$ is the number of examples.
+To classify many examples at once, pack the inputs into a single matrix $X$ where each row $i$ is an input vector $x^{(i)}$. If each input has $d$ features, then $X \in \mathbb{R}^{m \times d}$ where $m$ is the number of examples.
 
-$W \in \mathbb{R}^{d_h \times d}$ is the weight matrix for the hidden layer, and $b \in \mathbb{R}^{d_h}$ is the bias vector. $Y \in \mathbb{R}^{m \times n_{\text{output}}}$ is the output matrix.
+$W \in \mathbb{R}^{d_h \times d}$ is the weight matrix for the hidden layer, $b \in \mathbb{R}^{d_h}$ is the bias vector, and $U$ is the output layer weight matrix. $Y \in \mathbb{R}^{m \times n_{\text{output}}}$ is the output matrix.
 
 $$
 \begin{aligned}
@@ -179,33 +184,35 @@ We want to learn the parameters $W^{[i]}$ and $b^{[i]}$ for each layer $i$ that 
 
 ### Loss Function
 
-Same as the one used for MLR, the cross-entropy loss function.
+Same as the one used for MLR, the cross-entropy loss.
 
+For binary classification:
 
-For binary classification, the loss function is:
 $$
 L_{\text{CE}}(\hat{y}, y) = - \log p(y | x) = - \left [ y \log \hat{y} + (1 - y) \log (1 - \hat{y}) \right ]
 $$
 
-For multi-class classification, the loss function is:
+For multi-class classification with a one-hot true label $y$, the sum collapses to the log probability of the correct class $c$:
 
 $$
-L_{\text{CE}}(\hat{y}, y) = - \sum_{i=1}^n y_i \log \hat{y}_i = - \log \hat{y}_i \text{ where } y_i = 1
+L_{\text{CE}}(\hat{y}, y) = - \sum_{i=1}^n y_i \log \hat{y}_i = - \log \hat{y}_c
 $$
 
+Written in terms of the logit $z_c$ for the correct class:
+
 $$
-L_{\text{CE}}(\hat{y}, y) = -\log \frac{exp(z_{c})}{\sum_{i=1}^K exp(z_i)}
+L_{\text{CE}}(\hat{y}, y) = -\log \frac{\exp(z_{c})}{\sum_{i=1}^K \exp(z_i)}
 $$
 
 ### Backpropagation
 
-One must pass gradients back through the network to update the weights. This is done using the chain rule. Each node in a computation graph takes an **upstream** gradient and computes its **local** gradient, multiplying the two to get the **downstream** gradient. A node may have multiple local gradients, one for each incoming edge.
+Gradients pass backward through the network to update the weights, using the chain rule. Each node in a computation graph takes an **upstream** gradient and computes its **local** gradient, multiplying the two to get the **downstream** gradient. A node may have multiple local gradients, one for each incoming edge.
 
 #### A very simple example
 
 Consider the function $L(a, b, c) = c(a + 2b)$. Create a computation graph with nodes $a, b, c$ for the inputs, and $d = 2b, e = a + d, L = ce$ for the intermediate computations.
 
-```
+```text
 (a) ---------------- \
                       (e) ------------ (L)
                      /                /
@@ -224,9 +231,13 @@ $$
 
 ### Learning details
 
-NN optimization is a non-convex optimization problem, so it requires a few techniques to work well:
+NN optimization is a non-convex problem, so it needs a few techniques to work well:
 
 - Initialize weights and biases to small random values instead of all zeros
 - Normalize input values to $\mu = 0, \sigma = 1$
 - Dropout: randomly (with probability $p$) set some hidden units to 0, then renormalize other inputs to prevent overfitting
 - Hyperparameters: learning rate, mini-batch size, number of hidden units, number of layers, choice of activation function, etc.
+
+## Sources
+
+- [Jurafsky & Martin, Speech and Language Processing (3rd ed. draft), Neural Networks chapter](https://web.stanford.edu/~jurafsky/slp3/7.pdf)

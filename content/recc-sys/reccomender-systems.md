@@ -1,125 +1,124 @@
 ---
 title: Recommender Systems
 category: Machine Learning Systems
-tags: recommender systems, collaborative filtering, matrix factorization, matrix completion, personalization, cold-start problem
+tags:
+  - recommender systems
+  - collaborative filtering
+  - matrix factorization
+  - matrix completion
+  - personalization
+  - cold-start problem
 date: 2025-04-27
-description: A brief overview of recommender systems, including their challenges, approaches, and applications.
+updated: 2026-07-30
+status: draft
+description: Overview of recommender system approaches, from popularity and co-occurrence baselines through matrix factorization and featurized models that handle cold start.
+sources:
+  - title: Koren, Bell & Volinsky (2009), Matrix Factorization Techniques for Recommender Systems
+    url: https://doi.org/10.1109/MC.2009.263
+    type: paper
 ---
 
-## Recommender Systems
+## Purpose
 
-For a production ranking case study, see [[recc-sys/predicting-clicks-on-ads-at-facebook|Predicting Clicks on Ads at Facebook]]; its data scale motivates [[recc-sys/intro-mapreduce-spark|distributed data-mining techniques]].
+Maps the main approaches to recommendation and the tradeoffs between them, with matrix factorization as the centerpiece. For a production ranking case study, see [[recc-sys/predicting-clicks-on-ads-at-facebook|Predicting Clicks on Ads at Facebook]]; the data scale involved motivates [[recc-sys/intro-mapreduce-spark|distributed data-mining techniques]].
 
-**Personalization and Data Sparsity**
-- Personalization leverages user data (preferences, activities) to recommend items users might like.
-- Challenge: User-item interaction data is sparse-most users rate only a few items.
-- Collaborative filtering: Users are likely to enjoy items liked by similar users.
+## The problem
 
-**Types of Feedback**
-- Explicit feedback: Ratings, purchase history, rankings.
-- Implicit feedback: Browsing history, time spent, clicks-requires preprocessing.
+Personalization uses what we know about a user (preferences, activity) to recommend items they might like. The core difficulty is sparsity. Most users interact with a tiny fraction of the catalog, so the user-item interaction matrix is mostly empty. Collaborative filtering bets that users enjoy items liked by similar users, which lets data about many users compensate for the missing data about any one of them.
 
-**Major Challenges**
-- Sparsity of data.
-- Cold-start problem: Hard to recommend for new users/items with no history.
-- Changing interests: User preferences and item popularity shift over time.
-- Scalability: Need algorithms that efficiently handle millions of users/items.
+Feedback comes in two forms. Explicit feedback means ratings, purchase history, and rankings. Implicit feedback means browsing history, clicks, and time spent, and it needs preprocessing before it looks like a preference signal.
 
----
+Beyond sparsity, the recurring challenges are:
 
-## Approaches to Recommendation
+- Cold start: hard to recommend for new users or items with no history.
+- Changing interests: user preferences and item popularity shift over time.
+- Scalability: the algorithms have to handle millions of users and items.
 
-**Popularity-Based**
-- Recommend most popular items (no personalization).
+## Baseline approaches
 
-**Classifier-Based**
-- Treat as a classification problem:  
-  Input: $ x =$ (user features, item features), Output: $ y = +1$ (like) or $ -1$ (dislike).
-- Pros: Personalized, can include extra features.
-- Cons: Feature engineering is hard, often underperforms collaborative filtering.
+**Popularity-based** recommendation serves everyone the most popular items. It ignores the user entirely, so there is no personalization, and it handles new users fine.
 
-**Co-Occurrence-Based**
-- Use normalized co-occurrence matrix $ C$:
-  $$
-  C_{ij} = \frac{\text{users who bought both } i \text{ and } j}{\text{users who bought } i \text{ or } j}
-  $$
-- For a user who bought items $ A$ and $ B$, score for item $ X$:
-  $$
-  \text{Score}(X) = \frac{C_{XA} + C_{XB}}{2}
-  $$
+**Classifier-based** recommendation treats the task as classification. The input $x$ is a vector of user and item features, and the output is $y = +1$ (like) or $-1$ (dislike). This personalizes and can fold in arbitrary extra features, but it leans on feature engineering, which is hard to get right. On the Netflix Prize data, latent factor methods learned directly from interactions outperformed the classic alternatives ([Koren et al. 2009](https://doi.org/10.1109/MC.2009.263)).
 
----
+**Co-occurrence-based** recommendation uses a normalized co-occurrence matrix $C$:
 
-## Matrix Factorization and Completion
+$$
+C_{ij} = \frac{\text{users who bought both } i \text{ and } j}{\text{users who bought } i \text{ or } j}
+$$
 
-**Matrix Factorization Model**
-- Represent user $ u$ and item $ v$ with feature vectors $ L_u$ and $ R_v$.
-- Predicted rating:
-  $$
-  \text{Rating}(u, v) = L_u^T R_v
-  $$
-- The ratings matrix $ M$ is approximated by $ M \approx L R^T$.
+For a user who bought items $A$ and $B$, the score for item $X$ averages the co-occurrence with each purchase:
 
-**Matrix Completion Problem**
-- Given observed ratings, estimate missing entries by finding $ L$ and $ R$ that minimize:
-  $$
-  \min_{L, R} \sum_{(u,v): r_{uv} \text{ observed}} (L_u^T R_v - r_{uv})^2
-  $$
+$$
+\text{Score}(X) = \frac{C_{XA} + C_{XB}}{2}
+$$
 
-**Degrees of Freedom**
-- For $ m$ movies, $ n$ users, and $ k$ topics:
-  $$
-  \text{Degrees of freedom} = k(m + n)
-  $$
+## Matrix factorization and completion
 
-**Coordinate Descent Algorithm**
-- Alternately fix $ R$ and optimize $ L$, then fix $ L$ and optimize $ R$.
-- Each step reduces to multiple independent linear regression problems.
+Represent user $u$ and item $v$ with $k$-dimensional feature vectors $L_u$ and $R_v$, and predict the rating as their inner product:
 
-**Regularization to Prevent Overfitting**
-- Add $ \ell_2$ regularization:
-  $$
-  \min_{L, R} \sum_{(u,v): r_{uv} \text{ observed}} (L_u^T R_v - r_{uv})^2 + \lambda (\|L_u\|^2 + \|R_v\|^2)
-  $$
+$$
+\text{Rating}(u, v) = L_u^T R_v
+$$
 
----
+The full ratings matrix $M$ is approximated by $M \approx L R^T$. Since $L$ has $mk$ entries and $R$ has $nk$ (for $m$ items, $n$ users, $k$ topics), the model has
 
-## Extensions & Cold-Start Solutions
+$$
+\text{Degrees of freedom} = k(m + n)
+$$
 
-**Feature-Based Linear Models**
-- Represent items by feature vector $ \phi(v)$, learn global weights $ w$:
-  $$
-  r_{uv} \approx w \cdot \phi(v)
-  $$
-- Minimize:
-  $$
-  \min_w \sum_{(u,v): r_{uv} \text{ observed}} (w \cdot \phi(v) - r_{uv})^2 + \lambda \|w\|^2
-  $$
+parameters, far fewer than the $mn$ entries of $M$ when $k$ is small. That gap is what makes it possible to fill in a mostly empty matrix.
 
-**Personalization via User-Specific Deviations**
-- Add user-specific weights $ w_u$:
-  $$
-  r_{uv} \approx (w + w_u) \cdot \phi(v)
-  $$
-- For new users, $ w_u = 0$ (use global weights); as more data accumulates, $ w_u$ adapts.
+Fitting the model is a **matrix completion** problem. Given the observed ratings, find $L$ and $R$ minimizing the squared error on the entries we can see:
 
-**Featurized Matrix Factorization (Unified Model)**
-- Combine matrix factorization and feature-based approaches:
-  $$
-  r_{uv} \approx L_u \cdot R_v + (w + w_u) \cdot \phi(u, v)
-  $$
-- Can be optimized with coordinate descent or gradient descent.
+$$
+\min_{L, R} \sum_{(u,v): r_{uv} \text{ observed}} (L_u^T R_v - r_{uv})^2
+$$
 
----
+**Coordinate descent** works well here. Alternately fix $R$ and optimize $L$, then fix $L$ and optimize $R$. With one side fixed, the objective separates, so each step reduces to many independent linear regression problems.
+
+To prevent overfitting, add $\ell_2$ regularization:
+
+$$
+\min_{L, R} \sum_{(u,v): r_{uv} \text{ observed}} (L_u^T R_v - r_{uv})^2 + \lambda (\|L_u\|^2 + \|R_v\|^2)
+$$
+
+## Extensions and cold start
+
+Matrix factorization has nothing to say about a user or item with no observed ratings. Feature-based models fill that hole.
+
+A **feature-based linear model** represents items by a feature vector $\phi(v)$ and learns global weights $w$:
+
+$$
+r_{uv} \approx w \cdot \phi(v)
+$$
+
+$$
+\min_w \sum_{(u,v): r_{uv} \text{ observed}} (w \cdot \phi(v) - r_{uv})^2 + \lambda \|w\|^2
+$$
+
+Personalization comes back through **user-specific deviations** $w_u$:
+
+$$
+r_{uv} \approx (w + w_u) \cdot \phi(v)
+$$
+
+A new user starts at $w_u = 0$ and just gets the global weights. As their history accumulates, $w_u$ adapts.
+
+**Featurized matrix factorization** combines both models:
+
+$$
+r_{uv} \approx L_u \cdot R_v + (w + w_u) \cdot \phi(u, v)
+$$
+
+This gets collaborative filtering where interaction data exists and graceful fallback to features where it doesn't, and it can be optimized with coordinate descent or gradient descent.
 
 ## Applications
 
-- **Localization**: Matrix completion can infer missing entries in distance matrices, exploiting low-rank structure due to spatial constraints.
-- **Text Data**: Matrix factorization can uncover latent topics in document-word matrices, similar to topic modeling.
+Matrix completion can infer missing entries in distance matrices for localization, exploiting the low-rank structure that spatial constraints impose. Matrix factorization applied to document-word matrices uncovers latent topics, similar to topic modeling.
 
----
+## Comparison
 
-## Summary Table: Approaches Comparison
+A coarse comparison of the approaches above. The ratings follow from the model definitions rather than from any single benchmark.
 
 | Approach                | Personalization | Handles Cold-Start | Uses Features | Handles Sparsity | Scalability |
 |-------------------------|----------------|--------------------|---------------|------------------|-------------|
@@ -130,11 +129,6 @@ For a production ranking case study, see [[recc-sys/predicting-clicks-on-ads-at-
 | Feature-Based Linear    | Yes            | Yes                | Yes           | Yes              | High        |
 | Featurized Matrix Fact. | Yes            | Yes                | Yes           | Yes              | Moderate    |
 
----
+## Sources
 
-**Best Practices**
-- Use collaborative filtering (matrix factorization) for personalization when sufficient data exists.
-- Use feature-based models to address cold-start and incorporate context.
-- Combine both for robust, scalable, and adaptive recommender systems.
-
-
+- [Koren, Bell & Volinsky (2009), Matrix Factorization Techniques for Recommender Systems](https://doi.org/10.1109/MC.2009.263)

@@ -1,27 +1,50 @@
 ---
 title: Multinomial Logistic Regression
 category: Natural Language Processing
-tags: classification, multinomial logistic regression, machine learning
+tags:
+  - classification
+  - multinomial logistic regression
+  - machine learning
 date: 2025-01-05
-description: Explanation of multinomial logistic regression, a classification algorithm used in natural language processing.
+updated: 2026-07-30
+status: incomplete
+description: Notation and probabilistic setup for classification, plus the definition of the multinomial logistic regression model. Training, gradients, and regularization are not covered yet.
+sources:
+  - title: Jurafsky & Martin, Speech and Language Processing (3rd ed. draft)
+    url: https://web.stanford.edu/~jurafsky/slp3/
+    type: textbook
 ---
 
-# Multinomial Logistic Regression
+## Purpose
 
-This model is a concrete extension of the [[natural-language-processing/reading/classification|classification]] framework; [[natural-language-processing/reading/neural-networks|Feedforward Neural Networks]] provide a nonlinear alternative.
+Sets up the probabilistic framing for classification and defines the multinomial logistic regression model. This extends the [[natural-language-processing/reading/classification|classification]] framework with a discriminative linear model, and [[natural-language-processing/reading/neural-networks|feedforward neural networks]] generalize it further with nonlinear layers. Training, gradients, and regularization are still missing from this note.
 
-## Classification
+## Classification setup
 
-Input can be anything (document, image, etc.) and output is a class label from the finite set $\mathcal{L}$.
+The input can be anything (a document, an image) and the output is a class label from a finite set $\mathcal{L}$:
 
 $$
-classify : \mathcal{V}* \rightarrow \mathcal{L}
+classify : \mathcal{V}^* \rightarrow \mathcal{L}
 $$
 
-$\mathcal{V}$ is the set of words in our vocabulary.
+$\mathcal{V}$ is the vocabulary, so $\mathcal{V}^*$ is the set of all possible texts.
 
-$X$ is a random variable representing the input, in a given instance taking values from $\mathcal{V}*$.
+$X$ is a random variable over inputs, taking values in $\mathcal{V}^*$. $Y$ is a random variable over outputs, taking values in $\mathcal{L}$.
 
-$Y$ is a random variable representing the output, taking values from $\mathcal{L}$.
+$p(X, Y)$ is the true distribution of labeled texts, and $p(Y)$ is the marginal distribution of labels. We don't know either without looking at data.
 
-$p(X, Y)$ is the "true" distribution of labeled texts. $p(Y)$ is the distribution of labels. We don't normally know this without looking at the data.
+## The model
+
+Multinomial logistic regression scores each class with a linear function of features, then normalizes the scores into a distribution with softmax. With a feature vector $\phi(x) \in \mathbb{R}^d$ and per-class weights $w_y$:
+
+$$
+p(Y = y \mid X = x) = \frac{\exp(w_y \cdot \phi(x))}{\sum_{y' \in \mathcal{L}} \exp(w_{y'} \cdot \phi(x))}
+$$
+
+Prediction takes the argmax over classes. The model is discriminative. It estimates $p(Y \mid X)$ directly, while Naive Bayes models the joint $p(X, Y)$ through a generative story about how documents arise.
+
+Training maximizes the conditional log-likelihood of the labeled data, which is the same as minimizing cross-entropy loss. See [SLP3](https://web.stanford.edu/~jurafsky/slp3/) for the gradient derivation this note still needs.
+
+## Sources
+
+- [Jurafsky & Martin, Speech and Language Processing (3rd ed. draft)](https://web.stanford.edu/~jurafsky/slp3/)

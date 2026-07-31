@@ -1,23 +1,42 @@
 ---
 title: Tokenization, Segmentation, and Edit Distance
 category: Natural Language Processing
-tags: tokenization, segmentation, edit distance, bpe, nltk, tr, regex, byte-pair encoding
+tags:
+  - tokenization
+  - segmentation
+  - edit distance
+  - bpe
+  - nltk
+  - tr
+  - regex
+  - byte-pair encoding
 date: 2025-02-12
-description: Overview of tokenization techniques in Natural Language Processing (NLP), including Unix tools, regex, Byte-Pair Encoding (BPE), and edit distance.
+updated: 2026-07-30
+status: draft
+description: Ways to split text into tokens, from Unix one-liners and regex tokenizers to byte-pair encoding, plus sentence segmentation with NLTK and minimum edit distance.
+sources:
+  - title: Jurafsky & Martin, Speech and Language Processing (3rd ed. draft)
+    url: https://web.stanford.edu/~jurafsky/slp3/
+    type: textbook
+  - title: NLTK Book, ch. 3
+    url: https://www.nltk.org/book/ch03.html
+    type: book
 ---
 
-# Tokenization
+## Purpose
 
-Tokenization defines the terms consumed by [[natural-language-processing/reading/information-retrieval|information retrieval]] systems and the model inputs used throughout [[natural-language-processing/prompting|prompting]].
+A reference for splitting text into tokens, from Unix one-liners to byte-pair encoding, plus sentence segmentation and minimum edit distance. Mostly code I want to be able to grab quickly. Tokenization defines the terms consumed by [[natural-language-processing/reading/information-retrieval|information retrieval]] systems and the model inputs used throughout [[natural-language-processing/prompting|prompting]]. The material follows [SLP3](https://web.stanford.edu/~jurafsky/slp3/).
 
 ## Old-School Unix
+
+A crude word tokenizer in one pipeline. `tr -sc 'A-Za-z' '\n'` squeezes every run of non-letters into a single newline, which puts one word per line. The rest is sorting and counting.
 
 ```bash
 # output all words in a file, one per line
 tr -sc 'A-Za-z' '\n' < input.txt
 
 # count the words in a file
-tr -sc ’A-Za-z’ ’\n’ < input.txt | sort | uniq -c
+tr -sc 'A-Za-z' '\n' < input.txt | sort | uniq -c
 
 # count the words in a file, case-insensitive
 tr -sc 'A-Za-z' '\n' < input.txt | tr A-Z a-z | sort | uniq -c
@@ -27,6 +46,8 @@ tr -sc 'A-Za-z' '\n' < input.txt | tr A-Z a-z | sort | uniq -c | sort -n -r
 ```
 
 ## Top-Down Regex Tokenization
+
+Write the token grammar explicitly as alternations in a verbose regex and let NLTK apply it. This pattern (adapted from the [NLTK book, ch. 3](https://www.nltk.org/book/ch03.html)) handles abbreviations, hyphenated words, currency, percentages, and ellipses.
 
 ```python
 import nltk
@@ -45,7 +66,7 @@ nltk.regexp_tokenize(text, pattern)
 
 ## Bottom-Up Tokenization with Byte-Pair Encoding (BPE)
 
-BPE is a simple algorithm that learns tokens from a corpus by iteratively merging the most frequent pair of characters.
+BPE learns a vocabulary from a corpus by starting from single characters and repeatedly merging the most frequent adjacent pair. The learned merge list is the tokenizer, and tokenizing new text means replaying the merges in order.
 
 ```python
 def get_freq(vocab: Dict[str, int]) -> Dict[Tuple[str, str], int]:
@@ -106,6 +127,8 @@ for i, pair in enumerate(merge_operations, 1):
 
 ## Segmentation and Tokenization
 
+NLTK's built-ins. Segment into sentences first, then tokenize and POS-tag the words within each sentence.
+
 ```python
 import nltk
 
@@ -118,6 +141,8 @@ for sentence in sent_text:
 ```
 
 ## Edit Distance
+
+The standard dynamic program. `dp[i][j]` is the edit distance between the first $i$ characters of `w1` and the first $j$ characters of `w2`, built up from insertions, deletions, and substitutions. This version charges 1 for every operation; SLP3 also presents a variant where substitution costs 2.
 
 ```python
 def min_edit_distance(w1, w2):
@@ -139,3 +164,8 @@ def min_edit_distance(w1, w2):
 
     return dp[n][m]
 ```
+
+## Sources
+
+- [Jurafsky & Martin, Speech and Language Processing (3rd ed. draft)](https://web.stanford.edu/~jurafsky/slp3/)
+- [NLTK Book, ch. 3](https://www.nltk.org/book/ch03.html)

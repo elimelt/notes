@@ -1,130 +1,122 @@
 ---
 title: Clocks
 category: Distributed Systems
-tags: clocks, distributed systems, logical clocks, vector clocks, causality, consistency
+tags:
+  - clocks
+  - distributed-systems
+  - logical-clocks
+  - vector-clocks
+  - causality
 date: 2024-04-14
-description: Explains the concepts of physical and virtual clocks in distributed systems, including their limitations and potential solutions.
+updated: 2026-07-30
+status: evergreen
+description: Why physical clocks cannot order events in a distributed system, and how logical and vector clocks order events using causality instead.
+sources:
+  - title: "Time, Clocks, and the Ordering of Events in a Distributed System (Lamport, 1978)"
+    url: https://lamport.azurewebsites.net/pubs/time-clocks.pdf
+    type: paper
+  - title: "Exploiting a Natural Network Effect for Scalable, Fine-grained Clock Synchronization (Huygens, NSDI 2018)"
+    url: https://www.usenix.org/conference/nsdi18/presentation/geng
+    type: paper
 ---
 
-# Clocks
+## Purpose
 
-There are two main approaches to time in a distributed system: **physical clocks** and **virtual (logical) clocks**.
+This note explains why you cannot rely on physical clocks to order events across machines, and how logical clocks and vector clocks recover a useful ordering from causality alone.
 
-## Physical Clocks
+## Physical clocks
 
-Actual clocks running in most computers drift apart by ~30 ppm due to their temperature sensitivity. Although more accurate clocks (atomic, GPS, etc.) are available, they are expensive and are only *maybe* present in some data centers.
+Quartz clocks in commodity machines drift apart, on the order of 30 ppm, largely because oscillator frequency is temperature sensitive. More accurate clocks (atomic, GPS-disciplined) exist but are expensive, so at best a few machines in a datacenter have one.
 
-The crux of the problem is that physical clocks are not perfectly synchronized, and the sending of messages between processes can introduce unpredictable delays. In general, network latency is unpredictable, but with a lower bound.
+The deeper problem is that clocks are never perfectly synchronized and message delay is unpredictable. Network latency has a lower bound but no useful upper bound, so a timestamp from another machine tells you less than it appears to.
 
-A practical, albeit naive approach might be to use NTP and have clients query a set of time servers. Then, take the minimum (or some average, subtracting outliers) of the readings received. This can synchronize to ~50 microseconds in a LAN.
+A practical approach is NTP-style synchronization: query a set of time servers and combine the readings, for example by taking the minimum or an outlier-trimmed average. This gets you to roughly 50 microseconds of skew on a LAN.
 
-Such a system was implemented with **Google Huygens**. Some interesting optimizations they added include:
+[Huygens](https://www.usenix.org/conference/nsdi18/presentation/geng) pushed this much further. Its main techniques:
 
-- Time-stamping packets in the NIC to avoid OS scheduling overhead
-- Only included evenly-spaced packets in their sampling as a heuristic for no queuing delay
-- Estimate relative clock phase and drift between pairs
-- Sample pairs and use linear algebra to correct peer-to-peer clock skew
+- Timestamp packets in the NIC to avoid OS scheduling noise
+- Keep only evenly spaced probe packets in the sample, a heuristic for no queuing delay
+- Estimate relative clock phase and drift between pairs of machines
+- Feed pairwise estimates into a network-wide correction (the paper calls this network effect estimation)
 
-This enabled them to achieve a 50 ns clock skew 99% of the time. This is okay if time is only used as a hint, but shows that even with all of the above optimizations, it isn't good enough.
+Huygens achieves clock skew under about 50 ns 99% of the time. That sounds excellent, and it is fine when time is only a hint. It is still not good enough for correctness. At Google's scale, a billion RPCs per second with a 1% chance of exceeding the 50 ns bound means about 10 million RPCs every second whose timestamps you cannot trust to that precision. Ordering by physical timestamp will be wrong often enough to matter.
 
-To drive this point home, due to the massive scale Google operates at (1 billion RPCs/sec = 10 million clock skews above 50ns per sec), even for a minimum sized message that takes 2 ns to send in a high-performance network, thousands of instructions can be executed on a single server's processor.
+## Virtual clocks
 
-## Virtual Clocks
+Since physical time cannot be trusted, the goal shifts. Design the system so the ordering of events that can run concurrently does not matter, and the ordering of events that must be sequential is enforced on every possible execution.
 
-We want to design systems such that the ordering of events that can be concurrently executed **doesn't** matter, and the ordering of events that must be performed sequentially is enforced on all possible executions.
-
-Virtual clocks are a framework for reasoning about the order of events using **no** assumptions about physical clock skew or message delays in way way that both respects causality, and relies only on local information.
+Virtual (logical) clocks are a framework for reasoning about event order with no assumptions about clock skew or message delay. They respect causality and rely only on local information.
 
 ### Happens before
 
-We say that event `a` **happens before** event `b` if:
+Event $a$ **happens before** event $b$ if any of these hold:
 
-1. `a` happens earlier than `b` in the same process
-2. `a` is the sending of a message and `b` is the receipt of that message
-3. `a` happens before `c` and `c` happens before `b`, aka transitivity
+1. $a$ occurs earlier than $b$ in the same process
+2. $a$ is the sending of a message and $b$ is the receipt of that message
+3. $a$ happens before some $c$ and $c$ happens before $b$ (transitivity)
 
-This is a **partial order**.
+This relation is a **partial order**. The definition comes from [Lamport's 1978 paper](https://lamport.azurewebsites.net/pubs/time-clocks.pdf).
 
 ### Happens concurrently
 
-Two events `a` and `b` are said to happen concurrently if neither `a` happens before `b` nor `b` happens before `a`.
+Events $a$ and $b$ are concurrent if neither happens before the other. This is exactly the case where a correct system must not depend on their order.
 
-### Logical Clock Implementation
+### Logical clock implementation
 
-- Keep a local clock $T$, and increment it whenever an event happens.
-- On all messages sent, include a timestamp $T_m$.
-- On receipt of a message, set $T = \max(T, T_m) + 1$.
+- Keep a local counter $T$, incremented on every local event.
+- Include the current $T$ as a timestamp $T_m$ on every message sent.
+- On receiving a message, set $T = \max(T, T_m) + 1$.
 
-### Vector Clocks
+This guarantees that if $a$ happens before $b$ then $T(a) < T(b)$. The converse fails: $T(a) < T(b)$ does not imply $a$ happened before $b$, since two concurrent events can get any pair of timestamps.
 
-Note that with the above implementation of a logic clock system, it was not the case that $T(a) < T(b) \to $ $a$ happened before $b$. With vector clocks, we have $T(a) < T(b) \leftrightarrow a$ happened before $b$ by precisely representing transitive causal relationships between events. This is used in practice for eventual and causal consistency (ie Git, Amazon Dynamo, etc.).
+### Vector clocks
 
-#### Algorithm
+Vector clocks strengthen this to a two-way correspondence: $T(a) < T(b) \leftrightarrow a$ happens before $b$, where a vector $T(a)$ is less than $T(b)$ when every entry of $T(a)$ is $\le$ the corresponding entry of $T(b)$ and at least one entry is strictly smaller. If neither vector is less than the other, the events are concurrent. This precise representation of causal relationships is what eventually consistent and causally consistent systems build on, and the same idea shows up in Git and in Amazon's [[distributed-systems/dynamo-db|Dynamo]].
 
-Clock is a vector `C`, with length = # of nodes in the system
+The algorithm, for a system of $n$ nodes, keeps a vector `C` of length $n$ per node:
 
-- On node `i`, increment `C[i]` on each event
-- On receipt of message with clock `C_m` on node `i`:
+- On node `i`, increment `C[i]` on each local event
+- When node `i` sends a message, it attaches its vector `C_m`
+- On receipt of a message with vector `C_m` at node `i`:
   - increment `C[i]`
-  - for each `j != i`, `C[j] = max(C[j], C_m[j])`
+  - for each `j != i`, set `C[j] = max(C[j], C_m[j])`
 
 ```java
 public class VectorClock {
-  public final int[] clock;
+  private final int[] clock;
+  private final int id;
 
-  public VectorClock(int n) {
-    clock = new int[n];
-  }
-
-  public void increment(int i) {
-    clock[i]++;
-  }
-
-  public void handleMessage(VectorClock other) {
-    for (int i = 0; i < clock.length; i++)
-      clock[i] = Math.max(clock[i], other.clock[i]);
-  }
-}
-```
-
-```java
-public class Node {
-  private int id;
-  private VectorClock vc;
-
-  public Node(int id, int n) {
+  public VectorClock(int id, int n) {
     this.id = id;
-    this.vc = new VectorClock(n);
+    this.clock = new int[n];
   }
 
-  public void event() {
-    vc.increment(id);
+  // Call on every local event, including sends.
+  public void tick() {
+    clock[id]++;
   }
 
-  public void merge(Node other) {
-    vc.handleMessage(other.vc);
+  // Call on receipt of a message carrying the sender's vector.
+  public void receive(int[] senderClock) {
+    clock[id]++;
+    for (int j = 0; j < clock.length; j++)
+      if (j != id)
+        clock[j] = Math.max(clock[j], senderClock[j]);
   }
 
-  public void send(Node other) {
-    other.vc.handleMessage(vc.clock);
-  }
-
-  public boolean[] didHappenBefore(Node other) {
-    boolean[] res = new boolean[2];
-    res[0] = true;
-    res[1] = true;
-
-    for (int i = 0; i < vc.clock.length; i++) {
-      if (vc.clock[i] > other.vc.clock[i])
-        res[0] = false;
-       else if (vc.clock[i] < other.vc.clock[i])
-        res[1] = false;
+  // Returns true iff this clock's event happened before other's.
+  public boolean happenedBefore(VectorClock other) {
+    boolean strictlyLess = false;
+    for (int j = 0; j < clock.length; j++) {
+      if (clock[j] > other.clock[j]) return false;
+      if (clock[j] < other.clock[j]) strictlyLess = true;
     }
-
-    return res;
+    return strictlyLess;
   }
 }
 ```
+
+Two events are concurrent exactly when `a.happenedBefore(b)` and `b.happenedBefore(a)` are both false.
 
 ## Related notes
 

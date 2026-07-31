@@ -1,26 +1,39 @@
 ---
 title: Distributed Systems Consistency Models
 category: Distributed Systems
-tags: Consistency Models,Paxos,Linearizability,Sequential Consistency,Snapshot Reads,Causal Consistency,Processor Consistency,Memory Barrier/Fence
+tags:
+  - consistency-models
+  - linearizability
+  - sequential-consistency
+  - causal-consistency
+  - paxos
 date: 2024-05-06
-description: This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.
+updated: 2026-07-30
+status: evergreen
+description: Defines the common consistency models from strong to eventual, gives Lamport's register semantics, and covers how linearizability interacts with Paxos and sharding.
+sources:
+  - title: "On Interprocess Communication (Lamport, 1986)"
+    url: https://lamport.azurewebsites.net/pubs/interprocess.pdf
+    type: paper
 ---
 
-# Consistency
+## Purpose
 
-**Consistency**: the allowed semantics of operations that mutate a data store/shared object.
+This note defines the consistency models I keep reaching for, from strong down to eventual, and works through why weaker models exist at all. It also covers Lamport's register semantics and what linearizability costs in a Paxos-based system.
 
-Consistency specifies the interface (as opposed to implementation) for behavior of your system. It is essentially the contract between the programmer and implementer. An **anomaly** is a violation of the consistency semantics of the system
+## Core idea
 
-## Types of Consistency
+**Consistency** is the allowed semantics of operations that mutate a data store or shared object. It specifies the interface of your system rather than the implementation, a contract between the programmer and the implementer. An **anomaly** is a violation of the consistency semantics of the system.
 
 | Type                 | Description                               |
 |----------------------|-------------------------------------------|
 | Strong Consistency   | The system behaves as if there is a single server. Systems that maintain a single consistent log of operations are often strongly consistent. |
-| Weak Consistency     | Definitions vary, but basically just *not* strong consistency.  |
+| Weak Consistency     | Definitions vary, but basically just anything short of strong consistency.  |
 | Eventual Consistency | Weak consistency with any anomalies guaranteed to be temporary. |
 
-## Coordinating through a KV Store
+## Why the model matters
+
+Consider coordinating two processes through a KV store:
 
 ```python
 def Produce(key, lock, command):
@@ -34,36 +47,33 @@ def Consume(key, lock):
   return storage.get(key)
 ```
 
-With strong consistency semantics, the above approach works fine. However, with eventual consistency, and particularly for any system without multi-key transactions, we might see the update for `storage.get(done)` before the update for `storage.get(key)`, leading to unexpected behavior.
+With strong consistency this works fine. With eventual consistency, and in particular in any system without multi-key transactions, the consumer might observe the write to `lock` before the write to `key`, and read a stale or missing result.
 
 ## Formalization
 
-[Read here](https://lamport.azurewebsites.net/pubs/interprocess.pdf) for more info/theory.
+Lamport's [On Interprocess Communication](https://lamport.azurewebsites.net/pubs/interprocess.pdf) develops the theory. For a given RPC, the request starts at time $t$ and the reply returns at $t + x$. We cannot be sure what happens during $(t, t + x)$: the request or reply could be lost and retransmitted, and intermediate coordination sometimes has to take place.
 
-For a given RPC, the initial request starts at time $t$ and the reply returns at time $t + x$. We cannot be sure what happens during $(t, t + x)$, since the request/reply could be lost and retransmitted, and intermediate coordination sometimes has to take place.
+With a single server you still don't know precisely when the operation takes effect, but you expect it to be some point within $(t, t + x)$. Weaker models relax this, sometimes allowing different readers to see different results concurrently.
 
-With only a single server, you don't know precisely when the operation takes place, but we expect it to be some time in $(t, t + x)$. However, weaker consistency models relax this assumption, also sometimes allowing different readers to see different results concurrently.
+We accept weaker models because of these tradeoffs:
 
-We use different models because of the following tradeoffs:
+- Performance: consistency requires coordination, so stronger consistency usually costs latency and throughput
+- Availability: if a client is offline or the network partitions, strong consistency may be impossible to serve
+- Programmability: weaker models are harder to reason about and program against
 
-- Performance: Consistency requires coordination, so there is often a tradeoff between the level of consistency and the performance of the system
-- Availability: If some client is offline or some network failure occurs, we might be forced to abandon strong consistency
-- Programmability: Weaker consistency models are harder to reason about and program with
+### Lamport's register semantics
 
-### Lamport's Register Semantics
-
-Registers hold a single value, and we define operations $r_i, $w(v)$ as the $i$th read, and a write to the register with value $v$. Each operation has some starting time and ending time.
+Registers hold a single value. Define $r_i$ as the $i$th read and $w(v)$ as a write of value $v$. Each operation has a start time and an end time.
 
 - A read is **safe** if it is not concurrent with any write, and thus obtains the previously written value.
-- A read is **regular** if it is either safe, or if concurrent with a write, obtains either the old or new value.
-- A read/write is **atomic** if operations are safe, or if reads and writes behave as if they occur in some definite order.
-
+- A read is **regular** if it is either safe, or, when concurrent with a write, obtains either the old or the new value.
+- Reads and writes are **atomic** if operations are safe, or if reads and writes behave as if they occur in some definite order.
 
 | Semantics | Constraints          |
 |-----------|----------------------|
 | safe      | $r_1 \to v_1$         |
 | regular   | $r_1 \to v_1 \land (r_2 \to v_1 \lor r_2 \to v_2) \land (r_3 \to v_1 \lor r_3 \to v_2)$ |
-| atomic    | $r_1 \to v_1 \land (r_2 \to v_1 \lor r_2 \to v_2) \land (r_3 \to v_1 \lor r_3 \to v_2) \land (r_2 \to v_2 \implies t_3 \to v_2)$ |
+| atomic    | $r_1 \to v_1 \land (r_2 \to v_1 \lor r_2 \to v_2) \land (r_3 \to v_1 \lor r_3 \to v_2) \land (r_2 \to v_2 \implies r_3 \to v_2)$ |
 
 ```plaintext
             r1           r2     r3
@@ -74,57 +84,58 @@ Registers hold a single value, and we define operations $r_i, $w(v)$ as the $i$t
 
 ## Linearizability
 
-A **linearizable** system is one in which actions appear to occur in a single global order that is consistent with real time/causal order. Not all systems enforce linearizability.
+A **linearizable** system is one in which operations appear to occur in a single global order consistent with real time. Not all systems enforce linearizability.
 
-To do linearizable reads in Paxos, you need to first verify that the leader is **still** the leader at the time of the read. Otherwise, its possible that some other leader took over and formed a majority without the old leader. This can be done by waiting for the leader to execute some other request, which will only go through if we are indeed still the leader.
+To serve a linearizable read from a Paxos leader, the leader must first verify it is still the leader at the time of the read. Otherwise another leader may have taken over and committed writes with a majority that excludes the old leader. One way to verify is to wait for the leader to successfully execute some other request, which only succeeds while it holds leadership.
 
-### Linearizable Sharding with Paxos
+### Linearizable sharding with Paxos
 
-For linearizability with shards, we have the following requirements:
+For linearizability across shards, we need:
 
 - All operations from the same node occur in order
 - All operations to the same shard occur in order
-- All operations complete between the request send and response receive.
+- All operations complete between the request send and the response receive
 
-Parallelism/concurrency of batched requests becomes difficult in a sharded system, since breaking up operations of a batched request into a pipeline completely throws out the original order of the request. We can instead think of systems in terms of a weaker consistency model.
+Batched requests make this painful. Splitting a batch into a pipeline across shards throws away the original order of the batch, so preserving linearizability kills the parallelism. This pressure is a big part of why weaker models get used.
 
-### Sequential Consistency
+## Weaker models
 
-**Sequential Consistency** is a weaker form of consistency that requires all operations to be executed in some order that is consistent with the order in which they were issued. However, S.C. doesn't always follow real-time order. This is also referred to as **serializability** in the context of transactions.
+### Sequential consistency
 
-Simplistically, we can think of sequential consistency as a system where all operations are executed in some order that is consistent with the order in which they were issued, but not necessarily during their window of request/response timing. This allows stale reads, while still maintaining some order that is consistent with a prefix of the global state of the system.
+**Sequential consistency** requires all operations to execute in some total order consistent with the order each process issued them, without requiring that order to match real time. In the context of transactions this is called **serializability**. It permits stale reads, while still guaranteeing every reader sees some prefix-consistent view of the system.
 
+### Snapshot reads
 
-### Snapshot Reads
+Snapshot reads give a consistent view of global state at some point, while allowing that point to lag the present. Operations must still be serializable, but reads may return stale data.
 
-Gives us a consistent view of our global state across some set of views of the system. This requires all operations being serializable, but it is okay if reads return stale data.
+- All reads in a transaction come from the same snapshot
+- The client can define how stale is too stale for its use case
 
-- All reads in a transaction must be from the same snapshot
-- Client can define how old is too old for their usecase
+One implementation on top of Paxos, ignoring sharding:
 
-To implement this (without sharding) in conjunction with Paxos, we can do the following:
-
-1. Primary defines update order in log
+1. The primary defines the update order in the log
 2. Shadow replicas apply changes in that order
-3. Each lag primary from some variable amount
-4. Snapshot reads occur at a single replica
-5. If a replica crashes during a transaction, restart transaction at another snapshot replica
+3. Each replica lags the primary by some variable amount
+4. A snapshot read executes entirely at a single replica
+5. If a replica crashes mid-transaction, the transaction restarts at another snapshot replica
 
-### Causal Consistency
+### Causal consistency
 
-- Causally related reads and writes (ordered by happens before relation) must occur in that order.
+- Causally related reads and writes (ordered by the happens-before relation) must be observed in that order
 - Concurrent writes can be seen in different orders on different nodes
-- Note that linearizability imples causality
+- Linearizability implies causal consistency
 
-### Processor Consistency
+### Processor consistency
 
-- Writes done by the same process are seen in that order.
+- Writes done by the same process are seen in that order
 - Writes by different processors can be seen in different orders by different readers
 
-### Memory Barrier/Fence
+### Memory barrier / fence
 
-- Whenever consistency matters, you can insert a "fence" in a point of time that says all preceding operations happen before the fence, and all subsequent operations happen after
-- On either side of the fence, order is not enforced
-- If every operation is fenced, your system is linearizable
+A **fence** marks a point such that all preceding operations happen before it and all subsequent operations happen after it. On either side of the fence, order is not enforced. If every operation is fenced, the system is linearizable. POSIX file operations follow this model, and multi-cache systems use fences to enforce coherence at chosen points.
 
-This is how POSIX files work. Also many mutli-cache systems use fences to enforce consistency.
+## Related notes
+
+- [[distributed-systems/clocks|clocks]]
+- [[distributed-systems/distributed-cache-coherence|distributed cache coherence]]
+- [[distributed-systems/managing-critical-state|managing critical state]]

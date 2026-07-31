@@ -49,9 +49,10 @@ sync_site() {
     cp -R "$ROOT/docs" "$QUARTZ_DIR/quartz/static/docs"
   fi
 
-  # Quartz's graph forces Pixi onto WebGPU, which renders blank in some browsers.
-  perl -0pi -e 's/preference: "webgpu"/preference: "webgl"/' \
-    "$QUARTZ_DIR/quartz/components/scripts/graph.inline.ts"
+  if [[ -f "$ROOT/quartz-site/overrides/graph.inline.ts" ]]; then
+    cp "$ROOT/quartz-site/overrides/graph.inline.ts" \
+      "$QUARTZ_DIR/quartz/components/scripts/graph.inline.ts"
+  fi
 }
 
 command="${1:-}"

@@ -1,372 +1,128 @@
 ---
 title: Optimizing GPU Kernels
 category: Machine Learning Systems
-tags: gpu, kernel, optimization, cuda, triton
+tags:
+  - gpu
+  - kernel
+  - optimization
+  - cuda
+  - triton
 date: 2025-05-25
-description: How to write high-performance GPU kernels using CUDA and Triton, with practical examples and optimization techniques.
+updated: 2026-07-30
+status: needs-review
+description: The four core kernel optimizations (coalescing, shared memory, bank conflict avoidance, divergence control) worked through three case studies, matrix transpose, parallel reduction, and tiled GEMM.
+sources:
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
+  - title: CUDA C++ Programming Guide
+    url: https://docs.nvidia.com/cuda/cuda-c-programming-guide/
+    type: docs
 ---
 
-# GPU Kernel Optimizations
+## Purpose
 
-Start with [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]] for the hardware model, then use [[llm-serving-systems/performance-modeling|Performance Modeling]] or the concise [[llm-serving-systems/roofline-reference|Roofline reference]] to identify the limiting resource.
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+This note works through the standard GPU kernel optimizations using three case studies: matrix transpose, parallel reduction, and GEMM. Start with [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]] for the hardware model, then use [[llm-serving-systems/performance-modeling|Performance Modeling]] or the compact [[llm-serving-systems/roofline-reference|Roofline reference]] to identify which resource limits a given kernel.
 
-## GPU Architecture Recap
+These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025, taught by Prof. Baris Kasikci with TA Kan Zhu. The transpose timings below come from the course demo (an 8192x8192 FP32 transpose); the slides do not record the exact GPU or driver, so treat absolute numbers as indicative and the relative improvements as the real lesson.
 
-- Memory hierarchy with varying capacities and bandwidths:
-  - Global Memory (80GB): ~3TB/s
-  - L2 Cache (50MB): ~10TB/s
-  - Shared Memory/L1 Cache (228 KB): ~20TB/s
-  - Registers (64K * 32 Bit): ~600TB/s
-- Streaming Multiprocessors (SMs) contain cores, registers, and shared memory
+## The memory hierarchy sets the rules
 
-## GPU Programming Model
+Kernel optimization is mostly about which memory you touch and in what pattern. The hierarchy (H100-class numbers, per lecture):
 
-| Concept | Definition | Corresponding Architecture | Communication | Limits |
-|---------|------------|---------------------------|---------------|--------|
-| Thread | Minimal units that execute instructions | Functional units | Local | Up to 255 registers |
-| Warp | Group of Threads | "SM tiles" | Register file | 32 threads |
-| Thread Blocks | Group of Warps | SM | Shared memory | Up to 32 warps (1024 threads) |
-| Kernel | Function on GPU | GPU | L2 / Global memory | Up to (2^32-1)^3 Blocks |
+- Global memory: 80 GB at ~3 TB/s
+- L2 cache: 50 MB at ~10 TB/s
+- Shared memory / L1: 228 KB per SM at ~20 TB/s
+- Registers: 64K x 32-bit per SM at ~600 TB/s
 
-## Triton Framework
+Each level buys roughly an order of magnitude in bandwidth. The four techniques that follow are all ways of moving work up this hierarchy or making a level deliver its rated bandwidth:
 
-- **What is Triton?** A compiler framework from OpenAI for high-performance kernels with reduced human inputs
-  - Python interface
-  - Automated thread management
-  - High performance
-- **Why Triton?**
-  - Write customized kernels easily
-  - Higher performance than PyTorch for complex kernels
-- Triton composes kernels at the block level
-- Provides useful primitives: `tl.load`, `tl.store`, `tl.min`, etc.
+1. Coalesced global loading
+2. Shared memory as a staging buffer
+3. Bank conflict avoidance
+4. Branch divergence minimization
 
-## CUDA
+## Case study 1: matrix transpose
 
-- **What is CUDA?**
-  - Bare-bone GPU programming
-  - One-to-one mapping to the hardware
-  - Highest performance
-  - Heavy implementation burden
+The transpose is a pure data-movement kernel, so it isolates the memory techniques. Reads are row-major, writes are column-major, and one of the two will fight the hardware unless you restructure the access pattern. Total traffic for 8192x8192 FP32 is $8192^2 \times 4 \times 2 \approx 537$ MB per pass, which converts each timing below into an achieved bandwidth.
 
-- **Memory Management in CUDA**
-  - Allocation and deallocation:
-    - `cudaMalloc` -> device memory allocation
-    - `cudaMallocHost` -> pinned host memory allocation
-    - `cudaFree` -> free memory
-  - Memory movement and setting:
-    - `cudaMemcpy` -> synchronize copy
-    - `cudaMemcpyAsync` -> asynchronize copy
-    - `cudaMemset` -> synchronize set
-    - `cudaMemsetAsync` -> asynchronize set
+### V0: PyTorch baseline
 
-- **CUDA Kernels**
-  - Declaring a kernel: `__global__ void kernel_name(args...)`
-  - Declaring a device helper function: `__device__ T helper_name(args...)`
-  - Args are on the host
-  - Pointers to device memory also reside in the host
-  - Inside a kernel, args (basic types) can be used and device pointers can be dereferenced
+`x.t()` only flips strides; `.contiguous()` performs the actual movement. Measured: 0.561 ms, about 956 GB/s, roughly a third of what the memory system can do.
 
-- **Launching a Kernel**
-  - Defining block shapes: `dim3 block(x,y,z)`
-  - Defining thread shapes: `dim3 thread(x,y,z)`
-  - Launching kernels: `kernel_name<<<block, thread>>>(args);`
+### V1: row-wise partitioning
 
-- **Synchronization and Error Checking**
-  - Thread synchronization: `__syncthreads()` -> device function
-  - Block synchronization: Usually not feasible, except for cooperative launch
-  - Device synchronization: `cudaDeviceSynchronize()` -> host function
-  - Error checking: `cudaGetLastError()`, `cudaGetErrorString()`
+One block per row, each thread handling a slice of columns (the naive kernel written out in [[llm-serving-systems/how-to-write-a-fast-kernel|How to write a fast kernel]]). Measured: 3.65 ms, worse than PyTorch. The profiler blames uncoalesced global accesses: 117,440,512 excess sectors, 88% of total traffic wasted.
 
-- **Additional CUDA Features in Modern GPUs**
-  - Unified memory address (P100+)
-  - NvLink (P100+)
-  - Clusters (H100+)
-  - TMA (H100+)
-  - NVSHARP (H100+)
-  - FP4 and FP6 (B100+)
+### V2: coalesced reads
 
-## GPU Optimization Techniques
+Inside one warp, accesses to contiguous addresses coalesce into one or a few memory transactions. Reassigning threads so consecutive threads read consecutive addresses brings the time to 1.40 ms. The writes to the output are still strided by a full column, so 58,720,256 excess sectors remain (78% of total).
 
-### How to Write Fast Kernels
-Four key optimization strategies:
-1. Coalesced Global Loading
-2. Using Shared Memory
-3. Avoiding Bank Conflicts
-4. Avoiding Branch Divergence
+### V3: tiles through shared memory
 
-### Matrix Transpose Example
+You cannot make both sides of a transpose coalesce against global memory directly, so stage tiles in shared memory: read a tile row-wise (coalesced), transpose it inside shared memory, write it out row-wise in the transposed layout (also coalesced). Discontinuous access hurts far less in shared memory than in global memory. Measured: 312 us. The profiler now reports a 33-way bank conflict across 524,288 shared loads.
 
-- **Problem**: When transposing a matrix, memory access patterns change from row-major to column-major
+Shared memory can be allocated statically or dynamically:
 
-- **V0: Torch Implementation**
-  - `x.t()` will not actually perform the transpose
-  - Must use `contiguous()`
-  - Performance: 0.561 ms, 956 GB/s -> 1/3 of optimal
-
-- **V1: Row-wise Partitioning**
-  - Each thread handles elements from one row
-  - Performance: 3.65 ms
-  - Issue: Uncoalesced global accesses
-
-- **V2: Global Memory Coalescing**
-  - Inside one warp, if memory access addresses are contiguous, memory access is coalesced (batched)
-  - Data can be retrieved from global memory in one or a few transactions
-  - Performance: 1.40 ms
-  - Issue: Uncoalesced writes to output matrix
-
-- **V3: Tilewise Partitioning**
-  - Load small tiles into shared memory
-  - Reading discontinuously from shared memory doesn't significantly affect performance
-  - Performance: 312 mus
-  - Issue: Bank conflicts
-
-- **V4: Padding Shared Memory**
-  - Add padding to shared memory to avoid bank conflicts
-  - Performance: 280 mus, 1.9TB/s
-
-### Bank Conflicts
-
-- Shared memory is divided into banks (typically 32)
-- If multiple threads in a warp access the same bank, accesses are serialized
-- Bank conflicts occur when threads access different addresses in the same bank
-- Solutions:
-  - Padding shared memory
-  - Rearranging memory access patterns
-
-### Branch Divergence
-
-- Threads in a warp always execute the same instructions
-- If a warp has both threads that need to execute the 'if' path and threads that need to execute the 'else' path, all threads will execute both paths
-- The warp explores all paths and then uses a mask to determine outputs
-- For optimal performance, minimize branch divergence within a warp
-
-## Reduction Problem
-
-- **Definition**: Combine elements using an operation (sum, max, min, etc.)
-- Example: `for elements in array: temp = op(temp, element)`
-
-### Parallel Reduction Optimizations
-1. **Reduction #1**: Basic parallel reduction with divergent branching
-2. **Reduction #2**: Better access patterns to improve coalescing
-3. **Reduction #3**: Sequential addressing to eliminate bank conflicts
-4. **Reduction #4**: Load multiple elements per thread
-5. **Reduction #5**: Load even more elements per thread
-
-- **Trade-off**: More elements loading means higher memory utilization, but number of blocks reduces, and GPU utilization goes down
-
-## GEMM (General Matrix Multiplication)
-
-- **Memory Load Challenge**:
-  - For every output element: Load one row + one column = 2K elements
-  - Total memory load = 2MNK
-  - Unique load is only MK + NK
-  - Need to cache efficiently
-
-- **GEMM Tiling**:
-  - Load data in tiles to reduce memory accesses
-  - Input: TILE_M * TILE_K
-  - Weight: TILE_K * TILE_N
-  - Output: TILE_M * TILE_N
-  - Memory load reduced by a factor of tile dimension
-
-- **Tensor Core**:
-  - Special hardware unit that performs small shape GEMM
-  - A warp (32 threads) collectively uses the tensor core
-  - Different data types supported with different speeds (FP16, TF32, FP64, etc.)
-
-# Matrix Transpose Kernel Case Study
-
-## Problem Setup
-
-- Transform a 4	imes4 matrix from row-major to column-major layout
-- Input: `[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]`
-- Output: `[0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15]`
-
-## Transpose V1: Row-wise Partitioning
-
-- **Performance**: 3.65 ms
-- **Problem**: Uncoalesced global accesses
-  - **Uncoalesced Global Accesses**: 117,440,512 excessive sectors (88% of total)
-  - Branch efficiency: 100%, but poor memory access pattern
-
-## Transpose V2: Global Memory Coalescing
-
-- **Key Concept**: Inside one warp, if memory access addresses are contiguous, the memory access is coalesced (batched)
-- **Performance**: 1.40 ms (significant improvement)
-- **Remaining Issue**: Uncoalesced writes to output matrix
-  - Still has 58,720,256 excessive sectors (78% of total)
-
-## Transpose V3: Tilewise Partitioning with Shared Memory
-
-- **Strategy**: Use shared memory as intermediate buffer
-- **Key Insight**: Reading discontinuously from shared memory doesn't significantly affect performance
-- **Performance**: 312 mus
-- **New Problem**: Bank conflicts
-  - **Bank Conflict Rate**: 33.0-way bank conflict across 524,288 shared load requests
-
-### Shared Memory Allocation Methods
-
-#### Static Allocation
 ```cpp
+// static, up to 48 KB
 __shared__ float f_array[10];
-```
-- Easier to use
-- Fixed size, up to 48 KB
 
-#### Dynamic Allocation
-```cpp
+// dynamic, up to 228 KB (needs cudaFuncSetAttribute above 48 KB)
 extern __shared__ int shared_mem[];
-// Launch kernel with:
-my_kernel<<<grid, block, shared_mem_size_in_bytes>>>
+my_kernel<<<grid, block, shared_mem_size_in_bytes>>>(...);
 ```
-- Up to 228 KB
-- Requires `cudaFuncSetAttribute()` for sizes > 48KB
 
-## Understanding Bank Conflicts
+### V4: padding away bank conflicts
 
-**Bank Structure**: Shared memory is organized into banks (typically 32 banks)
+Shared memory is divided into 32 banks, with consecutive 4-byte words striped across banks round-robin. When multiple threads in a warp hit different addresses in the same bank, the accesses serialize. A transposed tile column maps every element to the same bank when the tile width is a multiple of 32, which is exactly the 32-way conflict V3 shows. Padding each tile row by one element shifts consecutive rows to different bank offsets and breaks the pattern. Measured: 280 us, about 1.9 TB/s, a 13x improvement over V1.
 
-- Elements are distributed across banks in round-robin fashion
-- **Conflict occurs** when multiple threads in a warp access different addresses in the same bank
-- **No conflict** when threads access the same address or different banks
+## Branch divergence
 
-## Transpose V4: Padding to Avoid Bank Conflicts
+Threads in a warp execute the same instruction stream. When a warp hits a branch where some threads take the `if` side and others the `else` side, the hardware runs both paths and masks out the inactive threads, so divergent code pays for every path any thread takes. Structure algorithms so that whole warps take the same branch whenever possible.
 
-- **Solution**: Add padding to shared memory arrays
-- **Result**:
-  - **Performance**: 280 mus
-  - **Bandwidth**: 1.9 TB/s
-- **Key Principle**: Padding shifts memory access patterns to avoid systematic bank conflicts
+## Case study 2: parallel reduction
 
----
+Reduce an array with an associative operation (sum, max, min):
 
-# Reduction Kernel Case Study
-
-## Reduction Problem Definition
-
-- **Goal**: Apply associative operation across array elements
-- **Examples**: Sum, Max/Min operations
-- **Pattern**:
-```
-for elements in array:
+```text
+for element in array:
     temp = op(temp, element)
 ```
 
-## Parallel Reduction Strategy
-Instead of sequential reduction, use tree-like parallel reduction:
-- Step 1: 8 elements 	o 4 partial results
-- Step 2: 4 partial results 	o 2 partial results
-- Step 3: 2 partial results 	o 1 final result
+The parallel version is a tree: 8 elements to 4 partials to 2 to 1, in $\log n$ steps. The classic sequence of implementations fixes one problem at a time:
 
-## Reduction Implementation Variants
+1. Interleaved addressing: thread $i$ works when $i \bmod 2^N = 0$, with stride $2^{N-1}$. Every other thread in a warp idles, severe branch divergence.
+2. Better access patterns: reindex so active threads are contiguous, which improves coalescing but keeps some divergence.
+3. Sequential addressing: start with a large stride and halve it (stride 8, 4, 2, 1). Active threads stay contiguous and bank conflicts disappear.
+4. Load two elements per thread: each thread does a first add during the load, halving the block count for the same data.
+5. Load even more elements per thread: raises memory utilization per thread, but fewer blocks means fewer SMs have work, so occupancy eventually drops. There is a sweet spot rather than a monotone win.
 
-### Reduction #1: Interleaved Addressing
+## Case study 3: GEMM
 
-- **Pattern**: `threadID % 2^N == 0` does the work
-- **Offset**: `2^(N-1)`
-- **Problem**: Severe branch divergence
+For $C = AB$ with $A$ of size $M \times K$ and $B$ of size $K \times N$, each output element consumes a row and a column, $2K$ elements. Computed naively that is $2MNK$ element loads while the unique data is only $MK + NK$. The gap is the caching opportunity.
 
-### Branch Divergence in CUDA
-**Key Concept**: Threads in a warp always execute the same instructions
+Tiling loads blocks of $A$ ($T_M \times K$ strips) and $B$ ($K \times T_N$ strips) through shared memory and reuses them across a $T_M \times T_N$ output tile. Total loads become
 
-- GPU explores all code paths and uses masks to determine outputs
-- **Divergent warps**: Some threads active, others idle
-- **Performance Impact**: Redundant operations reduce efficiency
+$$L = \frac{T_M + T_N}{T_M \cdot T_N} \cdot MNK$$
 
-### Reduction #2: Sequential Access Pattern
+so doubling tile dimensions roughly halves memory traffic, until shared memory and register capacity cap the tile size.
 
-- **Improvement**: Better access patterns
-- **Still has**: Some branch divergence issues
+Modern GEMMs layer this tiling: a thread block owns a large output tile, each warp owns a medium tile, and tensor cores execute the innermost small GEMMs (shapes like 16x8x16). A tensor core is a hardware unit that a full warp drives collectively, supporting several data types at different rates; the lecture quotes up to 256x throughput over FP32 CUDA cores for the fastest types. Whether a given matmul can actually saturate them is a roofline question, covered in [[llm-serving-systems/performance-modeling|Performance Modeling]].
 
-### Reduction #3: Sequential Accesses
+## Libraries to reach for first
 
-- **Key Insight**: Start with larger stride and work down
-- **Benefit**: Eliminates bank conflicts
-- **Access Pattern**: Stride 8 	o Stride 4 	o Stride 2 	o Stride 1
+Hand-writing kernels is the last resort. The standard library stack:
 
-### Reduction #4: Load Two Elements
+- cuBLAS: NVIDIA's closed-source GEMM library, the default answer for dense matmul.
+- CUTLASS: open-source template GEMM library when you need a custom epilogue or data type.
+- FlashInfer: attention kernels for serving (fused softmax, discontinuous GEMV).
+- CUB: warp-, block-, and device-level primitives (reductions, scans, sorts).
+- RAFT: vector search, clustering, top-k.
 
-- **Optimization**: Each thread loads and processes multiple elements
-- **Benefit**: Better memory utilization
+## Calling a custom kernel from Python
 
-### Reduction #5: Load More Elements
+Pybind11 plus the torch extension machinery wraps a CUDA kernel for PyTorch:
 
-- **Trade-off**: Higher memory utilization vs. reduced GPU occupancy
-- **Challenge**: Fewer blocks means lower overall GPU utilization
-
----
-
-# GEMM (General Matrix Multiply) Optimization
-
-## GEMM Memory Access Pattern
-For matrices of size M	imesK and K	imesN:
-- **Per output element**: Load one row + one column = 2K elements
-- **Total memory loads**: 2MNK
-- **Unique loads**: Only MK + NK
-- **Problem**: Massive redundancy in memory access
-
-## GEMM Tiling Strategy
-**Load by Tiles**:
-
-- Input tile: `TILE_M 	imes K`
-- Weight tile: `K 	imes TILE_N`
-- Output tile: `TILE_M 	imes TILE_N`
-
-**Memory Load Reduction**:
-$$L = \frac{Tile_M + Tile_N}{Tile_M \cdot Tile_N} \cdot MNK$$
-
-**Key Benefit**: L2 cache access reduced by factor of tile dimensions
-
-## Tensor Cores
-
-**Definition**: Special hardware units that perform small GEMM operations
-
-- **Usage**: One warp (32 threads) collectively uses tensor core
-- **Shapes**: Various supported (16	imes8	imes16, 8	imes8	imes4, etc.)
-- **Performance**: Up to 256	imes speedup over F32 CUDA cores for specific data types
-
-### GEMM Hierarchy
-
-- **Thread Block**: Handles large tile
-- **Warp**: Handles medium tile
-- **Tensor Core**: Handles small GEMM (e.g., 16	imes8	imes16)
-
----
-
-# High-Performance Kernel Libraries
-
-## Essential Libraries
-
-### **cuBLAS**
-
-- Closed-source GEMM library
-- Highly optimized by NVIDIA
-
-### **CUTLASS**
-
-- Open-source template-based GEMM library
-- Customizable and extensible
-
-### **Raft**
-
-- Vector Search, Clustering, Top-K, Sort operations
-
-### **FlashInfer**
-
-- Attention kernels (Fused Softmax, Discontinuous GEMV)
-
-### **CUB**
-
-- Templates for basic operations at Warp, Block, and Device level
-
----
-
-# Python Integration
-
-## Pybind11 for CUDA Kernels
-
-**Basic Pattern**:
 ```cpp
 #include <pybind11/pybind11.h>
 #include <torch/torch.h>
@@ -400,11 +156,9 @@ PYBIND11_MODULE(my_addition, m) {
 }
 ```
 
-## Key Optimization Principles Summary
+## Related notes
 
-1. **Memory Coalescing**: Ensure contiguous memory access within warps
-2. **Shared Memory**: Use as high-speed cache for frequently accessed data
-3. **Bank Conflict Avoidance**: Pad shared memory arrays when necessary
-4. **Branch Divergence Minimization**: Structure algorithms to keep warps synchronized
-5. **Occupancy vs Efficiency**: Balance thread utilization with per-thread work
-6. **Hierarchical Tiling**: Optimize for different levels of memory hierarchy
+- [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]]
+- [[llm-serving-systems/how-to-write-a-fast-kernel|How to write a fast kernel]]
+- [[llm-serving-systems/triton|Triton]]
+- [[llm-serving-systems/performance-modeling|Performance Modeling]]

@@ -1,225 +1,119 @@
 ---
 title: Performance Modeling for LLM Serving Systems
 category: Machine Learning Systems
-tags: performance, roofline, arithmetic intensity, machine learning
+tags:
+  - performance
+  - roofline
+  - arithmetic-intensity
+  - machine-learning
 date: 2025-05-10
-description: How do you model and optimize performance for LLM serving systems? What are the key metrics and techniques to ensure efficient inference? What really matters for end-to-end performance?
+updated: 2026-07-30
+status: needs-review
+description: The roofline model applied to LLM serving, critical operational intensity on the H100, and memory/compute/network execution time models that show serving is mostly compute-bound.
+sources:
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
+  - title: "Roofline: An Insightful Visual Performance Model for Multicore Architectures (Williams, Waterman, Patterson, CACM 2009)"
+    url: https://dl.acm.org/doi/10.1145/1498765.1498785
+    type: paper
+  - title: How to Scale Your Model, All About Rooflines
+    url: https://jax-ml.github.io/scaling-book/roofline/
+    type: book
 ---
 
-# Performance Modeling for LLM Serving Systems
+## Purpose
 
-For a compact version of the core model, see the [[llm-serving-systems/roofline-reference|Roofline reference]]. The same model guides [[llm-serving-systems/optimizing-gpu-kernels|kernel optimization]] and system-level choices such as [[llm-serving-systems/batching|batching]].
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+This note builds a performance model for LLM serving: the roofline model for single-kernel analysis, then whole-system execution time models for memory, compute, and network. A compact version of the core model lives in the [[llm-serving-systems/roofline-reference|Roofline reference]]. The same model guides [[llm-serving-systems/optimizing-gpu-kernels|kernel optimization]] and system-level choices such as [[llm-serving-systems/batching|batching]].
 
-### Performance Analysis
+These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025, taught by Prof. Baris Kasikci with TA Kan Zhu. The framework throughput comparison near the end is quoted from lecture slides without the underlying benchmark configuration, which is why this note carries needs-review status.
 
-- **Roofline model** - Based on the Roofline paper and Google's scaling book
-- **Detailed model of Transformer performance**
+## The roofline model
 
----
+The [roofline model](https://dl.acm.org/doi/10.1145/1498765.1498785) characterizes a kernel by its operational intensity:
 
-## The Roofline Model
+$$\text{Operational Intensity} = \frac{\text{FLOPs performed}}{\text{Bytes moved}}$$
 
-### Core Concept
+Plot intensity against achievable FLOPs/s and the hardware traces out a roofline: a slanted region where performance is capped by memory bandwidth times intensity (memory bound), and a flat region capped by peak compute (compute bound). A kernel below the ridge point wastes compute waiting on memory; a kernel past it can only improve by doing less math or using faster math.
 
-**Operational Intensity** = $\frac{\text{# of Operations}}{\text{# of Bytes Moved}}$
-
-- **Operations**: E.g., FLOPs/Sec
-- **Bytes Moved**: E.g., Bytes/sec (Memory or Network Bandwidth)
-
-### Key Components
-
-#### Computational Ceilings
-
-- **Memory Bound**: Low operational intensity region
-- **Compute Bound**: High operational intensity region
-- **Roofline**: The boundary between memory and compute limitations
-
-#### Performance Optimization Strategies
-
-**Compute optimizations:**
-
-- Multithreading
-- ILP (Instruction-Level Parallelism)
-- SIMD (Single Instruction, Multiple Data)
-
-**Memory optimizations:**
-
-- Stride accesses (HW prefetching)
-- Memory affinity (NUMA effect)
-- Software prefetching
-
-### Critical Operational Intensity
-
-$$\text{Intensity(Computation)} = \text{Intensity(Accelerator)}$$
+The ridge sits at the critical intensity, where the workload's demand matches the hardware's ratio:
 
 $$\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} = \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$$
 
-**Compute-Bound**: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} > \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$
+Above that ratio the kernel is compute bound, below it memory bound. To move up in the memory-bound region you improve data movement (coalescing, tiling, prefetching, NUMA-aware placement); in the compute-bound region you improve math throughput (multithreading, ILP, SIMD, tensor cores).
 
-**Memory-Bound**: $\frac{\text{Computation FLOPs}}{\text{Communication Bytes}} < \frac{\text{Accelerator FLOPs/s}}{\text{Bandwidth Bytes/s}}$
+## H100 numbers
 
----
+Peak FP16 tensor throughput is about 1000 TFLOPs dense (2000 with 2:4 structured sparsity) and memory bandwidth about 3000 GB/s, so the critical intensity is
 
-## Example: NVIDIA H100 Analysis
+$$\frac{1000 \times 10^{12}}{3000 \times 10^9} \approx 333 \text{ FLOPs/Byte}$$
 
-### Hardware Specifications
+Any kernel below 333 FLOPs per byte moved is memory bound on this part.
 
-- **Peak FP16 Tensor TFLOPS**: 1000/2000 TFLOPs (with sparsity/no sparsity)
-- **Memory bandwidth**: 3000 GB/s
-- **Critical intensity**: $(1000 \times 10^{12}) / (3000 \times 10^9) = 333$ FLOPs/Byte
+### Dot product
 
-**Rule**: If kernel has higher operational intensity than 333 FLOPs/Byte 	o compute-bound, otherwise memory-bound
+An FP32 dot product of length $N$ does $2N$ FLOPs ($N$ multiplies, $N$ adds) and moves $8N$ bytes in plus 4 bytes out:
 
-### Example Operations
+$$\text{OI} = \frac{2N}{8N + 4} \approx \frac{1}{4}$$
 
-#### FP32 Dot Product
-**Compute**: $N$ multiplications, $N$ additions = $2N$ FLOPs
+Hopelessly memory bound, three orders of magnitude below critical intensity. (Counting FP16 data instead shifts the constant, and the conclusion survives.)
 
-**Memory**: $2 \times 4N$ bytes read + $4$ bytes written back
+### Matrix multiplication
 
-**Operational Intensity**: $\frac{2N}{4N + 4} \approx \frac{1}{2}$
+For FP16 matrices $[M,N] \times [N,K] \rightarrow [M,K]$: reads are $2MN + 2NK$ bytes, writes $2MK$ bytes, compute $2MNK$ FLOPs.
 
-**Result**: FP32 dot product on H100 is **memory-bound**
+$$\text{OI} = \frac{2MNK}{2MN + 2NK + 2MK} \approx M \quad \text{when } N, K \gg M$$
 
-#### Matrix Multiplication with FP16
-For $[M,N] \times [N,K] \rightarrow [M,K]$:
+For the batched GEMMs in LLM serving, $M$ is the batch dimension, so matmul on the H100 goes compute bound around batch 333. This single number drives the batching pressure throughout [[llm-serving-systems/batching|Batching]].
 
-**Memory**: $2MN + 2NK$ bytes read, $2MK$ bytes written back
+One caveat on treating "bandwidth" as one number: clusters are hierarchical. HBM moves TB/s while the network moves 25 GB/s (200 Gb/s), so the same roofline logic applies again at the cluster level with a different denominator, a NUMA effect at rack scale.
 
-**Compute**: $2MNK$ FLOPs
+## System-level model
 
-**Operational Intensity**: $\frac{2MNK}{2MN + 2NK + 2MK} \approx M$
+Notation for the whole-system estimates:
 
-**Result**: Matrix multiplication on H100 is compute-bound if $M > 333$
+- Hardware: $N_{GPU}$ GPUs, aggregate memory bandwidth $MemBW$, memory capacity $GPU_{mem}$, compute $Compute$, interconnect bandwidth $NetBW$.
+- Model: hidden dim $D_{model}$, layers $L$, parameters $P_{model}$, GQA group size $R_{GQA}$, dtype size $S_{type}$.
+- Workload: average prefill length $p$, decode length $d$, dense batch size $B_{dense}$. Per-request throughput is $\frac{\text{Throughput}_{total}}{p+d}$ and decode throughput is $d\frac{\text{Throughput}_{total}}{p+d}$.
 
----
+Three execution time estimates for one iteration:
 
-## NUMA Effect with GPUs
-
-Modern GPU clusters show significant bandwidth variations:
-- **GPU memory bandwidth**: 900 GB/s
-- **Network bandwidth**: 200 Gb/s = 25 GB/s
-
-This creates hierarchical memory access patterns affecting performance modeling.
-
----
-
-## Performance Modeling Framework
-
-### Key Hardware Factors
-
-- **$N_{GPU}$**: number of GPUs
-- **MemBW** (GB/s): aggregate GPU memory bandwidth
-- **$GPU_{mem}$** (GB): aggregate GPU memory capacity
-- **Compute** (GFLOPS/s): aggregate GPU compute capacity
-- **NetBW** (GB/s): aggregate GPU interconnect bandwidth
-
-### Key Model Configuration Factors
-
-- **$D_{model}$**: hidden dimension size (hidden_dim)
-- **$L$**: number of layers
-- **$P_{model}$**: number of parameters
-- **$R_{GQA}$**: group size of GQA (group_size)
-- **$S_{Type}$**: Model parameters' data size in bytes (e.g., 2 for FP16)
-
-### Key User Statistics
-
-- **$p$**: average number of tokens in prompts to be prefilled
-- **$d$**: average number of tokens in output to be decoded
-- **$p + d$**: average number of tokens in user request (sequence length)
-- **Per request throughput**: $\frac{\text{Throughput}_{total}}{p + d}$
-- **Decoding throughput**: $d \frac{\text{Throughput}_{total}}{p + d}$
-
----
-
-## Execution Time Models
-
-### Memory-Centric Execution Time
+Memory: one iteration streams essentially all of GPU memory (weights, KV cache) once, so
 
 $$T_{memory} = \frac{GPU_{mem}}{MemBW}$$
 
-**Assumption**: Entire contents of GPU memory loaded once during one iteration
-
-### Compute-Centric Execution Time
+Compute: dense operations cost 2 FLOPs per parameter per token, so
 
 $$T_{compute} = \frac{2B_{dense}P_{model}}{Compute}$$
 
-**Logic**: All dense operations require $2B_{dense}P_{model}$ FLOPs total
+Network: with tensor parallelism, each layer runs about 4 AllGather-equivalents over activations of shape $B_{dense} \times D_{model}$ (an AllReduce counts as roughly two AllGathers), each taking $N_{GPU}-1$ hops:
 
-### Network-Centric Execution Time
+$$T_{net} = \frac{4(N_{GPU} - 1)\,D_{model}\,B_{dense}\,S_{type}\,L}{NetBW}$$
 
-$$T_{net} = \frac{4(N_{GPU} - 1)D_{model}B_{dense}S_{type}L}{NetBw}$$
+## What the ratios say
 
-**Components**:
+Network versus compute:
 
-- $(N_{GPU} - 1)$: number of hops
-- $4$: All-Gathers per layer
-- All-Reduce approx 2 	imes All-Gather
+$$\frac{T_{net}}{T_{compute}} = 2(N_{GPU} - 1)\frac{D_{model}L}{P_{model}} \cdot \frac{S_{type} \cdot Compute}{NetBW}$$
 
----
+Since $P_{model}$ grows like $D_{model}^2 L$ while the numerator grows like $D_{model} L$, bigger models push this ratio down. Plugging in typical model and hardware numbers, serving comes out compute bound rather than network bound.
 
-## Performance Analysis Results
-
-### Compute vs Network
-
-$$\frac{T_{net}}{T_{compute}} = 2(N_{GPU} - 1)\frac{D_{model}L}{P_{model}} \frac{S_{type} \cdot Compute}{NetBw}$$
-
-**Key Finding**: LLM Serving is more **compute-bound** than **network-bound**
-
-### Compute vs Memory
+Memory versus compute:
 
 $$\frac{T_{memory}}{T_{compute}} = \frac{Compute \cdot GPU_{mem}}{MemBW \cdot 2B_{dense}P_{model}}$$
 
-**Factors affecting the balance**:
+GQA shrinks the KV cache and lets $B_{dense}$ grow (see [[llm-serving-systems/transformers|Transformers]]), which favors compute-boundedness. Growing model sizes do the same. Batches dominated by long decodes pull the other way, since decode attention reads KV without matching dense FLOPs. On balance, at realistic batch sizes, serving is compute bound here too.
 
-- **GQA allows for larger batch size** 	o favors compute
-- **Model sizes tend to increase** 	o favors compute
-- **Batches with large decode requests increase memory accesses** 	o favors memory
+## Optimal throughput and the gap in practice
 
-**Key Finding**: LLM serving is more **compute-bound** than **memory-bound**
+If compute is the binding constraint, peak throughput per GPU is
 
----
+$$\text{Throughput} = \frac{B_{dense}}{T_{compute}} = \frac{Compute}{2P_{model}}$$
 
-## Grouped Query Attention (GQA)
+The lecture's example puts LLaMA 70B on an A100 at 1857 tokens/s/GPU by this bound, and quotes measured framework throughput far below it: vLLM around 494-552 tokens/s, DeepSpeed-FastGen 372-513, TensorRT-LLM 636-817. The slides do not record the benchmark setup (input/output lengths, hardware count, parallelism config), so treat these as one snapshot rather than a ranking. The robust conclusion is the size of the gap: frameworks at the time achieved roughly a quarter to half of the compute-bound ceiling, so keeping tensor cores busy is the central engineering problem in serving.
 
-### Concept
+## Related notes
 
-- **Traditional**: Each attention head has its own Key-Value cache
-- **GQA**: Multiple attention heads share Key-Value pairs
-- **Group size**: Number of heads sharing the same K-V pairs
-
-### Impact on Performance
-
-- **Reduces KV cache memory requirements** by factor of group size
-- **Allows increasing batch size** by factor of group size
-- **Shifts workload toward compute-bound** rather than memory-bound
-
----
-
-## Optimal Throughput Analysis
-
-### Theoretical Maximum
-
-$$\text{Throughput} = \frac{B_{dense}}{T_{compute}} = \frac{B_{dense}}{\frac{2B_{dense}P_{model}}{Compute}} = \frac{Compute}{2P_{model}}$$
-
-**Example**: LLaMA 70B on A100 	o **1857 tokens/s/GPU**
-
-### Performance Gap
-Current serving frameworks show significant gaps to optimal throughput:
-- **vLLM**: ~494-552 tokens/s
-- **DeepSpeed-FastGen**: ~372-513 tokens/s
-- **TensorRT-LLM**: ~636-817 tokens/s
-
-**Key Insight**: There is a **large gap to optimal throughput** - high GPU compute utilization is critical for LLM serving performance.
-
----
-
-## Key Takeaways
-
-1. **Roofline model** provides framework for understanding compute vs memory bounds
-2. **Critical operational intensity** determines performance bottlenecks
-3. **LLM serving is primarily compute-bound** rather than memory or network bound
-4. **GQA enables larger batch sizes** and improves compute utilization
-5. **Significant optimization opportunities exist** - current frameworks achieve only ~25-45% of theoretical peak throughput
-6. **High GPU compute utilization is the key** for effective LLM serving
+- [[llm-serving-systems/roofline-reference|Roofline reference]]
+- [[llm-serving-systems/batching|Batching]]
+- [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]]
+- [[llm-serving-systems/parallelism|Parallelism]]

@@ -1,20 +1,29 @@
 ---
 title: How to write a fast kernel
 category: Machine Learning Systems
-tags: cuda, gpu, pytorch, kernel
+tags:
+  - cuda
+  - gpu
+  - pytorch
+  - kernel
 date: 2025-04-02
-description: Techniques to write fast CUDA kernels, including coalesced memory access and shared memory usage.
+updated: 2026-07-30
+status: incomplete
+description: A first pass at hand-writing a matrix transpose kernel in CUDA, starting from a PyTorch baseline and introducing coalesced memory access.
+sources:
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
 ---
 
-# How to write a fast kernel?
+## Purpose
 
-The examples here apply the architecture concepts from [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]]; see [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]] for a broader optimization guide.
+This note walks the first steps of hand-writing a CUDA kernel, using matrix transpose as the running example. It applies the architecture concepts from [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]]. The full optimization sequence for this same kernel (shared memory tiling, bank conflict padding, measured timings) lives in [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]]; this note stops at the naive version and the coalescing idea.
 
-## Matrix Transpose Kernel
+## Baseline: transpose in PyTorch
 
-### Basic way with Torch
+`a.t()` only changes the tensor's stride metadata, so `.contiguous()` is what actually moves the data. Timing needs CUDA events because kernel launches are asynchronous.
 
-```py
+```python
 import torch
 
 num_rows = num_cols = 8192
@@ -23,7 +32,6 @@ a = torch.randn(num_rows, num_cols)
 res = a.t().contiguous()
 
 start = torch.cuda.Event(enable_timing=True)
-
 end = torch.cuda.Event(enable_timing=True)
 
 start.record()
@@ -41,11 +49,9 @@ print(f"Elapsed time: {elapsed_time} ms")
 print(f"Time per iteration: {time_per_iter} ms")
 ```
 
-### How can we optimize?
+## A first CUDA attempt
 
-Row-based partitioning in a CUDA kernel? But arrays can be very long. We can't load all the data into the shared memory. So, we need to partition the data into smaller chunks per-thread (since we have at most 1024 threads per block).
-
-### CUDA Kernel
+The natural partitioning is one block per row. A row of 8192 floats will not fit in the per-thread resources of a 1024-thread block if each thread handles one element, so each thread takes a contiguous slice of columns:
 
 ```cpp
 #include <torch/extension.h>
@@ -62,10 +68,15 @@ __global__ void transpose(float* input, float* output, int num_rows, int num_col
         }
     }
 }
-
 ```
 
-## Coallesced Memory Access
+This version is slow. Adjacent threads read addresses that are `num_cols / blockDim.x` elements apart, and write addresses that are entire columns apart, so neither the loads nor the stores coalesce.
 
-- Inside one warp, if memory accesses are coalesced, then the memory access is fast because it can be batched
-- Data can then be retrieved in a single memory transaction
+## Coalesced memory access
+
+Inside one warp, if the 32 threads access contiguous addresses, the hardware batches the accesses into one or a few memory transactions. That batching is what makes global memory bandwidth usable. Getting both the reads and the writes of a transpose to coalesce requires staging tiles in shared memory, which is where [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]] picks up.
+
+## Related notes
+
+- [[llm-serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]]
+- [[llm-serving-systems/gpu-basics|GPU Architecture and Programming]]

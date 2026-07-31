@@ -1,81 +1,65 @@
 ---
 title: Transformer Architecture and Implementation
 category: Machine Learning Systems
-tags: transformers, architecture, implementation, attention, prefill, decode, feedforward, normalization, machine learning
+tags:
+  - transformers
+  - architecture
+  - implementation
+  - attention
+  - prefill
+  - decode
+  - feedforward
+  - normalization
+  - machine-learning
 date: 2025-05-25
-description: Overview of transformer architecture (specifically Llama) and its implementation details for LLM serving systems
+updated: 2026-07-30
+status: evergreen
+description: The decoder-only transformer (Llama-style) from a serving perspective, covering prefill vs decode, attention with GQA, the FFN, normalization, and which operations bind on compute, memory, or network.
+sources:
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
+  - title: Attention Is All You Need
+    url: https://arxiv.org/abs/1706.03762
+    type: paper
+  - title: "Llama 2: Open Foundation and Fine-Tuned Chat Models"
+    url: https://arxiv.org/abs/2307.09288
+    type: paper
+  - title: "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"
+    url: https://arxiv.org/abs/2305.13245
+    type: paper
+  - title: "RoFormer: Enhanced Transformer with Rotary Position Embedding"
+    url: https://arxiv.org/abs/2104.09864
+    type: paper
 ---
 
-## Transformer Architecture Overview
+## Purpose
 
-This model-level overview supplies the attention and KV-cache context used by [[llm-serving-systems/memory-management|Memory Management]], [[llm-serving-systems/quantization|Quantization]], and [[llm-serving-systems/speculative-decoding|Speculative Decoding]].
+This note walks the components of a Llama-style decoder-only transformer with an eye toward serving: what each piece computes, and whether it binds on compute, memory, or network. It supplies the attention and KV-cache context used by [[llm-serving-systems/memory-management|Memory Management]], [[llm-serving-systems/quantization|Quantization]], and [[llm-serving-systems/speculative-decoding|Speculative Decoding]].
 
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025, taught by Prof. Baris Kasikci with TA Kan Zhu.
 
-### Prefill vs. Decode Phases
+## Prefill and decode
 
-**Prefill Phase:**
+Inference has two phases with opposite performance characters. Prefill processes the whole input prompt at once, all tokens in parallel, which makes it compute bound. Decode generates one token at a time, each step reading the accumulated KV cache, which makes it memory bound. Almost every serving technique in this note series exists to manage one of these two regimes.
 
-- Processes entire input prompt at once
-- All tokens processed in parallel
-- Compute-bound operation
+Terminology: an inference iteration is one full forward pass through all layers producing one output token (or, during prefill, processing the prompt). Activations are the intermediate tensors flowing between layers.
 
-**Decode Phase:**
+## Components
 
-- Generates one token at a time
-- Sequential generation process
-- Memory-bound operation (utilizes KV cache)
+### Embedding layer
 
-### Transformer Layers and Iterations
+Maps each token ID to a dense learned vector, 4096 dimensions in Llama-scale models. It is a table lookup, one row per vocabulary entry.
 
-- **Inference Iteration:** Complete forward pass through all layers to generate one output token
-- **Inference Layer:** Single transformer layer containing attention and FFN components
-- **Activations:** Intermediate representations passed between layers
+### Self-attention
 
----
-
-## Core Transformer Components
-
-### 1. Embedding Layer
-
-**Purpose:** Convert token IDs to dense vector representations
-
-```python
-input_ids: [The, University, ...]
-embeddings: {
-    The: [0, 1, 0, 1, ...],  # 4096 elements in Llama
-    University: [0, 0, 0, ...]
-}
-```
-
-### 2. Attention Mechanism
-
-#### Self-Attention Formula
 $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-Where:
+from [Attention Is All You Need](https://arxiv.org/abs/1706.03762). Q is what each position is looking for, K is what each position offers for matching, V is the content that actually gets mixed, and $\sqrt{d_k}$ keeps dot products from growing with head dimension and saturating the softmax.
 
-- **Q (Query):** What the transformer is looking for
-- **K (Key):** What's available in the sequence
-- **V (Value):** What needs to be updated to assimilate context
-- **$d_k$:** Head dimension for scaling
+Decoder-only models use causal attention: positions must not see the future. The mask sets future positions to $-\infty$ before the softmax, and since $\text{softmax}(x_i) \to 0$ as $x_i \to -\infty$, masked positions contribute nothing.
 
-#### Causal Self-Attention
+Multi-head attention splits the hidden dimension into independent heads that attend separately:
 
-- **Causal Mask:** Prevents tokens from attending to future tokens
-- Uses $-\infty$ values in attention matrix for future positions
-- When $x_i \to -\infty$, $\text{softmax}(x_i) \to 0$
-
-#### Grouped Query Attention (GQA)
-
-- **Purpose:** Reduce KV cache memory usage
-- **Mechanism:** Multiple query heads share the same key and value heads
-- **Group Size:** Number of query heads per key/value head (e.g., group size = 4)
-- **Benefit:** Allows increasing batch size by factor of group size
-
-### 3. Multi-Head Attention
-
-#### Head Separation Process
 ```python
 # Original query tensor
 q = [[1, 2, 3, 4, 5, 6],    # Token 1
@@ -83,120 +67,72 @@ q = [[1, 2, 3, 4, 5, 6],    # Token 1
 # Shape: (seq_len, hidden_dim) = (2, 6)
 
 # Separated into heads
-sub_q = [[[1, 2, 3],   # Head 1 for Token 1
-          [4, 5, 6]],  # Head 2 for Token 1
-         [[7, 8, 9],   # Head 1 for Token 2
+sub_q = [[[1, 2, 3],    # Head 1 for Token 1
+          [4, 5, 6]],   # Head 2 for Token 1
+         [[7, 8, 9],    # Head 1 for Token 2
           [10, 11, 12]]] # Head 2 for Token 2
 # Shape: (seq_len, num_heads, head_dim) = (2, 2, 3)
 ```
 
-### 4. Feed Forward Network (FFN)
+[Grouped Query Attention](https://arxiv.org/abs/2305.13245) has multiple query heads share one key/value head (group size 4 means 4 query heads per KV head). Quality holds up, and the KV cache shrinks by the group factor, which buys batch size; [[llm-serving-systems/performance-modeling|Performance Modeling]] quantifies why that matters.
 
-**Architecture:** Two linear transformations with activation function
+### Feed-forward network
 
-- **Up Projection:** Expands hidden dimension
-- **Gate Projection:** Controls information flow
-- **Activation Function:** SwiGLU (Swish-Gated Linear Unit)
-- **Down Projection:** Returns to original dimension
+The Llama FFN uses a gated design with three projections. Gate and up projections expand the hidden dimension, the gate passes through SiLU and multiplies the up path elementwise (SwiGLU), and the down projection returns to model width:
 
-**Mathematical representation:**
-$$\text{FFN}(x) = \text{Down}(\text{SwiGLU}(\text{Up}(x)) \odot \text{Gate}(x))$$
+$$\text{FFN}(x) = W_{down}\left(\text{SiLU}(W_{gate}\,x) \odot W_{up}\,x\right)$$
 
-### 5. Normalization
+### Normalization
 
-#### RMSNorm (Root Mean Square Normalization)
+RMSNorm replaces LayerNorm, dropping the mean subtraction:
+
 $$\text{RMSNorm}(x) = \frac{x}{\sqrt{\frac{1}{n}\sum_{i=1}^n x_i^2 + \epsilon}} \odot g$$
 
-Where:
+with $\epsilon$ a small stability constant and $g$ a learned per-dimension scale.
 
-- **x:** Input vector of size n
-- **epsilon:** Small constant for numerical stability (e.g., $10^{-8}$)
-- **g:** Learned scaling parameter (element-wise multiplication)
+### Residual connections
 
-### 6. Residual Connections
+Each major component's output is added to its input, $\text{output} = \text{input} + \text{component}(\text{input})$, which keeps gradients flowing through deep stacks.
 
-- **Purpose:** Enable gradient flow in deep networks
-- **Implementation:** Add input to output of each major component
-- **Formula:** $\text{output} = \text{input} + \text{component}(\text{input})$
+### Rotary positional encoding
 
----
+RoPE ([RoFormer](https://arxiv.org/abs/2104.09864)) applies position-dependent rotations to query and key vectors, encoding relative position directly in the attention dot product and extrapolating more gracefully to varying sequence lengths than learned absolute embeddings.
 
-## Multi-GPU Implementation
+### Softmax in practice
 
-### Tensor Parallelism
-
-- **Weight Distribution:** Split weight matrices across GPUs
-- **Query/Key/Value:** Distributed across different GPUs
-- **Computation:** Parallel matrix multiplications
-
-### Communication Operations
-
-#### AllGather
-
-- **Purpose:** Collect partial results from all GPUs
-- **Usage:** After attention computation to gather all head outputs
-- **Operation Type:** Network-bound
-
-#### AllReduce
-
-- **Purpose:** Sum partial results across GPUs
-- **Composition:** ReduceScatter + AllGather
-- **Usage:** After FFN down projection
-- **Operation Type:** Network-bound
-
----
-
-## Resource Utilization Patterns
-
-### Compute-Bound Operations
-
-- Query, Key, Value projections
-- Up and Gate projections in FFN
-- Output projections
-- Prefill attention computation
-
-### Memory-Bound Operations
-
-- Decode attention (KV cache access)
-- Reading cached key-value pairs
-
-### Network-Bound Operations
-
-- AllGather communications
-- AllReduce communications
-
----
-
-## Key Implementation Details
-
-### KV Cache Management
-
-- **Storage:** Unique per batch, shared across layers
-- **Purpose:** Avoid recomputing key-value pairs during decode
-- **Memory Impact:** Major contributor to GPU memory usage
-
-### Rotary Positional Encoding
-
-- **Application:** Applied to query and key vectors
-- **Purpose:** Encode relative position information
-- **Advantage:** Better handling of variable sequence lengths
-
-### Softmax Computation
 $$\text{softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$$
-- **Numerical Stability:** Often implemented with temperature scaling
-- **Attention Weights:** Output represents attention distribution
 
----
+Implementations subtract the row maximum before exponentiating to avoid overflow, which leaves the output unchanged; the online version of this trick is the heart of FlashAttention (see [[llm-serving-systems/memory-management|Memory Management]]).
 
-## Architecture Comparison
+## KV cache
 
-### Original Transformer vs. Llama Architecture
+During decode, each new token needs attention against every previous position's keys and values. Recomputing them every step would make step $t$ cost $O(t)$ full projections, so the K and V vectors are cached as they are produced. The cache is per request and per layer (every layer keeps its own K and V), and it grows linearly with generated length, which is why it dominates serving memory. Sizing math and allocation strategies live in [[llm-serving-systems/memory-management|Memory Management]].
 
-- **Original:** Encoder-decoder with cross-attention
-- **Llama:** Decoder-only architecture
-- **Normalization:** LayerNorm 	o RMSNorm
-- **Activation:** ReLU 	o SwiGLU
-- **Position Encoding:** Absolute 	o Rotary (RoPE)
-- **Attention:** Multi-head 	o Grouped Query Attention
+## Multi-GPU execution
 
-This architecture forms the foundation for modern large language models and understanding these components is crucial for optimizing LLM serving systems.
+Tensor parallelism splits the weight matrices across GPUs: Q, K, V projections are partitioned by head, FFN projections by rows or columns, and each GPU computes its shard (details in [[llm-serving-systems/parallelism|Parallelism]]). Two collectives stitch results back together: AllGather collects partial outputs after attention, and AllReduce (ReduceScatter plus AllGather) sums partial results after the FFN down projection. Both are network bound.
+
+## Where each operation binds
+
+Compute bound: the dense projections (Q, K, V, output, up, gate, down) and prefill attention, since they are large matmuls over many tokens.
+
+Memory bound: decode attention, which streams the KV cache to score one new token per request.
+
+Network bound: the AllGather and AllReduce collectives in tensor-parallel deployments.
+
+This split is the reason prefill and decode want different batching treatments ([[llm-serving-systems/batching|Batching]]) and different hardware ratios.
+
+## Original transformer vs Llama
+
+- Structure: encoder-decoder with cross-attention becomes decoder-only.
+- Normalization: LayerNorm becomes RMSNorm.
+- Activation: ReLU becomes SwiGLU.
+- Positions: absolute embeddings become rotary (RoPE).
+- Attention: full multi-head becomes grouped-query.
+
+## Related notes
+
+- [[llm-serving-systems/memory-management|Memory Management]]
+- [[llm-serving-systems/batching|Batching]]
+- [[llm-serving-systems/parallelism|Parallelism]]
+- [[llm-serving-systems/speculative-decoding|Speculative Decoding]]

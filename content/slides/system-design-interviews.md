@@ -6,18 +6,7 @@ date: 2025-03-05
 description: Overview of system design interviews, covering format, structure, and basic principles.
 ---
 
-
-<!--
-Overview of system design interviews
- -->
-
-<!-- backgroundColor: #121212 -->
-<!-- color: #fff -->
-<!-- style: normal -->
-
-# System Design Interviews
-
----
+This is a concise outline of what system design interviews are, how they usually flow, and how to prepare your thinking during the conversation.
 
 ## Agenda
 
@@ -37,7 +26,7 @@ Overview of system design interviews
 
 ---
 
-## Example:
+## Example
 
 Design a URL shortening service, which takes a long, complex web address and converts it into a shorter, more manageable link. This shorter URL redirects users to the original destination, making sharing links easier and cleaner
 
@@ -59,7 +48,7 @@ Note: there is not one right way of doing them, and you might not need to touch 
 
 ## Format/Structure of the Interview
 
-### Requirements clarification(functional and non-functional)
+### Requirements Clarification (Functional and Non-Functional)
 
 - functional: what your system does/features supported
 - e.g. takes a long, complex web address and converts it into a shorter, more manageable link

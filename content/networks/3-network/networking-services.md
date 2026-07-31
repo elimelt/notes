@@ -1,5 +1,5 @@
 ---
-title: Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits
+title: "Networking Services: Store-and-Forward Packet Switching and Datagrams vs. Virtual Circuits"
 category: Networks
 tags: store-and-forward packet switching, datagrams, virtual circuits, routing, forwarding table, connection-oriented, connectionless
 date: 2024-02-16
@@ -28,4 +28,3 @@ description: Covers the implementation of store-and-forward packet switching, da
 | Routing | Per packet | Per circuit |
 | Failures | Easy to mask | Hard to mask |
 | QoS | Hard to provide | Easier to provide |
-

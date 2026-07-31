@@ -6,18 +6,7 @@ date: 2025-03-05
 description: Presentation covering basic techniques and architectures for solving common scalability and reliability problems in systems.
 ---
 
-
-<!--
-Presentation covering the basics techniques and architectures for solving common scalability/reliability problems in systems.
- -->
-
-<!-- backgroundColor: #121212 -->
-<!-- color: #fff -->
-<!-- style: normal -->
-
-# Patterns for Scalability and Reliability in Systems
-
----
+This note condenses a slide deck on common system-design patterns for scaling and reliability into a scrollable Quartz-friendly reference.
 
 ## Agenda
 
@@ -36,10 +25,7 @@ Presentation covering the basics techniques and architectures for solving common
 - RESTful API
 - Stateful vs. stateless services
 
-![w:900](assets/client-server-db.png)
-<!-- alt: Diagram showing client-server architecture -->
-
-
+![w:900](./slides/assets/client-server-db.png)
 
 ---
 
@@ -51,7 +37,7 @@ Problem: I have too many requests! My single server can't take it anymore 😭
 
 Solution: Horizontal scaling with a load balancer -- distribute requests across multiple servers
 
-![w:900px](assets/load-balancer.png)
+![w:900px](./slides/assets/load-balancer.png)
 
 ---
 
@@ -63,8 +49,7 @@ Problem: My database is slow and can't handle all these reads 😩
 
 Solution: Cache frequently/recently accessed data to reduce database load
 
-![w:900px](assets/cache.png)
-<!-- alt: Diagram showing caching mechanism -->
+![w:900px](./slides/assets/cache.png)
 
 ---
 
@@ -76,8 +61,7 @@ Problem: My database is massive and can't handle all these writes 😭
 
 Solution: Split the database into smaller, more manageable pieces. Designate a *partition key* to determine which shard to write to.
 
-![w:900p](assets/sharding.png)
-<!-- alt: Diagram showing database sharding -->
+![w:900p](./slides/assets/sharding.png)
 
 ---
 
@@ -89,8 +73,7 @@ Problem: My system is overwhelmed by bursty traffic and can't process requests f
 
 Solution: Use a message queue to manage requests and process them asynchronously
 
-![w: auto h: 400px](assets/message-queue.png)
-<!-- alt: Diagram showing database sharding -->
+![w: auto h: 400px](./slides/assets/message-queue.png)
 
 ---
 
@@ -153,8 +136,7 @@ Problem: My monolithic architecture is hard to maintain and scale 😖
 
 Solution: Break down the monolith into smaller, more manageable services. Each service is responsible for a specific task and can be scaled independently.
 
-![w:900px](assets/soa.png)
-<!-- alt: Diagram showing service-oriented architecture -->
+![w:900px](./slides/assets/soa.png)
 
 ---
 
@@ -166,7 +148,7 @@ Problem: I have multiple services which are non-uniform, and clients need to acc
 
 Solution: Use an API Gateway to route requests to the appropriate service
 
-![](assets/api-gateway.png)
+![](./slides/assets/api-gateway.png)
 
 ---
 
@@ -194,8 +176,7 @@ Problem: I have a stateful, purpose-built service that needs to be highly availa
 
 Solution: Primary forwards writes to replicas, which can take over if the primary fails
 
-![](assets/replication.png)
-<!-- alt: Diagram showing data replication across servers -->
+![](./slides/assets/replication.png)
 
 ---
 
@@ -206,8 +187,7 @@ Solution: Primary forwards writes to replicas, which can take over if the primar
 - Prevents system failures from cascading
 - Monitors and isolates failing components
 
-![](assets/circuit-breaker.png)
-<!-- alt: Diagram showing circuit breaker pattern -->
+![](./slides/assets/circuit-breaker.png)
 
 ---
 

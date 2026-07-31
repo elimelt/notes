@@ -19,9 +19,6 @@ A data-intensive application is typically built from standard building blocks:
 - Send a message to another process, to be handled asynchronously (stream processing)
 - Periodically crunch a large amount of accumulated data (batch processing)
 
-![image](./sc.png)
-
-
 ### Reliability
 A fault is usually defined as one component of the system deviating from its spec, whereas a failure is when the system as a whole stops providing the required service to the user.
 

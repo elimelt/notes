@@ -1,5 +1,6 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
+import { StripFirstHeadingIfTitlePresent } from "./quartz.plugins"
 
 const config: QuartzConfig = {
   configuration: {
@@ -49,6 +50,7 @@ const config: QuartzConfig = {
   plugins: {
     transformers: [
       Plugin.FrontMatter(),
+      StripFirstHeadingIfTitlePresent(),
       Plugin.CreatedModifiedDate({ priority: ["frontmatter", "filesystem"] }),
       Plugin.SyntaxHighlighting({
         theme: { light: "github-light", dark: "github-dark" },

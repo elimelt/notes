@@ -1,5 +1,5 @@
 ---
-title: Dynamo: Amazon's Highly Available Key-value Store
+title: "Dynamo: Amazon's Highly Available Key-value Store"
 category: Distributed Systems
 tags: key-value store, database design, high availability, consistency, object versioning, conflict resolution
 date: 2024-08-04

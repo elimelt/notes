@@ -1,5 +1,5 @@
 ---
-title: Hard Lessons Learned: Windows RtlZeroMemory
+title: "Hard Lessons Learned: Windows RtlZeroMemory"
 category: Operating Systems
 tags: RtlZeroMemory, interrupt handling, Windows optimization, operating system development, memory management
 date: 2024-01-10

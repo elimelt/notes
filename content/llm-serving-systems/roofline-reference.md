@@ -42,7 +42,7 @@ This is *bad*. Modern accelerators can achieve much higher intensity, e.g. NVIDI
 
 ## Roofline Model
 
-![plot](assets/roofline-plot.png)
+![plot](./llm-serving-systems/assets/roofline-plot.png)
 
 Roofline plots visualize arithmetic intensity (x-axis) vs. performance (y-axis), typically both in log scale. The plot is divided into three regions:
 

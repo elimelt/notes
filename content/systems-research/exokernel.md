@@ -1,5 +1,5 @@
 ---
-title: Exokernel: An Operating System Architecture for Application-Level Resource Management
+title: "Exokernel: An Operating System Architecture for Application-Level Resource Management"
 category: Operating Systems
 tags: operating systems, exokernel, resource management
 date: 2025-01-14

@@ -1,5 +1,5 @@
 ---
-title: C-SWAP: Cost, Size, Weight and Power
+title: "C-SWAP: Cost, Size, Weight and Power"
 category: Hardware
 tags: cost, size, weight, power, hardware, energy constraints, heat dissipation, sensing, computing, communication
 date: 2024-01-03

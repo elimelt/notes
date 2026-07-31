@@ -3,7 +3,7 @@ title: Internet Control Message Protocol (ICMP)
 category: Networks
 tags: network protocols, ICMP, ping, traceroute, routing, TTL
 date: 2024-02-25
-description: Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues.
+description: "Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues."
 ---
 
 # Internet Control Message Protocol (ICMP)

@@ -1,7 +1,9 @@
-// Site-specific Quartz overrides. Quartz owns the layout and component styles;
-// keep this file intentionally small so upgrades remain straightforward.
+@use "./base.scss";
+
+// Site-specific Quartz overrides. Keep these scoped and restrained so Quartz
+// upgrades stay straightforward.
 :root {
-  --content-width: 760px;
+  --content-width: 780px;
 }
 
 .page-title a {
@@ -9,13 +11,95 @@
   letter-spacing: -0.02em;
 }
 
+.page {
+  max-width: 1440px;
+}
+
+#quartz-body {
+  column-gap: 2rem;
+}
+
+.page-header {
+  margin-bottom: 1.25rem;
+}
+
+.breadcrumb-container {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.article-title {
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  line-height: 1.1;
+}
+
+.content-meta {
+  margin-bottom: 0.75rem;
+}
+
+.tags {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.center > article {
+  max-width: 48rem;
+}
+
+article {
+  line-height: 1.7;
+}
+
+article pre {
+  border: 1px solid var(--lightgray);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
 article img,
 article video {
+  display: block;
+  max-width: 100%;
   border-radius: 0.4rem;
+  margin: 1.5rem auto;
 }
 
 article table {
   display: block;
   max-width: 100%;
   overflow-x: auto;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.75rem;
+  padding: 0.25rem;
+  background: color-mix(in srgb, var(--lightgray) 20%, transparent);
+}
+
+.sidebar.right {
+  gap: 1rem;
+}
+
+@media all and (max-width: 800px) {
+  .page-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .center > article {
+    max-width: 100%;
+  }
+
+  .search {
+    max-width: none;
+    width: 100%;
+  }
+
+  .explorer .explorer-content {
+    max-width: 100vw;
+    left: 0;
+    right: 0;
+  }
+
+  .sidebar.right {
+    display: none;
+  }
 }

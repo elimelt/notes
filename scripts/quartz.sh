@@ -33,6 +33,7 @@ sync_site() {
   ln -s "$ROOT/content" "$QUARTZ_DIR/content"
   cp "$ROOT/quartz.config.ts" "$QUARTZ_DIR/quartz.config.ts"
   cp "$ROOT/quartz.layout.ts" "$QUARTZ_DIR/quartz.layout.ts"
+  cp "$ROOT/quartz.plugins.ts" "$QUARTZ_DIR/quartz.plugins.ts"
   cp "$ROOT/quartz-site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
   mkdir -p "$QUARTZ_DIR/quartz/static"
   cp -R "$ROOT/quartz-site/static/." "$QUARTZ_DIR/quartz/static/"

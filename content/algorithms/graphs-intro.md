@@ -11,6 +11,8 @@ date: 2024-04-03
 updated: 2026-07-30
 status: evergreen
 description: Definitions and basic facts about undirected graphs, with proofs of the degree sum formula, the parity of odd-degree vertices, and the edge count bound, plus a comparison of adjacency matrix and adjacency list storage.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose
@@ -69,6 +71,18 @@ Let $G = (V, E)$ be a graph with $n = |V|$ vertices and $m = |E|$ edges.
 **Claim**: $m \le \binom{n}{2} = \frac{n(n - 1)}{2} = O(n^2)$
 
 **Proof**: each vertex can be connected to at most $n - 1$ other vertices, and each edge is shared by two vertices, so the total number of edges is at most $\frac{n(n-1)}{2}$. $\blacksquare$
+
+### Too Many Edges Force a Cycle
+
+**Claim**: if an undirected graph on $n$ vertices has at least $n$ edges, then it contains a cycle.
+
+**Proof**: an acyclic undirected graph is a forest, so each connected component is a tree. If the components have vertex counts $n_1, \ldots, n_k$, then the total number of edges is
+
+$$
+\sum_{i=1}^{k}(n_i - 1) = \left(\sum_{i=1}^{k} n_i\right) - k = n - k \le n - 1.
+$$
+
+So every acyclic graph on $n$ vertices has at most $n - 1$ edges. The contrapositive says any graph with at least $n$ edges must contain a cycle. $\blacksquare$
 
 ### Sparsity
 

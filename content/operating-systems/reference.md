@@ -1,10 +1,27 @@
 ---
-title: Operating System Principles and Practices
+title: Operating Systems Reference
 category: Operating Systems
-tags: operating systems, kernels, processes, concurrency, memory management, persistent storage
+tags:
+  - operating systems
+  - kernels
+  - processes
+  - concurrency
+  - memory management
+  - storage
 date: 2024-03-26
-description: Covers the implementation of fundamental operating system concepts, including process management, memory management, and persistent storage. Discusses the design and architecture of modern operating system kernels, with a focus on principles and practices for building robust and efficient systems.
+updated: 2026-07-31
+status: evergreen
+description: "Quick links for the Operating Systems: Principles and Practice textbook series."
+sources:
+  - https://www.kea.nu/files/textbooks/ospp/osppv1.pdf
+  - https://www.kea.nu/files/textbooks/ospp/osppv2.pdf
+  - https://www.kea.nu/files/textbooks/ospp/osppv3.pdf
+  - https://www.kea.nu/files/textbooks/ospp/osppv4.pdf
 ---
+
+## Purpose
+
+Keep the four OSPP volumes in one place so the rest of the operating systems notes can link back to a stable reference.
 
 ## Textbook
 

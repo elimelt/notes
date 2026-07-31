@@ -32,6 +32,11 @@ recommended:
     type: date
     format: YYYY-MM-DD
 
+optional:
+  archive:
+    type: boolean
+    effect: exclude_note_from_build_indexes_and_navigation
+
 conventions:
   title_lives_in_frontmatter: true
   no_in_body_h1: true
@@ -39,6 +44,7 @@ conventions:
   descriptions_should_state_scope_not_hype: true
   dates_should_be_iso8601: true
   source_urls_should_be_canonical_when_possible: true
+  archive_true_removes_note_from_site_output: true
 
 backfill_targets:
   normalize_tags_to_yaml_lists: true

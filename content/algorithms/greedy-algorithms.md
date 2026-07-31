@@ -11,6 +11,8 @@ date: 2024-04-19
 updated: 2026-07-30
 status: evergreen
 description: Greedy algorithms for interval scheduling and interval partitioning, with correctness proofs by greedy-stays-ahead, exchange argument, and a structural depth bound.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose
@@ -85,6 +87,23 @@ def partition_intervals(I: list[tuple[int, int]]):
       S.append([itvl])
   return S
 ```
+
+### Why the sort order matters
+
+Sorting by finish time works for [[algorithms/greedy-algorithms#Interval Scheduling|interval scheduling]], but it is the wrong rule for interval partitioning. A small counterexample is
+
+$$
+[(0, 1), (0, 3), (4, 5), (2, 5)].
+$$
+
+If these intervals are processed in finish-time order, the algorithm opens three classrooms:
+
+- $(0, 1)$ goes in $C_0$
+- $(0, 3)$ is incompatible with $C_0$, so it opens $C_1$
+- $(4, 5)$ fits in both $C_0$ and $C_1$, say $C_0$
+- $(2, 5)$ now conflicts with the last interval in both rooms, so it opens $C_2$
+
+That is not optimal. The input has depth $2$, since no point is covered by more than two intervals, so two classrooms suffice. The fix is to sort by **start** time. Then, when a new classroom is opened, every existing classroom already contains an interval that overlaps the new one, which is exactly the fact the correctness proof needs.
 
 ### Proof of Correctness
 

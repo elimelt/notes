@@ -1,14 +1,25 @@
 ---
 title: SWECC Leadership Applications 2025-2026
 category: Thoughts
-tags: swecc, leadership, application
+tags:
+  - swecc
+  - leadership
+  - university-of-washington
+  - student-organizations
 date: 2025-03-05
-description: Applications for the 2025-2026 SWECC officer team are now open! Apply by April 21st.
+updated: 2026-07-31
+status: needs-review
+archive: true
+description: Archived announcement for the 2025-2026 Software Engineering Career Club officer applications.
+sources:
+  - https://forms.gle/1JaS7iSeJK6CFW329
 ---
 
-# Software Engineering Career Club Leadership Applications
+## Purpose
 
-## Applications for the 2025-2026 SWECC officer team are now open!
+Keep a record of the 2025-2026 SWECC officer application announcement and timeline.
+
+## 2025-2026 Officer Applications
 
 Are you passionate about software engineering and helping others succeed in their careers? Do you want to be part of a team that organizes events/workshops, builds software for students, and facilitates community within the University of Washington? Apply to be an officer for the Software Engineering Career Club!
 
@@ -18,7 +29,7 @@ Are you passionate about software engineering and helping others succeed in thei
 |------|-------|
 | March 21st | Applications Open |
 | April 21st | Applications Close |
-| April 22nd - May 8st | Interviews |
+| April 22nd - May 8th | Interviews |
 | May 10th | Offers Extended |
 | May 14th | Officer Team Announced |
 

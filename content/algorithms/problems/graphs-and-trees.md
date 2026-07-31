@@ -1,12 +1,24 @@
 ---
-title: Graphs and Trees
+title: Graphs and Trees Problem Notes
 category: Algorithms
-tags: graphs, trees, induction, proof by contradiction, cycle detection
+tags:
+  - graphs
+  - trees
+  - induction
+  - contradiction
+  - cycle detection
 date: 2024-04-14
-description: A technical exploration of graphs and trees focusing on the properties and proofs of these fundamental data structures.
+updated: 2026-07-31
+status: needs-review
+archive: true
+description: Two graph theory proof exercises, one complete and one cleaned up from partial notes.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
-# Graphs and Trees
+## Purpose
+
+Work through a pair of short graph theory exercises. The first is a full inductive proof. The second is now written as a compact contradiction argument instead of stopping mid-proof.
 
 ## Problem 1
 Let $G$ be a tree. Use induction to prove that the number of leaves of $G$ is at least the number of vertices of degree at least $3$ in $G$.
@@ -55,4 +67,10 @@ Claim: The sum of the degrees of all vertices in a graph is equal to twice the n
 
 Proof: Each edge contributes $1$ to the degree of two vertices, so the sum of the degrees of all vertices is twice the number of edges.
 
+Now use the standard fact that every acyclic graph is a forest, and every forest on $n$ vertices has at most $n - 1$ edges. One way to see this is to sum the edge counts of each tree component. If the components have $n_1, \ldots, n_k$ vertices, then the total number of edges is
 
+$$
+\sum_{i=1}^{k}(n_i - 1) = \left(\sum_{i=1}^{k} n_i\right) - k = n - k \le n - 1.
+$$
+
+But $G$ is assumed to have at least $n$ edges, which contradicts the bound above. Therefore $G$ must contain a cycle.

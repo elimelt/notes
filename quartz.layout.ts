@@ -23,6 +23,17 @@ export const defaultContentPageLayout: PageLayout = {
   ],
   right: [
     Component.DesktopOnly(Component.TableOfContents()),
+    Component.DesktopOnly(
+      Component.Graph({
+        localGraph: {
+          showTags: false,
+          focusOnHover: true,
+        },
+        globalGraph: {
+          showTags: false,
+        },
+      }),
+    ),
   ],
 }
 

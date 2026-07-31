@@ -1,4 +1,4 @@
-import { QuartzTransformerPlugin } from "./quartz/plugins/types"
+import { QuartzFilterPlugin, QuartzTransformerPlugin } from "./quartz/plugins/types"
 
 export const StripFirstHeadingIfTitlePresent: QuartzTransformerPlugin = () => {
   return {
@@ -21,6 +21,17 @@ export const StripFirstHeadingIfTitlePresent: QuartzTransformerPlugin = () => {
           }
         },
       ]
+    },
+  }
+}
+
+export const RemoveArchived: QuartzFilterPlugin = () => {
+  return {
+    name: "RemoveArchived",
+    shouldPublish(_ctx, [_tree, vfile]) {
+      const archivedFlag: boolean =
+        vfile.data?.frontmatter?.archive === true || vfile.data?.frontmatter?.archive === "true"
+      return !archivedFlag
     },
   }
 }

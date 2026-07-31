@@ -1,30 +1,43 @@
 ---
 title: C and GDB Review
 category: Computer Science
-tags: static, extern, pointers, GDB, printf debugging, backtrace, watch
+tags:
+  - c
+  - gdb
+  - pointers
+  - static
+  - extern
+  - debugging
 date: 2024-01-04
-description: Covers the implementation of C programming language concepts such as static, extern, and pointers. Also reviews the usage of the GNU Debugger (GDB) for debugging C programs, including techniques like printf debugging, backtrace, and watch.
+updated: 2026-07-31
+status: draft
+description: Short review notes on C linkage, pointer basics, and a few core GDB commands.
+sources:
+  - https://sourceware.org/gdb/current/onlinedocs/gdb.html
+  - https://en.cppreference.com/w/c/language/storage_duration
 ---
 
-# Section 1 - C and GDB review
+## Purpose
+
+Capture the small set of C and GDB ideas that came up in section. This is a compact memory aid, not a full language reference.
 
 
 ## C Review
 **static**: has different meanings
 
--  static functions indicate it can't be used outside of the file (like private)
--  static variables are similar to other. ie only one
+- static functions cannot be used outside the file where they are defined
+- static local variables keep one storage location across function calls
 
 **extern**: declares variable without allocating any memory for it
 
--  variables must be defined somewhere else
--  allows you to use variables from other files
+- variables must be defined somewhere else
+- allows you to use variables from other files
 
 
 
 ```c
 
-void change(char** s) { *c = "class"; }
+void change(char** s) { *s = "class"; }
 
 int main() {
    char* s = "hello";
@@ -39,9 +52,9 @@ When you use an uninitialized pointer, the address that the pointer stores is th
 
 ## GDB Review
 
-`printf` debugging are useful, but limited when it comes to debugging concurrent code
+`printf` debugging is useful, but limited once the program state changes quickly or multiple threads are involved.
 
-Enter `GDB`
+Enter `gdb`.
 
 `run <...args>`: start execution
 
@@ -53,8 +66,7 @@ Enter `GDB`
 
 `p <opt> <arg>`: print arg
 
-`x <opt> <arg>: dereference and print arg
-
+`x <opt> <arg>`: examine memory at an address
 
 
 

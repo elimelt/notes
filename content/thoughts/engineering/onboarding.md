@@ -1,24 +1,33 @@
 ---
 title: How I Onboard
 category: Career
-tags: internship, onboarding, career, professional development, engineering
+tags:
+  - internships
+  - onboarding
+  - career
+  - engineering
+  - professional development
 date: 2025-03-05
-description: Personal reflections on onboarding strategies and succeeding in internships.
+updated: 2026-07-31
+status: evergreen
+archive: true
+description: Personal notes on how I ramp up in a new engineering role.
+sources:
+  - personal experience from internship onboarding
 ---
 
-
-# How I Onboard
+## Purpose
 
 I was recently asked about succeeding in an internship, and I thought I'd share what's worked for me in the past. This complements my practical advice on [[slides/getting-a-return-offer|getting a return offer]]. I'm writing this for two reasons:
 
 1. To create an artifact in case I'm asked this question again
 2. To reflect on what's worked well, in order to improve my process
 
-If you have any thoughts, I'd love to hear them! You can reach me through [email](mailto:elimelt@uw.edu) or [LinkedIn](https://www.linkedin.com/in/elimelt/).
+If you have any thoughts, feel free to reach out through [email](mailto:elimelt@uw.edu) or [LinkedIn](https://www.linkedin.com/in/elimelt/).
 
 ## Company-Specific Everything
 
-Every company is different. Many of these thoughts are general, but some are mainly applicable to larger companies. The original question posed to me was about my experience interning at AWS and how I prepared for/succeeded in that role, so you might notice an Amazon flavored slant to some of these thoughts.
+Every company is different. Many of these thoughts are general, but some are mainly applicable to larger companies. The original question was about my internship experience at AWS and how I prepared for that role, so some of the examples lean in that direction.
 
 ## Skill Gaps to Avoid
 
@@ -43,4 +52,4 @@ The last thing that made a big difference was being proactive - scheduling meeti
 
 Getting feedback early after my first PR helped me correct course before developing bad habits.
 
-That's what worked for me, but everyone's journey is different - find what works for you!
+That is what has worked for me so far.

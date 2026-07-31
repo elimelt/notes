@@ -24,22 +24,6 @@ publish_legacy_docs() {
   fi
 }
 
-version_built_assets() {
-  local output_dir="$1"
-  local asset_version
-  asset_version="${ASSET_VERSION:-$(git -C "$ROOT" rev-parse --short=12 HEAD 2>/dev/null || date +%s)}"
-
-  find "$output_dir" -name '*.html' -print0 | while IFS= read -r -d '' html_file; do
-    ASSET_VERSION="$asset_version" perl -0pi -e '
-      my $v = $ENV{ASSET_VERSION};
-      s{((?:\.\./|\./|/)?index\.css)(?=")}{$1 . "?v=" . $v}ge;
-      s{((?:\.\./|\./|/)?prescript\.js)(?=")}{$1 . "?v=" . $v}ge;
-      s{((?:\.\./|\./|/)?postscript\.js)(?=")}{$1 . "?v=" . $v}ge;
-      s{((?:\.\./|\./|/)?static/contentIndex\.json)(?=")}{$1 . "?v=" . $v}ge;
-    ' "$html_file"
-  done
-}
-
 bootstrap() {
   if [[ ! -d "$QUARTZ_DIR/.git" ]]; then
     rm -rf "$QUARTZ_DIR"
@@ -64,29 +48,26 @@ sync_site() {
     rm -rf "$QUARTZ_DIR/quartz/static/docs"
     cp -R "$ROOT/docs" "$QUARTZ_DIR/quartz/static/docs"
   fi
-
-  if [[ -f "$ROOT/quartz-site/overrides/graph.inline.ts" ]]; then
-    cp "$ROOT/quartz-site/overrides/graph.inline.ts" \
-      "$QUARTZ_DIR/quartz/components/scripts/graph.inline.ts"
-  fi
 }
 
 command="${1:-}"
 case "$command" in
   build)
     bootstrap
+    python3 "$ROOT/scripts/render_notebooks.py"
     sync_site
     (cd "$QUARTZ_DIR" && npx quartz build --output "$ROOT/public")
-    version_built_assets "$ROOT/public"
     publish_legacy_docs
     ;;
   serve)
     bootstrap
+    python3 "$ROOT/scripts/render_notebooks.py"
     sync_site
     (cd "$QUARTZ_DIR" && npx quartz build --serve)
     ;;
   sync)
     bootstrap
+    python3 "$ROOT/scripts/render_notebooks.py"
     sync_site
     ;;
   *)

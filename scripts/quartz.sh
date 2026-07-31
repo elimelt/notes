@@ -17,6 +17,13 @@ Environment overrides:
 EOF
 }
 
+publish_legacy_docs() {
+  if [[ -d "$ROOT/public/static/docs" ]]; then
+    rm -rf "$ROOT/public/docs"
+    cp -R "$ROOT/public/static/docs" "$ROOT/public/docs"
+  fi
+}
+
 bootstrap() {
   if [[ ! -d "$QUARTZ_DIR/.git" ]]; then
     rm -rf "$QUARTZ_DIR"
@@ -37,6 +44,10 @@ sync_site() {
   cp "$ROOT/quartz-site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
   mkdir -p "$QUARTZ_DIR/quartz/static"
   cp -R "$ROOT/quartz-site/static/." "$QUARTZ_DIR/quartz/static/"
+  if [[ -d "$ROOT/docs" ]]; then
+    rm -rf "$QUARTZ_DIR/quartz/static/docs"
+    cp -R "$ROOT/docs" "$QUARTZ_DIR/quartz/static/docs"
+  fi
 }
 
 command="${1:-}"
@@ -45,6 +56,7 @@ case "$command" in
     bootstrap
     sync_site
     (cd "$QUARTZ_DIR" && npx quartz build --output "$ROOT/public")
+    publish_legacy_docs
     ;;
   serve)
     bootstrap

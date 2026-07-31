@@ -2,6 +2,7 @@
   "name": "elijah-notes",
   "private": true,
   "scripts": {
+    "render:notebooks": "python3 scripts/render_notebooks.py",
     "build": "bash scripts/quartz.sh build",
     "dev": "bash scripts/quartz.sh serve",
     "sync:quartz": "bash scripts/quartz.sh sync",

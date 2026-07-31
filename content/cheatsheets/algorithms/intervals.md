@@ -1,12 +1,17 @@
 ---
 title: Interval Scheduling/Partitioning
 category: Algorithms
-tags: greedy algorithms, interval partitioning, scheduling, time complexity
+tags:
+  - greedy-algorithms
+  - interval-scheduling
+  - interval-partitioning
 date: 2024-04-28
-description: A technical exploration of Interval Scheduling and Partitioning focusing on their greedy algorithm properties and structural analysis.
+updated: 2026-07-30
+status: evergreen
+description: Greedy algorithms and proof sketches for interval scheduling and interval partitioning.
 ---
 
-# Interval Scheduling/Partitioning
+Greedy algorithms for the two classic interval problems, with proof sketches.
 
 ## Scheduling the max number of intervals
 
@@ -17,7 +22,7 @@ description: A technical exploration of Interval Scheduling and Partitioning foc
     - $P(r)$: For greedy choices $g_1, \ldots, g_n$ and optimal choices $k_1, \ldots, k_m$, $f(g_r) \le f(k_r)$
     - $P(1)$: $g_1$ is chosen to have the minimum finish time, so $f(g_1) \le f(k_1)$
     - Suppose $P(r)$. Since $f(g_r) \le f(k_r) \le s(k_{r + 1})$, $k_{r + 1}$ is among the candidates considered for $g_{r + 1}$. Of those candidates, it picks the minimum finish time, so $f(g_{r + 1}) \le f(k_{r + 1})$.
-  - By this lemma, we must have $n \ge m$, since since otherwise $k_{n + 1}$ is in the set of candidates for $g_{n + 1}$.
+  - By this lemma, we must have $n \ge m$, since otherwise $k_{n + 1}$ is in the set of candidates for $g_{n + 1}$.
 
 ## Partitioning intervals into the minimum number of sets
 
@@ -26,3 +31,8 @@ description: A technical exploration of Interval Scheduling and Partitioning foc
   - *Claim*: greedy algorithm is optimal
   - Let $d$ be the number of sets the greedy algorithm allocates. The $d$th set, $S_d$ is allocated because we had to assign some interval, $I_i$, that was not compatible with any of the $d - 1$ previous sets.
   - Since we sorted by start time, all intervals $I_j \in S_1 \cup \ldots \cup S_{d - 1}$ have $s(I_i) \ge s(I_j)$. Thus, we have at least depth $d$ intervals, and so all valid partitions must have $\ge d$ sets.
+
+## Related
+
+- [[cheatsheets/algorithms/divide-and-conquer|Divide and Conquer Algorithms]]
+- [[cheatsheets/algorithms/graphs|Graph Theory]]

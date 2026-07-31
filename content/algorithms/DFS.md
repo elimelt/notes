@@ -1,51 +1,60 @@
 ---
 title: Depth First Search Algorithm and Tree Properties
 category: Algorithms
-tags: graph theory, depth first search, spanning trees, graph traversal
+tags:
+  - graph theory
+  - depth first search
+  - spanning trees
+  - graph traversal
 date: 2024-04-14
-description: A technical explanation of Depth First Search (DFS) algorithm and its tree properties, including both recursive and iterative implementations. The document covers key properties of DFS trees, including the ancestor-descendant relationship of non-tree edges, and includes a formal lemma and proof about DFS tree characteristics.
+updated: 2026-07-30
+status: evergreen
+description: Recursive and iterative DFS implementations, and a proof that every non-tree edge of a DFS tree connects a vertex to one of its ancestors.
 ---
 
-# Depth First Search (DFS)
+## Purpose
 
-Running DFS on a graph produces a DFS tree (or depth-first spanning-tree). The DFS tree contains all the vertices of the graph and the edges of the DFS tree are a subset of the edges of the original graph.
+Running DFS on a graph produces a DFS tree (a depth-first spanning tree of the starting vertex's component). The tree contains every vertex DFS reaches, and its edges are a subset of the graph's edges. This note gives the implementations and proves the one structural property that makes DFS trees useful.
 
-Unlike the BFS tree, DFS trees aren't minimum depth, and its levels don't really tell you much. However, the property holds that sub-trees of a DFS tree must not contain any edges connecting them.
+## Core idea
 
-**Lemma**: For a DFS tree of graph $G = (V, E)$ $T = (V_t, E_t)$,  $\forall e = (x, y) \in E$, if $e \notin E_t$, then one of $x$ or $y$ is an ancestor of the other in the tree.
+Unlike the [[algorithms/BFS|BFS]] tree, a DFS tree has no minimum-depth guarantee, and its levels say nothing about distance. What it does guarantee: no edge of the graph connects two different subtrees. Every non-tree edge climbs between a vertex and one of its ancestors. That is why DFS finds cycles: any non-tree edge closes a cycle through the tree path between its endpoints.
 
-**Proof**: Without loss of generality, assume $x$ is discovered first.
+**Lemma**: Let $T = (V_t, E_t)$ be a DFS tree of graph $G = (V, E)$. For every edge $e = (x, y) \in E$ with $e \notin E_t$, one of $x$ or $y$ is an ancestor of the other in $T$.
 
-Call $dfs(x)$. At this time, $y$ is still undiscovered. By observation, it is enough to say $y$ will be discovered before finishing $dfs(x)$. This is true because $y$ is a neighbor of $x$, so DFS will eventually visit $y$. If $y$ is still undiscovered when $x$ we visit $x$'s neighbors, it will at least be discovered then.
+**Proof**: Without loss of generality, assume $x$ is discovered first. When $dfs(x)$ is called, $y$ is still undiscovered. The call $dfs(x)$ does not return until every neighbor of $x$ has been discovered, since it visits each neighbor and recurses on the undiscovered ones. So $y$ is discovered during $dfs(x)$, which places $y$ somewhere in the subtree rooted at $x$, making $x$ an ancestor of $y$. $\blacksquare$
 
+## Implementation
 
 ```python
+def dfs_recursive(G, src, vis=None, f=print):
+    if vis is None:
+        vis = set()
+    if src in vis:
+        return
+    vis.add(src)
+    f(src)
+    for v in G[src]:
+        dfs_recursive(G, v, vis, f)
 
-def dfs_recursive(G, src, vis = set(), f=print):
-  if src in vis:
-    return
-  vis.add(src)
-  f(src)
-  for v in G[src]:
-    dfs_recursive(G, v, vis)
-
-def dfs_iterative(G, src, vis=set(), f=print):
-  stack = [src]
-  while stack:
-    curr = stack.pop()
-    if curr in vis:
-      continue
-    vis.add(curr)
-    f(curr)
-    for v in G[curr]:
-      stack.append(v)
+def dfs_iterative(G, src, f=print):
+    vis = set()
+    stack = [src]
+    while stack:
+        curr = stack.pop()
+        if curr in vis:
+            continue
+        vis.add(curr)
+        f(curr)
+        for v in G[curr]:
+            stack.append(v)
 ```
 
 ## Properties of DFS Spanning Trees
 
-DFS visits every vertex within the starting vertex's connected component, so you can use it to find all connected components of a graph similar to BFS.
+DFS visits every vertex in the starting vertex's connected component, so it finds [[algorithms/connected-components|connected components]] just like BFS does.
 
-However, unlike BFS, the DFS tree has the property that every non-tree edge joins a vertex to one of its ancestors/decedents in the tree. We can thus still use DFS to find cycles in a graph.
+The ancestor property is what sets DFS apart. Since every non-tree edge joins a vertex to an ancestor or descendant, DFS gives a clean way to detect cycles, and it underlies algorithms on [[algorithms/DAGs|directed acyclic graphs]] like topological sorting.
 
 ## Related notes
 

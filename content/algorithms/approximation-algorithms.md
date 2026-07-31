@@ -1,26 +1,22 @@
 ---
 title: Approximation Algorithms
 category: Algorithms
-tags: approximation, algorithms, vertex cover, set cover
+tags:
+  - approximation
+  - algorithms
+  - vertex cover
+  - set cover
 date: 2024-05-10
-description: A survey of approximation algorithms, including the 2-approximation for vertex cover and the log(n) approximation for set cover.
+updated: 2026-07-30
+status: evergreen
+description: Defines the approximation ratio and derives the bounds for two standard examples, the 2-approximation for vertex cover and the greedy ln(n) approximation for set cover.
 ---
 
-# Approximation Algorithms
+## Purpose
 
-When faced with a problem that can be reduced to some NP-Complete problem, you (most probably) cannot generally solve it in polynomial time. For example:
+When a problem is NP-complete, you give up on computing an exact optimum in polynomial time. This note defines the approximation ratio and derives the guarantees for two standard approximation algorithms: the 2-approximation for vertex cover and the greedy $\ln(n)$ approximation for set cover.
 
-- Set Cover
-- Graph Coloring
-- Traveling Salesman/Eulerian Tour
-- Maximal independent Set
-- Vertex Cover
-- Boolean Satisfiability
-
-Instead of finding an optimal solution in polynomial time, we have two approaches:
-
-- Find the optimal solution to some specially structured input
-- Find as close to optimal solution as possible, with upper/lower bounds even on the worst case
+Problems where this comes up include set cover, graph coloring, traveling salesman, maximum independent set, vertex cover, and boolean satisfiability. When your problem reduces to one of these, you have two practical options. Solve the problem exactly on specially structured inputs, or compute a solution with a provable bound on how far it can be from optimal, even in the worst case.
 
 ## Approximation Ratio
 
@@ -28,22 +24,37 @@ $$
 \alpha = \frac{\text{computed solution}}{\text{optimum solution}}
 $$
 
-If we can prove some upper or lower bound on $\alpha$, then we might be able to use and reason about a given approximation algorithm. Finding better approximations is an open problem.
+An upper or lower bound on $\alpha$ turns a heuristic into an algorithm you can reason about. For a minimization problem, an $\alpha$-approximation guarantees $OPT \le ALG \le \alpha \cdot OPT$.
 
-## A Survey of Approximation Algorithms
+## 2-Approximation for Vertex Cover
 
-The following two examples are the best known general approximation algorithms for their respective problems.
+**Problem**: find a minimal subset $S$ of vertices in a graph such that every edge has at least one endpoint in $S$.
 
-### 2-Approximation for Vertex Cover
+**Algorithm**: while some edge $(u, v)$ has neither endpoint in $S$, add both $u$ and $v$ to $S$.
 
-**Problem**: find the minimal subset $S$ of vertices in a graph such that every edge is connected to some vertex in $S$.
-**Algorithm**: For every edge $(u, v)$, add $u$ and $v$ to $S$
+The edges the algorithm picks share no endpoints, so they form a matching $M$. Any vertex cover must contain at least one endpoint of every edge in $M$, and those endpoints are distinct across edges of $M$, so $OPT \ge |M|$. The algorithm outputs $|S| = 2|M|$ vertices, which gives
 
-By a 2-approximation, it means that $\alpha = 2$. Since we are minimizing the set, we have that that for any graph $G$, it must be the case that $OPT(G) \le ALG(G) \le 2 \cdot OPT(G)$
+$$
+OPT(G) \le ALG(G) \le 2 \cdot OPT(G)
+$$
 
-### log(n) approximation for Set Cover
+so $\alpha = 2$.
 
-**Problem**: Given some number of sets $S_1, S_2, \ldots, S_n$ with $S_i \subseteq U$, choose the minimum number of sets that cover all elements of $U$
-**Algorithm**: While there are remaining elements, choose the set that maximizes the number of new elements covered.
+## ln(n) Approximation for Set Cover
 
-If the optimal solution has $k$ sets, this algorithm always selects at most $k log(n)$ sets. This is because there is at least a set that covers $\frac{1}{k}$ of the remaining elements, so after $t$ steps we have $ \le n(1 - \frac{1}{k})^t \le n \cdot e^{-\frac{t}{k}}$ remaining elements. Therefore, after $t = k\ln(n)$ steps, we have $< 1$ uncovered element remaining.
+**Problem**: given sets $S_1, S_2, \ldots, S_m$ with $S_i \subseteq U$ and $|U| = n$, choose the minimum number of sets that cover all elements of $U$.
+
+**Algorithm**: while elements remain uncovered, choose the set that covers the most new elements.
+
+Suppose the optimal solution uses $k$ sets. Those $k$ sets cover every remaining element at any point during the run, so some set always covers at least $\frac{1}{k}$ of the remaining elements. The greedy choice covers at least that many. After $t$ steps the number of uncovered elements is at most
+
+$$
+n\left(1 - \frac{1}{k}\right)^t \le n \cdot e^{-t/k}
+$$
+
+Setting $t = k \ln(n)$ drives this below $1$, so greedy selects at most $k \ln(n)$ sets.
+
+## Related notes
+
+- [[algorithms/greedy-algorithms|greedy algorithms]]
+- [[algorithms/linear-programming|linear programming]]

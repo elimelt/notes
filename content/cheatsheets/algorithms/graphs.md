@@ -1,12 +1,21 @@
 ---
 title: Graph Theory
 category: Algorithms
-tags: Graphs, Trees, DFS, BFS, Topological Sort, Minimum Spanning Tree, Disjoint Sets
+tags:
+  - graphs
+  - trees
+  - bfs
+  - dfs
+  - topological-sort
+  - minimum-spanning-tree
+  - disjoint-sets
 date: 2024-04-27
-description: A comprehensive overview of graph theory, including concepts such as nodes, edges, trees, and minimum spanning trees, as well as algorithms like depth-first search and breadth-first search.
+updated: 2026-07-30
+status: evergreen
+description: Reference facts and proof sketches for undirected graphs, trees, BFS, DFS, DAGs, cuts, MSTs, and disjoint sets.
 ---
 
-# Graphs
+Reference facts and proof sketches for graphs, kept terse. The BFS pattern gets a fuller treatment in [[algorithms/patterns/BFS|Breadth First Search Pattern]].
 
 ## Undirected Graphs
 
@@ -32,7 +41,7 @@ For any graph $G = (V, E)$, if two of the following are true, then all three are
 
 ## Bipartite Graphs
 
-- $G$ is bipartite iff you can partition $V$ into $V_1$ and $V_2$ such that all edges are between $V_1$ and $V_2$, i.e. no edges between vertices in different sets
+- $G$ is bipartite iff you can partition $V$ into $V_1$ and $V_2$ such that all edges are between $V_1$ and $V_2$, i.e. no edges between vertices in the same set
 - $G$ is bipartite iff $G$ has no odd cycles
 
 ## Depth First Search
@@ -42,7 +51,7 @@ For any graph $G = (V, E)$, if two of the following are true, then all three are
   - DFS tree not minimum depth, nor do its levels reflect the min distance
   - Non-tree edges never join vertices on the same or adjacent level. Always join a vertex with one of its ancestors or descendants
   - All vertices visited during $DFS(s)$ are a descendant of $s$ in the DFS tree
-    - For every edge $(u, v) \notin T_{DFS(s)}$, either $x$ is an ancestor of $y$ or $y$ is an ancestor of $x$
+    - For every edge $(u, v) \notin T_{DFS(s)}$, either $u$ is an ancestor of $v$ or $v$ is an ancestor of $u$
 
 ## Directed Acyclic Graphs
 
@@ -76,7 +85,7 @@ An ordering of nodes $v_1, v_2, \ldots, v_n$ so that for every edge $(v_i, v_j)$
 - **Proof**:
   - Show that it is a tree
     - Initially start with $|V| = n$ sets, and only add an edge if you are connecting two of them. Therefore, we end with $n - 1$ sets to add an edge between each original set
-    - Only add edges between disconnected components, so it must be acyclic, since each additional edge $e$ connecting $C_1$ and $C_2$ (two disconnected components) is the only edge between them. This means $C_1 + e + C_2$ has an odd number of edges in its cut, so there are no cycles formed.
+    - Only add edges between disconnected components, so it must be acyclic, since each additional edge $e$ connecting $C_1$ and $C_2$ (two disconnected components) is the only edge between them.
   - Must be an MST
     - Considered edges in increasing order of cost. Taking the first edge where the optimal and Kruskal's differ, we can exchange them for an equal or better solution.
 
@@ -87,3 +96,8 @@ An ordering of nodes $v_1, v_2, \ldots, v_n$ so that for every edge $(v_i, v_j)$
   - To merge two sets, point root with smaller label to root with larger label, adjusting labels of the new root if necessary. This is $O(1)$.
 - **Properties**:
   - If the label of a root is $k$, there are at least $2^k$ elements in the set.
+
+## Related
+
+- [[cheatsheets/algorithms/divide-and-conquer|Divide and Conquer Algorithms]]
+- [[cheatsheets/algorithms/intervals|Interval Scheduling/Partitioning]]

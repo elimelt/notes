@@ -1,22 +1,32 @@
 ---
 title: Breadth First Search Algorithm Implementation and Analysis
 category: Algorithms
-tags: graph traversal, shortest paths, graph theory, complexity analysis
+tags:
+  - graph traversal
+  - shortest paths
+  - graph theory
+  - complexity analysis
 date: 2024-04-03
-description: A comprehensive explanation of the Breadth First Search (BFS) algorithm, including implementation, complexity analysis, and mathematical proofs. The document covers the algorithm's properties for finding shortest paths in graphs and includes Python implementations with detailed theoretical foundations and lemmas about level ordering.
+updated: 2026-07-30
+status: evergreen
+description: BFS pseudocode and Python implementations, the O(|V| + |E|) runtime analysis, and proofs that BFS levels differ by at most one across any edge and equal shortest path distances.
 ---
-# Breadth First Search
 
-Completely explore the vertices of a graph in order of their distance from the starting node.
+## Purpose
 
-There are three states of a vertex in BFS:
-- **Undiscovered**: The vertex has not been seen yet.
-- **Discovered**: The vertex has been seen, but its neighbors have not been explored yet.
-- **Explored**: The vertex has been seen and its neighbors have been explored.
+Breadth first search explores the vertices of a graph in order of their distance from the starting vertex. This note gives the algorithm, its runtime analysis, and proofs of the two structural facts that make BFS useful: adjacent vertices sit within one level of each other, and the level of a vertex equals its shortest path distance from the start.
 
-### Algorithm
+## Core idea
 
-```plaintext
+A vertex is in one of three states during BFS:
+
+- **Undiscovered**: the vertex has not been seen yet.
+- **Discovered**: the vertex has been seen, but its neighbors have not been explored yet.
+- **Explored**: the vertex has been seen and its neighbors have been explored.
+
+BFS holds discovered vertices in a queue, so vertices leave the queue in the same order they were discovered. Discovery order respects distance from the start, which is what the proofs below make precise.
+
+```text
 BFS(G, s):
   mark all vertices as undiscovered
 
@@ -31,71 +41,52 @@ BFS(G, s):
     mark u as explored
 ```
 
-### Analysis
+## Analysis
 
-The outer while loop runs once for each vertex in the graph, and the inner for loop runs once for each edge of the current node. Remembering that the sum of the degrees of all vertices is equal to twice the number of edges in the graph, we have...
+The outer while loop runs once for each vertex in the graph, and the inner for loop runs once for each edge of the current vertex. The sum of all vertex degrees is twice the number of edges, so the total work is
 
 $$
-O(|V|) + O(\sum_{v \in V} deg(v)) = O(|V| + |E|)
+O(|V|) + O\left(\sum_{v \in V} deg(v)\right) = O(|V| + |E|)
 $$
 
-### Lemmas
-
+## Structure of the BFS tree
 
 1. $BFS(s)$ visits a vertex $v$ if and only if there is a path from $s$ to $v$.
-2. Edges into then-unexplored vertices form a tree rooted at $s$ (the **BFS spanning tree**).
-3. Level $i$ in the tree are exactly all vertices $v$ stuch that the shortest path from $s$ to $v$ has $i$ edges.
-4. All non-tree edges from $G$ connect vertices in the same level or adjacent levels.
-
+2. Edges into then-undiscovered vertices form a tree rooted at $s$ (the **BFS spanning tree**).
+3. Level $i$ of the tree contains exactly the vertices $v$ such that the shortest path from $s$ to $v$ has $i$ edges.
+4. All non-tree edges of $G$ connect vertices in the same level or adjacent levels.
 
 ### Difference in levels
 
-Let $L(v)$ be the level of vertex $v$ in a BFS tree of interest.
+Let $L(v)$ be the level of vertex $v$ in the BFS tree.
 
-Claim:
+**Claim**:
+
 $$
 \forall (x, y) \in E, |L(x) - L(y)| \le 1
 $$
 
-Proof:
-Suppose $L(x) = i$ and $L(y) = j$. Without loss of generality, assume $x$ is explored before $y$.
+**Proof**: Suppose $L(x) = i$ and $L(y) = j$. Without loss of generality, assume $x$ is explored before $y$. Consider the iteration where we process $x$.
 
-Consider the iteration where we process $x$.
+Case 1: $y$ is still undiscovered. Since there is an edge between $x$ and $y$, we discover $y$ while processing $x$, so $L(y) = i + 1$.
 
-Case 1: $y$ is still undiscovered. Since there is an edge between $x$ and $y$, we will discover $y$ in the next iteration, and so $L(y) = i + 1$.
+Case 2: $y$ is already discovered. Then $y$ is in the queue somewhere behind $x$, and levels in the queue are non-decreasing, so $L(y) \ge i$. Every vertex still in the queue was discovered by a vertex of level at most $i$, so $L(y) \le i + 1$.
 
-Case 2: $y$ is discovered. Then $y$ is already in the queue, somewhere before $x$. We know $L(y) \ge i$ because $x$ was discovered before $y$. Since the levels are non-decreasing, and $L(x) = i$, we have $L(y) \le i + 1$.
+In both cases $|L(x) - L(y)| \le 1$. $\blacksquare$
 
-Thus, $|L(x) - L(y)| \le 1$.
+### Levels are shortest path distances
 
+**Claim**: for every vertex $v$ reachable from $s$, $L(v)$ equals the length of the shortest path from $s$ to $v$.
 
-### Shortest paths
+**Proof**: Let $l(v)$ be the length of the shortest path from $s$ to $v$.
 
-Claim:
+$L(v) \ge l(v)$: the tree path from $s$ to $v$ is a real path in $G$ with $L(v)$ edges, and the shortest path is at least as short.
 
-For every vertex $v \in V$ reachable from $s$, $L(v)$ is the length of the shortest path from $s$ to $v$.
+$L(v) \le l(v)$: let $s = v_0, v_1, \ldots, v_k = v$ be a shortest path, so $k = l(v)$. Each consecutive pair $(v_i, v_{i+1})$ is an edge, so the previous claim gives $L(v_{i+1}) \le L(v_i) + 1$. Starting from $L(v_0) = 0$ and applying this along the path, $L(v_k) \le k$.
 
-Proof:
+Together, $L(v) = l(v)$. $\blacksquare$
 
-Let $l(v)$ be the length of the shortest path from $s$ to $v$.
-
-We have that $L(v) \ge l(v)$, since $L(v)$ is the length of a valid path from $s$ to $v$, so the shortest path must be at least as short.
-
-Next, we must show that $L(v) \le l(v)$.
-
-Let $v_0, v_1, \ldots, v_k$ be the shortest path from $s$ to $v$ (with $v_0 = s$).
-
-
-
-
-
-
-
-$$
-\forall v \in BFS(G, s), L(v) = \text{length of the shortest path from } s \text{ to } v
-$$
-
-
+## Implementation
 
 ```python
 from collections import deque
@@ -113,18 +104,21 @@ def bfs(graph, start):
                 queue.append(neighbor)
 ```
 
-Or a reusable level-order iterator over a graph using BFS:
+Or a reusable level-order iterator over a graph. The visited set matters here: without it, any cycle makes the traversal loop forever.
 
 ```python
 from collections import deque
 
 def level_order_traversal(graph, start):
+    visited = {start}
     queue = deque([(start, 0)])
     while queue:
         vertex, level = queue.popleft()
         yield vertex, level
         for neighbor in graph[vertex]:
-            queue.append((neighbor, level + 1))
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, level + 1))
 ```
 
 ## Related notes
@@ -132,3 +126,4 @@ def level_order_traversal(graph, start):
 - [[algorithms/graphs-intro|Graph fundamentals]]
 - [[algorithms/DFS|depth-first search]]
 - [[algorithms/connected-components|connected components]]
+- [[algorithms/bipartite-graphs|bipartite graphs]]

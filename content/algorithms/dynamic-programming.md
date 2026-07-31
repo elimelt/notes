@@ -1,16 +1,21 @@
 ---
 title: Dynamic Programming Algorithms and Problem Solutions Guide
 category: Algorithms
-tags: dynamic programming, optimization, algorithm analysis
+tags:
+  - dynamic programming
+  - optimization
+  - algorithm analysis
 date: 2024-05-10
-description: A comprehensive guide covering various dynamic programming algorithms and their implementations, including knapsack, sequence alignment, and tree-based problems. Includes detailed explanations of problem-solving approaches, correctness proofs, and runtime analysis for each algorithm, with practical Python implementations.
+updated: 2026-07-30
+status: evergreen
+description: Worked dynamic programming problems with recurrences, correctness proofs, and Python implementations, covering interval scheduling, knapsack, string counting, post office placement, RNA folding, sequence alignment, Bellman-Ford, and three practice problems.
 ---
 
-# Dynamic Programming
+## Purpose
 
-**Dynamic Programming** is an algorithmic paradigm where you break up a problem into a series of **overlapping** sub-problems, building up solutions to progressively larger subproblems until the original answer is obtained. The key efficiency of DP is to **memoize** the answers to sub problems, often yielding a polynomial time algorithm.
+**Dynamic programming** breaks a problem into **overlapping** sub-problems and builds up solutions to progressively larger subproblems until the original answer is obtained. Memoizing the answers to sub-problems is what makes it fast, often turning an exponential recursion into a polynomial time algorithm.
 
-You can design dynamic programming algorithms by induction, with the added construct of somehow memorizing/caching previously solved problems. The key then becomes finding a valid recurrence relation that relates a given instance of the problem to its composite subproblems.
+You can design dynamic programming algorithms by [[algorithms/induction|induction]], with the added construct of caching previously solved subproblems. The work is in finding a valid recurrence relation that relates a given instance of the problem to its composite subproblems. This note collects worked problems, each with a recurrence, a correctness argument, and an implementation. Every code sample here has been checked against a brute force solution on small random inputs.
 
 ## Weighted Interval Scheduling
 
@@ -90,17 +95,17 @@ def knapsack_rec(W: int, w: list[int], v: list[int]) -> int:
     n = len(w)
     M = [[-1] * (W + 1) for _ in range(n + 1)]
 
-    def dp(i: int, w: int) -> int:
-      if M[i][w] != -1:
-        return M[i][w]
+    def dp(i: int, cap: int) -> int:
+      if i == 0 or cap == 0:
+        return 0
+      if M[i][cap] != -1:
+        return M[i][cap]
 
-      if i < 0 or w == 0:
-        M[i][w] = 0
-      elif w[i] > w:
-        M[i][w] = dp(i - 1, w)
+      if w[i - 1] > cap:
+        M[i][cap] = dp(i - 1, cap)
       else:
-        M[i][w] = max(v[i] + dp(i - 1, w - w[i]), dp(i - 1, w))
-      return M[i][w]
+        M[i][cap] = max(v[i - 1] + dp(i - 1, cap - w[i - 1]), dp(i - 1, cap))
+      return M[i][cap]
 
     return dp(n, W)
 
@@ -129,20 +134,13 @@ Given 3 integers $n \geq 1$ and $k_A,k_B \geq 1$, design an algorithm that runs 
 A, B = 0, 1
 
 def num_strings(n, ka, kb):
-  dp = [[None, None]] * (n + 1)
-  dp[1][A], dp[1][B] = None, None, 1, 1
-
-  if ka == 0 or kb == 0:
-    if ka < n and kb < n:
-      return 0
-    else:
-      return 1
+  dp = [[None, None] for _ in range(n + 1)]
 
   def f(i, c):
     if i == 1:
       return 1
 
-    if dp[i][c] != None:
+    if dp[i][c] is not None:
       return dp[i][c]
 
     kc = ka if c == A else kb
@@ -174,7 +172,7 @@ $$
 
 where $c'$ is the other character, and $k_c$ is the maximum number of consecutive $c$ allowed.
 
-For the case where $n > k_c$, we can sum over all possible lengths of the last run of $c$, and then recurse on the remaining string. For a run of $c$ of length $k$ in a string of length $n$, we must have the first $n - k$ characters be some other valid string ending in $c'$, since otherwise our string would end in a run of $c$ of length $> k$. Therefore, we only need to count the number of strings of left $n - k_c \le i \le n - 1$ ending in $c'$, since this is exactly the number of valid strings ending in runs of $1 \le k \le k_c$ $c$.
+For the case where $n > k_c$, we can sum over all possible lengths of the last run of $c$, and then recurse on the remaining string. For a run of $c$ of length $k$ in a string of length $n$, we must have the first $n - k$ characters be some other valid string ending in $c'$, since otherwise our string would end in a run of $c$ of length $> k$. Therefore, we only need to count the valid strings of length $i$ for $n - k_c \le i \le n - 1$ ending in $c'$, since this is exactly the number of valid strings ending in a run of between $1$ and $k_c$ copies of $c$.
 
 In the case where $2 \le n \le k_c$, we know that there is no way we'd have a run of $c$ of more than $k_c$, so we can simply count the number of valid strings of size $n - 1$ that either end in a $c$ or a $c'$. Then, we can add a $c$ to the end of all those strings to get our valid strings of length $n$.
 
@@ -196,43 +194,40 @@ USPS is interested in building k post offices in some, but not necessarily all o
 
 ```python
 def min_dist_td(X, K):
+  X = sorted(X)
   N = len(X)
   if K >= N:
     return 0
 
-  dp = [[None] * (K + 1) for _ in range(N + 1)]
-  for n in range(N + 1):
-    for k in range(n, K + 1):
-      dp[n][k] = 0
+  memo = {}
 
   def f(n, k):
-    if n >= k:
+    # min total distance for villages 1..n with k offices,
+    # given the k-th office sits at village n
+    if n <= k:
       return 0
 
-    if dp[n][k] is not None:
-      return dp[n][k]
-
-    dp[n][k] = float('inf')
+    if (n, k) in memo:
+      return memo[(n, k)]
 
     if k == 1:
-      dp[n][k] = sum(abs(X[i - 1] - X[n - 1]) for i in range(1, n))
+      memo[(n, k)] = sum(abs(X[i - 1] - X[n - 1]) for i in range(1, n))
     else:
-      for i in range(k - 1, n):
-        dp[n][k] = min(
-            dp[n][k],
-            f(i, k - 1) + sum(
-              min(
-                abs(X[j - 1] - X[n - 1]),
-                abs(X[j - 1] - X[i - 1])
-              ) for j in range(i + 1, n))
-        )
+      memo[(n, k)] = min(
+          f(i, k - 1) + sum(
+            min(
+              abs(X[j - 1] - X[n - 1]),
+              abs(X[j - 1] - X[i - 1])
+            ) for j in range(i + 1, n))
+          for i in range(k - 1, n)
+      )
 
-    return dp[n][k]
+    return memo[(n, k)]
 
   def c(i):
-    return f(i, k) + sum(abs(X[i - 1] - X[j - 1]) for j in range(i + 1, n + 1))
+    return f(i, K) + sum(abs(X[i - 1] - X[j - 1]) for j in range(i + 1, N + 1))
 
-  return min(c(i) for i in range(k, n + 1))
+  return min(c(i) for i in range(K, N + 1))
 ```
 
 ### Correctness
@@ -297,44 +292,24 @@ Note that maximizing the number of base pairs is a practical problem, since RNA 
 **Algorithm**:
 
 ```python
-# Top Down Recursive
+# Bottom up over increasing substring length
 
 WC = { 'A': 'U', 'U': 'A', 'C': 'G', 'G': 'C' }
-
-def ssr(B):
-  N = len(B)
-  dp = [[None] * N for _ in range(N)]
-
-  for i in range(N) for j in range(N):
-    if abs(j - i) <= 4:
-      dp[i][j] = 0
-
-  def f(i, j):
-    if dp[i][j] is not None:
-      return dp[i][j]
-
-    for t in range(i, j - 5 + 1):
-      if WC[B[t]] == B[j]:
-        dp[i][j] = max(dp[i][j], 1 + f(i, t - 1) + f(t + 1, j - 1))
-
-    return dp[i][j]
-
-  return f(0, N - 1)
 
 def ssi(B):
   N = len(B)
   dp = [[0] * N for _ in range(N)]
 
-  for l in range(2, N + 1):
+  for l in range(6, N + 1):
     for i in range(N - l + 1):
       j = i + l - 1
-      if j - i <= 4:
-        dp[i][j] = 0
-      else:
-        dp[i][j] = dp[i][j - 1]
-        for t in range(i, j - 5 + 1):
-          if WC[B[t]] == B[j]:
-            dp[i][j] = max(dp[i][j], 1 + dp[i][t - 1] + dp[t + 1][j - 1])
+      dp[i][j] = dp[i][j - 1]
+      for t in range(i, j - 4):
+        if WC[B[t]] == B[j]:
+          left = dp[i][t - 1] if t > i else 0
+          dp[i][j] = max(dp[i][j], 1 + left + dp[t + 1][j - 1])
+
+  return dp[0][N - 1] if N else 0
 ```
 
 **Correctness**:
@@ -379,10 +354,10 @@ def seq_alignment(x, y):
 
   for i in range(1, m + 1):
     for j in range(1, n + 1):
-      dp[i][j] = max(
-        (0 if x[i] == y[j] else 1) + dp[i - 1][j - 1],
+      dp[i][j] = min(
+        (0 if x[i - 1] == y[j - 1] else 1) + dp[i - 1][j - 1],
         1 + dp[i - 1][j],
-        1 + d[i][j - 1]
+        1 + dp[i][j - 1]
       )
 
   return dp[m][n]
@@ -394,24 +369,23 @@ You can optimize the space by only tracking the previous row of `dp`.
 
 ```python
 # Bottom up DP, optimized for space
-def seq_alignment(x, y):
+def seq_alignment_linear_space(x, y):
   m, n = len(x), len(y)
   # base cases covered
-  dp_prev = list(range(m + 1))
-  dp_curr = [None] * (m + 1)
+  dp_prev = list(range(n + 1))
+  dp_curr = [None] * (n + 1)
 
   for i in range(1, m + 1):
     dp_curr[0] = i
     for j in range(1, n + 1):
-      dp[curr] = min(
-        (0 if x[i] == y[j] else 1) + dp_prev[j - 1],
+      dp_curr[j] = min(
+        (0 if x[i - 1] == y[j - 1] else 1) + dp_prev[j - 1],
         1 + dp_prev[j],
         1 + dp_curr[j - 1]
       )
-    for j in range(1, n + 1):
-      dp_old[j] = dp_curr[j]
+    dp_prev, dp_curr = dp_curr, dp_prev
 
-  return dp_curr[n]
+  return dp_prev[n]
 ```
 
 ## Longest Path in a DAG
@@ -451,20 +425,20 @@ $$
 def LIS(X):
   n = len(X)
   dp = [None] * (n + 1)
-  dp[0], dp[1] = 0, 1
+  dp[0] = 0
 
   def f(i):
     if dp[i] is None:
-      dp[i] = 1 + max([0] + [f(k) for k in range(i) if X[k - 1] < X[i - 1]])
+      dp[i] = 1 + max([0] + [f(k) for k in range(1, i) if X[k - 1] < X[i - 1]])
 
     return dp[i]
 
-  return max(f(i) for i in range(1, n + 1))
+  return max(f(i) for i in range(1, n + 1)) if n else 0
 ```
 
 ## Shortest Paths with Negative Edge Weights (Bellman-Ford)
 
-Given a weighted directed graph $G = (V, E)$, and a source vertex $s4, where the weight of edges $e = (u, v) \in E$ is $c_e = c_{u, v}$, find the shortest path from $s$ to all other vertices.
+Given a weighted directed graph $G = (V, E)$ and a source vertex $s$, where the weight of edge $e = (u, v) \in E$ is $c_e = c_{u, v}$, find the shortest path from $s$ to all other vertices.
 
 *Note*: if $G$ has a negative cycle, there is no solution, so suppose $G$ has no negative cycles.
 
@@ -491,19 +465,18 @@ Since any path in any graph has at most $n - 1$ edges, the shortest path to $v$ 
 
 ```python
 def bellman_ford(G, C, s):
+  # C[u][v] = edge cost, float('inf') where no edge exists
   n = len(G)
-  dp = [[float('inf')] * (n + 1) for _ in range(n)]
-
-  for i in range(n + 1):
-    dp[s][i] = 0
+  dp = [[float('inf')] * n for _ in range(n)]  # dp[i][v] = OPT(v, i)
+  dp[0][s] = 0
 
   for i in range(1, n):
     for v in range(n):
-      dp[v][i] = dp[v][i - 1]
+      dp[i][v] = dp[i - 1][v]
       for u in range(n):
-        dp[v][i] = min(dp[v][i], dp[u][i - 1] + C[u][v])
+        dp[i][v] = min(dp[i][v], dp[i - 1][u] + C[u][v])
 
-  return [dp[v][n] for v in range(n)]
+  return dp[n - 1]
 ```
 
 ## P1 - Knapsack Approximation
@@ -529,7 +502,7 @@ def A(weights, values, W):
 
 **Correctness**: Let $A$ be my algorithm above, $G$ be an algorithm that makes the same greedy choice of selecting items in increasing order of $\frac{v_i}{w_i}$, but with fractional selection allowed, and $OPT$ be the optimal algorithm for selecting items of only whole quantities. Let $S$ be the set of items chosen by $A$, $S'$ be the set of items chosen by $G$, and $S^*$ be the set of items chosen by $OPT$. Define $w(X)$ and $v(X)$ as the sum of weights and values respectively of items in the set of items $X$.
 
-*Lemma 1*: With fractional choices allowed, greedy (choosing highest $v_i/w_i$ ratio) upper bounds the optimal for non-fractional choices, i.e. $G \ge OPT$. This is given
+*Lemma 1*: With fractional choices allowed, greedy (choosing highest $v_i/w_i$ ratio) upper bounds the optimal for non-fractional choices, i.e. $G \ge OPT$. This holds because every non-fractional solution is also a feasible fractional solution, and greedy by value density is optimal for the fractional problem.
 
 *Lemma 2*: $A$ chooses items with a total sum of weights $\ge \frac{W}{2} + 1$
 
@@ -625,28 +598,29 @@ Design an algorithm that runs in time $O(n^3)$ and outputs the value of the rect
 def max_rectangle(A):
   n = len(A)
 
-  dp = [[0] * (n + 1) for _ in range(n + 1)]
+  memo = {}
   pf_row = [[0] * (n + 1) for _ in range(n + 1)]
   for x in range(1, n + 1):
     for y in range(1, n + 1):
       pf_row[x][y] = pf_row[x][y - 1] + A[x - 1][y - 1]
 
-  def effsum(x1, y1, x2, y2):
-    return A[x1 - 1][y1 - 1] if x1 == x2 and y1 == y2 else sum(
-        pf_row[i][y2] - pf_row[i][y1 - 1]
-        for i in range(x1, x2 + 1)
-    )
+  def row_sum(x, y1, y2):
+    return pf_row[x][y2] - pf_row[x][y1 - 1]
 
   def g(y1, y2):
     if y1 > y2:
       return 0
+    if (y1, y2) in memo:
+      return memo[(y1, y2)]
 
-    dp[y1][y2] = max(g(y1 + 1, y2), g(y1, y2 - 1))
+    best = max(g(y1 + 1, y2), g(y1, y2 - 1))
     curr = 0
     for x in range(1, n + 1):
-      curr = max(curr + effsum(x, y1, x, y2), 0)
-      dp[y1][y2] = max(dp[y1][y2], curr)
-    return dp[y1][y2]
+      curr = max(curr + row_sum(x, y1, y2), 0)
+      best = max(best, curr)
+
+    memo[(y1, y2)] = best
+    return best
 
   return max(0, g(1, n))
 ```
@@ -691,58 +665,46 @@ Therefore, the overall runtime is $O(n^3)$.
 Given a tree $T$ with $n$ vertices and an integer $k \ge 1$ such that every vertex of $T$ has degree $deg(v) \le 3$, we want to choose a set $S$ of $k$ vertices of the tree which are connected, i.e., for any pair of vertices $u, v \in S$ the unique path between $u, v$ in $T$ is also in $S$. Design a polynomial time algorithm that outputs the number of such sets $S$.
 
 ```python
+from collections import deque
+
 def num_sets_deg_3(T, k):
-
-  def levels(v):
-    q = deque()
-    vis = set()
-    L = {}
-    q.append((v, 0))
-
-    while q:
-      size = len(q)
-      curr, l = q.popleft()
-      L[curr] = l
-      vis.add(curr)
-      for _ in range(size):
-        for nxt in T[curr]:
-          if nxt not in vis:
-            q.append((nxt, l + 1))
-    return L
-
-  root = arb_key(T)
-  L = levels(root)
+  root = next(iter(T))
+  L = {root: 0}
+  q = deque([root])
+  while q:
+    curr = q.popleft()
+    for nxt in T[curr]:
+      if nxt not in L:
+        L[nxt] = L[curr] + 1
+        q.append(nxt)
 
   def children(v):
-    return { u for u in T[v] if L[u] == L[v] + 1 }
+    return [u for u in T[v] if L[u] == L[v] + 1]
 
-  dp = { v: { 1: 1, 0: 1 } for v in T.keys() }
+  dp = { v: { 1: 1, 0: 1 } for v in T }
 
-  def r(v, k):
+  def f(v, k):
     if k in dp[v]:
       return dp[v][k]
 
-    c = list(children(v))
+    c = children(v)
     ans = 0
-    if len(c) == 0:
-      return 1 if k == 1 else 0
-    elif len(c) == 1:
-      ans = r(c[0], k - 1)
+    if len(c) == 1:
+      ans = f(c[0], k - 1)
     elif len(c) == 2:
       for c1 in range(k):
         c2 = k - c1 - 1
-        ans += r(c[0], c1) * r(c[1], c2)
+        ans += f(c[0], c1) * f(c[1], c2)
     elif len(c) == 3:
       for c1 in range(k):
         for c2 in range(k - c1):
           c3 = k - c1 - c2 - 1
-          ans += r(c[0], c1) * r(c[1], c2) * r(c[2], c3)
-
+          ans += f(c[0], c1) * f(c[1], c2) * f(c[2], c3)
 
     dp[v][k] = ans
-    return dp[v][k]
+    return ans
 
-  return sum(f(u, k) for k in T.keys())
+  return sum(f(u, k) for u in T)
 ```
 
 **Correctness**:

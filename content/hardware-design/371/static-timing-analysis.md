@@ -1,18 +1,30 @@
 ---
 title: Static Timing Analysis
 category: Hardware
-tags: timing analysis, verilog, systemverilog, clock domain crossing, metastability
+tags:
+  - timing analysis
+  - verilog
+  - systemverilog
+  - setup time
+  - hold time
 date: 2025-05-17
-description: How should you reason about timing in hardware? What are the key thresholds for signal integrity?
+updated: 2026-07-30
+status: evergreen
+description: The setup, hold, and clock-to-Q constraints on register inputs, how to bound tolerable combinational delays between registers, and where static timing analysis runs in the FPGA flow.
+sources:
+  - title: UW CSE/EE 371 lecture notes
+    type: lecture
 ---
 
-# Static Timing Analysis
+## Purpose
 
-## Sequential Timing Constraints
+Timing in synchronous hardware comes down to keeping every register input stable inside a window around each clock edge. This note defines the constraints, shows how to turn them into inequalities on path delays, and records where static timing analysis happens in the FPGA design flow.
 
-- $t_s$ (**Setup Time**): The minimum time before the clock edge that the data input must be stable. This is to ensure that the data is latched correctly by the flip-flop.
-- $t_h$ (**Hold Time**): The minimum time after the clock edge that the data input must remain stable. This is to ensure that the data is not changed before it is latched by the flip-flop.
-- $t_{co}$ (**Clock-to-Q Delay**): The time it takes for the output of the flip-flop to change after the clock edge. This is the time it takes for the data to propagate through the flip-flop.
+## Sequential timing constraints
+
+- $t_s$ (**Setup Time**): The minimum time before the clock edge that the data input must be stable, so the flip-flop latches the data correctly.
+- $t_h$ (**Hold Time**): The minimum time after the clock edge that the data input must remain stable, so the data doesn't change before the flip-flop latches it.
+- $t_{co}$ (**Clock-to-Q Delay**): The time it takes for the flip-flop's output to change after the clock edge, i.e. the time for data to propagate through the flip-flop.
 
 ```txt
             T (clk edge)
@@ -25,33 +37,33 @@ description: How should you reason about timing in hardware? What are the key th
 T - t_s                T + t_h
 ```
 
-
-A register input shouldn't violate setup or hold time constraints within a clock cycle. With $t_{\text{input}, i}$ being the $i$-th time a register input changes, and $T_clk$ being the clock period, we must have:
+A register input must not violate setup or hold constraints within a clock cycle. With $t_{\text{input}, i}$ being the $i$-th time a register input changes and $T_{clk}$ being the clock period, we need
 
 $$
 t_{h} \leq t_{\text{input}, i} \leq T_{clk} - t_{s} ~ \forall i
 $$
 
-So there are two key constraints to keep in mind:
+So there are two constraints to keep in mind:
 
-- $t_{\text{input}, i} \geq t_h$: The input must be stable for at least the hold time after the clock edge.
-- $t_{\text{input}, i} \leq T_{clk} - t_s$: The input must be stable for at least the setup time before the clock edge.
+- $t_{\text{input}, i} \geq t_h$: The input must stay stable for at least the hold time after the clock edge.
+- $t_{\text{input}, i} \leq T_{clk} - t_s$: The input must settle early enough to be stable for the setup time before the next clock edge.
 
-When considering combinational logic delay, we think about minimizing with respect to the hold time constraint, and maximizing with respect to the setup time constraint. So for hold time we want to find the shortest path through our circuit, and for setup time we want to find the longest path through our circuit.
+When reasoning about combinational delay between registers, the hold constraint cares about the fastest possible path and the setup constraint cares about the slowest. So for hold time you find the shortest path through the circuit, and for setup time you find the longest.
 
-For example, if you are given $t_{co}$, $t_{h}$, $t_{s}$, and $T_{clk}$, you can calculate the range of tolerable delays for components on a path between two registers, or the input signal's delay after clock edge to change, or some variation on these. In order to do this, you identify the longest and shortest paths through the circuit that concern your component/between the two registers, and then write out the inequalities.
+A typical exam problem gives you $t_{co}$, $t_{h}$, $t_{s}$, and $T_{clk}$ and asks for the range of tolerable delays for a component on a path between two registers, or for how late an input signal can change after the clock edge. The method is the same either way. Identify the longest and shortest paths through the circuit that involve your component or connect the two registers, then write out the two inequalities above and solve for the unknown delay.
 
-## In Practice
+## In practice
 
-Static timing analysis usually happens twice in the FPGA design process: once after synthesis (static analysis of the RTL), and once after place and route (static analysis of the netlist).
+Static timing analysis usually happens twice in the FPGA design process: once after synthesis, as static analysis of the RTL, and once after place and route, as static analysis of the netlist.
 
-### Circuit Path Categorization
+### Circuit path categorization
 
-- **Data paths** are between inputs, sequential elements, and outputs
-- **Clock paths** are from device ports or internally-generated clocks to the clock pins of sequential elements
-- **Asynchronous paths** are between inputs and asynchronous set and clear pins of sequential elements
+- **Data paths** run between inputs, sequential elements, and outputs.
+- **Clock paths** run from device ports or internally generated clocks to the clock pins of sequential elements.
+- **Asynchronous paths** run between inputs and the asynchronous set and clear pins of sequential elements.
 
 ## Related
 
 - [[hardware-design/369/waveform-diagram|Waveform Diagrams]]
 - [[hardware-design/369/sequential-logic|Sequential Logic]]
+- [[hardware-design/371/algorithmic-state-machines|Algorithmic State Machines]]

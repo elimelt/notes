@@ -1,32 +1,35 @@
 ---
 title: Waveform Diagrams
 category: Hardware
-tags: waveform diagrams, bit vectors, bus, circuit timing behavior
+tags:
+  - waveform diagrams
+  - bit vectors
+  - bus
+  - circuit timing behavior
 date: 2024-04-03
-description: Explains the concept of waveform diagrams in digital design, and how to use them to visualize the state of a system.
+updated: 2026-07-30
+status: draft
+description: Reading waveform diagrams and bus values over time, plus the Verilog syntax for buses, multi-bit constants, concatenation, and test benches.
+sources:
+  - title: UW CSE 369 lecture notes
+    type: lecture
 ---
 
-# Waveform Diagrams
+## Purpose
 
-Group bits of values into a **bus** or a **bit vector**. You can view the state of your system as slices of a waveform for each bit, corresponding to a number.
+Notes on reading waveform diagrams, along with the Verilog syntax from the same lecture for buses, constants, concatenation, and test benches.
 
-## Circuit Timing Behavior
+## Buses and waveforms
 
-Every gate has some fixed delay. In reality, you can look them up in their data sheet. However, for simplicity assume delay of all gates is 1 ns ( = 3 ticks).
+Group related bits into a **bus**, also called a **bit vector**. A waveform diagram shows each signal's value over time. Slice the diagram at any time point and you get the full state of the system, with each bus's bits at that slice reading as a number.
 
-# Verilog stuff
+## Circuit timing behavior
 
-## Verilog bus
+Every gate has some fixed delay. In reality you look delays up in the part's data sheet. For hand analysis in this course, assume every gate has a delay of 1 ns, which corresponds to 3 simulation ticks.
 
-Defining them: `[n-1:0]` is an $n$-bit bus. Access with array syntax. Can access sub-bus using `bus[start:size]`.
+## Verilog buses
 
-## Multi-bit constants
-
-`n'b#...#` is a constant with width $n$.
-
-## Concat
-
- `{A, B, C, ...}`
+`[n-1:0]` declares an $n$-bit bus. Access individual bits with array syntax, and take a slice of the bus with `bus[msb:lsb]`.
 
 ```verilog
 // SystemVerilog code for AND-OR-INVERT circuit
@@ -41,10 +44,17 @@ module AOI (F, A, B, C, D);
 endmodule
 ```
 
+## Multi-bit constants
 
-## Test Benches
+`n'b#...#` is a binary constant with width $n$. [[hardware-design/371/verilog-review|SystemVerilog Review]] covers the full constant syntax, including other radixes.
 
-Create emulated inputs for all of the FPGA's physical connections.
+## Concatenation
+
+`{A, B, C, ...}` concatenates signals into one wider value.
+
+## Test benches
+
+A test bench creates emulated inputs for all of the FPGA's physical connections, then drives them through a stimulus sequence:
 
 ```verilog
 module MUX2_tb ();
@@ -68,3 +78,4 @@ endmodule // MUX2_tb
 
 - [[hardware-design/371/static-timing-analysis|Static Timing Analysis]]
 - [[hardware-design/369/quartus-workflow|the Quartus and ModelSim workflow]]
+- [[hardware-design/369/system-verilog|SystemVerilog]]

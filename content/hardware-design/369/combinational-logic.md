@@ -1,74 +1,75 @@
 ---
 title: Combinational Logic
 category: Hardware
-tags: combinational logic, sequential logic, boolean algebra, logic gates, minimization
+tags:
+  - combinational logic
+  - sequential logic
+  - boolean algebra
+  - logic gates
+  - minimization
 date: 2024-03-29
-description: Explains the concept of combinatorial logic, its differences with sequential logic, and various techniques for minimizing boolean expressions.
+updated: 2026-07-30
+status: evergreen
+description: Defines combinational logic, shows how to read boolean expressions out of truth tables, and collects the identities and gate costs that drive logic minimization.
+sources:
+  - title: UW CSE 369 lecture notes
+    type: lecture
 ---
 
-# Combinational Logic
+## Purpose
 
-## Combinational Logic vs. Sequential Logic
+Pin down what makes a circuit combinational, and collect the tools for turning a truth table into a small boolean expression. Smaller expressions mean fewer transistors and less delay, so minimization is where most of this note goes.
 
-- **Combinational Logic**:
-  - Output depends only on the current input.
-  - No feedback.
-  - Examples: Multiplexers, decoders, adders, etc.
-- **Sequential Logic**:
-    - Output depends on the current input and the state of the circuit.
+## Combinational vs. sequential
 
+The output of combinational logic depends only on the current input. There is no feedback, so the circuit holds no state. Multiplexers, decoders, and adders all work this way. Sequential logic adds feedback, so its output depends on the current input and on stored state. See [[hardware-design/369/sequential-logic|Sequential Logic]] for that side.
 
 ## Representation
 
-Can represent logic with text, circuits, truth tables, or equations.
+The same logic can be written as text, a circuit, a truth table, or an equation. Take a car's warning lights. The door is ajar if the driver door is open or the passenger door is open:
 
-For example:
-
-Door is ajar if driver door is open OR passenger door is open.
-
-```plaintext```
+```plaintext
 DoorAjar = DriverDoorOpen OR PassengerDoorOpen
 ```
-Seat belt light is on if driver seat belt is not fastened OR passenger seat belt is not fastened AND the passenger is present.
 
-```plaintext```
+The seat belt light is on if the driver's belt is unfastened, or if a passenger is present with their belt unfastened:
+
+```plaintext
 SeatBeltLight = (NOT DriverSeatBeltFastened) OR (NOT PassengerSeatBeltFastened AND PassengerPresent)
 ```
 
-## Translating Truth Table to Boolean Expressions
+## Truth table to boolean expression
 
-- **Sum of products**: Take the rows where the output is 1 and OR the inputs.
-- **Product of sums**: Take the rows where the output is 0 and AND the complements of the inputs.
+Sum of products: for each row where the output is 1, AND the inputs together, complementing any input that is 0 in that row. OR all of those product terms.
 
+Product of sums: for each row where the output is 0, OR the inputs together, complementing any input that is 1 in that row. AND all of those sum terms.
 
-
-
-## Boolean Identities
+## Boolean identities
 
 | Identity | Description |
 |----------|-------------|
 | `A + 0 = A` | Identity |
 | `A + A = A` | Idempotent |
-| `A + 1 = 1` | Identity |
+| `A + 1 = 1` | Annihilation |
 | `A + A' = 1` | Complement |
 | `A + B = B + A` | Commutative |
 | `A + (B + C) = (A + B) + C` | Associative |
 | `A(B + C) = AB + AC` | Distributive |
 | `A + AB = A` | Absorption |
 
-## Logic Minimalization
+## Logic minimization
 
-It is nice to reduce complexity at the gate level. This allows us to build smaller and faster hardware. We care about...
+Reducing complexity at the gate level buys smaller and faster hardware. The things worth counting:
 
-- number of gates: fewer gates is better
-- number of literals (gate inputs): fewer literals is better
-- number of levels: able to parallelize better using fewer levels/depenencies
-- types of logic gates: some gates are faster than others
+- Number of gates. Fewer gates means less area.
+- Number of literals (gate inputs). Fewer literals means less wiring.
+- Number of levels. Fewer levels means a shorter critical path and fewer dependencies.
+- Types of gates. Some gates cost fewer transistors than others.
 
-Generally, simpler boolean expressions lead to smaller transistor networks, and smaller circuit delays/faster hardware.
+Simpler boolean expressions generally map to smaller transistor networks, which means smaller circuit delays. CMOS transistor counts per gate, from lecture:
 
-| Type | CMOS required |
-|------|----------------|
+| Type | CMOS transistors required |
+|------|---------------------------|
 | NOT | 2 |
 | AND | 6 |
 | OR | 6 |
@@ -77,15 +78,9 @@ Generally, simpler boolean expressions lead to smaller transistor networks, and 
 | XOR | 8 |
 | XNOR | 8 |
 
-You can recreate EVERY gate type using just NAND and NOR (universal gates). e.g. `AND = NAND(NAND(A, B))`
+NAND and NOR are universal gates. You can build every other gate type from just one of them. For example, AND is a NAND followed by an inverter, and the inverter itself is a NAND with both inputs tied together. The table above also explains why NAND-based implementations are attractive, since NAND costs 4 transistors while AND costs 6.
 
-
-## DeMorgan's Law
-
-```plaintext
-NOT(A AND B) = NOT(A) OR NOT(B)
-NOT(A OR B) = NOT(A) AND NOT(B)
-```
+## DeMorgan's law
 
 $$
 \overline{A \cdot B} = \overline{A} + \overline{B}
@@ -95,7 +90,7 @@ $$
 \overline{A + B} = \overline{A} \cdot \overline{B}
 $$
 
-In a circuit, the more general rule is that if you have an AND or OR gate with some inverted terminals, to apply demorgans law, you just change the type of gate (ie AND to OR or OR to AND) and invert the inputs (ie change all the points that are inverted to not inverted and vice versa).
+In a circuit, the general rule for applying DeMorgan's law to an AND or OR gate with some inverted terminals is to swap the gate type (AND becomes OR, OR becomes AND) and toggle the inversion on every terminal, so inverted points become plain and plain points become inverted.
 
 ## Related
 

@@ -1,38 +1,45 @@
 ---
 title: Karnaugh Maps
 category: Hardware
-tags: karnaugh maps, truth tables, graph theory, computer science
+tags:
+  - karnaugh maps
+  - truth tables
+  - boolean minimization
 date: 2024-04-14
-description: Method for simplifying Boolean expressions
+updated: 2026-07-30
+status: draft
+description: How to build a K-map from a truth table and group 1s to minimize a boolean expression, plus notes on Verilog procedural blocks from the same lecture.
+sources:
+  - title: UW CSE 369 lecture notes
+    type: lecture
 ---
 
-# Karnaugh Maps
+## Purpose
 
-Goal: Find neighboring subsets of the On set to eliminate variables and simplify expressions.
+K-maps give a visual way to minimize boolean expressions. The goal is to find neighboring subsets of the on set so you can eliminate variables from the expression.
 
-A `K-map` is a method of representing a truth table to help visualize adjacencies into $\le$ 4 dimensions.
+## Building and reading a K-map
 
-1. Split inputs into 2 evenly sized groups
-2. Draw a grid with the 2 groups as the axes, yielding $2^n$ cells.
-3. Number cells based on truth table
-4. Group 1s in powers of two (can be in multiple dimensions, and also wraps around the map).
-5. Left over 1s are corner cases and should be grouped with any adjacent 1s if possible.
+A K-map redraws a truth table as a grid where adjacent cells differ in exactly one variable. That layout makes adjacencies visible for functions of up to about 4 variables.
 
+1. Split the inputs into two evenly sized groups.
+2. Draw a grid with the two groups as the axes, yielding $2^n$ cells for $n$ inputs.
+3. Fill in each cell from the truth table.
+4. Group the 1s into rectangles whose sizes are powers of two. Groups can span both axes and can wrap around the edges of the map.
+5. Group any leftover 1s with adjacent 1s where possible.
 
-## 7 Segment Display in Verilog
+A group of size $2^k$ covers cells that agree on all but $k$ of the variables, so its product term drops those $k$ variables. Bigger groups mean simpler terms, which is why you want the largest power-of-two groupings you can find.
 
-### Procedural Blocks
+## Verilog procedural blocks
 
-- `assign`: continuous assignment. Statement should hold true for ALL time
-- `initial`: executes once at time zero. Only exists in test benches (since t = 0 isn't real)
-- `always`: loop to execute over and over again.
-  - Block gets triggered by *sensitivity list* (list of signals that trigger the block)
-  - Any object that is assigned a value in an `always` statement must be declared as a variable (`reg/logic`).
-  - EX:
-    - `always @ (a or b or c) <-> always @ (a, b, c)`
-    - `always @ (*)` implicitly contains all read signals within a block
-  - `always_comb`: like `always @ (*)`, but only triggered when any of the signals change.
+This came up in lab while building a 7-segment display driver.
+
+- `assign` is continuous assignment. The statement holds for all time.
+- `initial` executes once at time zero. It only belongs in test benches, since time zero is a simulation concept with no hardware meaning.
+- `always` re-executes whenever a signal in its *sensitivity list* changes. Any object assigned inside an `always` block must be declared as a variable (`reg` or `logic`). Writing `always @ (a or b or c)` is the same as `always @ (a, b, c)`, and `always @ (*)` implicitly includes every signal the block reads.
+- `always_comb` is the SystemVerilog form of `always @ (*)`. It infers the sensitivity list from the signals read in the block and tells the tools you intend combinational logic.
 
 ## Related
 
 - [[hardware-design/369/combinational-logic|Combinational Logic]]
+- [[hardware-design/369/system-verilog|SystemVerilog]]

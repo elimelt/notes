@@ -1,26 +1,32 @@
 ---
 title: S’more Blondies
 category: Recipes
-tags: baking, blondies, s'mores
+tags:
+  - baking
+  - blondies
+  - s'mores
+  - dessert
 date: 2025-05-17
-description: An recipe
+updated: 2026-07-31
+status: evergreen
+description: Browned-butter blondies with graham cracker, chocolate, and marshmallow.
+sources:
+  - original recipe note
 ---
 
-## S’more Blondies
+## Purpose
+
+Record a gram-first recipe for dense blondies with enough graham, chocolate, and marshmallow flavor to read clearly as a s'more riff.
 
 **Yields:** 16 bars (9×13″ pan)  
 **Bake time:** 25–30 minutes  
 **Rest time:** 2 hours (for clean slices)
 
----
-
 ### Equipment
 - 9×13″ metal baking pan  
 - Digital scale (grams)  
 - Oven thermometer  
-- Kitchen torch  
-
----
+- Kitchen torch
 
 ### Ingredients
 
@@ -44,9 +50,7 @@ description: An recipe
 - 100 g graham crackers, toasted & crushed  
 - 120 g bittersweet chocolate chunks (10–12 mm)  
 - 100 g marshmallow crème  
-- 10 g coarse sanding sugar  
-
----
+- 10 g coarse sanding sugar
 
 ### Method
 
@@ -88,8 +92,6 @@ description: An recipe
 10. **Cool & Slice**  
     - Cool on a wire rack for 1 hour, then chill in pan for 1 hour.  
     - Lift out with parchment and cut into 16 bars.
-
----
 
 ### Storage
 

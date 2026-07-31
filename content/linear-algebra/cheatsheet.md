@@ -1,12 +1,22 @@
 ---
 title: Matrix Theory
 category: Linear Algebra
-tags: linear algebra, vector spaces, operators, dual spaces, tensor products
+tags:
+  - linear algebra
+  - vector spaces
+  - matrices
+  - eigenvalues
+  - tensor products
 date: 2024-12-08
-description: Covers fundamental concepts in linear algebra and matrix theory, including vector spaces, basic operations, systems of linear equations, matrices, eigenvalues and eigenvectors, and advanced topics such as singular value decomposition, Jordan canonical form, and tensor products. It also explores properties of matrices, linear transformations, and inner product spaces, with a focus on geometric interpretations and algebraic definitions. The document concludes with various important theorems and applications in linear algebra, including matrix factorization, eigenvalue theory, and differential equations.
+updated: 2026-07-31
+status: evergreen
+description: A broad linear algebra reference covering vectors, linear systems, matrices, vector spaces, and core matrix decompositions.
+sources:
+  - https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+  - https://textbooks.math.gatech.edu/ila/
 ---
 
-# Fundamentals of Vectors
+## Purpose
 
 For a shorter introduction to the computational basics, start with [[linear-algebra/elementry-linear-algebra|Elementary Linear Algebra]]; the corresponding NumPy operations are collected in the [[linear-algebra/python-cheatsheet|Python Linear Algebra Cheatsheet]].
 
@@ -72,7 +82,7 @@ For a shorter introduction to the computational basics, start with [[linear-alge
   - $(c_1 + c_2)\vec{a} = c_1\vec{a} + c_2\vec{a}$
   - $\|c\vec{v}\| = |c|\|\vec{v}\|$
 
-# Systems of Linear Equations
+## Systems of Linear Equations
 
 ## Matrix Form (Ax = b)
 
@@ -144,7 +154,7 @@ $$
 | Scalar Multiplication | Multiply row $i$ by $c$            | $cR_i$                    |
 | Row Addition          | Add multiple of row $i$ to row $j$ | $R_j + cR_i$              |
 
-# Matrices
+## Matrices
 
 ## Types and Properties
 
@@ -209,7 +219,7 @@ Properties:
 - Leftmost nonzero entry in row
 - Each leading entry is right of leading entries above it
 
-# Vector Spaces
+## Vector Spaces
 
 ## Axioms of Vector Spaces
 
@@ -298,7 +308,7 @@ A subset $W$ of vector space $V$ is a subspace if:
 | Column Space | $C(A) = \{\mathbf{y}: \mathbf{y}=A\mathbf{x}\}$ | $\text{rank}(A)$     |
 | Row Space    | $R(A) = C(A^T)$                                 | $\text{rank}(A)$     |
 
-# Advanced Vector Operations (cont. 1)
+## Advanced Vector Operations (cont. 1)
 
 ## Dot Product
 
@@ -368,7 +378,7 @@ $$c_1\vec{v_1} + c_2\vec{v_2} + ... + c_n\vec{v_n}$$
 - For three vectors: Points in space formed by vectors
 - Span: Set of all possible linear combinations
 
-# Matrix Properties (cont. 1)
+## Matrix Properties (cont. 1)
 
 ## Rank
 
@@ -441,7 +451,7 @@ For system Ax = b with det(A) ≠ 0:
 $$x_i = \frac{det(A_i)}{det(A)}$$
 where Aᵢ is A with column i replaced by b
 
-# Matrix Operations (cont. 1)
+## Matrix Operations (cont. 1)
 
 ## Matrix Multiplication
 
@@ -525,7 +535,7 @@ For matrix $A$:
   - $(A + B)^H = A^H + B^H$
   - For real matrices, $A^H = A^T$
 
-# Systems of Linear Equations (cont. 1)
+## Systems of Linear Equations (cont. 1)
 
 ## Homogeneous Systems ($A\mathbf{x} = \mathbf{0}$)
 
@@ -576,7 +586,7 @@ Requirements:
 - $\text{det}(A) \neq 0$
 - Computationally expensive for large systems
 
-# Linear Transformations
+## Linear Transformations
 
 ## Definition
 
@@ -634,7 +644,7 @@ where $e_i$ are standard basis vectors
 - Vertical shear by $k$:
   $$\begin{bmatrix} 1 & 0 \\ k & 1 \end{bmatrix}$$
 
-# Inner Product Spaces
+## Inner Product Spaces
 
 ## Definition
 
@@ -702,7 +712,7 @@ where $\{w_1,\ldots,w_k\}$ is basis for $W$
 For orthonormal basis:
 $$\text{proj}_W(x) = \sum_{i=1}^k \langle x,w_i \rangle w_i$$
 
-# Special Matrices (cont. 1)
+## Special Matrices (cont. 1)
 
 | Type           | Definition             | Properties                                                                                                            | Example                                                                              |
 | -------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
@@ -736,7 +746,7 @@ $$\text{proj}_W(x) = \sum_{i=1}^k \langle x,w_i \rangle w_i$$
    - The minimal $k$ for which $A^k = 0$ is called the index of nilpotency
    - Characteristic polynomial is $\lambda^n$
 
-# Change of Basis
+## Change of Basis
 
 ## Transition Matrices
 
@@ -809,7 +819,7 @@ where:
 | Transition Matrix | P is orthogonal ($P^T = P^{-1}$)                                                                |
 | Coordinates       | $[v]_B = [\langle v,e_1 \rangle \; \langle v,e_2 \rangle \; \cdots \; \langle v,e_n \rangle]^T$ |
 
-# Eigenvalues and Eigenvectors
+## Eigenvalues and Eigenvectors
 
 ## Definitions
 
@@ -923,7 +933,7 @@ For system $\frac{d\vec{x}}{dt} = A\vec{x}$:
 
 ---
 
-# Important Theorems
+## Important Theorems
 
 ## Fundamental Theorem of Linear Algebra
 
@@ -1004,7 +1014,7 @@ where:
 - $L^T$ is upper triangular
 - Elements are real
 
-# Advanced Topics
+## Advanced Topics
 
 ## Singular Value Decomposition (SVD)
 

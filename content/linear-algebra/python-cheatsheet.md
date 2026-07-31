@@ -1,12 +1,22 @@
 ---
 title: Python Linear Algebra Cheatsheet
 category: Linear Algebra
-tags: linear algebra, matrix theory, vector spaces
+tags:
+  - linear algebra
+  - numpy
+  - matplotlib
+  - matrices
+  - vectors
 date: 2024-12-08
-description: Covers fundamental concepts and operations in linear algebra using NumPy, including vector and matrix creation, operations, properties, transformations, and systems of equations. It also touches on topics such as orthogonality, basis, and change of basis. The goal is to provide a comprehensive overview of the mathematical foundations of vectors and matrices in the context of visualization.
+updated: 2026-07-31
+status: evergreen
+description: NumPy and Matplotlib snippets for basic vector and matrix operations.
+sources:
+  - https://numpy.org/doc/stable/user/absolute_beginners.html
+  - https://matplotlib.org/stable/users/explain/quick_start.html
 ---
 
-# Fundamentals of Vectors
+## Purpose
 
 For the mathematical definitions behind these NumPy operations, see [[linear-algebra/elementry-linear-algebra|Elementary Linear Algebra]] and the more comprehensive [[linear-algebra/cheatsheet|Matrix Theory reference]].
 
@@ -19,67 +29,68 @@ import numpy as np
 ### Creating Vectors
 
 ```python
-# Row vector
+  # Row vector
 v_row = np.array([1, 2, 3])
 
-# Column vector
+  # Column vector
 v_col = np.array([[1], [2], [3]])
-assert v_col = np.transpose(v_row)
+v_col_from_row = np.array([v_row]).T
+assert np.array_equal(v_col, v_col_from_row)
 ```
 
 ### Vector Operations
 
 ```python
-# Addition
+  # Addition
 v1, v2 = np.array([1, 2, 3]), np.array([4, 5, 6])
 v_sum = v1 + v2
 
-# Subtraction
+  # Subtraction
 v_diff = v1 - v2
 
-# Scalar multiplication
+  # Scalar multiplication
 c = 2
 v_scaled = c * v1
 
-# Dot product
+  # Dot product
 dot_product = np.dot(v1, v2)
 
-# Cross product
+  # Cross product
 cross_product = np.cross(v1, v2)
 ```
 
 ### Vector Norms
 
 ```python
-# L1 norm
+  # L1 norm
 l1_norm = np.linalg.norm(v, ord=1)
 
-# L2 norm
+  # L2 norm
 l2_norm = np.linalg.norm(v, ord=2)
 
-# Infinity norm
+  # Infinity norm
 inf_norm = np.linalg.norm(v, ord=np.inf)
 ```
 
 ### Useful Functions
 
 ```python
-# Normalize vector
+  # Normalize vector
 normalize = lambda v: v / np.linalg.norm(v)
 
-# Angle between vectors (radians)
+  # Angle between vectors (radians)
 angle_rad = lambda v1, v2: np.arccos(np.clip(np.dot(normalize(v1), normalize(v2)), -1.0, 1.0))
 
-# Angle between vectors (degrees)
+  # Angle between vectors (degrees)
 angle_deg = lambda v1, v2: np.degrees(angle_rad(v1, v2))
 
-# Projection of v1 onto v2
+  # Projection of v1 onto v2
 projection = lambda v1, v2: np.dot(v1, normalize(v2)) * normalize(v2)
 
-# Rejection of v1 from v2
+  # Rejection of v1 from v2
 rejection = lambda v1, v2: v1 - projection(v1, v2)
 
-# Distance between vectors
+  # Distance between vectors
 distance = lambda v1, v2: np.linalg.norm(v1 - v2)
 ```
 
@@ -183,7 +194,7 @@ def plot_3d(*vectors):
     return fig, ax
 ```
 
-# Matrices
+## Matrices
 
 ## Working with Matrices in NumPy
 
@@ -194,61 +205,61 @@ import numpy as np
 ### Creating Matrices
 
 ```python
-# 2D array
+  # 2D array
 A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 
-# Identity matrix
+  # Identity matrix
 I = np.eye(3)
 
-# Zero matrix
+  # Zero matrix
 Z = np.zeros((3, 3))
 
-# Ones matrix
+  # Ones matrix
 O = np.ones((3, 3))
 
-# Random matrix
+  # Random matrix
 R = np.random.rand(3, 3)
 ```
 
 ### Matrix Operations
 
 ```python
-# Addition
+  # Addition
 A1, A2 = np.array([[1, 2], [3, 4]]), np.array([[5, 6], [7, 8]])
 A_sum = A1 + A2
 
-# Subtraction
+  # Subtraction
 A_diff = A1 - A2
 
-# Scalar multiplication
+  # Scalar multiplication
 c = 2
 A_scaled = c * A1
 
-# Matrix multiplication
+  # Matrix multiplication
 A_prod = np.dot(A1, A2)
 
-# Transpose
+  # Transpose
 A_transpose = np.transpose(A)
 
-# Inverse
+  # Inverse
 A_inv = np.linalg.inv(A)
 
-# Determinant
+  # Determinant
 det_A = np.linalg.det(A)
 
-# Trace
+  # Trace
 trace_A = np.trace(A)
 
-# Rank
+  # Rank
 rank_A = np.linalg.matrix_rank(A)
 
-# Eigenvalues and eigenvectors
+  # Eigenvalues and eigenvectors
 eigenvalues, eigenvectors = np.linalg.eig(A)
 
-# Singular value decomposition
+  # Singular value decomposition
 U, S, V = np.linalg.svd(A)
 
-# Matrix norms
+  # Matrix norms
 l1_norm = np.linalg.norm(A, ord=1)
 
 l2_norm = np.linalg.norm(A, ord=2)
@@ -257,11 +268,11 @@ inf_norm = np.linalg.norm(A, ord=np.inf)
 
 fro_norm = np.linalg.norm(A, ord='fro')
 
-# Matrix power
+  # Matrix power
 A_squared = np.linalg.matrix_power(A, 2)
 ```
 
-# Systems of Linear Equations
+## Systems of Linear Equations
 
 ## Solving Linear Systems
 
@@ -273,34 +284,34 @@ b = np.array([3, 2])
 
 x = np.linalg.inv(A).dot(b)
 
-# or, much faster
+  # or, much faster
 
 x = np.linalg.solve(A, b)
 
 print(x)
 ```
 
-# Vector Spaces
+## Vector Spaces
 
 ## Linear Independence, Span, Basis
 
 ```python
 
-# check if set of vectors is linearly independent
+  # check if set of vectors is linearly independent
 is_linearly_independent = lambda *vectors: np.linalg.matrix_rank(np.array(vectors)) == len(vectors[0])
 
-# check if vector is in span of other vectors
+  # check if vector is in span of other vectors
 is_in_span = lambda v, *S: np.linalg.matrix_rank(np.array([*S, v])) == np.linalg.matrix_rank(S)
 
-# find basis of a set of vectors
+  # find basis of a set of vectors
 basis = lambda *vectors: np.array(vectors).T[:, np.linalg.matrix_rank(np.array(vectors)):]
 ```
-# Matrix Properties (cont. 1)
+## Matrix Properties (cont. 1)
 
 ## Dimension, Rank, Nullity, Row Space
 
 ```python
-# dimension of a vector space
+  # dimension of a vector space
 dim = lambda *vectors: np.linalg.matrix_rank(np.array(vectors))
 rank = lambda A: np.linalg.matrix_rank(A)
 nullity = lambda A: A.shape[1] - rank(A)
@@ -309,34 +320,34 @@ nullity = lambda A: A.shape[1] - rank(A)
 ## Special Transformations
 
 ```python
-# reflection matrix
+  # reflection matrix
 reflect = lambda n: np.eye(len(n)) - 2 * np.outer(n, n) / np.dot(n, n)
 
-# projection matrix
+  # projection matrix
 project = lambda n: np.outer(n, n) / np.dot(n, n)
 
-# rotation matrix
+  # rotation matrix
 rotate = lambda theta: np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
 
-# scaling matrix
+  # scaling matrix
 scale = lambda s: np.diag(s)
 
-# shearing matrix
+  # shearing matrix
 shear = lambda s: np.array([[1, s], [0, 1]])
 
-# translation matrix
+  # translation matrix
 translate = lambda t: np.array([[1, 0, t[0]], [0, 1, t[1]], [0, 0, 1]])
 
-# homogenous coordinates
+  # homogenous coordinates
 homogenize = lambda v: np.append(v, 1)
 
-# dehomogenize
+  # dehomogenize
 dehomogenize = lambda v: v[:-1] / v[-1]
 
-# affine transformation
+  # affine transformation
 affine = lambda A, t: np.block([[A, t], [0, 0, 1]])
 
-# perspective transformation
+  # perspective transformation
 perspective = lambda d: np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1/d]])
 ```
 
@@ -344,25 +355,25 @@ perspective = lambda d: np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1/d]])
 ## Orthogonality
 
 ```python
-# check if two vectors are orthogonal
+  # check if two vectors are orthogonal
 is_orthogonal = lambda u, v: np.dot(u, v) == 0
 
-# check if set of vectors is orthogonal
+  # check if set of vectors is orthogonal
 is_orthogonal_set = lambda *vectors: all(np.dot(v1, v2) == 0 for v1, v2 in itertools.combinations(vectors, 2))
 
-# check if set of vectors is orthonormal
+  # check if set of vectors is orthonormal
 is_orthonormal_set = lambda *vectors: is_orthogonal_set(*vectors) and all(np.linalg.norm(v) == 1 for v in vectors)
 
-# check if matrix is orthogonal
+  # check if matrix is orthogonal
 is_orthogonal_matrix = lambda A: np.allclose(np.dot(A, A.T), np.eye(A.shape[0]))
 
-# check if matrix is orthonormal
+  # check if matrix is orthonormal
 is_orthonormal_matrix = lambda A: is_orthogonal_matrix(A) and np.allclose(np.linalg.det(A), 1)
 ```
 
-# Change of Basis
+## Change of Basis
 
 ```python
-# change of basis matrix
+  # change of basis matrix
 change_of_basis = lambda B, C: np.linalg.inv(C) @ B
 ```

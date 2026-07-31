@@ -1,12 +1,26 @@
 ---
 title: Lab 3 Questions
 category: Operating Systems
-tags: malloc, free, sbrk, heap, memory allocation, process management, shell, pipe operator
+tags:
+  - malloc
+  - free
+  - sbrk
+  - heap
+  - xv6
+  - paging
+  - shell
 date: 2024-02-25
-description: Covers the implementation of memory allocation and process management concepts in an operating system. Discusses topics such as malloc, free, sbrk, heap, and the use of the shell and pipe operator. Includes 10 specific questions related to these technical areas.
+updated: 2026-07-31
+status: needs-review
+description: Partial answers and debugging notes for an operating systems lab on allocation, shell pipelines, and page faults.
+sources:
+  - https://pdos.csail.mit.edu/6.1810/2023/xv6/book-riscv-rev3.pdf
+  - https://www.kea.nu/files/textbooks/ospp/osppv3.pdf
 ---
 
-# Lab 3 Questions
+## Purpose
+
+This is still a working note. Questions 7 through 10 are incomplete, and the final section is a raw debugging log that may still be useful when revisiting the lab.
 
 ## Question #1
 
@@ -18,11 +32,11 @@ description: Covers the implementation of memory allocation and process manageme
 
 *Q:* What is the relationship between `malloc`/`free` and `sbrk`?
 
-*A:* When malloc lacks the space nessesary to fulfill an allocation request, it calls sbrk to expand its heap region and increase the memory available to the process. With the current implementation of `malloc` in `umalloc.c`, `sbrk` only ever expands the heap (through `morecore`), but we never shrink the heap. In a real system, we would probably also want to shrink the heap once we have enough free space that it would be unlikely to be used in the near future.
+*A:* When `malloc` lacks the space necessary to fulfill an allocation request, it calls `sbrk` to expand its heap region and increase the memory available to the process. With the current implementation of `malloc` in `umalloc.c`, `sbrk` only expands the heap through `morecore`, and never shrinks it. In a real system, we would also want a way to return unused pages once the process has enough free space that it is unlikely to reuse soon.
 
 ## Question #3:
 
-*Q:* How many child processes are created by the shell program in order to run the command `ls | wc`? (This mirrors real OS'es).
+*Q:* How many child processes are created by the shell program in order to run the command `ls | wc`? (This mirrors real OSes.)
 
 > Hint: the shell will go into the `case PIPE` case in `user/sh.c:runcmd` when it receives a cmd with the pipe operator `|`.
 
@@ -78,7 +92,7 @@ The faulting address needs to be within `stack->va_base >= addr >= stack->va_bas
 
 
 
-# Debugging
+## Debugging
 
 - fork (user) triggers trap to call fork (kernel)
 - return to fork_ret, which returns to trap, which returns to trap_ret
@@ -93,4 +107,3 @@ The faulting address needs to be within `stack->va_base >= addr >= stack->va_bas
 - traps with page fault addr == 0xffffffff80000000
 - struct vpage_info* vpi = va2vpage_info(vr, addr) in trap causes another page fault trap, this time with addr == 24
 - infinite loop on above line with addr == 24
-

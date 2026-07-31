@@ -7,136 +7,151 @@ tags:
   - recommender systems
   - collaborative filtering
   - matrix factorization
-  - matrix completion
   - personalization
-  - cold-start problem
+  - ranking
 date: 2025-04-27
-updated: 2026-07-30
-status: draft
-description: Overview of recommender system approaches, from popularity and co-occurrence baselines through matrix factorization and featurized models that handle cold start.
+updated: 2026-07-31
+status: evergreen
+description: A first-principles map of recommender systems, from simple baselines through latent-factor models and the multi-stage production pipelines used at scale.
 sources:
-  - title: Koren, Bell & Volinsky (2009), Matrix Factorization Techniques for Recommender Systems
+  - title: Koren, Bell, and Volinsky (2009), Matrix Factorization Techniques for Recommender Systems
     url: https://doi.org/10.1109/MC.2009.263
+    type: paper
+  - title: Hu, Koren, and Volinsky (2008), Collaborative Filtering for Implicit Feedback Datasets
+    url: https://yifanhu.net/PUB/cf.pdf
+    type: paper
+  - title: Rendle et al. (2009), BPR
+    url: https://arxiv.org/pdf/1205.2618
     type: paper
 ---
 
 ## Purpose
 
-Maps the main approaches to recommendation and the tradeoffs between them, with matrix factorization as the centerpiece. For a production ranking case study, see [[ml/recommender-systems/predicting-clicks-on-ads-at-facebook|Predicting Clicks on Ads at Facebook]]; the data scale involved motivates [[ml/recommender-systems/intro-mapreduce-spark|distributed data-mining techniques]].
+This note is the top-level map. It is not trying to catalog every model family. It is trying to pin down the parts that keep recurring when recommendation systems are rebuilt in practice: sparse supervision, latent structure, pipeline decomposition, and the mismatch between offline logs and online behavior.
 
-## The problem
+## The Core Problem
 
-Personalization uses what we know about a user (preferences, activity) to recommend items they might like. The core difficulty is sparsity. Most users interact with a tiny fraction of the catalog, so the user-item interaction matrix is mostly empty. Collaborative filtering bets that users enjoy items liked by similar users, which lets data about many users compensate for the missing data about any one of them.
+A recommender has a user, a catalog, and a decision rule for exposure. The simplest version asks:
 
-Feedback comes in two forms. Explicit feedback means ratings, purchase history, and rankings. Implicit feedback means browsing history, clicks, and time spent, and it needs preprocessing before it looks like a preference signal.
+> given user $u$, which items $i$ should appear near the top of the list?
 
-Beyond sparsity, the recurring challenges are:
+That question hides most of the difficulty.
 
-- Cold start: hard to recommend for new users or items with no history.
-- Changing interests: user preferences and item popularity shift over time.
-- Scalability: the algorithms have to handle millions of users and items.
+- Users touch only a tiny fraction of the catalog.
+- Missing interactions are ambiguous.
+- Preferences drift.
+- Exposure itself changes the future data.
 
-## Baseline approaches
+So the training table is sparse, policy-shaped, and nonstationary from the start.
 
-**Popularity-based** recommendation serves everyone the most popular items. It ignores the user entirely, so there is no personalization, and it handles new users fine.
+## Signals: Explicit Versus Implicit
 
-**Classifier-based** recommendation treats the task as classification. The input $x$ is a vector of user and item features, and the output is $y = +1$ (like) or $-1$ (dislike). This personalizes and can fold in arbitrary extra features, but it leans on feature engineering, which is hard to get right. On the Netflix Prize data, latent factor methods learned directly from interactions outperformed the classic alternatives ([Koren et al. 2009](https://doi.org/10.1109/MC.2009.263)).
+Two kinds of feedback show up over and over.
 
-**Co-occurrence-based** recommendation uses a normalized co-occurrence matrix $C$:
+### Explicit Feedback
 
-$$
-C_{ij} = \frac{\text{users who bought both } i \text{ and } j}{\text{users who bought } i \text{ or } j}
-$$
+Ratings, thumbs-up events, stated preferences. These are direct and usually scarce.
 
-For a user who bought items $A$ and $B$, the score for item $X$ averages the co-occurrence with each purchase:
+### Implicit Feedback
 
-$$
-\text{Score}(X) = \frac{C_{XA} + C_{XB}}{2}
-$$
+Clicks, purchases, watches, dwell time, skips. These are abundant and weak. The absence of an interaction does not mean dislike. It often only means "not exposed" or "not now."
 
-## Matrix factorization and completion
+That is why [[ml/recommender-systems/ranking-objectives|ranking objectives and implicit feedback]] matters so much. Before choosing a model family, decide what the labels mean.
 
-Represent user $u$ and item $v$ with $k$-dimensional feature vectors $L_u$ and $R_v$, and predict the rating as their inner product:
+## Baselines Still Matter
 
-$$
-\text{Rating}(u, v) = L_u^T R_v
-$$
+The simplest recommenders often stay in production longer than expected because they are robust and cheap.
 
-The full ratings matrix $M$ is approximated by $M \approx L R^T$. Since $L$ has $mk$ entries and $R$ has $nk$ (for $m$ items, $n$ users, $k$ topics), the model has
+- **Popularity**: recommend the most popular items.
+- **Recent popularity**: same idea, but with a freshness window.
+- **Item-item co-occurrence**: recommend things often consumed with what the user already consumed.
 
-$$
-\text{Degrees of freedom} = k(m + n)
-$$
+These baselines are blunt, though they answer useful questions. If a new model cannot beat recent popularity in online testing, the modeling story is usually wrong or the evaluation setup is.
 
-parameters, far fewer than the $mn$ entries of $M$ when $k$ is small. That gap is what makes it possible to fill in a mostly empty matrix.
+## Latent Factor Models
 
-Fitting the model is a **matrix completion** problem. Given the observed ratings, find $L$ and $R$ minimizing the squared error on the entries we can see:
+Matrix factorization became the canonical collaborative-filtering model because it turns an enormous sparse table into a lower-dimensional geometric problem.
+
+Represent user $u$ and item $i$ with vectors $x_u, y_i \in \mathbb{R}^k$ and score them with
 
 $$
-\min_{L, R} \sum_{(u,v): r_{uv} \text{ observed}} (L_u^T R_v - r_{uv})^2
+\hat{r}_{ui} = x_u^\top y_i
 $$
 
-**Coordinate descent** works well here. Alternately fix $R$ and optimize $L$, then fix $L$ and optimize $R$. With one side fixed, the objective separates, so each step reduces to many independent linear regression problems.
+That works because user-item interactions often have lower-dimensional structure. Instead of learning an arbitrary score for every pair, the model learns a compact representation of user tastes and item attributes.
 
-To prevent overfitting, add $\ell_2$ regularization:
-
-$$
-\min_{L, R} \sum_{(u,v): r_{uv} \text{ observed}} (L_u^T R_v - r_{uv})^2 + \lambda (\|L_u\|^2 + \|R_v\|^2)
-$$
-
-## Extensions and cold start
-
-Matrix factorization has nothing to say about a user or item with no observed ratings. Feature-based models fill that hole.
-
-A **feature-based linear model** represents items by a feature vector $\phi(v)$ and learns global weights $w$:
+For explicit-feedback settings, the standard objective is regularized squared error on observed entries. For implicit-feedback settings, confidence weighting becomes the more natural move:
 
 $$
-r_{uv} \approx w \cdot \phi(v)
+\min_{x_*, y_*} \sum_{u,i} c_{ui}(p_{ui} - x_u^\top y_i)^2 + \lambda \left(\sum_u \lVert x_u \rVert^2 + \sum_i \lVert y_i \rVert^2 \right)
 $$
 
-$$
-\min_w \sum_{(u,v): r_{uv} \text{ observed}} (w \cdot \phi(v) - r_{uv})^2 + \lambda \|w\|^2
-$$
+That is the Hu, Koren, and Volinsky formulation. It does not treat all zeros as equally meaningful.
 
-Personalization comes back through **user-specific deviations** $w_u$:
+## Ranking, Not Just Prediction
 
-$$
-r_{uv} \approx (w + w_u) \cdot \phi(v)
-$$
+A lot of recommender work is not truly about estimating ratings. It is about ordering.
 
-A new user starts at $w_u = 0$ and just gets the global weights. As their history accumulates, $w_u$ adapts.
+That is why pairwise and listwise objectives matter. BPR, RankNet, LambdaRank, and LambdaMART all attack the ranking problem more directly than plain regression. If the product only shows a top-$k$ list, learning the relative order can matter more than absolute calibration.
 
-**Featurized matrix factorization** combines both models:
+There is still no universal rule here. Ads systems often need calibrated click probabilities. Media feeds often care more about top-of-list order. Good teams pick the loss based on the downstream consumer of the score.
 
-$$
-r_{uv} \approx L_u \cdot R_v + (w + w_u) \cdot \phi(u, v)
-$$
+## The Multi-Stage Pipeline
 
-This gets collaborative filtering where interaction data exists and graceful fallback to features where it doesn't, and it can be optimized with coordinate descent or gradient descent.
+Once the catalog is large, recommenders almost always become staged systems:
 
-## Applications
+1. retrieve a candidate set
+2. rank the candidates with a richer model
+3. apply filters or business constraints
 
-Matrix completion can infer missing entries in distance matrices for localization, exploiting the low-rank structure that spatial constraints impose. Matrix factorization applied to document-word matrices uncovers latent topics, similar to topic modeling.
+This is not optional elegance. It is the computational shape forced by large catalogs and tight latency budgets.
 
-## Comparison
+[[ml/recommender-systems/retrieval-and-ranking|Retrieval and Ranking]] explains the split. [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval]] covers the standard retrieval architecture. [[ml/recommender-systems/wide-and-deep|Wide and Deep]] is a ranking-side example of how sparse and dense features get combined once the candidate set is small enough.
 
-A coarse comparison of the approaches above. The ratings follow from the model definitions rather than from any single benchmark.
+## Beyond Bags of Interactions
 
-| Approach                | Personalization | Handles Cold-Start | Uses Features | Handles Sparsity | Scalability |
-|-------------------------|----------------|--------------------|---------------|------------------|-------------|
-| Popularity              | No             | Yes                | No            | Yes              | High        |
-| Classifier              | Yes            | Yes                | Yes           | Limited          | Moderate    |
-| Co-Occurrence           | Limited        | No                 | No            | Yes              | High        |
-| Matrix Factorization    | Yes            | No                 | No            | Yes              | High        |
-| Feature-Based Linear    | Yes            | Yes                | Yes           | Yes              | High        |
-| Featurized Matrix Fact. | Yes            | Yes                | Yes           | Yes              | Moderate    |
+Basic matrix factorization throws away order and graph structure. Modern recommenders usually try to recover one or both.
+
+- **Sequential models** capture short-horizon intent and recency.
+- **Graph models** propagate signal across the user-item interaction graph and related structures.
+
+Those ideas live in [[ml/recommender-systems/sequential-recommendation|Sequential and Graph Recommenders]].
+
+## Evaluation Is Harder Than It Looks
+
+Offline accuracy is useful and routinely misleading.
+
+The training and evaluation logs come from an older policy that already filtered what users saw. That creates exposure bias and feedback loops. A model can look excellent offline by copying the current policy's blind spots. Then it disappoints online.
+
+That is why mature recommender teams invest in:
+
+- randomized logging
+- exploration
+- counterfactual evaluation
+- A/B tests on actual business metrics
+
+[[ml/recommender-systems/bias-and-marketplace-effects|Bias, Marketplace Effects, and Counterfactual Evaluation]] covers this in more detail.
+
+## A Good Mental Model
+
+A production recommender is usually some combination of:
+
+- a retrieval system for recall
+- a ranker for precision
+- a logging policy that decides what can be learned next
+- a marketplace allocator, whether the team admits it or not
+
+The last line matters. Once recommendation controls exposure, it is not merely prediction anymore.
+
+## Related Notes
+
+- [[ml/recommender-systems/ranking-objectives|Ranking Objectives and Implicit Feedback]]
+- [[ml/recommender-systems/retrieval-and-ranking|Retrieval and Ranking]]
+- [[ml/recommender-systems/sequential-recommendation|Sequential and Graph Recommenders]]
+- [[ml/recommender-systems/bias-and-marketplace-effects|Bias, Marketplace Effects, and Counterfactual Evaluation]]
 
 ## Sources
 
-- [Koren, Bell & Volinsky (2009), Matrix Factorization Techniques for Recommender Systems](https://doi.org/10.1109/MC.2009.263)
-
-## Related notes
-
-- [[ml/recommender-systems/retrieval-and-ranking|retrieval and ranking]]
-- [[ml/recommender-systems/predicting-clicks-on-ads-at-facebook|Predicting Clicks on Ads at Facebook]]
-- [[ml/recommender-systems/intro-mapreduce-spark|distributed data-mining techniques]]
+- [Koren, Bell, and Volinsky (2009), Matrix Factorization Techniques for Recommender Systems](https://doi.org/10.1109/MC.2009.263)
+- [Hu, Koren, and Volinsky (2008), Collaborative Filtering for Implicit Feedback Datasets](https://yifanhu.net/PUB/cf.pdf)
+- [Rendle et al. (2009), BPR: Bayesian Personalized Ranking from Implicit Feedback](https://arxiv.org/pdf/1205.2618)

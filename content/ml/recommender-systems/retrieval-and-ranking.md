@@ -6,48 +6,147 @@ tags:
   - retrieval
   - ranking
   - candidate generation
-  - ads
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
-description: Why large recommender systems split into candidate generation and ranking, and what each stage is trying to optimize.
+description: Why large recommendation systems split into candidate generation and ranking, what each stage optimizes, and which design mistakes usually show up at the boundary between them.
+sources:
+  - title: Covington, Adams, and Sargin (2016), Deep Neural Networks for YouTube Recommendations
+    url: https://research.google.com/pubs/archive/45530.pdf
+    type: paper
+  - title: Cheng et al. (2016), Wide & Deep Learning for Recommender Systems
+    url: https://arxiv.org/pdf/1606.07792
+    type: paper
 ---
 
 ## Purpose
 
-This note gives the backbone shape of a modern recommender system. It is the piece that the more specific notes hang from.
+This note describes the backbone of a modern recommender. Once the catalog is large enough, the system stops looking like one model and starts looking like a cascade.
 
-## Why the pipeline splits
+## Why the Pipeline Splits
 
-A production recommender rarely scores every item with its richest model. The catalog is too large and the latency budget is too small. Instead the system uses a cheap stage to pull back a small candidate set, then a more expensive stage to sort those candidates well.
+Suppose the catalog has $N$ items and your best ranker costs $c_r$ to score one item. Full scoring costs
 
-You can think of the split as a resource allocation problem. If the catalog has $N$ items and the ranking model costs $c_r$ per item, full scoring costs $N c_r$. If retrieval keeps only $k \ll N$ items, the expensive stage costs $k c_r$ instead. That trade is what makes richer ranking models feasible.
+$$
+N c_r
+$$
 
-## Retrieval
+per request. If a cheap first stage cuts the catalog to $k \ll N$ candidates, the expensive stage now costs
 
-Retrieval is a recall-heavy stage. The goal is not to order items perfectly. The goal is to avoid throwing away good items before ranking sees them.
+$$
+k c_r
+$$
 
-Common retrieval sources:
+That is the basic economic reason the split exists.
 
-- collaborative signals such as similar users or similar items
-- content-based matches from item and user features
-- heuristic buckets such as recent items, popular items, or items from a followed creator
-- approximate nearest-neighbor search over learned embeddings
+The retrieval stage spends little compute per item and tries to preserve good options. The ranking stage spends much more compute per item and tries to order those options well.
 
-Each source has a failure mode. Popularity misses niche taste. Content similarity misses cross-category jumps. Pure collaborative filtering struggles with cold start. That is why real systems usually union candidates from several sources.
+## Retrieval Is a Recall Problem
 
-## Ranking
+Retrieval does not need a perfectly calibrated score. It needs to avoid prematurely discarding items the ranker would have liked.
 
-Ranking is a precision-heavy stage. Once the candidate set is small enough, the model can use richer features: user history, context, freshness, calibration, and business constraints. The target might be click-through rate, watch time, conversion, revenue, or a weighted objective that mixes several of them.
+Common candidate sources:
 
-The output is often a score $s(x)$ that orders candidates for the current request context $x$. The score does not need to estimate a perfectly calibrated probability to be useful. It needs to induce the right ordering under the chosen objective.
+- recent popularity
+- item-item or user-item collaborative signals
+- content similarity
+- follow graph or creator graph heuristics
+- two-tower embedding retrieval with ANN
+- rule-based pools such as new items or inventory-constrained buckets
 
-## Feedback loops
+Real systems usually union candidates from several sources because each source fails in a different way.
 
-Recommendation changes the data it later trains on. If a system never shows certain items, it never learns who wanted them. Logging, exploration, and counterfactual evaluation matter because the observed labels come from a policy that already filtered the world.
+- popularity misses niche intent
+- collaborative filtering struggles with cold start
+- content similarity misses cross-topic jumps
+- ANN retrieval inherits whatever blind spots the embedding space has
 
-## Related notes
+## Ranking Is a Precision Problem
 
-- [[ml/recommender-systems/recommender-systems|Recommender Systems]]
-- [[ml/recommender-systems/predicting-clicks-on-ads-at-facebook|Predicting Clicks on Ads at Facebook]]
-- [[ml/recommender-systems/intro-mapreduce-spark|MapReduce and Spark]]
+Ranking runs after the candidate set is small enough to justify richer features. It often consumes:
+
+- detailed user history
+- contextual features
+- item freshness
+- quality or trust signals
+- business constraints
+- calibrated historical statistics
+
+The objective may be click probability, conversion, watch time, revenue, or some weighted combination. The score only has to be good enough for the downstream decision rule. Sometimes that means calibrated probabilities. Sometimes it only means the top of the list is right.
+
+## Retrieval and Ranking Want Different Models
+
+The same architecture rarely wins both jobs.
+
+Retrieval likes models with:
+
+- decomposable scoring
+- precomputable item representations
+- cheap ANN serving
+
+Ranking likes models with:
+
+- rich cross features
+- calibration
+- constraint handling
+- interpretability for debugging and business logic
+
+That is why systems often pair a two-tower retriever with a feature-rich ranker.
+
+## Source Blending
+
+Retrieval almost always returns too many candidates from some sources and too few from others. Candidate blending is the guardrail.
+
+A practical retriever often reserves some budget for:
+
+- head items
+- fresh items
+- long-tail exploration
+- follow-graph items
+- advertiser or supplier obligations
+
+If you do not manage source blending explicitly, the candidate set will usually collapse toward the same narrow region of the catalog.
+
+## Calibration and Reranking
+
+Ranking still does not end the story. After the main score is computed, systems often add:
+
+- duplicate suppression
+- diversity heuristics
+- business rules
+- supplier exposure constraints
+- hard filters for policy or safety
+
+This is a sign that recommendation is not only prediction. It is also allocation under constraints.
+
+## Failure Modes at the Boundary
+
+The boundary between retrieval and ranking is where many silent failures show up.
+
+- Retrieval recall is low, so the ranker never even sees good items.
+- The retrieval embedding space collapses around popularity.
+- The ranker optimizes a metric that the retriever did not preserve.
+- The candidate mix is too homogeneous, so downstream ranking has no room to fix diversity.
+- Logged training data reflects old retrieval decisions, so both stages reinforce the same bias.
+
+When a recommender feels inexplicably stale, the problem is often here rather than inside the final ranker.
+
+## What to Measure
+
+Useful stage-specific metrics usually look different:
+
+- retrieval: candidate recall, source coverage, tail coverage, ANN latency
+- ranking: calibration, top-k engagement, watch time, conversion, business metrics
+
+If you measure only end-to-end CTR, you lose the ability to tell which stage got worse.
+
+## Related Notes
+
+- [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval]]
+- [[ml/recommender-systems/wide-and-deep|Wide and Deep]]
+- [[ml/recommender-systems/bias-and-marketplace-effects|Bias, Marketplace Effects, and Counterfactual Evaluation]]
+
+## Sources
+
+- [Covington, Adams, and Sargin (2016), Deep Neural Networks for YouTube Recommendations](https://research.google.com/pubs/archive/45530.pdf)
+- [Cheng et al. (2016), Wide & Deep Learning for Recommender Systems](https://arxiv.org/pdf/1606.07792)

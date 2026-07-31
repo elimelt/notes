@@ -11,9 +11,9 @@ tags:
   - Hadoop
   - Spark
 date: 2024-03-26
-updated: 2026-07-30
+updated: 2026-07-31
 status: evergreen
-description: How MapReduce and Spark RDDs process datasets too large for one machine, covering distributed file systems, the word count example, and the tradeoffs between Spark and Hadoop MapReduce.
+description: How MapReduce and Spark process datasets too large for one machine, and why recommender teams still lean on these patterns for feature generation, joins, and large-scale training data preparation.
 sources:
   - title: Dean & Ghemawat (2004), MapReduce - Simplified Data Processing on Large Clusters
     url: https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf
@@ -28,99 +28,98 @@ sources:
 
 ## Purpose
 
-Explains the infrastructure for mining very large datasets. Storage comes from a distributed file system, and computation comes from a programming model (MapReduce, then Spark) that moves work to where the data already lives. These primitives are the data-processing foundation under large [[ml/recommender-systems/recommender-systems|recommender systems]].
+Recommender papers often jump straight to the model and skip the machinery that made the training table exist in the first place. This note is about that machinery. Large recommenders depend on batch systems for log joins, feature aggregation, negative sampling, embedding preparation, and retraining at a scale that does not fit on one machine.
 
-## The setting
+## The Setting
 
-Data mining is the process of extracting actionable information from (usually) very large datasets. Descriptive methods find human-interpretable patterns in data, like clustering. Predictive methods use patterns to predict future data, like recommendation systems.
+Data mining is the process of extracting useful structure from large datasets. In recommender work that usually means:
 
-The data lives on networks of commodity hardware (cheap, off-the-shelf machines) in data centers, and at that scale machine failure is routine. If a server lasts about 1000 days on average, a cluster of 1000 machines loses about one per day, and a fleet of a million machines loses about a thousand per day. The system has to treat failure as normal operation.
+- aggregating user histories
+- computing co-occurrence tables
+- building candidate pools
+- generating supervised training examples
+- joining delayed labels back to impressions
 
-Replicating data across machines handles durability, but shipping large datasets over the network is slow and expensive. So the standard move is to run the computation on the machines that already hold the data. Hadoop and Spark are built around this idea, split into two layers:
+The data lives on fleets of commodity machines. At that scale failures are routine, so the system has to expect them.
 
-- **Storage Infrastructure**: a distributed file system, like HDFS (Hadoop Distributed File System)
-- **Computation Infrastructure**: a computation engine, like Spark
+Replicating data across machines handles durability. The other problem is bandwidth. Moving terabytes over the network is expensive, so the standard move is to place the computation near the data.
 
-A distributed file system gives you a global namespace. Typical usage patterns are huge files (100s of GBs to TBs), no updates in place (append-only logs), and large streaming reads, and HDFS is optimized for exactly these patterns ([HDFS Architecture](https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html)).
+That gives two layers:
 
-- **Chunk Servers**: files are split into large contiguous blocks (HDFS defaults to 128 MB). Each block is replicated across 2-3 servers, ideally in different racks, which gives both parallel reads and fault tolerance. Chunk servers often double as compute nodes, which is what makes "move computation to the data" possible.
-- **Master Node**: called the name node in HDFS. Stores metadata about where files are stored, and may itself be replicated.
-- **Client Libraries**: talk to the master node to locate data, then read and write it.
+- **Storage**: a distributed file system such as HDFS
+- **Computation**: an execution model such as MapReduce or Spark
+
+## Distributed File Systems
+
+HDFS is designed for:
+
+- very large files
+- append-heavy workloads
+- large streaming reads
+
+Files are split into large blocks, typically replicated across machines and racks. A master node tracks metadata. Clients ask the master where blocks live, then talk directly to the data nodes.
+
+This design matters for recommenders because offline jobs are full of giant scans over logs and fact tables. It is a bad fit for tiny random reads and a good fit for "read everything, aggregate, write a new table."
 
 ## MapReduce
 
-**MapReduce** ([Dean & Ghemawat 2004](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)) is a style of programming designed for:
+MapReduce is a programming pattern built around three logical steps:
 
-- Easy parallelization
-- Invisible management of hardware/software failures
-- Easy management of very large datasets
-- Very little required memory (since data is read from and written to disk)
+1. map records into key-value pairs
+2. group values by key
+3. reduce each key's values into an output
 
-Hadoop is the best-known open-source implementation, and Spark supports the same pattern.
+That sounds rigid because it is rigid. The benefit is that the runtime hides a lot of ugly distributed-systems detail:
 
-- **Map**: apply a user-written function to each element of a list, producing a new list. A **mapper** applies the map function to a single element, and many mappers are grouped into a **Map task**, the main unit of parallelism.
-- **Group by key**: sort and shuffle the output of the mappers so that all values for a given key end up together. The output is a list of key to list-of-values pairs.
-- **Reduce**: apply a user-written function to each key and its associated list of values, producing a new list.
+- scheduling
+- retries
+- locality
+- fault recovery
 
-The keys coming out of the map function should be spread semi-uniformly. Skew in the keys becomes skew in the workload of the reducers that own those keys.
+### Example: Co-Occurrence Counts
 
-### Example: Word Count
+A recommender job might want item-item co-watch counts. For each user session, emit all co-occurring item pairs in the map step, shuffle by pair, then reduce by summing counts.
 
-You have a huge text document and want to count the number of times each word appears (say, when analyzing a log file).
-
-**Map**: for each word in the document, output a key-value pair where the key is the word and the value is 1.
-
-```python
-def map(doc):
-    for word in doc.split():
-        yield (word, 1)
-```
-
-**Group by key**: sort and shuffle the mapper output so all values for a given key are grouped together.
-
-```python
-def group_by_key(pairs):
-    pairs.sort()
-    for key, group in itertools.groupby(pairs, key=lambda x: x[0]):
-        yield (key, [x[1] for x in group])
-```
-
-**Reduce**: for each key and its list of values, sum the values.
-
-```python
-def reduce(key, values):
-    yield (key, sum(values))
-```
+That is the same shape as word count, only with more painful skew.
 
 ## Spark
 
-MapReduce has two major limitations. The programming model is rigid, and writing every intermediate result to disk becomes a performance bottleneck.
+Spark relaxes the MapReduce straitjacket. Instead of one fixed map-shuffle-reduce pipeline, it supports a DAG of transformations over distributed datasets.
 
-**Spark** is a general-purpose cluster computing system that addresses both. It is dataflow based. You define a series of transformations on data, and Spark figures out how to execute them in parallel, which makes it more expressive and usually more efficient than MapReduce. Higher-level APIs like dataframes and SQL sit on top.
+The core abstraction is the RDD, an immutable distributed collection whose lineage records how it was built. If a partition is lost, Spark can recompute it.
 
-### Resilient Distributed Datasets (RDDs)
+Useful properties for recommender workloads:
 
-The core data structure in Spark ([Zaharia et al. 2012](https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/zaharia)). RDDs are immutable, distributed collections of objects, essentially a partitioned collection of records that can be cached in memory across machines. They are fault tolerant because each RDD records how it was computed, so a lost partition can be recomputed from its source.
+- in-memory caching for iterative jobs
+- richer joins and filters
+- easier expression of multi-stage pipelines
+- built-in libraries for SQL, graph, and ML work
 
-- **Transformations**: create a new RDD from an existing one. They are lazy, meaning they don't compute the result right away (e.g. `map`, `filter`, `join`, `union`, `intersection`, `distinct`).
-- **Actions**: compute a result from an RDD, triggering execution of the DAG (e.g. `collect`, `count`, `reduce`, `saveAsTextFile`).
+That matters because recommender preprocessing is often iterative. You build one table, join it to another, filter, bucketize, resample, then repeat. Spark fits that shape better than classic MapReduce.
 
-#### Task Scheduling
+## Where Recommender Teams Use This
 
-Spark supports general DAGs of tasks, where each task is a unit of work sent to a worker. The DAG scheduler breaks the computation into stages, where each stage is a set of tasks that can run in parallel. The task scheduler then schedules tasks within each stage. Functions are pipelined together when possible, and tasks are scheduled in a cache-aware and partition-aware manner.
+Typical batch jobs in recommendation look like:
 
-#### Libraries
+- aggregate rolling user features
+- build item popularity and freshness tables
+- compute training examples for retrieval and ranking
+- sample negatives
+- backfill delayed conversions or watch time
+- export item embeddings into an ANN index
 
-- **MLlib**: scalable machine learning
-- **GraphX**: graph processing
-- **Spark Streaming**: real-time stream processing
-- **Spark SQL**: SQL interface for Spark
+None of that is glamorous, though most production failures come from this layer sooner than from the model definition.
 
-## Spark vs. Hadoop MapReduce
+## Spark Versus Hadoop MapReduce
 
-- **Performance**: Spark is normally faster, with caveats. Spark wants memory, so its benefits shrink on commodity hardware, and MapReduce holds up better when the compute is shared with other processes.
-- **Ease of use**: Spark is more expressive and easier to program.
-- **Generality**: Spark is more general, with higher-level APIs.
+- **MapReduce** is simpler and robust for pure one-pass batch aggregation.
+- **Spark** is more expressive and usually faster for iterative pipelines and repeated reuse of intermediate state.
+
+For recommender teams, Spark usually wins because feature pipelines, joins, and sampling logic are rarely single-pass jobs.
+
+## The Real Lesson
+
+When a paper says "we trained on billions of examples," there is always a data system underneath it. In recommenders, the model is often only the last few percent of the engineering problem.
 
 ## Sources
 

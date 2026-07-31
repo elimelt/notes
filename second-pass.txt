@@ -1,0 +1,15 @@
+content/algorithms/practice/4.md
+content/algorithms/problems/graphs-and-trees.md
+content/index.md
+content/linear-algebra/cheatsheet.md
+content/linear-algebra/python-cheatsheet.md
+content/operating-systems/reference.md
+content/operating-systems/section-notes/lab-3-questions.md
+content/operating-systems/section-notes/section-1.md
+content/operating-systems/v1-kernels-and-processes/1-introductions.md
+content/systems-research/padded-encoder-decoder.md
+content/thoughts/engineering/onboarding.md
+content/thoughts/leadership/applications.md
+content/thoughts/leadership/solitude.md
+content/thoughts/recipe/smore-brownie.md
+content/thoughts/social/homelessness.md

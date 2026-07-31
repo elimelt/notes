@@ -7,8 +7,12 @@ tags:
   - recommender systems
   - collaborative filtering
   - matrix factorization
+  - implicit feedback
+  - bpr
   - personalization
   - ranking
+  - selection bias
+  - exposure bias
   - counterfactual evaluation
   - ads
   - candidate generation

@@ -6,6 +6,7 @@ category: Operating Systems
 tags:
   - operating systems
   - virtualization
+  - virtual-memory
   - resource management
   - reliability
   - availability

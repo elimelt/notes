@@ -7,6 +7,7 @@ tags:
   - http
   - application-layer
   - tcp
+  - rtt
   - web performance
   - caching
   - page-load-time

@@ -6,7 +6,7 @@ category: Operating Systems
 tags:
   - file systems
   - storage
-  - system-calls
+  - syscall
   - fat
 date: 2024-03-04
 updated: 2026-07-30

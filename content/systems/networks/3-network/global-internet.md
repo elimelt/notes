@@ -6,6 +6,8 @@ category: Networks
 tags:
   - networks
   - routing
+  - bgp
+  - ospf
   - autonomous-systems
   - inter-domain-routing
 date: 2024-02-25

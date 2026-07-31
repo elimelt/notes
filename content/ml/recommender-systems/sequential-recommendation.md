@@ -5,6 +5,8 @@ tags:
   - recommender systems
   - sequential recommendation
   - graph recommenders
+  - implicit feedback
+  - exposure bias
   - transformers
   - gnn
 date: 2026-07-31

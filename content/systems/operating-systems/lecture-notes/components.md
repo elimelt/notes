@@ -8,6 +8,7 @@ tags:
   - address-space
   - memory management
   - virtual-memory
+  - page-tables
   - io
   - device-drivers
   - file systems

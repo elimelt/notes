@@ -7,6 +7,7 @@ tags:
   - virtual-memory
   - address-space
   - paging
+  - page-faults
   - fragmentation
   - page-tables
   - address-translation

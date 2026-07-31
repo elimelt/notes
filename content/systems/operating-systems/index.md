@@ -5,12 +5,18 @@ tags:
   - operating systems
   - processes
   - threads
-  - virtual memory
+  - virtual-memory
   - file systems
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
 description: Overview of the operating systems notes, spanning kernels, concurrency, memory, storage, and performance measurements.
+sources:
+  - title: Operating systems course lecture notes
+    type: lecture
+  - title: "Operating Systems: Principles and Practice"
+    url: https://www.kea.nu/files/textbooks/ospp/
+    type: textbook
 ---
 
 ## Purpose

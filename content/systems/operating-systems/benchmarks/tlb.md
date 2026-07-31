@@ -5,8 +5,9 @@ aliases:
 category: Performance Engineering
 tags:
   - tlb
-  - page-table
+  - page-tables
   - virtual-memory
+  - paging
   - page-walk
   - huge-pages
   - memory-latency

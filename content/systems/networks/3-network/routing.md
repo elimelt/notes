@@ -6,6 +6,7 @@ category: Networks
 tags:
   - networks
   - routing
+  - bgp
   - distance-vector
   - link-state
   - rip

@@ -9,6 +9,8 @@ tags:
   - link-layer
   - routing
   - forwarding
+  - icmp
+  - bgp
 date: 2024-02-16
 updated: 2026-07-30
 status: evergreen

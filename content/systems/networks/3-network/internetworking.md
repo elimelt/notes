@@ -9,6 +9,7 @@ tags:
   - ip-addressing
   - forwarding
   - arp
+  - icmp
   - ttl
 date: 2024-02-16
 updated: 2026-07-30

@@ -9,6 +9,7 @@ tags:
   - udp
   - datagrams
   - bytestreams
+  - encapsulation
 date: 2024-02-25
 updated: 2026-07-30
 status: evergreen

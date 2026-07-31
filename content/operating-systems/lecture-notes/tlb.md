@@ -1,56 +1,62 @@
 ---
 title: Translation Lookaside Buffer (TLB)
 category: Operating Systems
-tags: virtual memory, address translation, page table, hardware, MMU
+tags:
+  - virtual-memory
+  - address-translation
+  - tlb
+  - mmu
+  - page-tables
 date: 2024-02-16
-description: The document covers the Translation Lookaside Buffer (TLB), a hardware component in computer systems that caches address translations from virtual to physical memory. It discusses the two main mapping techniques used in TLBs - associative and direct mapping. The document also explores how TLBs are managed, including the impact of context switching, and how page tables can enhance TLB functionality, such as in the loading of shared libraries and memory-mapped files, including the handling of soft page faults.
+updated: 2026-07-30
+status: evergreen
+description: How the TLB caches virtual-to-physical translations, hardware vs software miss handling, why context switches flush it, and the tricks page tables enable, shared libraries, memory-mapped files, and soft faults.
+sources:
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# Translation Lookaside Buffer (TLB)
+The TLB caches translations from virtual page numbers to physical page numbers so that most memory accesses never touch the page table. It is a small hardware cache of page table entries, and it exists because paging otherwise turns every memory access into two.
 
-Translates virtual page numbers to physical page numbers. It is a small, fully associative cache of page table entries implemented in hardware to improve the speed of address translation and decrease the number of memory accesses.
+## Mapping
 
-## Associative and Direct Mapping
+The usual cache design space applies:
 
-- **Direct Mapping**: Each entry in the TLB corresponds to a unique entry in the page table. This is the simplest and most common implementation of the TLB. It is also the fastest, but it is also the most limited in terms of the number of entries it can hold.
-- **Fully Associative**: Each entry in the TLB can correspond to any entry in the page table. This is the most flexible, but also the slowest. It means that the TLB must be searched for every memory access.
-- **N-way Set Associative**: A compromise between the two. The TLB is divided into a number of sets, and each entry in the TLB can correspond to any entry in the page table within its set.
+- **Direct mapped**: each virtual page number can live in exactly one TLB slot. Simplest and fastest to look up, and the most prone to conflicts.
+- **Fully associative**: a translation can live in any slot, and the hardware searches every slot in parallel on each access. Most flexible, hardest to build big.
+- **N-way set associative**: the compromise. The TLB divides into sets, and a translation can live in any slot within its set.
 
-## Managing TLBs
+TLBs hold few entries compared to data caches, and misses cost a page table walk, so real TLBs tend toward full or high associativity.
 
-- Address translation mostly handled by TLB
-    - Over 99% of address translations are handled by the TLB, but the remaining 1% are handled by the page table.
-    - In case of a miss, translation is done by the page table and the result is stored in the TLB. Often this results in an eviction.
-- Hardware (MMU) in x86 systems
-    - Knows where oage table is in memory. OS maintains page table, but hardware does the translation and accesses the page table.
-    - Page table is stored in a hardware-depended format, and the OS must maintain it in this format.
-- Software loaded TLB (OS)
-    - TLB miss is handled like a page fault (trap to OS)
-    - OS finds the page table entry, loads it into the TLB, and restarts the instruction that caused the miss.
-    - Must be very fast (20-1000 cycles), so CPU ISA has special instructions to load TLB entries.
+## Managing the TLB
 
-### Context Switching
+The TLB handles almost all address translations, and the page table only sees the misses. On a miss, the translation comes from the page table and gets inserted into the TLB, usually evicting some other entry.
 
-The OS **needs** to ensure TLB and page table are consistent. This is done by invalidating the TLB when the page table changes. When a process is switched, the OS must invalidate/flush the entire TLB, which is a big part of the overhead of context switching (since there will be many TLB misses subsequently). You can also use the PID as part of the TLB lookup to make the TLB "global" (ie. shared between processes). 
+Who handles the miss splits two ways:
 
-## Functionality Enhanced by Page Tables
+- Hardware, via the MMU, as on x86. The hardware knows where the page table sits in memory and walks it itself. The OS maintains the page table, and it must keep it in the hardware-defined format.
+- Software-loaded TLBs, where the OS does it. A TLB miss traps to the OS like a page fault. The OS finds the page table entry, loads it into the TLB, and restarts the instruction that missed. The handler has to be very fast since it runs on every miss, so the CPU's ISA includes special instructions for loading TLB entries.
 
-- **Memory Protection**: Each page table entry has a protection bit that specifies the access rights for the page. This is used to prevent unauthorized access to memory. This has the effect of catching errors at the hardware level, which is much faster than catching them at the software level.
-- **Shared Memory**: Multiple processes can share the same physical page. This is useful for shared libraries and shared memory, and is also used in copy-on-write optimization.
+### Context switching
 
-### Loading Shared Libraries
+The OS has to keep the TLB and the page table consistent, so when the page table changes it invalidates the affected TLB entries. When a process is switched in, the OS must invalidate or flush the entire TLB, and the flood of misses that follows is a big part of context switch overhead. Including the PID in the TLB lookup avoids the flush by making the TLB safely shared between processes.
 
-- Shared libraries are loaded into memory by the OS, and the same physical page is mapped into the address space of multiple processes. This is done by the OS, and is transparent to the user.
-- It doesn't *have* to be loaded into the same virtual address, but the OS tries to do this. As a rule of thumb, each library has a preferred virtual address location, which makes loading shared libraries easier.
-- Adter a while, might run out of address space to share all libraries. Need to be able to dynamicallly relocate them.
+## Functionality built on page tables
 
-### Memory Mapped Files
+- **Memory protection**: each PTE carries protection bits specifying access rights for the page, so violations get caught at the hardware level, which is much faster than catching them in software.
+- **Shared memory**: multiple processes can map the same physical page. Shared libraries and shared memory use this, and copy-on-write builds on it.
 
-Forget about doing reads/writes. Instead, map the file into the address space. Any time you write to the address space, it writes to the file. Depending on the OS and cache type (write-through vs write-back), the file may be written to immediately or later. This is a very efficient way to read/write files, and is used in many applications.
+### Loading shared libraries
 
-#### Soft Page Faults
+The OS loads a shared library once and maps the same physical pages into the address space of every process that uses it, transparently to the user. The library doesn't have to land at the same virtual address in every process, but the OS tries to make that happen, and as a rule of thumb each library has a preferred virtual address location, which makes loading easier. After a while there may not be room to give every library its preferred spot, so libraries need to be dynamically relocatable.
 
-Fault on a page that are actually in memory, but the PTE was marked as invalid. Resolving soft faults is relatively cheap. This can be used whenever you need to wake up the OS to do something on reference to a page (for instance, a debugger watch point). Windows uses soft faults in its page replacement strategy.
+### Memory-mapped files
+
+Forget reads and writes; map the file into the address space instead. A store to a mapped address becomes a write to the file. Depending on the OS and the caching policy (write-through vs write-back), the file gets updated immediately or later. Many applications use this because it is an efficient way to read and write files.
+
+#### Soft page faults
+
+A soft fault is a fault on a page that is actually in memory, with the PTE deliberately marked invalid. Resolving one is cheap since no disk I/O is involved. It works anywhere you want the OS woken up when a page gets referenced, a debugger watchpoint for instance. Windows uses soft faults in its page replacement strategy; see [[operating-systems/lecture-notes/windows-memory-management|Windows memory management]].
 
 ## Related notes
 

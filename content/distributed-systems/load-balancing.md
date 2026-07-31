@@ -1,60 +1,66 @@
 ---
 title: Load Balancing
 category: Distributed Systems
-tags: load balancing, distributed systems, paxos, sharding, edge caching, queueing, zipf distribution
+tags:
+  - load-balancing
+  - distributed-systems
+  - sharding
+  - queueing-theory
+  - zipf
 date: 2024-05-06
-description: Explains load balancing strategies and their implications on distributed systems.
+updated: 2026-07-30
+status: evergreen
+description: What good load balancing has to achieve, sharded Paxos and edge caching as strategies, and the queueing and key-popularity math that explains tail latency.
+sources:
+  - title: "The Power of Two Choices in Randomized Load Balancing (Mitzenmacher, 2001)"
+    url: https://www.eecs.harvard.edu/~michaelm/postscripts/tpds2001.pdf
+    type: paper
 ---
 
-# Load Balancing
+## Purpose
 
-In a load balancing systems, we want the following:
+This note lists what a load balancing scheme has to achieve, then covers the strategies I've studied for getting there and the queueing math that explains why utilization drives tail latency.
+
+## What we want
 
 1. Clients all follow the same assignment
 2. Load is evenly distributed
-3. Adding/removing only moves a few keys
+3. Adding or removing a server only moves a few keys
 4. Tail latency is minimized
 5. Redistributing keys should not overload a single server
-6. Workload should be evenly distributed despite key popularity differences
+6. Load stays even despite differences in key popularity
 
-## Scaling Paxos with Sharding
+## Scaling Paxos with sharding
 
 This design combines [[distributed-systems/paxos-intro|Paxos consensus]] with [[distributed-systems/sharding|sharding]].
 
-Use Paxos to define the order of a state machine running on a set of servers. For a key value store, we can split the key space into multiple shards, assigning some set of keys to a given shard. The Paxos group that performs this is known as the **shard master**. Then, each shard is a Paxos group that runs the state machine for its subset of keys.
+Use Paxos to define the order of a state machine running on a set of servers. For a key-value store, split the key space into shards, assigning a set of keys to each shard. A dedicated Paxos group called the **shard master** owns the assignment of keys to shards. Each shard is then its own Paxos group running the state machine for its subset of keys.
 
-This has the advantage of spreading load across multiple servers, as well as distributing the data.
+This spreads request load across multiple servers and distributes the data along with it.
 
-## Edge Caching
+## Edge caching
 
-Many things should be cached locally to the users machine. However, for content that is not user specific (like `logo.png`), we can cache it on a single server and redirect all requests for that content to that specific server, effectively load balancing the requests while condensing the cache to use less memory across all servers.
+Content local to a user should be cached on the user's machine. For content that is popular and not user specific, like `logo.png`, cache it on one designated server and redirect all requests for that content there. Requests spread across servers by content, and each piece of content occupies cache memory on only one server instead of every server.
 
 ## Queueing
 
-Assuming completely random (Poisson) arrivals and service times, the average number of requests in the system is given by:
+Assume completely random (Poisson) arrivals and exponentially distributed service times, the M/M/1 queueing model. The mean response time is
 
 $$
 R = \frac{S}{1 - U}
 $$
 
-Where $R$ is the response time, $S$ is the service time, and $U$ is the utilization of the server. This formula is derived from the M/M/1 queueing model.
+where $R$ is response time, $S$ is service time, and $U$ is server utilization. In an M/M/1 queue the response time is exponentially distributed, so its standard deviation equals its mean, $\frac{S}{1-U}$. As utilization approaches 1, both the mean and the spread of response times blow up, which is exactly where tail latency comes from.
 
-The variance of the response time is $\propto \frac{S}{1 - U}$, so as the server utilization approaches 1, the variance of the response time approaches infinity.
+The system can be modeled as a Markov chain with states $0, 1, 2, \ldots$, where state $i$ means $i$ requests are in the system. The transition rate from state $i$ to $i+1$ is the arrival rate $\lambda$, and from $i$ to $i-1$ is the service rate $\mu$. The formulas above fall out of solving this chain's steady state.
 
-In practice, load is bursty and services need to be overprovisioned to handle the spikes in load. This is why the variance of the response time is so important, since tail latencies can be very high if the server is overloaded.
+In practice load is bursty rather than Poisson, so services get overprovisioned to absorb spikes. The variance result explains why that overprovisioning is worth paying for. Run a server near full utilization and its tail latency becomes enormous.
 
-The system can be modeled as a Markov chain with states $0, 1, 2, \ldots, n$. The state $i$ represents the system with $i$ requests in the system. The transition rate from state $i$ to state $i+1$ is $\lambda$ and the transition rate from state $i$ to state $i-1$ is $\mu$.
+## Key popularity
 
-## Key Popularity
+The **Zipf distribution** says the $k$th most popular item has frequency proportional to $\frac{1}{k^c}$ for some $1 \le c \le 2$. It roughly fits a lot of observed workloads, including web page hits, file access frequency, file sizes, word frequency, and friend counts on social networks. The consequence for load balancing is that hashing keys uniformly across servers still leaves whichever server holds the hottest keys overloaded.
 
-The **Zipf distribution** says that the $k$th most popular item follows some curve $\frac{1}{k^c}$, where $1 \le c \le 2$. This is said to...sort of apply to many things
-
-- Web pages hits/file access frequency
-- File sizes
-- Word/token frequency
-- Friends on a social network
-
-We can cope with popular keys using **power of two choices**. Keys can be hashed to multiple (in this case two, but generalizes to $k$) servers, and requests are forwarded to whichever server is under less load.
+The **power of two choices** copes with popular keys: hash each key to two (or in general $k$) candidate servers, and forward each request to whichever candidate is under less load. [Mitzenmacher's analysis](https://www.eecs.harvard.edu/~michaelm/postscripts/tpds2001.pdf) shows that moving from one choice to two gives an exponential improvement in the maximum load, while more than two choices adds little.
 
 ## Related notes
 

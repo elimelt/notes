@@ -1,122 +1,127 @@
 ---
-title: Distributed Systems Consistency Models
+title: Managing Critical State
 category: Distributed Systems
-tags: Consistency Models,Paxos,Linearizability,Sequential Consistency,Snapshot Reads,Causal Consistency,Processor Consistency,Memory Barrier/Fence
+tags:
+  - distributed-systems
+  - consensus
+  - paxos
+  - replicated-state-machines
+  - sre
 date: 2024-03-26
-description: This document discusses various consistency models used in distributed systems, including Paxos, linearizability, sequential consistency, snapshot reads, causal consistency, processor consistency, and memory barriers. It explains the differences between these models and when to use them.
----
----
-title: Distributed Consensus Fundamentals
-category: Distributed Systems
-tags: Distributed Systems, Consensus Algorithms
-description: This document covers the fundamentals of distributed consensus algorithms, including leader election, replicated state machines, reliable datastores, and coordination services.
+updated: 2026-07-30
+status: incomplete
+description: Notes on the SRE book chapter about distributed consensus, covering CAP, why ad hoc coordination fails, Paxos at a high level, and the system patterns built on consensus. Stops before the Multi-Paxos message flow.
+sources:
+  - title: "Managing Critical State (Google SRE Book, ch. 23)"
+    url: https://sre.google/sre-book/managing-critical-state/
+    type: book
 ---
 
-# Managing Critical State
-[reading](https://sre.google/sre-book/managing-critical-state/)
+## Purpose
 
-## CAP Theorem
+Notes on the [Managing Critical State chapter](https://sre.google/sre-book/managing-critical-state/) of the Google SRE book. The chapter argues that whenever you need agreement on state across nodes, you should reach for a proven consensus protocol instead of ad hoc coordination, and it surveys the system patterns you build on top of one. These notes stop before the chapter's detailed Multi-Paxos message flow.
+
+## CAP theorem
 
 The CAP theorem states that a distributed system can only guarantee two of the following three properties:
-- **Consistency**: All nodes see the same data at the same time.
-- **Availability**: Every request receives a response, without guarantee that it contains the most recent write.
-- **Partition tolerance**: The system continues to operate despite network partitions.
 
-Essentially, if some nodes go down in a distrubuted system, you can either choose to continue serving requests (availability), or to stop and wait for the nodes to come back up (consistency).
+- **Consistency**: all nodes see the same data at the same time
+- **Availability**: every request receives a response, without guarantee that it contains the most recent write
+- **Partition tolerance**: the system continues to operate despite network partitions
 
-## ACID's Alternative: BASE
+Since real networks partition, the practical choice during a partition is between continuing to serve requests (availability) and refusing to serve until the partition heals (consistency).
 
-While ACID (Atomicity, Consistency, Isolation, Durability) lists properties that provide semantics for consistent transactions on a single node, this doesn't translate or scale well to distributed systems.
+## ACID's alternative: BASE
 
-Instead, some datastores use BASE (Basically Available, Soft state, Eventually consistent) semantics, allowing for more flexibility in the face of network partitions. Most systems that support BASE semantics use multi-leader replication, where each leader can accept writes and propagate them to other leaders. This allows for better availability and partition tolerance, but at the cost of complexity to deal with eventual consistency in application code.
+ACID (Atomicity, Consistency, Isolation, Durability) gives clean semantics for transactions on a single node, and it does not translate or scale well to distributed systems.
 
-## Motivating the Use of Consensus: Distributed Systems Coordination Failures
+Some datastores instead offer BASE semantics (Basically Available, Soft state, Eventually consistent), which tolerate network partitions better. Most BASE systems use multi-leader replication, where each leader accepts writes and propagates them to the other leaders. Availability and partition tolerance improve, and the application code inherits the complexity of dealing with eventual consistency.
 
-### The Split Brain Problem
+## Why ad hoc coordination fails
 
-Split brain is where multiple nodes think they are the leader. A naiive approach to solving this is to use a heartbeat mechanism, where a leader sends out a heartbeat to followers. If multiple nodes think they are the leader, they will both send out heartbeats, and eventually one of the "leaders" will realize that there is another leader and issue a **STONITH** (Shoot The Other Node In The Head) command to kill the other leader.
+### The split brain problem
 
-However, due to the asynchronous and unreliable nature of networks, it is possible for these messages to be delayed to a point where both nodes issue a STONITH command to each other, causing both nodes to go down. Furthermore, the issue of actually detecting and avoiding a split brain is non-trivial, since it is difficult to distinguish between a network partition and a node failure, and nodes can be partitioned from eachother arbitrarily.
+Split brain is when multiple nodes believe they are the leader. A naive defense is a heartbeat mechanism: the leader sends heartbeats to followers, and if two nodes both act as leader, each eventually notices the other's heartbeats and issues a **STONITH** (Shoot The Other Node In The Head) command to kill it.
 
-### Faulty Group Membership Algorithms
+Networks are asynchronous and unreliable, so heartbeats can be delayed until both nodes issue STONITH at each other and both go down. Worse, detecting split brain reliably is hard in the first place, because a network partition and a node failure look identical from the outside, and nodes can be partitioned from each other in arbitrary ways.
 
-Using gossip protocols to maintain group memberships of clusters can lead to issues. Specifically, partitions within a cluster lead to multiple leaders being elected in the same cluster, often leading to data loss or corruption.
+### Faulty group membership algorithms
 
-## How Distributed Consensus Works
+Maintaining cluster membership with gossip protocols runs into the same trap. A partition inside a cluster leads to multiple leaders elected in the same cluster, which often ends in data loss or corruption.
 
-In distributed software systems, we care about **asynchronous distributed consensus**, where nodes can fail and messages can be delayed, lost, or duplicated arbitrarily. Technically, this is impossible to solve in bounded time (see Dijkstra's FLP result), but we can solve problems by ensuring the system has sufficient healthy replicas and network connectivity, allowing the system to make progress *most of the time*. Futher, *exponential backoff* can be used to prevent cascading failures.
+## How distributed consensus works
 
-Some characteristics of distributed consensus algorithms include:
+The problem that matters in practice is **asynchronous distributed consensus**, where nodes can fail and messages can be delayed, lost, or duplicated arbitrarily. The FLP impossibility result (Fischer, Lynch, and Paterson) shows no deterministic algorithm can guarantee progress in an asynchronous system if even one node can crash. Real systems get around this by ensuring enough healthy replicas and network connectivity that progress happens most of the time, and by using exponential backoff to prevent cascading retries.
+
+Fault models for consensus algorithms:
+
 - **crash-fail**: nodes that fail never re-enter the system
-- **crash-recovery**: nodes that fail can re-enter the system. This is more realistic, but also more complex.
-- **Byzantine fault tolerance**: nodes can fail arbitrarily, including sending incorrect messages.
+- **crash-recovery**: nodes that fail can re-enter the system. More realistic, and more complex.
+- **Byzantine fault tolerance**: nodes can fail arbitrarily, including sending incorrect messages
 
-## Paxos Overview
+## Paxos overview
 
-Paxos is a distributed consensus algorithm that is used to ensure that a majority of nodes agree on a value. Importantly however, Paxos doesn't guarantee that all nodes agree on a value (this is impossible in an asynchronous network), but it does guarantee that a majority of nodes agree on a value.
+Paxos ensures that a quorum (majority) of nodes agrees on a value. It does not guarantee all nodes know the agreed value, since that would require unbounded communication in an asynchronous network. Majority agreement is the guarantee.
 
-Paxos operates as a sequence of proposals, which may or may not be accepted by a quorum (majority) of nodes. If a proposal isn't accepted, the proposal has failed/been rejected. Each proposal is given a `sequenceNumber`, such that there is a strict ordering of proposals. This `sequenceNumber` must be unique for all proposals, and must also be monotonically increasing.
+Paxos runs as a sequence of proposals, each of which a quorum may accept or reject. Each proposal carries a `sequenceNumber` that must be unique across all proposals and monotonically increasing, giving proposals a strict order.
 
-In the first phase, a proposer sends a `sequenceNumber` to all acceptors. If the acceptors have not seen a proposal with a higher `sequenceNumber`, they respond with a `promise` to not accept any proposals with a lower `sequenceNumber`. Otherwise, they reject the proposal. Once a proposer has received a majority of `promise`s, it can commit the proposal by sending a `commit` message with a value.
+In the first phase, a proposer sends a `sequenceNumber` to the acceptors. Each acceptor that has not seen a higher `sequenceNumber` responds with a `promise` to reject any proposal numbered lower. Otherwise it rejects the proposal. Once the proposer holds promises from a majority, it commits by sending a `commit` message carrying a value.
 
-The majority of nodes agreeing to a given proposal ensures that any committed proposal has a unique committed value, since two different quorums must have at least one node in common.
+Quorum overlap is what makes this safe. Any two majorities share at least one node, so a committed proposal has a unique committed value. Acceptors must persist a log of the proposals they have seen and accepted, so that they honor their promises even after a crash.
 
-It is extremely important that any acceptors maintain a crash-recovery log of all proposals they have seen/accepted, so that they continue to honor their promises even after a crash.
+## System architecture patterns for distributed consensus
 
-## System Architecture Patterns for Distributed Consensus
+Consensus algorithms are low-level building blocks and should sit behind higher-level abstractions. That separates concerns, makes testing and debugging easier, and lets you swap the protocol without touching the rest of the system.
 
-Distributed consensus algorithms should be used as low-level building blocks for distributed systems, and should be hidden behind higher-level abstractions. This allows for better separation of concerns, and allows for easier testing and debugging. Furthermore, the specific protocol used can then be swapped out without affecting the rest of the system.
+It is common to consume consensus as a service, such as Zookeeper, rather than embedding it. Google does this with Chubby. Designing applications as clients of a consensus service pushes the separation even further.
 
-In fact, it is common to use a consensus service, such as Zookeeper, to provide distributed consensus within a system. Designing applications as clients to a consensus service allows for even better seperation of concerns, and is done at Google with Chubby.
+### Reliable replicated state machines
 
-### Reliable Replicated State Machines
+A **replicated state machine** (RSM) maintains multiple copies of the same process by executing the same commands, in the same order, on every copy. Any deterministic program can become a highly available service by turning it into an RSM.
 
-A **replicated state machine** (RSM) is a system that maintains multiple copies of the same process by executing the same commands on all copies. Any deterministic program can be implemented as a highly available service by turning it into an RSM.
+A consensus algorithm in a lower layer determines the order of operations. Nodes in the consensus group can miss decisions they weren't in the quorum for, so peers synchronize state using a sliding-window protocol.
 
-The order of operations is determined by a consensus algorithm running in a lower layer of the system. However, since there can be nodes part of a consensus group that aren't part of a given consensus quorum, nodes need to synchronize state from peers, which can be done using a **sliding-window protocol**.
+### Reliable replicated datastores and configuration stores
 
-### Reliable Replicated Datastores and Configuration Stores
+Non-distributed storage systems often order operations by timestamp, and this fails in distributed systems because of clock drift. Google's Spanner attacks the timestamp uncertainty head on with TrueTime, modeling the uncertainty interval explicitly and minimizing it with periodic clock resynchronization, and that approach is complicated and expensive. See [[distributed-systems/clocks|clocks]] for why the uncertainty is unavoidable.
 
-Many non-distributed consensus-based storage systems use timestamps to determine order of operations, but this approach doesn't work in distributed systems (due to clock drift). While some systems (like Google's Spanner) use a probabilistic approach to determining timestamps (TrueTime), this gets complicated and expensive. There is inherent uncertainty in the time at any given nodes, and Spanner tries to account for this uncertainty, which also minimizing it through periodic slow-downs to resynchronize clocks.
+Consensus protocols sidestep timestamps entirely when replicating data. The cost is speed. Storage operations are small and frequent, and consensus needs multiple round trips per decision, so naive designs are slow.
 
-Instead, distributed consensus protocols can be used when replicating data across multiple nodes. However, these protocols can be slow, especially since operations on a storage system are often small and frequent, yet consensus protocols require multiple round trips to complete.
+### Highly available processing using leader election
 
-### Highly Available Processing Using Leader Election
+Leader election is equivalent to distributed consensus. It fits systems where one node should process requests at a time, and commonly the elected leader delegates actual work to a pool of workers, as in GFS and Bigtable. The leader election service sits off the critical path, so its latency barely affects system throughput.
 
-Leader election is an equivalent problem to distributed consensus, and is used in distributed systems to ensure that only one node is responsible for processing requests at a time. This might be used in cases where a single leader node is able to process requests, but it is often the case that a single leader needs to delegate work to a pool of worker nodes (like GFS or BigTable).
+### Distributed coordination and locking services
 
-With this pattern, the leader election service is off of the critical path of the system, and so it has a smaller impact on the system's throughput.
+A **barrier** blocks a group of nodes until all of them reach a certain point, splitting a distributed computation into ordered stages. MapReduce uses one to make sure every mapper finishes before reducers start. A single coordinator node can implement a barrier, and that is a single point of failure, so implementations like Zookeeper's build the barrier on an RSM instead.
 
-### Distributed Coordination and Locking Services
+**Distributed locking** provides mutual exclusion over shared resources among nodes. In practice locks need renewable leases with timeouts to prevent deadlock when a holder dies. Locks are another low-level primitive, and it is often better to use a higher-level abstraction that provides distributed transactions.
 
-A **barrier** is a synchronization primitive that allows a group of nodes to wait until all nodes have reached a certain point before continuing. This lets you split a distributed computation into multiple stages that must be completed in order. For instance, in MapReduce, a barrier is used to ensure that all mappers have finished before reducers start.
+### Reliable distributed queuing and messaging
 
-While barriers can be implemented as a single coordinator node, this introduces a single point of failure. Instead, once can use an RSM to implement a barrier, which is done by Zookeeper's implementation of the barrier pattern.
+Queues commonly use a lease mechanism so exactly one node processes a message at a time while still allowing failover when that node dies.
 
-**Distributed locking** is a more general distributed synchronization primitive that allows for mutual exclusion of shared resources among nodes. In practice, it is essential to use renewable leases with timeouts to prevent deadlocks. Distributed locks are another fairly low-level primitive, and it is often a good idea to use a higher-level abstraction that provides distributed transactions.
+Queuing also generalizes into **atomic broadcast** and **publish-subscribe** systems, where messages must be reliably delivered to multiple nodes, useful for notifications and for things like cache invalidation in [[distributed-systems/distributed-cache-coherence|distributed cache coherence]]. Queuing as workload distribution spreads work across a pool of workers.
 
-### Reliable Distributed Queuing and Messaging
-It is common to use a lease mechanism to ensure that only one node processes a message from a queue at a time, while also allowing for failover in case the node processing the message fails.
+## Distributed consensus performance
 
-Queuing is also a powerful abstraction that can be used to implement other patterns like **atomic broadcast** and **publish-subscribe** messaging systems, where messages need to be reliably delivered to multiple nodes. This is useful for things like sending notifications to multiple clients, but can be used in other applications like distributed cache coherence. Furthermore, **queuing as workload distribution** can be used to distribute work among a pool of worker nodes
+The conventional wisdom says consensus protocols are too slow to use freely. The SRE book pushes back on this, arguing that well-deployed consensus performs well.
 
-## Distributed Consensus Performance
-
-People are apparently pretty pessimistic about the performance of distributed consensus algorithms, but they can actually be quite fast. According to Google SREs, this is not the case.
-
-There are many factors that can affect the performance of distributed consensus algorithms, including:
+Performance depends on:
 
 - **Workload**
-  - **Throughput**: number of proposals per second at peak load
-  - Types of requests: read-heavy, write-heavy, mixed
+  - **Throughput**: proposals per second at peak load
+  - Request mix: read-heavy, write-heavy, mixed
   - **Consistency semantics**: can reads be stale?
-  - **Request size**: how much data is being read/written?
+  - **Request size**: how much data moves per operation
 - **Deployment**
-  - **Network topology**: how many nodes are in the cluster, and how are they connected? LAN, WAN, etc.
-  - **Quorum type**: how many nodes are in a quorum? Where are they located?
-  - **Optimizations**: sharding, pipelining, batching, etc.
+  - **Network topology**: cluster size, LAN versus WAN
+  - **Quorum type**: quorum size and geographic placement
+  - **Optimizations**: sharding, pipelining, batching
 
-One common performance pitfall with single-leader replication is that a client's perceived latency is proportional to the round-trip time between the client and the leader.
+One common pitfall with single-leader replication is that a client's perceived latency is proportional to the round-trip time between the client and the leader, wherever the leader happens to be.
 
-### Multi-Paxos: Detailed Message Flow
+## Related notes
 
+- [[distributed-systems/paxos-intro|Paxos]]
+- [[distributed-systems/consistency|consistency]]

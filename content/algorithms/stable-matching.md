@@ -1,34 +1,50 @@
 ---
 title: Stable Matching Algorithms and Proofs in Computer Science
 category: Algorithms
-tags: matching, stable matching, gale-shapley, proof techniques, complexity analysis, optimization
+tags:
+  - matching
+  - stable matching
+  - gale-shapley
+  - proof techniques
+  - complexity analysis
+  - optimization
 date: 2024-03-29
-description: This document provides a comprehensive overview of stable matching algorithms, focusing on the Gale-Shapley algorithm and its properties. It includes detailed proofs of correctness, complexity analysis, and discussions on optimal assignments for companies and applicants. The document also explores related problems like the Stable Roommate Problem.
+updated: 2026-07-30
+status: evergreen
+description: The stable matching problem and the Gale-Shapley algorithm, with proofs of termination, perfection, stability, company optimality, and applicant pessimality, plus a brute-force experiment on the top-choice question.
+sources:
+  - title: College Admissions and the Stability of Marriage (Gale and Shapley, 1962)
+    url: https://www.jstor.org/stable/2312726
+    type: paper
 ---
 
-# Stable Matching
+## Purpose
 
-Given a list of $n$ companies $c_1, c_2, \ldots, c_n$, and a list of students $s_1, s_2, \ldots, s_n$, each company ranks the students in order of preference, and each student ranks the companies in order of preference.
+Given $n$ companies and $n$ students, where each side ranks the other, we want a matching nobody wants to defect from. This note defines stability, walks the Gale-Shapley propose-and-reject algorithm, and proves its correctness and its optimality structure (proposers get their best valid partner, receivers get their worst). The algorithm and the existence guarantee come from [Gale and Shapley (1962)](https://www.jstor.org/stable/2312726).
 
-Find a **stable matching** between the companies and students, where no company and student would prefer each other over their current match.
+## Problem
 
-- **perfect matching**: every company and student is matched with exactly one other company or student.
-- **stable**: no pairs $(c, s)$ and $(c', s')$ such that $c$ prefers $s'$ over $s$ and $s'$ prefers $c$ over $c'$.
+Given a list of $n$ companies $c_1, c_2, \ldots, c_n$ and a list of students $s_1, s_2, \ldots, s_n$, each company ranks all students in order of preference, and each student ranks all companies.
 
-A stable matching is a perfect and stable matching. In other words, there should be no incentive for any company or student to break up their current match.
+Find a **stable matching**: a matching where no company and student would prefer each other over their current matches.
 
-You can confirm a matching is stable by checking all non-existant matches and seeing if they are preferred. So with $n$ pairs, there are $n(n - 1)$ pairs to check to confirm stability.
+- **Perfect matching**: every company and every student is matched with exactly one partner.
+- **Stable**: there is no pair $(c, s)$ not matched to each other where $c$ prefers $s$ over its current match and $s$ prefers $c$ over their current match.
 
-Stable matches are guaranteed to exist.
+A stable matching is a matching that is both perfect and stable. In other words, no company-student pair has an incentive to break their current matches for each other.
+
+You can confirm a matching is stable by checking every non-matched pair for whether both sides prefer each other. With $n$ matched pairs, that is $n(n - 1)$ pairs to check.
+
+Stable matchings always exist, and the algorithm below is the constructive proof.
 
 ## Propose and Reject Algorithm (Gale-Shapley)
 
-```plaintext
+```text
 Initialize all companies and students to be free
 
-while some company is free and hanst proposed to all students:
+while some company is free and hasn't proposed to all students:
     c = first such company
-    s = some student c has not yet proposed to
+    s = highest-ranked student c has not yet proposed to
     if s is free:
         (c, s) become paired
     else if s prefers c to current match c':
@@ -41,108 +57,84 @@ return the set of pairs
 ```
 
 ```python
-def GS(C, S):
-    # C: list of companies
-    # S: list of students
-    n = len(C)
-    free = set(C)
-    matches = {c: None for c in C}
+def gale_shapley(company_prefs, student_prefs):
+    # company_prefs[c]: list of students in decreasing preference
+    # student_prefs[s]: list of companies in decreasing preference
+    free = list(company_prefs)
+    match = {}                              # student -> company
+    next_prop = {c: 0 for c in company_prefs}
+    rank = {s: {c: i for i, c in enumerate(prefs)}
+            for s, prefs in student_prefs.items()}
+
     while free:
         c = free.pop()
-        for s in c.prefs:
-            if matches[s] is None:
-                matches[s] = c
-                break
-            elif s.prefs.index(c) < s.prefs.index(matches[s]):
-                free.add(matches[s])
-                matches[s] = c
-                break
-    return matches
-```
+        s = company_prefs[c][next_prop[c]]
+        next_prop[c] += 1
+        if s not in match:
+            match[s] = c
+        elif rank[s][c] < rank[s][match[s]]:
+            free.append(match[s])
+            match[s] = c
+        else:
+            free.append(c)
 
+    return match
+```
 
 ### Properties
 
-- Companies propose to students in descreasing order of preference
-- Each company proposes to each student at most once
-- Once an applicant is matched, never become unmatched, only "traded up"
+- Companies propose to students in decreasing order of preference.
+- Each company proposes to each student at most once.
+- Once a student is matched, they never become unmatched, only "trade up".
 
 ### Proof of Correctness
 
-When designing/analyzing algorithms, need to show the following:
+Two obligations: the algorithm terminates in reasonable time, and its output is a stable matching.
 
-- (1) The algorithm terminates with a reasonable running time
-- (2) The algorithm is correct (produces a stable matching)
+**Termination**: each of the $n$ companies proposes to each of the $n$ students at most once, so there are at most $n^2$ proposals, and the algorithm runs in $O(n^2)$ time.
 
-(1) Since $n$ companies propose to at most $n$ students, the algorithm runs in $O(n^2)$ time.
-
-(2) Proof by contradiction
-
-note: $p \to q$ is equiv to $p \land \neg q \equiv F$
-
-#### Output is always perfect:
-
-Suppose there is a company $c_1$ with no match after the algorithm terminates. Therefore, there is also an unmatched applicant.
+**Output is perfect**: suppose some company $c_1$ has no match after termination. Matches are one-to-one at every step, so some student is also unmatched:
 
 $$
-\exists \text{ unmatched company } \leftrightarrow \exists \text{ unmacted person}
+\exists \text{ unmatched company } \leftrightarrow \exists \text{ unmatched student}
 $$
 
-By observation, in order for a company to be unmatched, it will need to have proposed to and been rejected by every applicant. On the other hand, for an applicant to remain unmatched, it would need to have never been proposed to.
+A company only ends unmatched after proposing to and being rejected by every student. A student only ends unmatched by never receiving a proposal. But students keep a match once they have one, so a student proposed to by $c_1$ cannot end unmatched. Every student received a proposal from $c_1$, so no student is unmatched, a contradiction.
 
-This means there is an applicant that was never proposed to by the unmatched company, which is a contradiction.
+**Output is stable**: suppose for contradiction the output $S$ contains an unstable pair, i.e. there exist $(c, a') \in S$ and $(c', a) \in S$ where $c$ prefers $a$ over $a'$ and $a$ prefers $c$ over $c'$.
 
-#### Output is a stable matching
-
-For the sake of contradiction, suppose there exists an unstable pair not matched.
-
-Let $S$ be the output of the GS algorithm, and $(c, a)$ to be some unstable pair. Since $S$ is perfect, there is an existing pair $(c, a') \in S$. Furthermore, since $S$ is unstable, we have that $c >_{a} c'$ and $a' >_{c} a$.
-
-But $c$ must have proposed to and been rejected by $a$. Additionally, $a$ must have traded $c$ for a *better* company. Yet, $a$ ends up with a less preferred company, which is a contradiction.
+Since $c$ proposes in decreasing order of preference and ended with $a'$, it proposed to $a$ earlier and was rejected. Students only reject in favor of companies they prefer, and only trade up afterward, so $a$'s final match $c'$ satisfies $c' >_a c$. That contradicts $a$ preferring $c$ over $c'$. $\blacksquare$
 
 ## GS Solution Properties
 
 ### Company Optimal Assignments
 
-- **Valid partner**: A company $c$ is a valid partner of applicant $a$ if there exists a stable matching in which they are matched.
-- **Best valid partner**: The best valid partner of $c$ is the most preferred valid partner of $c$.
+- **Valid partner**: company $c$ is a valid partner of student $a$ if some stable matching pairs them.
+- **Best valid partner** $BVP(c)$: the valid partner $c$ prefers most.
 
-**Claim**: If you run GS, every company receives their BVP. Furthermore, the output of GS is unique.
+**Claim**: GS matches every company with its best valid partner. In particular the output is the same regardless of proposal order.
 
-#### Proof
+**Proof**: by contradiction. Since companies propose in decreasing order of preference, if some company misses its BVP, there is a *first* rejection of a company by its best valid partner during the run. Say $a = BVP(c)$ rejects $c$ in favor of $c'$, so $a$ prefers $c'$ over $c$.
 
-Proof by contradiction. Suppose that some company c is not matched with their BVP. Since companies propose in decreasing order of preference, there must exist a company $c$ that was rejected by their best valid partner $BVP(c) = a$.
+Since $a$ is a valid partner of $c$, some stable matching $S$ pairs $(c, a)$. In $S$, $c'$ is paired with some other student $a'$. Because $a$'s rejection of $c$ is the first rejection by a best valid partner, $c'$ had not yet been rejected by $BVP(c')$ at that moment, and $c'$ proposes in decreasing order, so $a \ge_{c'} BVP(c') \ge_{c'} a'$, meaning $c'$ prefers $a$ over $a'$.
 
-Consider the moment when $a$ rejects $c$. Let $S^*$ be the **current** state of the algorithm. Therefore, $a$ is matched to some other company $c'$. 
-
-$$
-a \in valid(c) \to \exists \text{ stable matching } S \text{ such that } (c, a) \in S
-$$
-
-Say $(c', a') \in S$. If $a >_{c'} a'$, then $(a, c')$ is unstable for $S$, which is a contradiction to the preceding claim. Therefore, we must have $a' >_{c'} a$. This also implies that $c'$ is also rejected by $BVP(c')$, since $c'$ proposed in decreasing order of preference, so it must already be rejected by $a'$.
-
-We can continue the same line of reasoning since $c'$ is also rejected by $BVP(c')$, and so on. This is a contradiction because $c$ is the first company rejected by their BVP.
+So in $S$, $c'$ prefers $a$ over its partner $a'$, and $a$ prefers $c'$ over its partner $c$. The pair $(c', a)$ is unstable for $S$, contradicting the stability of $S$. $\blacksquare$
 
 ### Applicant Pessimality
 
-**Claim**: Each applicant receives their **worst valid partner** (self descriptive).
+**Claim**: each student receives their **worst valid partner** $WVP(a)$.
 
-#### Proof
+**Proof**: let $S^*$ be the output of GS. Suppose for contradiction $(c, a) \in S^*$ but $c \ne WVP(a)$.
 
-Let $S^*$ be the output of $GS$. For cont. suppose $(c, a) \in S^*$, but $c \ne WVP(a)$.
+Say $c' = WVP(a)$. Since $c'$ is a valid partner of $a$, some stable matching $S$ pairs $(c', a)$. Let $(c, a') \in S$.
 
-Say $c' = WVP(a)$. Since $c' \in valid(a)$, $\exists \text{ stable matching } S$ such that $(c', a) \in S$. Further, suppose $(c, a') \in S$. 
-
-If $a >_{c} a'$, then $(c, a)$ is unstable for $S$. Therefore, we must have $a' >_{c} a$. If $a' >_{c} a$, then by the above prove, $a = BVP(c)$. That is a contradiction because $a'$ is also valid.
-
+By company optimality, $a = BVP(c)$, so $c$ prefers $a$ over $a'$. And since $c'$ is $a$'s worst valid partner while $c$ is also valid, $a$ prefers $c$ over $c'$. Then $(c, a)$ is unstable for $S$, a contradiction. $\blacksquare$
 
 ### Efficient Implementation
 
-Can be implemented in $O(n^2)$ time.
+GS runs in $O(n^2)$ time with the right data structures.
 
-Companies are named $1, ..., n$, and students are named $n + 1, ..., 2n$. Each company has a list of preferences of students, and each student has a list of preferences of companies.
-
-The key idea is to also maintain an inverse array of the preference index for a matching. 
+Name companies $1, \ldots, n$ and students $n + 1, \ldots, 2n$, each with a preference list of the other side. The one trick: precompute an inverse array of each student's preference list, so "does $s$ prefer $c$ to $c'$" is an $O(1)$ array lookup instead of a list scan.
 
 ```python
 for i in range(n):
@@ -150,15 +142,13 @@ for i in range(n):
         inverse[i][pref[i][j]] = j
 ```
 
+## Stable Roommate Problem
 
-# Stable Roommate Problem
+Given $2n$ people, each person ranks the other $2n - 1$ in order of preference. Find a stable matching among them. Unlike the bipartite version, a stable matching is no longer guaranteed to exist.
 
-Given a list of $2n$ people, each person ranks the other $2n - 1$ people in order of preference from $1$ to $2n - 1$. Find a stable matching between the people.
+### Does a stable match always include at least one person's top choice?
 
-
-## Does a stable match always include at least one person's top choice?
-
-No! Consider every possible instance of a stable matching problem with $n = 3$. By brute force, you can find plenty (12) unique examples where no person is matched with their top choice.
+No. Brute force over every stable matching instance with $n = 3$ companies and applicants turns up 12 examples where nobody is matched with their top choice. The script below enumerates all preference profiles, finds their stable matchings, and counts how many participants got their first pick.
 
 ```python
 from itertools import permutations, product
@@ -234,3 +224,9 @@ for i in range(len(res)):
     candidates.append(data[i])
     print(data[i])
 ```
+
+## Related notes
+
+- [[algorithms/bipartite-graphs|bipartite graphs]]
+- [[algorithms/greedy-algorithms|greedy algorithms]]
+- [[algorithms/induction|induction]]

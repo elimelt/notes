@@ -1,36 +1,43 @@
 ---
 title: Tree Properties and Proof of Edge Count
 category: Algorithms
-tags: trees, acyclic graphs, connected graphs, induction proofs, graph properties
+tags:
+  - trees
+  - acyclic graphs
+  - connected graphs
+  - induction proofs
+  - graph properties
 date: 2024-04-03
-description: This document explores the fundamental properties of trees in graph theory. It provides a proof by induction that a tree with n vertices has n-1 edges and outlines three key properties of trees, demonstrating their interconnected nature.
+updated: 2026-07-30
+status: evergreen
+description: The characterization of trees as connected acyclic graphs, an induction proof that a tree on n vertices has n-1 edges, and the two-out-of-three property.
 ---
 
-# Trees
+## Purpose
 
-### Lemma: acyclic and connected
+A tree is a connected graph with no cycles. This note proves the edge count of a tree by [[algorithms/induction|induction]] and records the two-out-of-three characterization that makes trees easy to recognize.
 
-A graph is a tree if and only if it is acyclic and connected.
+## Edge Count
 
-## Claim: Every tree with $n$ vertices has $n - 1$ edges.
+**Claim**: every tree with $n$ vertices has $n - 1$ edges.
 
-Proof by induction.
+**Proof**: by induction on $n$.
 
-Base case: $n = 1$. A tree with 1 vertex has 0 edges.
+**Base case**: $n = 1$. A tree with 1 vertex has 0 edges.
 
-IH: Suppose every tree with $n - 1$ vertices has $n - 2$ edges ($P(n - 1)$).
+**Inductive hypothesis**: suppose every tree with $n - 1$ vertices has $n - 2$ edges.
 
-IS: Let $T$ be a tree with $n$ vertices.
+**Inductive step**: let $T$ be a tree with $n \ge 2$ vertices. Since $T$ is acyclic, it has a vertex of degree at most 1 (proved in [[algorithms/graphs-intro|graph fundamentals]]), and since $T$ is connected with at least 2 vertices, that vertex has degree exactly 1. Remove it and its edge to get a graph $T'$ with $n - 1$ vertices. $T'$ is still connected (the removed vertex was a leaf) and still acyclic, so it is a tree, and by the inductive hypothesis it has $n - 2$ edges. Adding the vertex and its edge back gives $n - 1$ edges. $\blacksquare$
 
-$T$ must have a vertex of degree 1 (since it is by definition acyclic). Remove this vertex and its edge to get a tree $T'$ with $n - 1$ vertices. By IH, $T'$ has $n - 2$ edges. Adding back the vertex and edge, we get $n - 1$ edges.
+## Two-Out-of-Three Property
 
-## Properties of Trees
-
-Any graph $G$ that satisfies two of the following properties must satisfy the third (and thus be a tree):
+Any graph $G$ satisfying two of the following properties must satisfy the third, and is therefore a tree:
 
 - $G$ is connected
 - $G$ is acyclic
 - $G$ has $|V| - 1$ edges
+
+This gives a cheap tree test: count the edges and check either connectivity or acyclicity with a single [[algorithms/BFS|BFS]] or [[algorithms/DFS|DFS]] traversal.
 
 ## Related notes
 

@@ -1,9 +1,18 @@
 ---
 title: Computer Networks, a Systems Approach
 category: Networks
-tags: computer networks, systems approach, textbook
+tags:
+  - computer-networks
+  - systems-approach
+  - textbook
 date: 2024-03-26
-description: Covers the implementation of computer networks from a systems perspective, including network architecture, protocols, and performance optimization. Provides a comprehensive textbook-style overview of fundamental networking concepts and their practical applications.
+updated: 2026-07-30
+status: evergreen
+description: Pointer to the Computer Networks, A Systems Approach textbook, the primary reference for the notes in this section.
+sources:
+  - title: "Computer Networks: A Systems Approach"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
 ## Textbook

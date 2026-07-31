@@ -1,14 +1,17 @@
 ---
 title: Performance
 category: Networks
-tags: bandwidth, throughput, latency, delay, networks
+tags:
+  - bandwidth
+  - throughput
+  - latency
+  - delay
 date: 2024-01-12
-description: Covers the implementation of performance characteristics in computer networks, including bandwidth, throughput, latency, and delay. Discusses the key factors that influence network performance and how to measure and optimize these metrics.
+updated: 2026-07-30
+status: incomplete
+description: Stub on network performance metrics. Defines bandwidth and latency, then points to the notes that actually work the material.
 ---
 
-# Performance
+This note was meant to cover how network performance is measured and never got past the first definition. The two headline metrics are **bandwidth** (or throughput), the number of bits per second a link or path can move, and **latency** (or delay), the time a message takes to cross it.
 
-
-Measured in **bandwidth** (or *throughput*) and **latency** (or *delay*).
-
-**Bandwidth:** the number of bits per second
+Until this gets written, [[networks/0-foundation/2-physical-layer|the physical layer]] works a latency example with the transmission and propagation delay formulas, [[networks/1-physical/coding-and-modulation|coding and modulation]] covers the bandwidth-delay product, and [[networks/0-foundation/information-theory|information theory]] covers the hard limits on link capacity.

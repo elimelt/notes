@@ -1,28 +1,34 @@
 ---
 title: Hardware Modes
 category: Operating Systems
-tags: hardware modes, kernel mode, user mode, dual mode operation, EFLAGS register, MIPS status register
+tags:
+  - hardware-modes
+  - kernel-mode
+  - user-mode
+  - dual-mode-operation
 date: 2024-01-08
-description: Covers the implementation of hardware modes in operating systems, including kernel mode and user mode. Discusses the concept of dual mode operation, where the processor switches between privileged kernel mode and restricted user mode to provide protection with restrictions. Explains the use of the EFLAGS register in x86 systems and the status register in MIPS architectures to control and monitor the current hardware mode.
+updated: 2026-07-30
+status: evergreen
+description: Why the CPU has a privileged kernel mode and a restricted user mode, and where the current mode is stored on x86 and MIPS.
+sources:
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# Lecture 2 -
+The question behind this note is who gets to control the hardware. The application could drive it directly, which would be simple and quick. It would also be completely unsafe. So the OS acts on the application's behalf, which gives us protection.
 
-## Hardware Modes
+## Dual-mode operation
 
-*Who actually gets to control the hardware?*
+That raises the follow-up question of how to execute application code with restricted privileges. The hardware answers with two modes.
 
-*The application*? It would be simple and quick, but isn't safe at all.
+- **Kernel mode** is privileged. Code executes with full access to the hardware.
+- **User mode** is restricted. Code can only execute the instructions the OS grants it (the non-privileged ones), and memory access is limited to the process's own memory.
 
-*The OS*? Can act on behalf of the application, which gives us protection.
+A timer interrupt fires regularly, which guarantees the kernel gets a chance to take control back from a user process.
 
-### Challenge: Protection with Restrictions
+Per lecture, x86 stores the current mode in the EFLAGS register, and MIPS stores it in the status register.
 
-*How do we execute code with restricted privileges?*
+## Related notes
 
-**Hardware Support: Dual Mode Operation**
-
--  Kernel mode - privileged. Execution with full access to the hardware
--  User mode - restricted. Only able to execute instructions granted by OS (ie non privileged). Limits on memory accesses, only allowed to access own memory. There is a timer interrupt that regularly gives the kernel the ability to take control from a user process.
-
-On x86, mode stored in EFLAGS register. On MIPS, mode stored in status register.
+- [[operating-systems/lecture-notes/processes|processes]]
+- [[operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction|the kernel abstraction]]

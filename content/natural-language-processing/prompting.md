@@ -1,19 +1,49 @@
 ---
 title: Prompting Language Models
 category: Natural Language Processing
-tags: language-models, prompting, nlp, llm
+tags:
+  - language-models
+  - prompting
+  - nlp
+  - llm
 date: 2025-03-10
-description: All about prompting language models.
+updated: 2026-07-30
+status: draft
+description: Prompting techniques for language models, with small Python templates for few-shot prompting, retrieval-augmented generation, chain of thought, self-ask, and prompt self-improvement.
+sources:
+  - title: Brown et al. (2020), Language Models are Few-Shot Learners
+    url: https://arxiv.org/abs/2005.14165
+    type: paper
+  - title: Wei et al. (2022), Chain-of-Thought Prompting Elicits Reasoning in Large Language Models
+    url: https://arxiv.org/abs/2201.11903
+    type: paper
+  - title: Press et al. (2022), Measuring and Narrowing the Compositionality Gap in Language Models
+    url: https://arxiv.org/abs/2210.03350
+    type: paper
+  - title: Lewis et al. (2020), Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
+    url: https://arxiv.org/abs/2005.11401
+    type: paper
+  - title: Liu et al. (2023), Lost in the Middle - How Language Models Use Long Contexts
+    url: https://arxiv.org/abs/2307.03172
+    type: paper
+  - title: Madaan et al. (2023), Self-Refine - Iterative Refinement with Self-Feedback
+    url: https://arxiv.org/abs/2303.17651
+    type: paper
 ---
 
-## Basic Concepts
+## Purpose
 
-Prompt behavior begins with how text is represented, so [[natural-language-processing/reading/tokenization|tokenization]] is useful background; retrieval-augmented prompting also builds on [[natural-language-processing/reading/information-retrieval|information retrieval]].
+A working reference for the prompt patterns I reach for most, each with a small Python template. Prompt behavior starts with how text gets split into tokens, so [[natural-language-processing/reading/tokenization|tokenization]] is useful background. Retrieval-augmented prompting builds on [[natural-language-processing/reading/information-retrieval|information retrieval]].
 
-- **Recency Effect**: Place critical instructions at the end of your prompt where they'll have the strongest impact.
-- **Output Formatting**: Signal your expected response format through examples or explicit instructions. This doesn't work as well for chat-based models, since they're designed outside of the scope of basic auto-completion.
-- **Persona Invocation**: Direct the model to adopt a specific expertise or perspective.
-- **Few-Shot Learning**: Demonstrate desired outputs through examples before asking for a new response.
+## Basic concepts
+
+Where an instruction sits in the context matters. Models use information at the start and end of a long context more reliably than information buried in the middle ([Liu et al. 2023](https://arxiv.org/abs/2307.03172)), so put critical instructions near the end of the prompt, close to where generation begins.
+
+Signal the response format you want through examples or explicit instructions. Format-by-example works best on base models, which complete text patterns. Chat-tuned models respond better to explicit formatting instructions, since instruction tuning trains them to follow directions.
+
+Asking the model to adopt a persona ("You are an expert radiologist") steers tone and domain vocabulary. Treat it as a soft prior on style.
+
+Few-shot prompting demonstrates the desired input-output mapping with examples before the real query. Large models can pick up a task from a handful of demonstrations with no gradient updates ([Brown et al. 2020](https://arxiv.org/abs/2005.14165)).
 
 ```python
 prompt = lambda persona, context, query: \
@@ -33,12 +63,9 @@ f"""<Persona>
 """
 ```
 
-## Retrieval Augmented Generation
+## Retrieval augmented generation
 
-Enhance model responses by providing relevant external information:
-
-- Retrieve pertinent documents or data based on the query.
-- Incorporate this context into the prompt to ground the model's response in factual information.
+Retrieve documents relevant to the query, then include them in the prompt so the model answers from provided evidence instead of parametric memory ([Lewis et al. 2020](https://arxiv.org/abs/2005.11401)). This grounds the response and gives you something to check its claims against.
 
 ```python
 def rag_prompt(
@@ -58,12 +85,9 @@ def rag_prompt(
     {instruction}"""
 ```
 
-## Chain of Thought
+## Chain of thought
 
-Guide the model through complex reasoning:
-
-- Break down problems into logical steps.
-- Encourage methodical thinking by requesting explicit reasoning.
+Ask the model to reason step by step before answering. Requesting explicit intermediate reasoning improves accuracy on multi-step problems ([Wei et al. 2022](https://arxiv.org/abs/2201.11903)).
 
 ```python
 def chain_of_thought_prompt(problem, steps_required=True):
@@ -72,12 +96,9 @@ def chain_of_thought_prompt(problem, steps_required=True):
 {'Please think through this step-by-step and explain your reasoning for each step.' if steps_required else 'Solve this problem by showing your work.'}"""
 ```
 
-## Self-Ask
+## Self-ask
 
-Enable recursive problem-solving:
-
-- Instruct the model to decompose complex problems by asking itself sub-questions.
-- Allow it to answer these questions sequentially to build toward a complete solution.
+Have the model decompose a hard question into sub-questions, answer each in turn, and build toward the full answer. Press et al. ([2022](https://arxiv.org/abs/2210.03350)) introduced this format and showed the sub-questions give a natural place to plug in a search engine.
 
 ```python
 def self_ask_prompt(question, allow_search_queries=True):
@@ -90,12 +111,9 @@ To solve this problem, I'll break it down into smaller questions and answer them
 Let me think through this carefully:"""
 ```
 
-## Self Improvement
+## Self improvement
 
-Create a feedback loop for prompt optimization:
-
-- Use the model to evaluate the effectiveness of existing prompts.
-- Incorporate this critique as context for generating improved versions.
+Use the model to critique a prompt given the output it produced and the goal it missed, then generate a revised prompt. Iterating with model-generated feedback is the same loop as Self-Refine ([Madaan et al. 2023](https://arxiv.org/abs/2303.17651)).
 
 ```python
 def self_improvement_prompt(original_prompt, model_output, goal):
@@ -112,3 +130,12 @@ What are the weaknesses of the original prompt? How could it be improved to bett
 
 After analyzing the weaknesses, provide an improved version of the prompt."""
 ```
+
+## Sources
+
+- [Brown et al. (2020), Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
+- [Wei et al. (2022), Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)
+- [Press et al. (2022), Measuring and Narrowing the Compositionality Gap in Language Models](https://arxiv.org/abs/2210.03350)
+- [Lewis et al. (2020), Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
+- [Liu et al. (2023), Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172)
+- [Madaan et al. (2023), Self-Refine: Iterative Refinement with Self-Feedback](https://arxiv.org/abs/2303.17651)

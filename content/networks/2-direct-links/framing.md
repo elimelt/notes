@@ -1,95 +1,68 @@
 ---
 title: Framing in Network Protocols
 category: Networks
-tags: byte-oriented protocols, point-to-point protocol, BISYNC, DDCMP, PPP, bit-oriented protocols, HDLC, bit stuffing
+tags:
+  - framing
+  - byte-stuffing
+  - bit-stuffing
+  - ppp
+  - hdlc
+  - sonet
 date: 2024-01-15
-description: An overview of byte-oriented and bit-oriented network protocols, with a focus on the Point-to-Point Protocol (PPP) and High-Level Data Link Control (HDLC). It discusses the framing approaches used in these protocols, including the length field approach, sentinel-based approach, and bit stuffing. The document also covers the PPP frame format, the LCP protocol and negotiation, and the HDLC frame format. Additionally, it introduces clock-based protocols, such as SONET, and discusses their framing, frame structure, overhead, payload, multiplexing, and concatenation.
+updated: 2026-07-30
+status: evergreen
+description: How link protocols mark frame boundaries in a bit stream. Covers byte-oriented framing (length fields, sentinels, PPP), bit-oriented framing (HDLC and bit stuffing), and clock-based framing (SONET).
+sources:
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Byte Oriented Protocols, Point-to-point protocol (PPP)
+## Purpose
 
-## Byte-Oriented Framing
+The physical layer delivers a stream of bits. The link layer has to know where each frame starts and ends inside that stream. This note covers the three families of framing, based on Peterson and Davie's treatment: byte-oriented, bit-oriented, and clock-based.
 
-- Oldest approach, viewing frames as collections of bytes.
-- Examples: BISYNC by IBM, DDCMP in DECNET, PPP.
+## Byte-oriented framing
 
-## Length Field Approach
+The oldest approach views a frame as a collection of bytes. BISYNC (IBM), DDCMP (DECNET), and PPP all frame this way. Within the family there are two ways to find the end of a frame.
 
-- Include frame byte count in header (DDCMP approach).
-- Risk: Transmission error corrupting count field; framing error.
+### Length field approach
 
-## Sentinel-based Approach/Byte Stuffing
+DDCMP puts the frame's byte count in the header, and the receiver counts bytes until the frame is done. The weakness is that a transmission error in the count field desynchronizes the receiver from the real frame boundaries, a framing error.
 
-- Use special characters (SYN, STX, ETX) to indicate frame boundaries.
-- Challenge: Special characters in data; overcome by character stuffing or escape sequences similar to C.
+### Sentinel approach and byte stuffing
 
-## PPP Frame Format
+BISYNC instead marks frame boundaries with special characters (SYN, STX, ETX). The problem is that the payload can contain those same characters. The fix is to escape them, inserting an escape character before any sentinel byte that appears in the data, the same way C strings escape quotes. This is byte stuffing.
 
-- Used for IP packet transmission over point-to-point links.
-- Start-of-text character (Flag field: 01111110).
-- Negotiable field sizes, CRC used for checksum.
+### PPP frame format
 
-## LCP Protocol and Negotiation
+PPP carries IP packets over point-to-point links. Its flag field, 01111110, marks the start of a frame, several of its field sizes are negotiable, and a CRC protects the frame.
 
-- Link Control Protocol (LCP) negotiates field sizes in PPP.
-- Controls encapsulated in PPP frames.
-- Involvement in link establishment between peers.
+The negotiation happens through the Link Control Protocol (LCP). LCP control messages are themselves carried inside PPP frames, and LCP runs the link establishment between the two peers.
 
-# Bit Oriented Protocols (HDLC)
+## Bit-oriented framing (HDLC)
 
-## Bit-Oriented Framing
+Bit-oriented protocols treat the frame as a bit stream and ignore byte boundaries. IBM's SDLC was the first, later standardized by ISO as HDLC.
 
-- Views frames as a bit stream, not concerned with byte boundaries.
-- Examples: SDLC developed by IBM, standardized as HDLC by ISO.
+HDLC marks both the start and end of a frame with the bit sequence 01111110. Like the sentinel approach above, this raises the question of what happens when the payload contains the marker, and the answer is bit stuffing.
 
-## HDLC Frame Format
+### Bit stuffing
 
-- Denotes frame start and end with bit sequence 01111110.
-- Uses sentinel approach, similar to byte-oriented protocols.
-- Bit stuffing employed to handle the sequence within the frame.
+The sender inserts a 0 after every five consecutive 1s in the body. The receiver, on seeing five 1s, looks at the next bit. A 0 was stuffed, so it gets removed. A 1 means this is either the end-of-frame marker or an error, and the bit after that decides which.
 
-### Bit Stuffing in HDLC
+## Frame size
 
-- Inserts 0 after five consecutive 1s during transmission.
-- Receiver removes stuffed 0 based on the next bit.
-- Distinguishes between end-of-frame marker and errors.
+With stuffing, the bits on the wire depend on the payload, so frames of equal payload size can differ in length, and no fixed frame size can be enforced. Clock-based protocols take the opposite approach.
 
-## Frame Size Dependency
+## Clock-based framing (SONET)
 
-- Frame size depends on payload data; not all frames can be the same size.
-- Challenges with ensuring consistent frame size discussed in the next subsection.
+The Synchronous Optical Network (SONET) standard handles framing, encoding, and multiplexing for data over optical fiber. SONET frames have a fixed length and rely on timing rather than stuffing.
 
+The receiver finds frame boundaries by looking for a special bit pattern that recurs at a fixed interval, every 810 bytes in an STS-1 frame. Since the frame length never depends on the data, no stuffing is needed. Payload bytes are scrambled to guarantee enough signal transitions for clock recovery, and a good chunk of SONET's complexity comes from its overhead bytes and network-level features.
 
-# Clock-Based Protocols (SONET)
+### Multiplexing and concatenation
 
-## Clock-Based Framing in SONET
-
-- Exemplified by Synchronous Optical Network (SONET) standard.
-- Addresses framing, encoding, and multiplexing for data over optical fiber.
-
-## SONET Frame Structure
-
-- SONET frame has special information for start and end.
-- No bit stuffing used; frame length independent of data.
-- Special bit pattern in STS-1 frame helps receiver locate frame boundaries.
-
-## Overhead and Payload
-
-- SONET complexity due to overhead bytes and network-level considerations.
-- Payload bytes scrambled for clock recovery.
-- SONET supports multiplexing of low-speed links.
-
-## Multiplexing in SONET
-
-- SONET links run at rates ranging from STS-1 to STS-768.
-- A single SONET frame can contain subframes for multiple lower-rate channels.
-- STS-N frame consists of N interleaved STS-1 frames.
-
-## Concatenation in SONET
-
-- STS-N signal used to multiplex N STS-1 frames; payload may be concatenated.
-- Denoted as STS-Nc for concatenated links.
-- Simplifies clock synchronization across carriers' networks.
+SONET links run at a hierarchy of rates from STS-1 up to STS-768, and a single SONET frame can carry subframes for multiple lower-rate channels. An STS-N frame is N interleaved STS-1 frames. When the payload should be treated as one fat pipe instead of N thin ones, the payloads are concatenated, written STS-Nc. Keeping the hierarchy synchronous simplifies clock coordination across carriers' networks.
 
 ## Related notes
 

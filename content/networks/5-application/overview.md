@@ -1,11 +1,35 @@
 ---
 title: Application Layer Overview
 category: Networks
-tags: TCP, UDP, application layer, reliability, flow control, overhead
+tags:
+  - application-layer
+  - TCP
+  - UDP
+  - reliability
 date: 2024-03-04
-description: Covers the implementation of the application layer, the topmost layer of the TCP/IP network model. Discusses the role of protocols like TCP and UDP in providing reliability, flow control, and overhead management at the application level. Examines the key concepts and design considerations for application layer functionality.
+updated: 2026-07-30
+status: draft
+description: How applications choose between TCP and UDP as the substrate for application-layer protocols.
+sources:
+  - title: "CSE 461: Computer Networks, University of Washington"
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: lecture
+  - title: "Computer Networks: A Systems Approach"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Application Layer Overview
+## Purpose
 
-Applications built upon TCP have the benefit of being able to transfer arbitrary length data. Also provides reliability and flow control. However, some applications may not require these features and may be better suited to use UDP. Some applications even need to use UDP because they can't handle the overhead of TCP (like skype or online gaming).
+Frame the transport choice that every application-layer protocol makes before the notes on individual protocols.
+
+## Core idea
+
+Applications built on [[networks/4-transport/TCP|TCP]] can transfer arbitrary-length data and get reliability and flow control for free. Some applications do not need those guarantees, and some actively cannot afford them. Internet telephony and online games run on [[networks/4-transport/UDP|UDP]] because a retransmitted packet arrives too late to be useful, and the delays TCP introduces waiting for in-order delivery hurt more than the losses do. The protocol notes in this section, [[networks/5-application/HTTP|HTTP]] and [[networks/5-application/DNS|DNS]], show one of each. HTTP rides on TCP because pages must arrive intact, while DNS rides on UDP because a lookup is one small message and a retry is cheap.
+
+## Related notes
+
+- [[networks/5-application/HTTP|HTTP]]
+- [[networks/5-application/DNS|DNS]]
+- [[networks/5-application/CDNs|content delivery networks]]
+- [[networks/4-transport/transport-overview|transport layer overview]]

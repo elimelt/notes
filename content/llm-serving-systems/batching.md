@@ -1,222 +1,122 @@
 ---
 title: Batching in LLM Serving Systems
 category: Machine Learning Systems
-tags: batching, performance, throughput, latency, llm, serving systems, machine learning
+tags:
+  - batching
+  - performance
+  - throughput
+  - latency
+  - llm
+  - serving-systems
+  - machine-learning
 date: 2025-05-25
-description: Overview of batching techniques in LLM serving systems,
+updated: 2026-07-30
+status: needs-review
+description: How batching strategies (simple, continuous, chunked prefill, prefill-decode disaggregation) trade throughput against TTFT and TPOT, with the batch size formulas that fall out of SLO and KV-cache constraints.
+sources:
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
+  - title: "Orca: A Distributed Serving System for Transformer-Based Generative Models (OSDI 2022)"
+    url: https://www.usenix.org/conference/osdi22/presentation/yu
+    type: paper
+  - title: "SARATHI: Efficient LLM Inference by Piggybacking Decodes with Chunked Prefills"
+    url: https://arxiv.org/abs/2308.16369
+    type: paper
+  - title: "DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving"
+    url: https://arxiv.org/abs/2401.09383
+    type: paper
 ---
 
-# Batching in LLM Serving Systems
+## Purpose
 
-Batching exposes the tradeoff between the latency and throughput models in [[llm-serving-systems/performance-modeling|Performance Modeling]] and the per-request KV-cache costs discussed in [[llm-serving-systems/memory-management|Memory Management]].
+This note works through the main batching strategies for LLM serving and the constraints that limit batch size. Batching exposes the tradeoff between the latency and throughput models in [[llm-serving-systems/performance-modeling|Performance Modeling]] and the per-request KV-cache costs in [[llm-serving-systems/memory-management|Memory Management]].
 
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025, taught by Prof. Baris Kasikci with TA Kan Zhu. The specific latencies and capacity numbers below come from lecture slides. I have not reproduced them, and the slides do not spell out the full measurement setup, so treat them as illustrative.
 
-## Overview
+## Core idea
 
-Batching is critical for LLM serving performance. The H100 needs **333 batch size** to reach peak performance. Batching involves two key considerations:
+An H100 needs a GEMM batch size around 333 before it becomes compute bound (see the critical intensity derivation in [[llm-serving-systems/performance-modeling|Performance Modeling]]), so a serving system that decodes one request at a time wastes almost all of its FLOPs. Batching recovers that throughput. The cost is latency, and every batching strategy is a different answer to how much latency you pay and where.
 
-1. **User Experience** - maintaining response quality and latency
-2. **Throughput** - maximizing system efficiency
+## User experience metrics
 
-## User Experience Metrics
+The latency side of the tradeoff is measured with a few standard quantities:
 
-### Key Latency Metrics
+- Time to First Token (TTFT): time from request submission to the first generated token. TTFT = queuing time + prefill time.
+- Time Per Output Token (TPOT, also called ITL or inter-token latency): gap between consecutive output tokens. Reported as an average or as a maximum.
+- End-to-end time: queue + prefill + full decode.
+- Normalized latency: end-to-end time divided by output token count.
 
-- **Time to First Token (TTFT)**: Time between user request submission and first token generation
-  - TTFT = Queuing time + Prefill time
-- **Time Per Output Token (TPOT/ITL/IBT)**: Time between each output token
-- **Average TPOT**: Average time to produce one output token
-- **End-to-end time**: Total time to queue, prefill, and decode entire request
-- **Normalized Latency**: End-to-end time / number of output tokens
+Service level objectives combine these. Meeting an end-to-end deadline is the easiest target, since the system can shuffle time between prefill and decode freely. TTFT plus average TPOT is harder. TTFT plus maximum TPOT is hardest, because a single slow decode step violates it. When the SLO is deadline shaped, the server can deliberately delay token output to smooth generation, releasing buffered tokens at a steady rate that still lands inside the deadline.
 
-### Service Level Objectives (SLO)
+## Batching strategies
 
-Common SLO types in order of difficulty:
+### Simple batching
 
-1. **End-to-end time** (easiest)
-2. **TTFT + Average TPOT**
-3. **TTFT + Maximum TPOT** (hardest)
+Form a batch, run prefill for everyone, then decode everyone in lockstep until the last request finishes. Throughput is the lowest of the four strategies because the whole batch waits on the longest decode, and finished slots sit idle. TTFT and TPOT are short, and the implementation is trivial.
 
-**SLO Difficulty**: TTFT + TPOT_max > TTFT + TPOT_avg > E2E
+### Continuous batching (Orca)
 
-### Deadline-Based SLO Management
+[Orca](https://www.usenix.org/conference/osdi22/presentation/yu) admits new requests at token granularity: whenever a decode slot frees up, a waiting request takes it. Nothing waits for the longest request, so throughput rises, the GEMM batch size stabilizes, and queuing time drops. The cost is interference. Prefills run inside the same iteration as decodes, so a large arriving prompt stalls every concurrent decode, and prefill itself waits on decode work.
 
-- Can use **delay strategies** to smooth token generation when deadlines allow
-- **TTFT + TPOT_max ge DDL > TTFT + TPOT_avg > E2E**
-- Delaying token output can help meet consistent TPOT requirements
+The steady-state GEMM batch size follows from counting tokens. A request with prefill length $p$ and decode length $d$ lives for $d + 1$ iterations (one iteration processes all $p$ prompt tokens, then $d$ iterations produce one token each) and contributes $p + d$ token computations over that lifetime. With $B$ requests in flight the average tokens per iteration is
 
-## Batching Strategies
+$$\text{GEMM batch size} = \frac{p+d}{d+1}B = B + \frac{p-1}{d+1}B \approx \left(1 + \frac{p}{d}\right)B \text{ for large } d$$
 
-### 1. Simple Batching
+Longer prompts inflate the GEMM batch, longer decodes shrink it toward $B$. Example from lecture: $B = 512$ with $p/d = 2$ gives a GEMM batch of about $512 \times 3 = 1536$.
 
-- **Characteristics**:
-  - Lowest throughput
-  - Short TTFT and TPOT
-  - Low infrastructure complexity
-- **Limitation**: Bottlenecked by longest decode request
+### Chunked prefill
 
-### 2. Continuous Batching (Orca)
+Continuous batching still produces generation stalls because prefill sizes vary. Chunked prefill (introduced by [Sarathi](https://arxiv.org/abs/2308.16369)) fixes a token budget per iteration and fills it with all the pending decodes plus a fixed-size chunk of whatever prefill is in progress. The GEMM batch size becomes constant, decode latency becomes controlled, and throughput is the highest of the four strategies. TTFT gets worse, since a prompt now takes several iterations to prefill, and the scheduler has to manage chunk state.
 
-**Key Insight**: Admit new requests when decode requests finish
+### Prefill-decode disaggregation
 
-**Benefits**:
+Run prefill and decode on separate clusters ([DistServe](https://arxiv.org/abs/2401.09383) is the reference design). The prefill server processes the prompt, ships the KV cache to a decode server, and the decode server generates tokens. Both TTFT and TPOT can be short because neither phase interferes with the other, and in the limit you can dedicate a machine per request. Throughput suffers, since the decode cluster runs memory bound at modest batch sizes, and the KV transfer adds real cost. Lecture figure: about 160 ms to move the KV cache for a 16K-token prompt. Chunked prefill combined with layer-wise transfer hides most of that latency by streaming KV pages while later chunks are still computing; only the last layer of the last chunk has to move after prefill finishes.
 
-- **Higher throughput**: No waiting for longest decode request
-- **Stabilized GEMM batch size**: Better GPU utilization
-- **Reduced queuing time**: Requests enter at token granularity
+## What limits batch size
 
-**Drawbacks**:
+### SLO constraints
 
-- **Higher prefill latency**: Prefill batched with decode requests
-- **Higher decode latency**: Prefill slows concurrent decode
+For disaggregated serving, the prefill batch is limited by TTFT and the decode batch by TPOT. The decode constraint is $B \cdot \text{attn} + \text{GEMM}(B) + C < \text{TPOT}$, where $\text{attn}$ is the per-request attention (KV read) cost, $\text{GEMM}(B)$ is the dense compute for batch size $B$, and $C$ is fixed overhead.
 
-#### Batch Size Calculation
+For chunked prefill with dense token budget $B_{dense}$, the fraction $\frac{d}{p+d}$ of the budget is decode tokens, so
 
-For continuous batching with:
+$$\text{Cycle time} = \text{GEMM}(B_{dense}) + \frac{d}{p+d}B_{dense} \cdot \text{attn}$$
 
-- Decode length `d`
-- Prefill length `p`
-- Request batch size `B`
+with the constraints that cycle time stays under TPOT and $\frac{p+d}{B_{dense}} \times \text{cycle time}$ (the iterations needed to fully prefill one request, times cycle time) stays under TTFT.
 
-**GEMM batch size** = $$\frac{p+d}{d+1}B = B + \frac{p-1}{d+1}B$$
+### KV cache capacity
 
-**Key relationships**:
-
-- Increasing prefill length o increases GEMM batch size
-- Increasing decode length o decreases GEMM batch size
-- For large `d`: GEMM batch size approx $(1 + \frac{p}{d})B$
-
-**Example**: Batch size = 512, p/d = 2 o GEMM batch size = 512 imes3 = 1536
-
-### 3. Chunked Prefill
-
-**Problem**: Simple continuous batching creates generation stalls due to variable prefill sizes
-
-**Solution**: Break prefill into fixed-size chunks
-
-**Benefits**:
-
-- **Highest throughput**: Further stabilized batch size
-- **Controlled decode latency**: Eliminates generation stalls
-- **Consistent GEMM batch size**: Better performance predictability
-
-**Drawbacks**:
-
-- **Longest TTFT**: More cycles needed for prefill
-- **Higher infrastructure complexity**: Chunking management overhead
-
-#### Fixed Token Budget Approach
-
-- Allocate fixed token budget per iteration
-- Mix decode requests with prefill chunks
-- Maintains constant GEMM batch size
-
-### 4. Prefill-Decode Disaggregation
-
-**Architecture**: Separate clusters for prefill and decode operations
-
-**Process**:
-
-1. Prefill server processes input tokens
-2. KV cache transferred to decode server
-3. Decode server handles token generation
-
-**Benefits**:
-
-- **Short TTFT and TPOT**: Decoupled operations
-- **Optimal latency**: Can scale to one request per machine
-
-**Drawbacks**:
-
-- **Low throughput**: Prefill cluster fully utilized, decode underutilized
-- **High infrastructure complexity**: KV cache transfer overhead
-- **Network overhead**: KV transfer can be significant (160ms for 16K tokens)
-
-#### KV Transfer Optimization
-
-- Use **chunked prefill** + **layer-wise transfer** to overlap KV movement
-- Transfer last layer of last chunk when prefill completes
-
-## Batching Limitations
-
-### 1. SLO Constraints
-
-**For PD Disaggregation**:
-
-- Prefill batch limit o TTFT constraint
-- Decode batch limit o TPOT constraint: `B*attn + GEMM(B) + C < TPOT`
-
-**For Chunked Prefill**:
-
-- Cycle Time = GEMM(B*dense) + $\frac{d}{p+d}B*{dense}$ imes attn
-- Constraints: Cycle time < TPOT, $\frac{p+d}{B_{dense}}$ imes Cycle Time < TTFT
-
-### 2. GPU Memory Capacity
-
-**KV Cache Limitations**:
-
-- For 8B model on H100: ~512K tokens max
-- **Challenge**: Output length unknown, KV cache grows over time
-
-#### Batch Size Formulas
-
-**For constant lengths**:
+An 8B model on an H100 leaves room for roughly 512K tokens of KV cache (derivation in [[llm-serving-systems/memory-management|Memory Management]]). A request holds its $p$ prefill tokens for its entire decode and its decode allocation grows linearly from 0 to $d$, so on average it occupies $p + \frac{d}{2}$ token slots. With capacity $C$ tokens:
 
 $$B = \frac{C}{p + \frac{1}{2}d}$$
 
-**For variable lengths**:
-$$B = \frac{d_{avg}C}{(pd)_{avg} + \frac{1}{2}(d^2)_{avg}}$$
+When lengths vary, longer requests occupy the cache for more iterations, which weights the average toward them:
 
-Where:
+$$B = \frac{d_{avg}\,C}{(pd)_{avg} + \frac{1}{2}(d^2)_{avg}}$$
 
-- `C` = KV cache capacity
-- `p` = prefill length
-- `d` = decode length
-- Longer requests occupy cache longer, reducing effective batch size
+Sanity check from the lecture example: 1K input tokens, output uniform on 0 to 4K, $C = 512K$. Then $d_{avg} = 2K$, $(pd)_{avg} = 2M$, $(d^2)_{avg} = \frac{(4K)^2}{3} \approx 5.33M$, giving $B \approx \frac{2K \times 512K}{2M + 2.67M} \approx 220$.
 
-**Example**: 1K input, uniform 0-4K output o effective batch size approx 220
+The awkward part is that $d$ is unknown at admission time. The cache fills gradually and can run out mid-decode.
 
-### 3. Memory Management Strategies
+### Handling memory pressure
 
-**Prediction-Based Control**:
+Two families of mitigation. Prediction-based control uses a small encoder model to predict output length, stops admitting prefills when the predicted KV footprint would exceed capacity, and (for disaggregated setups) parks requests in a decode pending queue. When the system still runs out, it evicts. Offloading a victim's KV cache to CPU memory beats recomputing it, by roughly 12x in the lecture's A100 estimate (see the eviction analysis in [[llm-serving-systems/memory-management|Memory Management]]), with least-recently-used requests evicted first.
 
-- Use small encoder models to predict output length
-- Stop prefill when KV cache predicted to exceed capacity
-- Add decode pending queues for PD disaggregation
+## Comparison
 
-**Out-of-Memory Handling**:
-
-- Similar to prefix sharing eviction
-- Offload KV cache to CPU memory (faster than recomputation)
-- Evict least recently used requests
-
-## Performance Comparison
-
-| Method              | Throughput | TTFT    | TPOT             | Infra Complexity |
+| Method              | Throughput | TTFT    | TPOT             | Infra complexity |
 | ------------------- | ---------- | ------- | ---------------- | ---------------- |
 | Simple              | Lowest     | Short   | Short            | Low              |
-| Continuous Batching | High       | Longer  | Long, Unstable   | Low              |
-| Chunked Prefill     | Highest    | Longest | Long, Controlled | Medium           |
-| PD Disaggregation   | Low        | Short   | Short            | High             |
+| Continuous batching | High       | Longer  | Long, unstable   | Low              |
+| Chunked prefill     | Highest    | Longest | Long, controlled | Medium           |
+| PD disaggregation   | Low        | Short   | Short            | High             |
 
-## Advanced Considerations
+## Edge cases and open issues
 
-### SLO Attainment Strategies
+Hitting a 95th-percentile SLO target sometimes forces ugly policies, like dropping requests with very long inputs or outputs, indefinitely delaying requests predicted to violate their SLO, or prioritizing requests with strict SLOs over lenient ones. Fairness cuts against pure SLO attainment: every request should make progress, users should get comparable throughput shares, and a graded "badness" measure of SLO violation is more useful for scheduling than a binary attain-or-violate flag. Output length remains the central uncertainty. Long generations sit in the KV cache, create memory pressure, and cause batch size oscillations, so length prediction accuracy directly affects how close a scheduler gets to the formulas above.
 
-- **95% SLO targets** may require:
-  - Dropping long input/output requests
-  - Infinite delay for predicted SLO violations
-  - Prioritizing high-SLO requests
+## Related notes
 
-### Fairness Constraints
-
-- All requests should make progress
-- Equal throughput share per user
-- SLO violation "badness" metrics vs binary attain/violate
-
-### Output Length Impact
-
-- Longer requests stay in KV cache longer
-- Creates memory pressure and batch size oscillations
-- Prediction accuracy critical for optimal performance
+- [[llm-serving-systems/performance-modeling|Performance Modeling]]
+- [[llm-serving-systems/memory-management|Memory Management]]
+- [[llm-serving-systems/speculative-decoding|Speculative Decoding]]

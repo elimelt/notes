@@ -1,31 +1,43 @@
 ---
 title: Spring Boot Quickstart Guide
 category: Software Engineering
-tags: spring boot, quick start, spring web, rest repositories
+tags:
+  - spring-boot
+  - quickstart
+  - gradle
+  - spring-web
 date: 2023-12-21
-description: A step-by-step guide to creating a Spring Boot application with Rest Repositories
+updated: 2026-07-30
+status: evergreen
+description: Steps to generate, run, build, and deploy a Spring Boot application with Gradle.
+sources:
+  - title: Spring Initializr
+    url: https://start.spring.io/
+    type: docs
 ---
 
-# Quickstart
+Minimal steps to get a Spring Boot project running with Gradle.
 
-Create a zip file with (start.spring.io)[https://start.spring.io/] including the following dependencies:
+## Create the project
+
+Generate a zip at [start.spring.io](https://start.spring.io/) including the following dependencies:
 
 - Spring Web
 - Rest Repositories
 
-## Unzip the file
+Unzip the file and open the project in IntelliJ:
 
 ```bash
 unzip helloworld.zip
 ```
-
-Open the project in IntelliJ. Start the server and verify that the application is running by visiting http://localhost:8080/hello
 
 ## Running the application
 
 ```bash
 ./gradlew bootRun
 ```
+
+The server listens on http://localhost:8080 once it boots.
 
 ## Building the application
 

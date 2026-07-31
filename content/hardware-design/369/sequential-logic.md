@@ -1,53 +1,70 @@
 ---
 title: Sequential Logic (SL)
 category: Hardware
-tags: sequential logic, digital systems, finite state machines, flip-flops, clock signals
+tags:
+  - sequential logic
+  - digital systems
+  - finite state machines
+  - flip-flops
+  - clock signals
 date: 2024-05-17
-description: Explains the concept of sequential logic in digital systems and its applications.
+updated: 2026-07-30
+status: evergreen
+description: How feedback gives circuits state, how D flip-flops and registers synchronize signals with a clock, and the timing constraints that set maximum clock frequency.
+sources:
+  - title: UW CSE 369 lecture notes
+    type: lecture
 ---
 
-# Sequential Logic (SL)
+## Purpose
 
-Whereas in [[hardware-design/369/combinational-logic|combinational logic]], you have outputs which are direct functions of their inputs, with sequential logic the presence of *feedback* gives circuits the ability to store state. This is the basis for memory and computation in digital systems.
+In [[hardware-design/369/combinational-logic|combinational logic]] the outputs are direct functions of the inputs. Sequential logic adds *feedback*, which gives circuits the ability to store state. That state is the basis for memory and computation in digital systems, and this note covers the flip-flop that stores it and the timing rules it imposes.
 
-This helps control the flow of information through blocks of combinational logic, usually synchronizing with a clock signal. One of the major use cases of sequential logic is in **Finite State Machines (FSM)**. Without SL, the output of a combinational circuit would change instantly with every change in input, which can lead to unpredictable behavior within intermediate states, leading to unexpected outputs.
+Sequential logic controls the flow of information through blocks of combinational logic, usually synchronized with a clock signal. One major use case is the **Finite State Machine (FSM)**. Without sequential logic, the output of a combinational circuit would change with every change in input, including glitches through intermediate states, so downstream logic could see unpredictable values.
 
-## Positive Edge-Triggered D-type Flip-Flop
+## Positive edge-triggered D flip-flop
 
-On the rising edge of the clock signal, input is sampled and transferred to the output signal. At all other times, changes in the input are ignored and the previously samples value is retained. This essentially has the effect of *synchronizing* the input signal with the clock signal, or rather quantizing changes in the input signal to only fall on the rising edge of the clock signal.
+On the rising edge of the clock, the flip-flop samples its input and transfers it to the output. At all other times it ignores changes on the input and holds the previously sampled value. This *synchronizes* the input with the clock, quantizing input changes so that they only take effect on rising clock edges.
 
 ## Registers
 
-A `n` bit register is composed of `n` flip-flops. Registers have the addition of a `reset` signal, which sets the register to a known state if it is high during a clock trigger.
+An $n$-bit register is $n$ flip-flops sharing a clock. Registers add a `reset` signal, which forces the register to a known state when it is high during a clock trigger.
 
-## Flip-Flop Timing
+## Flip-flop timing
 
-- **Setup Time**: how long the input needs to be stable *before* the clock trigger for a proper read
-- **Hold Time**: how long the input needs to be stable *after* the clock trigger for a proper read
-- **"Clock-to-Q Delay"**: how long it takes the output to changed after a clock trigger
+- **Setup time** $t_{setup}$: how long the input must be stable *before* the clock trigger for a proper read.
+- **Hold time** $t_{hold}$: how long the input must be stable *after* the clock trigger for a proper read.
+- **Clock-to-Q delay** $t_{clk\text{-}to\text{-}Q}$: how long the output takes to change after a clock trigger.
 
-Let $t_{input, i}$ be the time it takes for the input of a register to change for the $i$-th time in a single clock cycle, measured from the clock signal. Then we need...
+Let $t_{input, i}$ be the time at which the input of a register changes for the $i$-th time within a clock cycle, measured from the clock edge. Every change must land in the window
 
 $$
 t_{hold} \le t_{input, i} \le t_{period} - t_{setup}
 $$
 
-### Minimum Delay
+The lower bound keeps the input stable long enough after the edge for the old value to latch. The upper bound leaves the input stable for the setup window before the next edge.
 
-If the shortest path to a register input is too short, then $t_{hold}$ could be violated, meaning the input could change before the state is "locked in". We have...
+### Minimum delay
 
-- `min_delay = min(clk_to_q + min_cl_delay, min_cl_delay)`
-- `min_delay >= t_hold`
+If the shortest path to a register input is too short, the input can change before the state is locked in, violating $t_{hold}$. The shortest path either starts at another register (clock-to-Q plus the shortest combinational delay) or comes straight from an external input (just the combinational delay):
 
-### Maximum Clock Frequency
+```plaintext
+min_delay = min(clk_to_q + min_cl_delay, min_cl_delay)
+min_delay >= t_hold
+```
 
-The maximum frequency you can run your clock at is limited by the amount of time needed to get a correct next state to your registers. We must have...
+### Maximum clock frequency
 
-`max_delay = max(clock_to_q + max_cl_delay, max_cl_delay)`
+The clock can only run as fast as the slowest path that must deliver a correct next state to a register:
 
-Then, `min_period = max_delay + t_setup`, and `max_freq = 1/min_period`.
+```plaintext
+max_delay  = max(clk_to_q + max_cl_delay, max_cl_delay)
+min_period = max_delay + t_setup
+max_freq   = 1 / min_period
+```
 
 ## Related
 
 - [[hardware-design/369/waveform-diagram|Waveform Diagrams]]
 - [[hardware-design/371/algorithmic-state-machines|Algorithmic State Machines]]
+- [[hardware-design/371/static-timing-analysis|Static Timing Analysis]]

@@ -1,19 +1,35 @@
 ---
 title: "Dynamo: Amazon's Highly Available Key-value Store"
 category: Distributed Systems
-tags: key-value store, database design, high availability, consistency, object versioning, conflict resolution
+tags:
+  - key-value-store
+  - high-availability
+  - object-versioning
+  - conflict-resolution
+  - paper-notes
 date: 2024-08-04
-description: A highly available key-value storage system sacrificing consistency under failure conditions, using object versioning and application assisted conflict resolution.
+updated: 2026-07-30
+status: incomplete
+description: Stub notes on the Dynamo paper (SOSP 2007). Records the paper's main move and its core techniques; the mechanism details are not written up yet.
+sources:
+  - title: "Dynamo: Amazon's Highly Available Key-value Store (SOSP 2007)"
+    url: https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf
+    type: paper
 ---
-# Dynamo: Amazon's Highly Available Key-value Store
 
-[reading](https://dl-acm-org.offcampus.lib.washington.edu/doi/pdf/10.1145/1323293.1294281)
+## Purpose
 
+Notes on the [Dynamo paper](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf). This is a stub. Only the main idea is recorded so far.
 
-Dynamo is a highly available key-value storage system that sacrifices consistency under certain failure conditions, making extensive use of object versioning and application assisted conflict resolution.
+## Main idea
+
+Dynamo is a highly available key-value store that sacrifices consistency under certain failure conditions. Writes are always accepted, so the system can produce divergent versions of an object, and it makes extensive use of object versioning with vector clocks plus application-assisted conflict resolution to reconcile them. Reconciliation happens at read time, and when the version history alone cannot decide, the application merges the divergent versions itself, the shopping cart being the paper's running example.
+
+The paper's techniques worth writing up properly: consistent hashing for partitioning and replication, vector clocks for versioning, sloppy quorums with hinted handoff for availability during failures, and gossip-based membership.
 
 ## Related notes
 
 - [[distributed-systems/consistency|consistency]]
 - [[distributed-systems/sharding|sharding]]
 - [[distributed-systems/disconnected-operation|disconnected operation]]
+- [[distributed-systems/clocks|clocks]]

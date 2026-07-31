@@ -1,59 +1,58 @@
 ---
 title: I/O Systems and Secondary Storage
 category: Operating Systems
-tags: I/O systems, secondary storage, device controllers, DMA, system bus, PCI bus, programmed I/O, device drivers
+tags:
+  - io-systems
+  - secondary-storage
+  - device-controllers
+  - dma
+  - buses
+  - device-drivers
 date: 2024-02-26
-description: Covers the implementation of I/O systems and secondary storage in operating systems. Discusses the hardware environment of I/O systems, their role and structure, the memory hierarchy, and performance considerations for hard disk drives (HDDs) and solid-state drives (SSDs). Explores topics such as device controllers, direct memory access (DMA), system and PCI buses, programmed I/O, and device drivers.
+updated: 2026-07-30
+status: needs-review
+description: How I/O hardware is organized (device controllers, buses, DMA), the ways the OS drives devices, and where secondary storage sits in the memory hierarchy. The 2024 price figures are unsourced lecture numbers.
+sources:
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# I/O Systems and Secondary Storage
+This note covers the hardware side of I/O (controllers, buses, DMA), what the OS's I/O system has to provide, and the characteristics of secondary storage. It is marked needs-review because the storage prices below came from lecture without a source.
 
+## I/O hardware
 
-## I/O System Hardware Environment
+I/O devices are typically **block devices**, which transfer data in fixed-size blocks, or **character devices**, which transfer data one character at a time as a stream.
 
-I/O devices are typically either **block devices**, which transfer data in fixed-size blocks, or **character devices**, which transfer data one character at a time in a stream.
+A **device controller** is the hardware that connects the CPU to a device, and it is a small computer in its own right. It sends commands to the device and moves data in both directions. The CPU talks to controllers through controller registers or memory-mapped I/O, or hands transfers off to direct memory access (DMA).
 
-**Device controllers** are the hardware (a mini-computer) that connects the CPU to the I/O devices. They are responsible for sending commands to the device, and for receiving and sending data to and from the device.
+Old computers hung everything off a single bus (the **system bus**) connecting the CPU, memory, and I/O devices, a topology like old Ethernet networks with a single broadcast domain. Modern systems use multiple buses. The **PCI** bus is a high speed backbone, and the other buses (**memory**, **SCSI**, **USB**, and so on) branch off of it.
 
-The I/O devices communicate via controller registers/memory-mapped I/O, or direct memory access (DMA).
+The I/O system has to cope with a wide variety of devices that differ in transfer rate, data format, and control mechanism.
 
-Old computers typically had a single bus (the **system bus**) that connects the CPU, memory, and I/O devices. The topology of the computer was similar to old ethernet networks with a single broadcast domain.
+## What the OS I/O system provides
 
-More modern and performant systems have multiple buses. The **PCI** bus is a high-speed backbone that all the other busses branch off of (**memory**, **SCSI**, **USB**, etc.).
+- A uniform interface across many devices, plus device-specific interfaces where necessary.
+- Device communication and interaction through device drivers.
+- A unique ID per device so applications can refer to it.
 
-The I/O system needs to be able to handle a wide variety of devices with different data transfer rates, data formats, and control mechanisms.
+### Ways to drive a device
 
-## I/O System's Role and Structure
+- **Programmed I/O with polling**: the CPU issues an I/O command for the process, and the process busy-waits until the I/O completes. Inefficient, since the CPU is tied up the whole time.
+- **Interrupt-driven I/O**: the CPU issues the command and keeps executing. When the I/O completes, the device interrupts the CPU, which then handles the completion. The process may or may not block while waiting, but the processor stays free.
+- **Direct Memory Access (DMA)**: the DMA module moves a block of data between the I/O module and main memory using physical addresses. The processor requests the transfer and gets interrupted when it finishes, so it never has to touch the data in between.
 
-Needs to provide:
+## Secondary storage
 
-- A uniform interface to many devices, as well as device specific interfaces when necessary.
-- Device-system communication and interaction through device drivers.
-- Every device is given a unique id so it can be referenced by applications.
+Everything outside primary memory (RAM) counts as **secondary storage**: hard drives, SSDs, and other storage devices. Secondary storage doesn't allow direct execution of instructions or data access via load/store instructions; access goes through I/O operations.
 
-### Organization
+Secondary storage is non-volatile, so data survives power loss. It is very slow compared to primary storage, it is failure-prone, and it is enormous for the price. Rough 2024 street prices from lecture:
 
-- **Programmed I/O with polling**: CPU issues an I/O command for the process, and the process busy waits until the I/O is complete. Inefficient because the CPU is tied up waiting for the I/O to complete.
-- **Interrupt-driven I/O**: CPU issues an I/O command and continues to execute. When the I/O is complete, the device sends an interrupt to the CPU, which then handles the I/O completion. The process may or may not be blocked while waiting for the I/O to complete, but the processor is not tied up waiting for the I/O to complete.
-- **Direct Memory Access (DMA)**: The DMA module controls exchange of data between I/O module and main memory using physical addresses. The processor requests transfer of a block of data from DMA, and is interrupted when the transfer is complete. This saves the processor from having to handle the data transfer.
+- 2 TB HDD for $73, about $0.04/GB
+- 30 TB HDD for $700
+- 500 GB SSD for $50, about $0.10/GB
+- 100 TB SSD for $40,000
 
-## Secondary Storage
-
-Anything outside of *primary memory* (RAM) is considered **secondary storage**. This includes hard drives, SSDs, and other storage devices. SS doesn't allow direct execution of instructions or data access via load/store instructions, and is instead accessed via I/O operations.
-
-Secondary storage is...
-- **Non-volatile**: Data is retained even when the power is off.
-- Very slow compared to primary storage.
-- Failure-prone.
-- Giant and relatively cheap compared to primary storage. 2024 numbers:
-    - 2 TB HDD for $73 ($0.04/GB)
-    - 30 TB HDD for $700
-    - 500 GB SSD for $50 ($10/GB)
-    - 100 TB SSD for $40,000
-
-
-
-### Memory Hierarchy
+### Memory hierarchy
 
 | Level | Speed | Cost | Size | Volatility |
 |-------|-------|------|------|------------|
@@ -64,24 +63,26 @@ Secondary storage is...
 | Secondary Storage | Slow | Cheap | Largest | Non-Volatile |
 | Tertiary Storage | Slowest | Least Expensive | Largest | Non-Volatile |
 
+### HDDs and SSDs
 
-### HDDs and SDDs
-
-**HDDs** are mechanical devices that store data on spinning disks. They have a read/write head that moves across the disk to read and write data. They are slow, but have a large capacity and are relatively cheap.
-
-**SSDs** are solid-state devices that store data on flash memory. They are much faster than HDDs, but are more expensive. They are also more reliable and consume less power.
+**HDDs** are mechanical devices that store data on spinning disks, with a read/write head that seeks across the disk. They are slow, but capacity is large and cheap. **SSDs** store data in flash memory. They are much faster than HDDs and cost more per byte. They are also more reliable and draw less power.
 
 ### Disks and the OS
 
-Disks are messy, slow, error-prone, horrible devices, and its the OS's job to make them look like a nice, clean, fast, reliable, and easy-to-use device.
+Disks are messy, slow, error-prone devices, and it's the OS's job to make them look clean, fast, and easy to use.
 
-The OS typically provides different levels of disk access to different clients, including:
-- **physical block access**: the ability to read and write blocks of data to the disk.
-- **disk logical block access**: the ability to read and write to a disk block number, without needing to know the physical location of the block.
-- **file system**: the ability to read and write files at a specified offset, block, or byte.
+The OS typically exposes disk access at different levels to different clients:
 
-With old disks, only physical block access was available. With modern disks, the controller provides a higher-level interface that maps physical regions on disk (cylinders, sectors, ect.) to logical block numbers from $\lbrack  0, n  \rbrack$, (ie a contiguous range of blocks to the OS).
+- **Physical block access**: read and write blocks at physical locations on the disk.
+- **Logical block access**: read and write by disk block number, without knowing the physical location of the block.
+- **File system**: read and write files at a specified offset, block, or byte.
 
-### Performance Issues
+Old disks only offered physical block access. Modern disk controllers map the physical geometry (cylinders, sectors, and so on) to logical block numbers $0$ through $n-1$, so the OS sees one contiguous range of blocks.
 
-The HDD's performance is affected by its mechanically moving parts. Limiting the amount of seeking and **defragmenting** help, but only to an extent.
+### Performance
+
+An HDD's performance is dominated by its mechanically moving parts. Limiting seeks helps, and **defragmenting** helps, but only to an extent.
+
+## Related notes
+
+- [[operating-systems/lecture-notes/file-systems|file systems]]

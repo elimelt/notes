@@ -1,71 +1,84 @@
 ---
 title: Multiple Access
 category: Networks
-tags: multiplexing, time division multiplexing, frequency division multiplexing, centralized access control, distributed access control
+tags:
+  - multiplexing
+  - tdm
+  - fdm
+  - csma
+  - aloha
+  - binary-exponential-backoff
+  - ethernet
 date: 2024-02-05
-description: Covers the implementation of multiple access techniques in computer networks, including time division multiplexing (TDM) and frequency division multiplexing (FDM). Discusses centralized and distributed access control methods, such as Carrier Sense Multiple Access (CSMA) with Collision Detection (CSMA/CD) and Binary Exponential Backoff. Provides an overview of Ethernet frame structure and the underlying principles of these networking concepts.
+updated: 2026-07-30
+status: evergreen
+description: How multiple senders share one link. Covers TDM and FDM, centralized versus distributed access control, ALOHA, CSMA/CD, binary exponential backoff with the expected-wait derivation, and classic Ethernet.
+sources:
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
+  - title: UW CSE 461 Computer Networks
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: course
 ---
 
-# Multiple Access
+## Purpose
+
+A link often has more than one sender. This note covers how senders share it, from fixed schedules (TDM, FDM) to distributed random access (ALOHA, CSMA), and how classic Ethernet put the pieces together.
 
 ## Multiplexing
 
-**Multiplexing** is the networking concept of sharing a resource among multiple clients. Network traffic is generally bursty, to the point that two concurrent users each using 1 Mbps of bandwidth might only need 1.5 Mbps of bandwidth to share. Multiplexing allows for this sharing.
+**Multiplexing** shares one resource among multiple clients. Network traffic is bursty, so the shared capacity can be much smaller than the sum of the peaks. Two users who each burst at 1 Mbps might share 1.5 Mbps comfortably.
 
-### Time Division Multiplexing (TDM)
+### Time division multiplexing (TDM)
 
-Users take turns on a fixed schedule, often being scheduled in a round-robin fashion.
+Users take turns on a fixed schedule, often round-robin. Each user sends at a high rate for a short time.
 
-### Frequency Division Multiplexing (FDM)
+### Frequency division multiplexing (FDM)
 
-Users are assigned different frequency bands, and can transmit at the same time, interfering minimally with each other.
+Users get different frequency bands and transmit at the same time with minimal interference. Each user sends at a low rate constantly.
 
 ### TDM vs. FDM
 
-In TDM, users send at a high rate for a short time, while in FDM, users send at a low rate contantly. For a fixed number of users, TDM might be better if the users are bursty, while FDM might be better if the users are constant.
+For a fixed set of users, TDM suits bursty traffic and FDM suits constant traffic. TV and radio use FDM. GSM (2G cellular) uses TDM inside FDM.
 
-Ex: TV and radio use FDM, while GSM (2G cellular) uses TDM within FDM.
+## Controlling access
 
-## Controlling Access
-
-Two classes: **centralized** and **distributed**.
+Fixed schedules need someone to set the schedule. There are two classes of access control, centralized and distributed.
 
 ### Centralized
 
-Uses a privileged "Scheduler" to allocate resources/coordinate access. This usually scales well vertically and has low overhead, but is a single point of failure and doesn't hold up with the demands of the modern internet.
-
-- Ex: Cellular networks, where the base station schedules access to the channel.
-
+A privileged scheduler allocates the resource. Overhead is low and the scheduler can enforce policy like QoS, but it is a single point of failure and a bottleneck at scale. Cellular networks work this way, with the base station scheduling access to the channel.
 
 ### Distributed
 
-All of the participants "figure it out" themselves. Scaling this is really hard, but it operates well under low load, is easy to set up, and is very fault-tolerant (not to mention the benefits of being decentralized).
+The participants figure it out among themselves. Distributed access holds up well under low load, sets up easily, and tolerates faults, though scaling it is hard. WiFi and Ethernet work this way.
 
-- Ex: Wifi, Ethernet, and the internet.
+## Random access protocols
 
-### Distributed (Random) Access
+Random access assumes no one is in charge and collisions will happen.
 
-Assumes noone is in charge, and that everyone is trying to access the channel at the same time.
+**ALOHA**: send whenever you want. If there's a collision (no ACK), wait a random time and retry. Simple, and wasteful under load. The classic analysis puts pure ALOHA's peak utilization at about 18% of capacity, and slotting time (senders start only on slot boundaries) doubles that to about 36%.
 
-- **ALOHA Protocol**: Send whenever you want, and if there's a collision (no ACK), wait a random amount of time and try again. This is very simple, but has a high collision rate. At most 18% of the channel's capacity can be used. Quantization can be used to improve this to 36%.
+### Carrier sense multiple access (CSMA)
 
-### Carrier Sense Multiple Access (CSMA)
+Listen to the channel before sending, and wait if it's busy. Carrier sensing only really works on wired links (see [[networks/2-direct-links/wireless|wireless]] for why it fails over the air). CSMA beats ALOHA, but collisions still happen because a competing transmission takes a propagation delay to become audible. That makes CSMA a good idea only when the bandwidth-delay product is small, so the vulnerable window is short.
 
-Another distributed access protocol. The sender listens to the channel (only really works for wired) before sending, and if it's busy, waits. This is better than ALOHA, but still has a high collision rate due to delay. Only a good idea for small BD-product links.
+#### CSMA/CD (collision detection)
 
-#### CSMA/CD (with Collision Detection):
+Classic Ethernet adds collision detection. A sender that detects a collision stops immediately and retries after a random wait. The complication is that every node involved in the collision must be able to detect it.
 
-Used in Ethernet. If a collision is detected, the sender stops sending and waits a random amount of time before trying again. Complicated because everyone involved in collision must be able to detect it.
+A collision can take up to $2 \cdot D_{\text{propagation}}$ to detect (the signal crosses the wire, collides at the far end, and the interference crosses back). If a sender could finish its frame before that window closes, it would never learn about the collision. So the standard imposes a minimum frame length that takes at least $2 \cdot D_{\text{propagation}}$ to transmit, plus a maximum network length. That is why Ethernet has a 64-byte minimum frame, a 500 m limit for coaxial Ethernet, and a 100 m limit for twisted pair.
 
-Nodes have $2 \cdot D_{\text{propagation}}$ time to detect a collision. One can thus impose a minimum frame length of $2D# secones so that nodes can't finish sending a frame before the collision is detected. This is why Ethernet has a minimum frame size of $64$ bytes, and a maximum network length of $500$ m for Coaxial Ethernet, and $100$ m for Twisted Pair Ethernet.
+#### CSMA persistence
 
-#### CSMA "Persistence"
+Waiting for the channel to go free and then sending immediately fails, because every queued sender does the same thing and they all collide the moment the channel clears. The design goal instead is that with $N$ queued senders, each sends with probability about $1/N$.
 
-Cannot simply wait until the channel is free, as nodes might just continue to queue up until the channel becomes free and they collide. Instead, design such that heuristically, given $N$ queued senders, the probability of any given node sending is $1/N$.
+### Binary exponential backoff
 
-### Binary Exponential Backoff
+Ethernet approximates that probability without knowing $N$ by widening the retry window after each collision. Given a base time quantum $q$, after collision $i$ the sender waits
 
-Given some discrete base quantity of time $q$, after collision $i$, sender waits $t_{i} = q \cdot \text{rand}(0, 2^i - 1)$.
+$$t_i = q \cdot \text{rand}(0, 2^i - 1)$$
 
 ```python
 Q = 1 # seconds
@@ -76,41 +89,21 @@ def send(frame):
         t *= 2
 ```
 
-#### Math behind Binary Exponential Backoff
+The expected wait after the $k$-th collision follows directly. $W_k$ is uniform over $\{0, q, 2q, \dots, (2^k - 1)q\}$, and the mean of a uniform distribution over $0$ to $M$ is $M/2$, so
 
-- Let $k$ be the number of retransmission attempts.
-- Let $W_k$ be the waiting time for the k-th retransmission attempt.
-- Let $q$ be a fixed discrete time interval.
+$$E[W_k] = \frac{q(2^k - 1)}{2}$$
 
-$W_k = q \cdot \text{randchoice}([0, 2^k - 1])$
+Each collision doubles the expected wait, which backs the senders off fast enough to thin out the contention.
 
-Now, calculate the expected value $E[W_k]$:
+## Ethernet
 
-$E[W_k] = \sum_{i=0}^{2^k - 1} i \cdot q \cdot P(W_k = i \cdot q)$
+Classic Ethernet (IEEE 802.3) ran at 10 Mbps over shared coaxial cable and was everywhere in the 80s and 90s. Its multiple access scheme is 1-persistent CSMA/CD with binary exponential backoff. Modern Ethernet is built on [[networks/2-direct-links/switching|switches]], which give each host a point-to-point link and remove the need for CSMA/CD.
 
-Since $P(W_k = i \cdot q)$ is uniform $\forall i \in [0, 2^k - 1]$, it is equal to $2^{-k}$.
+### Ethernet frames
 
-$E[W_k] = q \cdot 2^{-k} \cdot \sum_{i=0}^{2^k - 1} i$
-
-$ \sum_{i=0}^{2^k - 1} i = (2^k - 1) \cdot \frac{2^k}{2}$ (sum of first $n$ natural numbers)
-
-$E[W_k] = q \cdot 2^{-k} \cdot ( (2^k - 1) \cdot 2^{k - 1} )$
-
-Simplify further:
-
-$E[W_k] = q \cdot ( (2^k - 1) / 4 )$
-
-Therefore, the expected value of the binary exponential backoff for a fixed discrete time interval $q$ is $E[W_k] = \frac{q}{4} \cdot (2^k - 1)$.
-
-### Ethernet
-
-Classis Ethernet (IEEE 802.3), popular in the 80s and 90s. 10 Mbpd over shared coaxial cable. Multiple Access with 1-peristence CSMA/CD with BEB". Modern ethernet is based on switches, avoiding the need for CSMA/CD.
-
-#### Ethernet Frames
-
-- Addresses to identify sender and receiver.
-- CRC-32 checksum to detect errors. No ACK or retransmission.
-- Start of frame identified with phys layer preamble.
+- Source and destination addresses identify sender and receiver.
+- A CRC-32 checksum detects errors. There is no ACK or retransmission.
+- A physical-layer preamble marks the start of the frame.
 
 ```plaintext
 +----------------+
@@ -135,3 +128,8 @@ Classis Ethernet (IEEE 802.3), popular in the 80s and 90s. 10 Mbpd over shared c
 +----------------+
 ```
 
+## Related notes
+
+- [[networks/2-direct-links/wireless|wireless]]
+- [[networks/2-direct-links/switching|switching]]
+- [[networks/2-direct-links/framing|framing]]

@@ -1,9 +1,15 @@
 ---
 title: Paper Review Template
 category: Research
-tags: meta, template, research, paper, review
+tags:
+  - meta
+  - template
+  - research
+  - paper
+  - review
 date: 2025-01-06
-description: A template for reviewing research papers
+status: evergreen
+description: A blank template for reviewing research papers. Copy it to start a new paper note.
 ---
 
 ###### [Paper Title](https://example.com)

@@ -1,57 +1,52 @@
 ---
 title: The Unix Timesharing System
 category: Operating Systems
-tags: unix, systems, operating systems
+tags:
+  - unix
+  - systems
+  - operating-systems
+  - paper-notes
 date: 2025-01-16
-description: Paper review/notes from lecture of Unix Timesharing System
+updated: 2026-07-30
+status: draft
+description: Paper and lecture notes on the original Unix paper, covering the file system implementation, device model, and process model.
+sources:
+  - title: The UNIX Time-Sharing System (Ritchie and Thompson)
+    url: https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf
+    type: paper
 ---
 
-###### [The Unix Timesharing System](https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf)
+## Purpose
 
----
+Notes from reading the Unix paper alongside lecture. These stay close to the mechanics, mostly the file system and process model. I never wrote up my own takeaways, so this is a record of the design more than a review of it.
 
-### What is the Problem?
+## Citation
 
-A very unspecific problem. Essentially they were burnt by Multics and wanted to create a simpler and more general system.
+- [The UNIX Time-Sharing System](https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf), Ritchie and Thompson.
 
-### Summary 
+## Problem
 
-Key design goal is simplicity. Everything is hierarchical. Everything is a file.
+The problem statement is deliberately unspecific. The authors were burnt by Multics and wanted a simpler, more general system. The key design goal is simplicity: everything is hierarchical, and everything is a file.
 
-#### File System Implementation
+## File system implementation
 
-- Tree strucutre
-- FS mounted on a file
-- Sys table of i-numbers (i-list)
-- i-node contains metadata for each file
-- path names don't distinguish between files and directories
-- mount table for mounted file systems
-- buffering is built into kernel and transparent to user
-    - write-behind (flushes to disk when buffer is full)
+The file system is a tree, and additional file systems get mounted onto a file. A system table of i-numbers (the i-list) holds an i-node of metadata for each file. Path names don't distinguish between files and directories, and a mount table tracks mounted file systems.
 
-#### Storage Devices
+Buffering is built into the kernel and transparent to the user, with write-behind flushing to disk when the buffer fills.
 
-- block devices
-    - data is stored in fixed-size blocks
-    - "free list" of blocks for allocation, Linked list of blocks
-    - hard disks, usb drive, ssd, tape drives
-    - early versions of ethernet
-- character devices
+## Storage devices
 
-#### Execution
+Block devices store data in fixed-size blocks and manage allocation through a free list, a linked list of blocks. Hard disks, tape drives, and later devices like USB drives and SSDs fit this model, and early versions of Ethernet were exposed the same way. Character devices cover everything else.
 
-- **Image** is an execution env (parallel container)
-- **Process** is an instance/execution of an image
-    - Program text write-protected and shared between all instances of that process
-    - Separate virtual address space for each process
-- Kernel
-    - Mediator for accessing services/hardware/shared resources
-### Key Insights
+## Execution
 
--
--
+An **image** is an execution environment, a rough parallel to a container. A **process** is an instance of an image in execution. Program text is write-protected and shared between all processes running the same image, while each process gets its own virtual address space. The kernel sits underneath as the mediator for services, hardware, and shared resources.
 
-## Related
+## Sources
+
+- [The UNIX Time-Sharing System](https://people.eecs.berkeley.edu/~brewer/cs262/unix.pdf)
+
+## Related notes
 
 - [[systems-research/exokernel|Exokernel]]
 - [[systems-research/xen|Xen and the Art of Virtualization]]

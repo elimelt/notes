@@ -1,25 +1,35 @@
 ---
 title: TLB and Page Walk Benchmarks
 category: Operating Systems
-tags: TLB, page table, virtual memory, page walk, huge pages, memory latency, benchmarks
+tags:
+  - tlb
+  - page-table
+  - virtual-memory
+  - page-walk
+  - huge-pages
+  - memory-latency
+  - benchmarks
 date: 2025-12-29
-description: Benchmarking TLB miss penalties and page walk costs on x86-64, demonstrating how access stride affects TLB hit rates and the benefit of hardware page walk caches.
+updated: 2026-07-30
+status: needs-review
+description: Measures the TLB miss penalty on x86-64 by sweeping access stride from 8 bytes to 8 KB over a 256 MB array, separating cache misses from TLB misses.
+sources:
+  - title: What Every Programmer Should Know About Memory (Ulrich Drepper)
+    url: https://www.akkadia.org/drepper/cpumemory.pdf
+    type: paper
 ---
 
+## Purpose
 
-# TLB and Page Walks
+Measure what a TLB miss costs. Every virtual address has to be translated to a physical address, and the CPU caches translations in the Translation Lookaside Buffer. On a miss, x86-64 hardware walks a 4-level page table, which takes up to 4 dependent memory accesses per translation. This benchmark isolates that cost by controlling how many accesses land on each page.
 
-## The Problem
+## Setup
 
-Virtual addresses must be translated to physical addresses. The CPU caches these translations in the **Translation Lookaside Buffer (TLB)**. When the TLB misses, the CPU must walk the page table - a series of dependent memory accesses.
+The CPU model and compiler flags were not recorded with these results, so the note is marked needs-review. The runs use a 256 MB array, 4 KB pages, and the same `./bench` harness as the other notes in this directory.
 
-On x86-64 with 4-level paging, a TLB miss requires up to 4 memory accesses to resolve.
+## Workload
 
-## The Benchmark
-
-Access array elements at different strides:
-- Small strides: many accesses per page, TLB hits
-- Page-sized strides (4KB): one access per page, TLB misses
+Read the array at a fixed stride:
 
 ```c
 for (size_t i = 0; i < n; i += stride) {
@@ -27,35 +37,21 @@ for (size_t i = 0; i < n; i += stride) {
 }
 ```
 
-## Results (256 MB array)
+Small strides touch each 4 KB page many times, so the translation is almost always already in the TLB. A 4 KB stride touches each page exactly once, so with a working set this large every access needs a fresh translation.
+
+## Results
 
 | Stride | Accesses/page | ns/access | vs sequential |
 |--------|---------------|-----------|---------------|
-| 8B | 512 | 1.36 ns | 1.0× |
-| 64B | 64 | 2.49 ns | 1.8× |
-| 512B | 8 | 5.38 ns | 4.0× |
-| 4KB | 1 | 12.51 ns | 9.2× |
-| 8KB | 0.5 | 13.31 ns | 9.8× |
+| 8B | 512 | 1.36 ns | 1.0x |
+| 64B | 64 | 2.49 ns | 1.8x |
+| 512B | 8 | 5.38 ns | 4.0x |
+| 4KB | 1 | 12.51 ns | 9.2x |
+| 8KB | 0.5 | 13.31 ns | 9.8x |
 
-## Observations
+## Interpretation
 
-### 1. TLB Miss Penalty: ~10 ns
-
-The jump from 512B stride (5.38 ns) to 4KB stride (12.51 ns) shows the TLB miss cost. At 4KB stride, every access misses the TLB.
-
-### 2. Page Walk is a Pointer Chase
-
-A TLB miss triggers a page table walk - 4 dependent loads through PML4 → PDPT → PD → PT. This is why the penalty is fixed (~10 ns) rather than scaling with stride.
-
-### 3. Hardware Page Walk Cache
-
-Modern CPUs cache intermediate page table entries (page walk cache / paging structure cache). This is why 4KB and 8KB strides show similar latency - upper-level entries are cached.
-
-### 4. TLB Capacity
-
-Typical L1 dTLB: 64-128 entries (covers 256KB-512KB with 4KB pages). L2 TLB: 1024-2048 entries. With 256MB of data at 4KB stride, we access 65K pages - far exceeding TLB capacity.
-
-## Cache vs TLB
+Two different effects hide in this table, and pulling them apart is the whole point:
 
 | Stride | Cache behavior | TLB behavior |
 |--------|---------------|--------------|
@@ -64,13 +60,15 @@ Typical L1 dTLB: 64-128 entries (covers 256KB-512KB with 4KB pages). L2 TLB: 102
 | 512B | Miss | Hit (8 accesses/page) |
 | 4KB | Miss | Miss (1 access/page) |
 
-The 64B→512B slowdown is cache misses. The 512B→4KB slowdown is TLB misses.
+The slowdown from 64 B to 512 B stride is cache behavior, since each access now pulls a fresh cache line. The jump from 512 B (5.38 ns) to 4 KB (12.51 ns) is the TLB. Both strides miss cache the same way, so the extra ~7 ns per access is the translation cost. Drepper's memory paper ([What Every Programmer Should Know About Memory](https://www.akkadia.org/drepper/cpumemory.pdf)) covers the TLB and paging structures behind these numbers.
 
-## Huge Pages
+The miss penalty stays fixed instead of growing with stride, and 8 KB stride costs about the same as 4 KB. The page walk is itself a pointer chase, four dependent loads through PML4, PDPT, PD, and PT, so in the worst case it would cost several DRAM round trips. It doesn't here because the CPU caches intermediate page table entries in its paging structure caches, and the upper-level entries for a linear scan stay resident. Most walks only need the leaf PT entry, which keeps the penalty near 10 ns.
 
-With 2MB huge pages, the TLB covers 512× more memory per entry. Page-strided access would hit TLB until the working set exceeds TLB capacity × 2MB.
+Capacity explains why the misses are total at page stride. An L1 dTLB on the order of 64-128 entries covers only a few hundred KB of 4 KB pages, and an L2 TLB in the low thousands of entries covers a few MB. Striding through 256 MB touches 65K distinct pages, far past either level.
 
-## Running
+Huge pages attack the same problem from the other side. A 2 MB page covers 512 times as much memory per TLB entry, so this page-strided workload would keep hitting the TLB until the working set passed the TLB entry count times 2 MB. I have not measured the huge-page variant here.
+
+## Reproduction
 
 ```bash
 ./bench tlb_seq 256   # Sequential (TLB hits)
@@ -80,3 +78,11 @@ With 2MB huge pages, the TLB covers 512× more memory per entry. Page-strided ac
 ./bench tlb_8k 256    # Skip pages
 ```
 
+## Sources
+
+- [What Every Programmer Should Know About Memory (Drepper)](https://www.akkadia.org/drepper/cpumemory.pdf)
+
+## Related notes
+
+- [[operating-systems/benchmarks/README|measuring real DRAM latency]]
+- [[operating-systems/benchmarks/mlp|memory-level parallelism]]

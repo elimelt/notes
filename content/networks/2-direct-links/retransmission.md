@@ -1,41 +1,53 @@
 ---
 title: Automatic Repeat reQuest (ARQ)
 category: Networks
-tags: automatic repeat request, stop-and-wait ARQ, sliding window ARQ, go-back-N ARQ, sequence numbers, timeouts, bandwidth-delay product
+tags:
+  - arq
+  - stop-and-wait
+  - sliding-window
+  - go-back-n
+  - sequence-numbers
+  - timeouts
 date: 2024-02-05
-description: Covers the implementation of Automatic Repeat reQuest (ARQ) protocols for reliable data transmission in computer networks. Discusses key concepts such as timeouts, sequence numbers, and the limitations of stop-and-wait ARQ. Provides an overview of different ARQ schemes, including sliding window ARQ and go-back-N ARQ, and their trade-offs in terms of bandwidth utilization and robustness to errors.
+updated: 2026-07-30
+status: evergreen
+description: Reliable delivery over a lossy link with ARQ. Covers stop-and-wait, sliding window, and go-back-N, plus the two design problems every ARQ scheme has to solve, timeouts and sequence numbers.
+sources:
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
+  - title: UW CSE 461 Computer Networks
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: course
 ---
 
-# Retransmission
+## Purpose
 
-Reliability is a key feature of a network, and there are measures in place accross the entire stack to ensure it.
+Frames get lost or corrupted, and [[networks/2-direct-links/errors|error detection]] only tells you something went wrong. Retransmission is how the link recovers. This note covers ARQ, the family of protocols that acknowledge good frames and resend the rest.
 
 ## Automatic Repeat reQuest (ARQ)
 
-Often used when errors are common or must be corrected (e.g. wireless links). Receiver automatically acknowledges correct frames, and sender retransmits frames that are not acknowledged by a certain timeout.
+ARQ is used when errors are common or must be corrected, wireless links being the usual example. The receiver acknowledges each correctly received frame, and the sender retransmits any frame that isn't acknowledged before a timeout.
 
-- **Stop and Wait ARQ**: Sender sends one frame, waits for an ACK, and then sends the next frame.
-- **Sliding Window ARQ**: Sender can send multiple frames before waiting for an ACK. For a window size of $n$, the sender can send $n$ frames per RTT.
-- **Go-Back-N ARQ**: Sender can send multiple frames before waiting for an ACK, but if a frame is lost, the sender must retransmit all frames from the lost frame onwards.
+- **Stop-and-wait ARQ**: send one frame, wait for its ACK, send the next.
+- **Sliding window ARQ**: send up to $n$ frames before requiring an ACK. With window size $n$, the sender moves $n$ frames per RTT.
+- **Go-back-N ARQ**: a sliding window where a lost frame forces the sender to retransmit that frame and everything after it.
 
 ### Timeouts
 
-They need to be not too long (link is idle), but also not too short (link is busy). Timeouts are easy to set in a LAN, but harder over the internet where latency can vary greatly.
+The timeout can't be too long, or the link sits idle after a loss. It can't be too short, or the sender retransmits frames that were fine. Timeouts are easy to set on a LAN, where latency is predictable, and hard over the Internet, where it varies widely.
 
-### Sequence Numbers
+### Sequence numbers
 
-Both frames and ACKs are numbered, so that the sender knows which frames are acknowledged. In **stop and wait ARQ**, the sequence number is 0 or 1. In **go-back-N ARQ** and **sliding-window ARQ**, the sequence number is a number modulo $2^k$.
+Frames and ACKs both carry sequence numbers so the sender knows exactly which frames got through. Stop-and-wait only needs a single bit, 0 or 1, since one frame is in flight at a time. Sliding window and go-back-N number frames modulo $2^k$.
 
+### Limitations of stop-and-wait
 
-### Limitations of Stop and Wait ARQ
+Only one frame is outstanding at a time, so the link carries at most one frame per RTT no matter how fat it is. That's fine on a LAN and wasteful on any link with a high [[networks/1-physical/coding-and-modulation|bandwidth-delay product]], where keeping the pipe full requires many frames in flight.
 
-- Allows for only a single frame to be outstanding at a time.
-- Good for LAN, but bad for networks with high BD product (*bandwidth-delay product*).
+## Pseudocode sketches
 
-
-### Examples
-
-(These are just pseudocode examples)
+These are illustrative sketches, real implementations track timers and sequence numbers per frame.
 
 ```python
 # Stop and Wait ARQ
@@ -55,7 +67,6 @@ def receiver():
         process_frame(frame)
 
         send_ack()
-
 ```
 
 ```python
@@ -105,3 +116,8 @@ def receiver():
 
         send_acknowledgment()
 ```
+
+## Related notes
+
+- [[networks/2-direct-links/errors|error detection]]
+- [[networks/2-direct-links/framing|framing]]

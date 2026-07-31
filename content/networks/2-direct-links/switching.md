@@ -1,18 +1,34 @@
 ---
 title: Switched Ethernet
 category: Networks
-tags: ethernet, switching, MAC address, forwarding table, bridge
+tags:
+  - ethernet
+  - switching
+  - mac-address
+  - forwarding-table
+  - spanning-tree
+  - sdn
 date: 2024-02-07
-description: Covers the implementation of switched Ethernet networks, including the use of bridging tables for MAC address forwarding, the distributed spanning tree algorithm for network topology discovery, and different switch architectures such as software switches and bare-metal switches. Discusses software-defined networking as an approach to managing and configuring Ethernet switches programmatically.
+updated: 2026-07-30
+status: evergreen
+description: How L2 switches forward frames. Covers learning switches and their forwarding tables, the distributed spanning tree algorithm, switch implementation from software to NPUs, and the SDN split between control and data planes.
+sources:
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Switching
+## Purpose
 
-## Switched Ethernet
+Modern Ethernet is switched. Instead of sharing one cable and arbitrating with [[networks/2-direct-links/multiple-access|CSMA/CD]], each host gets a point-to-point link to a switch that forwards frames by MAC address. This note covers how switches learn where to forward, how they avoid loops, and how they are built.
 
-**L2 Switches** are used within enterprise and university networks to connect multiple devices on the same network. Historically, they were used as a "*bridge*" to connect multiple Ethernet segments, but are now typically used in a "*point-to-point*" configuration.
+## Learning switches
 
-**Learning Switches** are a type of L2 switch that learns the MAC addresses of devices connected to it. When a device sends a frame to the switch, the switch records the source MAC address and the port into its forwarding table. When a device sends a frame to the switch, the switch looks up the destination MAC address in its forwarding table and forwards the frame to the appropriate port. If the destination MAC address is not in the table, the switch floods the frame to all ports except the one it was received on.
+**L2 switches** connect devices inside enterprise and university networks. Historically a switch acted as a *bridge* joining multiple Ethernet segments. Today it usually connects hosts point-to-point.
+
+A **learning switch** builds its forwarding table from traffic. When a frame arrives, the switch records the source MAC address and the arrival port. When it needs to forward a frame, it looks up the destination MAC address in the table and sends the frame out the recorded port. If the destination isn't in the table, it floods the frame out every port except the one it arrived on. Flooding is always correct, just wasteful, so the table is an optimization that the switch can rebuild at any time.
+
+The following table-update code is adapted from [Peterson and Davie](https://book.systemsapproach.org/):
 
 ```c
 #define BRIDGE_TAB_SIZE   1024  /* max size of bridging table */
@@ -56,26 +72,26 @@ updateTable (MacAddr src, int inif)
 }
 ```
 
-### Distributed Spanning Tree Algorithm
+## Distributed spanning tree algorithm
 
-Initially, all switches assume they are the root of the tree. Switches *broadcast* **configuration messages** that contain the `following:
+Flooding breaks if the topology has loops, since frames circulate forever. The switches therefore agree on a spanning tree of the topology and only forward along it. The algorithm is Radia Perlman's, and it runs without any central coordination.
 
-- The ID of the sender
-- The ID for what the sender believes to be the root
-- The distance (in hops) of the sender to what the sender believes to be the root
+Initially every switch assumes it is the root. Switches broadcast **configuration messages** containing:
 
-Each swtich listens to configuration messages being broadcasted, and remebers the "best" root it has seen. This is defined as:
+- the ID of the sender
+- the ID of what the sender believes is the root
+- the sender's distance (in hops) from that root
 
-- The lowest root ID
-- Equal root IDs, but lower distance
-- Equal root IDs and distances, but lower sender ID
+Each switch listens to the configuration messages it receives and remembers the best root it has seen, judged in this order:
 
-Once it identifies the best root, it adds one to the disance and broadcasts a configuration message with the new root and distance. If a switch realizes it isn't the root anymore, it stops broadcasting configuration messages and starts forwarding frames (still adding 1). Similarly, once a switch recieves a message that indicates a better path, it stops sending messages over that port.
+- lowest root ID
+- equal root IDs, lower distance
+- equal root IDs and distances, lower sender ID
 
-Once the system stabilizes, the only the root will be sending configuration messages, and all other switches will be forwarding.
+When a switch adopts a better root, it adds one to the advertised distance and rebroadcasts. A switch that realizes it isn't the root stops originating configuration messages and only forwards the root's (still adding 1 to the distance). A switch that hears a better path over a port stops sending messages out that port. When the system stabilizes, only the root originates configuration messages, and every other switch just forwards them along the tree.
 
 ```c
-// Psuedo code for the distributed spanning tree algorithm
+// Pseudocode for the distributed spanning tree algorithm
 
 #define MAX_BRIDGES 1024
 
@@ -121,32 +137,27 @@ broadcast(struct message* m)
 }
 ```
 
-
-
 ## Implementation
 
-To create a switch, all you need to do is buy a general-purpose processor and equip it with multiple network interfaces. However, switches that deliver high-end performance typically take advantage of additional hardware acceleration. These are referred to as hardware switches, although both approaches obviously include a combination of hardware and software.
+A switch can be as simple as a general-purpose processor with multiple network interfaces. High-end switches add hardware acceleration, and get called hardware switches, though every switch mixes hardware and software. Switches and routers share so much implementation that a network administrator often buys one forwarding box and configures it as an L2 switch, an L3 router, or both. Peterson and Davie cover this ground in depth in [their chapter on switching](https://book.systemsapproach.org/).
 
-The implementation of switches and routers have so much in common that a network administrator typically buys a single forwarding box and then configures it to be an L2 switch, an L3 router, or some combination of the two.
+### Software switches
 
-### Software Switches
+A software switch is limited by the cost of passing every packet through main memory, which bites hardest on short packets. Per-packet processing costs like header parsing add up too, and table lookups are usually the most expensive per-packet routine. Control logic like the spanning tree algorithm stays off the per-packet path.
 
-The performance of switches is limited by the need to pass packets through main memory. This can be a bottleneck, especially for short packets. The cost of processing each packet, such as parsing its header and making forwarding decisions, can also be a limiting factor. Non-trivial algorithms used by switches, like the spanning tree algorithm, are not directly part of the per-packet forwarding decision. Table lookups are often the most costly routine executed on a per-packet basis.
+### Bare-metal switches
 
-### Bare-Metal Switches
+The split between the **control plane** (background processing) and the **data plane** (per-packet processing) drives modern switch design. Domain-specific processors now deliver ASIC-level forwarding performance with software-level programmability, so one box can be programmed as an L2 switch, an L3 router, or a hybrid.
 
-The distinction between the control plane (background processing) and the data plane (per-packet processing) is important. Recent advances in domain-specific processors have made it possible to build high-performance switches that combine the performance of ASICs with the agility of software. These switches can be programmed to be L2 switches, L3 routers, or a hybrid.
+Bare-metal switches built on Network Processing Units (NPUs) are the common form. An NPU is optimized for parsing packet headers and making forwarding decisions, at rates measured in Tbps. Internally it combines fast SRAM, TCAM for bit-pattern matching, and a multi-stage forwarding pipeline that keeps many packets in flight at once. Programming details vary by chip vendor.
 
-Bare-metal switches using Network Processing Units (NPUs) have become popular. NPUs are optimized for processing packet headers and making forwarding decisions. They can process packets at rates measured in Terabits per second (Tbps). The exact programming of an NPU depends on the chip vendor.
+### Software defined networking
 
-Internally, an NPU utilizes fast SRAM-based memory, TCAM-based memory for matching bit patterns, and a multi-stage forwarding pipeline. The use of a multi-stage pipeline allows for efficient packet processing and high throughput.
+SDN decouples the control plane from the data plane. Routing algorithms run as software on servers, and the forwarding decisions they compute get pushed down to bare-metal switches. OpenFlow standardized the interface between the two planes, so controllers and switches from different vendors interoperate.
 
-The networking industry is entering a commoditized world, similar to the computing industry, where standardized components and open source software are available for building high-performance switches.
+Splitting the planes also means a logically centralized control plane can drive a distributed data plane, and each side can scale independently. Cloud providers run SDN inside their datacenters and across their backbones for exactly this reason. The Network Operating System (NOS) makes the model usable, detecting network changes and exposing an abstract network map so control applications can compute globally optimized behavior against a graph instead of programming individual boxes.
 
-### Software Defined Networks
+## Related notes
 
-SDN (Software Defined Networks) decouples the network control plane from the data plane, allowing routing algorithms to run on software and packet forwarding decisions to be made by bare-metal switches. The standard interface between the control and data planes, known as OpenFlow, enables interoperability between different implementations. This concept of disaggregation has led to the trend of using commodity servers and bare-metal switches in network infrastructure.
-
-Another important aspect of disaggregation is that a logically centralized control plane can be used to control a distributed network data plane. This allows for scalability and availability, as the two planes can be configured and scaled independently. Cloud providers have embraced this approach, using SDN-based solutions within their datacenters and across their backbone networks.
-
-The Network Operating System (NOS) is a key enabler for SDN's success. It provides high-level abstractions and a Network Map to simplify network control functionality. The NOS detects changes in the network and the control application implements desired behavior on an abstract graph. By centralizing this logic, a globally optimized solution can be achieved.
+- [[networks/2-direct-links/multiple-access|multiple access]]
+- [[networks/2-direct-links/framing|framing]]

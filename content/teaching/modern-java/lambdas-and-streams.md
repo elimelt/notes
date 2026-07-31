@@ -1,16 +1,25 @@
 ---
 title: A Soft Introduction to Java Streams and Lambdas
 category: Software Engineering
-tags: java, streams, lambdas, functional programming, declarative programming, collections, filtering, iteration
+tags:
+  - java
+  - streams
+  - lambdas
+  - functional-programming
+  - collections
 date: 2024-12-08
-description: Covers the implementation of Java Streams and Lambdas, two key features that enable functional and declarative programming in Java. Discusses the motivation for these constructs, their usage in common operations like filtering, mapping, aggregation, and grouping of data from Java collections. Provides a high-level overview of the core concepts and capabilities of Streams and Lambdas, highlighting their role in simplifying complex data processing tasks in a concise and expressive manner.
+updated: 2026-07-30
+status: evergreen
+description: Why Java streams and lambdas exist, with side-by-side imperative and declarative versions of filtering, mapping, matching, summing, and grouping.
+sources:
+  - title: java.util.stream package documentation
+    url: https://docs.oracle.com/javase/8/docs/api/java/util/stream/package-summary.html
+    type: docs
 ---
-
-# A Soft Introduction to Java Streams and Lambdas
 
 ## Motivation
 
-If you've been programming in Java for a while (perhaps you're coming out of the 12x/14x series at UW), you're probably familiar with the regular *imperative* style of programming using loops and conditionals. There's nothing wrong with this, but often times, you'll find yourself writing a lot of code for simple operations.
+If you've been programming in Java for a while (perhaps you're coming out of the 12x/14x series at UW), you're probably familiar with the regular *imperative* style of programming using loops and conditionals. It works fine. It just gets verbose for simple operations.
 
 For example, consider the following code snippet:
 
@@ -41,13 +50,11 @@ boolean allAdmins(List<User> users) {
 }
 ```
 
-You've probably written similar code snippets hundreds of times. To reiterate, there's nothing wrong with this style of programming, but for a relatively simple operation, you're writing a lot of code.
-
-What's arguably better is to use a more *declarative* style of programming. This is where Java Streams and Lambdas come in.
+You've probably written snippets like these hundreds of times. That's a lot of code for such simple operations. Streams and lambdas let you write the same operations in a *declarative* style.
 
 ## Java Streams
 
-Java Streams are in some way similar to Iterators, but with a lot more functionality. They allow you to perform operations on a collection of elements in a more compositional way. For example, consider the following code snippet:
+Java Streams are in some ways similar to Iterators, with a lot more functionality. They let you perform operations on a collection of elements in a compositional way. For example, consider the following code snippet:
 
 ```java
 List<User> admins = users.stream()
@@ -84,7 +91,7 @@ Function<String, String> toUpperCase = s -> s.toUpperCase();
 Predicate<String> isEmpty = s -> s.isEmpty();
 ```
 
-Luckily, you don't need to remember all of these interfaces. More often than not, you're going to define lambdas without ever assigning them to a variable. In cases where you do need to assign them to a variable, you can use the `var` keyword.
+Luckily, you don't need to remember all of these interfaces. More often than not, you're going to define lambdas without ever assigning them to a variable. When you do assign one to a variable, spell out a functional interface type like the ones above. `var` doesn't work here, since the compiler needs an explicit target type to figure out the lambda's shape.
 
 ## Common Operations
 
@@ -169,7 +176,6 @@ int sum = numbers.stream().mapToInt(Integer::intValue).sum();
 
 // or Collectors.summingInt()
 int sum = numbers.stream().collect(Collectors.summingInt(Integer::intValue));
-
 ```
 
 ### Grouping

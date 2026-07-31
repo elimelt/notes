@@ -1,90 +1,83 @@
 ---
 title: How the Operating System Handles Page Faults
 category: Operating Systems
-tags: page fault, virtual memory, page replacement, page table, I/O, process management
+tags:
+  - page-faults
+  - virtual-memory
+  - page-replacement
+  - page-tables
+  - multi-level-page-tables
 date: 2024-02-16
-description: Covers the implementation of page fault handling in operating systems. Discusses how the OS finds the requested page on disk, allocates a page frame in memory, and updates the page table. Examines issues with page faults, including memory reference overhead and the large memory required for page tables, and explores solutions such as paging the page table and using multi-level page tables.
+updated: 2026-07-30
+status: evergreen
+description: What the page fault handler does step by step (locating the page on disk, finding or evicting a frame, fixing the PTE), and the two big costs of paging, extra memory references and page table size, with multi-level page tables as the fix.
+sources:
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# Page Fautls
+This note walks through what the OS does when a page fault fires, then covers the two big costs paging introduces, extra memory references and page table size, and the structures that mitigate them.
 
-## How does the OS handle a page fault?
+## Handling a page fault
 
-On fault, an interrupt causes the CPU to jump to the page fault handler:
+On a fault, an interrupt drops the CPU into the page fault handler, which:
 
-- find or create (evict another page) a page frame to load the new page into
-- read it in. if I/O needed, start I/O and let another process run
-- fix up PTE by marking it as "valid", set "referenced" and "modified" bits to false, set protection bits appropriately, point to correct page frame
-- add process to ready queue
+- finds a page frame to load the new page into, evicting another page if it has to
+- reads the page in; if I/O is needed, it starts the I/O and lets another process run
+- fixes up the PTE: marks it valid, clears the referenced and modified bits, sets the protection bits appropriately, and points it at the page frame
+- puts the process back on the ready queue
 
 ### Finding the page on disk
 
-- processor makes process ID and faulting virtual address available to page fault handler
-- process ID gets you to the base of the page table
-- VPN portion of VA gets you to the PTE
-- data structure analogous to page table (an array with an entry for each page in the address space) contains disk address of page
-- at this point, it's just a simple matter of I/O
-- must be positive that the target page frame remains available!
+- the processor makes the process ID and the faulting virtual address available to the page fault handler
+- the process ID gets you to the base of the page table
+- the VPN portion of the virtual address gets you to the PTE
+- a data structure analogous to the page table (an array with one entry per page in the address space) holds each page's disk address
+- from there it's just a matter of I/O
+- the target page frame must stay available for the whole operation
 
-### Find or create a page frame
+### Finding or creating a page frame
 
-- run page replacement algorithm
-- free page frame
-- assigned but unmodified ("clean") page frame
-- assigned and modified ("dirty") page frame
-- assigned but "clean"
-  - find PTE (may be a different process!)
-  - mark as invalid (disk address must be available for subsequent reload)
-- assigned and "dirty"
-    - find PTE (may be a different process!)
-    - mark as invalid
-    - write it out
-- OS may speculatively maintain lists of clean and dirty frames selected for replacement
-    - May also speculatively clean the dirty pages (by writing them to
-disk)
+Run the page replacement algorithm. The candidate frame is either free, assigned but unmodified ("clean"), or assigned and modified ("dirty").
 
+- Free: use it directly.
+- Assigned and clean: find the PTE, which may belong to a different process, and mark it invalid. The disk address must stay available so the page can be reloaded later.
+- Assigned and dirty: find the PTE (again, possibly another process's), mark it invalid, and write the page out.
 
-## Issues with Page Faults
+The OS may speculatively maintain lists of clean and dirty frames selected for replacement, and may speculatively clean the dirty ones by writing them to disk ahead of time.
+
+## Costs of paging
 
 ### Memory reference overhead
 
-There are 2 references to memory for every memory access: one to the page table, and one to the actual memory. This can be mitigated by using a TLB (Translation Lookaside Buffer), which is essentially a cache for the page table.
+Every memory access becomes two references: one to the page table and one to the actual memory. A TLB, which is a hardware cache of page table entries, absorbs most of the page table lookups. See [[operating-systems/lecture-notes/tlb|translation lookaside buffers]].
 
-### Memory required to hold a page table can be large
+### Page table size
 
-- need one PTE per page in the virtual address space
-- 32 bit AS with 4KB pages = 220 PTEs = 1,048,576 PTEs. 4 bytes/PTE = 4MB per page table
-    - OS's typically have separate page tables per process
-    - 25 processes = 100MB of page tables
-- 48 bit AS, same assumptions, 64GB per page table!
+You need one PTE per page of virtual address space. Work it out for a 32-bit address space with 4 KB pages and 4-byte PTEs:
 
-#### Old Solution: Paging the page table
+$$
+\frac{2^{32}}{2^{12}} = 2^{20} \text{ PTEs}, \qquad 2^{20} \times 4 \text{ B} = 4 \text{ MB per page table}
+$$
 
-Can be solved by paging the page table! (ie. have a page table for the page table). Keep the "system" page table in physical memory, and the "user" page table in virtual memory. This is no longer done in practice.
+Operating systems typically keep a separate page table per process, so 25 processes cost 100 MB in page tables. Stretch the address space to 48 bits with the same page and PTE sizes and a flat table needs $2^{36}$ PTEs, which is $2^{38}$ bytes, 256 GB per process.
 
-#### New Solution: Multi-level page tables
+#### Old solution: page the page table
 
-Simply add another level of indirection. Instead of having a single page table, have a page table of page tables. This works well because the page table is sparsely populated in practice, so it is a waste to have a PTE mapped for every page in the address space.
+Keep the "system" page table in physical memory and the "user" page table in virtual memory, so the page table itself can page out. This is no longer done in practice.
 
-**This is the solution used in modern operating systems.**
+#### Current solution: multi-level page tables
 
-##### Two-level page table
+Add another level of indirection, a page table of page tables. This works because address spaces are sparsely populated in practice, so a flat table wastes a PTE on every unmapped page while a multi-level table only materializes the pieces that are actually used. Modern operating systems use this.
 
-- VA has 3 parts:
-    - master page number, secondary page number, offset
-- master PT maps master PN to secondary PT
-- secondary PT maps secondary PN to page frame number
-- offset and PFN yield physical address
+##### Two-level page tables
 
-#### Other Alternatives
+The virtual address splits into three parts: a master page number, a secondary page number, and an offset. The master page table maps the master page number to a secondary page table. The secondary page table maps the secondary page number to a page frame number. The PFN plus the offset yields the physical address.
 
-- Hashed page tables
-    - VPN used as a hash
-    - collision resolved because elements in linked list at the hash index include the VPN as well as the PFN
-- Inverted page tables (really reduces space)
-    - one entry per page frame
-    - includes the VPN and the PID of the process
-    - hard to search (but IBM PC/RT actually did it)
+#### Other alternatives
+
+- Hashed page tables. The VPN is used as a hash, and collisions resolve through a linked list at the hash index whose elements carry the VPN along with the PFN.
+- Inverted page tables. One entry per page frame, holding the VPN and the PID of the owning process. This really cuts the space down, but searching is hard. The IBM PC/RT actually did it.
 
 ## Related notes
 

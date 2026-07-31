@@ -1,234 +1,121 @@
 ---
 title: Memory Management in LLM Serving Systems
 category: Machine Learning Systems
-tags: memory management, kv cache, prefix sharing, paged attention, flash attention, machine learning
+tags:
+  - memory-management
+  - kv-cache
+  - prefix-sharing
+  - paged-attention
+  - flash-attention
+  - machine-learning
 date: 2025-05-25
-description: Overview of memory management techniques in LLM serving systems, performance optimization strategies for serving serving systems, particularly on KV cache methods.
+updated: 2026-07-30
+status: needs-review
+description: KV cache sizing, allocation strategies (max-length, vector-style, PagedAttention), prefix sharing, eviction tradeoffs, and FlashAttention, with worked calculations for Llama3-8B on an H100.
+sources:
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
+  - title: "Efficient Memory Management for Large Language Model Serving with PagedAttention"
+    url: https://arxiv.org/abs/2309.06180
+    type: paper
+  - title: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness"
+    url: https://arxiv.org/abs/2205.14135
+    type: paper
 ---
 
-# Memory Management in LLM Serving Systems
+## Purpose
 
-KV-cache allocation directly constrains [[llm-serving-systems/batching|batching]], while [[llm-serving-systems/inf-llm|InfLLM]] explores an external-memory approach for exceptionally long contexts.
+This note covers how serving systems size, allocate, share, and evict the KV cache, plus the FlashAttention algorithm that keeps attention itself from blowing up memory. KV-cache allocation directly constrains [[llm-serving-systems/batching|batching]], and [[llm-serving-systems/inf-llm|InfLLM]] explores an external-memory approach for extremely long contexts.
 
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhuz
+These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025, taught by Prof. Baris Kasikci with TA Kan Zhu. The prefix-sharing speedup range quoted below comes from lecture slides without a full benchmark setup, so I mark it as unverified.
 
-## KV Cache Size Calculation
+## KV cache sizing
 
-### Key Components
+Per token, the KV cache stores one key vector and one value vector per layer per KV head:
 
-The KV cache size depends on:
+$$\text{KV bytes per token} = \underbrace{2}_{K \text{ and } V} \times \text{num\_kv\_heads} \times \text{head\_dim} \times \text{num\_layers} \times \text{dtype bytes}$$
 
-- **Num KV heads**: Number of key-value attention heads
-- **Head Dim**: Dimension of each attention head
-- **2**: Stores both K and V matrices
-- **Stype**: Data type size (e.g., 2 bytes for FP16)
-- **Seqlen**: Sequence length
-- **Layer**: Number of transformer layers
+Worked example from lecture, Llama3-8B on an 80 GB H100 in FP16. Weights take $2 \times 8 = 16$ GB, and serving-time activations are negligible next to that. Take requests with 1024 input tokens and 1024 output tokens. A request's decode allocation grows from 0 to 1024 tokens, so on average it holds $1024 + \frac{1024}{2} = 1536$ token slots. With 8 KV heads, head dim 128, 32 layers, FP16:
 
-### Example Calculation - Llama3-8B on H100
+$$1536 \times 2 \times 2 \times 8 \times 128 \times 32 \text{ bytes} = 192 \text{ MB per request (average)}$$
 
-- **Total GPU memory**: 80GB
-- **Model weights**: 2 imes8=16GB (assuming FP16)
-- **Activations**: Negligible during serving
-- **Input/Output**: 1024 input tokens, 1024 output tokens
+Maximum average batch size is then $(80 - 16) / 0.1875 \approx 341$ requests. Compare this against the batch size of 333 needed to reach the compute-bound regime on the H100 (see [[llm-serving-systems/performance-modeling|Performance Modeling]]): the KV cache budget barely covers the batch the compute wants. Per token the cache costs $2 \times 2 \times 8 \times 128 \times 32 = 128$ KB, so the 64 GB budget holds about 512K tokens.
 
-**KV cache per request**:
+## The allocation problem
 
-```
-(1024 + 1024/2) 	imes 2 	imes 2 	imes 8 	imes 128 	imes 32 / 1024 / 1024 = 192 MB
-```
+Output lengths vary and are unknown at admission. A request that stops at 1024 output tokens needs 192 MB on average; one that runs to 4096 needs 384 MB. The allocator has to reserve space without knowing which case it is holding.
 
-**Maximum batch size**:
+### Method 1: allocate for the maximum
 
-```
-(80 - 16) / (192/1024) = 341 requests
-```
+Reserve the model's maximum sequence length per request. Utilization craters from internal fragmentation, and the max batch size drops to $(80-16)/0.375 \approx 170$ even though most requests never touch the reserved space.
 
-Note: Batch size of 333 was needed to reach compute-bound regime on H100.
+### Method 2: grow like std::vector
 
-## Memory Allocation Challenges
-
-### Variable-Length Requests
-
-When serving requests with different output lengths:
-
-- **Min KV cache**: 192 MB (1024 output tokens)
-- **Max KV cache**: 384 MB (4096 output tokens)
-
-**Key Question**: How to efficiently allocate KV cache for requests with different lengths?
-
-## Allocation Methods
-
-### Method 1: Fixed Max Sequence Length
-
-**Approach**: Allocate KV cache using maximum sequence length the model supports
-
-**Problems**:
-
-- **Low utilization**: Significant internal fragmentation
-- **Wasted memory**: Short requests don't use full allocated space
-- **Reduced batch size**: Max batch size = (80-16)/(384/1024) = 170
-
-### Method 2: std::vector-style Allocation
-
-**Approach**:
-
-- Start with small size allocation
-- Double the size when fully occupied
-- Similar to dynamic array growth
-
-**Characteristics**:
-
-- **Internal waste**: ~75% average utilization within requests
-- **External fragmentation**: Memory gaps between requests
-- **Copy overhead**: Acceptable for the flexibility gained
+Start small and double the allocation when it fills. Average utilization within a request sits around 75% (the classic doubling-array bound), external fragmentation appears between requests, and growth requires copies. Workable, and better than max-length reservation, but the fragmentation still costs real batch slots.
 
 ### Method 3: PagedAttention
 
-**Core Innovation**: Chunk global memory space into small pages
+[PagedAttention](https://arxiv.org/abs/2309.06180) (the vLLM paper) applies virtual memory's trick: chunk KV storage into small fixed pages and map logical token positions to physical pages through an indirection table. A page holding 16 tokens' KV for one layer costs $16 \times 2 \times 2 \times 8 \times 128 = 64$ KB, big enough that reading a page uses memory bandwidth efficiently, small enough that internal fragmentation is capped at one partial page per request. Pages need not be contiguous, so external fragmentation disappears.
 
-**Key Features**:
+The page table is a flat multi-level structure:
 
-- **Page size**: 16 tokens' KV = 16 imes2 imes2 imes8 imes128 = 64 KB
-- **No fragmentation**: Pages can be allocated non-contiguously
-- **Efficient bandwidth**: Each page large enough for good utilization
-
-## PagedAttention Implementation
-
-### Multi-Level Page Table Structure
-
-```
+```text
 kv_indptr:  [0, 2, 3, 6, 10]                   # NumReq + 1 elements
 kv_indices: [1, 4, 8, 2, 5, 0, 6, 10, 15, 17]  # NumPage elements
-kv_data:    [actual KV cache data...]          # Max Page elements
+kv_data:    [actual KV cache data...]          # MaxPage elements
 ```
 
-**How it works**:
+Request $i$ owns pages `kv_indices[kv_indptr[i]:kv_indptr[i+1]]`, and `kv_data[page_id]` holds the actual KV entries. The attention kernel walks this table during decode.
 
-- `kv_indptr[i]` to `kv_indptr[i+1]` indicates page range for request i
-- `kv_indices[kv_indptr[i]:kv_indptr[i+1]]` contains page IDs for request i
-- `kv_data[page_id]` stores the actual KV cache data
+## Prefix sharing
 
-### Prefix Sharing
+Requests frequently share a prefix: the same system prompt across users, or the accumulated history in a multi-round conversation.
 
-**Concept**: Share common prefixes across multiple requests
-
-**Benefits**:
-
-- **Reduced prefill computation**: n imesp o p (where p = prefix length, n = requests)
-- **Reduced KV cache size**: n imesp o p
-- **Reduced memory bandwidth**: n imesp o p during decoding
-- **Asynchronous matching**: Can be performed in background
-
-**Drawbacks**:
-
-- **Memory overhead**: Must store prefix chunks even when not reused
-
-### Use Cases for Prefix Sharing
-
-#### Multi-round Conversations
-
-```
-1. "You are a helpful assistant. User:Hello, Assistant:Hi!"
-2. "You are a helpful assistant. User:Hello, Assistant:Hi!, User: Solve this problem..."
-3. "You are a helpful assistant. User:What can you do?"
+```text
+1. "You are a helpful assistant. User: Hello, Assistant: Hi!"
+2. "You are a helpful assistant. User: Hello, Assistant: Hi!, User: Solve this problem..."
+3. "You are a helpful assistant. User: What can you do?"
 ```
 
-#### Multi-request Scenarios
+Storing the shared prefix once turns $n$ copies of a length-$p$ prefix into one: prefill compute, KV cache space, and decode-time memory reads for the prefix all drop from $n \times p$ to $p$. Prefix matching can run asynchronously in the background. The cost is that cached prefix chunks occupy memory even when no live request reuses them, so the cache needs an eviction policy. Gains scale with prefix length, batch size, and how short the unique suffixes are; the lecture quotes 2-32x speedups across configurations, without the underlying benchmark setup, so treat the range as indicative.
 
-- Same system prompts across different user queries
-- Shared conversation contexts
-- Common document prefixes
+## Eviction: recompute or offload?
 
-### Performance Benefits
+When GPU memory cannot hold the whole prefix tree, evicted entries can later be rebuilt two ways: recompute them from the tokens, or reload them from CPU memory over PCIe.
 
-Performance gains vary with:
+Recomputing $p$ tokens through a model with $P_{model}$ parameters costs
 
-- **Shared prefix length**: Longer prefixes = greater benefits
-- **Batch size**: Higher batch sizes see more improvement
-- **Unique suffix length**: Shorter unique parts = better gains
-
-Typical improvements: **2-32x speedup** depending on configuration.
-
-## Memory Management Strategies
-
-### Eviction Policies: Recomputing vs Load/Offload
-
-When GPU memory insufficient for full radix tree:
-
-#### Recomputation Approach
-
-**Time cost**:
 $$T_{recompute} = \frac{2pP_{model}}{Compute}$$
 
-#### Load/Offload Approach
+Loading the same KV entries over PCIe costs
 
-**Time cost**:
-$$T_{load} = \frac{2 \times dtype \times \frac{D_{model}}{GQA} \times L \times p}{PCIE\_Bandwidth}$$
+$$T_{load} = \frac{2 \times \text{dtype} \times \frac{D_{model}}{GQA} \times L \times p}{PCIe_{BW}}$$
 
-#### Comparison Ratio
+where $\frac{D_{model}}{GQA}$ is the KV width after grouped-query sharing and $L$ is the layer count. The ratio is
 
-$$\frac{T_{recompute}}{T_{load}} = \frac{PCIE\_Bandwidth \times P_{compute}}{dtype \times \frac{D_{model}}{GQA} \times L \times Compute}$$
+$$\frac{T_{recompute}}{T_{load}} = \frac{PCIe_{BW} \times P_{model}}{\text{dtype} \times \frac{D_{model}}{GQA} \times L \times Compute}$$
 
-**Example calculation for A100**:
+Plugging in an 8B model on an A100 (30 GB/s PCIe, 300 TFLOPs, FP16, KV width 1024, 32 layers):
 
-```
-30GB/s 	imes 8 	imes 10^9 / (2 	imes 1024 	imes 32 	imes 300T) = 12
-```
+$$\frac{30 \times 10^9 \times 8 \times 10^9}{2 \times 1024 \times 32 \times 300 \times 10^{12}} \approx 12$$
 
-**Conclusion**: Loading from CPU memory is ~12x faster than recomputation.
+Loading from CPU memory beats recomputation by roughly 12x for this configuration, which is why serving systems offload rather than drop evicted KV entries.
 
-## FlashAttention: Memory-Efficient Attention
+## FlashAttention
 
-### Problem with Standard Attention
+Standard attention materializes the $\text{seqlen} \times \text{seqlen}$ score matrix in global memory, so memory grows quadratically with sequence length and the kernel spends its time moving that matrix around. [FlashAttention](https://arxiv.org/abs/2205.14135) computes exact attention without ever materializing it.
 
-- **Large intermediate matrices**: Seq_len imes Seq_len attention scores
-- **Memory bottleneck**: Quadratic memory growth with sequence length
+The obstacle is softmax, which normalizes over a full row. The numerically stable form subtracts the row max before exponentiating:
 
-### Softmax Numerical Stability
+$$sm(x_i) = \frac{e^{x_i - c}}{\sum_{j=1}^d e^{x_j - c}}, \quad c = \max_i x_i$$
 
-**Standard softmax**:
-$$sm(x_i) = \frac{e^{x_i}}{\sum_{j=1}^d e^{x_j}}$$
+Subtracting $c$ prevents overflow and leaves the result unchanged, since the factor $e^{-c}$ cancels between numerator and denominator. FlashAttention exploits the fact that the row max and the normalizing sum can be maintained incrementally. The algorithm tiles Q, K, V into blocks that fit in shared memory, computes attention block pair by block pair, keeps running max and sum statistics in registers, and rescales previously accumulated output whenever a new block raises the running max. Global memory only ever sees the inputs and the final output.
 
-**Numerically stable version**:
-$$sm(x_i) = \frac{e^{x_i-c}}{\sum_{j=1}^d e^{x_j-c}}$$
+Causal masking drops in cleanly: masked positions get $-\infty$ before the softmax, contribute $e^{-\infty} = 0$ to the running sum, and blocks that are entirely masked are skipped. Grouped-query attention also fits naturally, since multiple query heads sharing one KV head means the kernel processes several query blocks against the same KV block, cutting KV cache size and KV reads by the group factor.
 
-Where c = max(x_i) prevents overflow.
+## Related notes
 
-### FlashAttention Algorithm
-
-**Key Innovation**: Tile-based computation with online softmax
-
-**Steps**:
-
-1. **Tiling**: Divide Q, K, V into blocks that fit in SRAM
-2. **Block-wise computation**: Compute attention for each block pair
-3. **Online aggregation**: Maintain running statistics (max, sum) across blocks
-4. **Rescaling**: Properly combine results from different blocks
-
-**Memory hierarchy utilization**:
-
-- **SRAM**: Fast, limited capacity for active blocks
-- **Global memory**: Slower, larger capacity for full matrices
-- **Registers**: Fastest, smallest capacity for running statistics
-
-### Causal Masking in FlashAttention
-
-- **Implementation**: Set masked positions to -infty before softmax
-- **Effect**: Masked positions contribute 0 to attention weights
-- **Integration**: Seamlessly handled within block-wise computation
-
-### Grouped Query Attention (GQA)
-
-- **Shared KV heads**: Multiple query heads share same key-value heads
-- **Memory savings**: Reduces KV cache size significantly
-- **Implementation**: Process multiple query blocks with same KV block
-
-## Key Takeaways
-
-1. **KV cache dominates memory usage** in LLM serving, limiting batch sizes
-2. **PagedAttention eliminates fragmentation** through page-based allocation
-3. **Prefix sharing provides significant speedups** for common use cases
-4. **Loading is much faster than recomputation** for evicted cache entries
-5. **FlashAttention enables long sequences** through memory-efficient tiled computation
-6. **Proper memory management is crucial** for maximizing GPU utilization in LLM serving
+- [[llm-serving-systems/batching|Batching]]
+- [[llm-serving-systems/performance-modeling|Performance Modeling]]
+- [[llm-serving-systems/inf-llm|InfLLM]]
+- [[llm-serving-systems/transformers|Transformer Architecture]]

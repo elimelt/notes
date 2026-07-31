@@ -1,54 +1,77 @@
 ---
 title: Wireless Media and Access Protocols
 category: Networks
-tags: wireless media, hidden terminal problem, exposed terminal problem, MACA, 802.11, CSMA/CA, RTS/CTS
+tags:
+  - wireless
+  - hidden-terminal
+  - exposed-terminal
+  - maca
+  - 802.11
+  - csma-ca
 date: 2024-02-07
-description: Covers the implementation of wireless media access protocols, including the hidden terminal problem, exposed terminal problem, and the Multiple Access with Collision Avoidance (MACA) protocol. Discusses the 802.11 (WiFi) standard, including its physical layer, link layer, and centralized MAC used in cellular networks. Explores the challenges of wireless communication and the techniques used to mitigate them.
+updated: 2026-07-30
+status: evergreen
+description: Why carrier sense fails over the air, the hidden and exposed terminal problems, MACA's RTS/CTS handshake, the 802.11 physical and link layers, and the centralized MAC used in cellular networks.
+sources:
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
+  - title: UW CSE 461 Computer Networks
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: course
 ---
 
-# Wireless
+## Purpose
 
-Wireless media is infinite, and therefore cannot carrier sense. Futhermore, nodes cannot hear the network while sending
+Wired [[networks/2-direct-links/multiple-access|multiple access]] leans on carrier sense, and carrier sense breaks down over the air. This note covers why, the two classic failure modes, and the protocols WiFi and cellular use instead.
 
-## Hidden Terminal Problem
+## Why wireless is different
 
-Two nodes are out of range of each other, but in range of a third node. The third node can hear both nodes, but the two nodes cannot hear each other. This can cause collisions at the node in the middle.
+The wireless medium is an unbounded region of space rather than a wire with two ends, so what the sender hears tells it little about what the receiver hears. Collisions matter at the receiver, and the sender can't observe them there. On top of that, a node cannot hear the network while it is transmitting, so collision detection in the Ethernet style is off the table.
 
-## Exposed Terminal Problem
+## Hidden terminal problem
 
-Two nodes are in range of each other, but are sending to different nodes out of each other's range. The two nodes can hear each other, but are not in each other's way. The two nodes should be able to send at the same time, but this might be prevented by some protocols.
+Two nodes sit out of range of each other, both in range of a third node between them. Each sender hears a quiet channel, so both transmit, and their frames collide at the node in the middle. Carrier sense gave the wrong answer.
+
+## Exposed terminal problem
+
+Two nearby nodes send to different receivers that are out of each other's range. Each sender hears the other and backs off, even though both transmissions would have succeeded. Carrier sense gave the wrong answer in the other direction, wasting capacity instead of causing collisions.
 
 ## Multiple Access with Collision Avoidance (MACA)
 
-Uses short handshake instead of CSMA. Collisions are still possible, but less likely.
+MACA drops carrier sense for a short handshake. Collisions remain possible, on the handshake itself, but become much less likely.
 
-1. **Request to Send (RTS)**: Sender sends a request to send to the receiver.
-2. **Clear to Send (CTS)**: Receiver sends a clear to send to the sender, including the frame size.
-3. **Data**: Sender sends the frame while nodes that heard the CTS stay silent.
+1. **Request to Send (RTS)**: the sender asks the receiver for the channel.
+2. **Clear to Send (CTS)**: the receiver grants it, echoing the frame size.
+3. **Data**: the sender transmits while nodes that heard the CTS stay silent for the frame's duration.
 
+The handshake fixes both problems above. A hidden terminal hears the receiver's CTS even though it can't hear the sender, so it stays quiet. An exposed terminal hears the RTS but no CTS, so it knows its own transmission won't interfere.
 
 ## 802.11 (WiFi)
 
 Clients connect to the network through an **access point (AP)**.
 
-## Physical Layer
-- Uses 20/40 MHz channels on ISM (unlicensed) bands
-  - 802.11b/g/n on 2.4 GHz
-  - 802.11 a/n on 5 GHz
-- OFDM modulation (except legacy 802.11b)
-  - Different amplitudes/phases for varying SNRs
-  - Rates from 6 to 54 Mbps plus error correction
-  - 802.11n uses multiple antennas
+### Physical layer
 
-## Link Layer
-- Multiple access uses CSMA/CA; RTS/CTS optional
-- Frames are ACKed and retransmitted with ARQ
-- Three addresses due to AP
-- Errors are detected with a 32-bit CRC
-- Features like encryption, power save
+- 20/40 MHz channels on unlicensed ISM bands. 802.11b/g/n run on 2.4 GHz, 802.11a/n on 5 GHz.
+- OFDM modulation, except legacy 802.11b. Amplitude and phase choices adapt to the SNR, giving rates from 6 to 54 Mbps plus error correction.
+- 802.11n adds multiple antennas.
 
-## Centralized MAC: Cellular
+### Link layer
 
-Usually on a very limited spectrum because there are more regulations on non-ISM bands. The base station coordinates the transmissions of the mobiles, and is able to provide more strict control over the network to provide things like QoS and robustness.
+- Multiple access is CSMA/CA. The RTS/CTS handshake is optional.
+- Frames are ACKed and retransmitted with [[networks/2-direct-links/retransmission|ARQ]].
+- Frames carry three addresses because traffic relays through the AP.
+- A 32-bit CRC detects errors.
+- The standard also covers encryption and power saving.
 
-GSM MAC uses FDMA/TDMA, and BEB for random access. One channel for coordination, and other channels for traffic. There is also a dedicated channel for QoS.
+## Centralized MAC: cellular
+
+Cellular runs on licensed spectrum, which is scarce and heavily regulated, so the design centralizes control. The base station coordinates the mobiles' transmissions, and that tight control buys QoS guarantees and robustness that distributed access can't promise.
+
+GSM's MAC uses FDMA/TDMA with random access plus backoff for channel requests. One channel carries coordination traffic, the rest carry data, and a dedicated channel supports QoS.
+
+## Related notes
+
+- [[networks/2-direct-links/multiple-access|multiple access]]
+- [[networks/1-physical/media|media]]

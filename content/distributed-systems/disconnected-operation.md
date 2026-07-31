@@ -1,52 +1,66 @@
 ---
 title: Disconnected Operation
 category: Distributed Systems
-tags: disconnected operation, distributed systems, conflict resolution, eventual consistency
+tags:
+  - disconnected-operation
+  - distributed-systems
+  - conflict-resolution
+  - eventual-consistency
 date: 2024-12-08
-description: Explains the concept of disconnected operation in distributed systems and its implications.
+updated: 2026-07-30
+status: evergreen
+description: How systems keep accepting writes while offline, using Coda, Git, and offline-capable web apps as examples, and the conflict resolution strategies that make merging possible.
+sources:
+  - title: Coda File System project page (CMU)
+    url: https://coda.cs.cmu.edu/
+    type: docs
 ---
 
-# Disconnected Operation
+## Purpose
 
-Always available writes inherently pose a problem in distributed systems. To allow for disconnected operation, we need to be able to write to a local copy of the data, and then synchronize it with the rest of the system when we're back online. Many apps today are built to work with intermittent lack of connectivity, for example, file syncing apps/sourcing control systems. In many of these systems, writes can conflict, and need to be resolved either manually or automatically.
+This note explains how systems support writes while disconnected from the network, and what it costs. The pattern shows up in file syncing, source control, and offline-capable apps, and the hard part is always the same merge and conflict resolution problem.
 
-## Two Models
+## Core idea
 
-- Applications only communicate with the cloud (Coda, SVN)
-  - Log changes, apply on reconnection
-- Applications communicate with cloud and other clients (Git)
-  - Log changes and exchange with other clients
-  - Remerge changes when connected to a new client
+Always-available writes conflict with keeping a single authoritative copy of the data. To operate while disconnected, a client writes to a local copy and synchronizes with the rest of the system when connectivity returns. Since two clients can modify the same data while apart, writes can conflict, and conflicts get resolved either automatically or by a human.
+
+There are two communication models:
+
+- Clients only talk to a central service (Coda, SVN). Changes are logged locally and applied on reconnection.
+- Clients talk to the service and to each other (Git). Changes are logged and exchanged with whatever peer you connect to, and merges happen again on each new connection.
 
 ## Coda
 
-Coda lets you mount a remote file system as a local directory. The local file system is a partial replica of the global version. It makes extensive use of local caching to reduce latency. While disconnected, it uses a write ahead log to record changes. When reconnected, it replays the log to the server and merges changes atomically.
+[Coda](https://coda.cs.cmu.edu/) mounts a remote file system as a local directory, keeping a partial replica of the global version and caching aggressively to reduce latency. While disconnected it records changes in a write-ahead log. On reconnection it replays the log to the server and merges the changes atomically.
 
-When possible, Coda will merge changes automatically. If there are conflicts, i.e. two users edit the same file, Coda will create a conflict file and let the user resolve it.
+Coda merges automatically when it can. When two users edit the same file, it creates a conflict file and leaves resolution to the user.
 
-## Gmail/Google Docs
+## Offline-capable web apps
 
-Apps like Gmail and Google Docs allow for offline editing by using a local cache and log of changes. When reconnected, the changes are sent to the server and merged. In the case of conflicts, the application specifies a set of rules to resolve them automatically.
+Apps like Gmail and Google Docs support offline editing with a local cache plus a log of changes. On reconnection the log is sent to the server and merged, with conflicts resolved by application-level rules.
 
-One common general approach is to use a **version vector** to track changes. Each client has a unique ID, and each change is tagged with the client's ID. When changes are merged, the version vector is used to determine which changes are newer.
+A common building block is the **version vector**: each client has a unique ID, each change is tagged with it, and comparing vectors during a merge tells you which changes are newer and which are concurrent. This is the same mechanism as [[distributed-systems/clocks|vector clocks]].
 
-## Source Code Control
+## Source code control
 
-- Eventual Consistency with read/write on a local copy, and occasional sync manually
-- Track history of changes and metadata
-- Multiple clients can edit their own copy of the code and merge changes later
+Source control is disconnected operation as the normal mode, permanently. Each client reads and writes its own local copy, and syncs are occasional and manual. The system tracks the full history of changes plus metadata, which is what makes late merging tractable.
 
-## Interesting Application Model
+## Building apps around local storage
 
-Use local storage engines (like SQLite, LevelDB, etc.) for local writes and sync with the server when online. The key to making this strategy work is the synchronization mechanism, and how conflicts are resolved.
+A useful application model: write to a local storage engine (SQLite, LevelDB) and sync with the server when online. The synchronization mechanism carries all the difficulty, specifically how it resolves conflicts.
 
-### Conflict Resolution
+### Conflict resolution
 
-- **Client wins**: The client's changes are always accepted
-- **Server wins**: The server's changes are always accepted
-- **Merge**: Changes are combined, and conflicts are resolved manually or automatically
+- **Client wins**: the client's changes are always accepted
+- **Server wins**: the server's changes are always accepted
+- **Merge**: changes are combined, and remaining conflicts are resolved manually or automatically
 
-### Merge Strategies
+### Merge strategies
 
-- **Last write wins**: The last write is always accepted. This requires some form of timestamp or versioning.
-- **Operation based**: Changes are represented as operations (add, delete, etc.) and are applied in order. This is how CRDTs work.
+- **Last write wins**: the most recent write is accepted, which requires some form of timestamp or versioning
+- **Operation based**: changes are represented as operations (add, delete, and so on) and applied in order. CRDTs work this way.
+
+## Related notes
+
+- [[distributed-systems/consistency|consistency]]
+- [[distributed-systems/dynamo-db|Dynamo]]

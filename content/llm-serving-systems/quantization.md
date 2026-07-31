@@ -1,219 +1,105 @@
 ---
 title: Quantization in LLM Serving Systems
 category: Machine Learning Systems
-tags: quantization, low precision, performance, memory efficiency, machine learning
+tags:
+  - quantization
+  - low-precision
+  - performance
+  - memory-efficiency
+  - machine-learning
 date: 2025-05-25
-description: Overview of quantization techniques for LLM serving systems, focusing on theoretical foundations and practical applications.
+updated: 2026-07-30
+status: evergreen
+description: Linear and non-linear quantization, PTQ vs QAT, the LLM outlier problem, and the main deployed methods (LLM.int8(), SmoothQuant, AWQ).
+sources:
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
+  - title: "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale"
+    url: https://arxiv.org/abs/2208.07339
+    type: paper
+  - title: "SmoothQuant: Accurate and Efficient Post-Training Quantization for Large Language Models"
+    url: https://arxiv.org/abs/2211.10438
+    type: paper
+  - title: "AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration"
+    url: https://arxiv.org/abs/2306.00978
+    type: paper
+  - title: "Up or Down? Adaptive Rounding for Post-Training Quantization"
+    url: https://arxiv.org/abs/2004.10568
+    type: paper
 ---
 
-# Quantization
+## Purpose
 
-Quantization changes both arithmetic throughput and model-memory demand, so its serving impact is best interpreted with [[llm-serving-systems/performance-modeling|Performance Modeling]] and [[llm-serving-systems/memory-management|Memory Management]].
+This note covers how quantization works, why it is harder for LLMs than for small networks, and the methods that made low-precision LLM serving practical. Quantization changes both arithmetic throughput and model-memory demand, so its serving impact is best interpreted with [[llm-serving-systems/performance-modeling|Performance Modeling]] and [[llm-serving-systems/memory-management|Memory Management]].
 
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025, taught by Prof. Baris Kasikci with TA Kan Zhu.
 
-## Fundamentals
+## Core idea
 
-### What is Quantization?
-**Quantization** is the process of reducing the precision of numerical representations to achieve:
+Quantization maps high-precision numbers (FP32, BF16) to low-precision representations (INT8, INT4, FP8) while keeping accuracy acceptable. The payoff comes in memory footprint, latency, and energy. Energy is the underrated one: multiplier energy grows roughly quadratically with bit width, so 4x the bits costs around 16x the energy, and memory access dwarfs arithmetic anyway (a DRAM access costs about 640 pJ against 0.03 pJ for an 8-bit add, per Horowitz's ISSCC 2014 energy tables). Moving fewer bytes is worth more than doing cheaper math.
 
-- **Reduced memory footprint**
-- **Lower latency**
-- **Decreased energy consumption**
-- **Compact representation**
+Quantization works at all because activation ranges in trained networks are well behaved: normalization and careful initialization keep distributions concentrated, so a small set of representable values covers almost everything that occurs.
 
-### Key Idea
-Convert high-precision floating-point numbers (FP32) to lower-precision representations (INT4, INT8) while maintaining acceptable accuracy.
+The scale of the stakes for modern models: DeepSeek-V3 at 671B parameters is 1.3 TB in BF16 and 671 GB in FP8, the difference between two nodes and about five H200s.
 
-### Energy Motivation
+## Number formats
 
-- **Energy scales quadratically** with bit-width
-- **4x bit width** 	o **~16x energy consumption**
-- **Memory access costs** (DRAM: 640pJ vs 8b Add: 0.03pJ)
+FP32 spends 1 bit on sign, 8 on exponent, 23 on mantissa. FP16 spends 1/5/10. The exponent bits buy dynamic range (how far apart the smallest and largest representable numbers are), the mantissa bits buy precision (how close neighboring values sit). Training wants dynamic range because gradients span many magnitudes, which is why BF16 keeps FP32's 8 exponent bits. Inference tolerates less range, so integer formats work: INT8 covers only $[-127, 127]$ with a fixed step, trading range for uniform precision.
 
-### Why Quantization Works
+## Linear quantization
 
-- **Activation ranges are well-defined** in neural networks
-- **Even distributions** lead to better training outcomes
-- **Proper initialization** prevents activation divergence and gradient instability
+The affine map between real values $r$ and integers $q$ with scale $S$, zero point $Z$, and bit width $b$:
 
----
+$$q = \text{clip}\left(\text{round}\left(\frac{r}{S} + Z\right),\; -2^{b-1},\; 2^{b-1}-1\right), \qquad r \approx S(q - Z)$$
 
-## Floating Point Representations
+with $S = \frac{r_{max} - r_{min}}{q_{max} - q_{min}}$. Error comes from two places: rounding error, bounded by $[-S/2, S/2]$, and clipping error for values outside the representable range. Choosing the range is a tradeoff between the two, since widening the range shrinks clipping but grows $S$ and with it the rounding error.
 
-### FP32 (Full Precision)
+Symmetric quantization fixes $Z = 0$. The reason it matters shows up in matmul:
 
-- **Sign**: 1 bit
-- **Exponent**: 8 bits
-- **Significand/Mantissa**: 23 bits
-- **Total**: 32 bits
+$$Y = S_W S_X \left[q_W q_X - q_W Z_X - q_X Z_W + Z_W Z_X\right]$$
 
-### FP16 (Half Precision)
+With $Z_W = Z_X = 0$ the three correction terms vanish and the integer kernel is just $q_W q_X$. Asymmetric quantization keeps the flexibility for skewed distributions (ReLU outputs, for instance) at the cost of those terms.
 
-- **Sign**: 1 bit
-- **Exponent**: 5 bits
-- **Significand/Mantissa**: 10 bits
-- **Total**: 16 bits
+Granularity is the other axis: one scale per tensor, per channel, or per group of channels. Finer granularity tracks the data better and stores more metadata; per-channel is the common middle ground for weights.
 
-### Dynamic Range vs Precision Trade-offs
+For genuinely skewed weight distributions there is non-linear quantization: cluster the weights (k-means), store a small codebook of centroids in full precision plus $\log_2(N)$-bit indices per weight, as in [Deep Compression](https://arxiv.org/abs/1510.00149). A 4-bit codebook version compresses about 3.2x once codebook overhead is counted.
 
-- **Dynamic Range**: Range of representable numbers (better for training)
-- **Precision**: Distance between neighboring values (better for inference)
-- **INT8**: Limited dynamic range (-127 to 127) but consistent precision
+## PTQ and QAT
 
----
+Post-training quantization (PTQ) trains in full precision and quantizes afterward, possibly with a small calibration set. Simple, and the accuracy cost grows as bit width drops.
 
-## Linear Quantization
+Quantization-aware training (QAT) simulates quantization in the forward pass (quantize then dequantize) so the network learns weights that survive rounding. The rounding step has zero gradient almost everywhere, so the backward pass uses the straight-through estimator: pretend $\frac{\partial}{\partial x}\text{quantize}(x) \approx 1$. QAT generally beats PTQ at the same bit width, at the cost of a training loop.
 
-### Mathematical Formulation
-**Quantization**: $q = \text{clip}(\text{round}(r/S + Z), -2^{b-1}, 2^{b-1})$
+Rounding policy alone moves accuracy a lot at low bit width. The [AdaRound](https://arxiv.org/abs/2004.10568) experiments quantizing a ResNet's weights to 4 bits found nearest rounding at 52.29% accuracy, stochastic rounding at 52.06 ± 5.52% with the best draw reaching 63.06%, and ceil/floor collapsing to 0.10%. Rounding direction is worth optimizing, which is AdaRound's whole point.
 
-**Dequantization**: $r = S(q - Z)$
+## Why LLMs are special: outliers
 
-Where:
-- $S = \frac{r_{max} - r_{min}}{q_{max} - q_{min}}$ (scaling factor)
-- $Z$ = zero point
-- $b$ = bit width
+Quantization recipes that work on small models fall apart on large ones. [LLM.int8()](https://arxiv.org/abs/2208.07339) traced the failure to outlier features: past roughly 6.7B parameters, a few activation dimensions systematically carry values orders of magnitude larger than the rest. One shared scale per tensor either clips the outliers or crushes the precision of everything else, and accuracy drops sharply.
 
-### Sources of Error
-1. **Rounding Error**: Bounded by [-S/2, S/2]
-2. **Clipping Error**: Values outside representable range
+The three deployed answers each handle outliers differently:
 
-### Symmetric vs Asymmetric Quantization
+### LLM.int8() (W8A8, mixed precision)
 
-- **Symmetric**: Zero point Z = 0 (simpler computation)
-- **Asymmetric**: Non-zero Z (more flexible, better for skewed distributions like ReLU outputs)
-
-### Matrix Multiplication with Quantization
-$$Y = S_W S_X [q_W q_X - q_W Z_X - q_X Z_W + Z_W Z_X]$$
-
-**Symmetric quantization** eliminates the overhead terms when $Z_W = Z_X = 0$.
-
----
-
-## Non-Linear Quantization
-
-### Clustering-Based Approach
-
-- **Use case**: Skewed weight distributions
-- **Method**: K-means clustering to determine quantization levels
-- **Storage**:
-  - Indices: $\log_2(N)$ bits per weight
-  - Codebook: N centroids in original precision
-  - **Example**: 3.2x compression for 4-bit quantization
-
-### Granularity Options
-1. **Per-Tensor**: Single scale/zero-point for entire tensor
-2. **Per-Channel/Vector**: Scale per channel (more precise)
-3. **Per-Group**: Intermediate granularity
-
-**Trade-off**: Finer granularity 	o Higher precision but increased overhead
-
----
-
-## Training Workflows
-
-### Post-Training Quantization (PTQ)
-
-- **Training**: Uses full precision (FP32/BF16)
-- **Inference**: Applies quantization to weights and/or activations
-- **Simplest approach** but may have accuracy degradation
-
-### Quantization-Aware Training (QAT)
-
-- **Training**: Simulates quantization effects during training
-- **Method**: Quantize 	o Dequantize in forward pass
-- **Backpropagation**: Uses Straight-Through Estimator (STE) for differentiability
-- **Results**: Generally outperforms PTQ
-
-### Straight-Through Estimator (STE)
-
-- **Problem**: Step function derivative is 0 or infty
-- **Solution**: Use identity function gradient: $\frac{\partial}{\partial x}\text{quantize}(x) \approx 1$
-
----
-
-## LLM-Specific Quantization Challenges
-
-### Outlier Problem
-
-- **Observation**: Quantization accuracy drops significantly for large models (>6.7B parameters)
-- **Cause**: Emergence of outlier features in activations
-- **Impact**: Sharp accuracy degradation with standard quantization
-
-### Modern LLM Context
-**Example - DeepSeek V3**:
-
-- **FP8 quantization**: 671B parameters 	imes 1 byte = 671 GB (fits ~5 H200s)
-- **BF16 weights**: 671B parameters 	imes 2 bytes = 1.3 TB
-
----
-
-## Advanced LLM Quantization Methods
-
-### LLM.int8()
-**Key Ideas**:
-1. **Vector-wise quantization** for better outlier handling
-2. **Mixed precision**: Keep outliers in FP16, quantize regular values to INT8
-3. **Decomposition**: Separate outlier and regular computations
+Quantize per vector rather than per tensor, detect the outlier dimensions, and decompose the matmul: outlier columns run in FP16, everything else in INT8, results summed. Accuracy holds, at the price of a more complicated kernel.
 
 ### SmoothQuant (W8A8)
-**Motivation**: Outliers typically in activations, not weights
 
-**Core Concept**: Migrate quantization difficulty
+Outliers live in activations while weights are comparatively easy to quantize, so [SmoothQuant](https://arxiv.org/abs/2211.10438) migrates difficulty from activations to weights with a per-channel rescaling:
 
-- **Formula**: $s_j = \frac{\max(|X_j|)^\alpha}{\max(|W_j|)^{1-\alpha}}$
-- **Process**: $WX \rightarrow Q(W \cdot s)(s^{-1} \cdot X)$
-- **Optimal alpha**: Empirically found to be 0.5
+$$WX \rightarrow Q(W \cdot s)\,(s^{-1} \cdot X), \qquad s_j = \frac{\max(|X_j|)^\alpha}{\max(|W_j|)^{1-\alpha}}$$
 
-**Benefits**: Balances quantization difficulty between weights and activations
+The paper finds $\alpha = 0.5$ balances the two sides. Both weights and activations then quantize to INT8 with standard kernels.
 
-### AWQ (Activation-Aware Weight-Only Quantization)
-**Target**: Low-batch scenarios where activation quantization is prohibitive
+### AWQ (W4, weight-only)
 
-**Key Insights**:
-1. **Weight-only quantization** (W4) for memory efficiency
-2. **Salient weight identification** using activation magnitudes
-3. **Per-channel scaling** to protect important weights
+At low batch size, serving is memory bound (see [[llm-serving-systems/performance-modeling|Performance Modeling]]), so shrinking weights is what buys latency and activation quantization buys little. [AWQ](https://arxiv.org/abs/2306.00978) quantizes weights to 4 bits, identifies the salient weight channels by looking at activation magnitudes rather than weight magnitudes, and scales those channels up before quantization so they lose less precision, fusing the inverse scale into the preceding op (LayerNorm, for example). No retraining needed.
 
-**Method**: $WX \rightarrow Q(W \cdot s)(s^{-1} \cdot X)$
+## How low can you go
 
-- Scale important channels up before quantization
-- Fuse inverse scaling with previous operations (e.g., LayerNorm)
+INT8 is generally safe. INT4 works with outlier-aware methods like AWQ. INT3 and below remain a research problem, with high variance across models and tasks. As a rule the accuracy cost is model-specific, so any deployment needs its own evaluation rather than a bit-width rule of thumb.
 
----
+## Related notes
 
-## Quantization Performance Impact
-
-### Accuracy vs Bit-width
-
-- **High variance** across models and quantization levels
-- **INT8**: Generally acceptable accuracy loss
-- **INT4**: Requires careful techniques (AWQ, etc.)
-- **INT3/INT2**: Significant accuracy challenges
-
-### Rounding Schemes Impact
-| Scheme | Accuracy |
-|--------|----------|
-| Nearest | 52.29% |
-| Stochastic | 52.06plusequal5.52% |
-| Stochastic (best) | 63.06% |
-| Ceil/Floor | 0.10% |
-
----
-
-## Summary
-
-**Quantization** is essential for efficient LLM serving, providing:
-
-- **Memory reduction** (2-8x compression)
-- **Energy savings** (quadratic with bit-width)
-- **Inference speedup** through specialized hardware
-
-**Key techniques for LLMs**:
-
-- **Handle outliers** through mixed precision or smoothing
-- **Choose appropriate granularity** (per-tensor vs per-channel)
-- **Balance accuracy vs efficiency** based on deployment requirements
-
-**Modern approaches** (LLM.int8(), SmoothQuant, AWQ) address LLM-specific challenges while maintaining practical deployability.
+- [[llm-serving-systems/performance-modeling|Performance Modeling]]
+- [[llm-serving-systems/memory-management|Memory Management]]
+- [[llm-serving-systems/sparsity-and-pruning|Sparsity and Pruning]]

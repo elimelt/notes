@@ -1,29 +1,37 @@
 ---
 title: Two Phase Commit
 category: Distributed Systems
-tags: two-phase commit, distributed transactions, atomicity, durability, consistency, isolation, deadlock prevention, distributed systems
+tags:
+  - two-phase-commit
+  - distributed-transactions
+  - atomicity
+  - consistency
+  - deadlock
+  - distributed-systems
 date: 2024-05-11
-description: Explains the concept of two phase commit in distributed systems and its implications.
+updated: 2026-07-30
+status: evergreen
+description: The two-phase commit protocol for atomic distributed transactions, the locking and logging machinery it builds on, its failure handling, and why it blocks.
 ---
 
-# Two Phase Commit
+## Purpose
+
+Updates that span multiple keys, or multiple storage systems, need all-or-nothing semantics so failures leave the data in a sane state. Two-phase commit (2PC) is the protocol that makes a distributed transaction, a group of operations across nodes, commit or abort as a unit. This note covers the machinery 2PC builds on (locking and logging), the protocol itself, its failure handling, and why it blocks.
 
 ## ACID
 
-For updates that span multiple keys, or even multiple updates across different storage systems, we need all-or-nothing semantics so errors can be properly handled. Two-phase commit (2PC) is a protocol that ensures **distributed transactions**, i.e. groups of operations, are atomic, consistent, isolated, and durable (ACID).
+2PC exists to give distributed transactions the ACID properties:
 
 | Term | Description |
-|--------|--------------------------------|
-| Atomic | operations appear to either happen as a group, or not at all |
+|---|---|
+| Atomic | Operations appear to either happen as a group or not at all |
+| Consistent | The system satisfies linearizability (or some other chosen consistency model) |
+| Isolated | Transactions don't see the intermediate results of other transactions, only the effects of ones that already committed |
 | Durable | Operations that complete stay completed |
-| Isolation | Other transactions don't see the results until of earlier transactions unless they were already committed
-| Consistency | linearizability (or some other consistency model) |
 
+## Two phase locking (2PL): consistency and isolation
 
-## Two Phase Locking (2PL) - Consistency and Isolation
-
-
-In **2PL**, locks are acquired on all structures touched during the transaction, and are only released upon commit or abort. This provides isolation and consistency for multi-key transactions.
+In 2PL, a transaction acquires locks on all structures it touches and releases them only on commit or abort:
 
 ```plaintext
 - start transaction -
@@ -32,69 +40,74 @@ Phase 1: acquire locks
 Phase 2: release locks
 ```
 
-## Redo Logging - Atomicity and Durability
+Holding every lock until the end is what makes multi-key transactions look isolated, since no other transaction can observe a half-done state.
 
-Log all changes to disk, followed by a log commit. If there is a crash before the log commit, abandon the transaction. If it was committed in the log, we can just redo the changes.
+## Redo logging: atomicity and durability
 
+Log all changes to disk, followed by a log commit record. If a crash happens before the commit record hits the log, abandon the transaction. If the commit record made it, redo the logged changes. Either way the transaction lands entirely or not at all.
 
 ## Deadlock
 
-Deadlock is when two or more transactions are waiting for locks held by each other in a cycle. To solve this you can stop one of the transactions to break the cycle.
+Deadlock is when two or more transactions wait for locks held by each other in a cycle. Detection plus killing one transaction breaks the cycle. Prevention is generally the better idea, and a consistent global ordering on lock acquisition achieves it, since a cycle needs someone to acquire locks against the order.
 
-Deadlock prevention is generally a better idea, and you can achieve it by always ordering lock acquisition consistently.
+## Distributed transactions
 
-## Distributed Transactions
+The two generals problem (see [[distributed-systems/RPC|RPC]]) rules out agreeing to perform an action at the same physical time. Instead the nodes agree on a virtual time, an ordering position, at which the operation happens.
 
-From the *two generals problem*, it is theoretically impossible to agree on performing some action at the same time. Instead, we agree in **virtual time** when an operation happens.
+### Atomic commit protocol (ACP)
 
-### Atomic Commit Protocol (ACP)
+The properties we want:
 
 - Every node arrives at the same decision
-- Once a node decides, it never changes
-- Transaction is committed only if all nodes vote yes
-- If all processes vote yes the transaction is usually committed
+- Once a node decides, it never changes its decision
+- The transaction is committed only if all nodes vote yes
+- If all processes vote yes, the transaction is normally committed
 - If all failures are eventually repaired, the transaction is eventually either committed or aborted
 
-## 2PC in Detail
-
-**2PC** is a blocking protocol, meaning that it makes no progress if some participants are unavailable. It has fault tolerance, but is not highly available, which is a fundamental limit of the protocol.
-
-- For a given transaction a central coordinator sends a prepare
-- Participants commit to commit
-  - Acquires locks, prevent/delay conflicting operations
-  - Abort if deadlock or if any of the operations cannot be completed
-- Central coordinator decides and tells everyone, then releases all locks
-
-### Handling Failures
-
-#### Participant Fails Before Sending Response
-
-You can maintain a timer on the coordinator to retry prepares. If some threshold is reached, just log a no and abort
-
-If the participant then comes back online, they will need to ask the coordinator for the decision, at which point the coordinator sends an abort to the participant
-
-#### Participant Fails Before After Sending Vote
-
-If the participant crashes immediately after sending their response. Then either they come back online before the commit is sent, at which point the protocol continues, or they will need to check their log and request the decision from the coordinator, which will resent the commit and the protocol continues.
-
-#### Coordinator Fails Before Sending Prepare
-
-They would have logged the prepare request, so when they come back online and execute the transaction.
-
-#### Coordinator Fails After Sending Prepare
-
-If the coordinator fails after sending prepares, but before receiving responses, they must have logged the prepared already, and they need to be resent.
+## 2PC in detail
 
 ### Roles
 
-- Participants: Nodes that must update data relevant to the transaction
-- Coordinator: node responsible for executing the protocol (might also be a participant)
+- Participants: nodes that must update data relevant to the transaction
+- Coordinator: the node responsible for executing the protocol (it might also be a participant)
 
 ### Messages
 
-- Prepare: Can you commit the transaction?
+- Prepare: can you commit the transaction?
 - Commit: commit the transaction
 - Abort: abort the transaction
+
+### The protocol
+
+- The coordinator sends prepare to every participant
+- Each participant votes, and a yes vote is a promise
+  - It acquires locks to prevent or delay conflicting operations
+  - It votes abort on deadlock or if any of its operations cannot be completed
+- The coordinator collects the votes, decides, tells everyone, and the locks get released
+
+2PC is a blocking protocol. It makes no progress while a participant or the coordinator is unavailable at the wrong moment, so it is fault tolerant without being highly available. That limit is fundamental to the protocol, and [[distributed-systems/non-blocking-two-phase-commit|2PC over Paxos]] is the standard way around it.
+
+### Handling failures
+
+Every role logs its state transitions before sending messages, which is what makes the recovery cases below work.
+
+#### Participant fails before sending its vote
+
+The coordinator keeps a timer and retries the prepare. Past some threshold it logs a no vote on the participant's behalf and aborts. If the participant later comes back, it asks the coordinator for the decision and learns of the abort.
+
+#### Participant fails after sending its vote
+
+If the participant recovers before the decision is sent, the protocol continues normally. Otherwise it finds the pending transaction in its log on recovery and requests the decision from the coordinator, which resends it, and the protocol continues.
+
+#### Coordinator fails before sending prepares
+
+The coordinator logged the client request, so on recovery it picks the transaction back up and sends the prepares.
+
+#### Coordinator fails after sending prepares
+
+The prepare is in the coordinator's log, so on recovery it resends the prepares. Participants that already voted just repeat their votes.
+
+The painful case is the coordinator failing after participants vote yes and before any decision arrives. Every yes-voting participant has promised to commit, so it must hold its locks and wait for the coordinator to recover. That wait is the blocking behavior named above.
 
 ## Related notes
 

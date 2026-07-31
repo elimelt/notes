@@ -1,60 +1,61 @@
 ---
 title: Finding Connected Components in Undirected Graphs Using BFS/DFS
 category: Algorithms
-tags: graph theory, connected components, breadth-first search, depth-first search
+tags:
+  - graph theory
+  - connected components
+  - breadth-first search
+  - depth-first search
 date: 2024-04-14
-description: Explains how to partition an undirected graph into connected components using BFS or DFS algorithms in O(|V| + |E|) time complexity. Includes Python implementation using adjacency lists and demonstrates how to create a data structure that enables O(1) time queries for path existence between vertices.
+updated: 2026-07-30
+status: evergreen
+description: How to partition an undirected graph into connected components in O(|V| + |E|) with BFS or DFS, producing a labeling that answers path-existence queries in O(1).
 ---
 
-# Connected Components
+## Purpose
 
-Given an undirected graph $G = (V, E)$, you can find partition $V$ into sets of connected components $C_1, C_2, \ldots$ in $O(|V| + |E|)$ using [[algorithms/BFS|breadth-first search (BFS)]] or [[algorithms/DFS|depth-first search (DFS)]].
+Given an undirected graph $G = (V, E)$, you can partition $V$ into connected components $C_1, C_2, \ldots$ in $O(|V| + |E|)$ using [[algorithms/BFS|breadth-first search (BFS)]] or [[algorithms/DFS|depth-first search (DFS)]]. The payoff is a data structure built once from $G$ that answers whether a path exists between two vertices $u, v \in V$ in $O(1)$ time and $O(|V|)$ space: two vertices are connected exactly when they carry the same component label.
 
-In other words, we can create a data structure from $G$ such that given two vertices $u, v \in V$, we  we answer whether there exists a path from $u \to v$ in $O(1)$ time and $O(|V|)$ space.
+## Algorithm
 
-The basic idea is to run a BFS/DFS starting at every vertex, and to assign a label to each vertex we visit during this traversal. We can use an array (if vertices are numbered) or hash map to store the vertex to component set mapping $V \to C_i$
+Scan the vertices in order. Each time you hit a vertex that has no label yet, it starts a new component: run BFS (or DFS) from it and stamp every vertex you reach with the current label, then increment the label. Each traversal stays inside one component because BFS only follows edges, and it covers the whole component because BFS reaches everything connected to its source. Store the labels in an array (if vertices are numbered) or a hash map.
 
 ```python
-import networkx as nx
-import random
 from collections import deque, defaultdict
 
 def connected_components(graph):
-  a = [None] * len(graph)
+    a = [None] * len(graph)
 
-  def bfs(label, G, src):
-    q = deque()
-    vis = set()
+    def bfs(label, src):
+        q = deque([src])
+        a[src] = label
+        while q:
+            curr = q.popleft()
+            for v in graph[curr]:
+                if a[v] is None:
+                    a[v] = label
+                    q.append(v)
 
-    q.append(src)
-    while q:
-      curr = q.popleft()
-      vis.add(curr)
-      a[curr] = label
-      for v in G[curr]:
-        if v not in vis:
-          q.append(v)
-
-  curr_label = 0
-
-  for v in range(len(graph)):
-    bfs(curr_label, graph, v)
-    curr_label += 1
-  return a
+    curr_label = 0
+    for v in range(len(graph)):
+        if a[v] is None:
+            bfs(curr_label, v)
+            curr_label += 1
+    return a
 
 def component_sets(G):
-  n = len(G)
-  comp = connected_components(G)
-  component_dict = defaultdict(lambda: set())
-  for v, c in enumerate(comp):
-    component_dict[c].add(v)
-
-  return list(component_dict.values())
+    comp = connected_components(G)
+    component_dict = defaultdict(set)
+    for v, c in enumerate(comp):
+        component_dict[c].add(v)
+    return list(component_dict.values())
 ```
 
-## Strategy for Unconnected Graph
+The label array doubles as the visited set, so every vertex enters the queue at most once and the total work over all traversals is $O(|V| + |E|)$.
 
-In general, if you are solving a graph problem you should first assume your graph is fully connected, and then after you've found a solution for connected graphs, you can run your algorithm on all the connected components of your graph.
+## Strategy for Unconnected Graphs
+
+When solving a graph problem, first assume the graph is connected. Once you have a solution for connected graphs, run it separately on each connected component.
 
 ## Related notes
 

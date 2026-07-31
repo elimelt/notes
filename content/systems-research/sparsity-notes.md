@@ -1,110 +1,55 @@
 ---
 title: Faster Causal Self Attention
 category: Machine Learning Systems
-tags: machine learning, attention mechanism, transformer, sparse attention
+tags:
+  - machine-learning
+  - attention-mechanism
+  - transformer
+  - sparse-attention
 date: 2025-01-14
-description: Covers the implementation of faster causal self-attention mechanisms for transformer models. Introduces techniques to achieve linear complexity in long-range attention, such as sparse attention patterns and the use of mixture-of-attention (MoA) layers. Discusses the trade-offs between attention sparsity and model performance, highlighting the potential for significant speedups in transformer-based models.
+updated: 2026-07-30
+status: needs-review
+description: Reading notes on three sparse attention papers, SCFA, SparseK, and MoA, covering how each one cuts the quadratic cost of attention over long sequences.
+sources:
+  - title: Faster Causal Attention Over Large Sequences Through Sparse Flash Attention
+    url: https://arxiv.org/abs/2306.01160
+    type: paper
+  - title: "Sparser is Faster and Less is More: Efficient Sparse Attention for Long-Range Transformers"
+    url: https://arxiv.org/abs/2406.16747
+    type: paper
+  - title: "MoA: Mixture of Sparse Attention for Automatic Large Language Model Compression"
+    url: https://arxiv.org/abs/2406.14909
+    type: paper
 ---
 
-# Attention Sparsity Review
+## Purpose
 
-## Faster Causal Self Attention
+Reading notes on three papers about making causal self attention cheaper over long sequences. All three attack the same bottleneck, the quadratic cost of attention in sequence length, from different angles. These summaries are second-hand and I have not re-verified every number against the papers, hence the needs-review status.
 
-This paper presents an important advancement in making transformer attention mechanisms more efficient for processing long sequences. Here are the key points:
+## Sparse Causal Flash Attention (SCFA)
 
-1. Core Innovation: The authors introduce Sparse Causal Flash Attention (SCFA), which extends the existing FlashAttention algorithm to handle irregular/sparse attention patterns while maintaining high computational efficiency.
+[Faster Causal Attention Over Large Sequences Through Sparse Flash Attention](https://arxiv.org/abs/2306.01160) (Pagliardini et al., 2023) extends FlashAttention to handle irregular, sparse attention patterns while keeping its computational efficiency. The technical move is modifying FlashAttention to handle non-triangular causal masks, which unlocks flexible attention patterns while keeping the memory and compute benefits of the original kernel.
 
-2. Two Main Applications:
-- Query/Key (QK) dropping: Selectively removing certain query and key pairs
-- Hash-based attention: Using locality-sensitive hashing to group similar queries and keys together
+Two applications drive the paper. Query/key (QK) dropping selectively removes certain query and key pairs. Hash-based attention uses locality-sensitive hashing to group similar queries and keys together.
 
-3. Key Results:
-- Achieves 2.0× speedup for sequences of 8,192 tokens
-- Achieves 3.3× speedup for sequences of 16,384 tokens
-- Maintains comparable perplexity to standard attention
-- Outperforms previous approaches like Reformer in both speed and accuracy
+Reported results: 2.0x training speedup at 8,192 tokens and 3.3x at 16,384 tokens, with perplexity comparable to standard attention, beating Reformer on both speed and accuracy. The computation stays exact rather than approximate, sparsity patterns can be dynamic rather than static, and there is no complexity overhead on top of regular FlashAttention. The benefits grow with sequence length.
 
-4. Main Advantages:
-- No computational complexity overhead compared to regular FlashAttention
-- Supports dynamic sparsity patterns rather than just static ones
-- Achieves exact computation (unlike some previous approaches that approximate)
-- Works particularly well for longer sequences
+## SparseK Attention
 
-5. Technical Innovation:
-The key technical achievement is modifying FlashAttention to handle non-triangular causal masks, which enables more flexible attention patterns while maintaining the memory and computational benefits of the original FlashAttention algorithm.
+[Sparser is Faster and Less is More](https://arxiv.org/abs/2406.16747) introduces SparseK Attention, which uses a scoring network and a differentiable top-k mask operator to dynamically select a constant number of important key-value pairs for each query. The differentiability matters because it makes the selection trainable end to end.
 
-This work is significant because it helps address one of the main bottlenecks in transformer models - the quadratic computational cost of attention with respect to sequence length - while maintaining exact computation and allowing for dynamic sparsity patterns.
+That constant-size selection gives linear time complexity and a constant memory footprint during generation, and the mechanism stays efficient for both training and inference. It integrates with sliding window attention, works with pre-trained LLMs through fine-tuning, and uses an IO-aware implementation built on FlashAttention. The paper reports better perplexity than baseline sparse attention methods while matching or exceeding full attention quality.
 
-## Sparser is Faster: Long-Range Attention with Linear Complexity
+Limits the authors call out: validation only reaches modest model sizes and context lengths due to compute constraints, only decoder-only architectures and text tasks are tested, and short sequences pay some overhead.
 
-Here's a summary of the key points from this paper about SparseK Attention:
+## MoA (Mixture of Sparse Attention)
 
-Key Innovation:
-- Introduces SparseK Attention, a novel sparse attention mechanism that offers both computational and memory efficiency for long sequences
-- Uses a scoring network and differentiable top-k mask operator to dynamically select important key-value pairs for each query
+[MoA: Mixture of Sparse Attention for Automatic Large Language Model Compression](https://arxiv.org/abs/2406.14909) starts from the observation that existing sparse attention methods apply one uniform pattern across all attention heads, even though different heads serve different purposes. Uniform patterns also fail to extend the effective context length beyond their attention span.
 
-Main Advantages:
-1. Efficiency:
-- Linear time complexity and constant memory footprint
-- Better speed than previous sparse attention methods
-- Efficient for both training and inference
+MoA automatically discovers heterogeneous sparse attention patterns tailored to each head and layer. It profiles the influence of each attention position on model predictions with gradient-based analysis, builds a search space of attention patterns and elastic scaling rules that let spans grow differently with input length, and optimizes over that space with calibration datasets containing long-range dependencies.
 
-2. Performance:
-- Outperforms previous sparse attention approaches
-- Matches or exceeds full attention quality while being faster
-- Can handle sequences up to 16,384 tokens effectively
+Reported results: 3.9x longer effective context length than baseline methods at the same average attention span, retrieval accuracy improved 1.5-7.1x over uniform sparse baselines, maximum benchmark performance drop reduced from the 9-36% range to within 5%, 6.6-8.2x throughput over FlashAttention2, and 1.2-1.4x lower GPU memory usage. Performance degrades under extremely low density constraints, and the authors leave dynamic attention patterns and non-linear elastic rules to future work.
 
-3. Technical Features:
-- Integrates with sliding window attention
-- Compatible with pre-trained LLMs through fine-tuning
-- Uses an IO-aware implementation based on Flash Attention
-
-Results:
-- Language modeling tests show better perplexity than baseline methods
-- Achieves 2.0× speedup for 8k sequences and 3.3× for 16k sequences
-- Maintains performance while significantly reducing compute and memory requirements
-
-Key Limitation:
-- Currently validated only up to 1.1B parameter models and 16k token contexts due to computational constraints
-- Only tested on decoder-only architectures and text tasks
-- Some overhead for short sequences, though benefits increase with sequence length
-
-The paper demonstrates that SparseK Attention can make transformer models more efficient for long sequences while maintaining or improving quality, offering a practical solution for scaling up context windows in language models.
-
-## MoA
-
-This paper introduces MoA (Mixture of Attention), a novel method for compressing large language models (LLMs) by automatically optimizing sparse attention patterns. Here are the key points:
-
-1. Problem & Motivation:
-- LLMs struggle with long contexts due to quadratic memory and computation costs from attention
-- Existing sparse attention methods use uniform patterns across all attention heads, ignoring that different heads serve different purposes
-- Current approaches fail to extend effective context length beyond their attention span
-
-2. Key Innovation - MoA:
-- Automatically discovers heterogeneous sparse attention patterns tailored to each attention head
-- Uses elastic rules that allow attention spans to scale differently with input length
-- Maintains different patterns for different layers and heads based on their functions
-
-3. Technical Approach:
-- Profiles the influence of each attention position on model predictions using gradient-based analysis
-- Constructs a search space of various attention patterns and scaling rules
-- Uses calibration datasets with long-range dependencies
-- Optimizes patterns automatically through a multi-objective framework
-
-4. Key Results:
-- Increases effective context length by 3.9× compared to baseline methods
-- Improves retrieval accuracy by 1.5-7.1× over uniform attention baselines
-- Reduces maximum performance drop from 9-36% to within 5% on benchmarks
-- Achieves 6.6-8.2× throughput improvement over FlashAttention2
-- Reduces GPU memory usage by 1.2-1.4×
-
-5. Limitations:
-- Performance degrades under extremely low-density constraints
-- May benefit from dynamic attention patterns (left for future work)
-- Could explore non-linear elastic rules
-
-The paper demonstrates that automatically discovering heterogeneous attention patterns can significantly improve both the efficiency and capabilities of LLMs in handling long contexts, while maintaining model performance.
-
-## Related
+## Related notes
 
 - [[systems-research/padded-encoder-decoder|Accelerating Padded Encoder-Decoder Transformer Models]]

@@ -1,173 +1,107 @@
 ---
 title: Speculative Decoding in LLM Serving Systems
 category: Machine Learning Systems
-tags: speculative decoding, llm, performance, machine learning
+tags:
+  - speculative-decoding
+  - llm
+  - performance
+  - machine-learning
 date: 2025-05-25
-description: Using speculative decoding to accelerate large language model inference, including algorithm details, performance analysis, and advanced techniques like Medusa and SpecInfer.
+updated: 2026-07-30
+status: evergreen
+description: How speculative decoding accelerates inference with draft models and rejection sampling, why the output distribution is preserved, and the tree-based extensions (Medusa, SpecInfer).
+sources:
+  - title: Fast Inference from Transformers via Speculative Decoding (Leviathan et al.)
+    url: https://arxiv.org/abs/2211.17192
+    type: paper
+  - title: Accelerating Large Language Model Decoding with Speculative Sampling (Chen et al.)
+    url: https://arxiv.org/abs/2302.01318
+    type: paper
+  - title: "Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads"
+    url: https://arxiv.org/abs/2401.10774
+    type: paper
+  - title: "SpecInfer: Accelerating Generative Large Language Model Serving with Tree-based Speculative Inference and Verification"
+    url: https://arxiv.org/abs/2305.09781
+    type: paper
+  - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
+    type: lecture
 ---
 
-## Overview
+## Purpose
 
-Speculative decoding changes the decode workload and acceptance-dependent throughput, complementing the scheduling tradeoffs in [[llm-serving-systems/batching|Batching]] and the baseline model in [[llm-serving-systems/performance-modeling|Performance Modeling]].
-> Disclaimer: These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025 instructed by both Prof. Baris Kasikci and TA Kan Zhu
+This note explains speculative decoding: the algorithm, why it leaves the output distribution unchanged, and the tree-based variants used in serving systems. Speculative decoding changes the decode workload and makes throughput depend on acceptance rates, which complements the scheduling tradeoffs in [[llm-serving-systems/batching|Batching]] and the baseline model in [[llm-serving-systems/performance-modeling|Performance Modeling]].
 
-**Speculative Decoding** is a technique to accelerate large language model inference by using a smaller, faster model to generate candidate tokens that are then verified by the larger target model in parallel.
+These are notes for CSE 599K "LLM Serving Systems" at the University of Washington, Spring 2025, taught by Prof. Baris Kasikci with TA Kan Zhu.
 
-### Key References
+## Core idea
 
-- Chen et al., "Accelerating Large Language Model Decoding with Speculative Sampling" (2023)
-- Leviathan et al., "Fast Inference from Transformers via Speculative Decoding" (2022)
+A small draft model generates several candidate tokens quickly, and the large target model verifies them all in a single parallel forward pass. The analogy is speculative execution in CPUs: guess ahead, verify cheaply, and roll back only what was wrong. The technique comes from [Leviathan et al.](https://arxiv.org/abs/2211.17192) and [Chen et al.](https://arxiv.org/abs/2302.01318), developed independently.
 
-## Core Concept
+Two observations make it work. At low batch size, decoding is memory bound (see [[llm-serving-systems/performance-modeling|Performance Modeling]]): a forward pass over one token and a forward pass over five tokens cost nearly the same wall-clock time because both are dominated by streaming the weights. So verifying a batch of drafted tokens is almost free relative to generating them one at a time. And draft models are accurate on easy tokens, which are most tokens. Completing "Geoffrey Hinton did his PhD at the University of..." does not need a 70B model; a small model gets "Edinburgh" right, and the target model's capacity only matters at genuinely hard positions.
 
-### Speculative Decoding in a Nutshell
+## The algorithm
 
-- **Small LM (Draft Model)**: Generates multiple tokens quickly
-  - Can be obtained via quantization, pruning, training from scratch, etc.
-- **Large LM (Target Model)**: Verifies the generated tokens for accuracy
-- **Analogy**: Similar to speculative execution in CPUs - the small model may quickly generate many tokens that are mostly accurate
+One round with draft length $\gamma$ (say 5):
 
-### Key Enabling Observations
-1. **Compute vs Memory Bound**:
-   - LLM serving is **compute-bound** at large batch sizes
-   - At lower batch sizes, LLM serving becomes **memory-bound**
-   - A batch of quickly generated tokens can be verified in parallel at once
+1. Draft: run the draft model $M_p$ autoregressively $\gamma$ times, sampling $x_1, \dots, x_5$ with distributions $p_1, \dots, p_5$:
 
-2. **Draft Model Accuracy**:
-   - Small (draft) LLMs are quite accurate for most "easy" tokens
-   - Most of the time, a large (target) LLM is not needed
-   - Example: "Geoffrey Hinton did his PhD at the University of..." 	o "Edinburgh" (easy) vs more complex completions (difficult)
-
-## Algorithm Details
-
-### Two-Step Process
-
-1. **Draft Generation**: Run the draft model N iterations (e.g., 5)
-   ```
-   p1(x) = Mp(prefix) 	o x1
-   pz(x) = Mp(prefix, x1) 	o xz
-   ...
-   p5(x) = Mp(prefix, x1, xz, xepsilon, x4) 	o x5
-   ```
-
-2. **Parallel Verification**: Run the target model once to verify all tokens
-   ```
-   q1(x), qz(x), qepsilon(x), q4(x), q5(x), q6(x) = Mq(prefix, x1, xz, xepsilon, x4, x5)
-   ```
-
-**Important**: Target model only produces distributions; sampling is only done from the draft model.
-
-### Rejection Sampling Process
-
-For each generated token, compare draft probability `p(x)` with target probability `q(x)`:
-
-- **Case 1**: If `q(x) ge p(x)` 	o **Accept** the token
-  - Target model is even more confident than draft model
-- **Case 2**: If `q(x) < p(x)` 	o **Accept with probability `q(x)/p(x)`**
-
-### Handling Rejections
-
-When a token is rejected:
-- Sample from the **corrected distribution**: `(q(x) - p(x))+`
-- The `+` notation means we won't sample from negative probabilities
-- This ensures the final distribution matches what the target model would produce
-
-### Token Generation Outcomes
-
-- **Best case**: All tokens accepted 	o K+1 tokens generated
-- **Worst case**: First token rejected 	o 1 token generated
-- **Key insight**: The worst case doesn't slow down the algorithm since a forward pass normally generates only one token
-
-## Performance Analysis
-
-### Speedup Factors
-
-- **alpha**: Measure of how accurately the draft model represents the target model
-- **gamma**: Number of draft model predictions before verification
-
-### Speedup Results
-The effectiveness shows:
-- Higher accuracy (alpha) leads to better speedup
-- Optimal gamma values exist (diminishing returns from too many draft predictions)
-- Typical speedups: 1.4x to 3.4x depending on model size and task
-
-## Advanced Techniques
-
-### Medusa
-**Key Innovation**: Add multiple prediction heads to a single model instead of using separate draft/target models.
-
-**Architecture**:
-
-- Add a few additional heads to predict tokens
-- Easy to train the new heads with basic GPU
-- Easy to serve (same parallelism patterns)
-- Good speedup (~3x)
-
-**Tree Attention**:
-
-- Heads provide different token candidates, forming different candidate sequences
-- Each sequence becomes a branch in the tree
-- Tree attention mask allows each token to attend only to its predecessors
-- Multiple sequences can be batched and verified in one forward pass
-
-**Variants**:
-
-- **Medusa-1**: Medusa heads fine-tuned on top of frozen backbone LLM
-- **Medusa-2**: Medusa heads fine-tuned together with backbone LLM (requires special training recipe)
-
-### SpecInfer
-**Problem**: Single draft model may not provide enough "coverage"
-
-**Solution**: Use multiple draft models simultaneously
-
-- Creates a tree of sequences
-- Can be verified simultaneously
-- Leverages memory-bound regime for batched verification
-
-**Token Tree Verification**:
-
-- Uses topology-aware causal mask
-- Applies attention in a manner aware of tree topology
-- Enables batching of verification requests
-
-## Implementation Details
-
-### Parallel Token Probability Computation
-```python
-# Project to vocabulary
-# I: (seq_len, hidden_dim): (seq_len, 4096)
-# O: (seq_len, vocab_size): (seq_len, 128256)
-logits = model_output.matmul(lm_head_weight.t())
-# Pick the next token with highest probability
-sample_output = torch.argmax(logits, dim=1)
-# Return the next token following the last token in input sequence
-return sample_output[-1].item()
+```text
+p1(x) = Mp(prefix)                    -> x1
+p2(x) = Mp(prefix, x1)                -> x2
+...
+p5(x) = Mp(prefix, x1, x2, x3, x4)   -> x5
 ```
 
-This gives **next token probabilities for each token in the sequence in one pass**.
+2. Verify: run the target model $M_q$ once over the whole drafted sequence, producing all the target distributions in one pass:
 
-### Benefits Timeline Comparison
+```text
+q1(x), q2(x), ..., q6(x) = Mq(prefix, x1, x2, x3, x4, x5)
+```
 
-- **Base**: Sequential token generation
-- **Sequence-based Speculative**: Alternating speculation and verification phases
-- **Tree-based Speculative**: More efficient with parallel tree verification
+This works because a single transformer forward pass yields next-token distributions at every position (the same fact that makes prefill parallel; see [[llm-serving-systems/transformers|Transformers]]):
 
-## Results Summary
+```python
+# Project to vocabulary
+# in:  (seq_len, hidden_dim)
+# out: (seq_len, vocab_size)
+logits = model_output.matmul(lm_head_weight.t())
+```
 
-### Performance Gains
+The target model only produces distributions here; new tokens are sampled from the draft model, plus one correction sample described below.
 
-- **T5-Small**: 2.6x - 3.4x speedup
-- **T5-Base**: 2.4x - 3.0x speedup  
-- **T5-Large**: 1.4x - 2.2x speedup
-- **Medusa**: Consistent ~2.5x - 3.6x across different task categories
+### Accepting and rejecting
 
-### Key Insight
-Diminishing returns from increased gamma (number of draft predictions) - there's an optimal balance between speculation depth and verification overhead.
+Walk the drafted tokens left to right, comparing the draft probability $p(x)$ of each sampled token against the target probability $q(x)$:
 
-## Practical Applications
+- If $q(x) \geq p(x)$: accept. The target model likes this token at least as much as the draft did.
+- If $q(x) < p(x)$: accept with probability $q(x)/p(x)$.
 
-Speculative decoding is particularly effective for:
-- **Memory-bound serving scenarios** (lower batch sizes)
-- **Tasks with predictable patterns** where draft models can be reasonably accurate
-- **Scenarios requiring maintained output quality** (lossless acceleration)
-- **Real-time applications** where latency reduction is critical
+On the first rejection, discard that token and everything after it, and sample the replacement from the corrected distribution $\propto \max(q(x) - p(x), 0)$. This is exactly rejection sampling, and the Leviathan and Chen papers prove the combined procedure produces samples distributed identically to sampling from the target model alone. The acceleration is lossless in distribution.
+
+Per round the output is between 1 token (first draft token rejected, correction sample emitted) and $\gamma + 1$ tokens (all accepted, plus one free token from $q_{\gamma+1}$). The worst case costs no more than ordinary decoding, since a normal forward pass also yields one token.
+
+## Performance
+
+Two parameters govern speedup: $\alpha$, how well the draft distribution matches the target (acceptance rate), and $\gamma$, the draft length. Higher $\alpha$ means longer accepted runs. For fixed $\alpha$ there is an optimal $\gamma$, because each additional draft token is more likely to be thrown away while still costing draft compute. The Leviathan paper reports 1.4x to 3.4x speedups with T5 drafters depending on model size and task (T5-Small 2.6-3.4x, T5-Base 2.4-3.0x, T5-Large 1.4-2.2x).
+
+## Tree-based variants
+
+### Medusa
+
+[Medusa](https://arxiv.org/abs/2401.10774) drops the separate draft model and adds extra decoding heads to the target model itself, each predicting a token several positions ahead. The heads are cheap to train (Medusa-1 fine-tunes heads on a frozen backbone; Medusa-2 trains heads and backbone together with a special recipe) and serving stays simple because there is one model with one parallelism configuration.
+
+Since each head proposes several candidates, the candidates compose into a tree of possible continuations rather than a single sequence. Tree attention verifies all branches in one forward pass: a topology-aware attention mask lets every token attend only to its ancestors in the tree, so distinct branches do not contaminate each other. The paper reports around 2.3-3.6x speedup across task categories.
+
+### SpecInfer
+
+[SpecInfer](https://arxiv.org/abs/2305.09781) attacks draft coverage: one draft model may miss the target's actual continuation, so it runs several small speculators (or one boosted with multiple sampling) to build a candidate token tree, then verifies the whole tree in one pass with the same topology-aware causal masking idea. Verification piggybacks on the memory-bound regime, where scoring many tree nodes costs little more than scoring one.
+
+## When it helps
+
+Speculative decoding pays off when decoding is memory bound (low batch size), when the text is predictable enough for drafts to hit (code, templated prose), and when output quality cannot be compromised, since the distribution is provably unchanged. At high batch sizes the target model's verification passes stop being free, the compute-bound regime takes over, and the technique's advantage shrinks; that interaction with scheduler load is exactly the territory of [[llm-serving-systems/batching|Batching]].
+
+## Related notes
+
+- [[llm-serving-systems/batching|Batching]]
+- [[llm-serving-systems/performance-modeling|Performance Modeling]]
+- [[llm-serving-systems/transformers|Transformers]]

@@ -1,53 +1,68 @@
 ---
 title: Sliding Window Pattern
 category: Algorithms
-tags: sliding window, fixed size window, dynamic size window, streaming algorithms, array problems, contiguous subarray, linear data structure
+tags:
+  - sliding-window
+  - two-pointers
+  - arrays
+  - streaming-algorithms
 date: 2024-03-31
-description: A technical exploration of the sliding window pattern in algorithms, focusing on its applications and variations.
+updated: 2026-07-30
+status: draft
+description: How to recognize sliding window problems and design both fixed and variable size window algorithms over linear data structures.
 ---
 
-# Sliding Window
+## Purpose
 
-Sliding window is a useful pattern when you need to maintain a contiguous subarray of elements within a linear data structure. Problems typically fall into one of two categories:
+Sliding window is the pattern to reach for when you need to maintain a contiguous subarray of elements within a linear data structure. This note covers how to recognize these problems and how to structure the two variants.
 
-1. **Fixed Size Window**: The window size is fixed and does not change as you iterate through the data structure. These are typically easier to solve.
-2. **Variable Size Window**: The window size changes as you iterate through the data structure. These are typically harder to solve, since you need to dynamically adjust the window size depending on the state of your algorithm.
+## Core idea
 
-## Fixed Size Window
+Problems typically fall into one of two categories:
 
-Any time you are given a linear data structure and are asked to find some minimal or maximal contiguous subset of elements, you should immediately think of using a fixed size sliding window.
+1. **Fixed size window**: the window size never changes as you iterate. These are typically easier to solve.
+2. **Variable size window**: the window grows and shrinks as you iterate, depending on the state of your algorithm. These are harder, since you have to decide when to expand and when to contract.
 
-A typical algorithm might look like this:
+## Fixed size window
+
+Any time you're given a linear data structure and asked for a minimal or maximal contiguous subset of elements with a known size, think fixed size sliding window.
+
+A typical algorithm:
 
 - Initialize the window state with the first $k$ elements.
-- Iterate through the array, from index $k$ to $n - 1$.
-  - At each step, update the window state by removing the first element of your current window and adding the next element.
-  - (Sometimes conditionally) update the result based on the window state.
-  - Move the window boundries to the right by one element.
-- Return result based on the window state.
+- Iterate through the array from index $k$ to $n - 1$.
+  - At each step, update the window state by removing the element leaving the window and adding the next element.
+  - Update the result based on the window state, sometimes conditionally.
+- Return the result.
 
-To design such an algorithm, you need to identify the following:
-- What state do you need to describe a window of elements?
-  - For example: the sum of elements: integer, the frequency of elements: `dict`, the maximum element: monotonic stack, etc.
-- How do you update the window state as add and remove elements?
-  - This can be as simple as adding/subtracting, and as complex as iterating through an auxiliary data structure or solving an entire subproblem based on the window state.
-- How and when do you update the result based on the window state?
-  - For minimum/maximum problems, often your state is `Comparable`, so you can easily update the result by comparing the current state with the result.
+To design such an algorithm, work out:
 
-Some problems will require you to `map` (as in apply a function to each element of a collection) over all windows of a fixed size, outputting some linear data structe of results based on each iteration's window state. In this case, you can use the same algorithm, but instead of updating a single result, you can append the result of each iteration to a `list`. In others, you can update a single result in more of a "streaming" fashion. You should always look for the streaming approach if your final result only depends on a single window state.
+- What state describes a window of elements? A sum fits in an integer, element frequencies fit in a `dict`, a running maximum needs a monotonic deque.
+- How does the state change when an element enters or leaves the window? This can be as simple as adding and subtracting, or as involved as solving an entire subproblem on the window state.
+- How and when does the window state update the result? For minimum and maximum problems the state is often directly comparable against the result.
 
-## Dynamic Size Window
+Some problems ask you to apply a function to every window of a fixed size and output a list of per-window results. The same algorithm works, appending each iteration's result to a list. If the final answer only depends on aggregating window states, update a single result in streaming fashion instead. Always look for the streaming version when the output is a single value.
 
-Dynamic size windows often involve more complicated logic within each iteration, since at any given step you need to decide whether to expand or contract the window, on top of how to update the window state for each case.
+## Variable size window
 
-A typical algorithm might look like this:
--
+Variable size windows involve more logic per iteration, since at each step you decide whether to expand or contract the window, on top of updating the window state in each case.
 
+A typical algorithm:
 
-## Practice Problems
+- Start with two pointers $l = r = 0$ and an empty window state.
+- Advance $r$ one element at a time, adding $A[r]$ to the window state.
+- After each expansion, shrink from the left while the window violates the problem's constraint, removing $A[l]$ from the state and incrementing $l$.
+- Update the result whenever the window is valid. For longest-window problems that's after the shrink loop restores validity. For shortest-window problems, shrink while the window stays valid and record the size before it breaks.
+
+The nested loop looks quadratic. Both pointers only move forward though, so each element enters and leaves the window at most once, and the whole pass costs $O(n)$ state updates.
+
+## Practice problems
 
 - [minimum-size-subarray-sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
 - [longest-substring-without-repeating-characters](https://leetcode.com/problems/longest-substring-without-repeating-characters)
 - [substring-with-concatenation-of-all-words](https://leetcode.com/problems/substring-with-concatenation-of-all-words)
 - [minimum-window-substring](https://leetcode.com/problems/minimum-window-substring)
 
+## Related notes
+
+- [[algorithms/patterns/BFS|Breadth First Search Pattern]]

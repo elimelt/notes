@@ -10,12 +10,12 @@ tags:
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
-description: The encoder-decoder transformer, with separate encoder and decoder stacks, cross-attention, sequence-to-sequence training, and reference implementations in NumPy and PyTorch.
+description: The original transformer architecture, including encoder and decoder stacks, cross-attention, positional encoding, optimization details, and sequence-to-sequence training.
 sources:
-  - title: Attention Is All You Need
+  - title: Vaswani et al. (2017), Attention Is All You Need
     url: https://arxiv.org/abs/1706.03762
     type: paper
-  - title: Neural Machine Translation by Jointly Learning to Align and Translate
+  - title: Bahdanau, Cho, and Bengio (2014), Neural Machine Translation by Jointly Learning to Align and Translate
     url: https://arxiv.org/abs/1409.0473
     type: paper
   - title: einops
@@ -25,63 +25,151 @@ sources:
 
 ## Purpose
 
-The original transformer was not decoder-only. It was an encoder-decoder model for sequence transduction. This note covers that split and the extra mechanism that makes it useful: cross-attention.
+The original transformer was a sequence-to-sequence model, not a decoder-only language model. This note covers that original shape and the main idea that distinguishes it from plain self-attention stacks: cross-attention from the decoder into a separately encoded source sequence.
 
-## The Factorization
+## What Problem It Solves
 
-For source sequence $x_{1:S}$ and target sequence $y_{1:T}$:
+Given source tokens $x_{1:S}$ and target tokens $y_{1:T}$, model
 
 $$
 p(y_{1:T} \mid x_{1:S}) = \prod_{t=1}^{T} p(y_t \mid y_{<t}, x_{1:S})
 $$
 
-The encoder builds a representation of the full source. The decoder autoregressively predicts the target while attending both to earlier target tokens and to the encoded source.
+This factorization says:
 
-## Encoder Stack
+- the full source sequence is available
+- the target is generated autoregressively
+- each target step can condition on the whole source
 
-The encoder uses unmasked self-attention because every source token may see every other source token:
+That is exactly the structure of translation and many other transduction tasks.
+
+## Why Bahdanau Attention Matters Here
+
+Before transformers, Bahdanau, Cho, and Bengio argued that the plain encoder-decoder architecture suffered from a fixed-length bottleneck. Their fix was to let the decoder form a context vector by softly attending over source annotations:
 
 $$
-\begin{aligned}
-H_1 &= X + \text{MHA}(\text{LN}(X)) \\
-H_2 &= H_1 + \text{MLP}(\text{LN}(H_1))
-\end{aligned}
+c_i = \sum_{j=1}^{T_x} \alpha_{ij} h_j
 $$
 
-After several layers, the encoder outputs contextualized source states $E \in \mathbb{R}^{S \times d}$.
+with
 
-## Decoder Stack
+$$
+\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k=1}^{T_x}\exp(e_{ik})},
+\qquad
+e_{ij} = a(s_{i-1}, h_j)
+$$
 
-The decoder has three sublayers:
+The transformer inherits this idea and replaces recurrence with attention blocks.
 
-1. masked self-attention over target-prefix states
-2. cross-attention to encoder states
+## The Original Transformer Architecture
+
+Vaswani et al. use:
+
+- **$N = 6$** encoder layers
+- **$N = 6$** decoder layers
+- **$d_{model} = 512$**
+- **$d_{ff} = 2048$**
+- **$h = 8$** attention heads
+- dropout rate **0.1**
+
+These numbers define the base model. The "big" model scales width and head count further.
+
+## Encoder
+
+The encoder stack applies unmasked self-attention followed by a positionwise feed-forward network. In the original post-norm presentation:
+
+$$
+\operatorname{EncoderLayer}(x)
+=
+\operatorname{LayerNorm}\left(x + \operatorname{Sublayer}(x)\right)
+$$
+
+where the first sublayer is multi-head self-attention and the second is the feed-forward block.
+
+The feed-forward block is:
+
+$$
+\operatorname{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2
+$$
+
+with input/output dimension $512$ and inner dimension $2048$.
+
+## Decoder
+
+Each decoder layer contains three sublayers:
+
+1. masked self-attention over the target prefix
+2. encoder-decoder attention
 3. feed-forward network
 
-In pre-norm form:
-
-$$
-\begin{aligned}
-H_1 &= Y + \text{MaskedMHA}(\text{LN}(Y)) \\
-H_2 &= H_1 + \text{CrossAttn}(\text{LN}(H_1), E) \\
-H_3 &= H_2 + \text{MLP}(\text{LN}(H_2))
-\end{aligned}
-$$
+That middle step is cross-attention.
 
 ## Cross-Attention
 
-Cross-attention differs from self-attention only in where $Q$, $K$, and $V$ come from.
+Cross-attention differs from self-attention only in the origin of $Q$, $K$, and $V$:
 
-- queries come from the decoder state
-- keys and values come from the encoder output
+- queries come from decoder states
+- keys come from encoder states
+- values come from encoder states
+
+Formally,
 
 $$
-\text{CrossAttn}(Q_{dec}, K_{enc}, V_{enc}) = \text{softmax}\left(\frac{Q_{dec}K_{enc}^\top}{\sqrt{d_k}}\right)V_{enc}
+\operatorname{CrossAttn}(Q_{dec}, K_{enc}, V_{enc})
+=
+\operatorname{softmax}\left(\frac{Q_{dec}K_{enc}^\top}{\sqrt{d_k}}\right)V_{enc}
 $$
 
-This is the mechanism that lets the decoder align to relevant source positions when predicting each target token.
+This is the mechanism that lets target position $t$ align to whichever source positions matter for predicting $y_t$.
 
-Bahdanau attention made this alignment idea central. The transformer kept the idea and replaced recurrence with attention stacks.
+## Positional Encoding
+
+Because the transformer has no recurrence and no convolution, order must be injected. The paper uses sinusoidal positional encodings:
+
+$$
+\operatorname{PE}(pos, 2i)
+=
+\sin\left(pos / 10000^{2i/d_{model}}\right)
+$$
+
+$$
+\operatorname{PE}(pos, 2i+1)
+=
+\cos\left(pos / 10000^{2i/d_{model}}\right)
+$$
+
+These are added to the token embeddings.
+
+## Optimization Details That Matter
+
+The transformer paper is worth reading for the optimizer schedule alone. They use Adam with:
+
+- $\beta_1 = 0.9$
+- $\beta_2 = 0.98$
+- $\epsilon = 10^{-9}$
+
+and learning rate
+
+$$
+\operatorname{lrate}
+=
+d_{model}^{-0.5}
+\min\left(\text{step}^{-0.5}, \text{step} \cdot \text{warmup}^{-1.5}\right)
+$$
+
+with **4000 warmup steps**.
+
+They also use **label smoothing** with $\epsilon_{ls} = 0.1$, which the paper says hurts perplexity but improves accuracy and BLEU.
+
+## Experimental Result
+
+The paper reports:
+
+- **28.4 BLEU** on WMT 2014 English-to-German, improving over prior best ensembles by more than 2 BLEU
+- **41.8 BLEU** on WMT 2014 English-to-French for a single model
+- training of the big English-to-French model in **3.5 days on 8 GPUs**
+
+Those numbers mattered historically because they made the case that attention-only sequence transduction was not just elegant. It was competitive and cheaper to train.
 
 ## NumPy Cross-Attention
 
@@ -94,7 +182,6 @@ def softmax(x, axis=-1):
     return e / e.sum(axis=axis, keepdims=True)
 
 def cross_attention(dec_states, enc_states, Wq, Wk, Wv):
-    # dec_states: (B, T, D), enc_states: (B, S, D)
     Q = dec_states @ Wq
     K = enc_states @ Wk
     V = enc_states @ Wv
@@ -103,7 +190,7 @@ def cross_attention(dec_states, enc_states, Wq, Wk, Wv):
     return probs @ V
 ```
 
-## PyTorch Decoder Layer with Cross-Attention
+## PyTorch Decoder Block with Cross-Attention
 
 ```python
 import torch
@@ -121,10 +208,9 @@ class MultiHeadAttention(nn.Module):
         self.v_proj = nn.Linear(d_model, d_model, bias=False)
         self.out = nn.Linear(d_model, d_model, bias=False)
 
-    def forward(self, q_in, k_in, v_in, causal: bool = False):
+    def forward(self, q_in, k_in, v_in, causal=False):
         B, Tq, D = q_in.shape
         Tk = k_in.shape[1]
-
         q = rearrange(self.q_proj(q_in), "b t (h d) -> b h t d", h=self.n_heads)
         k = rearrange(self.k_proj(k_in), "b t (h d) -> b h t d", h=self.n_heads)
         v = rearrange(self.v_proj(v_in), "b t (h d) -> b h t d", h=self.n_heads)
@@ -148,7 +234,7 @@ class Seq2SeqDecoderBlock(nn.Module):
         self.ln3 = nn.LayerNorm(d_model)
         self.mlp = nn.Sequential(
             nn.Linear(d_model, 4 * d_model),
-            nn.GELU(),
+            nn.ReLU(),
             nn.Linear(4 * d_model, d_model),
         )
 
@@ -159,24 +245,14 @@ class Seq2SeqDecoderBlock(nn.Module):
         return y
 ```
 
-## Training
+## Where Encoder-Decoder Still Wins
 
-Sequence-to-sequence training usually shifts the target by one token:
+- translation
+- summarization from a fully observed source
+- speech or vision to text
+- tasks where source and target have distinct roles
 
-- decoder input: `<bos>, y_1, \dots, y_{T-1}`
-- prediction target: `y_1, \dots, y_T`
-
-Teacher forcing keeps training parallel across target positions, even though inference is autoregressive.
-
-## When Encoder-Decoder Still Wins
-
-Decoder-only models are simpler. Still, encoder-decoder designs remain attractive when:
-
-- the input and output have distinct roles
-- the source is fully observed before generation starts
-- cross-attention is a clean structural prior
-
-That includes translation, summarization, and many speech or vision-to-text settings.
+Decoder-only models are simpler. Still, when one sequence is given in full and the other is generated conditioned on it, encoder-decoder structure remains natural.
 
 ## Related Notes
 

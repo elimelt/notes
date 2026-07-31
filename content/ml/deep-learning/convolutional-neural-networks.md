@@ -10,61 +10,103 @@ tags:
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
-description: Convolutional neural networks from discrete convolution upward, including receptive fields, pooling, residual blocks, and both NumPy and PyTorch implementations.
+description: Convolutional neural networks from LeNet through ResNet and U-Net, including local connectivity, weight sharing, receptive fields, and both NumPy and PyTorch implementations.
 sources:
   - title: LeCun et al. (1998), Gradient-Based Learning Applied to Document Recognition
     url: https://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf
     type: paper
-  - title: Deep Residual Learning for Image Recognition
+  - title: He et al. (2015), Deep Residual Learning for Image Recognition
     url: https://arxiv.org/abs/1512.03385
     type: paper
-  - title: U-Net
+  - title: Ronneberger, Fischer, and Brox (2015), U-Net
     url: https://arxiv.org/pdf/1505.04597
     type: paper
 ---
 
 ## Purpose
 
-CNNs encode a strong prior for grid-structured data: nearby pixels interact strongly, and the same local pattern can matter anywhere in the image. That prior shows up as local connectivity and weight sharing.
+CNNs are the canonical architecture for grid-structured signals. This note tracks the main line from LeNet-5 to ResNet and U-Net, because those three papers explain most of the structural choices that still show up in modern vision backbones.
 
-## Discrete Convolution
+## What Convolution Encodes
 
-For input image $x$ and kernel $K$, a 2D discrete convolution layer computes
+For a single-channel image $x$ and kernel $K$:
 
 $$
-y_{i,j} = \sum_{u=0}^{k_h-1} \sum_{v=0}^{k_w-1} K_{u,v} \, x_{i+u, j+v}
+y_{i,j} = \sum_{u=0}^{k_h-1} \sum_{v=0}^{k_w-1} K_{u,v}x_{i+u,j+v}
 $$
 
-Deep-learning libraries usually implement cross-correlation rather than a mathematically flipped convolution, though the learned behavior is the same because the kernel parameters are free.
-
-With $C_{in}$ input channels and $C_{out}$ output channels:
+With multiple channels:
 
 $$
 y_{c_{out}, i, j}
-= \sum_{c_{in}=1}^{C_{in}} \sum_{u,v} K_{c_{out}, c_{in}, u, v} \, x_{c_{in}, i+u, j+v}
+=
+\sum_{c_{in}=1}^{C_{in}}
+\sum_{u,v}
+K_{c_{out}, c_{in}, u, v}x_{c_{in}, i+u, j+v}
 $$
 
-## Why CNNs Work
+The architectural claims are:
 
-- **locality**: nearby pixels are more related than distant ones
-- **translation equivariance**: shifting the image shifts the feature map
-- **parameter sharing**: one kernel is reused everywhere
+- nearby pixels interact more strongly than distant ones
+- the same local pattern may matter anywhere
+- parameter sharing is efficient and useful
 
-These assumptions are powerful when the domain really is image-like.
+That is why convolution works so well on images.
 
-## Stride, Padding, and Receptive Field
+## LeNet-5
 
-Stride reduces spatial resolution. Padding preserves edge information and output size. Stacking layers expands the receptive field. A deep stack of small kernels often works better than one giant kernel because it inserts more nonlinearities and uses fewer parameters.
+LeCun et al. present LeNet-5 as a full document-recognition system, not just a convolution demo. The famous architecture is roughly:
 
-## Residual Blocks
+- input: $32 \times 32$
+- `C1`: 6 feature maps with $5 \times 5$ kernels
+- `S2`: subsampling / pooling
+- `C3`: 16 feature maps
+- `S4`: subsampling / pooling
+- `C5`: convolution to a fully connected-style stage
+- `F6`
+- final classifier
 
-Deep CNNs are much easier to train with skip connections:
+The paper's point is broader than "use convs." It argues for **gradient-based learning** as a full stack, where feature extraction and classification are trained jointly instead of being separated into hand-designed modules.
+
+## Receptive Fields, Stride, and Pooling
+
+Stride reduces spatial resolution. Pooling or subsampling adds local invariance. Stacking multiple small kernels increases effective receptive field while inserting more nonlinearities than one large kernel would.
+
+This explains why deep stacks of $3 \times 3$ convolutions became standard.
+
+## The ResNet Argument
+
+He et al. make a very specific claim: depth should help, but plain very deep nets show a **degradation problem** where training error gets worse as layers are added.
+
+Their key thought experiment is that a deeper model should contain the shallower solution by construction if the added layers learn identity mappings. Since plain networks still optimize worse, the problem is the parameterization, not expressivity.
+
+The fix is the residual block:
 
 $$
 y = x + F(x)
 $$
 
-ResNet is the canonical example. Many later image models, even when they are not literally "ResNets," still preserve this residual design logic.
+The paper studies architectures up to **152 layers**, reports **3.57%** ImageNet test error for an ensemble, and uses **bottleneck** blocks for ResNet-50/101/152 to keep compute manageable.
+
+That bottleneck structure is:
+
+- `1x1` reduce
+- `3x3` process
+- `1x1` expand
+
+## U-Net
+
+Ronneberger, Fischer, and Brox target dense segmentation with limited labeled data. Their architecture has:
+
+- a **contracting path** for context
+- a symmetric **expanding path** for localization
+- skip connections between matching resolutions
+
+The paper also emphasizes training strategy, not only topology. Because biomedical labels are scarce, it relies heavily on augmentation, especially **elastic deformations**.
+
+The famous diagram includes **copy and crop** skip connections because valid convolutions change feature-map size.
+
+The paper reports segmentation of a **512x512** image in **less than a second** on a contemporary GPU.
 
 ## NumPy Convolution
 
@@ -85,14 +127,13 @@ def conv2d_single_channel(x, kernel, stride=1, padding=0):
     return out
 ```
 
-The important point is not the loops. It is that one small kernel is reused across all spatial positions.
+This code is simple enough that the parameter-sharing pattern is obvious.
 
-## PyTorch CNN with Residual Block
+## PyTorch Residual CNN
 
 ```python
 import torch
 import torch.nn as nn
-from einops import rearrange
 
 class ResidualBlock(nn.Module):
     def __init__(self, channels: int):
@@ -127,17 +168,16 @@ class SmallCNN(nn.Module):
         return self.head(x)
 ```
 
-`einops` becomes useful when reshaping patches or mixing spatial and sequence views, though plain CNN code often reads fine without it.
+## What Changed Later
 
-## U-Nets
+Vision transformers challenged CNN dominance, though most of the practical lessons from CNNs survived:
 
-For dense prediction such as segmentation, classification-style downsampling is not enough. U-Net uses:
+- locality is useful
+- residual paths are critical
+- multi-scale processing matters
+- skip connections help dense prediction
 
-- a contracting path for context
-- an expanding path for localization
-- skip connections between matching resolutions
-
-This encoder-decoder-with-skips pattern later became one of the default backbones for diffusion models.
+That is why U-Net-like and ResNet-like patterns keep reappearing even outside classic CNNs.
 
 ## Related Notes
 

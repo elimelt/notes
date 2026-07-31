@@ -10,12 +10,12 @@ tags:
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
-description: The decoder-only transformer from the modeling side, including causal self-attention, multi-head projection, residual blocks, and implementations in NumPy and PyTorch with einops.
+description: The decoder-only transformer from the modeling side, including causal self-attention, block structure, GPT-2-style architectural choices, and implementations in NumPy and PyTorch with einops.
 sources:
-  - title: Attention Is All You Need
+  - title: Vaswani et al. (2017), Attention Is All You Need
     url: https://arxiv.org/abs/1706.03762
     type: paper
-  - title: Language Models are Unsupervised Multitask Learners
+  - title: Radford et al. (2019), Language Models are Unsupervised Multitask Learners
     url: https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
     type: paper
   - title: einops
@@ -25,82 +25,144 @@ sources:
 
 ## Purpose
 
-This note covers the decoder-only transformer as a sequence model. The serving notes already discuss it from the systems side in [[ml/serving-systems/transformers|Transformer Architecture and Implementation]]. Here the focus is the actual computation: causal self-attention, the block structure, and why autoregressive training fits the model.
+This note covers the decoder-only transformer as the standard autoregressive language-model architecture. The serving note [[ml/serving-systems/transformers|Transformer Architecture and Implementation]] explains the same model from a systems angle. This note stays on the modeling side: what the block computes, how GPT-style models differ from the original transformer, and why causal self-attention became the default sequence primitive.
 
-## The Core Recurrence-Free Idea
+## From the Original Transformer to GPT-Style Models
 
-Given token embeddings $X \in \mathbb{R}^{T \times d_{model}}$, produce queries, keys, and values:
+The original transformer paper is encoder-decoder. Decoder-only models keep the masked self-attention stack and language-model objective, then drop the encoder and cross-attention path.
+
+The probability factorization is:
+
+$$
+p(x_{1:T}) = \prod_{t=1}^{T} p(x_t \mid x_{<t})
+$$
+
+That matches next-token prediction exactly.
+
+## Scaled Dot-Product Self-Attention
+
+Given hidden states $X \in \mathbb{R}^{T \times d_{model}}$:
 
 $$
 Q = XW_Q,\quad K = XW_K,\quad V = XW_V
 $$
 
-with $W_Q, W_K, W_V \in \mathbb{R}^{d_{model} \times d_k}$.
-
-Scaled dot-product attention is
+and
 
 $$
-\text{Attn}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}} + M\right)V
+\operatorname{Attn}(Q, K, V)
+=
+\operatorname{softmax}\left(\frac{QK^\top}{\sqrt{d_k}} + M\right)V
 $$
 
-where $M$ is a causal mask whose future entries are $-\infty$.
+where $M$ is the causal mask. Future positions get $-\infty$ before softmax, so position $t$ can only attend to $1,\dots,t$.
 
-The mask enforces
-
-$$
-\hat{x}_t = f(x_{\le t})
-$$
-
-so the model can be trained on next-token prediction without peeking ahead.
+The $1/\sqrt{d_k}$ scale from Vaswani et al. is there because raw dot products grow with dimension and can otherwise saturate the softmax.
 
 ## Multi-Head Attention
 
-One attention map is a bottleneck. Multi-head attention splits the model dimension into $h$ heads:
+Instead of one attention map, split the model into $h$ heads:
 
 $$
-\text{MHA}(X) = \text{Concat}(\text{head}_1, \dots, \text{head}_h)W_O
+\operatorname{MHA}(X)
+=
+\operatorname{Concat}(\text{head}_1, \dots, \text{head}_h)W_O
 $$
 
 with
 
 $$
-\text{head}_i = \text{Attn}(XW_Q^{(i)}, XW_K^{(i)}, XW_V^{(i)})
+\text{head}_i
+=
+\operatorname{Attn}(XW_Q^{(i)}, XW_K^{(i)}, XW_V^{(i)})
 $$
 
-Each head can specialize in a different relation: locality, induction, copying, syntax, and so on.
+In the original transformer base model:
 
-## The Decoder Block
+- $N = 6$ layers
+- $d_{model} = 512$
+- $d_{ff} = 2048$
+- $h = 8$ heads
 
-A modern pre-norm decoder block is usually
+Those numbers matter because they became the template many later variants scaled from.
+
+## Decoder Block
+
+A modern GPT-style block is usually pre-norm:
 
 $$
 \begin{aligned}
-H_1 &= X + \text{MHA}(\text{LN}(X)) \\
-H_2 &= H_1 + \text{MLP}(\text{LN}(H_1))
+H_1 &= X + \operatorname{MHA}(\operatorname{LN}(X)) \\
+H_2 &= H_1 + \operatorname{MLP}(\operatorname{LN}(H_1))
 \end{aligned}
 $$
 
-The MLP is typically a two-layer expansion and contraction:
+The MLP is typically
 
 $$
-\text{MLP}(x) = W_2 \phi(W_1x + b_1) + b_2
+\operatorname{MLP}(x) = W_2 \phi(W_1x + b_1) + b_2
 $$
 
-The residual path matters. Without it, very deep stacks are much harder to optimize.
+often with expansion ratio around $4\times$.
+
+The original transformer used post-norm. GPT-2 moves layer normalization to the input of each sub-block, which the paper explicitly notes, making it resemble a pre-activation residual network.
+
+## Positional Information
+
+Self-attention alone is permutation-equivariant. Order has to be injected.
+
+The original transformer uses sinusoidal positional encodings:
+
+$$
+\operatorname{PE}(pos, 2i) = \sin\left(pos / 10000^{2i/d_{model}}\right)
+$$
+
+$$
+\operatorname{PE}(pos, 2i+1) = \cos\left(pos / 10000^{2i/d_{model}}\right)
+$$
+
+GPT-style models often replace this with learned or rotary position schemes, but the need is the same.
 
 ## Training Objective
 
-For tokens $(x_1, \dots, x_T)$, maximize
+For a tokenized sequence, maximize
 
 $$
-\log p(x_1, \dots, x_T) = \sum_{t=1}^{T} \log p(x_t \mid x_{<t})
+\sum_{t=1}^{T} \log p(x_t \mid x_{<t})
 $$
 
-Training uses teacher forcing: all positions are computed in parallel, but the mask ensures the model at position $t$ still depends only on earlier tokens.
+Teacher forcing makes this parallel over positions during training. Every position predicts the next token simultaneously, with the mask enforcing causality.
+
+## GPT-2 Architectural Details
+
+Radford et al. train four decoder-only transformers with the following sizes:
+
+| Parameters | Layers | $d_{model}$ |
+| --- | ---: | ---: |
+| 117M | 12 | 768 |
+| 345M | 24 | 1024 |
+| 762M | 36 | 1280 |
+| 1542M | 48 | 1600 |
+
+The paper also calls out several design changes relative to GPT:
+
+- layer normalization moved to the input of each sub-block
+- an extra layer norm after the final self-attention block
+- vocabulary expanded to **50,257**
+- context length increased from **512** to **1024**
+- residual-layer weights scaled at initialization by $1/\sqrt{N}$ where $N$ is the number of residual layers
+
+These are the kinds of details that matter. A decoder-only transformer is not just "masked attention plus an MLP." It is a very specific residual stack whose optimization behavior depends on these choices.
+
+## Why Decoder-Only Won for Language Modeling
+
+The paper case for transformers already existed in Vaswani et al.: self-attention connects any two positions with constant sequential path length and parallelizes training. GPT-2 adds the empirical argument that simply scaling this setup on WebText produces strong zero-shot transfer.
+
+The GPT-2 paper reports that the **1.5B** parameter model achieves state-of-the-art results on **7 of 8** evaluated language-modeling datasets in a zero-shot setting while still underfitting WebText.
+
+That is the basic scaling story of modern language models.
 
 ## NumPy Self-Attention
-
-This implementation exposes the actual tensor algebra for one batch.
 
 ```python
 import numpy as np
@@ -115,7 +177,6 @@ def softmax(x, axis=-1):
     return e / e.sum(axis=axis, keepdims=True)
 
 def self_attention(x, Wq, Wk, Wv):
-    # x: (B, T, D)
     Q = x @ Wq
     K = x @ Wk
     V = x @ Wv
@@ -176,25 +237,21 @@ class DecoderBlock(nn.Module):
         return x
 ```
 
-## Why Decoder-Only Models Won Language Modeling
+## Complexity
 
-- next-token prediction matches the causal factorization of text
-- all positions train in parallel despite the causal constraint
-- attention handles long-range dependencies more directly than a recurrent hidden state
-
-The main cost is quadratic attention in sequence length:
+For sequence length $T$ and width $d$, full self-attention is
 
 $$
 O(T^2 d)
 $$
 
-for sequence length $T$ and model width $d$.
+in both compute and attention-score storage. That quadratic cost is the main reason long-context variants and inference-side memory work keep recurring.
 
 ## Related Notes
 
 - [[ml/deep-learning/encoder-decoder-transformers|Encoder-Decoder Transformers]]
-- [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]]
 - [[ml/serving-systems/transformers|Transformer Architecture and Implementation]]
+- [[ml/deep-learning/modeling-architecture-and-data|Modeling, Architecture, and Data]]
 
 ## Sources
 

@@ -10,7 +10,7 @@ tags:
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
-description: Neural networks from first principles, including affine layers, nonlinearities, cross-entropy, backpropagation derivations, and small implementations in NumPy and PyTorch.
+description: Neural networks from first principles, including backpropagation derivations, initialization, normalization, regularization, and small implementations in NumPy and PyTorch.
 sources:
   - title: Rumelhart, Hinton, and Williams (1986), Learning Representations by Back-Propagating Errors
     url: https://www.nature.com/articles/323533a0
@@ -18,47 +18,44 @@ sources:
   - title: He et al. (2015), Delving Deep into Rectifiers
     url: https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/He_Delving_Deep_into_ICCV_2015_paper.pdf
     type: paper
-  - title: Batch Normalization (2015)
+  - title: Ioffe and Szegedy (2015), Batch Normalization
     url: https://arxiv.org/abs/1502.03167
+    type: paper
+  - title: Srivastava et al. (2014), Dropout
+    url: https://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf
     type: paper
 ---
 
 ## Purpose
 
-This note rebuilds the feedforward neural network from the scalar neuron upward. The key objects are simple:
+This note is the foundation under the rest of the deep-learning section. The goal is to make the standard neural-network training loop feel mechanical rather than mysterious:
 
-- affine maps
-- nonlinearities
-- a scalar loss
-- gradients passed backward with the chain rule
+- define a computation
+- define a scalar loss
+- differentiate it with the chain rule
+- update parameters
 
-Once those are clear, most later architectures look like structured ways to choose the affine maps and parameter sharing.
+Rumelhart, Hinton, and Williams made the key move in 1986. Once the network is a composition of differentiable operations, the gradient can be pushed backward one local Jacobian at a time.
 
-## One Neuron
+## One Affine Layer
 
-For input $x \in \mathbb{R}^{d_{in}}$, weights $W \in \mathbb{R}^{d_{out} \times d_{in}}$, and bias $b \in \mathbb{R}^{d_{out}}$, the affine map is
+For input $x \in \mathbb{R}^{d_{in}}$, weights $W \in \mathbb{R}^{d_{out} \times d_{in}}$, and bias $b \in \mathbb{R}^{d_{out}}$:
 
 $$
 z = Wx + b
 $$
 
-and a hidden layer applies a nonlinearity elementwise:
-
-$$
-a = \phi(z)
-$$
-
-If every layer were affine, the whole network would collapse into one affine map:
+This is just an affine map. If a network were only a stack of affine maps, the whole composition would still be affine:
 
 $$
 W_2(W_1x + b_1) + b_2 = (W_2W_1)x + (W_2b_1 + b_2)
 $$
 
-That is why nonlinearity is not decorative. It is the thing that keeps depth from degenerating into one linear model.
+That is why hidden-layer nonlinearities are necessary. They prevent depth from collapsing into one linear classifier.
 
-## A Two-Layer Network
+## A Two-Layer Classifier
 
-For classification with hidden width $h$ and $K$ classes:
+For hidden width $h$ and $K$ classes:
 
 $$
 \begin{aligned}
@@ -72,55 +69,95 @@ $$
 The softmax is
 
 $$
-\hat{y}_k = \frac{\exp(z_{2,k})}{\sum_{j=1}^{K} \exp(z_{2,j})}
+\hat{y}_k = \frac{e^{z_{2,k}}}{\sum_{j=1}^{K} e^{z_{2,j}}}
 $$
 
-and the cross-entropy loss for one-hot target $y$ is
+and for one-hot target $y$ the cross-entropy loss is
 
 $$
-\mathcal{L} = -\sum_{k=1}^{K} y_k \log \hat{y}_k
+\mathcal{L}(\hat{y}, y) = -\sum_{k=1}^{K} y_k \log \hat{y}_k
 $$
 
-For one example whose correct class is $c$, this reduces to
+If the correct class is $c$, this reduces to
 
 $$
 \mathcal{L} = -\log \hat{y}_c
 $$
 
-## Why the Softmax Gradient Is Nice
+## Backpropagation Derivation
 
-For softmax followed by cross-entropy, the output-layer gradient simplifies to
+The output-layer derivative is the standard identity:
 
 $$
 \frac{\partial \mathcal{L}}{\partial z_2} = \hat{y} - y
 $$
 
-That is one of the most useful algebraic cancellations in deep learning.
+This falls out of differentiating the softmax and cross-entropy together. The rest is the chain rule.
 
-The hidden-layer gradients then follow by the chain rule:
+### Output Layer
+
+Because $z_2 = W_2a_1 + b_2$:
 
 $$
-\begin{aligned}
-\frac{\partial \mathcal{L}}{\partial W_2} &= \left(\hat{y} - y\right)a_1^\top \\
-\frac{\partial \mathcal{L}}{\partial b_2} &= \hat{y} - y \\
-\frac{\partial \mathcal{L}}{\partial a_1} &= W_2^\top(\hat{y} - y) \\
-\frac{\partial \mathcal{L}}{\partial z_1} &= \frac{\partial \mathcal{L}}{\partial a_1} \odot \phi'(z_1) \\
-\frac{\partial \mathcal{L}}{\partial W_1} &= \frac{\partial \mathcal{L}}{\partial z_1}x^\top \\
-\frac{\partial \mathcal{L}}{\partial b_1} &= \frac{\partial \mathcal{L}}{\partial z_1}
-\end{aligned}
+\frac{\partial \mathcal{L}}{\partial W_2}
+=
+\frac{\partial \mathcal{L}}{\partial z_2}
+\frac{\partial z_2}{\partial W_2}
+=
+(\hat{y} - y)a_1^\top
+$$
+
+and
+
+$$
+\frac{\partial \mathcal{L}}{\partial b_2} = \hat{y} - y
+$$
+
+The hidden activation receives
+
+$$
+\frac{\partial \mathcal{L}}{\partial a_1}
+=
+W_2^\top(\hat{y} - y)
+$$
+
+### Hidden Layer
+
+Since $a_1 = \phi(z_1)$:
+
+$$
+\frac{\partial \mathcal{L}}{\partial z_1}
+=
+\frac{\partial \mathcal{L}}{\partial a_1} \odot \phi'(z_1)
 $$
 
 For ReLU,
 
 $$
+\phi(z) = \max(0, z),
+\qquad
 \phi'(z) = \mathbf{1}[z > 0]
 $$
 
-so gradients flow only through active units.
+so only active hidden units pass gradient.
 
-## Mini-Batch Form
+Now
 
-For a batch matrix $X \in \mathbb{R}^{B \times d_{in}}$:
+$$
+\frac{\partial \mathcal{L}}{\partial W_1}
+=
+\frac{\partial \mathcal{L}}{\partial z_1}x^\top,
+\qquad
+\frac{\partial \mathcal{L}}{\partial b_1}
+=
+\frac{\partial \mathcal{L}}{\partial z_1}
+$$
+
+This is the whole backpropagation pattern in miniature. Every later architecture is the same story, only with more structured Jacobians.
+
+## Batch Form
+
+For batch matrix $X \in \mathbb{R}^{B \times d_{in}}$:
 
 $$
 \begin{aligned}
@@ -131,31 +168,72 @@ Z_2 &= A_1W_2^\top + b_2 \\
 \end{aligned}
 $$
 
-The batch loss is usually the mean over rows.
+In practice the loss is averaged over the batch.
 
-## Initialization and Optimization
+## Why Initialization Matters
 
-Bad initialization can destroy training before optimization has a chance. If the variance shrinks each layer, activations and gradients vanish. If it grows, they explode.
+Very deep networks fail easily if activations or gradients change scale too aggressively across layers.
 
-For ReLU networks, He initialization uses
-
-$$
-W_{ij} \sim \mathcal{N}\left(0, \frac{2}{d_{in}}\right)
-$$
-
-which keeps signal scale more stable through depth.
-
-SGD updates parameters by
+He et al. derive an initialization for rectifier networks that keeps the forward variance roughly stable:
 
 $$
-\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}
+\operatorname{Var}[W_{ij}] = \frac{2}{n_{in}}
 $$
 
-and Adam keeps exponential moving averages of the first and second moments of the gradient.
+so one common choice is
+
+$$
+W_{ij} \sim \mathcal{N}\left(0, \frac{2}{n_{in}}\right)
+$$
+
+That is the standard He initialization. The factor of $2$ appears because ReLU zeroes about half the mass.
+
+The same paper also proposes PReLU:
+
+$$
+f(y_i) =
+\begin{cases}
+y_i & y_i > 0 \\
+a_i y_i & y_i \le 0
+\end{cases}
+$$
+
+with learned negative slope $a_i$. The paper reports **4.94%** top-5 test error on ImageNet 2012, a **26% relative improvement** over GoogLeNet's **6.66%**.
+
+## Batch Normalization
+
+Ioffe and Szegedy normalize each activation dimension over the current mini-batch:
+
+$$
+\hat{x}^{(k)} = \frac{x^{(k)} - \mathbb{E}_{\mathcal{B}}[x^{(k)}]}
+{\sqrt{\operatorname{Var}_{\mathcal{B}}[x^{(k)}] + \epsilon}}
+$$
+
+then restore learnable scale and shift:
+
+$$
+y^{(k)} = \gamma^{(k)} \hat{x}^{(k)} + \beta^{(k)}
+$$
+
+The point is not to clamp everything permanently to zero mean and unit variance. The point is to stabilize optimization while still letting the model learn whatever affine reparameterization it needs.
+
+The BatchNorm paper reports the same accuracy in **14 times fewer training steps** on a strong ImageNet model, and an ensemble reaching **4.9%** top-5 validation error.
+
+## Dropout
+
+Dropout randomly removes units during training. If $m$ is a Bernoulli mask:
+
+$$
+\tilde{h} = m \odot h
+$$
+
+The paper's framing is useful. Training samples an exponential family of "thinned" subnetworks, and test-time inference approximates their average with one full network.
+
+Srivastava et al. describe dropout as a way to prevent units from **co-adapting too much**. In several experiments they found dropping **20% of input units** and **50% of hidden units** worked well.
 
 ## NumPy Implementation
 
-This version does the forward pass, backpropagation, and SGD update explicitly.
+This version does the forward pass, gradient calculation, and SGD update explicitly.
 
 ```python
 import numpy as np
@@ -184,11 +262,11 @@ class MLP:
         a1 = relu(z1)
         z2 = a1 @ self.W2.T + self.b2
         probs = softmax(z2)
-        cache = (X, z1, a1, z2, probs)
+        cache = (X, z1, a1, probs)
         return probs, cache
 
     def loss_and_grads(self, X, y):
-        probs, (X, z1, a1, z2, probs) = self.forward(X)
+        probs, (X, z1, a1, probs) = self.forward(X)
         B = X.shape[0]
 
         one_hot = np.zeros_like(probs)
@@ -208,13 +286,13 @@ class MLP:
         return loss, grads
 
     def step(self, grads, lr=1e-2):
-        for name, grad in grads.items():
-            setattr(self, name, getattr(self, name) - lr * grad)
+        self.W1 -= lr * grads["W1"]
+        self.b1 -= lr * grads["b1"]
+        self.W2 -= lr * grads["W2"]
+        self.b2 -= lr * grads["b2"]
 ```
 
 ## PyTorch Implementation
-
-PyTorch will differentiate this automatically, though the math is the same.
 
 ```python
 import torch
@@ -232,27 +310,25 @@ class TorchMLP(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.net(x)
 
-model = TorchMLP(d_in=128, d_hidden=256, d_out=10)
+model = TorchMLP(128, 256, 10)
 logits = model(torch.randn(32, 128))
 loss = nn.CrossEntropyLoss()(logits, torch.randint(0, 10, (32,)))
 loss.backward()
 ```
 
-## What Changes in Larger Models
+This is shorter because autograd is doing exactly the backpropagation derivation from above.
 
-The basic backpropagation story does not change. Larger architectures mostly change:
+## What to Carry Forward
 
-- which parameters are shared
-- which inputs are local or global
-- what inductive bias the affine map encodes
-- what loss the model is trained against
-
-CNNs constrain the affine map to local shared filters. RNNs reuse the same transition over time. Transformers let each position build a data-dependent affine mixture over other positions.
+- Backpropagation is just repeated local application of the chain rule.
+- Initialization is part of the model, not a clerical detail.
+- Normalization layers often change optimization more than small architecture tweaks do.
+- Dropout is an ensemble-style regularizer implemented inside one training loop.
 
 ## Related Notes
 
 - [[ml/deep-learning/modeling-architecture-and-data|Modeling, Architecture, and Data]]
-- [[ml/deep-learning/recurrent-neural-networks|Recurrent Neural Networks]]
+- [[ml/deep-learning/convolutional-neural-networks|Convolutional Neural Networks]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
 
 ## Sources
@@ -260,3 +336,4 @@ CNNs constrain the affine map to local shared filters. RNNs reuse the same trans
 - [Rumelhart, Hinton, and Williams (1986), Learning Representations by Back-Propagating Errors](https://www.nature.com/articles/323533a0)
 - [He et al. (2015), Delving Deep into Rectifiers](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/He_Delving_Deep_into_ICCV_2015_paper.pdf)
 - [Ioffe and Szegedy (2015), Batch Normalization](https://arxiv.org/abs/1502.03167)
+- [Srivastava et al. (2014), Dropout](https://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)

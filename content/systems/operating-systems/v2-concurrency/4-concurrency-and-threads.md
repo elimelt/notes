@@ -10,6 +10,9 @@ tags:
   - I/O devices
   - CPU utilization
   - parallel processing
+  - context-switch
+  - syscall
+  - address-space
 date: 2024-01-15
 updated: 2026-07-30
 status: evergreen

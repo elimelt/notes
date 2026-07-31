@@ -9,9 +9,10 @@ tags:
   - bfs
   - dfs
   - bipartite graphs
-  - topological-sort
+  - topological sorting
   - minimum-spanning-tree
   - disjoint-sets
+  - acyclic graphs
 date: 2024-04-27
 updated: 2026-07-30
 status: evergreen

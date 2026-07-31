@@ -8,6 +8,9 @@ tags:
   - architecture
   - implementation
   - attention
+  - gqa
+  - kv-cache
+  - flashattention
   - prefill
   - decode
   - feedforward
@@ -63,17 +66,17 @@ Decoder-only models use causal attention: positions must not see the future. The
 Multi-head attention splits the hidden dimension into independent heads that attend separately:
 
 ```python
-# Original query tensor
+#Original query tensor
 q = [[1, 2, 3, 4, 5, 6],    # Token 1
      [7, 8, 9, 10, 11, 12]] # Token 2
-# Shape: (seq_len, hidden_dim) = (2, 6)
+#Shape: (seq_len, hidden_dim) = (2, 6)
 
-# Separated into heads
+#Separated into heads
 sub_q = [[[1, 2, 3],    # Head 1 for Token 1
           [4, 5, 6]],   # Head 2 for Token 1
          [[7, 8, 9],    # Head 1 for Token 2
           [10, 11, 12]]] # Head 2 for Token 2
-# Shape: (seq_len, num_heads, head_dim) = (2, 2, 3)
+#Shape: (seq_len, num_heads, head_dim) = (2, 2, 3)
 ```
 
 [Grouped Query Attention](https://arxiv.org/abs/2305.13245) has multiple query heads share one key/value head (group size 4 means 4 query heads per KV head). Quality holds up, and the KV cache shrinks by the group factor, which buys batch size; [[ml/serving-systems/performance-modeling|Performance Modeling]] quantifies why that matters.

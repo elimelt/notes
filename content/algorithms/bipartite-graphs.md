@@ -3,6 +3,7 @@ title: Bipartite Graphs Properties, Proofs, and Detection Algorithm
 category: Algorithms
 tags:
   - bipartite graphs
+  - bfs
   - graph coloring
   - odd cycles
   - breadth-first search
@@ -10,6 +11,8 @@ date: 2024-04-14
 updated: 2026-07-30
 status: evergreen
 description: Definition of bipartite graphs, the equivalence between bipartiteness and having no odd cycle, and the BFS layer algorithm for testing bipartiteness in O(|V| + |E|).
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

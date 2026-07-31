@@ -8,7 +8,8 @@ tags:
   - kv-cache
   - prefix-sharing
   - paged-attention
-  - flash-attention
+  - flashattention
+  - gqa
   - machine-learning
 date: 2025-05-25
 updated: 2026-07-30

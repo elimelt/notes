@@ -7,6 +7,7 @@ tags:
   - distributed-systems
   - consensus
   - paxos
+  - atomicity
   - replicated-state-machines
   - sre
 date: 2024-03-26

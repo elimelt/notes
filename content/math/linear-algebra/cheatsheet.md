@@ -9,6 +9,7 @@ tags:
   - matrices
   - eigenvalues
   - tensor products
+  - gaussian-elimination
 date: 2024-12-08
 updated: 2026-07-31
 status: evergreen

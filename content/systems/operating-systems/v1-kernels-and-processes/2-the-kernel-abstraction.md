@@ -8,7 +8,10 @@ tags:
   - kernel
   - process abstraction
   - process control block
+  - address-space
+  - virtual-memory
   - privileged mode
+  - syscall
 date: 2023-12-31
 updated: 2026-07-30
 status: evergreen

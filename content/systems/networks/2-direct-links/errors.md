@@ -11,6 +11,9 @@ tags:
   - hamming-distance
   - checksum
   - crc
+  - 802.11
+  - physical-layer
+  - modulation
 date: 2024-01-26
 updated: 2026-07-30
 status: needs-review
@@ -96,8 +99,8 @@ Receiver:
 3. If the result is the expected check value, the data passes.
 
 ```python
-# Simplified sketch, not RFC 1071. Real code uses 16-bit words,
-# ones' complement addition, and transmits the complement.
+#Simplified sketch, not RFC 1071. Real code uses 16-bit words,
+#ones' complement addition, and transmits the complement.
 def internet_checksum(data):
     checksum = 0
     for i in range(0, len(data), 4):
@@ -145,7 +148,7 @@ Receive:
 3. Otherwise, the parities concatenated (the syndrome) spell out the index of the flipped bit. Flip it back.
 
 ```python
-# Unverified sketch of the encoder.
+#Unverified sketch of the encoder.
 def hamming_encode(data):
     n = len(data)
     k, acc = 0, 1

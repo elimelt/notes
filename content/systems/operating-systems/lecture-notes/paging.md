@@ -5,12 +5,14 @@ aliases:
 category: Operating Systems
 tags:
   - virtual-memory
+  - address-space
   - paging
   - fragmentation
   - page-tables
   - address-translation
   - page-replacement
   - working-set
+  - lru
 date: 2024-02-07
 updated: 2026-07-30
 status: evergreen

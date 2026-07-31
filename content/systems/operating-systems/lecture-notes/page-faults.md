@@ -6,6 +6,7 @@ category: Operating Systems
 tags:
   - page-faults
   - virtual-memory
+  - paging
   - page-replacement
   - page-tables
   - multi-level-page-tables

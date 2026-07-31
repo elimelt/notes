@@ -5,8 +5,10 @@ aliases:
 category: Systems Research
 tags:
   - machine-learning
+  - attention
   - attention-mechanism
   - transformer
+  - flashattention
   - sparse-attention
 date: 2025-01-14
 updated: 2026-07-30

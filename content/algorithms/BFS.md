@@ -2,6 +2,7 @@
 title: Breadth First Search Algorithm Implementation and Analysis
 category: Algorithms
 tags:
+  - bfs
   - graph traversal
   - shortest paths
   - graph theory

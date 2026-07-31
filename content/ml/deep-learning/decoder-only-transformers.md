@@ -4,6 +4,7 @@ category: Deep Learning
 tags:
   - deep learning
   - transformers
+  - attention
   - self-attention
   - autoregressive models
   - pytorch

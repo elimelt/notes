@@ -8,6 +8,8 @@ tags:
   - indexing
   - oltp-vs-olap
   - column-oriented-storage
+  - trie
+  - inverted index
 date: 2023-12-20
 updated: 2026-07-30
 status: evergreen

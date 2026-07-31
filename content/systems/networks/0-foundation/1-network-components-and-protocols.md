@@ -10,6 +10,10 @@ tags:
   - osi-model
   - encapsulation
   - demultiplexing
+  - arp
+  - http
+  - 802.11
+  - physical-layer
 date: 2024-01-04
 updated: 2026-07-30
 status: evergreen
@@ -111,8 +115,8 @@ The network is modular. There are clean interfaces between apps and the network,
 Protocols are horizontal, layers are vertical.
 
 ```txt
-# define protocols X, Y,
-# where Y is a layer below X
+#define protocols X, Y,
+#where Y is a layer below X
 
    (comm using X)
 X <---------------> X  <- (peers)

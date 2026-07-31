@@ -7,6 +7,8 @@ tags:
   - performance
   - roofline
   - arithmetic-intensity
+  - gqa
+  - kv-cache
   - machine-learning
 date: 2025-05-10
 updated: 2026-07-30

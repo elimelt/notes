@@ -7,6 +7,8 @@ tags:
   - retrieval
   - ranking
   - deep learning
+  - candidate generation
+  - ann
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen

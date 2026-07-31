@@ -2,14 +2,18 @@
 title: Depth First Search Algorithm and Tree Properties
 category: Algorithms
 tags:
+  - dfs
   - graph theory
   - depth first search
   - spanning trees
   - graph traversal
+  - acyclic graphs
 date: 2024-04-14
 updated: 2026-07-30
 status: evergreen
 description: Recursive and iterative DFS implementations, and a proof that every non-tree edge of a DFS tree connects a vertex to one of its ancestors.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

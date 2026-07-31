@@ -6,6 +6,7 @@ category: Database Systems
 tags:
   - batch-processing
   - mapreduce
+  - hadoop
   - distributed-filesystems
   - data-analysis
   - etl
@@ -79,18 +80,18 @@ The multi-node version inserts a shuffle: map output is partitioned by hash of k
 A **sort-merge join** joins two sorted streams of records on a shared key. In MapReduce, mappers over both datasets emit records keyed by the join key, the shuffle brings all records for a key to the same reducer, and the reducer combines them.
 
 ```python
-# pseudocode to join event and user data by user_id
-# this is JUST PSEUDOCODE, not actual MapReduce code
+#pseudocode to join event and user data by user_id
+#this is JUST PSEUDOCODE, not actual MapReduce code
 
-# user: { user_id, name, date_of_birth, ... }
+#user: { user_id, name, date_of_birth, ... }
 map_user_data(user):
     emit_intermediate(user.user_id, user.date_of_birth)
 
-# event: { user_id, event_type, ... }
+#event: { user_id, event_type, ... }
 map_events(event):
     emit_intermediate(event.user_id, event.event_type)
 
-# join: { user_id, date_of_birth, event_type, ... }
+#join: { user_id, date_of_birth, event_type, ... }
 reduce_join(user_id, values):
     user = values[0]
     event = values[1]
@@ -101,14 +102,14 @@ reduce_join(user_id, values):
 **Group-by** uses the same machinery without a second dataset: map emits the grouping key, reduce aggregates each group.
 
 ```python
-# pseudocode to group events by user_id
-# this is JUST PSEUDOCODE, not actual MapReduce code
+#pseudocode to group events by user_id
+#this is JUST PSEUDOCODE, not actual MapReduce code
 
-# event: { user_id, event_type, ... }
+#event: { user_id, event_type, ... }
 map_events(event):
     emit_intermediate(event.user_id, event.event_type)
 
-# group: { user_id, [event_type, ...] }
+#group: { user_id, [event_type, ...] }
 reduce_group(user_id, values):
     emit(user_id, values)
 ```
@@ -122,13 +123,13 @@ The joins above run in the reducer. A **map-side join** performs the join in the
 A **broadcast hash join** handles joining a large dataset with a small one: load the small dataset into an in-memory hash table on every mapper. Pig calls this a replicated join, Hive a MapJoin. A small dataset that does not fit in memory can sit in a disk index instead, where frequent lookups stay warm in the page cache.
 
 ```python
-# pseudocode to join event and user data by user_id
-# this is JUST PSEUDOCODE, not actual MapReduce code
+#pseudocode to join event and user data by user_id
+#this is JUST PSEUDOCODE, not actual MapReduce code
 
-# user: { user_id, name, date_of_birth, ... }
+#user: { user_id, name, date_of_birth, ... }
 users = load_users()
 
-# event: { user_id, event_type, ... }
+#event: { user_id, event_type, ... }
 map_events(event):
     user = users[event.user_id]
     payload = { dob: user.date_of_birth, event: event.event_type }
@@ -138,13 +139,13 @@ map_events(event):
 A **partitioned hash join** applies the same idea when both datasets are partitioned the same way, for example by the last digit of the user id. Each mapper then only loads the one partition of the small dataset matching its input partition, roughly a tenth of it in the ten-partition case. Hive calls these bucketed map joins.
 
 ```python
-# pseudocode to join event and user data by user_id
-# this is JUST PSEUDOCODE, not actual MapReduce code
+#pseudocode to join event and user data by user_id
+#this is JUST PSEUDOCODE, not actual MapReduce code
 
-# user: { user_id, name, date_of_birth, ... }
+#user: { user_id, name, date_of_birth, ... }
 users_partition = load_users_with(ENV.partition_key)
 
-# event: { user_id, event_type, ... }
+#event: { user_id, event_type, ... }
 map_events(event):
     user = users_partition[event.user_id]
     payload = { dob: user.date_of_birth, event: event.event_type }
@@ -163,16 +164,16 @@ map_events(event):
 Partition the documents by id, build an index per partition in parallel, then merge the partial indexes.
 
 ```python
-# pseudocode to build a search index
-# this is JUST PSEUDOCODE, not actual MapReduce code
+#pseudocode to build a search index
+#this is JUST PSEUDOCODE, not actual MapReduce code
 
-# document: { id, text, ... }
+#document: { id, text, ... }
 map_document(document):
     for word in tokenize(document.text):
         if word not in stop_words:
             emit_intermediate(word, document.id)
 
-# index: { word, [document_id, ...] }
+#index: { word, [document_id, ...] }
 reduce_index(word, values):
     emit(word, values)
 ```
@@ -180,21 +181,21 @@ reduce_index(word, values):
 **Recommendation systems** suggest items to users based on past behavior. The recommendations need to be queryable in real time with low latency, while the heavy computation runs in batches so it never loads down the serving database. Instead of having the batch job query the database directly, extract an immutable copy of the data into the distributed filesystem, transform it there, and load the results into a serving store, the extract-transform-load (ETL) pattern.
 
 ```python
-# pseudocode to build a recommendation index
-# running on a machine that doesn't handle user requests
+#pseudocode to build a recommendation index
+#running on a machine that doesn't handle user requests
 
-# load a partition of the data into memory (without relying on db client)
+#load a partition of the data into memory (without relying on db client)
 inmem_store_partition = load_data_from_db(ENV.partition_key)
 
-# process data of this partition
+#process data of this partition
 index = build_index_with_map_reduce(inmem_store_partition)
 
-# write the partition's index to the filesystem
+#write the partition's index to the filesystem
 write_partition_index_to_fs(ENV.partition_key, index)
 ```
 
 ```python
-# pseudocode to query a recommendation index
+#pseudocode to query a recommendation index
 
 def query(user_id):
     result = offload_query_to_partition(user_id)

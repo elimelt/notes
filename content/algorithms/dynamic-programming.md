@@ -5,10 +5,13 @@ tags:
   - dynamic programming
   - optimization
   - algorithm analysis
+  - topological sorting
 date: 2024-05-10
 updated: 2026-07-30
 status: evergreen
 description: Worked dynamic programming problems with recurrences, correctness proofs, and Python implementations, covering interval scheduling, knapsack, string counting, post office placement, RNA folding, sequence alignment, Bellman-Ford, and three practice problems.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose
@@ -47,7 +50,7 @@ So we sort by finishing time of each job, which reduces the number of subproblem
 - Our actual $OPT(j_1, \ldots, j_n)$ is then just the maximum of these two cases
 
 ```python
-# J[i] = (s_i, f_i, c_i)
+#J[i] = (s_i, f_i, c_i)
 def max_weighted_interval_subset(J: tuple[int, int, int]) -> int:
     J = sorted(J, key=lambda x: x[1])
     n = len(J)
@@ -90,7 +93,7 @@ OPT(i - 1, w) & \text{if } w_i > w \\
 $$
 
 ```python
-# recursive
+#recursive
 def knapsack_rec(W: int, w: list[int], v: list[int]) -> int:
     n = len(w)
     M = [[-1] * (W + 1) for _ in range(n + 1)]
@@ -109,7 +112,7 @@ def knapsack_rec(W: int, w: list[int], v: list[int]) -> int:
 
     return dp(n, W)
 
-# iterative
+#iterative
 def knapsack_it(W: int, w: list[int], v: list[int]) -> int:
     n = len(w)
     M = [[0] * (W + 1) for _ in range(n + 1)]
@@ -292,7 +295,7 @@ Note that maximizing the number of base pairs is a practical problem, since RNA 
 **Algorithm**:
 
 ```python
-# Bottom up over increasing substring length
+#Bottom up over increasing substring length
 
 WC = { 'A': 'U', 'U': 'A', 'C': 'G', 'G': 'C' }
 
@@ -343,7 +346,7 @@ Our base case is when either $i$ or $j$ are $0$, we just need to do $j$ or $i$ d
   - Then, pay gap cost for $y_j + OPT(i, j - 1)$
 
 ```python
-# Bottom up, non memory optimized - T = O(mn), S = O(mn)
+#Bottom up, non memory optimized - T = O(mn), S = O(mn)
 def seq_alignment(x, y):
   m, n = len(x), len(y)
   dp = [[None] * (n + 1) for _ in range(m + 1)]
@@ -368,7 +371,7 @@ Note that in computational biology, you'll be running this on strings with thous
 You can optimize the space by only tracking the previous row of `dp`.
 
 ```python
-# Bottom up DP, optimized for space
+#Bottom up DP, optimized for space
 def seq_alignment_linear_space(x, y):
   m, n = len(x), len(y)
   # base cases covered

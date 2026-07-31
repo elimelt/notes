@@ -5,7 +5,9 @@ aliases:
 category: Operating Systems
 tags:
   - process-operations
+  - address-space
   - memory management
+  - virtual-memory
   - io
   - device-drivers
   - file systems

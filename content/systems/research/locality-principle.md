@@ -8,6 +8,8 @@ tags:
   - operating-system
   - systems
   - virtual-memory
+  - paging
+  - lru
   - caching
   - paper-notes
 date: 2025-03-05

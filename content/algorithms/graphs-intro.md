@@ -7,6 +7,7 @@ tags:
   - graph representation
   - graph properties
   - data structures
+  - acyclic graphs
 date: 2024-04-03
 updated: 2026-07-30
 status: evergreen

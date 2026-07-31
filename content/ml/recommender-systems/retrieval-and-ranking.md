@@ -6,6 +6,10 @@ tags:
   - retrieval
   - ranking
   - candidate generation
+  - collaborative filtering
+  - ann
+  - two-tower
+  - wide and deep
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen

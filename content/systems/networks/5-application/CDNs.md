@@ -6,10 +6,12 @@ category: Networks
 tags:
   - content-delivery-networks
   - application-layer
+  - http
   - web-caching
   - proxy-servers
   - edge-locations
   - dns
+  - name-resolution
 date: 2024-03-07
 updated: 2026-07-30
 status: evergreen

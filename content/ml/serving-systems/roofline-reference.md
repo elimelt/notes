@@ -10,6 +10,9 @@ tags:
   - gpu
   - bandwidth
   - compute
+  - arithmetic-intensity
+  - gqa
+  - kv-cache
 date: 2025-05-10
 updated: 2026-07-30
 status: evergreen

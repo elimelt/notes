@@ -6,6 +6,8 @@ category: Operating Systems
 tags:
   - handle-tables
   - process control block
+  - address-space
+  - page-tables
   - context-switch
   - scheduling
   - fork-exec

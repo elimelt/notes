@@ -6,7 +6,7 @@ tags:
   - diffusion
   - convolution
   - generative models
-  - unet
+  - u-net
   - denoising
 date: 2026-07-31
 updated: 2026-07-31

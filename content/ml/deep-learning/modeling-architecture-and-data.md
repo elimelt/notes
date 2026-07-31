@@ -7,6 +7,8 @@ tags:
   - architecture
   - data
   - regularization
+  - attention
+  - resnet
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen

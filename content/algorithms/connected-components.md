@@ -2,6 +2,8 @@
 title: Finding Connected Components in Undirected Graphs Using BFS/DFS
 category: Algorithms
 tags:
+  - bfs
+  - dfs
   - graph theory
   - connected components
   - breadth-first search

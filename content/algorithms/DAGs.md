@@ -5,11 +5,14 @@ tags:
   - graph theory
   - topological sorting
   - directed acyclic graphs
+  - acyclic graphs
   - proofs
 date: 2024-04-14
 updated: 2026-07-30
 status: evergreen
 description: Proves the equivalence between DAGs and topological orderings, shows every DAG has a source vertex, and gives Kahn's algorithm for computing a topological order.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

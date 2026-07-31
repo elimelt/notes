@@ -8,8 +8,9 @@ tags:
   - distributed file systems
   - commodity hardware
   - mapreduce
-  - Hadoop
-  - Spark
+  - hadoop
+  - spark
+  - batch-processing
 date: 2024-03-26
 updated: 2026-07-31
 status: evergreen

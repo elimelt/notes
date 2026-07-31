@@ -9,6 +9,7 @@ tags:
   - distributed-database
   - top-level-domain
   - name-server
+  - ttl
 date: 2024-03-07
 updated: 2026-07-30
 status: evergreen

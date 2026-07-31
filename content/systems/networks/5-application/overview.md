@@ -5,6 +5,7 @@ aliases:
 category: Networks
 tags:
   - application-layer
+  - http
   - tcp
   - udp
   - reliability

@@ -5,10 +5,13 @@ aliases:
 category: Operating Systems
 tags:
   - windows
+  - virtual-memory
+  - paging
   - pfn-database
   - page-replacement
   - working-set
   - standby-list
+  - lru
 date: 2024-02-21
 updated: 2026-07-30
 status: needs-review

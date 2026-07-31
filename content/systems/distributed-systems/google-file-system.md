@@ -7,7 +7,10 @@ tags:
   - distributed-storage
   - google
   - paper-notes
+  - directories
   - fault-tolerance
+  - atomicity
+  - lru
 date: 2024-05-21
 updated: 2026-07-30
 status: evergreen

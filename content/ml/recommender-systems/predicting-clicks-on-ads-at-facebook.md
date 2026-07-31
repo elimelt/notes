@@ -11,6 +11,7 @@ tags:
   - gradient boosted decision trees
   - logistic regression
   - online learning
+  - spark
 date: 2025-05-17
 updated: 2026-07-31
 status: evergreen

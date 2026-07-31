@@ -8,6 +8,9 @@ tags:
   - matrix factorization
   - bpr
   - counterfactual evaluation
+  - collaborative filtering
+  - ads
+  - ctr prediction
 date: 2026-07-31
 updated: 2026-07-31
 status: evergreen

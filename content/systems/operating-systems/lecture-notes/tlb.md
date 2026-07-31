@@ -5,10 +5,12 @@ aliases:
 category: Operating Systems
 tags:
   - virtual-memory
+  - paging
   - address-translation
   - tlb
   - mmu
   - page-tables
+  - context-switch
 date: 2024-02-16
 updated: 2026-07-30
 status: evergreen

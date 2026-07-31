@@ -10,6 +10,9 @@ tags:
   - personalization
   - ranking
   - counterfactual evaluation
+  - ads
+  - candidate generation
+  - wide and deep
 date: 2025-04-27
 updated: 2026-07-31
 status: evergreen

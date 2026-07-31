@@ -8,6 +8,7 @@ tags:
   - dhcp
   - udp
   - ip-addressing
+  - arp
 date: 2024-02-23
 updated: 2026-07-30
 status: evergreen

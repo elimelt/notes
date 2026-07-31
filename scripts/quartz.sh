@@ -24,6 +24,22 @@ publish_legacy_docs() {
   fi
 }
 
+version_built_assets() {
+  local output_dir="$1"
+  local asset_version
+  asset_version="${ASSET_VERSION:-$(git -C "$ROOT" rev-parse --short=12 HEAD 2>/dev/null || date +%s)}"
+
+  find "$output_dir" -name '*.html' -print0 | while IFS= read -r -d '' html_file; do
+    ASSET_VERSION="$asset_version" perl -0pi -e '
+      my $v = $ENV{ASSET_VERSION};
+      s{((?:\.\./|\./|/)?index\.css)(?=")}{$1 . "?v=" . $v}ge;
+      s{((?:\.\./|\./|/)?prescript\.js)(?=")}{$1 . "?v=" . $v}ge;
+      s{((?:\.\./|\./|/)?postscript\.js)(?=")}{$1 . "?v=" . $v}ge;
+      s{((?:\.\./|\./|/)?static/contentIndex\.json)(?=")}{$1 . "?v=" . $v}ge;
+    ' "$html_file"
+  done
+}
+
 bootstrap() {
   if [[ ! -d "$QUARTZ_DIR/.git" ]]; then
     rm -rf "$QUARTZ_DIR"
@@ -61,6 +77,7 @@ case "$command" in
     bootstrap
     sync_site
     (cd "$QUARTZ_DIR" && npx quartz build --output "$ROOT/public")
+    version_built_assets "$ROOT/public"
     publish_legacy_docs
     ;;
   serve)

@@ -690,8 +690,8 @@ Matrix $Q$ is orthogonal if $Q^TQ = QQ^T = I$
 
 ### Orthogonal Complements
 
-For subspace $W$, orthogonal complement $W^⊥$:
-$$W^⊥ = \{x \in V : \langle x,w \rangle = 0 \text{ for all } w \in W\}$$
+For subspace $W$, orthogonal complement $W^\perp$:
+$$W^\perp = \{x \in V : \langle x,w \rangle = 0 \text{ for all } w \in W\}$$
 
 ### Orthogonal Projections
 

@@ -1,14 +1,21 @@
 ---
 title: Glossary of Linear Algebra Concepts
 category: Linear Algebra
-tags: Gaussian Elimination, Matrix-Vector Multiplication, Linear Transformations, Matrix-Matrix Multiplication
+tags:
+  - gaussian-elimination
+  - linear-transformations
+  - matrix-multiplication
+  - span
+  - linear-independence
 date: 2024-12-08
-description: Provides an overview of basic linear algebra concepts and techniques, including Gaussian elimination, systems of equations, row operations, matrix-vector multiplication, and matrix-matrix multiplication, providing efficient methods for solving systems of equations and transforming matrices. It also touches on the relationships between these concepts, such as span and linear transformations. The document distinguishes between inefficient and efficient approaches to solving systems of equations.
+updated: 2026-07-30
+status: evergreen
+description: Introductory notes on systems of equations, Gaussian elimination, span, linear transformations, and matrix multiplication, with an emphasis on the ideas that stay useful past the algorithms.
 ---
 
-# Elementary Linear Algebra
+## Purpose
 
-This introduction is complemented by the broader [[linear-algebra/cheatsheet|Matrix Theory reference]] and its practical [[linear-algebra/python-cheatsheet|NumPy companion]].
+These are introductory notes on the computational entry points to linear algebra, kept deliberately short on algorithm mechanics and longer on the takeaways that matter later. They are complemented by the broader [[linear-algebra/cheatsheet|Matrix Theory reference]] and its practical [[linear-algebra/python-cheatsheet|NumPy companion]].
 
 ## Systems of Equations
 
@@ -53,14 +60,13 @@ $$
 
 ### Gaussian Elimination
 
-Perform any of the following **elementary row operations** to the augmented matrix $\lbrack  A|b  \rbrack$:
+Perform any of the following **elementary row operations** on the augmented matrix $\lbrack  A|b  \rbrack$:
 
 - Swap two rows
 - Multiply a row by a nonzero scalar
 - Add a multiple of one row to another
 
- The aim of the algorithm is to get the matrix into either **row echelon form** or **reduced row echelon form**. The former is a matrix where the first nonzero element in each row is 1, and the first nonzero element in each row is to the right of the first nonzero element in the row above it. The latter is a matrix where the first nonzero element in each row is 1, and the first nonzero element in each row is the only nonzero element in its column. For example, below $A$ is in row echelon form, and $B$ is in reduced row echelon form.
-
+The aim of the algorithm is to get the matrix into either **row echelon form** or **reduced row echelon form**. In row echelon form, the first nonzero entry of each row sits strictly to the right of the first nonzero entry of the row above it (many texts also scale each leading entry to 1). In reduced row echelon form, each leading entry is 1 and is the only nonzero entry in its column. For example, below $A$ is in row echelon form, and $B$ is in reduced row echelon form.
 
 $$
 \begin{aligned}
@@ -90,13 +96,13 @@ As you perform row operations, you also act on $b$ to keep the system equivalent
 
 Solving systems of equations is pretty boring, but the emergent structure of a system on the verge of being solved cements a few important ideas:
 
-- **Row operations** need to *somehow* be legal, in particular reversible and preservative of the solution set. This is a good example of a **group** in action.
-- The result of running Gaussian elimination is a **basis** for the solution set. This gives the **span** of the solution set, and the **rank** of the matrix.
-- Additional rows of zero left in the matrix after row reduction indicate **redundancy**, or in other words, **linear dependence**.
+- **Row operations** need to *somehow* be legal, in particular reversible and preservative of the solution set. Each operation corresponds to multiplication by an invertible elementary matrix, so the operations form a **group** in action.
+- Row reducing exposes the structure of the solution set. Pivot columns correspond to determined variables and non-pivot columns to free ones, which gives a parameterization of the solution set and reads off the **rank** of the matrix.
+- Rows of zeros left after row reduction indicate **redundancy** among the original equations, in other words **linear dependence**.
 
 #### Span
 
-The span of a set of vectors is the set of all possible linear combinations of those vectors. The span of a set of vectors is a **subspace** of the vector space. The span of a set of vectors is the **null space** of the matrix whose columns are those vectors.
+The span of a set of vectors is the set of all possible linear combinations of those vectors, and it is always a **subspace** of the ambient vector space. For a matrix whose columns are those vectors, the span is exactly the **column space** of the matrix.
 
 $$
 \begin{aligned}
@@ -106,7 +112,7 @@ $$
 \end{aligned}
 $$
 
-For a set of $n$ vectors in $\mathbb{R}^n$ to span $\mathbb{R}^n$, the vectors must be linearly independent. This is a necessary and sufficient condition for a set of vectors to be a **basis** for $\mathbb{R}^n$. You can perform additional reasoning to determine the rules for spanning sets, and implications on linear independence. For instance, a set of less than $n$ vectors in $\mathbb{R}^n$ cannot span $\mathbb{R}^n$, and a set of more than $n$ vectors in $\mathbb{R}^n$ must be linearly dependent.
+For a set of $n$ vectors in $\mathbb{R}^n$ to span $\mathbb{R}^n$, the vectors must be linearly independent. This is a necessary and sufficient condition for a set of vectors to be a **basis** for $\mathbb{R}^n$. You can perform additional reasoning to determine the rules for spanning sets, and implications on linear independence. For instance, a set of fewer than $n$ vectors in $\mathbb{R}^n$ cannot span $\mathbb{R}^n$, and a set of more than $n$ vectors in $\mathbb{R}^n$ must be linearly dependent.
 
 #### Linear Transformations
 
@@ -142,7 +148,7 @@ $$
 
 Matrix-vector multiplication is a linear transformation. The columns of the matrix are the images of the basis vectors, and the result is the image of the input vector. The kernel of the transformation is the null space of the matrix, and the range is the column space of the matrix.
 
-Visually, you can picture transforming the basis vectors/unit square of the domain into the basis vectors/unit square of the codomain. The matrix is the transformation matrix, and the columns are the images of the basis vectors. The result is the image of the input vector.
+Visually, you can picture transforming the basis vectors, and with them the unit square, of the domain. The matrix is the transformation, its columns are where the basis vectors land, and the product is where the input vector lands.
 
 #### Matrix-Matrix Multiplication
 
@@ -153,7 +159,7 @@ AB &= A\begin{bmatrix} b_1 & b_2 & \cdots & b_n \end{bmatrix} \\
 \end{aligned}
 $$
 
-The algorithm here is to multiply the matrix on the right by each column of the matrix on the left. The result is a matrix whose columns are the images of the columns of the matrix on the right. This is a linear transformation, and the kernel of the transformation is the null space of the matrix on the right, and the range is the column space of the matrix on the left.q
+The algorithm is to multiply $A$ by each column of $B$. The result is a matrix whose columns are the images of the columns of $B$ under $A$, which is exactly composing the two transformations. The column space of $AB$ sits inside the column space of $A$, and the null space of $AB$ contains the null space of $B$.
 
 ```python
 import numpy as np
@@ -171,16 +177,18 @@ def multiply_bad(A, B):
 def multiply_good(A, B):
     return np.dot(A, B)
 
-M, N = 10000, 10000
+M, N = 1000, 1000
 A = np.random.rand(M, N)
 B = np.random.rand(N, M)
 
-%timeit multiply_bad(A, B)
-%timeit multiply_good(A, B)
+# in IPython/Jupyter:
+# %timeit multiply_bad(A, B)
+# %timeit multiply_good(A, B)
 ```
 
-```plaintext
+Matrix multiplication is fundamentally a costly operation. The schoolbook algorithm above takes $O(n^3)$ time for square matrices, which is why the naive triple loop is unusable at any real size. Libraries like NumPy dispatch to heavily optimized BLAS routines that use vectorized instructions and cache-aware blocking, and run orders of magnitude faster than the naive loop even at the same asymptotic complexity. In practice you should **never** write your own matrix multiplication.
 
-```
+## Related notes
 
-Matrix multiplication is fundamentally a costly operation, taking $O(n^3)$ time. That being said, libraries like numpy are heavily optimized and can perform matrix multiplication orders of magnitude faster than naive implementations using vectorized operations. In practice you should **never** write your own matrix multiplication.
+- [[linear-algebra/cheatsheet|Matrix Theory reference]]
+- [[linear-algebra/python-cheatsheet|Python Linear Algebra Cheatsheet]]

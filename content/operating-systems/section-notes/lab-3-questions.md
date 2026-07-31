@@ -12,6 +12,7 @@ tags:
 date: 2024-02-25
 updated: 2026-07-31
 status: needs-review
+archive: true
 description: Partial answers and debugging notes for an operating systems lab on allocation, shell pipelines, and page faults.
 sources:
   - https://pdos.csail.mit.edu/6.1810/2023/xv6/book-riscv-rev3.pdf

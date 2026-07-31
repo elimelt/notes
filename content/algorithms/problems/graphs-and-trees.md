@@ -10,6 +10,7 @@ tags:
 date: 2024-04-14
 updated: 2026-07-31
 status: needs-review
+archive: true
 description: Two graph theory proof exercises, one complete and one cleaned up from partial notes.
 sources:
   - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/

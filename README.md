@@ -29,7 +29,7 @@ From the repository root, run:
 npm run dev
 ```
 
-The first run clones the Quartz `v4` branch into the ignored `.quartz/`
+The first run clones the Quartz `v5` branch into the ignored `.quartz/`
 directory and installs its locked dependencies. Quartz then serves the site at
 `http://localhost:8080` and rebuilds it as content changes. Stop it with
 <kbd>Ctrl</kbd>+<kbd>C</kbd>.
@@ -39,6 +39,9 @@ To create the same production output used by GitHub Pages:
 ```sh
 npm run build
 ```
+
+After adding or changing a Quartz plugin in `quartz.config.yaml`, run
+`npm run sync:quartz` and commit the updated `quartz.lock.json`.
 
 The generated site is written to `public/`. Both `.quartz/` and `public/` are
 disposable and ignored by Git. To use a particular Quartz tag or commit, set
@@ -62,13 +65,13 @@ npm run validate:notes:all
 
 ## Notebook-backed notes
 
-Quartz does not ingest `.ipynb` files directly in this repo. Notebook notes use
-the following flow instead:
+Notebook pages use the
+[`quartz-jupyter-embed`](https://github.com/vazome/quartz-jupyter-embed) plugin:
 
 1. Author the notebook in `content/**/*.ipynb`.
-2. Render it to a sibling Markdown page with `scripts/render_notebooks.py`.
-3. Let Quartz publish the generated Markdown and any extracted `*_files/`
-   assets.
+2. Generate a small sibling Markdown wrapper with `scripts/render_notebooks.py`.
+3. Let Quartz render the notebook's Markdown, code, tables, plots, and stored
+   outputs directly from the checked-in notebook JSON.
 
 The normal site commands already do the render step for you:
 
@@ -94,8 +97,8 @@ python3.12 -m venv .venv
 .venv/bin/python scripts/execute_notebooks.py content/path/to/notebook.ipynb
 ```
 
-Notebook source of truth is the `.ipynb` file. The generated `.md` sibling is
-derived output and should usually not be edited by hand.
+The `.ipynb` file is the source of truth. The generated `.md` sibling contains
+only page metadata and the public source link and should not be edited by hand.
 
 ## Writing and organizing notes
 
@@ -114,7 +117,7 @@ derived output and should usually not be edited by hand.
 - Use `npm run new:note -- ...` to scaffold a note from one of the tracked
   templates instead of copying and editing template files by hand.
 - Put site-wide visual overrides in `quartz-site/custom.scss` and Quartz layout
-  changes in `quartz.layout.ts`.
+  changes in `quartz.config.yaml`.
 
 ### Scaffolding a note
 
@@ -133,17 +136,13 @@ npm run new:note -- content/algorithms/example.md \
 - `npm run validate:notes:all` scans the full corpus backlog.
 - Run `npm run build` after changes that affect rendering, assets, math, or
   note structure.
-- If you edit notebooks, rerender them before validation so the generated
-  Markdown is what gets checked.
+- If you edit notebooks, regenerate their wrappers before validation.
 
 ## Repo-specific gotchas
 
 - `scripts/quartz.sh` mirrors repo-root `docs/` into the built site for legacy
   URLs.
 - `npm run validate:notes` validates Markdown only, not raw `.ipynb` files.
-- The validator rejects any body line that begins with literal `# ` because
-  notes should not contain in-body H1 headings. Notebook code cells that start
-  with top-level `# ` comments can therefore trip validation after rendering.
 - Keep `.quartz/`, `public/`, `.venv/`, and `work/notebook-data/` out of Git.
 
 ## How the build works
@@ -156,7 +155,7 @@ generator.
 
 Pushes to `main` trigger `.github/workflows/static.yml`, which builds `public/`
 and deploys it through the official GitHub Pages artifact actions. The custom
-domain is configured as `notes.elimelt.com` in `quartz.config.ts`.
+domain is configured as `notes.elimelt.com` in `quartz.config.yaml`.
 
 ## Optional research utilities
 

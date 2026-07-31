@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 QUARTZ_DIR="${QUARTZ_DIR:-$ROOT/.quartz}"
 QUARTZ_REPOSITORY="${QUARTZ_REPOSITORY:-https://github.com/jackyzha0/quartz.git}"
-QUARTZ_REF="${QUARTZ_REF:-v4}"
+QUARTZ_REF="${QUARTZ_REF:-v5}"
 
 usage() {
   cat <<'EOF'
@@ -13,7 +13,7 @@ Usage: scripts/quartz.sh <build|serve|sync>
 Environment overrides:
   QUARTZ_DIR         Cached Quartz checkout (default: .quartz)
   QUARTZ_REPOSITORY  Quartz Git repository
-  QUARTZ_REF         Quartz branch/tag/commit (default: v4)
+  QUARTZ_REF         Quartz branch/tag/commit (default: v5)
 EOF
 }
 
@@ -25,9 +25,11 @@ publish_legacy_docs() {
 }
 
 bootstrap() {
-  if [[ ! -d "$QUARTZ_DIR/.git" ]]; then
+  local ref_stamp="$QUARTZ_DIR/.notes-quartz-ref"
+  if [[ ! -d "$QUARTZ_DIR/.git" ]] || [[ ! -f "$ref_stamp" ]] || [[ "$(<"$ref_stamp")" != "$QUARTZ_REF" ]]; then
     rm -rf "$QUARTZ_DIR"
     git clone --depth 1 --branch "$QUARTZ_REF" "$QUARTZ_REPOSITORY" "$QUARTZ_DIR"
+    printf '%s\n' "$QUARTZ_REF" > "$ref_stamp"
   fi
 
   if [[ ! -d "$QUARTZ_DIR/node_modules" ]]; then
@@ -37,10 +39,12 @@ bootstrap() {
 
 sync_site() {
   rm -rf "$QUARTZ_DIR/content"
-  ln -s "$ROOT/content" "$QUARTZ_DIR/content"
-  cp "$ROOT/quartz.config.ts" "$QUARTZ_DIR/quartz.config.ts"
-  cp "$ROOT/quartz.layout.ts" "$QUARTZ_DIR/quartz.layout.ts"
-  cp "$ROOT/quartz.plugins.ts" "$QUARTZ_DIR/quartz.plugins.ts"
+  cp -R "$ROOT/content" "$QUARTZ_DIR/content"
+  python3 "$ROOT/scripts/prepare_content.py" "$QUARTZ_DIR/content"
+  cp "$ROOT/quartz.config.yaml" "$QUARTZ_DIR/quartz.config.yaml"
+  if [[ -f "$ROOT/quartz.lock.json" ]]; then
+    cp "$ROOT/quartz.lock.json" "$QUARTZ_DIR/quartz.lock.json"
+  fi
   cp "$ROOT/quartz-site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
   mkdir -p "$QUARTZ_DIR/quartz/static"
   cp -R "$ROOT/quartz-site/static/." "$QUARTZ_DIR/quartz/static/"
@@ -50,25 +54,42 @@ sync_site() {
   fi
 }
 
+install_plugins() {
+  (cd "$QUARTZ_DIR" && npx quartz plugin install --concurrency 2)
+}
+
+sync_plugins() {
+  (cd "$QUARTZ_DIR" && npx quartz plugin install --from-config --concurrency 2)
+  cp "$QUARTZ_DIR/quartz.lock.json" "$ROOT/quartz.lock.json"
+}
+
+prepare_notebooks() {
+  python3 "$ROOT/scripts/render_notebooks.py" \
+    --cache-dir "$QUARTZ_DIR/.quartz-cache/notebooks"
+}
+
 command="${1:-}"
 case "$command" in
   build)
     bootstrap
-    python3 "$ROOT/scripts/render_notebooks.py"
+    prepare_notebooks
     sync_site
+    install_plugins
     (cd "$QUARTZ_DIR" && npx quartz build --output "$ROOT/public")
     publish_legacy_docs
     ;;
   serve)
     bootstrap
-    python3 "$ROOT/scripts/render_notebooks.py"
+    prepare_notebooks
     sync_site
+    install_plugins
     (cd "$QUARTZ_DIR" && npx quartz build --serve)
     ;;
   sync)
     bootstrap
-    python3 "$ROOT/scripts/render_notebooks.py"
+    prepare_notebooks
     sync_site
+    sync_plugins
     ;;
   *)
     usage >&2

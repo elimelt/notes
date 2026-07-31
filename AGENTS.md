@@ -26,10 +26,10 @@ target for any new note or backfill pass.
 ## Notebook workflow
 
 - Notebook source of truth lives in `content/**/*.ipynb`.
-- Rendered notebook pages live beside them as generated `*.md` files plus
-  optional `*_files/` asset directories.
-- Do not hand-edit generated notebook Markdown unless you are fixing the
-  renderer itself. Edit the notebook, then rerender.
+- Generated `*.md` wrappers live beside the notebooks and contain only
+  frontmatter plus the source link consumed by `quartz-jupyter-embed`.
+- Do not hand-edit generated notebook wrappers. Edit the notebook, then
+  regenerate them.
 - `npm run build`, `npm run dev`, and `npm run sync:quartz` already call
   `scripts/render_notebooks.py` before Quartz runs.
 - For notebook-only changes without a full site build, run
@@ -50,11 +50,8 @@ target for any new note or backfill pass.
 - Non-Markdown files inside `content/` are published as static assets by Quartz.
 - Repo-root `docs/` is mirrored into the built site for legacy URLs by
   `scripts/quartz.sh`.
-- `npm run validate:notes` only validates Markdown. If you change notebooks,
-  rerender them first so the generated Markdown is what gets checked.
-- The validator treats any body line starting with literal `# ` as an H1. In
-  generated notebook pages this can be tripped by top-level Python comments, so
-  avoid leading `# ` comment lines in notebook code cells when possible.
+- `npm run validate:notes` validates notebook wrappers, not raw `.ipynb` cells.
+  If you change notebooks, regenerate the wrappers first.
 - Keep `.venv/`, `.quartz/`, `public/`, and `work/notebook-data/` untracked.
 
 ## Useful commands

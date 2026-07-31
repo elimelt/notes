@@ -1,5 +1,5 @@
 ---
-title: Recommender Systems
+title: Recommender Systems Reading Guide
 category: Recommender Systems
 tags:
   - recommender systems

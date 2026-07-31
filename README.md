@@ -17,6 +17,12 @@ Requirements:
 - Node.js 22 or newer
 - npm
 
+Optional notebook tooling:
+
+- Python 3.12 is the safest choice for local notebook execution because the
+  current notebook stack uses `torch` and related wheels that are not equally
+  available on newer Python releases.
+
 From the repository root, run:
 
 ```sh
@@ -54,6 +60,43 @@ To scan the full corpus instead of only changed Markdown files:
 npm run validate:notes:all
 ```
 
+## Notebook-backed notes
+
+Quartz does not ingest `.ipynb` files directly in this repo. Notebook notes use
+the following flow instead:
+
+1. Author the notebook in `content/**/*.ipynb`.
+2. Render it to a sibling Markdown page with `scripts/render_notebooks.py`.
+3. Let Quartz publish the generated Markdown and any extracted `*_files/`
+   assets.
+
+The normal site commands already do the render step for you:
+
+```sh
+npm run dev
+npm run build
+```
+
+If you only need to refresh notebook-derived Markdown without a full site
+build:
+
+```sh
+python3 scripts/render_notebooks.py
+```
+
+If you want executed outputs checked into the notebook itself, use a local
+Python 3.12 environment and run the executor directly:
+
+```sh
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -U pip
+.venv/bin/python -m pip install numpy pandas matplotlib torch datasets nbclient ipykernel
+.venv/bin/python scripts/execute_notebooks.py content/path/to/notebook.ipynb
+```
+
+Notebook source of truth is the `.ipynb` file. The generated `.md` sibling is
+derived output and should usually not be edited by hand.
+
 ## Writing and organizing notes
 
 - Put publishable Markdown and attachments in `content/`.
@@ -90,6 +133,18 @@ npm run new:note -- content/algorithms/example.md \
 - `npm run validate:notes:all` scans the full corpus backlog.
 - Run `npm run build` after changes that affect rendering, assets, math, or
   note structure.
+- If you edit notebooks, rerender them before validation so the generated
+  Markdown is what gets checked.
+
+## Repo-specific gotchas
+
+- `scripts/quartz.sh` mirrors repo-root `docs/` into the built site for legacy
+  URLs.
+- `npm run validate:notes` validates Markdown only, not raw `.ipynb` files.
+- The validator rejects any body line that begins with literal `# ` because
+  notes should not contain in-body H1 headings. Notebook code cells that start
+  with top-level `# ` comments can therefore trip validation after rendering.
+- Keep `.quartz/`, `public/`, `.venv/`, and `work/notebook-data/` out of Git.
 
 ## How the build works
 

@@ -23,6 +23,23 @@ target for any new note or backfill pass.
 5. Run `npm run build` if the change touches rendering, layout, note structure,
    math, or assets.
 
+## Notebook workflow
+
+- Notebook source of truth lives in `content/**/*.ipynb`.
+- Rendered notebook pages live beside them as generated `*.md` files plus
+  optional `*_files/` asset directories.
+- Do not hand-edit generated notebook Markdown unless you are fixing the
+  renderer itself. Edit the notebook, then rerender.
+- `npm run build`, `npm run dev`, and `npm run sync:quartz` already call
+  `scripts/render_notebooks.py` before Quartz runs.
+- For notebook-only changes without a full site build, run
+  `python3 scripts/render_notebooks.py`.
+- To execute notebooks with outputs in place, prefer a repo-local Python 3.12
+  environment and run `python3.12 -m venv .venv`, install notebook deps into
+  it, then use `.venv/bin/python scripts/execute_notebooks.py <path>.ipynb`.
+- Cache downloaded notebook data under `work/notebook-data/`, not under
+  `content/`.
+
 ## Repo-specific rules
 
 - Do not add an in-body `#` heading to a note that already has frontmatter
@@ -33,6 +50,12 @@ target for any new note or backfill pass.
 - Non-Markdown files inside `content/` are published as static assets by Quartz.
 - Repo-root `docs/` is mirrored into the built site for legacy URLs by
   `scripts/quartz.sh`.
+- `npm run validate:notes` only validates Markdown. If you change notebooks,
+  rerender them first so the generated Markdown is what gets checked.
+- The validator treats any body line starting with literal `# ` as an H1. In
+  generated notebook pages this can be tripped by top-level Python comments, so
+  avoid leading `# ` comment lines in notebook code cells when possible.
+- Keep `.venv/`, `.quartz/`, `public/`, and `work/notebook-data/` untracked.
 
 ## Useful commands
 
@@ -42,6 +65,8 @@ npm run validate:notes
 npm run validate:notes:all
 npm run build
 npm run dev
+python3 scripts/render_notebooks.py
+.venv/bin/python scripts/execute_notebooks.py content/path/to/notebook.ipynb
 ```
 
 `npm run validate:notes` checks changed Markdown files. Use

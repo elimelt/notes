@@ -124,6 +124,8 @@ To avoid starvation and approximate max-min fairness, the scheduler also monitor
 
 ## Related notes
 
+- [[systems/scheduling/1-single-resource/fifo-sjf-srpt-rr-and-mlfq|FIFO, SJF, SRPT, RR, and MLFQ]]
+- [[systems/scheduling/1-single-resource/real-time-scheduling-edf-and-rate-monotonic|real-time scheduling]]
 - [[systems/operating-systems/v2-concurrency/7-queueing-theory|queueing theory]]
 - [[systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling|multiprocessor scheduling]]
 - [[systems/operating-systems/v2-concurrency/4-concurrency-and-threads|concurrency and threads]]

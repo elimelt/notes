@@ -66,6 +66,8 @@ When responsiveness matters more than throughput, for instance in control system
 
 ## Related notes
 
+- [[systems/scheduling/2-parallel-and-multiprocessor/work-stealing-affinity-and-numa|work stealing, affinity, and NUMA]]
+- [[systems/scheduling/1-single-resource/real-time-scheduling-edf-and-rate-monotonic|real-time scheduling]]
 - [[systems/operating-systems/v2-concurrency/7-uniprocessor-scheduling|uniprocessor scheduling]]
 - [[systems/operating-systems/v2-concurrency/7-queueing-theory|queueing theory]]
 - [[systems/operating-systems/v2-concurrency/4-concurrency-and-threads|concurrency and threads]]

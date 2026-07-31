@@ -66,5 +66,7 @@ The **power of two choices** copes with popular keys: hash each key to two (or i
 
 ## Related notes
 
+- [[systems/scheduling/0-foundations/queueing-models-and-tail-latency|queueing models and tail latency]]
+- [[systems/scheduling/4-cluster-and-datacenter/stragglers-speculation-and-overload|stragglers, speculation, and overload]]
 - [[systems/distributed-systems/scaling-web-services|scaling web services]]
 - [[systems/distributed-systems/sharding|sharding]]

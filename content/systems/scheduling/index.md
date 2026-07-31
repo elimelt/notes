@@ -50,17 +50,28 @@ The best route is to start with the math, then the single-resource policies, the
 ## Clusters
 
 - Foundations:
+  - [[systems/scheduling/0-foundations/littles-law-and-bottleneck-analysis|Little's Law and bottleneck analysis]]
+  - [[systems/scheduling/0-foundations/queueing-models-and-tail-latency|queueing models and tail latency]]
   - [[systems/performance/latency-throughput-and-utilization|latency, throughput, and utilization]]
-  - [[systems/operating-systems/v2-concurrency/7-queueing-theory|queueing theory]]
   - [[systems/distributed-systems/load-balancing|tail latency and queueing under load balancing]]
 - CPU scheduling:
+  - [[systems/scheduling/1-single-resource/fifo-sjf-srpt-rr-and-mlfq|FIFO, SJF, SRPT, RR, and MLFQ]]
+  - [[systems/scheduling/1-single-resource/real-time-scheduling-edf-and-rate-monotonic|EDF and rate monotonic]]
   - [[systems/operating-systems/v2-concurrency/7-uniprocessor-scheduling|uniprocessor scheduling]]
   - [[systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling|multiprocessor scheduling]]
   - [[systems/operating-systems/v2-concurrency/4-concurrency-and-threads|threads and scheduler activations]]
+- Parallel and locality-aware scheduling:
+  - [[systems/scheduling/2-parallel-and-multiprocessor/work-stealing-affinity-and-numa|work stealing, affinity, and NUMA]]
 - Resource contention and waiting:
   - [[systems/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects|synchronization and scheduler interaction]]
   - [[systems/research/locality-principle|locality, working sets, and thrashing]]
+- Network and packet scheduling:
+  - [[systems/scheduling/3-network-and-packet/fair-queueing-wfq-and-drr|fair queueing, WFQ, and DRR]]
+- Cluster and datacenter scheduling:
+  - [[systems/scheduling/4-cluster-and-datacenter/cluster-scheduling-and-dominant-resource-fairness|cluster scheduling and DRF]]
+  - [[systems/scheduling/4-cluster-and-datacenter/stragglers-speculation-and-overload|stragglers, speculation, and overload]]
 - Model-serving scheduling:
+  - [[systems/scheduling/5-ml-and-serving/request-scheduling-for-llm-serving|request scheduling for LLM serving]]
   - [[ml/serving-systems/batching|batching]]
   - [[ml/serving-systems/parallelism|parallelism]]
   - [[ml/serving-systems/performance-modeling|performance modeling]]

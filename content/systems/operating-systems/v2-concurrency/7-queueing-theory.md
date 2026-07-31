@@ -127,5 +127,7 @@ The shape of this curve is the practical takeaway. At low utilization, response 
 
 ## Related notes
 
+- [[systems/scheduling/0-foundations/littles-law-and-bottleneck-analysis|Little's Law and bottleneck analysis]]
+- [[systems/scheduling/0-foundations/queueing-models-and-tail-latency|queueing models and tail latency]]
 - [[systems/operating-systems/v2-concurrency/7-uniprocessor-scheduling|uniprocessor scheduling]]
 - [[systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling|multiprocessor scheduling]]

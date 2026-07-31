@@ -120,6 +120,7 @@ Hitting a 95th-percentile SLO target sometimes forces ugly policies, like droppi
 
 ## Related notes
 
+- [[systems/scheduling/5-ml-and-serving/request-scheduling-for-llm-serving|request scheduling for LLM serving]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
 - [[ml/serving-systems/memory-management|Memory Management]]
 - [[ml/serving-systems/speculative-decoding|Speculative Decoding]]

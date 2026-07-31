@@ -6,7 +6,7 @@ category: Systems Research
 tags:
   - unix
   - systems
-  - operating-systems
+  - operating systems
   - paper-notes
 date: 2025-01-16
 updated: 2026-07-30

@@ -2,7 +2,7 @@
 title: Store-to-Load Forwarding Benchmarks
 aliases:
   - operating-systems/benchmarks/store_fwd
-category: Operating Systems
+category: Performance Engineering
 tags:
   - store-forwarding
   - store-buffer

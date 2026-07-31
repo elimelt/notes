@@ -4,7 +4,7 @@ aliases:
   - networks/5-application/DNS
 category: Networks
 tags:
-  - DNS
+  - dns
   - name-resolution
   - distributed-database
   - top-level-domain

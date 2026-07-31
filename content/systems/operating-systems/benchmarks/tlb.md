@@ -2,7 +2,7 @@
 title: TLB and Page Walk Benchmarks
 aliases:
   - operating-systems/benchmarks/tlb
-category: Operating Systems
+category: Performance Engineering
 tags:
   - tlb
   - page-table

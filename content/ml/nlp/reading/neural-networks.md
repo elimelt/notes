@@ -5,10 +5,11 @@ aliases:
 category: Natural Language Processing
 tags:
   - neural networks
-  - machine learning
+  - machine-learning
   - natural language processing
   - deep learning
   - feedforward
+  - backpropagation
 date: 2025-01-14
 updated: 2026-07-30
 status: evergreen

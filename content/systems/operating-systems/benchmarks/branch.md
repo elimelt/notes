@@ -2,7 +2,7 @@
 title: Branch Prediction Benchmarks
 aliases:
   - operating-systems/benchmarks/branch
-category: Operating Systems
+category: Performance Engineering
 tags:
   - branch-prediction
   - cpu

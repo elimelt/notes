@@ -5,8 +5,8 @@ aliases:
 category: Networks
 tags:
   - transport-layer
-  - TCP
-  - UDP
+  - tcp
+  - udp
   - datagrams
   - bytestreams
 date: 2024-02-25

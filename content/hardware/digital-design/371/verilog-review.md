@@ -8,7 +8,7 @@ tags:
   - review
   - combinational logic
   - sequential logic
-  - FSM
+  - fsm
   - test benches
 date: 2025-04-03
 updated: 2026-07-30

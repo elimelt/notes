@@ -6,7 +6,7 @@ category: Natural Language Processing
 tags:
   - classification
   - multinomial logistic regression
-  - machine learning
+  - machine-learning
 date: 2025-01-05
 updated: 2026-07-30
 status: incomplete

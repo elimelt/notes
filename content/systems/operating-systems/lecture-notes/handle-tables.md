@@ -5,7 +5,7 @@ aliases:
 category: Operating Systems
 tags:
   - handle-tables
-  - process-control-block
+  - process control block
   - context-switch
   - scheduling
   - fork-exec

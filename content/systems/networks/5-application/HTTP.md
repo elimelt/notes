@@ -4,8 +4,8 @@ aliases:
   - networks/5-application/HTTP
 category: Networks
 tags:
-  - HTTP
-  - TCP
+  - http
+  - tcp
   - web
   - caching
   - page-load-time

@@ -8,7 +8,7 @@ tags:
   - web-caching
   - proxy-servers
   - edge-locations
-  - DNS
+  - dns
 date: 2024-03-07
 updated: 2026-07-30
 status: evergreen

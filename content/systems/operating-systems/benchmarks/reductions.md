@@ -2,7 +2,7 @@
 title: Parallel Reductions Benchmarks
 aliases:
   - operating-systems/benchmarks/reductions
-category: Operating Systems
+category: Performance Engineering
 tags:
   - simd
   - avx2
@@ -15,6 +15,12 @@ date: 2025-12-29
 updated: 2026-07-30
 status: needs-review
 description: Benchmarks array reduction variants (single accumulator, multiple accumulators, AVX2, threads, and combinations) across array sizes, with the generated assembly showing what the compiler actually emitted.
+sources:
+  - title: Original benchmark measurements by Elijah Melton
+    type: experiment
+  - title: Compiler Explorer
+    url: https://godbolt.org/
+    type: tool
 ---
 
 ## Purpose
@@ -166,15 +172,15 @@ Every variant runs `vpaddq`, so the only real difference is accumulator count. M
 ## Reproduction
 
 ```bash
-# Build
+## Build
 make
 
-# Run individual benchmark
+## Run individual benchmark
 ./bench red_naive 256    # 256 MB array
 ./bench red_ilp 256
 ./bench red_all 256
 
-# Compare all variants
+## Compare all variants
 for v in red_naive red_ilp red_simd red_thread red_ilp_simd red_all; do
     ./bench $v 256 2>&1 | grep "Time per"
 done

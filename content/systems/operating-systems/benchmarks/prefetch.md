@@ -2,7 +2,7 @@
 title: Software Prefetching Benchmarks
 aliases:
   - operating-systems/benchmarks/prefetch
-category: Operating Systems
+category: Performance Engineering
 tags:
   - prefetching
   - cache

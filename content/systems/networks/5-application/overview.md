@@ -5,8 +5,8 @@ aliases:
 category: Networks
 tags:
   - application-layer
-  - TCP
-  - UDP
+  - tcp
+  - udp
   - reliability
 date: 2024-03-04
 updated: 2026-07-30

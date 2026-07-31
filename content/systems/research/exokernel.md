@@ -4,9 +4,9 @@ aliases:
   - systems-research/exokernel
 category: Systems Research
 tags:
-  - operating-systems
+  - operating systems
   - exokernel
-  - resource-management
+  - resource management
   - paper-notes
 date: 2025-01-14
 updated: 2026-07-30

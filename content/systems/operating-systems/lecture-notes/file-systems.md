@@ -4,7 +4,7 @@ aliases:
   - operating-systems/lecture-notes/file-systems
 category: Operating Systems
 tags:
-  - file-systems
+  - file systems
   - storage
   - system-calls
   - fat

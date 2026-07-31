@@ -2,14 +2,16 @@
 title: Breadth First Search Pattern
 category: Algorithms
 tags:
-  - breadth-first-search
-  - graph-algorithms
-  - graph-traversal
+  - breadth-first search
+  - graph algorithms
+  - graph traversal
   - shortest-path
 date: 2024-04-14
 updated: 2026-07-30
 status: draft
 description: Why BFS visits vertices in order of shortest-path distance, and the problems that property solves.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

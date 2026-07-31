@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Taxonomy audit
+    url: https://github.com/elimelt/notes/blob/main/scripts/audit_taxonomy.py
+    about: Re-run the local audit before opening a large batch of planned-note issues.

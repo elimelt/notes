@@ -2,10 +2,10 @@
 title: False Sharing Benchmarks
 aliases:
   - operating-systems/benchmarks/false_sharing
-category: Operating Systems
+category: Performance Engineering
 tags:
   - false-sharing
-  - cache-coherence
+  - cache coherence
   - mesi
   - multi-threading
   - cache-line

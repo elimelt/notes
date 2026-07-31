@@ -5,10 +5,10 @@ aliases:
 category: Operating Systems
 tags:
   - process-operations
-  - memory-management
+  - memory management
   - io
   - device-drivers
-  - file-systems
+  - file systems
   - kernel-structure
 date: 2024-01-13
 updated: 2026-07-30

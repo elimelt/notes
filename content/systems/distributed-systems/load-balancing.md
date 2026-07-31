@@ -7,7 +7,7 @@ tags:
   - load-balancing
   - distributed-systems
   - sharding
-  - queueing-theory
+  - queueing theory
   - zipf
 date: 2024-05-06
 updated: 2026-07-30

@@ -2,7 +2,7 @@
 title: Spring Boot Annotations
 aliases:
   - cheatsheets/java-spring-boot/reference
-category: Reference
+category: Software Engineering
 tags:
   - spring-boot
   - annotations

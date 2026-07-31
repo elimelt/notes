@@ -4,7 +4,7 @@ aliases:
   - networks/4-transport/UDP
 category: Networks
 tags:
-  - UDP
+  - udp
   - transport-layer
   - datagrams
 date: 2024-02-25

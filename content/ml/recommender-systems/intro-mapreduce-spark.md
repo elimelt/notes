@@ -7,7 +7,7 @@ tags:
   - data mining
   - distributed file systems
   - commodity hardware
-  - MapReduce
+  - mapreduce
   - Hadoop
   - Spark
 date: 2024-03-26

@@ -4,6 +4,7 @@ category: Deep Learning
 tags:
   - deep learning
   - transformers
+  - self-attention
   - cross attention
   - seq2seq
   - translation

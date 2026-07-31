@@ -2,7 +2,7 @@
 title: Matrix Theory
 aliases:
   - linear-algebra/cheatsheet
-category: Linear Algebra
+category: Mathematics
 tags:
   - linear algebra
   - vector spaces

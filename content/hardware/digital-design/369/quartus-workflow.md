@@ -4,9 +4,9 @@ aliases:
   - hardware-design/369/quartus-workflow
 category: Hardware Design
 tags:
-  - Quartus
-  - ModelSim
-  - Verilog
+  - quartus
+  - modelsim
+  - verilog
   - testing process
   - modular design
 date: 2024-02-25

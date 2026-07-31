@@ -1,6 +1,6 @@
 ---
 title: Measuring Algorithm Efficiency with Asymptotic Notation
-category: Computer Science
+category: Algorithms
 tags:
   - algorithm
   - time complexity
@@ -10,6 +10,8 @@ date: 2024-03-29
 updated: 2026-07-30
 status: evergreen
 description: Definitions of O, Omega, and Theta notation, growth-rate facts for common function families, and why polynomial time is the standard bar for an efficient algorithm.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

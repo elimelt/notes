@@ -1,6 +1,6 @@
 ---
 title: S’more Blondies
-category: Recipes
+category: Reference
 tags:
   - baking
   - blondies

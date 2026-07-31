@@ -6,7 +6,7 @@ category: Networks
 tags:
   - flow-control
   - sliding-window
-  - ARQ
+  - arq
   - bandwidth-delay-product
 date: 2024-02-25
 updated: 2026-07-30

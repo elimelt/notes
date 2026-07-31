@@ -4,7 +4,7 @@ aliases:
   - cheatsheets/algorithms/divide-and-conquer
 category: Reference
 tags:
-  - divide-and-conquer
+  - divide and conquer
   - master-theorem
   - root-finding
   - selection
@@ -12,6 +12,8 @@ date: 2024-04-28
 updated: 2026-07-30
 status: evergreen
 description: Quick reference for the master theorem, bisection root finding, and median-of-medians selection.
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 Quick reference for three divide and conquer staples, with proof sketches.

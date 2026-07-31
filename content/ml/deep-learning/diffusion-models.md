@@ -4,6 +4,7 @@ category: Deep Learning
 tags:
   - deep learning
   - diffusion
+  - convolution
   - generative models
   - unet
   - denoising

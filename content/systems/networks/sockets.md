@@ -6,7 +6,7 @@ category: Networks
 tags:
   - sockets
   - system-programming
-  - C
+  - c
   - Python
 date: 2024-01-11
 updated: 2026-07-30
@@ -47,9 +47,9 @@ int socket(int domain, int type, int protocol);
 
 ```python
 import socket
-# TCP socket
+#TCP-socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# UDP socket
+#UDP-socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 ```
 
@@ -77,10 +77,10 @@ int bind(int socket, struct sockaddr *address, socklen_t addr_len);
 ```
 
 ```python
-# ...
+#...
 port = 80
 
-# Bind the socket to an address
+#Bind-the-socket-to-an-address
 serversock.bind((socket.gethostname(), port))
 ```
 
@@ -105,11 +105,11 @@ int listen(int socket, int backlog);
 ```
 
 ```python
-# ...
+#...
 
 backlog = 5
 
-# Listen for connections
+#Listen-for-connections
 serversock.listen(backlog)
 ```
 
@@ -134,9 +134,9 @@ int accept(int socket, struct sockaddr *address, socklen_t *addr_len);
 ```
 
 ```python
-# ...
+#...
 
-# Accept a connection
+#Accept-a-connection
 clientsock, addr = serversock.accept()
 ```
 
@@ -167,10 +167,10 @@ import socket
 
 port = 80
 
-# create a socket
+#create-a-socket
 clientsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# connect to a server (host name, not a URL)
+#connect-to-a-server (host name, not a URL)
 clientsock.connect(('elimelt.com', port))
 ```
 
@@ -207,12 +207,12 @@ ssize_t recv(int socket, void *buf, size_t len, int flags);
 ```
 
 ```python
-# ...
+#...
 
-# Send data (bytes, not str)
+#Send-data (bytes, not str)
 clientsock.send(b'Hello, world!')
 
-# Receive data
+#Receive-data
 data = clientsock.recv(1024)
 ```
 
@@ -232,9 +232,9 @@ int close(int socket);
 ```
 
 ```python
-# ...
+#...
 
-# Close the socket
+#Close-the-socket
 clientsock.close()
 ```
 

@@ -7,7 +7,7 @@ tags:
   - data-serialization
   - schema-evolution
   - compatibility
-  - message-passing
+  - message passing
   - encoding-formats
 date: 2023-12-19
 updated: 2026-07-30

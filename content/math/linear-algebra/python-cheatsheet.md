@@ -2,7 +2,7 @@
 title: Python Linear Algebra Cheatsheet
 aliases:
   - linear-algebra/python-cheatsheet
-category: Linear Algebra
+category: Mathematics
 tags:
   - linear algebra
   - numpy

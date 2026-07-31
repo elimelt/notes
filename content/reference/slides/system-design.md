@@ -2,10 +2,17 @@
 title: Patterns for Scalability and Reliability in Systems
 aliases:
   - slides/system-design
-category: Reference
-tags: system design, scalability, reliability, architecture, distributed systems
+category: Software Engineering
+tags:
+  - system design
+  - scalability
+  - reliability
+  - architecture
+  - distributed-systems
 date: 2025-03-05
 description: Presentation covering basic techniques and architectures for solving common scalability and reliability problems in systems.
+sources:
+  - original slide deck
 ---
 
 This note condenses a slide deck on common system-design patterns for scaling and reliability into a scrollable Quartz-friendly reference.
@@ -205,7 +212,7 @@ Limit hard dependencies and keep services decoupled
 
 ---
 
-# Questions?
+## Questions?
 
 ## Related
 

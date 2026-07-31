@@ -2,7 +2,7 @@
 title: Memory Bandwidth Benchmarks
 aliases:
   - operating-systems/benchmarks/bandwidth
-category: Operating Systems
+category: Performance Engineering
 tags:
   - memory
   - bandwidth

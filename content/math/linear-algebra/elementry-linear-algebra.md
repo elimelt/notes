@@ -2,7 +2,7 @@
 title: Glossary of Linear Algebra Concepts
 aliases:
   - linear-algebra/elementry-linear-algebra
-category: Linear Algebra
+category: Mathematics
 tags:
   - gaussian-elimination
   - linear-transformations
@@ -13,6 +13,9 @@ date: 2024-12-08
 updated: 2026-07-30
 status: evergreen
 description: Introductory notes on systems of equations, Gaussian elimination, span, linear transformations, and matrix multiplication, with an emphasis on the ideas that stay useful past the algorithms.
+sources:
+  - https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+  - https://textbooks.math.gatech.edu/ila/
 ---
 
 ## Purpose
@@ -166,7 +169,7 @@ The algorithm is to multiply $A$ by each column of $B$. The result is a matrix w
 ```python
 import numpy as np
 
-# inefficient
+## inefficient
 def multiply_bad(A, B):
     C = np.zeros((A.shape[0], B.shape[1]))
     for i in range(A.shape[0]):
@@ -175,7 +178,7 @@ def multiply_bad(A, B):
                 C[i, j] += A[i, k] * B[k, j]
     return C
 
-# efficient
+## efficient
 def multiply_good(A, B):
     return np.dot(A, B)
 
@@ -183,9 +186,9 @@ M, N = 1000, 1000
 A = np.random.rand(M, N)
 B = np.random.rand(N, M)
 
-# in IPython/Jupyter:
-# %timeit multiply_bad(A, B)
-# %timeit multiply_good(A, B)
+## in IPython/Jupyter:
+## %timeit multiply_bad(A, B)
+## %timeit multiply_good(A, B)
 ```
 
 Matrix multiplication is fundamentally a costly operation. The schoolbook algorithm above takes $O(n^3)$ time for square matrices, which is why the naive triple loop is unusable at any real size. Libraries like NumPy dispatch to heavily optimized BLAS routines that use vectorized instructions and cache-aware blocking, and run orders of magnitude faster than the naive loop even at the same asymptotic complexity. In practice you should **never** write your own matrix multiplication.

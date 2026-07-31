@@ -1,0 +1,81 @@
+name: Planned note entry
+description: Track a proposed note so it can move from idea to researched draft.
+title: "[Planned Note] "
+labels:
+  - planned-entry
+body:
+  - type: input
+    id: note_title
+    attributes:
+      label: Proposed note title
+      description: Use the note title you expect to publish.
+      placeholder: Singular Value Decomposition and the Pseudoinverse
+    validations:
+      required: true
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: What should this note help the reader understand or do?
+      placeholder: Explain why SVD matters, derive the factorization at a high level, and show how it supports PCA and low-rank approximation.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Papers, books, docs, lectures, or datasets that should anchor the note.
+      placeholder: |
+        - https://...
+        - https://...
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Proposed category
+      description: Broad category used for site navigation.
+      placeholder: Mathematics
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Proposed tags
+      description: Comma-separated specific tags that should connect this note into the graph.
+      placeholder: singular value decomposition, pseudoinverse, low-rank approximation, numerical linear algebra
+    validations:
+      required: true
+  - type: textarea
+    id: related_notes
+    attributes:
+      label: Related existing notes
+      description: Link any notes this should extend, split from, or cross-link.
+      placeholder: |
+        - content/math/linear-algebra/cheatsheet.md
+        - content/math/linear-algebra/python-cheatsheet.md
+  - type: dropdown
+    id: entry_type
+    attributes:
+      label: Entry type
+      options:
+        - Standalone note
+        - Expansion of an existing note
+        - Series / hub note
+    validations:
+      required: true
+  - type: textarea
+    id: outline
+    attributes:
+      label: Outline or acceptance criteria
+      description: Keep this loose, but capture the non-negotiable sections, derivations, code, or measurements.
+      placeholder: |
+        - Define the object from first principles
+        - Work one concrete example
+        - Include a NumPy implementation
+        - Link to downstream uses
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra notes
+      description: Anything else worth preserving while the idea is fresh.

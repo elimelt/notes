@@ -4,7 +4,7 @@ aliases:
   - designing-data-intensive-applications/part-1-foundations-of-data-systems/ch3-storage-and-retrieval
 category: Database Systems
 tags:
-  - data-structures
+  - data structures
   - indexing
   - oltp-vs-olap
   - column-oriented-storage
@@ -27,7 +27,7 @@ Reading notes on chapter 3 of [Designing Data-Intensive Applications](https://da
 ```bash
 #!/bin/bash
 
-# instant database
+#instant database
 db_set () {
  echo "$1,$2" >> database
 }

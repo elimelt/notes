@@ -5,11 +5,13 @@ tags:
   - graph theory
   - connected components
   - breadth-first search
-  - depth-first search
+  - depth first search
 date: 2024-04-14
 updated: 2026-07-30
 status: evergreen
 description: How to partition an undirected graph into connected components in O(|V| + |E|) with BFS or DFS, producing a labeling that answers path-existence queries in O(1).
+sources:
+  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
 ---
 
 ## Purpose

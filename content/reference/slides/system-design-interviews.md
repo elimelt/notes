@@ -2,10 +2,16 @@
 title: System Design Interviews
 aliases:
   - slides/system-design-interviews
-category: Reference
-tags: system design, interviews, career, technical interviews
+category: Software Engineering
+tags:
+  - system design
+  - interviews
+  - career
+  - technical interviews
 date: 2025-03-05
 description: Overview of system design interviews, covering format, structure, and basic principles.
+sources:
+  - original slide deck
 ---
 
 This is a concise outline of what system design interviews are, how they usually flow, and how to prepare your thinking during the conversation.
@@ -148,7 +154,7 @@ Future improvements
 
 ---
 
-# [Part 2](system-design.html)
+## [Part 2](system-design.html)
 
 ## Related
 

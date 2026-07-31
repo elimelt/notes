@@ -5,7 +5,7 @@ aliases:
 category: Distributed Systems
 tags:
   - distributed-systems
-  - mutual-exclusion
+  - mutual exclusion
   - locking
   - ordering
 date: 2024-04-24

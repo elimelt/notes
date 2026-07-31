@@ -1,6 +1,6 @@
 ---
 title: Greedy Algorithms for Interval Scheduling and Partitioning
-category: Algorithm Analysis
+category: Algorithms
 tags:
   - algorithms
   - interval

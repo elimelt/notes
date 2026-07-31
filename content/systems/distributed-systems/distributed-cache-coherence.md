@@ -4,7 +4,7 @@ aliases:
   - distributed-systems/distributed-cache-coherence
 category: Distributed Systems
 tags:
-  - cache-coherence
+  - cache coherence
   - consistency-models
   - distributed-systems
   - leases
@@ -12,6 +12,12 @@ date: 2024-05-17
 updated: 2026-07-30
 status: evergreen
 description: How leases give linearizable caching, why that approach scales poorly, and how NFS and DNS get away with weaker consistency instead.
+sources:
+  - title: "Leases: An Efficient Fault-Tolerant Mechanism for Distributed File Cache Consistency"
+    url: https://dl.acm.org/doi/10.1145/74851.74870
+    type: paper
+  - title: Computer systems lecture notes
+    type: lecture
 ---
 
 ## Purpose

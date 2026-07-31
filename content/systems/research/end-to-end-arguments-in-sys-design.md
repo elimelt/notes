@@ -4,7 +4,7 @@ aliases:
   - systems-research/end-to-end-arguments-in-sys-design
 category: Systems Research
 tags:
-  - system-design
+  - system design
   - end-to-end
   - design
   - networking

@@ -4,7 +4,7 @@ aliases:
   - llm-serving-systems/memory-management
 category: Machine Learning Systems
 tags:
-  - memory-management
+  - memory management
   - kv-cache
   - prefix-sharing
   - paged-attention

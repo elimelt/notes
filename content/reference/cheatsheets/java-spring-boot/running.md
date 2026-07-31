@@ -2,7 +2,7 @@
 title: Spring Boot Quickstart Guide
 aliases:
   - cheatsheets/java-spring-boot/running
-category: Reference
+category: Software Engineering
 tags:
   - spring-boot
   - quickstart

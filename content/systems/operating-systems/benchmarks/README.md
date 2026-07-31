@@ -2,7 +2,7 @@
 title: Measuring Real DRAM Latency
 aliases:
   - operating-systems/benchmarks/README
-category: Operating Systems
+category: Performance Engineering
 tags:
   - memory
   - dram

@@ -2,7 +2,7 @@
 title: Memory-Level Parallelism Benchmarks
 aliases:
   - operating-systems/benchmarks/mlp
-category: Operating Systems
+category: Performance Engineering
 tags:
   - memory-level-parallelism
   - mlp
@@ -14,6 +14,12 @@ date: 2025-12-29
 updated: 2026-07-30
 status: needs-review
 description: Measures how running multiple independent pointer chains overlaps DRAM accesses, scaling from 92.6 ns per access with one chain down to 8.9 ns with sixteen.
+sources:
+  - title: Original benchmark measurements by Elijah Melton
+    type: experiment
+  - title: What Every Programmer Should Know About Memory (Ulrich Drepper)
+    url: https://www.akkadia.org/drepper/cpumemory.pdf
+    type: paper
 ---
 
 ## Purpose
@@ -96,7 +102,7 @@ Real code sits somewhere between the fully serial chase and the fully parallel r
 ./bench mlp4 256   # 4 chains
 ./bench mlp16 256  # 16 chains
 
-# Compare to random access (maximum MLP)
+## Compare to random access (maximum MLP)
 ./bench ran 256
 ```
 

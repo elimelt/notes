@@ -5,7 +5,7 @@ aliases:
 category: Recommender Systems
 tags:
   - recommender systems
-  - machine learning
+  - machine-learning
   - ads
   - ctr prediction
   - gradient boosted decision trees

@@ -42,6 +42,18 @@ disposable and ignored by Git. To use a particular Quartz tag or commit, set
 QUARTZ_REF=<tag-or-commit> npm run dev
 ```
 
+To validate repo-specific note rules before a larger edit or backfill pass:
+
+```sh
+npm run validate:notes
+```
+
+To scan the full corpus instead of only changed Markdown files:
+
+```sh
+npm run validate:notes:all
+```
+
 ## Writing and organizing notes
 
 - Put publishable Markdown and attachments in `content/`.
@@ -56,8 +68,28 @@ QUARTZ_REF=<tag-or-commit> npm run dev
 - Treat `.notes/` as the repository's authoring contract. `prose.yml`,
   `content.yml`, and `frontmatter.yml` define the target style for future notes
   and for the backfill of existing notes.
+- Use `npm run new:note -- ...` to scaffold a note from one of the tracked
+  templates instead of copying and editing template files by hand.
 - Put site-wide visual overrides in `quartz-site/custom.scss` and Quartz layout
   changes in `quartz.layout.ts`.
+
+### Scaffolding a note
+
+```sh
+npm run new:note -- content/algorithms/example.md \
+  --template concept \
+  --title "Example title" \
+  --category "Algorithms" \
+  --tags graph traversal bfs
+```
+
+### Agent-facing workflow
+
+- Read `AGENTS.md` first if you are using an LLM coding agent.
+- `npm run validate:notes` checks changed Markdown files.
+- `npm run validate:notes:all` scans the full corpus backlog.
+- Run `npm run build` after changes that affect rendering, assets, math, or
+  note structure.
 
 ## How the build works
 

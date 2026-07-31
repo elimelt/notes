@@ -4,7 +4,10 @@
   "scripts": {
     "build": "bash scripts/quartz.sh build",
     "dev": "bash scripts/quartz.sh serve",
-    "sync:quartz": "bash scripts/quartz.sh sync"
+    "sync:quartz": "bash scripts/quartz.sh sync",
+    "new:note": "python3 scripts/new_note.py",
+    "validate:notes": "python3 scripts/validate_notes.py --changed",
+    "validate:notes:all": "python3 scripts/validate_notes.py"
   },
   "engines": {
     "node": ">=22"

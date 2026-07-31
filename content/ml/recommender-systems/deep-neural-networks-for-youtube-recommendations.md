@@ -40,6 +40,44 @@ The candidate generator is trained as a multiclass classification problem over t
 
 The paper is explicit about the computational reason. Full scoring over millions of items would blow the serving budget, so the model is trained with sampled softmax and served through nearest-neighbor search in dot-product space.
 
+### Candidate Model Architecture
+
+The candidate model is a feed-forward network built around learned ID embeddings.
+
+- video watches are represented as a variable-length bag of watched video IDs
+- searches are represented as a variable-length bag of unigram and bigram query tokens
+- each sparse ID space gets an embedding table
+- multivalent histories are averaged into fixed-width dense vectors before entering the MLP
+- demographic and device features are concatenated as additional dense inputs
+
+The paper's main experiment uses:
+
+- a vocabulary of **1M videos**
+- a vocabulary of **1M search tokens**
+- **256-dimensional** embeddings
+- a maximum bag size of **50 recent watches** and **50 recent searches**
+- a softmax over the same **1M** video classes, with output dimension **256**
+
+The hidden layers follow a tower pattern where width shrinks with depth:
+
+- depth 0: linear projection to the 256-dimensional softmax space
+- depth 1: `256 ReLU`
+- depth 2: `512 ReLU -> 256 ReLU`
+- depth 3: `1024 ReLU -> 512 ReLU -> 256 ReLU`
+- depth 4: `2048 ReLU -> 1024 ReLU -> 512 ReLU -> 256 ReLU`
+
+This is more specific than "a neural retriever." It is basically a bag-of-IDs encoder plus an MLP, trained end to end. The averaging step matters because it means the model is order-insensitive inside the watched-history bag. It captures coarse preference better than local sequence structure.
+
+### Training and Serving Path
+
+The training and serving story is part of the architecture, not just implementation detail.
+
+- During training, they use **sampled softmax** with **several thousand sampled negatives** per example.
+- They report this gives **more than 100x speedup** relative to a full softmax over the catalog.
+- At serving time, they discard the calibrated softmax view and do **approximate nearest-neighbor search in dot-product space**.
+
+That last point is the essential retrieval trick. The model is trained like an extreme multiclass classifier, but deployed like an embedding retriever.
+
 The user side is built from several signals:
 
 - watched video IDs
@@ -81,6 +119,37 @@ The ranking model is a separate deep network with a much richer feature set. The
 - counts of prior impressions
 - normalized continuous features
 
+### Ranking Model Architecture
+
+The ranking network reuses the same broad recipe as candidate generation, though with a richer feature table because it only scores a few hundred candidates rather than millions.
+
+- categorical features are split into **univalent** features such as the impression video ID and **multivalent** features such as the bag of recently watched videos
+- each ID space gets its own learned embedding table
+- embedding dimension grows roughly with the **logarithm of vocabulary size**
+- multivalent categorical features are **averaged** before entering the network
+- features that share the same ID space also **share embeddings**
+
+That shared-embedding design is easy to miss, though it matters. The same global video-ID embedding table is reused across several features, such as:
+
+- the impression video ID
+- the last watched video ID
+- a seed video ID from an upstream candidate source
+
+The embeddings are shared, but the resulting feature channels are still fed separately so the upper layers can learn different roles for the same underlying ID space.
+
+The continuous side also gets special treatment:
+
+- each continuous feature is normalized to approximately uniform mass on $[0,1)$ using its empirical cumulative distribution
+- the model consumes not just $\tilde{x}$, but also $\tilde{x}^2$ and $\sqrt{\tilde{x}}$
+
+That is a small architecture detail with real effect. The paper reports a **0.2%** loss increase when those powers are removed from the best ranking model.
+
+For hidden layers, the best configuration in Table 1 is:
+
+- `1024 ReLU -> 512 ReLU -> 256 ReLU`
+
+The output layer is trained with logistic loss, then exponentiated at inference to produce odds that approximate expected watch time.
+
 The target here is not raw click probability. The system wants expected watch time. To get that, positive examples are weighted by watch time and negatives get unit weight. This turns logistic regression into a watch-time-sensitive classifier whose learned odds approximate expected watch time closely enough to optimize the real product metric better than CTR prediction alone.
 
 That choice matters because CTR can be gamed by short, low-value clicks. A recommender that optimizes CTR too directly will often drift toward clicky junk.
@@ -91,6 +160,8 @@ The ranking experiments are not subtle. Hidden layers help a lot.
 
 On the paper's next-day holdout metric, the no-hidden-layer baseline has **41.6%** weighted per-user loss, while the best three-layer stack in Table 1 reaches **34.6%**. Equal weighting of positive and negative examples makes the loss much worse, by **4.1%** in the authors' comparison.
 
+The candidate-generation experiments tell a similar story. The depth-zero model, which the authors describe as effectively a linear factorization scheme, behaves much more like the older MF-style systems. Once they add search features, example age, and deeper ReLU stacks, holdout MAP rises materially. Their conclusion is that depth is not just adding capacity in the abstract. It lets the model use heterogeneous features by learning interactions between them.
+
 The main inference is simple:
 
 - depth helps because the feature interactions are not close to linear
@@ -99,6 +170,7 @@ The main inference is simple:
 ## What I Would Keep in My Head
 
 - Separate retrieval from ranking as early as possible in the design.
+- In paper notes, architecture details belong in the note, not just the high-level takeaway.
 - Treat the training label as a systems decision, not just a statistics decision.
 - Add freshness features explicitly when the catalog evolves fast.
 - Optimize a downstream value signal like watch time when clicks are a poor proxy.

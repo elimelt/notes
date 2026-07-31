@@ -46,5 +46,5 @@ Each level $L_i$ is exactly the set of vertices at distance $i$ from $s$. A quic
 
 ## Related notes
 
-- [[cheatsheets/algorithms/graphs|Graph Theory]]
+- [[reference/cheatsheets/algorithms/graphs|Graph Theory]]
 - [[algorithms/patterns/sliding-window|Sliding Window Pattern]]

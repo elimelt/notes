@@ -496,17 +496,27 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   const app = new Application()
   try {
-    await app.init({
-      width,
-      height,
-      antialias: true,
-      autoStart: false,
-      autoDensity: true,
-      backgroundAlpha: 0,
-      preference: "webgl",
-      resolution: window.devicePixelRatio,
-      eventMode: "static",
-    })
+    const initResult = await Promise.race([
+      app.init({
+        width,
+        height,
+        antialias: true,
+        autoStart: false,
+        autoDensity: true,
+        backgroundAlpha: 0,
+        preference: "webgl",
+        resolution: window.devicePixelRatio,
+        eventMode: "static",
+      }).then(() => "ready" as const),
+      new Promise<"timeout">((resolve) => {
+        window.setTimeout(() => resolve("timeout"), 1500)
+      }),
+    ])
+
+    if (initResult !== "ready") {
+      console.warn("Graph renderer fallback", new Error("Pixi renderer init timed out"))
+      return renderSvgGraph()
+    }
   } catch (error) {
     console.warn("Graph renderer fallback", error)
     return renderSvgGraph()

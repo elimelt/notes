@@ -5,7 +5,7 @@ tags:
   - deep learning
   - modeling
   - architecture
-  - data
+  - data representation
   - regularization
   - attention
   - resnet

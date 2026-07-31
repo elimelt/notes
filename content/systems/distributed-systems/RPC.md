@@ -6,7 +6,6 @@ category: Distributed Systems
 tags:
   - distributed-systems
   - rpc
-  - communication
   - fault-model
 date: 2024-03-26
 updated: 2026-07-30

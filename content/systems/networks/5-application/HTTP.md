@@ -7,7 +7,7 @@ tags:
   - http
   - application-layer
   - tcp
-  - web
+  - web performance
   - caching
   - page-load-time
 date: 2024-03-04

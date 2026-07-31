@@ -2,7 +2,7 @@
 title: Introduction to Undirected Graphs and Their Properties
 category: Algorithms
 tags:
-  - graph
+  - graphs
   - graph fundamentals
   - graph representation
   - graph properties

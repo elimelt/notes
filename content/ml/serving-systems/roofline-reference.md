@@ -9,7 +9,7 @@ tags:
   - optimization
   - gpu
   - bandwidth
-  - compute
+  - compute-bound
   - arithmetic-intensity
   - gqa
   - kv-cache

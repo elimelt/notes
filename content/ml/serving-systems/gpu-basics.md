@@ -6,7 +6,7 @@ category: Machine Learning Systems
 tags:
   - gpu
   - architecture
-  - programming
+  - gpu programming
   - cuda
   - nvidia
   - pytorch

@@ -4,6 +4,7 @@ aliases:
   - llm-serving-systems/performance-modeling
 category: Machine Learning Systems
 tags:
+  - batching
   - performance
   - roofline
   - arithmetic-intensity

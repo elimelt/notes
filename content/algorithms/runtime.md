@@ -2,7 +2,6 @@
 title: Measuring Algorithm Efficiency with Asymptotic Notation
 category: Algorithms
 tags:
-  - algorithm
   - time complexity
   - asymptotic notation
   - efficiency

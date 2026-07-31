@@ -7,7 +7,7 @@ tags:
   - java
   - collections
   - immutability
-  - records
+  - java records
 date: 2024-12-08
 updated: 2026-07-30
 status: evergreen

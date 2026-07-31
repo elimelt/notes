@@ -5,6 +5,7 @@ aliases:
 category: Machine Learning Systems
 tags:
   - memory management
+  - batching
   - kv-cache
   - prefix-sharing
   - paged-attention

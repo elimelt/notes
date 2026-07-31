@@ -4,9 +4,8 @@ aliases:
   - signal-conditioning/lecture-notes/lecture-1
 category: Signal Conditioning
 tags:
-  - cost
-  - size
-  - weight
+  - c-swap
+  - embedded systems
   - power
   - hardware
   - energy constraints

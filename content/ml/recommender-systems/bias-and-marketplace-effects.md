@@ -3,7 +3,8 @@ title: Bias, Marketplace Effects, and Counterfactual Evaluation
 category: Recommender Systems
 tags:
   - recommender systems
-  - bias
+  - selection bias
+  - exposure bias
   - contextual bandits
   - counterfactual evaluation
   - fairness

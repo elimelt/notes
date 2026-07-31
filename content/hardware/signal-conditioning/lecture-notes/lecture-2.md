@@ -5,7 +5,7 @@ aliases:
 category: Signal Conditioning
 tags:
   - electricity
-  - current
+  - electric current
   - voltage
   - power
   - alternating current

@@ -6,11 +6,11 @@ category: Machine Learning Systems
 tags:
   - transformers
   - architecture
-  - implementation
   - attention
   - gqa
   - kv-cache
   - flashattention
+  - batching
   - prefill
   - decode
   - feedforward

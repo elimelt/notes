@@ -7,7 +7,6 @@ tags:
   - datacenter
   - power
   - provisioning
-  - capacity
   - utilization
   - paper-notes
 date: 2025-03-12

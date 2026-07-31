@@ -7,7 +7,6 @@ tags:
   - sockets
   - system-programming
   - c
-  - Python
 date: 2024-01-11
 updated: 2026-07-30
 status: evergreen

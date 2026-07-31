@@ -1,0 +1,62 @@
+version: 1
+
+voice:
+  register: spoken
+  tone: direct
+  enthusiasm: none
+  prefer_plain_verbs: true
+  prefer_repeat_over_synonym_cycling: true
+
+global_rules:
+  vary_sentence_length_unpredictably: true
+  vary_sentence_openings_within_paragraph: true
+  avoid_parallel_sentence_shapes_within_paragraph: true
+  avoid_stacked_noun_phrases: true
+  avoid_nominalizations_when_a_verb_will_do: true
+
+disallowed_patterns:
+  - antithesis
+  - corrective_negation
+  - paragraph_pinning
+  - parataxis
+  - summary_beats
+  - rhetorical_crutches
+  - negative_parallelisms
+  - negative_anaphoras
+  - contrasting_pairs
+  - rule_of_three
+  - em_dash
+  - throat_clearing_openers
+  - landing_sentences
+  - setup_payoff_constructions
+  - filler_intensifiers
+  - corporate_register_verbs
+  - hedging_qualifiers
+  - performed_enthusiasm
+
+humanizer_additions:
+  - no_significance_inflation
+  - no_promotional_language
+  - no_vague_attributions
+  - no_formulaic_challenge_turns
+  - no_signposting_announcements
+  - no_colon_reveal_constructions
+  - no_diff_anchored_writing
+  - no_generic_conclusions
+  - no_chatbot_artifacts
+  - no_cutoff_disclaimers
+  - no_fabricated_specificity
+  - no_false_ranges
+  - no_fragmented_headers
+
+preferred_patterns:
+  - name_the_actor_when_it_improves_clarity
+  - use_is_or_has_when_they_are_the_cleanest_choice
+  - repeat_the_same_term_when_it_is_the_right_term
+  - cut_explanatory_scaffolding_and_start_with_the_claim
+  - let_the_heading_do_its_job
+
+exceptions:
+  - exact_quoted_source_text
+  - theorem_or_definition_language_when_precision_requires_it
+  - code_or_command_snippets

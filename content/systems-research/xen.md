@@ -1,49 +1,63 @@
 ---
 title: Xen and the Art of Virtualization
 category: Operating Systems
-tags: virtualization, hypervisor, xen, operating system, systems
+tags:
+  - virtualization
+  - hypervisor
+  - xen
+  - operating-system
+  - systems
+  - paper-notes
 date: 2025-01-26
-description: Paper review of Xen and the Art of Virtualization
+updated: 2026-07-30
+status: evergreen
+description: Review notes on the Xen paper, covering paravirtualization, why hypervisor-aware guests beat full emulation, and the costs of requiring guest modification.
+sources:
+  - title: Xen and the Art of Virtualization (SOSP 2003)
+    url: https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf
+    type: paper
 ---
 
-###### [Xen and the Art of Virtualization](https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf)
+## Purpose
 
----
+Reading notes on the Xen paper. The note records what paravirtualization buys over full virtualization, the design details that made porting guests tractable, and what the approach costs.
 
-### What is the Problem?
+## Citation
 
-Full virtualization, where you completely emulate the underlying hardware of a machine to run a guest OS, is not a very good solution. In particular, it is much slower due to overhead, and it doesn't guest OSes to access hardware features from the host OS.
+- [Xen and the Art of Virtualization](https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf), Barham et al., SOSP 2003.
 
-### Summary
+## Problem
 
-Xen is a hypervisor that allows multiple OSes to run on the same hardware through **paravirtualization**. This means that the guest OSes are modified to be aware of the hypervisor, and they can make calls to the hypervisor to access hardware features. It implements efficient mechanisms for memory management, scheduling, event delivery, and I/O that exist in the hypervisor, which are then used to delegate resources to the guest OSes. To this end, it achieves many performance improvements over traditional full virtualization systems on their port **XenoLinux**.
+Full virtualization emulates the underlying hardware completely so an unmodified guest OS can run on it. That approach is slow because of emulation overhead, and it prevents guest OSes from accessing hardware features of the host that would let them behave correctly and efficiently, like real time sources.
 
-### Key Insights
+## Main idea
 
-- Guest OSes benefit from being hypervisor-aware, both for correctness (clocks, paging), and performance (fast handlers).
-- Paravirtualization provides huge performance improvements over full virtualization, but requires modifying the guest OSes. Xen was still able to minimize the amount of source code that needed to be changed by using a simple and clean interface that can easily be ported to new OSes.
+Xen is a hypervisor that runs multiple OSes on the same hardware through **paravirtualization**. Guest OSes are modified to be aware of the hypervisor and make calls to it for access to hardware features. Xen implements efficient mechanisms for memory management, scheduling, event delivery, and I/O inside the hypervisor, and delegates resources to guests through them. The paper demonstrates the resulting performance on **XenoLinux**, their port of Linux.
 
-### Notable Design Details/Strengths
+## Key insights
 
-- Requires minimal changes to the guest OSes; only need to "port" new guest OSes, which involves modifying the OS to be aware of the hypervisor
-- Very low overhead in terms of latency and throughput for most operations, since emulation is not needed in many cases
+Guests benefit from knowing they are virtualized, both for correctness (clocks, paging) and performance (fast handlers). Paravirtualization delivers a large performance improvement over full virtualization in exchange for modifying the guest, and Xen keeps the modification small by exposing a simple, clean interface that ports to new OSes without touching much guest source.
 
-### Limitations/Weaknesses
+Because emulation is unnecessary in most cases, overhead stays low for both latency and throughput across most operations.
 
-- Guest OSes still need to be modified, making adoption more difficult for new OSes
-- Doesn't support SMP on guest OSes, meaning some workloads are still far more efficient on native hardware
+## Evidence
 
-### Summary of Key Results
+The paper's evaluation shows performance close to native Linux for many workloads, and where it falls short of native it still beats full virtualization by a wide margin. Many guest OSes run concurrently with little memory footprint attributable to the hypervisor.
 
-- Performance very close to native linux for many workloads, and even when it is not, it is still much better than full virtualization
-- Many concurrent guest OSes can run with little memory imprint resulting from the hypervisor.
+## Assumptions and limits
 
-### Open Questions
+Guest OSes still need modification, which raises the cost of adoption for any new OS. Xen at this point also lacked SMP support inside guests, so some workloads remained far more efficient on native hardware.
 
-- Is there a way to automatically/programmatically port guest OSes to be hypervisor-aware? Is there some way we could make implementing a new OS conform to an interface that complies with the hypervisor automatically?
-- Has there been any work in detecting "hot spots" for routines that that are called a lot, for which we could automatically register a fast handler in the hypervisor?
+## Open questions
 
-## Related
+- Could guest OSes be ported to hypervisor-awareness automatically or programmatically? Could new OS implementations conform to an interface that makes them hypervisor-compliant by construction?
+- Has anyone worked on detecting hot spots, routines a guest calls constantly, and automatically registering fast handlers for them in the hypervisor?
+
+## Sources
+
+- [Xen and the Art of Virtualization](https://www.cl.cam.ac.uk/research/srg/netos/papers/2003-xensosp.pdf)
+
+## Related notes
 
 - [[systems-research/exokernel|Exokernel]]
 - [[systems-research/barrelfish|The Multikernel]]

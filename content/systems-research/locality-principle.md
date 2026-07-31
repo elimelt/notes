@@ -1,49 +1,67 @@
 ---
 title: The Locality Principle
 category: Systems
-tags: os, operating-system, systems, multicore, kernel
+tags:
+  - os
+  - operating-system
+  - systems
+  - virtual-memory
+  - caching
+  - paper-notes
 date: 2025-03-05
-description: A review of the paper The Locality Principle, where the authors argue that the OS should be designed to exploit the locality of reference in modern workloads.
+updated: 2026-07-30
+status: evergreen
+description: Review notes on Denning's retrospective about the working set model and how locality of reference became a general design principle for memory systems.
+sources:
+  - title: The Locality Principle, Peter J. Denning, Communications of the ACM 48(7), 2005
+    url: https://dl.acm.org/doi/10.1145/1070838.1070856
+    type: paper
+  - title: Author's PDF
+    url: https://denninginstitute.com/pjd/PUBS/CACMcols/cacmJul05.pdf
+    type: paper
 ---
 
-###### [Paper Title](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/asplos2016.pdf)
+## Purpose
 
----
+Reading notes on Denning's retrospective about locality. The note traces how the working set model fixed thrashing in early virtual memory, and why locality generalized into a design principle far beyond paging. My original note linked the wrong PDF; the sources above are the correct ones.
 
-### What is the Problem?
+## Citation
 
-Early implementations of virtual memory were plagued by poor performance due to thrashing, when the system spends more time swapping pages in and out of memory than executing the actual program. This is caused by a larger "working set" than the available physical memory, leading to repeated page faults and throughput collapse.
+- [The Locality Principle](https://dl.acm.org/doi/10.1145/1070838.1070856), Peter J. Denning, Communications of the ACM, July 2005 ([author's PDF](https://denninginstitute.com/pjd/PUBS/CACMcols/cacmJul05.pdf)).
 
-### Summary
+## Problem
 
-The author details the history of virtual memory and the development and evolution of the working set model for managing memory. While studying this, the author discovered a natural pattern in the behavior of modern workloads: working sets tend to be related by some measure of locality. This property is generally applicable and can therefore be exploited to improve the performance of many systems.
+Early virtual memory implementations were plagued by thrashing, where the system spends more time swapping pages in and out of memory than executing the program. Thrashing happens when a program's working set is larger than the physical memory available to it, so it page faults repeatedly and throughput collapses.
 
-### Key Insights
+## Main idea
 
-- Systems, particularly those that interact with some external storage, naturally exhibit patterns in locality that can be exploited to improve performance.
-- When working sets grow too large, one way to cope is to queue up requests and and control admission to the working set.
+Denning recounts the history of virtual memory and the development of the working set model for managing memory. While studying the problem, he found a natural pattern in program behavior: memory references cluster, and the set of pages a program needs stays related over time by locality. That property is general, and it can be exploited to improve the performance of systems well beyond paging, particularly any system that talks to external storage.
 
-### Notable Design Details/Strengths
+## Mechanism
 
-- The working set model ($W(t,T)$) abstractly defines a process's memory needs as the set of pages referenced in the time interval of length T preceding time t, giving a good theoretical basis for understanding memory behavior.
-- The feedback control mechanism for limiting multiprogramming level prevents thrashing by refusing to activate programs whose working sets wouldn't fit in available memory.
+The working set model $W(t, T)$ defines a process's memory needs as the set of pages it referenced in the time interval of length $T$ preceding time $t$. That gives an abstract, measurable definition of what a process needs, and a theoretical basis for reasoning about memory behavior.
 
-### Limitations/Weaknesses
+The model turns into a control mechanism through admission control on the multiprogramming level. The OS refuses to activate a program whose working set would not fit in available memory. Feedback control on that admission decision prevents thrashing outright, because memory never gets committed past what the active working sets demand. The same coping strategy applies whenever working sets grow too large: queue up requests and control admission.
 
-- The original working set model requires a fixed $T$ (essentially an LRU cache of size $T$), which is not always ideal for all workloads.
-- Some workloads differ in nature from the traditional working set model, e.g. a job running over a massive file that is read sequentially.
+## Assumptions and limits
 
-### Summary of Key Results
+The original model fixes $T$, which makes it behave like an LRU cache of a fixed window, and no single window suits all workloads. Some workloads also break the model's shape entirely, like a job that reads a massive file sequentially and never revisits a page.
 
-- Virtual memory became a viable and relatively predictable technology.
-- The locality principle has been successfully applied to many many domains and systems/
+## Evidence
 
-### Open Questions
+The paper is historical, so the evidence is the record. Working-set-based memory management made virtual memory viable and reasonably predictable, and locality went on to be applied across caches, storage hierarchies, and plenty of other domains.
 
-- Can malicious actors exploit systems that design for the common case of locality, somehow executing a DOS attack?
-- Is designing a system for high throughput sequential reads directly at odds with designing for locality? Or can the two be targeted simultaneously?
+## Open questions
 
-## Related
+- Can malicious actors exploit systems designed around the common case of locality, turning worst-case access patterns into a denial of service?
+- Is designing for high-throughput sequential reads directly at odds with designing for locality, or can a system target both at once?
+
+## Sources
+
+- [The Locality Principle, CACM 2005](https://dl.acm.org/doi/10.1145/1070838.1070856)
+- [Author's PDF at the Denning Institute](https://denninginstitute.com/pjd/PUBS/CACMcols/cacmJul05.pdf)
+
+## Related notes
 
 - [[systems-research/barrelfish|The Multikernel]]
 - [[systems-research/hints-for-computer-system-design|Hints for Computer System Design]]

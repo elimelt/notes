@@ -1,44 +1,56 @@
 ---
 title: Strong Inference
 category: Research
-tags: meta, research, paper, review
+tags:
+  - meta
+  - research
+  - paper
+  - review
 date: 2025-01-06
-description: A review of John R. Platt's paper on the principles of strong inference in scientific research.
+updated: 2026-07-30
+status: evergreen
+description: Review notes on Platt's Strong Inference, a method of structuring research around competing hypotheses and experiments designed to eliminate them.
+sources:
+  - title: "Strong Inference, John R. Platt, Science 146 (1964)"
+    url: https://pages.cs.wisc.edu/~markhill/science64_strong_inference.pdf
+    type: paper
 ---
 
-##### [Strong Inference: Certain systematic methods of scientific thinking may produce much more rapid progress than others.](https://pages.cs.wisc.edu/~markhill/science64_strong_inference.pdf)
----
+## Purpose
 
-### What is the Problem?
+Reading notes on Platt's Strong Inference. I keep this next to [[systems-research/how-to-read-a-paper|How to Read a Paper]] as part of the method behind my paper reviews, since both are about doing research deliberately instead of by habit.
 
-The process of doing research has become less standardized in some fields, especially when compared to the more structured approach of fields like molecular bio and high-energy physics.
+## Citation
 
-When a formal scientific method isn't adhered to, especially when formulating hypotheses, the process can become less efficient and less effective, leading to fewer discoveries and slower progress over time.
+- [Strong Inference: Certain systematic methods of scientific thinking may produce much more rapid progress than others](https://pages.cs.wisc.edu/~markhill/science64_strong_inference.pdf), John R. Platt, Science, 1964.
 
-### Summary
+## Problem
 
-John R. Platt critiques the application of the scientific method in modern research, arguing that the process has become less structured and less effective in some fields. He proposes a more structured approach to hypothesis formulation, which he calls "strong inference".
+Research practice has become less standardized in some fields, especially compared to the structured approach of molecular biology and high-energy physics. When researchers stop adhering to a formal method, particularly when formulating hypotheses, the work gets less efficient and progress slows.
 
-The paper goes on quite a bit about historical examples of the principles of strong inference working in practice, as well as a detailed breakdown of how to systematically apply the method to research.
+## Main idea
 
-1. **Devise alternative hypotheses** - Generate multiple competing hypotheses that could explain the phenomenon being studied.
-2. **Devise a crucial experiment** - Design an experiment that can unambiguously distinguish between the competing hypotheses, or at the very least, eliminate some or all of them.
-3. **Carry out the experiment** - Conduct the experiment and analyze the results.
+Platt argues the fast-moving fields move fast because they apply the scientific method with unusual discipline, and he names that discipline strong inference. The loop:
 
-Strong inference is essentially to carry out this process at every vertex of the logical tree of inquiry, and to do so in a systematic and structured way. He suggests keeping a notebook explicitly for this, and to pay particular attention to the process of hypothesis generation.
+1. **Devise alternative hypotheses.** Generate multiple competing hypotheses that could explain the phenomenon.
+2. **Devise a crucial experiment.** Design an experiment that can unambiguously distinguish between the hypotheses, or at least eliminate some of them.
+3. **Carry out the experiment.** Run it and analyze the results.
 
-### Key Insights
+Strong inference means running this loop at every vertex of the logical tree of inquiry, systematically. Platt suggests keeping a notebook explicitly for it, and paying particular attention to the hypothesis generation step. The paper spends much of its length on historical examples of the method working in practice, plus a detailed breakdown of applying it.
 
-- Have multiple **competing hypotheses**, and come up with the most efficient way to eliminate them via experimentation.
-- **Systematically**, explicitly, and *regularly* follow this process, from hypothesis generation to experimentation to analysis.
-- Ask yourself the two questions: "How would we know this hypothesis is wrong?" and "What hypothesis does this experiment disprove?"
+The two questions worth asking constantly: "How would we know this hypothesis is wrong?" and "What hypothesis does this experiment disprove?"
 
-### Notable Design Details/Strengths
+## Why it works
 
-- Deviations from strong inference only really manifest themselves as useless delays in the research process. Many scientists do a lot of busywork for no reason, which could be avoided had they spent more time formulating hypotheses.
-- Strong inference is strongly dependent on the actual induction being done when formulating hypotheses. This **needs** to be logically sound.
-- It is a system that **works** if done correctly, as it's essentially the minimum amount of work needed to make a discovery without just getting lucky.
+Deviations from strong inference show up as delays. A lot of scientific busywork exists because the researcher never spent the time up front formulating hypotheses that experiments could kill. Done correctly, the method approaches the minimum amount of work needed to make a discovery without getting lucky.
 
-## Related
+The whole thing hinges on the induction step. The competing hypotheses have to be logically sound and actually span the possibilities, or the crucial experiment eliminates nothing.
+
+## Sources
+
+- [Strong Inference](https://pages.cs.wisc.edu/~markhill/science64_strong_inference.pdf)
+
+## Related notes
 
 - [[systems-research/how-to-read-a-paper|How to Read a Paper]]
+- [[systems-research/paper-review-template|Paper Review Template]]

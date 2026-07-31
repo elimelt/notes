@@ -1,181 +1,168 @@
 ---
 title: The Kernel Abstraction
 category: Operating Systems
-tags: operating systems, kernel, process abstraction, process control block, privileged mode
+tags:
+  - operating systems
+  - kernel
+  - process abstraction
+  - process control block
+  - privileged mode
 date: 2023-12-31
-description: Covers the implementation of the kernel abstraction, a core component of operating systems. Discusses the process abstraction, dual-mode operation, virtual memory, timer interrupts, and the mechanisms for safe mode transfer between user and kernel modes. Examines the specifics of mode transfers on x86 architectures, the implementation of secure system calls, process creation, and the role of virtual machines in operating system design.
+updated: 2026-07-30
+status: evergreen
+description: Chapter notes on OSPP chapter 2. How dual-mode operation isolates processes, how x86 transfers between user and kernel mode, how system calls are validated, and how the same machinery supports booting and virtual machines.
+sources:
+  - title: "Operating Systems: Principles and Practice (2nd ed.), Anderson and Dahlin, chapter 2"
+    url: https://ospp.cs.washington.edu/
+    type: textbook
 ---
 
-# Chapter 2 - The Kernel Abstraction
+## Purpose
 
-"A central role of operating systems is protection - the isolation of potentially misbehaving applications and users so that they do not corrupt other applications or the operating system itself."
+Notes on chapter 2 of [Operating Systems: Principles and Practice](https://ospp.cs.washington.edu/). The chapter answers one question. How does the kernel run untrusted application code directly on the hardware without losing control of the machine? The mechanism is dual-mode operation plus a small set of tightly controlled paths between user mode and kernel mode. Anderson and Dahlin frame it this way:
 
-**Kernel**: The lowest level of software running on the operating system. It is the first program loaded on boot, and it remains in memory until the system is shut down. It is responsible for all interactions with the hardware, and it is the only program that runs in privileged mode.
+> "A central role of operating systems is protection - the isolation of potentially misbehaving applications and users so that they do not corrupt other applications or the operating system itself."
 
-**Process**: The execution of an application program with restricted access to the operating system and hardware. Processes are managed by the kernel, and they need to request access to resources from the kernel.
+Two definitions carry the whole chapter. The **kernel** is the lowest level of software on the machine. It is the first program loaded on boot, it stays in memory until shutdown, and it is the only program that runs in privileged mode. A **process** is the execution of an application program with restricted rights. The kernel manages processes, and a process must ask the kernel to perform any operation it lacks the rights to do itself.
 
 ## The Process Abstraction
 
-In the same way an object instantiates a class in OOP, a process instantiates a program. In most OS's, a programs instructions are stored once in a file on disk. The user edits the file, then compiles the file into a binary executable. When a user runs the executable, the OS creates a new process including program data, heap, and stack, loads the executable into memory, and starts the process.
+A process instantiates a program the same way an object instantiates a class. The program's instructions live in a file on disk. The user edits the file and compiles it into a binary executable. When the user runs the executable, the OS creates a new process with its own program data, heap, and stack, loads the executable into memory, and starts it.
 
-The OS keeps track of all processes in a process control block (PCB). The PCB contains the process ID, the process state, the program counter, the stack pointer, the memory management information, and the accounting information. The OS uses the PCB to keep track of all processes, and it uses the program counter to keep track of the next instruction to execute.
+The OS tracks each process in a **process control block** (PCB). The PCB holds the process ID, the process state, the program counter, the stack pointer, memory management information, and accounting information.
 
-_Digging Deeper:_ in Linux, the PCB is called the `task` struct, and is a doubly linked list of processes, starting off with the `init task` which has a `pid` of 0. Users can view processes using the `ps` command, or could view the data directly in `/proc` for the system, or `/proc/<pid>` for a specific process.
+Digging deeper: Linux calls its PCB `struct task_struct`, and links tasks together in a doubly linked list starting from the initial task with pid 0. You can view processes with `ps`, or read the data directly from `/proc` for the system and `/proc/<pid>` for a specific process.
 
 ## Dual-Mode Operation
 
-There is a single bit in the CPU that determines whether the CPU is in user mode or kernel mode. When the CPU is in user mode, checks for privileged instructions are enabled that stop the program from executing anything that could harm the system. When in kernel mode, these checks are turned off.
+A single bit in the processor determines whether the CPU is in user mode or kernel mode. In user mode, the hardware checks every instruction and blocks anything that could harm the system. In kernel mode, those checks are off.
 
-The **principal of least privilege** states that a process should only have access to the resources it needs to do its job. This is enforced by the CPU by only allowing processes to access resources in user mode. Some operating system code runs in their own user-level processes, for example the window manager. Code that runs in Kernel mode _needs_ to be trusted, because it has access to all of the hardware.
+The **principle of least privilege** says a process should only have access to the resources it needs to do its job. Enforcement lands on the hardware, since only kernel mode gets unrestricted access. Some operating system code runs in ordinary user-level processes, the window manager for example. Code that runs in kernel mode has to be trusted, because it can touch all of the hardware.
 
-The hardware must be able to switch between user and kernel mode safely, and must support the following restrictions for user mode:
+Hardware support for user mode comes down to three restrictions:
 
+| Feature                  | Description                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| Privileged Instructions  | Instructions only the kernel can execute.                                              |
+| Memory Protection        | Processes cannot access memory that does not belong to them.                           |
+| Timer Interrupts         | The hardware can interrupt a running process at any time and hand control to the kernel. |
 
-| Feature                | Description                                                                                       |
-|------------------------|---------------------------------------------------------------------------------------------------|
-| Privileged Instructions | Prohibited instructions that only the kernel can execute.                                         |
-| Memory Protection      | Processes are restricted from accessing memory that does not belong to them.                      |
-| Timer Interrupts       | The CPU can interrupt and stop executing a process at any time using timer interrupts.             |
-
-This "kernel bit" is just one of many flags set in the CPU. These flags aren't directly accessible to application code, but the **process status register** (PSR) is has corresponding flags that are set when the processor switches between user and kernel mode. This register works similarly to other registers (like arithmetic condition codes in assembly).
-
-Intel x86 processors actually support 4 privilege levels, but none of MacOS, Windows or Linux make use of the extra 2 levels.
+The mode bit is one of several flags in the **processor status register** (PSR), which the hardware updates when the processor switches between user and kernel mode. Application code cannot write it directly. Intel x86 processors actually support 4 privilege levels, but MacOS, Windows, and Linux only use two of them.
 
 ### User and Kernel Memory
 
-In physical memory, the kernel is stored at the top of memory, and the user program is stored at the bottom. The kernel is stored at the top because it needs to be able to access all of memory, and the user program is stored at the bottom because it needs to be able to access all of its own memory. The kernel is stored in a fixed location in memory, and the user program is loaded into memory at runtime.
+Physical memory is conventionally split with the kernel at the top of the address space and user programs at the bottom. The kernel sits at a fixed location so its own code and data are always mapped, and user programs get loaded at runtime into the lower region.
 
 ## Virtual Memory
 
-In a naiive implementation (like MS-DOS), the OS directly loads the program into memory and gives it access to the entire memory space. This is problematic for a few reasons, including security, fragmentation of memory, difficulty in growing the stack/heap. **Virtual memory** solves these problems by giving each process its own virtual address space in which their memory starts at 0. The OS maps the virtual address space to physical memory, usually in fixed size chunks called **pages**. The OS can then swap pages in and out of memory as needed for each process. Modern OS's often also use address randomization to prevent attacks.
+A naive implementation (MS-DOS did this) loads the program directly into physical memory and gives it the whole address space. That breaks security, fragments memory, and makes it hard to grow the stack and heap. **Virtual memory** fixes this by giving each process its own address space starting at 0. The OS maps virtual addresses to physical memory in fixed size chunks called **pages**, and can swap pages in and out of memory as each process needs them. Modern systems also randomize address layout to make attacks harder.
 
 ## Timer Interrupts
 
-The CPU's **hardware timer** is a timer that runs periodically (either by time or number of instructions) sends an interrupt to the CPU to switch back to kernel mode. Each core has its own timer. Usually, processes will only be stopped by a timer if the user signals the OS to stop the process.
+Each core has a **hardware timer** that fires periodically, either by elapsed time or by instruction count, and forces a switch into kernel mode. This is what guarantees the kernel can always regain control, no matter what user code does. When you ask the OS to kill a runaway process, the timer interrupt is what gives the kernel the chance to act.
 
-Older versions of MacOS lacked the ability to forcibly stop a process, so if a process was stuck, the user would have to reboot the system. This was due to their **preemtive scheduling** algorithm, that instead of using an interrupt at the hardware level, would instead rely on processes to voluntarily poll the OS to see if they should stop. When a runaway process was stuck in a loop, it would never poll the OS, and the OS would never stop it, leading to those forever spinning beach balls.
+Older versions of MacOS lacked this. They used cooperative multitasking, where a process kept the CPU until it voluntarily polled the OS to check whether it should stop. A runaway process stuck in a loop never polled, the OS never got control back, and the user got the forever spinning beach ball and a reboot.
 
 ## Types of Mode Transfer
 
-In a high performance server, the CPU may switch from kernel to user mode thousands of times every second. It is thus important for this switch to be fast and secure.
+A busy server may cross between kernel and user mode thousands of times per second, so the transfer has to be both fast and safe.
 
 ### User to Kernel
 
-There are three main ways: **system calls**, **exceptions**, and **interrupts**. _Trapping_ is the process of syncronously switching from user to kernel mode.
+Three events move the processor from user to kernel mode. _Trapping_ is the general term for synchronously switching into the kernel.
 
-**Interrupts** are the most common way to switch from user to kernel mode. They are triggered by an external event, like a hardware device or another process signal. The CPU finished any user instructions, saves the state, and then switches to kernel mode and calls the corresponding interrupt handler. On a multicore system, only one core will handle the interrupt. An alternative to interrupts would be the kernel **polling** IO devices, but this is inefficient.
+**Interrupts** are triggered by external events, like a hardware device or a signal from another process. The CPU finishes the current user instruction, saves state, switches to kernel mode, and calls the matching interrupt handler. On a multicore system, only one core takes a given interrupt. The alternative to interrupts is the kernel **polling** I/O devices, which wastes cycles. For high performance I/O the OS uses **direct memory access** (DMA) with a circular queue of requests per device. Each entry in the queue is called a **buffer descriptor**.
 
-To enable high performance IO, the OS uses **direct memory access** (DMA), and a circular queue of requests for each IO device to handle. Each entry in the queue is called a **buffer descriptor**.
+**Exceptions** are triggered by internal events, like a page fault or divide by zero. The handling looks like an interrupt: save state, switch to kernel mode, run the exception handler. Debuggers ride on this mechanism. A breakpoint is a modified instruction that traps into the kernel when executed. The kernel then restores the original instruction and hands control to the debugger. Exceptions also matter for virtualization, where the host OS catches privileged instructions issued by a guest and emulates them, letting an entire VM run in user mode.
 
-**Exceptions** are triggered by internal events, like a page fault or a divide by zero error. The CPU finishes any user instructions, saves the state, and then switches to kernel mode and calls the corresponding exception handler. Another common use case is in debuggers. A breakpoint is just a modified instruction that traps into kernel mode when it is executed. The kernel then reloads the instruction and transfers control to the debugger.
-
-Exceptions are extremely useful for virtualization, and are often used as a signal for the host OS to emulate some hardware functionality, or to execute an operation of behalf of the guest OS. In this way, a VM can run in user mode, and the host OS can handle all of the privileged instructions.
-
-**System Calls** allow the user program to voluntarily request the OS to execute something on its behalf. Most processors have a special `syscall` or `trap` instruction to do this. Each call invokes some code at a _pre-defined_ address in the kernel. To see a table of system calls on Linux, run `man syscalls`.
+**System calls** let a user program voluntarily request that the OS do something on its behalf. Most processors have a dedicated `syscall` or `trap` instruction that jumps to a pre-defined address in the kernel. Run `man syscalls` on Linux to see the full table.
 
 ### Kernel to User
 
-There are several reasons why the kernel would want to switch to user mode.
-
-| Action                          | Description                                                                                     |
-|---------------------------------|-------------------------------------------------------------------------------------------------|
-| New Process                     | When the kernel creates a new process, it needs to switch to user mode to start executing the process. |
-| Resume Process                  | After interrupting a process, the kernel needs to switch back to user mode to resume the process. |
-| Switching to a Different Process | The kernel may want to switch to a different process, for example if the current process is waiting for IO. |
-| User-Level Upcall               | Similar to interrupts, for the user program to handle asynchronous events, the kernel needs to be able to switch to user mode to call the user-level handler. |
+| Action                           | Description                                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| New Process                      | The kernel switches to user mode to start executing a newly created process.                     |
+| Resume Process                   | After handling an interrupt, the kernel switches back to resume the interrupted process.         |
+| Switching to a Different Process | The kernel may resume a different process, for example when the current one is waiting for I/O.  |
+| User-Level Upcall                | To deliver an asynchronous event to a user program, the kernel switches to user mode and runs the program's registered handler. |
 
 ## Implementing Safe Mode Transfer
 
-**Limited Entry Into Kernel**
+Three properties have to hold.
 
-The kernel needs to be able to switch to user mode at any time, but the user program should not be able to switch to kernel mode. User programs should only be able to request privileged operations through paths defined by the OS/kernel. If the user program violates any built in rules, the kernel should be able to stop the program and switch back to user mode by returning an error code.
+**Limited entry into the kernel.** User programs may only enter the kernel through paths the kernel defines. If a program violates the rules, the kernel stops it and returns an error code.
 
-**Atomic Changes to Processor State**
+**Atomic changes to processor state.** Kernel code sees its own memory and registers plus the user program's, while user code has to stay isolated. The switch between those two contexts must be atomic.
 
-When switching between modes, there needs to be distinction between the state of memory; kernel code has access to its local memory and registers as well as the program's memory and registers, whereas user code should be isolated. The switch between these two contexts needs to be atomic.
-
-**Transparent, Restartable Execution**
-
-The kernel needs to be able to stop a user program in the middle of execution at any point, and to resume execution with _exactly_ the same state later. User processes shouldn't need to know that they are being interrupted. On interrupt, the processor saves the current state to memory, defers further events, changes to kernel mode, then jumps to the correct handler. After execution of the handler, the same is done in reverse to resume the user program.
+**Transparent, restartable execution.** The kernel can stop a user program at any instruction and later resume it with exactly the same state. The process should never be able to tell it was interrupted. On interrupt, the processor saves the current state to memory, defers further events, switches to kernel mode, and jumps to the handler. Resuming runs the same steps in reverse.
 
 ### Interrupt Vector Table
 
-| Entry | Type                  | Example                                          |
-|-------|-----------------------|--------------------------------------------------|
-| 0-31  | Processor Exceptions  | Divide by zero, page fault, etc.                 |
-| 32-255| Interrupts            | Hardware interrupts, system calls, etc.          |
-| 64    | System Call/Trap      | Syscall instruction                              |
+The hardware finds the right handler through the interrupt vector table. On x86 the layout looks like:
 
-On modern, multicore systems, interrup routing has become increasingly programmable at the kernel level. This is especially important for IO-heavy systems like web servers. The kernel can route interrupts to the core that is handling the IO, helping to avoid cache misses.
+| Entry  | Type                 | Example                                 |
+| ------ | -------------------- | ---------------------------------------- |
+| 0-31   | Processor Exceptions | Divide by zero, page fault, etc.         |
+| 32-255 | Interrupts           | Hardware interrupts, system calls, etc.  |
+| 64     | System Call/Trap     | Entry conventionally used for `syscall`. |
+
+On modern multicore systems, interrupt routing is programmable at the kernel level. This matters for I/O-heavy systems like web servers, where the kernel routes interrupts to the core already handling that I/O to avoid cache misses.
 
 ### Interrupt Stack
 
-Each core has its own **interrupt stack**. When an interrupt occurs, the processor pushes the current state onto the interrupt stack, and then switches to kernel mode. The interrupt handler then runs on the interrupt stack. When the handler is finished, the processor pops the state off the interrupt stack and resumes execution of the user program.
+Each core has its own **interrupt stack**. On interrupt, the processor pushes the current state onto the interrupt stack, switches to kernel mode, and runs the handler there. When the handler finishes, the processor pops the state back off and resumes the user program.
 
-Most OS's allocate a **kernel interrupt stack** (KIS) for every user process. When a process is running, the hardware interrupt stack points to the processes' kernel interrupt stack (which should be empty if being run in User Mode). This makes it easy for the kernel to switch between processes inside an interrupt or syscall handler.
+Most operating systems also allocate a kernel interrupt stack per user process. While a process runs, the hardware interrupt stack pointer points at that process's kernel stack, which makes it easy for the kernel to switch processes from inside an interrupt or syscall handler. The kernel stack's contents track the process state:
 
-- when running in user mode, KIS is empty
-- when preempted (ready but not running), KIS contains the state of the process when it was interrupted
-- when waiting for IO in syscall, KIS contains the process state as well as the syscall handler and IO Driver
+- Running in user mode: the kernel stack is empty.
+- Preempted (ready, off the CPU): the kernel stack holds the state at the point of interruption.
+- Waiting for I/O inside a syscall: the kernel stack holds the process state plus the frames of the syscall handler and I/O driver.
 
 ### Interrupt Masking
 
-Hardware provides a privileged instruction to disable interrupts. This is useful for critical sections of code that should not be interrupted. On X86, disable interrupts defers interrupts until an enable interrupt instruction is executed. While they are deferred, interrupts are queued, but will be lost if this queue fills up. Generally, hardware will buffer one interrupt of each type, and will drop any additional interrupts of that type. Interrupts are disabled with `%CLI` and enabled with `%STI`, which only applies to the current CPU (for multi-core systems).
-
-Different devices all have their own interrupt buffer, and also assign priotiries to each type of interrupt that they handle.
+Hardware provides a privileged instruction to disable interrupts, used for critical sections that must not be interrupted. On x86, `cli` defers interrupts and `sti` re-enables them, and each applies only to the current CPU. Deferred interrupts are buffered, but the buffer is shallow. Hardware typically holds one pending interrupt per type and drops further ones of the same type. Devices maintain their own interrupt buffers and assign priorities to the interrupt types they raise.
 
 ### Hardware Support for Saving and Restoring Registers
 
-For x86...
+On x86, when an interrupt arrives in user mode the hardware:
 
-- If processor in user mode, push interrupted process's stack pointer onto kernel interrupt stack, then switches to kernel stack
-- Pushes interrupted process's instruction pointer
-- Pushes x86 _processor status word_, which includes control bits and condition codes (which are needed to restore state of current execution)
+1. Pushes the interrupted process's stack pointer onto the kernel interrupt stack, then switches to that stack.
+2. Pushes the interrupted process's instruction pointer.
+3. Pushes the processor status word, whose control bits and condition codes are needed to restore the interrupted execution.
 
-### More on Interrup Handlers
+### Interrupt Handlers
 
-- Often part of the **device driver**
-- **non-blocking** ~ runs to completion: any waiting must be limited duration ~ Wake up other threads to do any real work (Linux: semaphore)
-- Rest of device driver runs as a kernel thread
+The handler is often part of the **device driver**. It must be non-blocking and run to completion, so any waiting inside it has to be bounded. Real work gets deferred by waking another thread (Linux uses semaphores for this), and the rest of the device driver runs as a kernel thread.
 
 ## Putting It All Together: x86 Mode Transfers
 
-"First, we provide some background on the x86 architecture. The x86 is segmented, so
-pointers come in two parts: (i) a segment, a region of memory such as code, data, or stack,
-and (ii) an offset within that segment. The current user-level instruction is a combination of
-the code segment (cs register) plus the instruction pointer (eip register). Likewise, the
-current stack position is the combination of the stack segment (ss) and the stack pointer
-within the stack segment (esp). The current privilege level is stored as the low-order bits of
-the cs register rather than in the processor status word (eflags register). The eflags register
-has condition codes that are modified as a by-product of executing instructions; the eflags
-register also has other flags that control the processor's behavior, such as whether
-interrupts are masked or not"
+Background on x86, quoting Anderson and Dahlin:
 
-1. _Mask interrupts_ to prevent the processor from being interrupted while switching modes
-2. _Save the current state_ of the user program on the interrupt stack, including the stack pointer, execution flags, and instruction pointer, all to temp hardware registers
-3. _Switch onto kernel interrupt stack_ by changing the stack pointer to point to its base address
-4. _Push the current state_ of the user program onto the kernel interrupt stack
-5. _Optionally save an error code_ if this was an exception with one.
-6. _Invoke interrupt handler_ by jumping to the correct entry in the interrupt vector table
+> "The x86 is segmented, so pointers come in two parts: (i) a segment, a region of memory such as code, data, or stack, and (ii) an offset within that segment. The current user-level instruction is a combination of the code segment (cs register) plus the instruction pointer (eip register). Likewise, the current stack position is the combination of the stack segment (ss) and the stack pointer within the stack segment (esp). The current privilege level is stored as the low-order bits of the cs register rather than in the processor status word (eflags register). The eflags register has condition codes that are modified as a by-product of executing instructions; the eflags register also has other flags that control the processor's behavior, such as whether interrupts are masked or not"
 
-The interrupt handle also saves some registers to its own stack before executing any code that might overwrite the processor state (callee-saved registers).
+The transfer sequence:
 
-Once finished executing, the callee then pops the registers off the stack, restoring the interrupted process state, excluding the program counter, execution flags, and stack pointer. The interrupt handler then executes a `iret` instruction, which restores those aforementioned elements of state, fully restoring the interrupted process.
+1. _Mask interrupts_ so the processor cannot be interrupted mid-switch.
+2. _Save the current state_ (stack pointer, execution flags, instruction pointer) to temporary hardware registers.
+3. _Switch onto the kernel interrupt stack_ by pointing the stack pointer at its base.
+4. _Push the saved state_ onto the kernel interrupt stack.
+5. _Optionally push an error code_ if the exception carries one.
+6. _Invoke the handler_ by jumping through the interrupt vector table.
 
-_Note..._ for exceptions that signal instructions in the kernel, the handler will modify the program counter to point to the instruction **after** the exception occurred, so as to prevent an infinite loop.
+The handler saves any callee-saved registers to its own stack before running code that might overwrite them. When it finishes, it pops those registers back, then executes `iret`, which restores the program counter, execution flags, and stack pointer, fully restoring the interrupted process.
+
+One subtlety: for exceptions raised by an instruction the kernel intends to skip, the handler must advance the saved program counter past the faulting instruction before returning, otherwise the same exception fires forever.
 
 ## Implementing Secure System Calls
 
-OS kernel constructs restricted enviornment for process execution. Any time a process needs to execute something outside of its _protection domain_, it requests the OS do so on its behalf using a **system call**.
+The kernel constructs a restricted environment for each process. Whenever a process needs to do something outside its protection domain, it asks the kernel via a **system call**. Syscalls try to look like ordinary function calls, and **stubs** on both sides make that work:
 
-**System calls** are the primary interface between user programs and the OS. When the user program makes a call, the library code will _trap_ into kernel mode, and the kernel will execute the system call handler. System calls generally try to appear as a normal function call thorughout a library and often use **stubs** to mediate between the user program and the kernel. This allows the following flow:
+1. The user program calls a library function (the user stub).
+2. The user stub loads the syscall number and traps into the kernel.
+3. Hardware transfers control to the kernel stub, which validates arguments and runs the real syscall.
+4. The syscall returns through the kernel stub to the instruction after the trap in the user stub, which returns to the user program.
 
-1. User calls function in library (user stub)
-2. Stub fills in code for system call, and traps into kernel mode
-3. Hardware transfers control to kernel and finds correct system call handler (kernel stub), which checks args and then executes the correct system call
-4. Syscall returns to kernel stub, which returns to user stub's next instruction, which returns to the user program
-
-For example, the user-level library stub for `open` in x86 looks like:
+The user-level stub for `open` on x86:
 
 ```asm
  // We assume that the caller put the filename onto the stack,
@@ -192,15 +179,15 @@ For example, the user-level library stub for `open` in x86 looks like:
     ret
 ```
 
-Where `SysCallOpen` is the code for the specific system call to run, and `TrapCode` is the index into the x86 interrupt vector table for the system call handler. Note that `%eax` is overwritten by the return of the syscall, and that `int` saves the user state (program counter, stack pointer, eflags) onto the kernel interrupt stack, beforte jumping to the syscall handler on the IVT. This example is fairly simple stub, so some of the details are implicit, but in general a kernel stub has four main tasks:
+`SysCallOpen` is the number of the syscall to run, and `TrapCode` is the index into the interrupt vector table for the syscall handler. The `int` instruction saves the user's program counter, stack pointer, and eflags onto the kernel interrupt stack before jumping to the handler. The kernel stub then has four jobs:
 
-**Locate syscall arguments**. Unlike regular kernel procedures, the args of a syscall are in user memory, typically on a user's stack. Stubs need to locate arguments and ensure that any pointers reside in the user's address space. These will be virtual addresses, so the stub needs to translate them to physical addresses.
+**Locate syscall arguments.** The arguments live in user memory, typically on the user stack, as virtual addresses. The stub must find them, verify that any pointers lie inside the user's address space, and translate them to kernel addresses.
 
-**Validate parameters**. The stub needs to check that all the arguments are valid, and that there aren't any invalid states. For example, if a syscall is trying to open a file, the kernel stub needs to check that it exists, that the user has permission to open it, etc.
+**Validate parameters.** The stub checks that the arguments describe a legal operation. For `open`, that means the file exists, the user has permission to open it, and so on.
 
-**Copy before check**. To prevent _time of check vs. time of use_ (TOCTOU) attacks, the kernel stub copies the arguments to kernel memory before checking them. This prevents the user from modifying the arguments after they have been checked in order to bypass the checks and supply illegal arguments.
+**Copy before check.** The stub copies arguments into kernel memory before checking them. Otherwise a process could pass arguments that look valid, then modify them from another thread after the check but before use. This is the time of check vs. time of use (TOCTOU) attack.
 
-**Copy results back**. The kernel stub copies the results of the syscall back to user memory before returning to the user program. This is necessary because the kernel stub executes in kernel mode, and thus has access to kernel memory, but the user program does not.
+**Copy results back.** The stub copies results into user memory before returning, since the user program cannot read kernel memory.
 
 ```c
 int KernelStub_Open() {
@@ -232,20 +219,17 @@ int KernelStub_Open() {
 
 ## Starting a New Process
 
-At a high level, before running a program the kernel must...
+Before running a program, the kernel must:
 
-- Allocate and initialize the process control block (PCB)
+- Allocate and initialize the process control block
 - Allocate memory for the process
 - Load the program from disk into memory
-- Allocate user-level stack
-- Allocate a new kernel-level stack for handling syscalls, interrupts, and exceptions
+- Allocate the user-level stack
+- Allocate a kernel stack for handling syscalls, interrupts, and exceptions
 
-Then, to actually run it, the kernel must...
+To actually start it, the kernel copies the arguments into the process's memory, usually at the base of the new stack. When you double-click a file, for example, the window manager asks the kernel to start the associated application, and the kernel copies the file name from the window manager's memory into the new process's memory. Then the kernel transfers control to user mode, reusing the same path as any other return to user mode: it places the initial user register values at the bottom of the kernel stack and "returns" into the start of the program with `popad` and `iret`.
 
-- Copy arguments into memory. _For example_, when you click on a file in MacOS or Windows, the window manager calls upon the kernel to start a new process running whatever application is associated with the filetype. To do this, the kernel copies the file name from the window manager's memory into the new process's memory (usually at the base of the new process' stack).
-- Transfer control to user mode. When a new process starts, most kernels reuse the same code as for a any other transfer to user mode. User values are saved at the bottom of the initial kernel stack, and then the kernel uses `popad` and `iret` to "return" to the start of the user program.
-
-Finally, there is a level of indirection between program execution in the form of a stub. This ensures that the program calls exit (ie terminates), and is done by the compiler. Conceptually, this looks like:
+There is one level of indirection between the kernel and `main`. The compiler wraps the program in a stub that guarantees `exit` gets called:
 
 ```c
 start(int argc, char** argv) {
@@ -256,145 +240,86 @@ start(int argc, char** argv) {
 
 ## Implementing Upcalls
 
-**Upcalls** are a way for the kernel to notify the user program of an event. They are similar to interrupts, but are initiated by the kernel rather than hardware. These are called _signals_ in Unix, and _asynchronous events_ in Windows, and are crucial for virtualization.
+**Upcalls** let the kernel notify a user program of an event, the mirror image of an interrupt. Unix calls them _signals_, Windows calls them _asynchronous events_. Uses include:
 
-#### Applications:
+| Upcall Purpose                 | Description                                                                                          |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| Preemptive user-level threads  | A threading library uses a periodic timer upcall to switch or terminate threads.                      |
+| Asynchronous I/O notifications | A process issues a syscall asynchronously and gets an upcall when the kernel finishes the operation.  |
+| Interprocess communication     | Processes that need to react to each other in real time, or e.g. kernel-initiated logout notification. |
+| User-level exception handling  | Runtimes with their own exception systems get notified of processor exceptions.                        |
+| User-level resource allocation | A resource-adaptive application monitors its own usage. The JVM does this for garbage collection.      |
 
-| Upcall Purpose                   | Description                                                                                          |
-|---------------------------------|------------------------------------------------------------------------------------------------------|
-| Preemptive user-level threads    | Enables threading libraries to use a periodic timer upcall to switch and/or terminate threads.       |
-| Asynchronous I/O Notifications   | Applications can make syscalls asynchronously. When the kernel finishes the operation, it notifies the application with an upcall. |
-| Interprocess communication      | Any time two processes need to communicate in real time, they can use upcalls to notify each other of events. Another example might be when the user logs out, the kernel can send an upcall to all processes to terminate. |
-| User-level exception handling    | If application runtimes have their own exception system, they can be notified of processor exceptions with upcalls. |
-| User-level resource allocation   | If an application needs to be resource adaptive, it can use upcalls to monitor resource usage and adjust accordingly. The JVM uses upcalls to monitor memory usage and garbage collect. |
-
-Upcalls aren't always needed, and many programs get by with an event loop model. In fact, Windows didn't support immediate delivery of upcalls to user-level programs until recently.
+Upcalls are not always needed. Many programs get by with an event loop, and Windows went a long time without immediate delivery of upcalls to user level.
 
 ### Unix Signals
 
-- The kernel defines a fixed number of signal types that a process can receive.
-- Processes define their own handlers for each type, or the kernel invokes a default handler.
-- Handlers can either be run on the application stack, or on a seperate signal stack allocated by the user process.
-- While a given signal handler is executing, the OS blocks delivery of the same signal to any other process. OS also provides a syscall to mask signals as needed.
-- The kernel copies registers onto the signal stack before invoking the handler, and restores them after the handler returns.
+- The kernel defines a fixed set of signal types.
+- A process registers its own handler per type, or the kernel runs a default handler.
+- Handlers run either on the application stack or on a separate signal stack the process allocates.
+- While a handler runs, the OS blocks delivery of further signals of the same type, and provides a syscall to mask signals as needed.
+- The kernel copies the interrupted registers onto the signal stack before invoking the handler, and restores them when the handler returns.
 
 ## Booting an Operating System Kernel
 
-Systems typically use a special read only memory (Boot ROM) to store boot instructions. On most x86 computers, this is stored in the BIOS (Basic Input/Output System).
-
-ROM memory is relatively slow and expensive, and typically never changes, whereas kernel code needs to be updated often, so it is preferable to keep to BIOS minimal.
-
-BIOS provides indirection between hardware and OS. It reads a fixed-size block of data from a fixed location on disk (or flash RAM) called the bootloader into memory. Some newer bootloaders also store a cryptographic signature to verify the bootloader's integrity.
-
-Then, the bootloader loads the kernel into memory and transfers control to it. The kernel then initializes the hardware, loads the rest of the OS, and starts the first process.
+Systems store boot instructions in read-only memory. On most x86 machines this is the BIOS. ROM is slow and expensive and rarely changes, while kernel code updates often, so the BIOS stays minimal. It reads a fixed-size block from a fixed disk location, the bootloader, into memory. Newer systems verify a cryptographic signature on the bootloader before running it. The bootloader then loads the kernel into memory and jumps to it, and the kernel initializes the hardware, loads the rest of the OS, and starts the first process.
 
 ## Virtual Machines
 
+The same mode transfer machinery lets a host kernel run an entire guest OS in user mode.
+
 ### To Boot
 
-1. Host OS loads guest bootloader from virtual disk into memory and starts running it.
-2. Guest bootloader loads guest kernel into memory and starts running it.
-3. Guest kernel initializes IVT to point to its own handlers.
-4. Guest kernel loads process from virtual disk into its own emulated memory.
-5. When the guest kernel starts the process, it issues instructions to resume execution at user level (ie `iret` on x86). This traps into the host kernel.
-6. Host kernel validates the request and then simulates the requested mode transfer exactly as if the processor had directly executed it.
+1. Host OS loads the guest bootloader from a virtual disk and starts running it.
+2. Guest bootloader loads the guest kernel into memory and starts it.
+3. Guest kernel initializes its interrupt vector table to point at its own handlers.
+4. Guest kernel loads a process from the virtual disk into its emulated memory.
+5. When the guest kernel starts the process, it issues the instruction to resume at user level (`iret` on x86). That instruction is privileged, so it traps into the host kernel.
+6. Host kernel validates the request and simulates the mode transfer exactly as the hardware would have.
 
 ### User Level System Call
 
-1. Host kernel saves registers onto interrupt stack of guest operating system.
-2. Host kernel transfers control to the guest kernel at start of interrupt handler with guest kernel running in user-mode.
-3. Guest kernel performs system call, saving user state and checking arguments.
-4. When guest kernel returns from syscall, triggers processor exception, dropping into host kernel.
-5. Host kernel restores user state as if guest OS had returned directly.
+1. Host kernel saves the registers onto the interrupt stack of the guest operating system.
+2. Host kernel transfers control to the guest kernel's handler, with the guest kernel running in user mode.
+3. Guest kernel performs the system call, saving user state and checking arguments.
+4. The guest kernel's return from the syscall triggers a processor exception, dropping back into the host kernel.
+5. Host kernel restores user state as if the guest OS had returned directly.
 
 ### Processor Exceptions
 
-Handles them similarly to user level system calls, but the host kernel tracks what privilege level the guest kernel is running at, and delegates exception handling to the guest kernel if it is running in kernel mode.
+Handled like guest system calls, except the host kernel tracks which privilege level the guest thinks it is running at, and delegates the exception to the guest kernel when the guest was in kernel mode.
 
 ### Timer Interrupts
 
-Host kernel returns from the interrupt to the interrupt handler for the guest kernel. The guest kernel may in turn switch guest processes; its iret will cause a processor exception, returning to the host kernel, which can then resume the correct guest process.
+The host kernel returns from its own timer handler into the guest kernel's timer handler. The guest kernel may switch guest processes, and its `iret` traps back into the host kernel, which resumes the right guest process.
 
 ### I/O Interrupts
 
-Simulation of virtual devices doesn't need to be anything like a real device. For example, when the guest OS writes to a virtual disk (ie writing to the buffer descriptor ring for the device), the host OS can read these and perform the actual write to the real disk however it wants. The guest kernel then receives an interrupt when the write is complete, which is handled similarly to a timer interrupt, but executes the guest disk interrupt handler instead of the guest timer interrupt handler.
+Virtual devices do not need to resemble real ones. When the guest OS writes to a virtual disk by filling the device's buffer descriptor ring, the host OS reads those descriptors and performs the real disk write however it likes. The guest kernel later receives a completion interrupt, delivered the same way as a timer interrupt but routed to the guest's disk interrupt handler.
 
+## Exercise Notes
 
+Working answers to some of the chapter exercises.
 
+1. **Kernel stack on interrupt.** When a user process is interrupted or faults, x86 switches to a kernel stack before saving the process state, so user code can never overwrite or corrupt the saved kernel data.
+2. **Screen buffer protection.** If any application could write any pixel, it could spoof UI, capture what other programs display, or destabilize the system. Protecting the frame buffer protects the integrity of everything on screen.
+3. **Dropping a dual-mode mechanism.** Without privileged instructions, user code could execute sensitive operations directly. Without memory protection, user code could modify kernel memory. Without timer interrupts, a process could monopolize the CPU forever.
+4. **Browser script safety.** Sandboxing, code validation, resource limits, and privilege separation keep buggy or malicious scripts from corrupting the browser.
+5. **User to kernel transfers.** Interrupts, exceptions, and system calls.
+6. **Kernel to user transfers.** Returning from an interrupt, syscall, or exception, starting a new process, and context switching to a different process.
+7. **`iret`.** The interrupt service routine uses `iret` to return from kernel mode to user mode. Application code has no legitimate use for it; letting an application execute a mode-changing return would corrupt the OS's internal state.
+8. **Many registers.** More registers reduce memory traffic, and features like register renaming, out-of-order execution, and branch prediction help hide latency. But a 16-stage pipeline with precise exceptions raises the cost of user-kernel switches, since more in-flight state must be drained or saved.
+9. **x86 virtualization holes.** Instructions like `popf` behave differently in privileged and unprivileged mode instead of trapping, so a guest kernel running in user mode silently gets wrong behavior. Fixing it requires hardware that traps or gives consistent behavior for such instructions.
+10. **Initial program counter.** The kernel sets the initial program counter when it builds the process, as part of the saved state it "returns" into. (At machine boot, the reset vector in the boot ROM plays this role for the first instruction ever executed.)
+11. **Virtualized I/O safety.** Hardware support like an I/O MMU plus software support like device emulation and hypervisor-mediated drivers.
+12. **Syscall vs. procedure call cost.** Syscalls pay for mode switching and trap handling, so they cost more. A test program timing a trivial syscall (e.g. `getpid`) against a trivial function call in a loop shows the gap.
+13. **No trap instruction.** An intentionally-raised exception (e.g. executing an illegal instruction at an agreed address) can substitute for a trap.
+14. **No interrupts.** The kernel can fall back on polling plus exceptions and traps to regain control, at a cost in complexity and wasted cycles.
+15. **Interrupt handling steps.** Save the current state, identify the interrupt source, run the matching handler, do the work, restore the saved state.
+16. **Separate kernel stack.** Syscalls must run on a kernel stack separate from the application stack, both for isolation and because the user stack pointer cannot be trusted to be valid.
+17. **Rogue syscall testing.** Write a program that issues illegal syscalls (bad numbers, bad pointers, bad arguments) and check the OS rejects each one cleanly.
 
-## Exercises
+## Related notes
 
-1. **Kernel Stack and User Process Interruption**
-
-- When a user process is interrupted or causes a processor exception, the x86 hardware switches the stack pointer to a kernel stack. This is done before saving the current process state to ensure that sensitive kernel data is not overwritten or corrupted by user-level processes.
-
-2. **Screen Buffer Memory Protection**
-
-- The screen's buffer memory must be protected because if a malicious application could alter any pixel on the screen, it could potentially display misleading information, capture sensitive data, or cause system instability. Protecting the screen buffer ensures the integrity and security of the displayed content.
-
-3. **Dual-mode Operation Mechanisms**
-
-- Without **privileged instructions**: User processes might be able to execute sensitive operations.
-- Without **memory protection**: User processes could access and modify kernel memory directly.
-- Without **timer interrupts**: User processes could monopolize the CPU, leading to a denial-of-service situation.
-
-4. **Security Checks for Web Browser**
-
-- To ensure executing buggy or malicious scripts cannot corrupt or crash the browser, checks like script sandboxing, code validation, resource limitations, and privilege separation should be implemented.
-
-5. **Types of User-Mode to Kernel-Mode Transfers**
-
-- Software Interrupts
-- System Calls
-- Exceptions
-
-6. **Types of Kernel-Mode to User-Mode Transfers**
-
-- Returning from an interrupt
-- Returning from a system call
-- Resuming execution after an exception
-- Context switching
-
-7. **IRET Instruction in OS**
-a. The `iret` instruction is used in the interrupt service routine (ISR) to return from an interrupt, transitioning the mode from kernel-mode back to user-mode.
-b. If an application program executes `iret`, it could potentially disrupt the operating system's internal state, leading to unpredictable behavior or crashes.
-
-8. **Large Number of Registers Design**
-a. Having a large number of registers can reduce the need for frequent memory accesses, improving performance.
-b. Hardware features like register renaming, out-of-order execution, and branch prediction can be beneficial.
-c. Adding a 16-stage pipeline and precise exceptions might increase the overhead of user-kernel switching due to increased complexity and potential stalls.
-
-9. **Virtualization and x86 Architecture**
-a. Instructions like `popf` prevent transparent virtualization because they have different behaviors in privileged and unprivileged modes, making it challenging to virtualize without affecting guest OS behavior.
-b. Modifying the hardware to provide consistent behavior for instructions like `popf` in both modes can resolve the virtualization issue.
-
-10. **Initial Value in Program Counter**
-
-- The boot ROM is responsible for loading the initial value in the program counter for an application program before it starts running.
-
-11. **Safe Access to Virtualized I/O Devices**
-
-- To enable safe access to virtualized I/O devices, hardware support like I/O MMU, device assignment, and software support like device emulation, device drivers, and hypervisor integration are essential.
-
-12. **System Calls vs. Procedure Calls**
-
-- System calls are generally more expensive than procedure calls due to the overhead of mode switching, trap handling, and potential context switches. A test program can be designed to measure and compare the time required for each type of call.
-
-13. **Substitute for Traps**
-
-- Without a trap instruction, a combination of interrupts and exceptions can be used as a substitute for traps, allowing the operating system to handle events and transitions effectively.
-
-14. **Substitute for Interrupts**
-
-- Without interrupts, a combination of exceptions and traps can be utilized to handle events and transitions within the operating system, although it may introduce additional complexity and overhead.
-
-15. **Steps for CPU Interrupt Handling**
-
-- The operating system typically follows steps like saving the current state, identifying the interrupt source, invoking the appropriate interrupt handler, performing the required processing, and restoring the saved state.
-
-16. **Operating System Stack for System Calls**
-
-- The operating system stack for handling system calls should be separate from the application stack to ensure isolation and prevent potential stack-related vulnerabilities or conflicts.
-
-17. **Verifying Rogue System Calls**
-- Writing a program to test the operating system's protection against rogue system calls involves trying various illegal calls and observing the system's response to ensure it handles them correctly.
+- [[operating-systems/v1-kernels-and-processes/3-the-programming-interface|the programming interface]]
+- [[operating-systems/v1-kernels-and-processes/1-introductions|what is an operating system]]

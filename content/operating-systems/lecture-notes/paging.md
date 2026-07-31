@@ -1,194 +1,164 @@
 ---
 title: Virtual Memory and Paging
 category: Operating Systems
-tags: virtual memory, paging, fragmentation, page table, address translation
+tags:
+  - virtual-memory
+  - paging
+  - fragmentation
+  - page-tables
+  - address-translation
+  - page-replacement
+  - working-set
 date: 2024-02-07
-description: Covers the implementation of virtual memory and paging in operating systems. Discusses concepts such as fragmentation, protection, address translation, shared frames, and page table entries. Explores the advantages and disadvantages of paging, as well as demand paging, page replacement algorithms, and the impact of locality on performance. Contrasts local and global page replacement strategies and the working set model.
+updated: 2026-07-30
+status: evergreen
+description: The paging mechanism (page tables, address translation, PTE contents) and the policy side of virtual memory, demand paging, replacement algorithms from FIFO to clock, and the working set model.
+sources:
+  - title: P. J. Denning, "The Working Set Model for Program Behavior" (CACM, 1968)
+    type: paper
+  - title: L. A. Belady, R. A. Nelson, and G. S. Shedler, "An Anomaly in Space-Time Characteristics of Certain Programs Running in a Paging Machine" (CACM, 1969)
+    type: paper
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# Virtual Memory and Paging
+Paging maps virtual memory to physical memory in fixed-size units. This note covers the mechanism (page tables, address translation, what lives in a PTE) and the policy side of virtual memory: demand paging, page replacement algorithms, and the working set model.
 
-Use pages to map virtual memory to physical memory. This prevents **external fragmentation** by dividing memory into fixed-size pages, and **internal fragmentation** by making the units of allocation smaller.
+## Why pages
 
-### Fragmentation
+Dividing memory into fixed-size pages prevents **external fragmentation**, and keeping the allocation unit small limits **internal fragmentation**.
 
-- **external fragmentation**: when free memory is broken into small pieces, but the memory is not being used because it is not contiguous.
-- **internal fragmentation**: when a process is allocated more memory than it needs, and the extra memory is not being used.
+- **external fragmentation**: free memory is broken into pieces too small and scattered to use, even though the total would be enough.
+- **internal fragmentation**: a process is allocated more memory than it needs, and the excess goes unused.
 
-Virtual address space is divided into *pages*, and physical address space is divided into *frames*. The page table maps pages to frames. The page table is stored in memory, and the page table base register (PTBR) points to the page table. The page table is indexed by the page number, and the value at that index is the frame number.
+Virtual address space divides into *pages*, physical address space into *frames*. The page table maps pages to frames. It lives in memory, and the page table base register (PTBR) points at it. Index it by page number and it gives back a frame number.
 
-From the programmers perspective, memory is a giant contiguous block, completely independent of the physical memory and hardware.
+From the programmer's perspective, memory is one giant contiguous block, completely independent of the physical memory and hardware underneath.
 
-### Protection
+## Protection
 
-One processes cannot "name" or address the memory of another process. This provides protection between processes.
+A process cannot name or address another process's memory, since every access goes through its own page table. That is the isolation boundary between processes.
 
-Set the first page to be invalid so that if a process tries to access it (NULL pointer), it will cause an exception.
+Marking the first page invalid turns NULL pointer dereferences into exceptions.
 
-### Address Translation
+## Address translation
 
-- Page table provides layer of indirection
-- Virtual address is divided into **virtual page number (vpn)**, which is an index into the page table, and **offset**
-- The page table entry (PTE) contains the frame number
-- The physical address is the frame number concatenated with the offset
+- The page table provides a layer of indirection.
+- A virtual address divides into a **virtual page number (VPN)**, which indexes the page table, and an **offset**.
+- The page table entry (PTE) contains the frame number.
+- The physical address is the frame number concatenated with the offset.
 
-Page tables are managed by the operating system, and are stored in memory. There is one PTE for each page, ie one PTE per VPN. The page table maps VPNs to PFNs. Each process has its own page table, and the PTBR points to the page table.
+The OS manages page tables and stores them in memory. There is one PTE per page, i.e. one per VPN. Each process has its own page table, and the PTBR points at the running process's table.
 
-### Shared Frames
+## Shared frames
 
-Multiple processes can share the same frame. This is useful for shared libraries, and for shared memory between processes. Can also be used when implementing **copy-on-write (COW)** to optimize things like read-only fork, or exec.
+Multiple processes can map the same frame. Shared libraries and shared memory between processes use this. It also underlies **copy-on-write (COW)**, which makes things like read-only fork and exec cheap.
 
-### Page Table Entries
+## Page table entries
 
-#### More functionality to the PTEs:
+Beyond the frame number, PTEs carry:
 
-- Protection by setting read/write/execute bits
-- Page table entry can point to nothing, causing a page fault
-- Accounting information for if the PTE is used, dirty bit, reference bit, etc.
-- **valid bit**: if the page is in memory. set when the page is in memory, cleared when the page is not in memory. Used for page faults.
-- **referenced bit**: if the page has been referenced before. set when page is read or written to. cleared by the OS but set by the hardware. Used for LRU replacement.
-- **dirty/modified bit**: page has been modified. set when page is written to. cleared by the OS but set by the hardware. Used for COW.
-- **protection bits**: read/write/execute permissions
+- **valid bit**: set when the page is in memory, cleared when it isn't. An access to an invalid page causes a page fault.
+- **referenced bit**: set by hardware when the page is read or written, cleared by the OS. Used to approximate LRU replacement.
+- **dirty/modified bit**: set by hardware when the page is written, cleared by the OS. Used for COW and to skip writeback of clean pages.
+- **protection bits**: read/write/execute permissions, enforced in hardware.
 
-More out there.
+## What paging buys and costs
 
-#### Advantages of Paging
+Physical allocation gets easy: grab a frame off the free list (usually a linked list). External fragmentation disappears, since every unit is the same fixed size. And paging leads naturally to virtual memory, because pages can swap in and out and a program doesn't need to be fully resident to run.
 
-- Easy to allocate physical memory. Allocated from a free list (linked usually) of frames. To allocate, remove
-- External fragmentation is eliminated. Pages are fixed size, so no fragmentation.
-- Leads naturally to virual memory. Pages can be swapped in and out of memory, and don't need to be entirely in physical memory for a program to run.
+The costs: internal fragmentation remains when a page is only partly used. Every memory access also touches the page table, which a TLB mitigates. And the page table itself can get large. One PTE per page in a 32-bit address space with 4 KB pages is $2^{20}$ PTEs, about 4 MB at 4 bytes per PTE. Multi-level page tables fix this; see [[operating-systems/lecture-notes/page-faults|page faults]].
 
-#### Disadvantages of Paging
+## Paged virtual memory
 
-- Can still have internal fragmentation. If a page is not entirely used, there is wasted space.
-- Overhead of managing the page table. Page table is stored in memory, and is accessed for every memory access. This can be mitigated by using a TLB (essentially a cache).
-- Memory required to hold a page table can be large. Need one PTE/page, and if the page size is small, the page table can be large. ie 32 bit AS with 4 KB pages = $2^20$ PTEs = $1,048,576$ PTEs = 4 MB (using 4 bytes/page). Solution: page the page table.
+- The full used address space lives on secondary storage (disk) in page-sized blocks.
+- The OS uses main memory as a cache for the disk.
+- When a page is needed, it gets transferred into a free page frame.
+- With no free frames, the OS must evict a page. A dirty page gets written to disk first; a clean page can just be discarded.
+- All of it is transparent to the application.
 
-### Paged Virtual Memory
+## Page faults
 
-- The full (used) address space exists on secondary storage (disk) in page-sized blocks
-- OS uses main memory as a cache for the disk
-- When a page is needed, it is transferred to a free page frame
-- If there are no free page frames, the OS must choose a page to evict. If the evicted page is dirty, it must be written to disk. Otherwise, it can just be discarded.
-- All transparent to the application/user
+When the OS evicts a page, it marks the PTE invalid and records the page's disk location in a separate data structure. A later access to that page throws an exception, and after trapping into the kernel the OS runs the page fault handler, which looks up the page on disk, reads it into a free frame, updates the page table, and restarts the instruction that faulted. Details in [[operating-systems/lecture-notes/page-faults|page faults]].
 
-### Page Faults
+### Hard vs soft page faults
 
-- When a page is evicted, the OS sets the PTE to invalid and records the disk location of the page into a seperate data structure.
-- When a process tries to access the now invalid page, an exception is thrown (page fault).
-    - After trapping into the kernel on exception, the OS runs the page fault handler
-    - The OS looks up the page on disk, and reads it into a free frame
-    - The OS updates the page table to point to the new frame
-    - The OS restarts the instruction that caused the page fault
+- **Hard page fault**: the page is not in memory, and the OS must read it from disk or other backing storage.
+- **Soft page fault**: the page is actually still in memory, so the OS can map it back in without touching backing storage.
 
-### Demand Paging
+## Demand paging
 
-- Pages are only brought into main memory when they are referenced.
-    - only the code/data that is actually used is brought into memory
-- Few systems try to anticipate what pages will be used, and instead just bring in pages as they are used
-- However, not uncommon to cluster pages that are likely to be used together (ie. code and data pages)
-    - OS keeps track of pages that come and go together
-    - bring in all pages in the cluster when one is referenced
-    - interface may allow programmer or compiler to specify clusters
+Pages come into main memory only when they are referenced, so only the code and data that actually get used take up memory. Few systems try to anticipate which pages will be needed. Clustering is common though. The OS keeps track of pages that come and go together and brings in the whole cluster when one of them is referenced, and some interfaces let the programmer or compiler specify the clusters.
 
-### Page Replacement
+## Page replacement
 
-- When you read in a page, you either use an existing free frame, or you evict a page.
+Reading in a page either uses an existing free frame or evicts something. Good eviction targets are pages that won't be used for a while and pages that haven't been modified, since clean pages don't need to be written back. The OS typically keeps a pool of free pages so allocations don't have to evict, and tries to keep clean pages around for cheap eviction.
 
-#### Page Replacement Algorithms
+### Belady's optimal algorithm
 
-- pick one that won't be used for a while
-- pick one that hasn't been modified (so we don't have to write it to disk)
-- OS typically keeps a pool of free pages so that allocations don't need to evict.
-- OS also tries to keep clean pages around so that they can be evicted without writing to disk.
+Replace the page that will not be used for the longest time in the future. Impossible to implement in practice, but useful as a yardstick for other algorithms.
 
-##### Belady's Optimal Algorithm
+### FIFO
 
-- Replace the page that will not be used for the longest time in the future
-- Impossible to implement in practice, but useful for comparing other algorithms
+Replace the page that has been in memory the longest. Simple to implement. It also suffers from **Belady's anomaly**: increasing the number of frames can increase the number of page faults.
 
-##### FIFO
+### LRU
 
-- Replace the page that has been in memory the longest
-- Simple to implement, but not always the best
-- Can cause **Belady's Anomaly**: increasing the number of frames can increase the number of page faults
+Replace the page that has not been used for the longest time. Doing this exactly requires recording the time of the last reference to every page on every access, which costs too much, so systems approximate it.
 
-##### LRU
+### Approximate LRU
 
-- Replace the page that has not been used for the longest time
-- Requires keeping track of the time of the last reference for each page
+Keep a counter for each page. At some regular interval, for each page:
 
-##### Approximate LRU
+- if the reference bit is 0, increment the counter
+- if the reference bit is 1, zero the counter
+- zero the reference bit
 
-- Keep counter for each page
-- At some regular interval, for each page:
-    - if ref bit == 1, increment counter
-    - if ref bit == 0, zero counter
-    - zero ref bit
-- counter contains the number of intervals since the last reference to the page. page with the largest counter is least recently used
+The counter then holds the number of intervals since the last reference to the page, and the page with the largest counter is the least recently used.
 
-##### LRU Clock
+### LRU clock
 
-- Keep a circular list of pages
-- Each page has a reference bit
-- When a page is referenced, set the reference bit to 1
-- When a page is evicted, if the reference bit is 1, set it to 0 and move to the next page. If the reference bit is 0, evict the page
-- Essentially a clock hand that moves around the list, and evicts the page that the hand is pointing to
-- Low overhead if plenty of memory
-- As memory increases, accuracy decreases. Can use multiple hands to increase accuracy.
+Keep the pages in a circular list, each with a reference bit that gets set when the page is referenced. To evict, sweep a clock hand around the list. A page with its bit set gets the bit cleared and the hand moves on; a page with its bit clear gets evicted. Overhead is low when memory is plentiful. As memory grows the accuracy drops, and multiple hands can compensate.
 
-### How do you load a program?
+## Loading a program
 
-- Create descriptor/process control block (PCB)
-- Create page table
-- Put address space image on disk in page-sized blocks
-- Build page table
-    - All PTE valid bits set to 0
-    - Some data structure stores disk location of each page
-    - When process starts executing, the OS sets the PTBR to point to the page table
+- Create the descriptor / process control block (PCB).
+- Create the page table.
+- Put the address space image on disk in page-sized blocks.
+- Build the page table with every PTE valid bit set to 0, and record each page's disk location in a separate data structure.
+- When the process starts executing, point the PTBR at its page table.
 
-### Locality
+Demand paging pulls the pages in from there.
 
-- **Temporal locality**: if a memory location is accessed, it is likely to be accessed again soon
-- **Spatial locality**: if a memory location is accessed, it is likely that nearby memory locations will be accessed soon
+## Locality
 
-Locality means paging can be infrequent, and the OS can bring in multiple pages at once. This assumes that:
+- **Temporal locality**: a memory location accessed now is likely to be accessed again soon.
+- **Spatial locality**: locations near an accessed location are likely to be accessed soon.
 
-- Once you bring in a page, you will use it many times
-- On average, you will use the pages you bring in
+Locality is why paging can be infrequent and why the OS can profitably bring in multiple pages at once. It assumes that a page brought in gets used many times, and that on average you use the pages you bring in.
 
+## Local vs global replacement
 
+Local replacement means each process evicts only from its own set of pages. Global replacement lets the OS evict any page, regardless of which process owns it. Linux replaces globally.
 
-### Local vs Global Page Replacement
+Global replacement is typically implemented with a shared pool of free pages, and it lets the OS put memory where it does the most good, which can reduce the total number of page faults.
 
-Local page replacement means that each process has its own set of pages that it is replacing. Global page replacement means that the OS can choose any page to replace, regardless of which process it belongs to. Linux uses global page replacement.
+## Working set model
 
-This is typically implemented by keeping a pool of free pages, and when a page is needed, the OS can choose any page to evict. This is useful because it allows the OS to make better decisions about which pages to evict, and can reduce the number of page faults.
-
-#### Working Set Model
+Denning's working set model defines:
 
 - $t$: time
-- $w$: working set window (measured in page refs)
-- a page is in the working set (WS) only if it was referenced in the
-last w references
+- $w$: the working set window, measured in page references
+
+A page is in the working set only if it was referenced in the last $w$ references:
 
 $$
-WS(t,w) = \{\text{pages P such that P was referenced in the time
-interval } (t, t-w)\}
+WS(t,w) = \{\text{pages } P \text{ such that } P \text{ was referenced in the interval } (t-w, t]\}
 $$
 
-$|WT(t, w)|$ is the number of pages in the working set at time $t$, and varies with time. During a time interval with particularly bad locality, the working set can be very large.
+$|WS(t, w)|$ is the number of pages in the working set at time $t$, and it varies over time. During a stretch of particularly bad locality, the working set can get very large.
 
-- The working set of a process is the set of pages that the process is currently using
-- The working set window is the number of page references that are considered to be in the working set.
-- Typically, the working set is the set of pages that have been referenced in the last $n$ references, where $n$ is the working set window.
-
-The goal is to reduce page faults by keeping the working set in memory. **Thrashing** is when a process is spending more time paging than executing, and keeping the working set in memory can help prevent thrashing.
-
-### Hard vs Soft Page Faults
-
-- **Hard page fault**: when a page is not in memory, and the OS must read it from disk/backend storage
-- **Soft page fault**: when a page is not in memory, but the OS can find it in the page file, and bring it into memory without reading from the backend storage
+The goal is to reduce page faults by keeping each process's working set in memory. **Thrashing** is when a process spends more time paging than executing, and keeping working sets resident is the defense against it.
 
 ## Related notes
 

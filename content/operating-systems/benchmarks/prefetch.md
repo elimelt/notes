@@ -1,80 +1,73 @@
 ---
 title: Software Prefetching Benchmarks
 category: Operating Systems
-tags: prefetching, cache, memory latency, hardware prefetcher, performance optimization, benchmarks
+tags:
+  - prefetching
+  - cache
+  - memory-latency
+  - hardware-prefetcher
+  - performance
+  - benchmarks
 date: 2025-12-29
-description: Comparing hardware and software prefetching effectiveness for sequential and random access patterns, demonstrating when explicit prefetch instructions can outperform automatic hardware prefetching.
+updated: 2026-07-30
+status: needs-review
+description: Compares hardware and software prefetching for random and sequential access, measuring how prefetch distance affects the win and where explicit prefetches beat the hardware prefetcher.
+sources:
+  - title: GCC documentation for __builtin_prefetch
+    url: https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
+    type: docs
 ---
 
+## Purpose
 
-# Software Prefetching
+Measure when issuing explicit prefetch instructions beats letting the hardware prefetcher do its thing. Hardware prefetchers detect sequential and strided patterns and fetch ahead on their own, and they do nothing useful for random patterns. Software prefetching can cover the random case whenever the code knows future addresses, and it turns out it can also beat the hardware on the sequential case.
 
-## Hardware vs Software
+## Setup
 
-Modern CPUs have **hardware prefetchers** that detect access patterns and speculatively fetch cache lines. Great for sequential/strided access, but fail for random patterns.
+The CPU model and compiler flags were not recorded with these results, so the note is marked needs-review. The runs use a 256 MB array and the same `./bench` harness as the other notes in this directory. The DRAM latency assumed in the analysis (~75 to 100 ns) comes from the pointer-chase measurement in [[operating-systems/benchmarks/README|measuring real DRAM latency]].
 
-**Software prefetching** explicitly tells the CPU to fetch data before you need it:
+## Workload
+
+The software prefetch is GCC's builtin ([docs](https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html)):
 
 ```c
 __builtin_prefetch(&array[i + 64], 0, 0);  // Prefetch 64 elements ahead
 sum += array[i];                            // Use current element
 ```
 
-## Results (256 MB array)
+The signature is `__builtin_prefetch(addr, rw, locality)` where `rw` is 0 for read and 1 for write, and `locality` runs from 0 (no temporal locality) to 3 (high). On x86 it compiles to `prefetchnta` or `prefetcht0/t1/t2`.
 
-### Random Access
+The random variants walk a precomputed index array, prefetching `array[indices[i+N]]` while processing `array[indices[i]]`. The sequential variants stream through the array with and without an explicit prefetch at distance +64 elements.
 
-| Variant | Distance | ns/access | vs baseline |
-|---------|----------|-----------|-------------|
-| `pf_none` | 0 | 7.61 ns | 1.0× |
-| `pf_8` | +8 | 6.23 ns | 1.2× |
-| `pf_32` | +32 | 5.91 ns | 1.3× |
-| `pf_128` | +128 | 5.99 ns | 1.3× |
+## Results
 
-### Sequential Access
+Random access:
 
 | Variant | Distance | ns/access | vs baseline |
 |---------|----------|-----------|-------------|
-| `pf_seq` | 0 (hw only) | 1.37 ns | 1.0× |
-| `pf_seq64` | +64 | 0.54 ns | 2.5× |
+| `pf_none` | 0 | 7.61 ns | 1.0x |
+| `pf_8` | +8 | 6.23 ns | 1.2x |
+| `pf_32` | +32 | 5.91 ns | 1.3x |
+| `pf_128` | +128 | 5.99 ns | 1.3x |
 
-## Observations
+Sequential access:
 
-### 1. Random Prefetch Helps Modestly (~25%)
+| Variant | Distance | ns/access | vs baseline |
+|---------|----------|-----------|-------------|
+| `pf_seq` | 0 (hw only) | 1.37 ns | 1.0x |
+| `pf_seq64` | +64 | 0.54 ns | 2.5x |
 
-For random access, we know the *sequence* of indices but not their *values*. We can prefetch `array[indices[i+N]]` while processing `array[indices[i]]`.
+## Interpretation
 
-Limited improvement because:
-- Prefetch distance must be large enough to hide DRAM latency (~300 cycles)
-- But not so large that prefetched data gets evicted before use
-- Memory bandwidth becomes the bottleneck, not latency
+For random access the win tops out around 25%. The indices are known ahead of time, so the prefetch addresses are computable, and yet the improvement stays modest. The prefetch distance has to be long enough to cover the DRAM round trip, and the 7.6 ns baseline already reflects heavy memory-level parallelism (see [[operating-systems/benchmarks/mlp|memory-level parallelism]]), so the run is close to bandwidth-bound before any prefetching happens. Once bandwidth is the limit, all a prefetch can do is smooth out when the requests land.
 
-### 2. Sequential SW Prefetch Beats Hardware
+The sequential result surprised me. The explicit prefetch at +64 elements (512 bytes, 8 cache lines ahead) beats the hardware prefetcher by 2.5x. My read is that the hardware prefetcher stays conservative about how far ahead it fetches so it does not pollute the cache on patterns it has misjudged. The software prefetch has no such doubt because the code knows the pattern exactly, so fetching aggressively far ahead pays off.
 
-Surprisingly, software prefetching beats the hardware prefetcher for sequential access. The hardware prefetcher is *conservative* - it doesn't fetch too far ahead to avoid cache pollution. Our explicit prefetch with distance +64 (512 bytes ahead) is more aggressive and wins when we know the pattern perfectly.
+Distance tuning depends on the memory latency, the work per iteration, and cache capacity. In these runs, +32 to +128 worked for random access and +64 worked for sequential. Too short a distance and the data has not arrived when the load executes. Too long and the prefetched lines get evicted before use.
 
-### 3. Optimal Prefetch Distance
+Prefetching does nothing for a pointer chase, since `array[array[i]]` needs `array[i]` before the prefetch address even exists. It also backfires on data already resident in cache, where the extra instructions are pure overhead, and on bandwidth-saturated loops, where the prefetches just add pressure.
 
-Depends on memory latency (~75ns), loop iteration time, and cache capacity. For random access, +32 to +128 works well. For sequential, +64 (512 bytes = 8 cache lines) is effective.
-
-## When Prefetching Doesn't Help
-
-1. **Pointer chasing**: Can't prefetch `array[array[i]]` because you don't know `array[i]` yet
-2. **Unpredictable patterns**: If you don't know future addresses, you can't prefetch them
-3. **Cache-resident data**: Prefetching hurts if data is already in cache (extra instructions)
-4. **Bandwidth-bound**: If memory bandwidth is saturated, prefetching adds pressure
-
-## The Instruction
-
-```c
-__builtin_prefetch(addr, rw, locality);
-// rw: 0 = read, 1 = write
-// locality: 0 = no temporal locality, 3 = high temporal locality
-```
-
-Compiles to x86 `prefetchnta` (non-temporal) or `prefetcht0/t1/t2` (temporal).
-
-## Running
+## Reproduction
 
 ```bash
 ./bench pf_none 256   # Random baseline
@@ -83,3 +76,11 @@ Compiles to x86 `prefetchnta` (non-temporal) or `prefetcht0/t1/t2` (temporal).
 ./bench pf_seq64 256  # Sequential sw prefetch +64
 ```
 
+## Sources
+
+- [GCC documentation for __builtin_prefetch](https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html)
+
+## Related notes
+
+- [[operating-systems/benchmarks/mlp|memory-level parallelism]]
+- [[operating-systems/benchmarks/README|measuring real DRAM latency]]

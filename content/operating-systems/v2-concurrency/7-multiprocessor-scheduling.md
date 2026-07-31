@@ -1,55 +1,69 @@
 ---
 title: Multiprocessor Scheduling
 category: Operating Systems
-tags: multiprocessor scheduling, operating systems, cache coherence, affinity scheduling
+tags:
+  - multiprocessor scheduling
+  - operating systems
+  - cache coherence
+  - affinity scheduling
 date: 2024-03-04
-description: Covers the implementation of multiprocessor scheduling techniques, including scheduling sequential and parallel applications. Discusses gang scheduling and scheduler activations as methods for efficiently utilizing multiprocessor systems. Examines real-time scheduling considerations for multiprocessor environments.
+updated: 2026-07-30
+status: evergreen
+description: Chapter notes on the multiprocessor portion of OSPP chapter 7. Per-processor scheduling queues and affinity scheduling, the failure modes of oblivious scheduling for parallel programs, gang scheduling and scheduler activations, and a short treatment of real-time scheduling.
+sources:
+  - title: "Operating Systems: Principles and Practice (2nd ed.), Anderson and Dahlin, chapter 7"
+    url: https://ospp.cs.washington.edu/
+    type: textbook
 ---
 
-# Multiprocessor Scheduling
+## Purpose
 
-Modern systems usually have multiple processors, each with multiple cores that all have hyperthreading. Scheduling algorithms for multiprocessor systems need to make use of the parallelism that these systems offer.
+Notes on the multiprocessor scheduling part of chapter 7 of [Operating Systems: Principles and Practice](https://ospp.cs.washington.edu/). The uniprocessor policies in [[operating-systems/v2-concurrency/7-uniprocessor-scheduling|uniprocessor scheduling]] assume one processor pulling from one queue. This note covers what breaks when there are many processors, and what schedulers do about it.
 
-### Scheduling Sequential Applications on Multiprocessors
+Modern systems have multiple processors, each with multiple cores, often with hyperthreading on top. A scheduler has to exploit that parallelism without drowning in coordination costs.
 
-Consider a server application that needs to process a large number of requests. A simple approach would be to maintain a single MFQ, as well as a lock on it so only one processor can access it at a time. When a request needs to do something like I/O, it can reenter the MFQ and let another request run. However, this approach has a few problems:
+## Scheduling Sequential Applications on Multiprocessors
 
-- **Contention for MFQ lock**: As the number of processors increases, the contention for the MFQ lock also increases. This can lead to a lot of time being spent waiting for the lock.
-- **Cache Coherence Overhead**: When a processor modifies a queue, it needs to invalidate the cache of all other processors that have a copy of the queue. This means that each processor will need to fetch the queue either from memory or a remote cache, which can take orders of magnitude longer than fetching from a local cache. Not to mention this needing to happen while the queue is locked.
-- **Limited Cache Reuse**: Threads will run on random queues, so they won't be able to reuse the cache of the previous thread that ran on that processor.
+Consider a server processing a large number of requests. The simple design is one shared multi-level feedback queue (MLFQ, covered in the uniprocessor note) protected by a lock, with every processor pulling work from it. When a request blocks on I/O, it re-enters the queue and another request runs. Three things go wrong:
 
-For these reasons, common practice is to have a separate MFQ for each processor. Each processor uses **affinity scheduling**, where once a thread is scheduled on a processor, it will stick to only being scheduled there. Rebalancing load between processors is done by moving threads between MFQs.
+- **Contention for the MLFQ lock**: more processors means more contention, and processors end up waiting on the lock instead of running work.
+- **Cache coherence overhead**: each scheduling decision writes the shared queue, invalidating the copies cached by other processors. Every processor then fetches queue state from memory or a remote cache, which takes orders of magnitude longer than a local cache hit, and this happens while the lock is held, lengthening the critical section.
+- **Limited cache reuse**: a thread gets picked up by whatever processor is free, so it usually lands on a processor whose cache holds someone else's data.
 
-### Scheduling Parallel Applications on Multiprocessors
+For these reasons, common practice is a separate MLFQ per processor. Each processor uses **affinity scheduling**: once a thread is scheduled on a processor, it keeps getting scheduled there, so its cache state stays useful. Load gets rebalanced by occasionally migrating threads between per-processor queues.
 
-Although there often exists a logical mapping between work and processors, it's often not possible to know this mapping at compile time. The number of threads and processors available can change at runtime, and the work may not be evenly divisible among the processors.
+## Scheduling Parallel Applications on Multiprocessors
 
-**Oblivious Scheduling** is when the scheduler operates without knowledge of the intent of the program. Each thread schedules completely independently of the others. This can be simple and effiient, but also has some problems:
+A parallel program usually has some logical mapping between work and processors, but the mapping cannot be fixed at compile time. The number of runnable threads and available processors changes at runtime, and work rarely divides evenly.
 
-- **Bulk synchronous delay**: In sequential pipelines of parallel work (like MapReduce), the slowest thread determines the speed of the entire pipeline.
-- **Producer-consumer delay**: In a chain of producer consumer threads (like a bash pipeline), the slowest thread in a chain determines the speed of the entire pipeline.
-- **Critical path delay**: In a DAG of parallel work (like a fork-join parallel program), if a thread performing work on the critical path is preempted, the entire program will be delayed.
-- **Preemption of lock holder**: If a thread holding a lock is preempted, the lock will be held for longer than necessary, and other threads will be delayed while waiting for the lock.
-- **I/O**: If a read/write request is blocked in the kernel, the thread blocks as well. In order to make use of the processor, there should be more threads than processors, but this can lead to the above problems.
+**Oblivious scheduling** is when the scheduler operates without knowledge of the program's intent, scheduling each thread independently. It is simple and efficient for the scheduler, and it fails in recognizable ways:
 
-#### Gang Scheduling
+- **Bulk synchronous delay**: in staged parallel computation (MapReduce is the canonical shape), every stage waits for the slowest thread, so one preempted thread stalls the whole stage.
+- **Producer-consumer delay**: in a chain of producer and consumer threads (a shell pipeline), the slowest link sets the pace of the chain.
+- **Critical path delay**: in a DAG of parallel work (fork-join programs), preempting a thread on the critical path delays the entire program.
+- **Preemption of lock holder**: preempting a thread that holds a lock stretches the critical section across its time off the processor, delaying every waiter.
+- **I/O**: a thread that blocks in the kernel on a read or write gives up its processor. Keeping the processor busy requires more threads than processors, which feeds all the problems above.
 
-The application picks some decomposition of the work into some set of threads, and those threads are always either running togther or not at all. This can be especially useful for specialized servers that need fine-grained control over the scheduling of their threads (like a DBMS). Windows, Linux and MacOS all support mechanisms for gang scheduling.
+### Gang Scheduling
 
-It is usually more efficient to run two parallel programs, each with half the number of processors, than to time slice two programs, each gang scheduled onto all processors.
+The application decomposes its work into a set of threads, and those threads run together or not at all. This suits specialized servers that need fine-grained control over their threads, a DBMS for example. Windows, Linux, and MacOS all provide mechanisms for it.
 
-Allocating different processors to different tasks is called **space sharing**, and is useful for minimizing context switches and cache invalidations. Space sharing is straightforward if tasks start and stop at the same tie. However, with a dynamic number of available processors, it's less trivial.
+Time-slicing two gang-scheduled programs across all processors is usually worse than giving each program half the processors outright. Dedicating processors to tasks is called **space sharing**, and it minimizes context switches and cache invalidations. Space sharing is straightforward when tasks start and stop together; with processors coming and going dynamically, it takes more machinery, which is what scheduler activations provide.
 
-#### Scheduler Activations
+### Scheduler Activations
 
-Applications are given an *execution context*, or **scheduler activation**, on each processor assigned to the application. Via upcalls, the application is informed whenever the number of processors changes. Blocking on I/O operations also triggers an upcall to allow the application to repurpose the processor.
-
-Scheduler activations only define the mechanism for informing an application of its processor allocation, but not the policy for scheduling.
+The application gets an *execution context*, a **scheduler activation**, on each processor assigned to it. The kernel informs the application via upcalls whenever its processor allocation changes, and a thread blocking on I/O also triggers an upcall so the application can put that processor to other use. Scheduler activations define only the mechanism for telling an application about its processors. The scheduling policy stays with the application. The mechanism is covered in more depth in [[operating-systems/v2-concurrency/4-concurrency-and-threads|concurrency and threads]].
 
 ## Real Time Scheduling
 
-If responsiveness is more important than throughput, we can use real-time scheduling. For instance, in control systems, or with a user interface, we want to ensure tasks are completed by a **deadline**.
+When responsiveness matters more than throughput, for instance in control systems or user interfaces, the goal becomes finishing tasks by a **deadline**. Some tools:
 
-- **Over-provisioning**: Only schedule a fraction of the resources on a system. Like not signing up for too many classes in college.
-- **Earliest Deadline First (EDF)**: The task with the earliest deadline is scheduled next. This is optimal for minimizing the number of missed deadlines for CPU-bound tasks. However, mixed workloads can complicate this, since it might be more efficient to start a task with a later deadline to request I/O, and then start a task with an earlier deadline.
-- **Priority Donation**: *priority inversion* can lead to infinite waiting times for lower priority tasks. To avoid this, when a high-priority task is waiting for a lock held by a lower priority task, the higher priority task "dontates" some of its priority to the lower priority task. This allows the low priority task to be scheduled to complete the critical section and release the lock, at which point it will return to its original priority and the processor can be given to the high priority task.
+- **Over-provisioning**: schedule only a fraction of the system's capacity, leaving headroom so deadlines survive bursts. Like not signing up for too many classes.
+- **Earliest Deadline First (EDF)**: run the task with the earliest deadline next. For CPU-bound tasks this is optimal for minimizing missed deadlines. Mixed workloads complicate it, since it can pay to start a later-deadline task's I/O early and then run the earlier-deadline task while the I/O is in flight.
+- **Priority donation**: *priority inversion* happens when a high priority task waits on a lock held by a low priority task that never gets scheduled. With priority donation, the waiting high priority task donates its priority to the lock holder, which then gets scheduled, finishes the critical section, releases the lock, and drops back to its original priority.
+
+## Related notes
+
+- [[operating-systems/v2-concurrency/7-uniprocessor-scheduling|uniprocessor scheduling]]
+- [[operating-systems/v2-concurrency/7-queueing-theory|queueing theory]]
+- [[operating-systems/v2-concurrency/4-concurrency-and-threads|concurrency and threads]]

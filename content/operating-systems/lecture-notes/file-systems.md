@@ -1,19 +1,28 @@
 ---
 title: File Systems
 category: Operating Systems
-tags: file systems, storage, hierarchical structure, programming interface, system calls
+tags:
+  - file-systems
+  - storage
+  - system-calls
+  - fat
 date: 2024-03-04
-description: Covers the implementation of file systems, including the programming interface, differences between Windows and Unix file systems, and the on-disk structure of the FAT file system. Discusses key concepts such as file and directory management, design constraints, and the hierarchical structure of file systems.
+updated: 2026-07-30
+status: draft
+description: The file system programming interface, how Windows and Unix differ on moving and deleting files, the constraints that drive on-disk layout, and the FAT on-disk structure.
+sources:
+  - title: unlink(2), Linux manual page
+    url: https://man7.org/linux/man-pages/man2/unlink.2.html
+    type: docs
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# File Systems
+A file system reads and writes blocks (sectors) on a per-volume basis and turns them into files and directories. It is a thick layer of abstraction over the raw storage device. This note covers the programming interface, a couple of behavioral differences between Windows and Unix, the constraints that shape on-disk layout, and FAT as a concrete example.
 
-A file system interacts with storage by reading/writing blocks (sectors) on a per-volume basis. It is basically a thick layer of abstraction over the raw storage device.
+## Programming interface
 
-## Programming Interface
-
-- Naming: files and directories in a hierarchical structure.
-- Operations: create, delete, open, close, read, write, seek, stat, etc.
+Naming is hierarchical: files live in directories, and directories nest. The operations are the familiar ones.
 
 | Windows | Unix |
 |---------|------|
@@ -28,52 +37,48 @@ A file system interacts with storage by reading/writing blocks (sectors) on a pe
 | `DeleteFile(name)` | `unlink(name)` |
 | `MoveFile(old, new)` | `rename(old, new)` |
 
+### Moving files
 
+Unix always moves with the `rename` system call. Windows renames only when the file stays on the same volume; a move across volumes becomes a copy followed by a delete.
 
-We all know about this and I'm not going to get into it.
+### Deleting files
 
-### Windows vs. Unix
-
-#### Moving Files
-
-Windows and Unix have different ways of moving files. In Unix, you always use the `rename` system call. In Windows, moving a file within the same volume is a rename operation, whereas moving a file between volumes is a copy operation followed by a delete operation.
-
-#### Deleting Files
-
-In Unix, a file is not actually deleted until all references to it are removed. In Windows, a file is deleted as soon as the last reference to it is removed. This is why you can't delete a file that is open in Windows.
+Unix separates a file's name from the file itself. [`unlink`](https://man7.org/linux/man-pages/man2/unlink.2.html) removes the name, and the storage is reclaimed only after the last reference to the file (an open descriptor or a remaining hard link) goes away, so deleting a file that some process still has open works fine. Windows ties deletion to open handles instead. By default you cannot delete a file while a process has it open, which is where "file in use" errors come from.
 
 ## Files
 
-A file is logically just a sequence of bytes, typically consisting of data and properties/metadata. Some file systems also have types (ie. regular file, directory, symbolic link, device, etc.). 
+A file is logically a sequence of bytes, plus properties and metadata. Some file systems also track a type (regular file, directory, symbolic link, device). Some files are understood to be executable by the OS. Windows decides a file's type by its extension, while Unix records the type in the file's metadata.
 
-Some files are also understood to be executable by the OS. In Windows, the file type is determined by the file extension. In Unix, the file type is determined by the file's metadata.
-
-Shared file handles will also share the file's offset. This can be an issue if you have multiple threads or processes reading/writing to the same file handle.
-
+Shared file handles share the file's offset. Multiple threads or processes reading and writing through the same handle will step on each other's position.
 
 ## Directories
 
-A directory is typically just a file that contains metadata about the files it contains in the form of **directory entries**. It is a mapping from file names to file metadata.
+A directory is typically just a file whose contents are **directory entries**: a mapping from file names to file metadata.
 
+## Design constraints
 
-## Design Constriants
+- Support small and large files efficiently. Small files want small blocks for storage efficiency, while large files want contiguity.
+- File data lives in **blocks**, so an indexing structure has to locate the blocks of a file. Unix calls it an **inode**, Windows a **file control block**.
+- Free space has to be findable quickly, usually with a **bitmap** or a **free list** on disk.
+- Placement should maximize spatial locality while keeping seek time and fragmentation down.
+- Crashes and disk errors happen. **Journaling** recovers from crashes, and error detection/correction codes plus redundancy (RAID) recover from disk errors.
 
-- Want to support small and large files efficiently. Small files need small blocks for efficient storage, whereas large files need large blocks for contiguity
-- Store actual file data within **blocks**. Need an indexing structure to retrieve the blocks of a file: **inode** in Unix, **file control block** in Windows.
-- Also need to be able to efficiently locate free space. Often done with either a **bitmap** or a **free list** on disk.
-- Want to maximize spatial locality and minimize seek time, while minimizing fragmentation.
-- Need reliability and fault tolerance. Can use **journaling** to recover from crashes, and error detection/correction codes + redundancy to recover from disk errors (RAID).
+## On-disk structure
 
-## On-Disk Structure
+The file system has two representations. One layer actually gets persisted on disk. A separate in-memory representation is what the OS manipulates.
 
-There is typically a layer of storage that actually gets persisted on disk, as well as the in-memory representation of the file system that is manipulated by the OS.
+### FAT
 
-### FAT File System
+The **File Allocation Table** file system from DOS and early Windows keeps its on-disk structure simple. The volume splits into a reserved area, one or more FAT areas, and a data area:
 
-The **File Allocation Table** file system is a simple file system that was used in DOS and Windows. It has a simple on-disk structure that consists of a **reserved area**, a number of **FAT areas**, and a **data area**. The reserved area contains the boot sector and metadata about the file system/disk layout. The FAT areas contain the file allocation table, which is a table that maps file names to disk blocks. The data area contains the actual file data.
-
-```
+```text
 +-----------------+-----------------+-----------------+-----------------+
 | Reserved Area   | FAT Area 1      | FAT Area 2      | Data Area       |
 +-----------------+-----------------+-----------------+-----------------+
 ```
+
+The reserved area holds the boot sector and metadata about the file system and disk layout. Each FAT area holds a copy of the file allocation table, which has one entry per data cluster, and each entry points to the next cluster of the file it belongs to, so a file is a linked chain through the table. Directory entries in the data area map file names to a file's starting cluster and metadata. The data area holds the actual file contents.
+
+## Related notes
+
+- [[operating-systems/lecture-notes/io-systems-secondary-storage|I/O systems and secondary storage]]

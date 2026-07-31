@@ -1,114 +1,108 @@
 ---
 title: Files and Directories
 category: Operating Systems
-tags: directories, index structures, free space maps, locality heuristics, file systems, persistence, performance
+tags:
+  - directories
+  - index structures
+  - free space maps
+  - locality heuristics
+  - file systems
+  - persistence
+  - performance
 date: 2024-01-08
-description: Covers the implementation of file systems, including the use of directories and index structures for organizing and accessing data. Discusses free space management techniques and locality heuristics to optimize file system performance. Examines the internals of directories, such as link structures, and the mechanisms for finding data in files, including case studies and the FAT file system.
+updated: 2026-07-30
+status: evergreen
+description: Chapter notes on OSPP chapter 13. The four building blocks of file system implementations (directories, index structures, free space maps, locality heuristics), how directories name data, how index structures find it, and FAT as a case study with FFS, NTFS, and ZFS sketched for contrast.
+sources:
+  - title: "Operating Systems: Principles and Practice (2nd ed.), Anderson and Dahlin, chapter 13"
+    url: https://ospp.cs.washington.edu/
+    type: textbook
 ---
 
-# Chapter 13 - Files and Directories
+## Purpose
 
-Need to achieve the following:
-
-- **performance**
-- **flexibility**
-- **persistence**
-- **relability**
+Notes on chapter 13 of [Operating Systems: Principles and Practice](https://ospp.cs.washington.edu/). The chapter answers how a file system maps a name plus an offset to actual blocks on a storage device, while staying fast, flexible, persistent, and reliable. The abstraction this implements is covered in [[operating-systems/v4-persistent-storage/11-file-systems-overview|file-system overview]].
 
 ## Implementation Overview
 
-Most implementations are based on four key ideas:
+Most implementations are built from four ideas:
 
-- directories
-- index structures
-- free space maps
-- locality heuristics
+1. **directories**, which map names to file numbers
+2. **index structures**, which map file numbers and offsets to storage blocks
+3. **free space maps**, which track which blocks are available
+4. **locality heuristics**, which decide where to put data
 
 ### Directories and Index Structures
 
-File names and offsets are mapped to storage blocks in two steps:
-
-1. **directories** map names to file numbers
-2. **index structures** map file numbers and offsets to storage blocks
-
-Often, the index is some form of tree.
+Resolving a file name and offset to a storage block happens in two steps. The directory maps the name to a file number, then the index structure maps that file number and offset to a block. The index is usually some form of tree.
 
 ### Free Space Maps
 
-Free space maps are used to keep track of which blocks are free and which are in use. At a minimum, it needs to work, but it is also nice if files are allocated in a way that gives better spacial locality. For example, many file systems implement free space maps as bitmaps in persistent storage.
+The free space map tracks which blocks are free and which are in use. At minimum it just has to work, but a good one also allocates blocks so files get better spatial locality. Many file systems implement the free space map as a bitmap in persistent storage.
 
 ### Locality Heuristics
 
-Locality heuristics are used to improve performance. Operating systems implement their own policies on where to store data in order to increase the spacing locality of files. For instance, storing files in the same directory in the same area of the disk. Some also periodically _defragment_ the disk by rewriting files to be contiguous.
+The OS chooses where to place data to increase spatial locality. Storing files from the same directory in the same region of the disk is the common example, since those files tend to be accessed together. Some systems also periodically _defragment_ the disk, rewriting files to be contiguous.
 
 ## Directories: Naming Data
 
-Can simply store name -> number mappings in a file that represents the directory. As a base case, you can just have a predefined number for the root directory. Linux's Fast File System (FFS) uses 2 as the root directory's number. Files in the same directory are often accessed together, so it is nice to store them in the same area of the disk so that caching can work its magic.
+A directory can simply be a file holding name to file number mappings. The bootstrap is a predefined file number for the root directory; the Unix Fast File System (FFS) and many of its descendants use 2. Files in the same directory are often accessed together, so storing them in the same area of the disk lets caching do its work.
 
-Although they are files, directories need their own API to prevent users from accidentally corrupting the directory structure. However, processes can still `read` directories to get a list of files in a directory, but it can be convinent to have a syscall to get the list of files in a directory (`getdents` in Linux).
+Directories are files, but they get their own API so users cannot accidentally corrupt the directory structure. Processes can still `read` a directory to list its contents, and syscalls like `getdents` on Linux make that convenient.
 
 ### Internals
 
-Although simple lists of file name number pairs works (and were used in early versions of Linux), modern file systems use more complex data structures to acccomodate large directories. Linux XFS, Microsoft NTFS, and Oracle ZFS all use trees to store directories.
+Simple lists of name/number pairs work, and early Unix systems used exactly that. Modern file systems use trees to handle large directories: Linux XFS, Microsoft NTFS, and Oracle ZFS all do.
 
-XFS uses a B+ tree, and directory entries are stored in the first part of the directory file. The B+ tree's root node is stored in a known offset (`BTREE_ROOT_PTR`). The fixed-size internal and leaf nodes are stored after the root node, and the variable-size directory entries are stored at the start of the file. Starting from the root, each tree node includes pointers to where in the file its children are stored.
+In XFS, a directory is stored inside a file as a B+ tree. The variable-size directory entries sit at the start of the file, the tree's root node lives at a known offset (`BTREE_ROOT_PTR`), and the fixed-size internal and leaf nodes follow the root. Each tree node points to where in the file its children sit, so a lookup walks from the root down to the entry.
 
-#### Links
+### Links
 
-Hard links are multiple names (and directory entries) for the same file on disk. OS uses reference counting to garbage collect files that are unlinked.
+Hard links are multiple names, and so multiple directory entries, for the same file. The OS reference counts the links and garbage collects the file when the last one is unlinked. Soft (symbolic) links are files whose content maps to the name of another file.
 
-Soft (symbolic) links are files that directly map to the name of another file.
-
-A consequence of hard links is that you can't keep file metadata in the directory entry
+Hard links have a structural consequence: file metadata cannot live in the directory entry, because two entries would then hold two competing copies. Metadata has to live with the file itself, which is what the index structure provides a home for.
 
 ## Files: Finding Data
 
-Files systems usually try to:
+File systems usually aim to:
 
-- Locate blocks of disk that belong to a file
+- Locate the disk blocks belonging to a file
 - Maximize sequential data placement
 - Provide efficient access to all blocks
 - Minimize overhead for small files
-- Be scalable for large files
+- Scale to large files
 - Provide a place for metadata
 
-Some properties of file systems are:
+Storage hardware arranges data in *sectors* (magnetic disk) or *pages* (flash), but file systems allocate in *blocks*, a power-of-two multiple of the sector or page size. Linux uses 4KB blocks on 512 byte sectors. FAT and NTFS call blocks *clusters*. File systems also place data in variable length runs of contiguous blocks called *extents* (NTFS calls them *runs*).
 
-- The *index structure*, which maps file numbers and offsets to storage blocks. Is usually a tree.
-- The *free space map*, which keeps track of which blocks are free and which are in use. Is usually a bitmap.
-- The *locality heuristic*, which is used to improve performance. For example, storing files in the same directory in the same area of the disk.
+## Case Study: FAT
 
-Although storage arranges data in *sectors* (magnectic disk) or *pages* (flash), file systems usually use *blocks* as the unit of allocation. Blocks are usually a power of two multiple of the sector or page size. For example, Linux uses 4KB blocks on 512 byte sectors. FAT and NTFS call blocks *clusters*. Similarly, file systems store data in variable length arrays of contiguous tracks called *extents*. NTFs calls them *runs*.
+FAT is a very simple file system that uses a linked list as its index structure. It survives in flash drives and SD cards, and the most recent version, FAT32, supports volumes with up to $2^{28}$ blocks and files up to $2^{32} - 1$ bytes.
 
+The FAT itself is an array of 32-bit entries in a reserved area of the volume, one entry per block. A file is a linked list threaded through the FAT: each entry holds the index of the file's next block. A directory maps each file name to the index of the file's first FAT entry.
 
-### Case Studies
+The FAT doubles as the free space map. The OS scans for unused entries (0x00000000) to find free blocks.
 
-### FAT
+FAT uses simple allocation strategies like first-fit or next-fit, which fragment over time, so some implementations ship a defragmentation tool that rewrites files contiguously. The FAT defragmenter in Windows XP tries to rewrite each file into a single extent.
 
-Very simple file system that uses a linked list to store the index structure. Still used in places like flash drives and SD cards, and most recent version (FAT32) supports volumes with up to 2^28 blocks, and files with up to 2^32 - 1 byes.
+Its simplicity keeps it everywhere. Beyond simple storage devices, some applications use FAT-style layouts internally; Anderson and Dahlin note a FAT-like file system embedded in the .doc format used by Microsoft Word from 1997 to 2007.
 
-The FAT is an array of 32-bit entries that resides in a reserved area of the volume. Each file has a linked list of FAT entries that point to the blocks that make up the file. Directories map file names to the index of the first FAT entry for the file.
-
-System can also use the FAT for free space tracking. OS scans for unused entries (0x00000000), and takes it out of the free list.
-
-FAT usually uses simple allocation strategies like first-fit or next-fit. To deal with the resulting fragmentation, some implementations have a defragmentation tool that rewrites files to be contiguous. For example, the FAT degrafmenter in Windows XP tries to rewrite files to be within the same extent.
-
-It is widely used because it is simple. In addition to simple storage technologies, even some applications use FAT to store data. For example, there is a FAT-like file system embedded in .doc files made in Microsoft Word 1997-2007.
-
-**Drawbacks**:
+Drawbacks:
 
 - Usually poor locality of file data
-- Poor random access due to nature of linked list
-- Limited metadata and access control (no permissions, etc.)
+- Poor random access, since reaching an offset means walking the linked list
+- Limited metadata and no access control
 - No hard links
-- Limited file and volume sizes (volume max: 2^28 blocks, total max: 1TM)
-- Lacks support for transactional updates
+- Limited volume and file sizes (the $2^{28}$ block and $2^{32} - 1$ byte limits above)
+- No support for transactional updates
 
-**Unix Fast File System (FFS)**: Uses a tree-based multi-level index, and many locality heuristics to achieve good spacial locality. Linux's ext2 and ext3 are based on FFS.
+## Other Index Structures
 
-**NTFS**: Uses a tree-based structure that is more flexible than FFS's indexing scheme. Indexes variable sized extents* indead of individual blocks. NTFS is still used in Windows, and its techniques are used in many other modern file systems (ext4, XFS, HFS, HFS+).
+**Unix Fast File System (FFS)**: a tree-based multi-level index (the inode with direct, indirect, double-indirect pointers), plus many locality heuristics for good spatial locality. Linux's ext2 and ext3 are based on FFS.
 
-**ZFS**: Uses **copy-on-write**, writing new versions of files to free disk space instead of overwriting old versions. This optimizes for reliability and write performance
+**NTFS**: a tree-based structure more flexible than FFS's fixed indexing scheme, indexing variable-sized extents instead of individual blocks. Beyond Windows, NTFS's techniques appear in many modern file systems (ext4, XFS, HFS, HFS+).
+
+**ZFS**: **copy-on-write**, writing new versions of files to free disk space instead of overwriting old versions. This optimizes for reliability and write performance.
 
 ## Related notes
 

@@ -1,37 +1,37 @@
 ---
 title: Processes
 category: Operating Systems
-tags: operating systems, processes, address space, cpu state, namespace
+tags:
+  - processes
+  - address-space
+  - cpu-state
+  - pid-namespace
 date: 2024-01-13
-description: Covers the implementation of processes in operating systems, including the concept of a process, its address space, and the OS process namespace. Discusses the key components that make up a process, such as its CPU state and resources, and how the operating system manages and isolates processes.
+updated: 2026-07-30
+status: evergreen
+description: What a process is, the pieces that make one up (address space, CPU state, OS resources), the idealized address space layout, and the PID namespace.
+sources:
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# Processes
+A process is the OS's abstraction of a running program: a program in execution. The simplest case is one address space with a single thread of execution.
 
-## What is a process?
+## What's in a process
 
-The OS's abstraction of a running program. A process is a program in execution.
+A process consists of at least:
 
-Simplest case:
+- an address space, containing the code (instructions) and data of the running program
+- at least one CPU state, consisting of the instruction pointer (EIP), stack pointer (ESP), and the other general purpose registers
+- a set of OS resources, including open files, open pipes, open network connections, and so on
 
-- An address space
-- A sinle thread of execution
+### Address space
 
-## What's "in" a process?
+The stack grows down: push decrements ESP, pop increments it. The stack contains all runtime frames.
 
-Consists of (at least)
+A process's address space, idealized:
 
-- An address space, containing the code (instructions) and data of the running program
-- (At least one) CPU state, consisting of the instruction pointer (EIP), stack pointer (ESP), and other general purpose registers.
-- A set of OS resources, including open files, open pipes, open network connections, etc.
-
-### Address Space
-
-Remember stack grows down (ie push decrements ESP, pop increments ESP). Stack contains all runtime frames.
-
-A processes address space (idealized):
-
-```txt
+```text
 +----------------------+ <- 0x7FFFFFFF
 |        Stack         |
 |   (dynamic memory)   |
@@ -53,15 +53,15 @@ A processes address space (idealized):
 +----------------------+ 0x00000000
 ```
 
+## OS process namespace
 
-## OS Process Namespace
-
-- Each process has a unique identifier (PID)
-- The PID namespace is global to the OS
-- Operations that create processes (e.g. `fork`) returns the pid
-- Operations on processes take pid as an argument (e.g. `kill`)
+- Each process has a unique identifier, the PID.
+- The PID namespace is global to the OS.
+- Operations that create processes (e.g. `fork`) return the PID.
+- Operations on processes (e.g. `kill`) take a PID as an argument.
 
 ## Related notes
 
 - [[operating-systems/lecture-notes/kernel-abstraction|kernel abstractions]]
+- [[operating-systems/lecture-notes/handle-tables|handle tables]]
 - [[operating-systems/v2-concurrency/4-concurrency-and-threads|concurrency and threads]]

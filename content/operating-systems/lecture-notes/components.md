@@ -1,72 +1,65 @@
 ---
 title: Components of an OS
 category: Operating Systems
-tags: process operations, memory management, I/O, device drivers, file systems, process creation, process synchronization, virtual memory
+tags:
+  - process-operations
+  - memory-management
+  - io
+  - device-drivers
+  - file-systems
+  - kernel-structure
 date: 2024-01-13
-description: Covers the implementation of key components in an operating system, including process operations, memory management, and I/O. Discusses device drivers, file systems, and the layered structure of an OS, including the hardware abstraction layer and microkernel architectures. Highlights Dijkstra's "THE" multiprogramming system as an influential early design.
+updated: 2026-07-30
+status: evergreen
+description: Surveys the services an OS provides (process operations, memory management, I/O, file systems) and compares monolithic, layered, and microkernel structures.
+sources:
+  - title: E. W. Dijkstra, "The Structure of the 'THE'-Multiprogramming System" (CACM, 1968)
+    url: https://dl.acm.org/doi/10.1145/363095.363143
+    type: paper
+  - title: Operating systems course lecture notes
+    type: lecture
 ---
 
-# Components of an OS
+This note maps out what an operating system actually contains. The first half lists the services the kernel provides for processes, memory, I/O, and files. The second half looks at how kernels arrange those pieces.
 
-## Process Operations
+## Process operations
 
-OS provides the following kinds of operations:
+The OS provides operations to:
 
-- *Create* a process
-- *Delete* a process
-- *Suspend* a process
-- *Resume* a process
-- *Clone* a process
-- Inter-process *communication*
-- Inter-process *synchronization*
-- Create/delete *child* processes (*subprocess*)
+- create and delete a process
+- suspend and resume a process
+- clone a process
+- communicate and synchronize between processes
+- create and delete child processes (subprocesses)
 
-## Memory Management
+## Memory management
 
-primary memory is directly accessible to the CPU.
+Primary memory is the only storage the CPU can access directly. A program has to be in memory to execute, access is fast, and the contents disappear on power loss.
 
-- Programs must be in memory to execute
-- Memory access is fast
-- Memory is non-persistent (volatile)
-
-OS must:
-
-- Allocate memory for process
-- deallocate memory when process terminates
-- maintain mappings from physical -> virtual memory though *page tables*
-- decide how much memory to allocate to each process
+The OS allocates memory for a process, deallocates it when the process terminates, maintains the mapping between virtual and physical memory through page tables, and decides how much memory each process gets.
 
 ## I/O
 
-- a "big" chunk of kernel deals with I/O. Soft of like the "glue" that connects devices to the rest of the system.
-- OS must provide a uniform interface to devices
+A big chunk of the kernel deals with I/O. It acts as the glue between devices and the rest of the system, and it has to present a uniform interface over wildly different hardware.
 
-### Device Drivers
+### Device drivers
 
-Routines that interact with specific device types. **Encapsulate** the details of the device.
+Drivers are the routines that talk to a specific device type. They encapsulate the device's details, e.g. how to initialize it, how to request I/O, and how to handle its interrupts. SCSI drivers, Ethernet card drivers, and video card drivers are all examples. The lecture put the count of device drivers written for Windows around 35,000.
 
-- e.g. how to initialize the device, how to request I/O, how to handle interrupts, etc.
-- ex: SCSI device drivers, Ethernet card drivers, video card drivers.
+### File systems
 
-Note: Windows has ~35,000 device drivers.
+The file system is an abstraction on top of the physical storage drivers. It provides the usual per-file operations (open, close, read, write, seek) plus higher level operations on the file system itself:
 
-### File Systems
-
-A nice abstraction on top of physica storage device drivers. Provides the usual list of operations (open, close, read, write, seek, etc.), but also higher level operations on the fs itself:
-
-- create/delete files
-- create/delete directories
+- create and delete files and directories
 - accounting and quotas
 - backup and restore
-- (sometimes) indexing and searching
-- (sometimes) file versioning
+- sometimes indexing, search, and file versioning
 
+## Kernel structure
 
-### Structure
+### Monolithic
 
-```txt
-Monolith:
-
+```text
 +----------------------+
 |    User Programs     |
 +----------------------+
@@ -76,51 +69,35 @@ Monolith:
 |     Device Driver/   |
 |     hardware stuff   |
 +----------------------+
-
 ```
 
-advantages:
-- cost of module interaction is low (procedure call)
-
-disadvantages:
-- hard to maintain
-- hard to extend
-
+Everything lives in one kernel, so a call from one module to another costs only a procedure call. That is the main advantage. The price is a codebase that resists change, since every module can reach into every other module.
 
 ### Layering
 
+Dijkstra's ["THE" multiprogramming system](https://dl.acm.org/doi/10.1145/363095.363143) structured the OS as layers. Each layer presents a virtual machine to the layer above it and only uses the services of the layer below it:
 
-#### Dikjstra's "THE" multiprogramming system:
-
-Each layer presents a "virtual machine" to the layer above it. Each layer only uses the services of the layer below it.
-
-- Layer 5: Job Managers, execute user programs
-- Layer 4: Device Managers, handle devices and provide buffering
-- Layer 3: Console Manager, implements virtual consoles
-- Layer 2: Page Manager, implements virtual memory
-- Layer 1: Kernel, implements virtual processor for each process
-- Layer 0: Hardware
+- Layer 5: job managers, execute user programs
+- Layer 4: device managers, handle devices and provide buffering
+- Layer 3: console manager, implements virtual consoles
+- Layer 2: page manager, implements virtual memory
+- Layer 1: kernel, implements a virtual processor for each process
+- Layer 0: hardware
 
 Each layer can be tested and verified independently.
 
-#### Hardware Abstraction Layer
+### Hardware abstraction layer
 
-Goal: seperate hardwarte-specific routines from the "core" OS. Provides protability and improves readability.
-
+A HAL separates hardware-specific routines from the core OS, which makes the core portable and keeps hardware details out of the way of readers.
 
 ### Microkernels
 
-Introduced in the late 80s, early 90s. Goal: minimize the kernel, move as much as possible into user space.
+Microkernels showed up in the late 80s and early 90s. The idea is to shrink the kernel and move as much as possible into user space. The microkernel keeps basic services like process management, memory management, and I/O. Higher level services (file system, networking, scheduling policy) run as user-space server processes.
 
-Results in:
-- better reliability (isolation between components)
-- better portability (less code to port)
-- better extensibility (easier to add new features)
+The isolation between components buys reliability, and a smaller kernel means less code to port to new hardware. Extending the system means adding a server rather than patching the kernel. The cost is speed. Requests that a monolithic kernel would handle with a procedure call now cross address space boundaries, so a microkernel is probably slower.
 
-OS is split into two parts:
+## Related notes
 
-- microkernel: provides basic OS services (process management, memory management, I/O, etc.)
-- system processes (servers): provide higher level services (file system, networking, scheduling, etc.)
-
-Probably slower than monolithic kernel because of all the expensive context switches.
-
+- [[operating-systems/lecture-notes/kernel-abstraction|hardware modes]]
+- [[operating-systems/lecture-notes/processes|processes]]
+- [[operating-systems/lecture-notes/file-systems|file systems]]

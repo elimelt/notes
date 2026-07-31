@@ -1,17 +1,30 @@
 ---
 title: Memory-Level Parallelism Benchmarks
 category: Operating Systems
-tags: memory-level parallelism, MLP, pointer chasing, MSHR, latency hiding, benchmarks
+tags:
+  - memory-level-parallelism
+  - mlp
+  - pointer-chasing
+  - mshr
+  - latency-hiding
+  - benchmarks
 date: 2025-12-29
-description: Exploring how CPUs hide memory latency through memory-level parallelism, using multiple independent pointer chains to overlap DRAM accesses and achieve near-linear speedup up to hardware limits.
+updated: 2026-07-30
+status: needs-review
+description: Measures how running multiple independent pointer chains overlaps DRAM accesses, scaling from 92.6 ns per access with one chain down to 8.9 ns with sixteen.
 ---
 
+## Purpose
 
-# Memory-Level Parallelism (MLP)
+Measure how much DRAM latency the CPU can hide when memory accesses are independent of each other. A single pointer chase serializes everything, so it pays full latency on every load. Independent chains let the out-of-order core keep several misses in flight at once, and this benchmark counts how many this machine can actually sustain.
 
-## The Problem
+## Setup
 
-A single pointer chase serializes memory accesses:
+The CPU model and compiler flags were not recorded with these results, so the note is marked needs-review. The runs use a 256 MB array and the same `./bench` harness as the other notes in this directory. The single-chain baseline here (92.6 ns) matches the serial DRAM latency measured in [[operating-systems/benchmarks/README|measuring real DRAM latency]].
+
+## Workload
+
+The baseline is one pointer chase through a randomized chain:
 
 ```c
 size_t idx = 0;
@@ -20,11 +33,9 @@ for (size_t i = 0; i < n; i++) {
 }
 ```
 
-Each load depends on the previous result. The CPU issues one memory request, waits ~75ns for DRAM, then issues the next. Memory bandwidth sits mostly idle.
+Each load needs the result of the previous one, so the CPU issues one memory request, waits out the full DRAM round trip, then issues the next. Memory bandwidth sits mostly idle.
 
-## Multiple Chains
-
-Run N independent pointer chains simultaneously
+The variants run N independent chains in the same loop:
 
 ```c
 // 4 independent chains - CPU can issue 4 loads in parallel
@@ -34,53 +45,9 @@ idx2 = array[idx2];
 idx3 = array[idx3];
 ```
 
-No dependencies between chains. The CPU's load/store unit can have multiple outstanding memory requests in its **Miss Status Holding Registers (MSHRs)**. Modern CPUs probably have anywhere from a dozen to 64 MSHRs.
+Nothing connects the chains, so the load/store unit can hold all of them as outstanding misses in its Miss Status Holding Registers (MSHRs) at once. The MSHR count is the hardware ceiling on how many chains can help.
 
-## Results (256 MB array)
-
-| Chains | ns/access | Speedup | Effective MLP |
-|--------|-----------|---------|---------------|
-| 1      | 92.6 ns   | 1.0×    | 1.0 |
-| 2      | 53.6 ns   | 1.7×    | 1.7 |
-| 4      | 31.0 ns   | 3.0×    | 3.0 |
-| 8      | 15.6 ns   | 5.9×    | 5.9 |
-| 16     | 8.9 ns    | 10.4×   | 10.4 |
-
-## Observations
-
-### 1. Near-Linear Scaling to ~8 Chains
-
-Each additional chain nearly halves latency until we hit hardware limits. The CPU successfully overlaps memory requests when there are no dependencies.
-
-### 2. Diminishing Returns Past 8-10 Chains
-
-At 16 chains, we see ~10× speedup rather than 16×. This reflects:
-- MSHR capacity limits (~10-12 on this CPU)
-- Memory controller queue depth
-- DRAM bank conflicts when many requests are in flight
-
-### 3. Convergence with Random Access
-
-Compare to `ran` benchmark (random with independent indices): ~7ns. That's our ceiling - maximum MLP the hardware can sustain.
-
-| Benchmark | ns/access | MLP |
-|-----------|-----------|-----|
-| `chase` (1 chain) | 92.6 ns | 1 |
-| `mlp16` (16 chains) | 8.9 ns | ~10 |
-| `ran` (independent) | 7.6 ns | ~12 |
-
-## Why
-
-Most real code has memory access patterns somewhere between fully serial (pointer chase) and fully parallel (independent random). Understanding MLP helps you:
-
-1. **Restructure data** to enable parallel accesses
-2. **Batch operations** instead of one-at-a-time processing
-3. **Unroll loops** to expose multiple independent memory operations
-4. **Use prefetching** when you know future access patterns
-
-## Assembly
-
-Ensuring the compiler doesn't serialize the loads:
+It is worth checking the assembly to confirm the compiler kept the loads independent:
 
 ```asm
 ; 4-chain inner loop
@@ -92,9 +59,35 @@ Ensuring the compiler doesn't serialize the loads:
     ...
 ```
 
-All four `movq` instructions can be issued in the same cycle. The CPU's out-of-order engine tracks that they're independent and keeps all four memory requests in flight.
+The out-of-order engine sees four independent `movq` instructions and keeps all four memory requests in flight.
 
-## Running
+## Results
+
+| Chains | ns/access | Speedup | Effective MLP |
+|--------|-----------|---------|---------------|
+| 1      | 92.6 ns   | 1.0x    | 1.0 |
+| 2      | 53.6 ns   | 1.7x    | 1.7 |
+| 4      | 31.0 ns   | 3.0x    | 3.0 |
+| 8      | 15.6 ns   | 5.9x    | 5.9 |
+| 16     | 8.9 ns    | 10.4x   | 10.4 |
+
+For comparison, the `ran` benchmark (random access with independent indices, so maximum parallelism) lands at 7.6 ns:
+
+| Benchmark | ns/access | MLP |
+|-----------|-----------|-----|
+| `chase` (1 chain) | 92.6 ns | 1 |
+| `mlp16` (16 chains) | 8.9 ns | ~10 |
+| `ran` (independent) | 7.6 ns | ~12 |
+
+## Interpretation
+
+Scaling is close to linear up to 8 chains. Each doubling of chains nearly halves the time per access, which means the hardware really does overlap the requests.
+
+Past 8 chains the returns shrink. Sixteen chains gives 10.4x rather than 16x. The measured ceiling of roughly 10 to 12 concurrent misses is the interesting number here. It reflects the MSHR capacity of this core, plus memory controller queue depth and DRAM bank conflicts once that many requests are in flight. The fully independent `ran` benchmark converges to the same ceiling, so 7 to 8 ns per access is the best this machine can do for random DRAM reads no matter how the code is written.
+
+Real code sits somewhere between the fully serial chase and the fully parallel random loop. Knowing where your access pattern falls tells you what to fix. Restructuring data so accesses stop depending on each other, batching lookups instead of doing them one at a time, and unrolling loops to expose independent loads all move you toward the parallel end. Prefetching helps when future addresses are computable, which is measured separately in [[operating-systems/benchmarks/prefetch|software prefetching]].
+
+## Reproduction
 
 ```bash
 ./bench mlp1 256   # Baseline (1 chain)
@@ -105,3 +98,8 @@ All four `movq` instructions can be issued in the same cycle. The CPU's out-of-o
 ./bench ran 256
 ```
 
+## Related notes
+
+- [[operating-systems/benchmarks/README|measuring real DRAM latency]]
+- [[operating-systems/benchmarks/prefetch|software prefetching]]
+- [[operating-systems/benchmarks/bandwidth|memory bandwidth]]

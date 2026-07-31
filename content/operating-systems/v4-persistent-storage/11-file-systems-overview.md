@@ -1,14 +1,27 @@
 ---
 title: File Systems, Introduction and Overview
 category: Operating Systems
-tags: file systems, nonvolatile storage, metadata, executable files, file streams
+tags:
+  - file systems
+  - nonvolatile storage
+  - metadata
+  - executable files
+  - file streams
 date: 2024-01-08
-description: Covers the implementation of file systems, a key component of operating systems that provides a standardized interface for managing nonvolatile storage. Discusses the file system abstraction, including concepts like volumes and links, and how it enables efficient organization and access of data on storage devices.
+updated: 2026-07-30
+status: evergreen
+description: Chapter notes on OSPP chapter 11. What a file system has to provide, the properties of nonvolatile storage, and the core abstractions of files, directories, links, and volumes.
+sources:
+  - title: "Operating Systems: Principles and Practice (2nd ed.), Anderson and Dahlin, chapter 11"
+    url: https://ospp.cs.washington.edu/
+    type: textbook
 ---
 
-# File Systems: Introduction and Overview
+## Purpose
 
-What do we need in a filesystem?
+Notes on chapter 11 of [Operating Systems: Principles and Practice](https://ospp.cs.washington.edu/). This chapter sets up the file system abstraction; the implementation details live in [[operating-systems/v4-persistent-storage/13-files-and-directories|files and directories]].
+
+A file system has to deliver several things at once:
 
 - **Reliability**
 - **Large capacity and low cost**
@@ -16,33 +29,27 @@ What do we need in a filesystem?
 - **Named data**
 - **Controlled sharing**
 
-### Nonvolatile Storage
+## Nonvolatile Storage
 
-As opposed to DRAM, nonvolatile storage is persistent. It is also generally cheaper and can have higher capacity. However, it is also orders of magnitude (~5 in the case of magnetic disk accesses) slower than DRAM. Current nonvolatile storage technologies don't allow random access to words of data, but instead require that data be read and written in blocks of a fixed size (e.g. 512 bytes).
+Unlike DRAM, nonvolatile storage is persistent, and it is generally cheaper with higher capacity. The price is speed. A magnetic disk access takes on the order of milliseconds against DRAM's nanoseconds, roughly 5 orders of magnitude slower. Current nonvolatile storage technologies also do not allow random access to individual words. Data must be read and written in fixed-size blocks (e.g. 512 bytes). Both properties shape everything a file system does: it batches work into blocks and fights hard to avoid touching the device at all.
 
 ## The File System Abstraction
 
-A **File** is a named collection of data in a file system. Files are made of metadata and data. I won't go into what those are. Files can be "*executable*", and executable files on Linux begin with a magic number that tells the OS how to run the file. Scripts can also be executable, and they begin with a "shebang" (`#!`), following by the interpreter which tells the OS how to run the script.
+A **file** is a named collection of data in a file system, consisting of the data itself plus metadata describing it (size, owner, permissions, timestamps, and where the data lives on disk).
 
-Traditional files can be thought of as a signle logical stream of bytes. However, MacOS's Extended File System (HFS+) and Windows NTFS support multiple streams (forks) for a signle file. In these contexts, you need to specify which stream you want to read from/write to in the corresponding system calls.
+Files can be *executable*. Executable binaries on Linux begin with a magic number telling the OS how to run the file. Scripts can be executable too, beginning with a shebang (`#!`) followed by the interpreter that should run them.
 
-I won't define them, but you should also know and understand the following terms:
+A traditional file is a single logical stream of bytes. MacOS's HFS+ and Windows NTFS support multiple streams (forks) per file, and in those systems the read and write system calls take an argument naming which stream to touch.
 
-- **Directory**
-- **Root Directory**
-- **Home Directory**
-- **Current Working Directory**
-- **Path**
-- **Absolute Path**
-- **Relative Path**
+Terms worth having down cold: **directory**, **root directory**, **home directory**, **current working directory**, **path**, **absolute path**, **relative path**.
 
-#### Links
+### Links
 
-The mapping between a name and file is called a **hard link**. File systems that allow multiple hard links aren't a tree, and are instead usually a directed acyclic graph (DAG). A **symbolic link** is a mapping from a name to another file name. These are useful since they allow you to reference files that are stored on other systems/volumes. Some OS's support features managed outside of the file system. Windows has **shortcuts**, which are really just files that Windows recognizes and redirects from. MacOS has **aliases**, which are similar to symbolic links, but also refactor themselves when the target file is moved.
+The mapping between a name and a file is a **hard link**. A file system that allows multiple hard links to one file stops being a tree and becomes a directed acyclic graph. A **symbolic link** maps a name to another file name instead of to the file itself, which lets you reference files on other volumes or systems. Some operating systems layer similar features above the file system. Windows has **shortcuts**, ordinary files that Windows recognizes and redirects through. MacOS has **aliases**, which behave like symbolic links and also fix themselves up when the target file moves.
 
-#### Volumes
+### Volumes
 
-A **volume** is a collection of physical storage resources that form a logical storage device. In the simplest case, a volume is a single disk. However, a disk can be partitioned into multiple volumes, and a single volume can be made of multiple disks.
+A **volume** is a collection of physical storage resources forming one logical storage device. In the simplest case a volume is a single disk. A disk can also be partitioned into multiple volumes, and a single volume can span multiple disks.
 
 ## Related notes
 

@@ -1,21 +1,34 @@
 ---
 title: Branch Prediction Benchmarks
 category: Operating Systems
-tags: branch prediction, CPU, pipeline, branchless, performance, benchmarks
+tags:
+  - branch-prediction
+  - cpu
+  - pipeline
+  - branchless
+  - performance
+  - benchmarks
 date: 2025-12-29
-description: Measuring the cost of branch misprediction on modern CPUs, comparing sorted vs random data patterns, and exploring branchless programming techniques to avoid misprediction penalties.
+updated: 2026-07-30
+status: needs-review
+description: Measures the cost of branch misprediction by comparing sorted, random, and branchless variants of a conditional sum, and derives a per-misprediction penalty from the results.
+sources:
+  - title: The microarchitecture of Intel, AMD and VIA CPUs (Agner Fog)
+    url: https://www.agner.org/optimize/microarchitecture.pdf
+    type: docs
 ---
 
+## Purpose
 
-# Branch Prediction
+Measure what a branch misprediction costs on a real workload. Modern CPUs speculatively execute past branches before the outcome is known. A wrong guess forces a pipeline flush, and Agner Fog's [microarchitecture manual](https://www.agner.org/optimize/microarchitecture.pdf) puts that penalty in the tens of cycles for recent Intel and AMD cores. This benchmark makes the penalty visible by feeding the same branch predictable and unpredictable data.
 
-## The Problem
+## Setup
 
-Modern CPUs speculatively execute past branches before knowing the outcome. When the prediction is wrong, the pipeline flushes - typically 15-20 cycles wasted.
+The CPU model and compiler flags were not recorded with these results, so the note is marked needs-review. The cycle conversions below assume a 3 GHz clock. The runs use the same `./bench` harness as the other notes in this directory.
 
-## The Benchmark
+## Workload
 
-Conditionally sum array elements:
+Conditionally sum the elements of a 64 MB array:
 
 ```c
 for (size_t i = 0; i < n; i++) {
@@ -24,56 +37,38 @@ for (size_t i = 0; i < n; i++) {
 }
 ```
 
-Three variants:
-- **Sorted**: First half below threshold, second half above. Predictor learns the pattern.
-- **Random**: 50% probability per element. Predictor wrong ~50% of the time.
-- **Branchless**: Use bit manipulation instead of a branch.
+Three variants change how predictable the branch is:
 
-## Results (64 MB array)
+- `br_sort`: first half of the array below the threshold, second half above. The predictor learns this immediately.
+- `br_rand`: each element is below the threshold with 50% probability. The predictor is wrong about half the time.
+- `br_less`: branchless, using a mask instead of a branch.
+
+## Results
 
 | Variant | ns/element | vs sorted |
 |---------|------------|-----------|
-| `br_sort` (sorted) | 0.85 ns | 1.0× |
-| `br_less` (branchless) | 1.41 ns | 1.7× |
-| `br_rand` (random) | 2.75 ns | 3.2× |
+| `br_sort` (sorted) | 0.85 ns | 1.0x |
+| `br_less` (branchless) | 1.41 ns | 1.7x |
+| `br_rand` (random) | 2.75 ns | 3.2x |
 
-## Observations
+## Interpretation
 
-### 1. Misprediction Penalty: ~2 ns / ~6 cycles
+The random variant pays 2.75 - 0.85 = 1.9 ns extra per element. Only about half the elements mispredict, so each misprediction costs roughly 3.8 ns, or about 11 cycles at 3 GHz. That is on the low end of published flush penalties, which makes sense because the out-of-order core can overlap some of the recovery with other work.
 
-Random data causes ~50% misprediction. The 1.9 ns difference (2.75 - 0.85) amortized over 50% mispredictions suggests ~4 ns per misprediction, or ~12 cycles at 3 GHz.
-
-### 2. Branchless Trades ALU for Predictability
-
-The branchless version:
+The branchless variant replaces the branch with arithmetic:
 
 ```c
 uint64_t mask = -(array[i] < threshold);  // 0 or 0xFFFFFFFFFFFFFFFF
 sum += array[i] & mask;
 ```
 
-More instructions, but no branch. Faster than mispredicted branches, slower than predicted ones.
+It executes more instructions per element, so it loses to the well-predicted branch (1.41 ns vs 0.85 ns). It wins big against the mispredicted branch (1.41 ns vs 2.75 ns) because its cost is flat regardless of the data. The practical rule falls out of the numbers. Keep the branch when the data has a pattern the predictor can learn, and go branchless when the data is effectively random, as with hashed keys. If you can't tell which case you're in, profile it.
 
-### 3. When to Use Branchless
+One caveat when reproducing this: GCC and Clang at `-O3` sometimes convert branches to conditional moves (`cmov`) on their own, which erases the difference between the branchy and branchless variants. Check the generated assembly if the numbers look flat.
 
-- **Predictable data** (sorted, patterns): Use branches
-- **Unpredictable data** (random, hashed): Use branchless
-- **Mixed**: Profile and measure
+On the hardware side, predictors track the history of each branch and the recent outcomes of all branches, and combine both. Agner Fog's [manual](https://www.agner.org/optimize/microarchitecture.pdf) describes the schemes used by each microarchitecture. These predictors can learn repeating patterns like taken three times then not taken once. Truly random data defeats all of them, which is exactly what `br_rand` exploits.
 
-### 4. Modern Compilers
-
-GCC/Clang may auto-convert branches to conditional moves (`cmov`) with `-O3`. Check the assembly if results seem off.
-
-## Branch Predictor Basics
-
-Modern predictors use:
-- **Local history**: Pattern of recent outcomes for this branch
-- **Global history**: Pattern of recent branches (any branch)
-- **Hybrid**: Combines both with neural-network-like structures (TAGE)
-
-Predictors can learn patterns like "taken 3×, not taken 1×, repeat". They fail on truly random data.
-
-## Running
+## Reproduction
 
 ```bash
 ./bench br_sort 64   # Predictable (sorted)
@@ -81,3 +76,11 @@ Predictors can learn patterns like "taken 3×, not taken 1×, repeat". They fail
 ./bench br_less 64   # Branchless (mask)
 ```
 
+## Sources
+
+- [The microarchitecture of Intel, AMD and VIA CPUs (Agner Fog)](https://www.agner.org/optimize/microarchitecture.pdf)
+
+## Related notes
+
+- [[operating-systems/benchmarks/store_fwd|store-to-load forwarding]]
+- [[operating-systems/benchmarks/prefetch|software prefetching]]

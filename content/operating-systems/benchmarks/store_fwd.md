@@ -1,23 +1,34 @@
 ---
 title: Store-to-Load Forwarding Benchmarks
 category: Operating Systems
-tags: store forwarding, store buffer, memory ordering, CPU microarchitecture, performance, benchmarks
+tags:
+  - store-forwarding
+  - store-buffer
+  - memory-ordering
+  - microarchitecture
+  - performance
+  - benchmarks
 date: 2025-12-29
-description: Measuring the performance impact of store-to-load forwarding on modern CPUs, showing how aligned stores enable fast forwarding while partial overlaps cause significant stalls.
+updated: 2026-07-30
+status: needs-review
+description: Measures store-to-load forwarding on a modern x86 core, showing that an exactly matching load beats even an independent load, while a partially overlapping load stalls 7x.
+sources:
+  - title: The microarchitecture of Intel, AMD and VIA CPUs (Agner Fog)
+    url: https://www.agner.org/optimize/microarchitecture.pdf
+    type: docs
 ---
 
+## Purpose
 
-# Store-to-Load Forwarding
+Measure what store-to-load forwarding is worth, and what it costs when it fails. When a load reads an address that was just written, the CPU can forward the value straight from the store buffer instead of waiting for the store to commit to cache. Forwarding only works when the load lines up with the store. A partial overlap forces a store forwarding stall, where the load waits for the store to reach L1 before it can read.
 
-## The Problem
+## Setup
 
-When a load reads from an address that was just written, the CPU can forward the data directly from the store buffer instead of waiting for the store to commit to cache. This is **store-to-load forwarding**.
+The CPU model and compiler flags were not recorded with these results, so the note is marked needs-review. The cycle conversion below assumes a 3 GHz clock. The runs use the same `./bench` harness as the other notes in this directory.
 
-However, forwarding only works when the load exactly matches the store. Partial overlaps cause a **store forwarding stall** - the CPU must wait for the store to commit before loading.
+## Workload
 
-## The Benchmark
-
-Three patterns:
+Three store-then-load patterns, run in a tight loop:
 
 ```c
 // Aligned: store 8 bytes, load same 8 bytes (forwarding works)
@@ -33,42 +44,21 @@ array[0] = i;
 sum += array[64];
 ```
 
-## Results (64 MB array)
+## Results
 
 | Pattern | ns/op | vs forwarding |
 |---------|-------|---------------|
-| `sf_fwd` (aligned) | 0.52 ns | 1.0× |
-| `sf_indep` (independent) | 0.70 ns | 1.3× |
-| `sf_stall` (overlap) | 3.64 ns | 7.0× |
+| `sf_fwd` (aligned) | 0.52 ns | 1.0x |
+| `sf_indep` (independent) | 0.70 ns | 1.3x |
+| `sf_stall` (overlap) | 3.64 ns | 7.0x |
 
-## Observations
+## Interpretation
 
-### 1. Forwarding is Faster Than Independent
+The aligned case beats the independent case, 0.52 ns against 0.70 ns, even though the independent load has no dependency at all. Forwarded data comes straight out of the store buffer with no cache lookup, so a load that exactly matches a recent store gets its value faster than an L1 hit.
 
-The aligned case (0.52 ns) beats the independent case (0.70 ns). Store-forwarding provides data faster than even an L1 cache hit because:
-- No cache lookup needed
-- Data comes directly from store buffer
-- Zero latency dependency
+The overlapping case pays about 3.1 ns extra per operation, roughly 10 cycles at 3 GHz. The store buffer can't forward a value that only partially covers the load, so the CPU waits for the store to commit to L1 and then performs the load from cache. Agner Fog's [microarchitecture manual](https://www.agner.org/optimize/microarchitecture.pdf) documents the exact forwarding rules per CPU family. The common failure cases are a load smaller than the store that isn't aligned to the store's start, a load larger than the store, a load spanning multiple stores, and on some cores mismatched sizes at the same address.
 
-### 2. Overlap Stall: ~3 ns Penalty
-
-When the load partially overlaps the store, the CPU cannot forward. It must:
-1. Wait for the store to commit to L1 cache
-2. Then perform the load from cache
-
-This adds ~3 ns (roughly 10 cycles at 3 GHz).
-
-### 3. When Forwarding Fails
-
-Store-forwarding fails when:
-- Load is smaller than store and not aligned to store start
-- Load is larger than store
-- Load spans multiple stores
-- Store and load have different sizes at same address (sometimes)
-
-### 4. Compiler Implications
-
-The compiler doesn't know about store-forwarding stalls. Code like:
+The compiler won't save you from this. It has no model of forwarding stalls, so code like the following can be quietly slow:
 
 ```c
 struct { char a; int64_t b; } __attribute__((packed)) s;
@@ -76,9 +66,9 @@ s.b = value;
 use(s.b);  // May stall if 'a' was recently written
 ```
 
-Can cause unexpected slowdowns.
+Packed structs and type-punned byte buffers are where this bites in practice, since they produce loads and stores of different sizes and offsets over the same bytes.
 
-## Running
+## Reproduction
 
 ```bash
 ./bench sf_fwd 64     # Aligned (forwarding)
@@ -86,3 +76,11 @@ Can cause unexpected slowdowns.
 ./bench sf_indep 64   # Independent (no dependency)
 ```
 
+## Sources
+
+- [The microarchitecture of Intel, AMD and VIA CPUs (Agner Fog)](https://www.agner.org/optimize/microarchitecture.pdf)
+
+## Related notes
+
+- [[operating-systems/benchmarks/branch|branch prediction]]
+- [[operating-systems/benchmarks/false_sharing|false sharing]]

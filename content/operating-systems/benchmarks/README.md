@@ -1,32 +1,45 @@
 ---
 title: Measuring Real DRAM Latency
 category: Operating Systems
-tags: memory, DRAM, SRAM, cache, latency, benchmarks, pointer chasing, memory hierarchy
+tags:
+  - memory
+  - dram
+  - sram
+  - cache
+  - latency
+  - benchmarks
+  - pointer-chasing
+  - memory-hierarchy
 date: 2025-12-29
-description: An in-depth exploration of DRAM and SRAM memory latency, including the physical principles behind memory cells, row buffers, and how to measure true serial DRAM latency using pointer chasing benchmarks to eliminate memory-level parallelism.
+updated: 2026-07-30
+status: needs-review
+description: Measures true serial DRAM latency with a pointer-chasing benchmark, explains why naive strided benchmarks understate it, and covers the SRAM and DRAM physics that set the numbers.
+sources:
+  - title: What Every Programmer Should Know About Memory (Ulrich Drepper)
+    url: https://www.akkadia.org/drepper/cpumemory.pdf
+    type: paper
 ---
 
+## Purpose
 
-# Measuring Real DRAM Latency
+When you write `int x = array[i]` in C, how long does it actually take? The answer depends on where the data lives in the memory hierarchy. A DRAM access costs orders of magnitude more than a hit in the CPU's SRAM caches, and the naive way of measuring it understates the cost badly. This note measures the true serial DRAM latency on my machine with a pointer-chasing benchmark and explains why the naive numbers lie.
 
-When you write `int x = array[i]` in C, how long does it actually take? The answer depends on where the data lives in your system's memory hierarchy. Accessing data in DRAM, the legit RAM that you have probably touched/nervously forced into sockets (if you've built a computer), is orders of magnitude slower than accessing data in the CPU's caches (SRAM, e.g. L1, L2, L3)
+## Setup
 
-## The Memory Hierarchy
+Intel i9-13900HK, 96 GB RAM, 25 MB L3 cache, 64-byte cache lines. The compiler and flags were not recorded with these results, which is why the note is marked needs-review. Rough latencies and sizes for this system:
 
-Modern CPUs have multiple levels of storage, each with different speeds. The system I'm testing on looks like this:
+- L1 cache: ~1-4 ns, 48 KB
+- L2 cache: ~10-20 ns, 1.3 MB
+- L3 cache: ~20-40 ns, 25 MB
+- DRAM: ~60-100 ns, 96 GB
 
-- **L1 cache**: ~1-4 ns, 48 KB
-- **L2 cache**: ~10-20 ns, 1.3 MB
-- **L3 cache**: ~20-40 ns, 25 MB
-- **DRAM**: ~60-100 ns, 96 GB
-
-The first three are SRAM - static RAM. SRAM is fundamentally different from DRAM, in that it both functions and is built differently, using entirely different physical mechanisms/principles than DRAM.
+The first three levels are SRAM, static RAM. SRAM works on entirely different physical principles than DRAM, and the difference explains most of the latency gap.
 
 ## SRAM
 
-SRAM is built from standard digital logic. A basic SRAM cell (6T-SRAM) uses 6 transistors arranged as \*cross-coupled \*\*inverters:
+SRAM is built from standard digital logic. A basic 6T-SRAM cell uses 6 transistors arranged as cross-coupled inverters. An inverter is a logic gate that outputs the inverse of its input, and cross-coupled means each inverter's output feeds the other's input, which creates a bistable circuit that holds its state.
 
-```
+```text
     VDD
      |
   |--+--|  Cross-coupled
@@ -59,54 +72,42 @@ module sram #(
 endmodule
 ```
 
-Physically, this synthesizes to:
-1. **Decoder logic**: Activates one of 1024 word lines based on address
-2. **Memory array**: 1024 rows x 32 bits = 32,768 six-transistor cells
-3. **Sense amplifiers**: Detect voltage on bit lines and amplify to logic levels
-4. **Output drivers**: Drive the data bus
+Physically, this synthesizes to decoder logic that activates one of 1024 word lines, a memory array of 1024 rows x 32 bits of six-transistor cells, sense amplifiers that detect voltage on the bit lines and amplify it to logic levels, and output drivers for the data bus.
 
-Perhaps mose importantly, SRAM is **static**; as long as power is on, the cross-coupled inverters hold their state. Access time is ~0.3-1 ns because it's just transistor switching.
-
-However, 6 transistors per bit makes SRAM expensive in die area. My L1 cache is only 48 KB 😞
-
-\* cross-coupled means the output of one inverter feeds back into the other, creating a stable state.
-
-\*\* inverters are logic gates that output the inverse of their input
+SRAM is static. As long as power is on, the cross-coupled inverters hold their state. Access time is around 0.3-1 ns because the whole read is just transistor switching. The catch is cost. Six transistors per bit eat die area fast, which is why my L1 cache is only 48 KB.
 
 ## DRAM
 
-DRAM stores each bit as **charge on a capacitor**. A DRAM cell is just one transistor plus one capacitor (1T1C):
+DRAM stores each bit as charge on a capacitor. A DRAM cell is one transistor plus one capacitor (1T1C):
 
-```
+```text
     Bit Line (vertical metal trace)
        |
        |
-    [===]  ← Capacitor (~50 fF, holds ~30,000 electrons)
+    [===]  <- Capacitor (tens of femtofarads)
        |
-    --+--  ← NMOS access transistor
+    --+--  <- NMOS access transistor
        |
     Word Line (horizontal polysilicon)
 ```
 
-Like I mentioned earlier, DRAM and SRAM are funamentally different because DRAM is an analog circuit, while SRAM is digital. The capacitor holds a voltage, but capacitors leak charge over time according to RC time constants. Therefore DRAM is **dynamic**; without periodic refresh (every \~64ms), the data disappears.
+Where SRAM is digital, DRAM reads are an analog operation. The capacitor holds a voltage, and capacitors leak charge over time according to their RC time constants. That makes DRAM dynamic. Without a refresh roughly every 64 ms, the data disappears. Drepper's [What Every Programmer Should Know About Memory](https://www.akkadia.org/drepper/cpumemory.pdf) covers the cell design and refresh mechanics in depth.
 
-I don't actually know that much about the low-level internals/implementation of DRAM, because I'm a computer engineer, not an electrical engineer. That being said, there *is* at least a baseline understanding I use to reason about DRAM performance from the perspective of a computer engineer.
+I don't know the low-level DRAM internals well, since I'm a computer engineer rather than an electrical engineer. The baseline model I use to reason about DRAM performance goes like this:
 
-It works like this:
+1. Precharge the bit line
+2. Activate the word line (open the access transistor)
+3. The capacitor connects to the bit line
+4. Charge redistributes between the tiny cell capacitor and the much larger bit line capacitance
+5. The result is a tiny voltage swing on the bit line, on the order of 100-200 mV
 
-1. Precharge bit line
-2. Activate word line (open transistor)
-3. Capacitor connects to bit line
-4. Charge redistributes between tiny capacitor (50 fF) and large bit line (~500 fF)
-5. This creates a tiny voltage swing: \~100-200 mV
+A sense amplifier, a differential analog circuit, detects this small swing and amplifies it to full logic levels. The sense amplifier also latches the amplified value into the row buffer.
 
-A **sense amplifier** (differential analog circuit) detects this small voltage and amplifies it to full logic levels. The sense amplifier also latches the amplified value into what's called the **row buffer**.
+## The row buffer
 
-## The Row Buffer
+DRAM cells are arranged in a 2D array, and access happens in two steps:
 
-DRAM cells are arranged in a 2D array. To access data:
-
-```
+```text
 Step 1: RAS (Row Address Strobe)
   - Activate word line
   - All ~1024-8192 cells in that row dump charge onto bit lines
@@ -118,26 +119,21 @@ Step 2: CAS (Column Address Strobe)
   - Drive data onto output bus
 ```
 
-The row buffer is actual hardware - a set of SRAM-like latches (one per column). Once a row is open, accessing different columns in that row is fast (~10-15 ns) because you're just reading from latches.
+The row buffer is real hardware, a set of SRAM-like latches, one per column. Once a row is open, hitting different columns in that row is fast (~10-15 ns) because you're just reading latches.
 
-Accessing a on the slow path requires:
-1. **Precharge**: Close current row (~15 ns)
-2. **RAS**: Open new row, wait for sensing (~15 ns)
-3. **CAS**: Column access (~10 ns)
+Accessing a closed row takes the slow path. Precharge closes the current row (~15 ns), RAS opens the new row and waits for sensing (~15 ns), then CAS does the column access (~10 ns). Call it 40-50 ns for the full row operation, versus 10-15 ns when the row is already open and you only pay the CAS.
 
-Total: ~40-50 ns for the row operation, vs ~10-15 ns if the row is already open (meaning you just did a CAS)
+## Physical constraints
 
-## Physical Constraints
+Why does this take so long? Two effects dominate.
 
-Why does this take so long?
+Wire delay. Signals travel at roughly 2/3 the speed of light in a conductor. On a 3 GHz CPU, light in vacuum covers about 10 cm per clock cycle, and the DRAM chips sit several centimeters from the CPU over motherboard traces. The round-trip signal propagation alone is on the order of 5-10 ns.
 
-**Wire delay**: Signals travel at roughly 2/3 the speed of light in silicon. On a 3 GHz CPU, if light travels ~6 cm per clock cycle, and DRAM chips are several centimeters away from the CPU connected by traces on the motherboard, then just the round-trip signal propagation is ~5-10 ns.
+Capacitor charging. The cell capacitor is tiny and takes time to charge and discharge. Worse, activating a word line connects every cell in the row, thousands of capacitors, to bit lines at once, and all those sense amplifiers must stabilize before the data is valid. How long exactly? I'm not sure, and I refuse to do the math.
 
-**Capacitor charging**: The DRAM cell capacitor is small (~50 fF) and takes time to charge/discharge. Likewise, when you activate a word line, you're simultaneously connecting ~1024-8192 capacitors to bit lines. All those sense amplifiers must stabilize before data is valid. How much time does this take? I'm not sure, and I refuse to do the math.
+## First attempt, and why it failed
 
-## Initial Benchmark Attempt
-
-I wrote a simple benchmark to measure sequential vs strided access:
+I wrote a simple benchmark to compare sequential and strided access:
 
 ```c
 // Sequential access
@@ -151,20 +147,20 @@ for (size_t i = 0; i < n; i += 1024) {
 }
 ```
 
-Running on a 64 MB array (larger than my 25 MB L3 cache):
+Running on a 64 MB array, larger than my 25 MB L3:
 
-```
+```text
 Sequential:  1.50 ns/access
 Stride 1024: 13.18 ns/access
 ```
 
-This showed a difference, but both numbers were suspiciously low for DRAM access. Looking at `perf` counters:
+A difference, sure, but both numbers were suspiciously low for DRAM. The `perf` counters showed the strided version missing L3 constantly:
 
-```
+```text
 LLC-load-misses: 80.52% of all L3 accesses
 ```
 
-The strided version was missing L3 and going to DRAM, yet only taking 13 ns. Something was hiding the true latency. Modern CPUs can have ~10-12 outstanding memory requests in flight simultaneously. When my loop does:
+So the loads were reaching DRAM, yet each one appeared to take only 13 ns. Something was hiding the true latency. The culprit is memory-level parallelism. My loop does this:
 
 ```c
 sum += array[i];      // Load request sent
@@ -172,13 +168,11 @@ sum += array[i+1024]; // Another load sent before first completes
 // ... multiple loads in flight ...
 ```
 
-The loads are independent - the CPU doesn't need the result of one to start the next. This **memory-level parallelism (MLP)** hides latency. If each DRAM access takes 100 ns but I have 10 in flight, I get results every ~10 ns on average.
+The loads are independent. The CPU never needs the result of one to start the next, so its load/store unit keeps a queue of outstanding requests and can hold around 10-12 loads in flight at once. If each DRAM access takes 100 ns but 10 are in flight, results arrive every 10 ns on average. It's pipelining, applied to memory requests. I measure this effect directly in [[operating-systems/benchmarks/mlp|memory-level parallelism]].
 
-The CPU's load/store unit has a queue of pending memory operations. As long as there are no data dependencies, it can issue new loads while waiting for old ones to complete. Like pipelining, but for memory operations across multiple clock cycles.
+## Pointer chasing
 
-## No MLP: Pointer Chasing
-
-To measure true serial latency, each load must depend on the previous one. The solution is pointer chasing - create a linked list where each element points to the next:
+To measure true serial latency, each load must depend on the previous one. Pointer chasing does this. Build a linked list where each element holds the index of the next, in randomized order:
 
 ```c
 // Setup: create randomized pointer chain
@@ -194,45 +188,46 @@ for (size_t i = 0; i < n; i++) {
 }
 ```
 
-The CPU can't start `array[index]` until it knows what `index` is. Each load has a true data dependency on the previous one, preventing the CPU from issuing them in parallel.
+The CPU can't start loading `array[index]` until it knows `index`. Every load carries a true data dependency on the previous one, so nothing overlaps.
 
 ## Results
 
-I implemented three benchmarks and ran them on a 4 GB array (well beyond cache size):
-
-**System:** Intel i9-13900HK, 96 GB RAM, 25 MB L3 cache, 64-byte cache lines
+Three benchmarks on a 4 GB array, well beyond cache size:
 
 | Benchmark | ns/access | LLC Misses | Explanation |
 |-----------|-----------|------------|-------------|
 | Sequential | 1.35 | 98% | Hardware prefetcher brings data into cache before needed |
 | Random (parallel) | 7.90 | 99% | Hitting DRAM but MLP hides latency (~10 loads in flight) |
-| Pointer Chase | **97.40** | 99% | True serial DRAM latency - no parallelism possible |
+| Pointer Chase | 97.40 | 99% | True serial DRAM latency, no parallelism possible |
 
-## Why Sequential is So Fast
+## Why sequential is so fast
 
-Modern CPUs have hardware prefetchers that detect access patterns. When they see sequential access (stride of 1), they speculatively fetch cache lines ahead of the program. The `perf` stats show this clearly:
+The hardware prefetcher detects the stride-1 pattern and speculatively fetches cache lines ahead of the program. The `perf` counts make this obvious:
 
-```
+```text
 Sequential:    1.3M LLC loads    (for 537M accesses)
 Random:        1.07B LLC loads   (for 537M accesses)
 ```
 
-With sequential access, only ~0.2% of accesses reach L3 - almost everything is prefetched into L1/L2. The prefetcher is effectively predicting the future, bringing cache lines into L1 before the load instruction even executes.
+With sequential access, only about 0.2% of accesses ever reach L3. The prefetcher pulls lines into L1 and L2 before the load instruction even executes. Each 64-byte line covers 8 adjacent `uint64_t` values, and the prefetcher tracks multiple concurrent streams with strides up to a few KB.
 
-Cache lines are 64 bytes on my system, so each prefetch brings in 8 adjacent `uint64_t` values. The prefetcher tracks multiple concurrent streams and can detect strides up to a few KB.
+## Reading the 97 ns number
 
-## My guess for the 97 ns latency
+My guess is that 97 ns is an average across row buffer hits and misses. A row buffer hit might land around 50-60 ns end to end, while a miss that has to precharge the old row and activate a new one could run 100-120 ns. Random pointer chasing hits a mix of both, and the memory controller can't optimize for row locality when it can't predict the access pattern. I hesitate to pin it down further without writing more benchmarks.
 
-This is actually an average across row buffer hits and misses. A row buffer hit (data in already-open row) might be ~50-60 ns, while a row buffer miss (must precharge old row, activate new one) could be ~100-120 ns.
+## Reproduction
 
-My random pointer chasing likely hits a mix of both, averaging to ~97 ns. The memory controller doesn't know our access pattern, so it can't optimize for row locality.
-
-That all being said, I hesitate to guess exactly without writing more benchmarks.
-
-## Code
-
-To run:
 ```bash
 make
 ./run_benchmarks.sh 4096  # 4096 MB array
 ```
+
+## Sources
+
+- [What Every Programmer Should Know About Memory (Drepper)](https://www.akkadia.org/drepper/cpumemory.pdf)
+
+## Related notes
+
+- [[operating-systems/benchmarks/mlp|memory-level parallelism]]
+- [[operating-systems/benchmarks/bandwidth|memory bandwidth]]
+- [[operating-systems/benchmarks/tlb|TLB and page walks]]

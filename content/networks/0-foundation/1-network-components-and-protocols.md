@@ -1,61 +1,65 @@
 ---
 title: Network Components and Protocols
 category: Networks
-tags: network components, network protocols, network layers, OSI model, network interfaces, encapsulation, demultiplexing
+tags:
+  - network-components
+  - protocols
+  - layering
+  - osi-model
+  - encapsulation
+  - demultiplexing
 date: 2024-01-04
-description: Describes the components of a network, including hosts, routers, links, and applications. It also covers the concept of network boundaries and interfaces, and the advantages and disadvantages of network layering. The OSI model is introduced, along with the actual Internet Protocol Stack.
+updated: 2026-07-30
+status: evergreen
+description: Names the parts of a network (applications, hosts, routers, links), classifies networks by scale, and explains protocol layering, encapsulation, and demultiplexing. Ends with the OSI model and the Internet protocol stack.
+sources:
+  - title: UW CSE 461 Computer Networks
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: course
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Network Components
+## Purpose
+
+Pin down the vocabulary for the rest of these networking notes. Everything from [[networks/0-foundation/2-physical-layer|the physical layer]] up assumes the terms and the layering model defined here.
 
 ## Parts of a network
 
-**Application** (app, user) - The application is the program that is running on the computer. It is the program that is using the network to communicate with other computers. Examples of applications are web browsers, email clients etc.
+**Application** (app, user). The program that uses the network to communicate with other machines. Browsers and email clients are applications.
 
-**Host** (end system, edge device, node) - The host is the computer that is running the application. It is the computer that is using the network to communicate with other computers. Examples of hosts are desktop computers, laptops, mobile phones etc.
+**Host** (end system, edge device, node). The computer the application runs on. Desktops, laptops, and phones are hosts.
 
-**Router** (switch, node, hub) - Device used to relay messages between links. Connects networks together. Examples of routers are home routers/access points, cabel/DSL modems etc.
+**Router** (switch, node, hub). A device that relays messages between links and connects networks together. A home access point and a cable modem both do this job.
 
-**Link** (channel) - A connection between nodes. Examples of links are Ethernet cables, fiber optic cables, wireless connections etc.
+**Link** (channel). A connection between nodes, such as an Ethernet cable, a fiber strand, or a wireless channel.
 
 ### Types of links
 
-- **Full-duplex** - Both nodes can send and receive at the same time. *Bidirectional*. Ex: ethernet
-- **Half-duplex** - Only one node can send at a time. *Bidirectional*. Ex: WiFi
-- **Simplex** - Only one node can send at a time. *Unidirectional*. Ex: 
+- **Full-duplex**: both ends can send and receive at the same time. Bidirectional. Ethernet is full-duplex.
+- **Half-duplex**: bidirectional, but only one end can send at a time. WiFi is half-duplex.
+- **Simplex**: one direction only, one sender. Broadcast radio works this way.
 
-### Wireless Links
+### Wireless links
 
-Messages are **broadcast**. All nodes in range recieve the message. Often, in graph depictions of a network, only the logical (but not all possible) links are shown.
+Wireless messages are **broadcast**. Every node in range receives them, whether or not it is the intended destination. Graph drawings of wireless networks usually show only the logical links, since drawing every possible link would bury the picture.
 
-## Network Names by Scale
+## Network names by scale
 
-**Personal Area Network** (PAN) - A network that is available in a single person's vicinity.
+| Name | Reach | Examples |
+|------|-------|----------|
+| Personal Area Network (PAN) | one person's vicinity | Bluetooth, USB, FireWire |
+| Local Area Network (LAN) | one building | Ethernet, WiFi |
+| Metropolitan Area Network (MAN) | one city | cable TV, DSL |
+| Wide Area Network (WAN) | a country or region | a large ISP, 3G/4G |
+| Internet | global | the Internet |
 
-*Examples*: Bluetooth, USB, FireWire etc.
+Connect multiple networks and you get an **internetwork**, or **internet**. The Internet with a capital I is the global internet.
 
-**Local Area Network** (LAN) - A network that is available in a single building.
+### Switched networks
 
-*Examples*: Ethernet, WiFi etc.
-
-**Metropolitan Area Network** (MAN) - A network that is available in a city.
-
-*Examples*: cable TV, DSL etc.
-
-**Wide Area Network** (WAN) - A network that is available in a country or geographic location.
-
-*Examples*: a large ISP, 3G/4G wireless networks etc.
-
-**Internet** - A network that is available globally.
-
-*Examples*: the Internet.
-
-
-When you connect multiple networks, you get an **internetwork**, or **internet**. The Internet (capital I) is the internet we all know and love.
-
-#### Switched Network
-
-**Switched networks** forward messages from node-to-node, until they reach their destination. The two most common switched networks are **circuit-switched** (phones) and **packet-switched** (most computer networks) networks.
+**Switched networks** forward messages node to node until they reach their destination. The two common kinds are **circuit-switched** networks (telephony) and **packet-switched** networks (most computer networks).
 
 ```txt
     +-- (Host)      --+
@@ -69,15 +73,13 @@ When you connect multiple networks, you get an **internetwork**, or **internet**
     +-- (Host)      --+
 ```
 
-Packet switched networks (PSN) send data in discrete chunks, called **packets**, or messages. PSNs typically use **store-and-forward** switching, where the entire packet is received and loaded into memory, then forwarded to the next node. This is opposed to a circuit switched network, where a stream of data is sent over a maintained connection.
+A packet-switched network sends data in discrete chunks called **packets**. It typically uses **store-and-forward** switching, where each node receives the whole packet into memory before forwarding it to the next node. A circuit-switched network instead maintains a dedicated connection and sends a continuous stream over it.
 
-Networks use an _address_ to identify the destination of a packet. Packets can be sent from node to node (_unicast_), but also to all other nodes _(broadcast_), or to a subset of nodes (_multicast_).
+Networks use an **address** to identify the destination of a packet. A packet can go to one node (**unicast**), to all nodes (**broadcast**), or to a chosen subset (**multicast**).
 
+## Network boundaries
 
-
-## Network Boundaries
-
-```
+```txt
 (Router) --- (Host) --- client
    |
 (Link)
@@ -85,13 +87,11 @@ Networks use an _address_ to identify the destination of a packet. Packets can b
 (Router) --- (Host) --- server
 ```
 
-#### What part is the network?
+Which part is "the network"? Everything below the application. Some treatments exclude the hosts; the course these notes come from includes them.
 
-Everything that isn't the application level. Some people do and don't include the host, but in this course we do.
+You can also collapse the middle into a generic cloud when the internals don't matter:
 
-#### Can think of "the cloud" as a generic network...
-
-```
+```txt
    +-- (Host) --- client
    |
 (Cloud)
@@ -99,21 +99,18 @@ Everything that isn't the application level. Some people do and don't include th
    +-- (Host) --- server
 ```
 
-## Key Interfaces
+## Key interfaces
 
-The network is designed to be modular, and there are clearly defined interfaces betweem (1) apps and the network, and (2) the network components themselves.
+The network is modular. There are clean interfaces between apps and the network, and between the network components themselves. **Protocols** and **layering** provide that modularity.
 
-This is achieved through **protocols** and **layering**.
-
-- Each instance of a protocol communicates to its peer through the same protocol.
+- Each instance of a protocol talks to its peer using the same protocol.
 - Each instance of a protocol uses only the services of the layer below it.
 
-*"Protocols are horrizontal, and layers are vertical."*
+Protocols are horizontal, layers are vertical.
 
-```
+```txt
 # define protocols X, Y,
-# where Y is a lower below X
-
+# where Y is a layer below X
 
    (comm using X)
 X <---------------> X  <- (peers)
@@ -124,11 +121,11 @@ Y <---------------> Y  <- (peers)
     (comm using Y)
 ```
 
-#### Examples of protocols:
-TCP, UDP, HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP, ARP, ICMP, IP, Ethernet, WiFi, Bluetooth, USB, FireWire, DSL, cable TV, 3G/4G, etc.
+Examples of protocols: TCP, UDP, HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP, ARP, ICMP, IP, Ethernet, WiFi, Bluetooth, USB, DSL.
 
-#### Example of a stack
-```
+A browser fetching a page over WiFi runs this stack:
+
+```txt
  (browser)
     ||
 +--------+
@@ -144,14 +141,13 @@ TCP, UDP, HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP, ARP, ICMP, IP, Ethernet, WiFi,
     ++==>
 ```
 
-
 ### Encapsulation
 
-Protocol layering is built upon literal encapsulation of data. Each lower level protocol wraps the higher level protocol's data in its own format with extra information. Similar to putting a letter in an envelope, and then sending it to someone in the mail.
+Layering works by literally wrapping data. Each lower protocol wraps the higher protocol's data in its own format with extra information, like putting a letter inside an envelope before mailing it.
 
-The message "on the wire" for the above stack might look like...
+The message on the wire for the stack above looks like this as it descends:
 
-```
+```txt
                     +------+
                     | HTTP |
                     +------+
@@ -166,63 +162,42 @@ The message "on the wire" for the above stack might look like...
 +--------+----+-----+------+
 ```
 
-When two nodes communicate, the sender builds up these layers until the data is ready to be transported over the physical medium. Then, once the data is recieved, the reciever peels back the layers until it reaches the application layer.
-
-It is more involved that this diagram in practice. Trailers and headers of each request segment are needed, and the content is often encrypted or compressed. Furthermore, segmentation and reassembly happens when nodes communicate as well.
+The sender builds these layers up until the data is ready for the physical medium. The receiver peels them back until it reaches the application layer. Real traffic is messier than the diagram. Protocols add trailers as well as headers, content gets encrypted or compressed, and messages get segmented and reassembled along the way.
 
 ### Demultiplexing
 
-When a message is recieved, it needs to be passed through exactly the protocols that use it. This is done using **demultiplexing keys** found in the headers of each protocol. Ex: IP protocol field, TCP port number, etc.
+A received message must be handed to exactly the protocols that should process it. **Demultiplexing keys** in each header make this possible. The IP protocol field and the TCP port number are demultiplexing keys.
 
-### Advantages of Layering
+### Advantages of layering
 
-- **Modularity** - Each layer can be changed without affecting the other layers, so long as the interface remains the same.
-- **Abstraction** - Each layer can be thought of as a black box. Information hiding can be used to connect different systems that rely on different protocols under the hood.
-- **Standardization** - Each layer can be standardized, and then implemented by many different vendors.
+- **Modularity**: a layer can change without affecting the others, as long as its interface stays the same.
+- **Abstraction**: each layer is a black box, so systems with different internals can interoperate.
+- **Standardization**: each layer can be standardized and implemented by many vendors.
 
-For example, when a person submits a request on their home wifi, the router strips the WiFi header and adds an ethernet header to send it to the server.
+Layering shows up in ordinary traffic. When a home router forwards a request from WiFi to a wired uplink, it strips the WiFi header and adds an Ethernet header, and nothing above the link layer has to care.
 
+### Disadvantages of layering
 
-### Disadvantages of Layering
+- **Overhead**: every layer adds header bytes. Small messages hurt most, since the overhead is large relative to the payload.
+- **Hidden information**: each layer hides detail from the layer above. That complicates debugging, and it blocks applications that want lower-layer facts, like an app that wants to know network latency, or a network that wants to know app priorities for QoS.
 
-- **Inefficiency** - Each layer adds overhead to the message. This is especially true for small messages, since the amount of overhead relative to the message size is large.
-- **Hides information** - Each layer hides information from the layer above it. This can make debugging difficult, and limits some applications of the network (like an app that wants to know the network latency, or a network that needs to know about app priorities like QoS).
+## OSI layers
 
-## OSI Layers
+The OSI model splits the stack into seven layers.
 
+- **Application**: services for end-user programs. HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP.
+- **Presentation**: formats data for the application layer, including encryption and compression. JPEG, MPEG, ASCII.
+- **Session**: manages the connection between two nodes. NetBIOS, PPTP.
+- **Transport**: transport protocol and error handling. TCP, UDP.
+- **Network**: routing and addressing, reads the IP address of a packet. Routers and layer 3 switches live here.
+- **Data link**: physical addressing, reads the MAC address of a frame. Switches and bridges live here.
+- **Physical**: moves bits over a physical medium. Hubs, NICs, cables.
 
-### Application Layer
+## The actual Internet protocol stack
 
-Services that are used with end user applications. Examples: HTTP, FTP, SMTP, POP3, IMAP, DNS, DHCP, etc.
+The Internet collapses OSI's top three layers into one.
 
-### Presentation Layer
-
-Formats the data so it can be understood by the application layer. Also handles encryption and compression. Examples: JPEG, MPEG, ASCII, etc.
-
-### Session Layer
-
-Manages the connection between two nodes. Examples: NetBIOS, PPTP, etc.
-
-### Transport Layer
-
-Responsible for the transport protocol and error handling. Examples: TCP, UDP, etc.
-
-### Network Layer
-
-Responsible for routing and addressing. Reads the IP address from a packet. Examples: Routers, Layer 3 switches, etc.
-
-### Data Link Layer
-
-Responsible for the physical addressing. Reads the MAC address from a data packet/frame. Examples: Switches, bridges, etc.
-
-### Physical Layer
-
-Transfer data on a physical medium. Examples: Hubs, NICS, Cables, etc.
-
-
-## The actual Internet Protocol Stack
-
-```
+```txt
 +-------------+---------------+
 | Application | SMTP, HTTP,   |
 |             | RTP, DNS      |
@@ -232,14 +207,19 @@ Transfer data on a physical medium. Examples: Hubs, NICS, Cables, etc.
 | Internet    | IP            |
 +-------------+---------------+
 | Link        | Ethernet, DSL,|
-|             | 3G/4G, WiFi,  |
+|             | 3G/4G, WiFi   |
 +-------------+---------------+
 ```
 
-## Course Reference Model
+## Course reference model
 
-- **Application**: Programs that use network services
-- **Transport**: Provides end-to-end data delivery
-- **Network**: Provides data delivery across multiple networks
-- **Link**: Sends frames over one or more links
-- **Physical**: Sends bits using physical signals
+- **Application**: programs that use network services
+- **Transport**: end-to-end data delivery
+- **Network**: data delivery across multiple networks
+- **Link**: sends frames over one or more links
+- **Physical**: sends bits using physical signals
+
+## Related notes
+
+- [[networks/0-foundation/2-physical-layer|the physical layer]]
+- [[networks/0-foundation/3-performance|performance]]

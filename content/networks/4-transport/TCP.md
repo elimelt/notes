@@ -1,185 +1,157 @@
 ---
 title: Transmission Control Protocol (TCP)
 category: Networks
-tags: connection establishment, three-way handshake, connection release, time_wait state, adaptive timeout, rtt, initial sequence number
+tags:
+  - tcp
+  - three-way-handshake
+  - connection-release
+  - adaptive-timeout
+  - congestion-control
+  - AIMD
+  - slow-start
 date: 2024-02-25
-description: The document covers the Transmission Control Protocol (TCP), a fundamental networking protocol that enables reliable data transfer between computers. It describes the key aspects of TCP, including the connection establishment process (three-way handshake), connection release, and the TIME_WAIT state. The document also discusses TCP's mechanisms for handling network congestion, such as Slow Start, Tahoe, Reno, and Explicit Congestion Notification (ECN), as well as fairness considerations in bandwidth allocation.
+updated: 2026-07-30
+status: evergreen
+description: TCP connection setup and teardown, adaptive retransmission timeout, and congestion control from AIMD through Tahoe, Reno, SACK, ECN, and RED.
+sources:
+  - title: "CSE 461: Computer Networks, University of Washington"
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: lecture
+  - title: "Computer Networks: A Systems Approach"
+    url: https://book.systemsapproach.org/
+    type: textbook
+  - title: "RFC 9293: Transmission Control Protocol"
+    url: https://datatracker.ietf.org/doc/html/rfc9293
+    type: spec
+  - title: "RFC 6298: Computing TCP's Retransmission Timer"
+    url: https://datatracker.ietf.org/doc/html/rfc6298
+    type: spec
 ---
 
-# Transmission Control Protocol (TCP)
+## Purpose
 
-## Connection Establishment
+Cover the connection-oriented machinery of TCP, from setup and teardown through retransmission timers, then work through congestion control, which is where most of the interesting design lives. The protocol itself is specified in [RFC 9293](https://datatracker.ietf.org/doc/html/rfc9293).
 
-Both sender and receiver must be ready to transfer data, and they need to agree on parameters like max segment size.
+## Connection establishment
 
+Both sides must be ready to transfer data and must agree on parameters like the maximum segment size before any data flows.
 
-### Three-Way Handshake
+### Three-way handshake
 
-Opens up connection between client and server. Each side probes the other with a fresh **Initial Sequence Number (ISN)**. Sends on a SYNchronize segment, and echos on ACKnowledge segment. This gives us robustness, but requires extra overhead.
+Each side probes the other with a fresh Initial Sequence Number (ISN). A side announces its ISN in a SYNchronize segment, and the peer echoes it back in an ACKnowledge segment.
 
-- Client sends SYN(x)
-- Server replies with SYN(y)ACK(x+1)
-- Client replies with ACK(y+1)
-- SYNs are retransmitted if lost
+1. Client sends SYN(x)
+2. Server replies with SYN(y)ACK(x+1)
+3. Client replies with ACK(y+1)
 
+Lost SYNs are retransmitted. The fresh ISNs make the handshake robust against stale segments from earlier connections, at the cost of one extra round trip before data can flow.
 
-### Connection Release
+### Connection release
 
-TCP requires a two-way close. Client and server both finish sending all their data and send a FIN segment. Each FIN closes one direction of the connection.
+TCP closes in two halves. Each side finishes sending its data and sends a FIN segment, and each FIN closes one direction of the connection.
 
-- Active sends FIN(x), passive ACKs
-- Passive sends FIN(y), active ACKs
-- FINs are retransmitted if lost
+1. The active closer sends FIN(x), the passive side ACKs
+2. The passive side sends FIN(y), the active side ACKs
 
-### TIME_WAIT State
+Lost FINs are retransmitted, just like SYNs.
 
-Wait a long time afer sending all segments before actually closing (2 x max segment lifetime). This is because the final ACK may be lost, and we need to make sure the other side has received it. Otherwise it might interfere with a new connection.
+### TIME_WAIT state
 
-### Timeout Problem
+After the final exchange, the active closer waits twice the maximum segment lifetime before fully closing. The final ACK may have been lost, in which case the peer will retransmit its FIN and someone has to be around to answer it. Waiting also keeps old segments from this connection from being misread as part of a new connection on the same port pair.
 
-If you set it too small, you will retransmit too often. If you set it too large, you will wait too long to detect a failure. Setting the timeout of TCP is a difficult problem because RTT varies widely (due to queueing, routing, etc).
+## Retransmission timeout
 
-TCP uses **adaptive timeout**. It smooths the estimates and variance of the RTT using a moving average.
+Picking the timeout is a real problem because RTT varies widely with queueing and routing. Set it too small and you retransmit segments that were merely delayed. Set it too large and you sit idle after a real loss.
 
-$$SRTT_{N + 1} = (1 - \alpha) \cdot SRTT_N + \alpha \cdot RTT_{N + 1}$$
+TCP uses an adaptive timeout that tracks a smoothed RTT estimate and its variance with exponentially weighted moving averages:
 
-$$Svar_{N + 1} = (1 - \beta) \cdot Svar_N + \beta \cdot |RTT_{N + 1} - SRTT_{N + 1}|$$
+$$SRTT_{N+1} = (1 - \alpha) \cdot SRTT_N + \alpha \cdot RTT_{N+1}$$
 
-Set the timeout to be a multiple of the smoothed RTT, plus a margin for error. Adaptive timeout works well in practice, but it's not perfect. It can be thrown off by a sudden change in RTT, and it can be exploited by an attacker to cause a DoS attack.
+$$Svar_{N+1} = (1 - \beta) \cdot Svar_N + \beta \cdot |RTT_{N+1} - SRTT_{N+1}|$$
 
-## Network Congestion
+The timeout is the smoothed RTT plus a multiple of the variance as a safety margin. This works well in practice, though a sudden shift in path RTT can still throw the estimate off until the averages catch up. The standardized version of this computation is [RFC 6298](https://datatracker.ietf.org/doc/html/rfc6298).
 
-Think about a "traffic jam" in the network. The network is temporarily overloaded and can't handle all the traffic. This can lead to packet loss, increased latency, and decreased throughput. Want to push as close to being congested as possible without actually being congested, which is a high level function of TCP.
+## Congestion
 
-Switches and routers have *internal buffers* to store packets, which essentially act like a queue for each port. When working normally, queues are able to absorb bursts of traffic. However, if the input rate is persistently higher than the output rate, the queue will eventually fill up and packets will be dropped.
+Congestion is a traffic jam in the network. Switches and routers keep internal buffers per output port, and those queues absorb short bursts fine. When the input rate stays above the output rate for long enough, the queue fills and packets drop. Congestion depends on traffic patterns, so it can happen even when the network as a whole has spare capacity.
 
-Congestion is a function of traffic patterns, and it can even occur even when the network isn't at full capacity. We would like it if the throughput increased linearly, or even logarithmically towards the capacity of the network as you increase the load on a system. In practice, there is a sharp dropoff in throughput past a certain point of load where congestion collapse occurs.
+Ideally throughput would climb toward link capacity as offered load grows. In practice throughput drops sharply past a certain load. This is congestion collapse. Dropped packets time out, senders retransmit, the retransmissions add load, and more packets drop. The feedback loop can push a network into a state where almost no useful data gets through. TCP's job is to run each sender as close to the congestion point as possible without tipping over it.
 
-Connection collapse is when packets are dropped/time out, and so the sender retransmits the packets, which only makes the problem worse. This is a positive feedback loop that can lead to a complete breakdown of the network.
+### Bandwidth allocation and fairness
 
-## TCP Tahoe/Reno
+Deciding who gets how much bandwidth resembles CPU scheduling. Giving every TCP connection an equal share is not obviously fair, since one user or one application can open many connections. In practice TCP allocates per flow.
 
-Has the following extensions/features:
+The bottleneck for a flow is the link that limits its bandwidth. Equal per-flow fairness shares each bottleneck link equally among the flows crossing it. The cleaner formalization is max-min fairness, the allocation that maximizes the minimum bandwidth any flow gets. You can find it by imagining water poured into the network. Rates rise together until some link saturates, the flows bottlenecked there are frozen at their share, and the remaining flows keep rising. When flows start or stop, the allocation has to be recomputed.
 
-- AIMD
-- Fair queuing
-- Slow start
-- Fast retransmit
-- Fast recovery
+Allocating bandwidth fairly and efficiently at once is hard. Senders come and go, load shifts constantly, and no single entity sees the whole network. The working solution is to have every sender continuously probe the network and adapt its rate to feedback. The design space:
 
-### Bandwidth Allocation
+- Open loop (reserve bandwidth before use) versus closed loop (measure and adjust as you go)
+- Host support versus network support for setting and enforcing allocations
+- Window-based versus rate-based control
 
+TCP is closed-loop, host-driven, and window-based, with packet drops as the feedback signal. Nothing physically stops a sender from running a greedier algorithm, so the scheme relies on hosts cooperating. Different TCP implementations also use different congestion signals:
 
-#### Fairness
+| Signal | Protocol | Tradeoff |
+| ------ | -------- | -------- |
+| Packet loss | TCP NewReno, Cubic (Linux default) | Simple, but the signal arrives late |
+| Packet delay | TCP BBR (used by YouTube) | Earlier warning, but congestion must be inferred |
+| Explicit notification from routers | TCPs with ECN | Fast and unambiguous, but routers must support it |
 
-Kind of a weird problem. Just think about it like scheduling threads and processes. You want to give each process a fair share of the CPU, but simply allocating bandwidth equally to each thread in the process is not fair. You want to allocate bandwidth to each connection fairly, but you also want to allocate bandwidth to each user fairly, and you also want to allocate bandwidth to each application fairly.
+### AIMD
 
-#### Equal per Flow Fairness
+Additive Increase, Multiplicative Decrease is the control law hosts use to converge on a good allocation. While the network is not congested, add a small constant to the rate. When congestion is detected, multiply the rate down.
 
-The **bottleneck** for a flow of traffic is the link that limits its bandwidth. TCP tries to allocate bandwidth fairly to each flow by sharing the bottleneck bandwidth equally among the flows that traverse it.
+Picture two hosts sharing a link of capacity 1, with $x$ the bandwidth of H1 and $y$ the bandwidth of H2. Fair allocations satisfy $x = y$ and efficient ones satisfy $x + y = 1$. On this plot, additive increase moves the operating point diagonally, parallel to the fair line, and multiplicative decrease moves it back along the line toward the origin. Each cycle ends closer to the intersection of the fair and efficient lines, so the allocation converges there.
 
-#### Max-Min Fairness
+![AIMD phase plot of two hosts converging to the fair and efficient allocation](./networks/4-transport/AIMD.png)
 
-Intuitively, flows bottlenecked on a link get an equal share of that link. A max-min fair allocation is one that maximizes the minimum bandwidth allocated to any flow. To find it given a network, you can imagine "pouring water" into the network and seeing how much each flow gets. You can then adjust the flow rates to maximize the minimum flow rate.
+The repeated increase-then-halve cycle produces the sawtooth pattern in TCP's sending rate over time.
 
-When flows start and stop, need to rerun the algorithm to find new allocation.
+## Slow start and TCP Tahoe
 
+The sender maintains a congestion window, cwnd, and sends at roughly cwnd/RTT, using packet loss as the congestion signal. A new connection wants to reach the right window fast without blasting the network on the way up.
 
-TCP needs to allocate bandwidth of a network fairly and efficiently (which are conflicting goals). The network witnesses congestion and provides direct feedback to the transport layer. Then, the transport layer can decrease its sending rate to avoid congestion.
+Slow start does this with exponential growth. Send one packet, then two after the first ACK, then four, doubling each RTT (cwnd increases by 1 per ACK). Growth continues until loss or until cwnd crosses the threshold ssthresh, at which point the sender switches to additive increase, adding about one packet per RTT (cwnd increases by 1/cwnd per ACK).
 
-This is a hard problem. The number of senders is almost never constant, and each customer's load is constantly changing. Also, senders often lack capacity in certain parts of the network, and no one entity has a complete view of the network.
+Tahoe puts these together:
 
-This is solved by having the senders continuously probe the network and adapt their sending rate based on feedback from the network.
+- Start in slow start with cwnd = 1 (or another small value)
+- On crossing ssthresh, switch to additive increase
+- On packet loss, set ssthresh = cwnd / 2, reset cwnd = 1, and slow start again
 
-- **Open loop**: reverse bandwidth before use
-- **Closed loop**: measure bandwidth and adjust as you go
-- Host vs. network support: who sets and enforces allocations.
-- Window vs. rate: allocation based on window size or rate of sending.
+Resetting to cwnd = 1 is necessary in Tahoe because a timeout means the ACK clock is gone, and slow start is how TCP rebuilds it. It is conservative and costs a lot of throughput per loss.
 
-TCP uses closed-loop, host-driven, window-based allocation. The network sends *packet-dropped* messages as feedback. Note that there is nothing stopping a sender from implementing a more "aggressive" or "greedy" algorithm, but it would be against the spirit of the protocol. There are also different implementations of TCP that have different congestion control algorithms.
+### Inferring loss before timeout: fast retransmit
 
-| Signal | Protocol | Pros/Cons |
-| ------ | -------- | ---------- |
-| Packet Loss | TCP NewReno/Cubic (linux) | Simple, but there is some latency |
-| Packet delay | TCP BBR (YouTube) | Early notifacation, but need to infer congestion |
-| Explicit congestion notification via router | TCPs with explicity congestion notification | Fast, but requires router support |
+TCP ACKs are cumulative, carrying the highest in-order sequence number received. When a segment goes missing, later segments trigger duplicate ACKs stuck at the gap. Three duplicate ACKs let the sender conclude the segment was lost and retransmit it immediately, without waiting for a timeout. The sender also halves cwnd. This is fast retransmit.
 
+### Fast recovery and Reno
 
-#### Additive Increase, Multiplicative Decrease (AIMD)
+Duplicate ACKs carry a second piece of information. Each one means some packet did arrive, just out of order, so the network is still delivering. Fast recovery uses this to keep the ACK clock running after a fast retransmit. Instead of collapsing to cwnd = 1, the sender continues at the halved window, sending one new segment per duplicate ACK. The result is the classic sawtooth without the slow start dips:
 
-A control law hosts use to reach a good allocation. Hosts additively increase rate while network isn't congested, and multiplicitively decrease rate when congestion is detected.
+![TCP Reno congestion window over time, showing slow start, the sawtooth of additive increase, and multiplicative decrease on loss](./networks/4-transport/TCP-sawtooth.png)
 
-Let $x$ be the allocated bandwidth to H1, and $y$ be the allocated bandwidth to H2. Assumming a capacity $1$, a fair allocation would be $x = y$, but an efficient allocation would be $x + y = 1$.
+Fast recovery only works when duplicate ACKs keep arriving. If several packets in a row are lost, the ACK stream dries up, the sender times out, and it falls back to slow start at cwnd = 1.
 
-On the plot of x and y, the algorithn is as follows:
+### Reno, NewReno, and SACK
 
-- When the network is not congested, increase the rate by a small amount parallel to the "fair" line, (ie increase x and y by an equal amount).
-- When the network is congested, decrease the rate by a large amount, corresponding to the line from the current allocation point to the origin.
+- Reno repairs one loss per RTT. Multiple losses in a window usually force a timeout.
+- NewReno repairs multiple losses in a window without timing out.
+- Selective ACKs (SACK) let the receiver report received ranges, so the sender can see all the holes and retransmit several lost segments at once.
 
-This guarantees that the allocation converges to the intersection of the "fair" line and the "efficient" line. Also creates a "sawtooth" pattern of sending rate over time.
-
-
-### Slow Start with TCP (Additive Increase)
-
-Sender uses **congestion window (cwnd)** to set its rate (cwnd/RTT), and packet loss as a signal.
-
-You want to quickly converge to the ideal window size, but you also don't want to cause congestion. Solution is to increase exponentially until you hit a packet loss, then set the window size to half of the current window size. Then, switch to additive increase.
-
-- **Slow Start Doubling**: First send one packet. Then, on ACK, send two packets. Then, on two ACKs, send four packets. Keep this doubling until you hit a packet loss.
-
-- **Additive Increase**: After slow start, increase the window size by one packet per RTT/ACK.
-
-### TCP Tahoe
-
-- Initial slow-start phase
-    - Start with cwnd = 1 (or another small val)
-    - cwnd += 1 for each ACK
-- After packet loss, additively increase cwnd
-    - cwnd += 1/cwnd for each ACK
-    - roughly add 1 packet per RTT
-- Switching threshold
-    - Switch to AI when cwnd > ssthresh
-    - set ssthresh = cwnd / 2 on packet loss
-    - begin slow start again
-
-Need to go back to cwnd = 1 on packet loss because we lost the ack clock. This is conservative but not very efficient.
-
-### Fast Recovery
-
-#### Infering Packet Loss
-
-Reciever sends duplicate ACKs when it receives out-of-order packets. The sender can infer that the packet was lost and retransmit it. If the reciever is stuck on an out of order packet, the subsequently sent packets will still be buffered, but the duplicate ack indicates where to retransmit on the client side.
-
-Need to be able to infer loss of packets before timeout actually occurs. TCP uses a **cumulative ACK**, which carries the highest in-order sequence number received. If you receive three duplicate ACKs, you can infer that the packet was lost and retransmit it.
-
-Sender decreases cwnd by half on packet loss, but it can also retransmit the lost packet immediately. This is called **fast retransmit**.
-
-#### Inferring Non-Loss from ACKs
-
-Each duplicate ACK indicates that a packet was received, but not in order. This means that the network is still capable of transmitting packets, and so the sender can increase its sending rate. This is called **fast recovery**.
-
-If multiple packets are lost in a row, this will not work and the sender will go back to slow start cwnd = 1.
-
-### TCP Reno, NewReno, SACK
-
-- Reno can repair one loss per RTT. Multiple losses cause timeout
-- NewReno repairs multiple losses without timeout
-- Selective ACKs (SACK) sends ACK ranges so that sender can retransmit multiple packets at once
+## Router-assisted schemes
 
 ### Explicit Congestion Notification (ECN)
 
-- Commonly used in data centers
-- Routers deliver clear signal to hosts when congestion occurs
-- Congestion is detected early to prevent packet loss
-- Hosts can react to congestion without packet loss, and no retransmission or timeout is needed
-- Routers need to support ECN, and they have more work to do.
-- Hosts need to support ECN, and they have more work to do.
+Routers mark packets when congestion builds, before the queue overflows, and the receiver echoes the mark back to the sender. The sender reacts as it would to loss, but no packet was dropped, so nothing needs retransmitting and no timeout is risked. The cost is that both routers and hosts must implement it. ECN is common in data centers, where the operator controls both.
+
 ### Random Early Detection (RED)
 
-Instead of marking pakets, just randomly drop packets to throttle senders. The probablity of dropping a packet increases as the queue fills up.
+Without ECN support in hosts, routers can still signal early by dropping packets at random before the queue is full, with drop probability rising as the queue fills. Senders see the drops and back off before hard congestion sets in.
 
 ## Related notes
 
 - [[networks/4-transport/flow-control|flow control]]
 - [[networks/4-transport/ACK-clocking|ACK clocking]]
+- [[networks/4-transport/transport-overview|transport layer overview]]
 - [[networks/2-direct-links/retransmission|retransmission]]

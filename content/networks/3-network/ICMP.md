@@ -1,23 +1,44 @@
 ---
 title: Internet Control Message Protocol (ICMP)
 category: Networks
-tags: network protocols, ICMP, ping, traceroute, routing, TTL
+tags:
+  - networks
+  - icmp
+  - ping
+  - traceroute
+  - ttl
 date: 2024-02-25
-description: "Internet Control Message Protocol (ICMP), a core network protocol used for diagnostic and error-reporting purposes. Discusses two key ICMP-based tools: Traceroute, which traces the network path to a destination, and Ping, which tests connectivity and measures round-trip time. Provides an overview of ICMP's role in routing, including the use of Time-to-Live (TTL) values to detect and handle routing issues."
+updated: 2026-07-30
+status: evergreen
+description: What ICMP does at the network layer, covering error reporting, ICMP redirects, and how traceroute and ping are built on top of it.
+sources:
+  - title: "RFC 792: Internet Control Message Protocol"
+    url: https://datatracker.ietf.org/doc/html/rfc792
+    type: rfc
+  - title: "Computer Networks: A Systems Approach"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Internet Control Message Protocol (ICMP)
+## Purpose
 
-ICMP is a network layer protocol used to report errors and exchange control messages. It is also the basis for tools like `ping` and `traceroute`.
+Explain what ICMP is for and how `ping` and `traceroute` use it. IP itself gives no feedback when a packet dies in the network, so a companion protocol carries errors and control messages back to the sender.
 
-One particularly useful ICMP message is the **ICMP Redirect**, which is used to inform a host that a better route exists for a given destination. When a host receives an ICMP Redirect, it updates its routing table to use the new route.
+## Core idea
+
+ICMP ([RFC 792](https://datatracker.ietf.org/doc/html/rfc792)) is a network layer protocol for reporting errors and exchanging control messages. When a router drops a datagram or a TTL expires (see [[networks/3-network/internetworking|internetworking]] for the TTL field in the IP header), an ICMP message tells the source what happened.
+
+One useful control message is the **ICMP Redirect**, which tells a host that a better route exists for a given destination. A host that receives one updates its routing table to use the new route.
 
 ## Traceroute
 
-`traceroute` works by continuously sending packets with increasing TTLs, and listening for ICMP Time Exceeded messages. When a packet reaches a router, the router decrements the TTL, and if it reaches 0, it sends an ICMP Time Exceeded message back to the source. This message contains the IP address of the router, and the time it took for the packet to reach it.
-
-After each packet, `traceroute` prints the IP address of the router and the time it took for the packet to reach it. This is repeated until the destination is reached.
+`traceroute` sends packets with increasing TTLs and listens for ICMP Time Exceeded messages. Each router along the path decrements the TTL, and the router where it hits 0 sends a Time Exceeded message back to the source. That message carries the router's IP address as its source, so a packet with TTL $n$ exposes the $n$-th router on the path. `traceroute` records the round-trip time to each router itself, prints the router's address and the timing, and keeps increasing the TTL until packets reach the destination.
 
 ## Ping
 
-`ping` works by sending ICMP Echo Request messages to the destination, and listening for ICMP Echo Reply messages. When the destination receives an Echo Request, it responds with an Echo Reply. This is repeated until the user stops the command.
+`ping` sends ICMP Echo Request messages to the destination and listens for ICMP Echo Reply messages. A host that receives an Echo Request answers with an Echo Reply, which gives the sender a connectivity check and a round-trip time. It repeats until the user stops the command.
+
+## Related notes
+
+- [[networks/3-network/internetworking|internetworking]]
+- [[networks/3-network/routing|routing]]

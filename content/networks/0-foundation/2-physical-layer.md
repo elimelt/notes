@@ -1,34 +1,44 @@
 ---
 title: The Physical Layer
 category: Hardware
-tags: dsp, modulation, coding, noise immunity, clock recovery
+tags:
+  - physical-layer
+  - modulation
+  - coding
+  - clock-recovery
+  - latency
 date: 2024-01-05
-description: Describes the hardware component responsible for transmitting and receiving data in a communication system. It focuses on coding, modulation techniques, noise immunity, and clock recovery to ensure reliable data transfer. Key concepts include message latency, cut-through routing, and the differences between modulation and coding methods.
+updated: 2026-07-30
+status: evergreen
+description: How bits become signals on a link. Covers simple codings (NRZ, RZ), clock recovery, the difference between coding and modulation, a simple link model, and message latency with a worked example.
+sources:
+  - title: UW CSE 461 Computer Networks
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: course
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# The Physical Layer
+## Purpose
 
-**Scope**: How signals are used to transfer bits over a link. i.e, how analog signals are converted to digital signals, and vise versa.
+Explain how signals carry bits over a link. That means how digital data becomes an analog signal and back, and what delays a message picks up along the way. [[networks/1-physical/coding-and-modulation|Coding and modulation]] goes deeper on the encoding schemes themselves.
 
-## Coding and Modulation
+## Coding and modulation
 
-A modem (modulator-demodulator) converts digital signals to analog signals, and vise versa.
+A modem (modulator-demodulator) converts digital signals to analog signals and back.
 
 ### A simple coding
 
-A high positive voltage for 1, and a low negative voltage for 0. This is called **NRZ**(Non-Return-to-Zero). Each time interval (**symbol**) is like a sample point.
+Use a high positive voltage for 1 and a low negative voltage for 0. This is **NRZ** (non-return-to-zero). Each time interval carries one **symbol**, and the receiver samples once per symbol.
 
-### Problems?
+NRZ only gets 1 bit per symbol. Using more voltage levels packs more bits into each symbol. To get $N$ bits per symbol you need $2^N$ voltage levels, and the more levels you use, the more sensitive the signal is to noise. Practical coding schemes trade these off in different ways depending on the engineering constraints of the link.
 
-Only 1 bit/symbol. Can use more than just 2 voltage levels to get more bits/symbol. To get N bits/symbol, need 2^n voltage levels. There is a tradeoff between encoding efficiency and the sensitivity to noise.
+### Clock recovery
 
-There are many other practical coding schemes, all of which are driven by engineering considerations.
+The receiver needs frequent signal transitions to decode bits. A long run of identical bits gives it nothing to synchronize on, so it loses track of where symbols begin and end. Manchester coding and scrambling both solve this.
 
-### Clock Recovery
-
-Reciever needs requent signal transitions to decode bits. Several possible designs, including Manchester Coding and Scrambling.
-
-A simple solution is to alternate between positive/negative, and zero voltages. This is return to zero (RZ) coding.
+A simple fix is return-to-zero (RZ) coding, which alternates between the signal voltage and zero after each bit:
 
 ```txt
     0       1        1      1       0
@@ -41,75 +51,69 @@ A simple solution is to alternate between positive/negative, and zero voltages. 
 -V |___|   |   |   |   |   |   |   |___|
 ```
 
-#### Better Solution
+You can do better than RZ. Map input bit patterns to longer output patterns chosen so that long runs of zeros cannot occur (4b/5b works this way). Or XOR the data with a pseudorandom bit pattern before sending, which makes the encoded data look random and kills most long runs. Both approaches show up in [[networks/1-physical/coding-and-modulation|coding and modulation]].
 
--  Can map arbitrary bit patterns to eachother (as long as you don't decrease the number of bits to decode). Design encoding such that long runs of zero can't happen
--  Can even use xor and a psuedorandom bit pattern to encode and decode to make the encoded data random looking as well, getting rid of most long runs of zero.
+### Modulation vs. coding
 
-### Modulation vs. Coding
+With **coding**, the signal goes directly onto the wire. That works poorly for wireless, so wireless links use **modulation** instead. Modulation carries a signal by varying the frequency, amplitude, or phase of a carrier wave. The original signal is the **baseband**, and the modulated signal is the **passband**.
 
-In order to agree on the timing of data streams, AKA the start and end of a symbol being transmitted, you need to have a common clock between the two systems that are communicating.
+Examples:
 
-With **coding**, signal is sent directly on a wire. This doesn't work well for wireless, so we use **modulation**. **Modulation** carries a signal by varying the frequency, amplitude, or phase of a carrier wave. *Baseband* is the original signal, and *passband* is the modulated signal. We can modulate a signal by varying the amplitude, frequency, or phase of a carrier wave.
-
-#### Some examples:
-- NRZ signal of bits
-- Amplitude shift keying (zigbee)
-- Frequency shift keying (bluetooth)
+- NRZ signal of bits sent directly on a wire
+- Amplitude shift keying (Zigbee)
+- Frequency shift keying (Bluetooth)
 - Phase shift keying
 
-WiFi for example goes all in and listens on an entire band of frequencies instead of just the binary 2 frequencies.Modern WiFi uses 256 frequency levels.
+Modern WiFi goes further and uses a whole band of frequencies with many signal levels rather than two.
 
-### Key Points
+### Key points
 
-- Everythign is analog, even digital signals.
-- Digital signals are conceptually discrete, but are represented physically in a continuous medium.
-- Modulating and demodulating a signal is converting between analog to digital, and vise versa.
-- A coding is an agreed upon "language" for your data.
+- Everything is analog, even digital signals. A digital signal is conceptually discrete but lives in a continuous physical medium.
+- Modulating and demodulating converts between the digital data and the analog carrier.
+- A coding is an agreed-upon language for your data.
 
-## Simple Link Model
+## Simple link model
 
-Two main parameters:
+Two main parameters describe a link:
 
-- **Rate** (bandwidth, capacity, speed): Number of bits per second
-- **Delay**: Related to the time it takes to deliver a message
+- **Rate** (bandwidth, capacity, speed): bits per second
+- **Delay**: how long a message takes to get across
 
-Additional info:
+Also relevant are the type of cast (unicast, multicast, broadcast) and the error rate.
 
-- **type of cast**: unicast, multicast, broadcast
-- **error rate**
+### Message latency
 
-### Message Latency
-
-**Latency** is the time it takes for a message to travel from one end of a link to the other. It is the sum of the **transmission delay** (time to put bits on wire) and the **propagation delay** (time for bits to travel from one end of the link to the other).
+**Latency** is the time a message takes to travel from one end of a link to the other. It is the sum of the **transmission delay** (time to put the bits on the wire) and the **propagation delay** (time for the bits to cross the link). Signals in copper and fiber travel at roughly $\frac{2}{3}c$, which is where the $3D/2c$ form comes from.
 
 ```txt
-Transimission Delay:
-T (delay) = L (message length) / R (rate) = L/R seconds
+Transmission delay:
+T = L (message length) / R (rate) = L/R seconds
 
-Propagation Delay:
-P (delay) = D (distance) / S (speed) = D/(2/3 * C) = 3D/2C seconds
+Propagation delay:
+P = D (distance) / S (speed) = D / (2/3 * C) = 3D/2C seconds
 
-Total Latency:
+Total latency:
 L_t = T + P = L/R + 3D/2C
 ```
 
 #### Example
 
-```txt
-Broadband cross-country link:
-P = 50ms, R = 10Mbps, L = 1MB
+A broadband cross-country link with $P = 50\text{ ms}$, $R = 10$ Mbps, and a message of $L = 1$ MB:
 
-L_t = 1MB/10MBps + 50ms = .1s + .05s = .15s
+```txt
+L = 1 MB = 8 Mb
+T = 8 Mb / 10 Mbps = 0.8 s
+L_t = 0.8 s + 0.05 s = 0.85 s
 ```
 
+Transmission delay dominates here. On a faster link the propagation delay would take over, since distance does not shrink with the rate.
 
-### Cut Through Routing
+### Cut-through routing
 
+Store-and-forward switching pays the full transmission delay at every hop, because each node buffers the whole message before sending it on. Cut-through routing starts forwarding as soon as the destination header arrives, before the rest of the message is in. That cuts per-hop latency, at the cost of forwarding frames before their checksum can be verified.
 
+## Related notes
 
-
-
-
-
-
+- [[networks/1-physical/coding-and-modulation|coding and modulation]]
+- [[networks/0-foundation/information-theory|information theory]]
+- [[networks/0-foundation/3-performance|performance]]

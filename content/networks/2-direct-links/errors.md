@@ -1,29 +1,40 @@
 ---
 title: Error Detection and Correction
 category: Networks
-tags: error detection, error correction, redundancy, codewords, probability
+tags:
+  - error-detection
+  - error-correction
+  - redundancy
+  - codewords
+  - hamming-distance
+  - checksum
+  - crc
 date: 2024-01-26
-description: An overview of error detection and correction techniques used in computer networks. It covers approaches such as adding redundancy to data, Hamming distance, internet checksum, and cyclic redundancy check (CRC). The document explains the algorithms for these techniques, including the sender and receiver-side operations. It also discusses the distinction between error detection and error correction capabilities. The content focuses on the technical concepts and implementation details of these network error handling mechanisms.
+updated: 2026-07-30
+status: needs-review
+description: Error detection and correction by adding redundancy. Covers codewords and Hamming distance, the Internet checksum, CRC, and Hamming codes, and when to detect versus correct. Code snippets are unverified sketches.
+sources:
+  - title: "RFC 1071: Computing the Internet Checksum"
+    url: https://www.rfc-editor.org/rfc/rfc1071
+    type: rfc
+  - title: "Computer Networks: A Systems Approach (Peterson and Davie)"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Error Detection and Correction
+## Purpose
 
-Some bits will inevitably be recieved in error. Noise may flip the bits recieved over the network. We need to be able to...
+Some received bits will be wrong. Noise flips bits in flight, so a link needs a way to detect errors, and then either retransmit (see [[networks/2-direct-links/retransmission|retransmission]]) or correct them in place. This note covers the codes that make both possible.
 
-- detect errors
-- retransmit
-- correct errors
+## Approach: add redundancy
 
-## Approach: Add Redundancy
+Error detection codes add *check bits* to the message bits. Error correction codes add more check bits, enough to let some errors be fixed without retransmission. The design problem is catching as many errors as possible without paying too much in redundancy or computation.
 
-- In error detection codes, add *check bits* to the message bits.
-- In error correction codes, add **more** *check bits* to let some errors be corrected.
-- Key issue is to design codes to detect as many errors as possible without having too much redundancy or computation required.
+A **codeword** is a $D$-bit message with $R$ check bits appended. The sender computes the check bits and appends them. The receiver recomputes them from the data and compares against what arrived.
 
-Generally, a **codeword** is a $D$-bit message with $R$ check bits added to it. The sender computes the check bits and appends them to the message. The reciever then verifies the check bits by recomputing them and comparing them to the recieved check bits.
+### Example code
 
-
-### Example Code:
+Repeat every bit:
 
 $$
 1 \to 11\\
@@ -32,58 +43,59 @@ x \to xx\\
 $$
 
 For example:
+
 $$
 101110 \to 101110101110
 $$
 
-Can detect errors with this code up to 1 bit. However, no guarantee if more bits are flipped. Also cannot correct errors. This sucks.
+This detects any single bit flip, since a flip breaks one of the pairs. It gives no guarantee for two or more flips, and it can't correct anything, all while doubling the message size. Weak protection at a high price.
 
 ## Intuition
 
-Let $S$ be the set of all possible $n$-bit sequences, and let $C$ be the set of all $n$-bit code words with $D$ data bits and $R$ check bits. We have $C \subset S$, and we want to choose $C$ such that the probability of a random $D$-bit sequence being in $C$ is low.
-
-Consider a random $n$-bit sequence $x \in S$...
+Let $S$ be the set of all $n$-bit sequences and $C \subset S$ the set of valid codewords, where $n = D + R$. There are $2^D$ codewords, one per data pattern. We want a random corruption to land on a valid codeword as rarely as possible. For a random $x \in S$:
 
 $$
-\mathbb{P}(x \in C) = \frac{|C|}{|S|} = \frac{2^R}{2^n} = 2^{-D}
+\mathbb{P}(x \in C) = \frac{|C|}{|S|} = \frac{2^D}{2^{D+R}} = 2^{-R}
 $$
 
-Error correction/detection is hard because even the check bits can be corrupted. Given $d$ errors, we can detect and correct $d$ errors if the distance between any two code words is $2d + 1$.
+So every check bit halves the chance that random garbage looks valid. The check bits themselves can be corrupted too, which is what makes the design problem interesting.
 
-## Hamming Distance
+## Hamming distance
 
-Distance: The number of bit flips needed to change from one valid code word to another. The distance of a code is the minimum distance between any two code words. Letting $C$ be the set of all code words, the distance is:
+The distance between two codewords is the number of bit flips needed to turn one into the other. The distance of a code is the minimum over all pairs:
 
 $$
 \min_{x, y \in C, x \neq y} d(x, y)
 $$
 
-- For a coding of distance $d + 1$, we can detect $d$ errors
-- For a coding of distance $2d + 1$, we can correct $d$ errors by mapping to the closest code word.
+- A code of distance $d + 1$ can detect $d$ errors, since $d$ flips can't reach another valid codeword.
+- A code of distance $2d + 1$ can correct $d$ errors by mapping the received word to the closest codeword. With fewer than $d+1$ flips, the original codeword is still the unique nearest one.
 
+## Internet checksum
 
-## Internet Checksum
+Sum the data in fixed-size chunks and append the sum. The receiver sums the data plus the checksum and checks for the expected result.
 
-Sum up chunks of data and append the sum to the end of the data. If the sum is 0 on the recieving end, then the data is valid.
+The real Internet checksum ([RFC 1071](https://www.rfc-editor.org/rfc/rfc1071)) sums 16-bit words in ones' complement arithmetic, folding carries back in, and transmits the complement of the sum. The version below is the simplified form from lecture.
 
-This code has a distance of 2, so it can detect 1 bit errors, and can correct 0 bit errors (since it can't correct any errors)
+This code has distance 2, so it detects single-bit errors and corrects nothing.
 
-### Internet Checksum Algorithm
+### Internet checksum algorithm
 
-#### sender
+Sender:
 
-1. Split up data into 4 byte chunks.
-2. Sum up all the 4 byte chunks, wrapping around for carry beyond 4 bytes.
-3. netgate append the checksum to the end of the data.
+1. Split the data into chunks.
+2. Sum the chunks, wrapping carries back into the sum.
+3. Append the (complemented) sum to the data.
 
-#### reciever
+Receiver:
 
-1. Split up data into 4 byte chunks.
-2. Sum up all the 4 byte chunks, wrapping around for carry beyond 4 bytes.
-3. netgate append the checksum to the end of the data.
-4. If the sum is 0, then the data is valid.
+1. Split the received data, including the checksum, into chunks.
+2. Sum the chunks the same way.
+3. If the result is the expected check value, the data passes.
 
 ```python
+# Simplified sketch, not RFC 1071. Real code uses 16-bit words,
+# ones' complement addition, and transmits the complement.
 def internet_checksum(data):
     checksum = 0
     for i in range(0, len(data), 4):
@@ -92,36 +104,46 @@ def internet_checksum(data):
     return checksum.to_bytes(4, 'big')
 ```
 
-## Cyclical Redundancy Check (CRC)
+## Cyclic redundancy check (CRC)
 
-Given a generator polynomial $C$ and a message of $n$ bits, generate $k$ bits such that the $n + k$ bit message is divisible by $C$. Works with binary values that operate over the field $\mathbb{Z}_2$ (mod 2 arithmetic).
+Given a generator polynomial $C$ of degree $k$ and an $n$-bit message, generate $k$ check bits such that the $n + k$ bit message is divisible by $C$. The arithmetic is over $\mathbb{Z}_2$, so addition and subtraction are both XOR.
 
-### CRC Algorithm
+### CRC algorithm
 
-#### sender
+Sender:
 
-1. create binary representation of polynomial as divisor
-2. append 0s to the end of the data to be sent, equal to the degree of the polynomial
-3. divide the data by the polynomial, using XOR
-4. change redundant bits to remainder
+1. Write the generator polynomial as a binary divisor.
+2. Append $k$ zeros to the data, where $k$ is the degree of the polynomial.
+3. Divide the padded data by the polynomial using XOR.
+4. Replace the appended zeros with the remainder.
 
-#### reciever
+Receiver:
 
-1. create binary representation of polynomial as divisor
-2. divide the data by the polynomial, using XOR
-3. if the remainder is 0, then the data is valid
+1. Divide the received bits by the same polynomial using XOR.
+2. If the remainder is 0, the data passes.
 
-### Notes:
+Using $x + 1$ as the generator polynomial gives exactly a parity bit.
 
-x + 1 as a generating polynomial is just a parity bit!
+## Hamming code
 
-## Hamming Code
+A code with distance 3. It detects 2-bit errors and corrects 1-bit errors.
 
-A code with distance 3. Can detect 2 bit errors and correct 1 bit errors.
+For $k$ check bits, the code carries $n = 2^k - k - 1$ data bits. Check bits sit at the positions that are powers of 2, and data bits fill the rest. Check bit $i$ covers every position whose binary index has bit $i$ set, so each position is covered by a unique combination of check bits.
 
-Uses $n = 2^k - k - 1$. Put check bits in positions that are powers of 2, and fill in the rest with data bits. Check bits are calculated by checking the bits in the ith position for all data bits whose ith bit is 1.
+Send:
+
+1. Put check bits at the power-of-2 positions (1, 2, 4, 8, ...).
+2. Fill the remaining positions with data bits.
+3. Compute each check bit as the parity of the positions it covers.
+
+Receive:
+
+1. Recompute each check bit over the positions it covers.
+2. If all parities are 0, the data is valid. Strip the check bits.
+3. Otherwise, the parities concatenated (the syndrome) spell out the index of the flipped bit. Flip it back.
 
 ```python
+# Unverified sketch of the encoder.
 def hamming_encode(data):
     n = len(data)
     k, acc = 0, 1
@@ -145,27 +167,14 @@ def hamming_encode(data):
     return code
 ```
 
-### Algorithm
+## Detection vs. correction
 
-#### Send
-1. Put all parity bits in positions that are powers of 2 (1, 2, 4, 8, 16, etc.)
-2. Fill in all other positions with data bits.
-3. calculate parity bits for each of the ith check bits. (check the bits in ith position for all data bits whose ith bit is 1)
+Detection is cheaper than correction in both overhead and computation. Which one to use depends on the error pattern and the cost of retransmission. Correction wins when errors are common or retransmission is expensive. Detection wins when errors are rare and retransmission is cheap.
 
-#### Recieve
-1. calculate parity bits for each of the ith check bits. (check the bits in ith position for all data bits whose ith bit is 1 of its index is a power of 2)
-2. If the parity bits are all 0, then the data is valid (remove check bits from data bits)
-3. If the parity bits are not all 0, then the data is invalid. The syndrome (concat and reverse the parity bits) is the index of the bit that is wrong. Flip that bit.
-
-
-## Detection vs. Correction
-
-- Error detection is easier than error correction. There is less overhead and computation required.
-- Which is better depends on the pattern of errors. In general, error correction should be used when errors are detected and retransmission is expensive. Error detection should be used when errors are rare/unrecoverable, or when retransmission is cheap. Also used in application layer for physical storage (Reed-Solomon codes for CDs, DVDs, etc).
-
-Error correction is heavily used in the physical layer. Low Density Parity Check (LDPC) codes are used in 802.11, DVB, WiMAX etc, and convolutional codes are used a lot in practice. On the other hand, detection combined with retranmission is used in the data link layer and above for residual errors.
+In practice, error correction dominates the physical layer, where LDPC codes appear in 802.11, DVB, and WiMAX, and convolutional codes are widely used. Detection paired with retransmission handles residual errors at the data link layer and above. Storage systems use correction too, such as Reed-Solomon codes on CDs and DVDs.
 
 ## Related notes
 
 - [[networks/2-direct-links/retransmission|retransmission]]
 - [[networks/1-physical/coding-and-modulation|coding and modulation]]
+- [[networks/2-direct-links/framing|framing]]

@@ -1,99 +1,110 @@
 ---
 title: Hyper Text Transfer Protocol (HTTP)
 category: Networks
-tags: HTTP, TCP, DNS, web pages, static web pages, dynamic web pages, HTTP methods, HTTP status codes
+tags:
+  - HTTP
+  - TCP
+  - web
+  - caching
+  - page-load-time
 date: 2024-03-04
-description: Covers the implementation of the Hypertext Transfer Protocol (HTTP), a fundamental protocol for the World Wide Web. Discusses the process of fetching web pages, including the distinction between static and dynamic content, the various HTTP methods, and the status codes used to communicate the result of a request. Examines performance considerations, such as page load time, HTTP/1.0, and techniques for decreasing load times, as well as the role of HTTP caching and proxies.
+updated: 2026-07-30
+status: evergreen
+description: How fetching a web page works over HTTP, the methods and status codes, what drives page load time, and how caching and proxies cut it down.
+sources:
+  - title: "RFC 9110: HTTP Semantics"
+    url: https://datatracker.ietf.org/doc/html/rfc9110
+    type: spec
+  - title: "CSE 461: Computer Networks, University of Washington"
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: lecture
+  - title: "Computer Networks: A Systems Approach"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Hyper Text Transfer Protocol (HTTP)
+## Purpose
 
-You can think of a web page as a set of related HTTP transactions. Each transaction consists of a request and a response, which runs on TCP (typically on port 80).
+Cover HTTP as the web's request-response protocol, what a page fetch actually involves, and where the time goes, since most of HTTP's evolution has been about cutting page load time.
 
-## Fetching a Web Page
+## Core idea
 
-```plaintext
+A web page is a set of related HTTP transactions. Each transaction is a request and a response, carried over TCP, typically on port 80. Protocol semantics, methods, and status codes are specified in [RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110).
+
+## Fetching a web page
+
+URLs name the resource to fetch:
+
+```text
 protocol://host:port/path
 ```
 
-1. Resolve server to IP address using **DNS**.
-2. Establish a **TCP** connection to the server.
-3. Send an **HTTP** request for the page.
-4. Await HTTP response
-5. Execute/fetch embedded resources and render the page.
-6. Close the TCP connection.
+1. Resolve the host to an IP address using [[networks/5-application/DNS|DNS]]
+2. Establish a [[networks/4-transport/TCP|TCP]] connection to the server
+3. Send an HTTP request for the page
+4. Await the HTTP response
+5. Fetch embedded resources, execute scripts, and render the page
+6. Close the TCP connection
 
-### Static vs. Dynamic Web-pages
+Static pages are pre-built and served as-is. Dynamic pages are built on the server per request, or shipped as code, usually JavaScript, that runs in the client.
 
-Static web pages are pre-built and served as-is to the client. Dynamic web pages are built on the server and served to the client to be run/interpreted (usually with JavaScript).
-
-### Methods
+## Methods
 
 | Method | Description |
 | --- | --- |
-| GET | Read a Web page |
-| HEAD | Read a Web page's header |
-| POST | Append to a Web page |
-| PUT | Store a Web page |
-| DELETE | Remove the Web page |
+| GET | Read a web page |
+| HEAD | Read a web page's header |
+| POST | Append to a web page |
+| PUT | Store a web page |
+| DELETE | Remove the web page |
 | TRACE | Echo the incoming request |
 | CONNECT | Connect through a proxy |
 | OPTIONS | Query options for a page |
 
-### Status Codes
+## Status codes
 
 | Code | Description | Example |
 | --- | --- | --- |
-| 1xx | Informational | 100 Continue - server agrees to handle client's request |
-| 2xx | Success | 201 Created - resource created - posted data |
-| 3xx | Redirection | 304 - Not Modified - client should use cached version |
-| 4xx | Client Error | 404 Not Found - resource not found |
-| 5xx | Server Error | 503 Service Unavailable  - server overloaded |
+| 1xx | Informational | 100 Continue, server agrees to handle the client's request |
+| 2xx | Success | 201 Created, resource created from posted data |
+| 3xx | Redirection | 304 Not Modified, client should use its cached version |
+| 4xx | Client error | 404 Not Found |
+| 5xx | Server error | 503 Service Unavailable, server overloaded |
 
-### Performance
+## Performance
 
-#### Page Load Time (PLT)
+### Page load time
 
-The time it takes to download and display the entire content of a web page in the browser. Small increases in PLT can have a significant impact on user satisfaction. Depends on many factors including the page's content, the network RTT and bandwidth, and HTTP caching/TCP optimizations.
+Page load time (PLT) is the time from request to the full page being displayed in the browser. Small increases in PLT measurably hurt user satisfaction, which is why so much engineering goes into it. PLT depends on the page's content, the network RTT and bandwidth, and how well HTTP and TCP are being used.
 
-#### HTTP/1.0
+### Why HTTP/1.0 was slow
 
-Uses one TCP connection per request. This can be slow due to the overhead of setting up and tearing down connections. Also used sequential requests to all resources, requiring multiple TCP connections to the same server.
+HTTP/1.0 opened one TCP connection per request and issued requests sequentially. Every resource paid a fresh connection setup, and fetches to the same server could not overlap, so RTTs stacked up linearly with resource count.
 
-#### Decreasing PLT
+### Cutting PLT
 
-- Reduce content size (minify, compress, etc.)
-- Change protocol to make more efficient use of TCP (HTTP/2)
-- Reduce the number of round trips (e.g., DNS prefetching, cahing, proxying)
-- Move content closer to the client (CDN, edge caching)
+- Shrink the content, by minifying and compressing
+- Use TCP more efficiently, which is what HTTP/2 does with multiplexing
+- Cut round trips, with DNS prefetching, caching, and proxies
+- Move content closer to the client, with CDNs and edge caching
 
-In practice, this might look like:
+Browsers first attacked this by opening several parallel HTTP connections to fetch resources. That backfires under load, since the parallel connections amplify network bursts and loss. The alternative is one TCP connection to the server with multiple HTTP requests multiplexed over it. That raises the question of how long to keep the connection open, and for some access patterns it is actually slower than parallel connections.
 
-- Browser runs multiple HTTP instances in parallel to fetch resources? Not good in practice, exacerbating network bursts and loss.
-- Make a single TCP connection to the server and multiplex multiple HTTP requests over it. Issue of how long to keep the connection open, and can actually be slower for some use cases.
+## Caching and proxies
 
-### HTTP Caching and Proxies
+Users revisit pages, so a lot of fetches can be answered without hitting the server. The standard strategies:
 
-Users often revisit web pages, so caching is important. Some strategies include:
+- The `Expires` header gives a date after which the resource is stale
+- Heuristic expiration treats resources as fresh when they are cacheable, currently valid, and were not modified recently
+- Revalidation asks the server whether the cached copy is still valid, and a 304 means yes without resending the body
 
-- **Expires** header: specifies a date after which the resource is invalid.
-- **Heuristic expiration**: cacheable, freshly valid, not modified recently.
-- **Revalidation**: check with the server if the resource is still valid.
+A proxy caches on behalf of a pool of clients. The client sends its request to the proxy, and the proxy checks whether it holds a fresh copy. If it does, it serves the copy directly. Otherwise it fetches from the server, updates its cache using response metadata like Not-Modified, and returns the resource to the client.
 
-Proxies can cache resources on behalf of clients, reducing the load on the server and speeding up the response time for clients. However, they can also introduce security and privacy concerns.
-
-The general workflow for a proxy is:
-
-1. Client sends a request to the proxy.
-2. Proxy checks the expiry for the resource
-3. If the resource is still valid, the proxy returns it to the client. Otherwise, the proxy fetches the resource from the server.
-4. The proxy fetches the resource, and maybe some metadata through headers like Not-Modified and updates its cache.
-5. The proxy returns the resource to the client.
-
-This places an intermediary between the pool of clients and the server, which can be useful for load balancing, security, and privacy. Has the added benefit of being able to improve physical locality of data to be closer to clients while in the cache. Benefits are limited by secure/dynamic content, and the "long tail" of resources that are rarely accessed.
+Putting an intermediary between clients and servers also helps with load balancing, security, and privacy, and it moves cached data physically closer to clients. The benefits are capped by secure and dynamic content, which cannot be shared or stored, and by the long tail of resources that are rarely requested twice. CDNs push the same caching idea out to global scale, see [[networks/5-application/CDNs|content delivery networks]].
 
 ## Related notes
 
 - [[networks/5-application/DNS|DNS]]
 - [[networks/5-application/CDNs|content delivery networks]]
+- [[networks/5-application/overview|application layer overview]]
 - [[networks/4-transport/TCP|TCP]]

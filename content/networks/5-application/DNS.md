@@ -1,84 +1,85 @@
 ---
 title: Domain Name System (DNS)
 category: Networks
-tags: domain name system, name resolution, distributed database, top-level domain, name server
+tags:
+  - DNS
+  - name-resolution
+  - distributed-database
+  - top-level-domain
+  - name-server
 date: 2024-03-07
-description: The Domain Name System (DNS) is a distributed database that translates human-readable domain names into IP addresses, enabling communication on the internet. It covers the hierarchical namespace structure, the resolution process using iterative and recursive queries, and the role of local nameservers and root name servers. The document also discusses the DNS protocol, including zone management and caching mechanisms, which are crucial for the efficient and scalable operation of the global domain name system.
+updated: 2026-07-30
+status: evergreen
+description: How DNS maps names to IP addresses, covering the hierarchical namespace, zones, iterative and recursive resolution, caching, root servers, and the protocol itself.
+sources:
+  - title: "RFC 1034: Domain Names - Concepts and Facilities"
+    url: https://datatracker.ietf.org/doc/html/rfc1034
+    type: spec
+  - title: "Root Servers"
+    url: https://root-servers.org/
+    type: docs
+  - title: "CSE 461: Computer Networks, University of Washington"
+    url: https://courses.cs.washington.edu/courses/cse461/
+    type: lecture
+  - title: "Computer Networks: A Systems Approach"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Domain Name System (DNS)
+## Purpose
+
+Explain how DNS resolves human-readable names into IP addresses at internet scale, and why its hierarchy and caching are what make that scale work.
 
 ## Namespaces
 
-- **Names** are higher-level, human-readable identifiers for resources.
-- **Addresses** are lower-level, machine-readable identifiers for resources.
-- **Resolution/Lookup** is the process of mapping names to addresses.
+Names are high-level, human-readable identifiers for resources. Addresses are low-level, machine-readable identifiers. Resolution, or lookup, maps names to addresses.
 
 ## Before DNS
 
-Machines retrieved a file called `hosts.txt` from a centralized server to resolve names to addresses. 
+Machines fetched a file called `hosts.txt` from a centralized server and resolved names against it locally. Every name change meant redistributing the file to every machine on the network, which stopped scaling as the internet grew. DNS ([RFC 1034](https://datatracker.ietf.org/doc/html/rfc1034)) replaced it.
 
-This approach was not scalable, as the `hosts.txt` file would have to be updated on every machine on the network.
+## The DNS hierarchy
 
-## DNS
+DNS is a naming service that maps names to IP addresses and back. It is a distributed database implemented as a hierarchy of name servers, and the namespace itself is hierarchical.
 
-DNS is a naming service that maps names to IP addresses and vice versa. It is a distributed database implemented in a hierarchy of name servers.
+- Every fully qualified DNS name ends with a dot, the root of the hierarchy.
+- The rightmost label is the top-level domain (TLD), like `.edu` or `.com`.
+- Each TLD is managed by a registry.
 
-- All DNS names end with a dot, which represents the root of the DNS hierarchy.
-- The rightmost part of a DNS name is called the **top-level domain** (TLD).
-- The top-level domain is managed by a **registry**.
+### Zones
 
-### DNS Zones
+Zones divide the namespace into manageable pieces. A zone is a contiguous portion of the global namespace under one administrator. For example, the EDU registry runs the `.edu` TLD, UW runs `washington.edu`, and the Allen School runs `cs.washington.edu`. Each zone has one or more authoritative name servers that maintain its records. Authority can be delegated, so the servers for `washington.edu` delegate `cs.washington.edu` to the Allen School's servers.
 
-Zones are a way to divide the domain name space into manageable sections. A zone is a contiguous portion of the global DNS namespace. 
+## Resolution
 
-#### Example
-- EDU registry is responsible for the `.edu` TLD.
-- UW is responsible for the `washington.edu` domain.
-- The Allen School is responsible for the `cs.washington.edu` domain.
+A client resolving an unknown name sends the query to a DNS resolver. The resolver asks a root name server, which answers with the address of the right TLD name server. The TLD server answers with the authoritative name server for the domain, and that server finally answers with the IP address.
 
-Each zone has one or more **name server** that is authoritative for the zone. The name server is responsible for maintaining the zone's records. For instance, the name server for `washingon.edu` is responsible for maintaining the records for `cs.washington.edu`.
+### Iterative vs. recursive queries
 
-### DNS Resolution
+In a recursive query, the resolver asks a server to return the final answer directly, and that server does the rest of the walking. In an iterative query, each server just returns the next server to ask.
 
-When a client wants to resolve an unknown name to an IP address, it sends a query to a DNS resolver. The resolver then sends a query to a root name server, which responds with the address of a TLD name server. The resolver then sends a query to the TLD name server, which responds with the address of the authoritative name server for the domain. The resolver then sends a query to the authoritative name server, which responds with the IP address of the domain.
+Recursive service takes the resolution burden off the client and lets the server build a cache shared across its whole pool of clients. Iterative service keeps the server simple, which makes high-load servers easier to build, and leaves the client in control of the process. Root and TLD servers answer iteratively, and local resolvers typically offer recursion to their clients.
 
-### Iterative vs. Recursive Resolution
+### Caching
 
-- **Recursive queries** are queries in which the DNS resolver asks the name server to return the answer directly.
-- **Iterative queries** the name server returns the next name server to query.
+Resolution sits on the critical path of nearly every connection, so latency matters and caching does the heavy lifting. Nameservers cache query results, including the partial answers from iterative resolution, for the duration of each record's TTL. The caching follows the hierarchy. Answers near the root change rarely and get cached widely, which is what keeps the root servers from being crushed by the world's lookups.
 
-Recursive queries are nice because it offloads the client burden for address resolution. Also lets the server cache over a pool of clients.
+### Local nameservers
 
-Iterative queries are nice because it minimizes the complexity of the server, and is easier to build high load servers. Also gives the client more control over the resolution process.
+The local nameserver is a client's first stop. It is usually run by the ISP, though it can run on the host itself or at an access point, and public resolvers like Google's 8.8.8.8 are an alternative. Clients typically learn their local nameserver via DHCP.
 
-### DNS Caching
+### Root name servers
 
-Latency needs to be fairly low for DNS resolution, so caching is important. Nameservers cache query results (including partial/iterative answers) for the duration of their TTL (time to live).
+The root is served by 13 named servers, `a.root-servers.net` through `m.root-servers.net`, operated by 12 independent organizations. Each name is actually hundreds of server instances spread around the world, reached by IP anycast, where the same IP address is advertised from many locations and routing delivers the query to a nearby one. Current instance counts and operators are listed at [root-servers.org](https://root-servers.org/).
 
-The caching is hierarchical, with the root servers at the top, and the client at the bottom. This means that the root servers are the most heavily loaded, and the client is the least heavily loaded.
+## Protocol
 
-### Local Nameservers
+DNS runs over UDP on port 53, see [[networks/4-transport/UDP|UDP]]. Reliability comes from the client retransmitting on timeout, with a 16-bit ID field linking each response to its query. Servers are replicated for load and availability, queries can return multiple records, and the client picks which to use.
 
-Local nameservers are the first point of contact for a client's DNS resolution. They are usually provided by the ISP, and are responsible for caching DNS records for a short period of time.   
-
-They can also run on a host, or at an access point. Alternatively, you can use a public DNS resolver like Google's. Local name servers are typically configured via DHCP.
-
-### Root Name Servers
-
-Root (.) is served by 13 root servers (labeled `a.root-servers.net` through `m.root-servers.net`). These servers are distributed around the world and are operated by 12 independent organizations.
-
-There are more than 250 distributed server instances to increase the fault tolerance and availability of the root server system. Most servers are reached by **IP anycast**, which means that the same IP address is advertised from multiple locations.
-
-## DNS Protocol
-
-DNS uses the User Datagram Protocol (UDP) on port 53 to serve requests. Uses ARQ for reliability. Messages are linked by a 16-bit ID field.
-
-Servers can be replicated to handle load and reliability. Queries can return multiple records, and the client can choose which one to use.
-
-Security is a major concern for DNS. DNSSEC is a suite of extensions that add security to the DNS protocol by signing DNS data, but it is not widely adopted.
+Plain DNS has no authentication, so responses can be spoofed. DNSSEC adds signatures over DNS data to fix this, but adoption is limited.
 
 ## Related notes
 
 - [[networks/5-application/HTTP|HTTP]]
+- [[networks/5-application/CDNs|content delivery networks]]
 - [[networks/3-network/global-internet|the global Internet]]

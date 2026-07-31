@@ -1,12 +1,25 @@
 ---
 title: Socket Reference
 category: Networks
-tags: socket, networking, system programming, C, Python
+tags:
+  - sockets
+  - system-programming
+  - C
+  - Python
 date: 2024-01-11
-description: This document covers the implementation of sockets, a fundamental networking concept in system programming. It provides a reference for creating, configuring, and using sockets in both client and server applications, including examples in C and Python. Key topics include TCP and UDP socket types, binding sockets to addresses, listening for connections, accepting connections, sending and receiving data, and closing sockets. The document serves as a comprehensive guide for developers working on network-based applications.
+updated: 2026-07-30
+status: evergreen
+description: Reference for the BSD sockets API in C and Python, covering socket creation, bind, listen, accept, connect, send, recv, close, and a minimal client and server.
+sources:
+  - title: "socket(2) - Linux manual page"
+    url: https://man7.org/linux/man-pages/man2/socket.2.html
+    type: docs
+  - title: "Computer Networks: A Systems Approach"
+    url: https://book.systemsapproach.org/
+    type: textbook
 ---
 
-# Socket Reference
+Quick reference for the BSD sockets API, with each call shown in C and Python side by side. The C signatures follow the [socket(2) man pages](https://man7.org/linux/man-pages/man2/socket.2.html), and the full client and server at the bottom come from [Computer Networks: A Systems Approach](https://book.systemsapproach.org/). For what TCP and UDP do underneath these calls, see [[networks/4-transport/TCP|TCP]] and [[networks/4-transport/UDP|UDP]].
 
 ## Creating a Socket
 
@@ -58,7 +71,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
  *
  * @return 0 on success, -1 on failure.
 */
-int bind(int socket, struct sockaddr *address, int addr_len);
+int bind(int socket, struct sockaddr *address, socklen_t addr_len);
 ```
 
 ```python
@@ -110,12 +123,12 @@ serversock.listen(backlog)
  * @param socket The socket to accept a connection on.
  * @param address A pointer to a sockaddr struct that will be
  *   filled with the address of the peer socket.
- * @param addr_len A pointer to an int that will be filled with
+ * @param addr_len A pointer to a socklen_t that will be filled with
  *   the length of the sockaddr struct.
  *
  * @return The file descriptor of the new socket, or -1 on failure.
 */
-int accept(int socket, struct sockaddr *address, int *addr_len);
+int accept(int socket, struct sockaddr *address, socklen_t *addr_len);
 ```
 
 ```python
@@ -144,17 +157,19 @@ clientsock, addr = serversock.accept()
  *
  * @return 0 on success, -1 on failure.
 */
-int connect(int socket, struct sockaddr *address, int addr_len);
+int connect(int socket, struct sockaddr *address, socklen_t addr_len);
 ```
 
 ```python
 import socket
 
+port = 80
+
 # create a socket
 clientsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# connect to a server
-clientsock.connect(('http://elimelt.com', port))
+# connect to a server (host name, not a URL)
+clientsock.connect(('elimelt.com', port))
 ```
 
 ## Sending and Receiving Data
@@ -192,8 +207,8 @@ ssize_t recv(int socket, void *buf, size_t len, int flags);
 ```python
 # ...
 
-# Send data
-clientsock.send('Hello, world!')
+# Send data (bytes, not str)
+clientsock.send(b'Hello, world!')
 
 # Receive data
 data = clientsock.recv(1024)
@@ -202,8 +217,7 @@ data = clientsock.recv(1024)
 ## Closing a Socket
 
 ```c
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <unistd.h>
 
 /**
  * @brief Closes the socket @p socket.
@@ -302,7 +316,7 @@ while 1:
     line = sys.stdin.readline()
     if not line:
         break
-    s.send(line)
+    s.send(line.encode())
 s.close()
 ```
 
@@ -375,6 +389,12 @@ while True:
         data = clientsock.recv(1024)
         if not data:
             break
-        print(data)
+        print(data.decode())
     clientsock.close()
 ```
+
+## Related notes
+
+- [[networks/4-transport/TCP|TCP]]
+- [[networks/4-transport/UDP|UDP]]
+- [[networks/reference|networks reference]]

@@ -3,6 +3,8 @@
 .vscode
 .DS_Store
 venv
+.venv
+.ipynb_checkpoints
 *.pyc
 search_index.db
 search_embeddings.jsonl
@@ -16,6 +18,7 @@ embeddings.jsonl
 *.sed
 *.html
 *.htm
+/work/notebook-data
 
 # Exception: track template HTML files
 !scripts/template/*.html

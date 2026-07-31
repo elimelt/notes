@@ -8,6 +8,7 @@ tags:
 date: 2025-03-12
 updated: 2026-07-31
 status: draft
+archive: true
 description: Draft personal reflection on visible homelessness in Seattle.
 sources:
   - personal observations in Seattle

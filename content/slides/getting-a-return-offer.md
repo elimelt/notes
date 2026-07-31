@@ -1,9 +1,15 @@
 ---
 title: How to Get a Return Offer
 category: Career
-tags: internship, career, return offer, professional development
+tags:
+  - internship
+  - career
+  - return offer
+  - professional development
 date: 2025-03-05
 description: A non-exhaustive guide to making the most of your internship and securing a return offer.
+sources:
+  - https://wiki.swecc.org/member-resources/succeeding-at-your-internship/0-overview/
 ---
 
 [wiki entry](https://wiki.swecc.org/member-resources/succeeding-at-your-internship/0-overview/)
@@ -153,4 +159,4 @@ This is a condensed checklist for making the most of an internship and maximizin
 
 ## Related
 
-- [[thoughts/engineering/onboarding|How I Onboard]]
+- Personal onboarding notes

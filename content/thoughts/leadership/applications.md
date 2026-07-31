@@ -9,6 +9,7 @@ tags:
 date: 2025-03-05
 updated: 2026-07-31
 status: needs-review
+archive: true
 description: Archived announcement for the 2025-2026 Software Engineering Career Club officer applications.
 sources:
   - https://forms.gle/1JaS7iSeJK6CFW329

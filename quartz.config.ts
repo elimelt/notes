@@ -1,6 +1,6 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
-import { StripFirstHeadingIfTitlePresent } from "./quartz.plugins"
+import { RemoveArchived, StripFirstHeadingIfTitlePresent } from "./quartz.plugins"
 
 const config: QuartzConfig = {
   configuration: {
@@ -63,7 +63,7 @@ const config: QuartzConfig = {
       Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
     ],
-    filters: [Plugin.RemoveDrafts()],
+    filters: [Plugin.RemoveDrafts(), RemoveArchived()],
     emitters: [
       Plugin.AliasRedirects(),
       Plugin.ComponentResources(),

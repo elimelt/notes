@@ -10,6 +10,7 @@ tags:
 date: 2025-03-05
 updated: 2026-07-31
 status: evergreen
+archive: true
 description: Personal notes on how I ramp up in a new engineering role.
 sources:
   - personal experience from internship onboarding

@@ -9,6 +9,7 @@ tags:
 date: 2025-03-05
 updated: 2026-07-31
 status: evergreen
+archive: true
 description: Reflection on William Deresiewicz's essay "Solitude and Leadership."
 sources:
   - https://theamericanscholar.org/solitude-and-leadership/

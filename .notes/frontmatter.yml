@@ -1,0 +1,46 @@
+version: 1
+
+required:
+  title:
+    type: string
+  category:
+    type: string
+  tags:
+    type: array
+    items: string
+  date:
+    type: date
+    format: YYYY-MM-DD
+
+recommended:
+  description:
+    type: string
+  status:
+    type: enum
+    values:
+      - draft
+      - evergreen
+      - needs-review
+      - incomplete
+  sources:
+    type: array
+    items:
+      title: string
+      url: string
+      type: string
+  updated:
+    type: date
+    format: YYYY-MM-DD
+
+conventions:
+  title_lives_in_frontmatter: true
+  no_in_body_h1: true
+  tags_should_be_yaml_lists: true
+  descriptions_should_state_scope_not_hype: true
+  dates_should_be_iso8601: true
+  source_urls_should_be_canonical_when_possible: true
+
+backfill_targets:
+  normalize_tags_to_yaml_lists: true
+  add_sources_field_when_the_note_depends_on_external_material: true
+  remove_in_body_h1_when_frontmatter_title_exists: true

@@ -51,6 +51,11 @@ QUARTZ_REF=<tag-or-commit> npm run dev
   backlinks and graph edges.
 - Use `draft: true` in front matter to keep an unfinished note out of the
   published site.
+- Use `content/templates/` as the starting point for new concept, paper, and
+  benchmark notes. Quartz ignores that directory during site generation.
+- Treat `.notes/` as the repository's authoring contract. `prose.yml`,
+  `content.yml`, and `frontmatter.yml` define the target style for future notes
+  and for the backfill of existing notes.
 - Put site-wide visual overrides in `quartz-site/custom.scss` and Quartz layout
   changes in `quartz.layout.ts`.
 

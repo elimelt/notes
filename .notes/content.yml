@@ -1,0 +1,91 @@
+version: 1
+
+core_principles:
+  - every_note_needs_a_clear_purpose
+  - every_nontrivial_claim_must_be_cited_derived_or_measured
+  - intuition_and_rigor_should_coexist
+  - examples_should_pull_their_weight
+  - prose_should_follow_the_shape_of_the_idea
+
+required_elements:
+  - purpose
+  - main_claim_or_question
+  - intuitive_explanation
+  - technical_detail
+  - sources
+  - related_notes
+
+evidence:
+  allowed_support:
+    - cited
+    - derived_in_note
+    - measured_by_author
+  disallowed_support:
+    - unsupported_assertion
+    - folklore_without_citation
+    - copied_text_without_attribution
+  measured_claim_requirements:
+    - methodology
+    - environment_or_setup
+    - raw_result_or_summary_table
+  derived_claim_requirements:
+    - assumptions
+    - intermediate_steps_when_nontrivial
+  cited_claim_requirements:
+    - inline_link_near_claim
+    - references_section_for_primary_sources
+
+citations:
+  prefer_inline_links: true
+  prefer_primary_sources: true
+  quotes_require_attribution: true
+  verbatim_quote_requires_link: true
+  no_plagiarism: true
+
+math_and_code:
+  define_symbols_before_heavy_use: true
+  label_pseudocode_clearly: true
+  runnable_code_should_include_context: true
+  code_blocks_should_have_language_tags: true
+  equations_should_support_the_argument: true
+
+note_types:
+  concept:
+    recommended_sections:
+      - Purpose
+      - Core idea
+      - Intuition
+      - Formal statement
+      - Worked example
+      - Edge cases or limits
+      - Sources
+      - Related notes
+  paper:
+    recommended_sections:
+      - Purpose
+      - Citation
+      - Problem
+      - Main idea
+      - Mechanism
+      - Evidence
+      - Assumptions and limits
+      - Sources
+      - Related notes
+  benchmark:
+    recommended_sections:
+      - Purpose
+      - Setup
+      - Workload
+      - Method
+      - Results
+      - Interpretation
+      - Reproduction
+      - Sources
+      - Related notes
+
+review_prompts:
+  - does_the_note_state_why_it_exists_early
+  - is_every_nontrivial_claim_supported
+  - does_each_section_move_the_argument_forward
+  - is_any_sentence_only_there_to_sound_nice
+  - can_a_reader_reproduce_the_result_or_follow_the_derivation

@@ -7,6 +7,7 @@ tags:
   - return offer
   - professional development
 date: 2025-03-05
+archive: true
 description: A non-exhaustive guide to making the most of your internship and securing a return offer.
 sources:
   - https://wiki.swecc.org/member-resources/succeeding-at-your-internship/0-overview/

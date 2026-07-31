@@ -1,0 +1,88 @@
+name: Expand existing note
+description: Track a planned expansion of an existing note when the right home already exists.
+title: "[Expand Note] "
+labels:
+  - planned-expansion
+body:
+  - type: input
+    id: note_path
+    attributes:
+      label: Note to expand
+      description: Path to the existing note that should absorb the new material.
+      placeholder: content/ml/recommender-systems/retrieval-and-ranking.md
+    validations:
+      required: true
+  - type: textarea
+    id: expansion_goal
+    attributes:
+      label: Expansion goal
+      description: What should this note cover after the expansion?
+      placeholder: Add a concrete treatment of cold start, candidate blending, reranking, and calibration tradeoffs.
+    validations:
+      required: true
+  - type: textarea
+    id: why_here
+    attributes:
+      label: Why expand instead of split
+      description: Explain why this material belongs in the existing note rather than a new standalone entry.
+      placeholder: The note already frames the stage boundary. The missing material deepens that framing instead of introducing a separate concept family.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Papers, books, docs, lectures, or datasets that should anchor the expansion.
+      placeholder: |
+        - https://...
+        - https://...
+    validations:
+      required: true
+  - type: dropdown
+    id: expansion_type
+    attributes:
+      label: Expansion type
+      options:
+        - New sections
+        - More derivation or rigor
+        - More code or implementation detail
+        - Better measurements or benchmarks
+        - Better citations or source grounding
+        - Structural rewrite
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_changes
+    attributes:
+      label: Proposed sections or changes
+      description: Capture the concrete additions, rewrites, or examples the note needs.
+      placeholder: |
+        - Add a section on source blending and candidate budget allocation
+        - Add a section on post-ranking diversity and business constraints
+        - Add concrete metrics for retrieval recall and ranker calibration
+    validations:
+      required: true
+  - type: textarea
+    id: related_notes
+    attributes:
+      label: Related notes
+      description: Link nearby notes that should be cross-linked or kept consistent.
+      placeholder: |
+        - content/ml/recommender-systems/recommender-systems.md
+        - content/ml/recommender-systems/bias-and-marketplace-effects.md
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: List the non-negotiable additions the expanded note should have when done.
+      placeholder: |
+        - Add at least one worked example, derivation, or system diagram
+        - Add source-backed discussion of the missing subtopics
+        - Cross-link the new sections from the section index if needed
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra notes
+      description: Anything else worth preserving while the idea is fresh.

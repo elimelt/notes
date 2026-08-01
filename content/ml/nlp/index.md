@@ -24,7 +24,7 @@ The section also holds practical notes that sit closer to modern language models
 
 ## Suggested path
 
-- Represent and retrieve text: [[ml/nlp/reading/tokenization|tokenization]], [[ml/nlp/reading/information-retrieval|information retrieval and the PPMI experiment]]
+- Represent and retrieve text: [[ml/nlp/reading/tokenization|tokenization]], [[ml/nlp/ppmi|PPMI]], [[ml/nlp/word-embeddings|word embeddings]], [[ml/nlp/reading/information-retrieval|information retrieval and the PPMI experiment]]
 - Build classifiers: [[ml/nlp/reading/classification|classification]], [[ml/nlp/reading/multinomial-logistic-regression|multinomial logistic regression]]
 - Add nonlinear models: [[ml/nlp/reading/neural-networks|neural networks]]
 - Use current models: [[ml/nlp/prompting|prompting]], [[ml/nlp/decoding-strategies|decoding strategies]]

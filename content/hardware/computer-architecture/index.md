@@ -1,5 +1,5 @@
 ---
-title: A Working Map of Computer Architecture
+title: Computer Architecture
 category: Computer Architecture
 tags:
   - computer-architecture

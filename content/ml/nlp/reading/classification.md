@@ -81,6 +81,9 @@ $$
 \hat{P}(w_i | c) = \frac{count(w_i, c)}{\sum_{w \in V} count(w, c)}
 $$
 
+> [!warning] Zero counts veto everything
+> Under the product rule, a single unseen word gives its class probability zero regardless of the rest of the document. Smoothing is not an optional refinement for Naive Bayes; without it the classifier fails on almost any realistic test document.
+
 This breaks on any word that never appears with class $c$ in training. Its estimated probability is zero, and one zero factor wipes out the entire product no matter how strong the other evidence is. Laplace (add-one) smoothing fixes it:
 
 $$

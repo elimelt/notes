@@ -54,6 +54,9 @@ The architectural claims are:
 
 That is why convolution works so well on images.
 
+> [!abstract] Parameter sharing is the whole trick
+> One $5 \times 5$ kernel is 25 weights applied at every spatial position. A fully connected layer mapping even a modest image to a feature map of the same size would need millions of independent weights to represent the same computation. Sharing the kernel encodes the assumption that "edge detector at the top left" and "edge detector at the bottom right" should be the same function.
+
 ## LeNet-5
 
 LeCun et al. present LeNet-5 as a full document-recognition system, not just a convolution demo. The famous architecture is roughly:
@@ -67,6 +70,19 @@ LeCun et al. present LeNet-5 as a full document-recognition system, not just a c
 - `F6`
 - final classifier
 
+```mermaid
+flowchart LR
+    in["Input 32x32"] --> c1["C1: conv, 6 maps, 5x5"]
+    c1 --> s2["S2: subsample"]
+    s2 --> c3["C3: conv, 16 maps"]
+    c3 --> s4["S4: subsample"]
+    s4 --> c5["C5: conv"]
+    c5 --> f6["F6: fully connected"]
+    f6 --> out["Classifier"]
+```
+
+This alternating conv-pool-conv-pool-fc shape — spatial resolution shrinking while channel count grows — is the template nearly every later CNN elaborated on.
+
 The paper's point is broader than "use convs." It argues for **gradient-based learning** as a full stack, where feature extraction and classification are trained jointly instead of being separated into hand-designed modules.
 
 ## Receptive Fields, Stride, and Pooling
@@ -74,6 +90,9 @@ The paper's point is broader than "use convs." It argues for **gradient-based le
 Stride reduces spatial resolution. Pooling or subsampling adds local invariance. Stacking multiple small kernels increases effective receptive field while inserting more nonlinearities than one large kernel would.
 
 This explains why deep stacks of $3 \times 3$ convolutions became standard.
+
+> [!tip] Depth buys receptive field cheaply
+> Two stacked $3 \times 3$ convolutions see a $5 \times 5$ region; three see $7 \times 7$. For $C$ channels, three $3 \times 3$ layers cost $27C^2$ weights versus $49C^2$ for one $7 \times 7$ layer, and they insert three nonlinearities instead of one. Deeper-and-smaller wins on both parameters and expressivity, which is the VGG-era lesson baked into most backbones since.
 
 ## The ResNet Argument
 

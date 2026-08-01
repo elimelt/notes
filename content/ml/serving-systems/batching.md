@@ -61,6 +61,25 @@ Form a batch, run prefill for everyone, then decode everyone in lockstep until t
 
 [Orca](https://www.usenix.org/conference/osdi22/presentation/yu) admits new requests at token granularity: whenever a decode slot frees up, a waiting request takes it. Nothing waits for the longest request, so throughput rises, the GEMM batch size stabilizes, and queuing time drops. The cost is interference. Prefills run inside the same iteration as decodes, so a large arriving prompt stalls every concurrent decode, and prefill itself waits on decode work.
 
+The timeline difference with two decode slots, where R1 and R2 arrive at $t=0$ and R3 arrives at $t=2$. Simple batching holds R1's finished slot idle and R3 in the queue until the whole batch drains; continuous batching hands the slot over as soon as R1 finishes:
+
+```mermaid
+gantt
+    dateFormat X
+    axisFormat %s
+    section Simple batching
+    R1 decode      :done, 0, 4
+    R1 slot idle   :crit, 4, 8
+    R2 decode      :active, 0, 8
+    R3 queued      :crit, 2, 8
+    R3 decode      :8, 12
+    section Continuous batching
+    R1 decode      :done, 0, 4
+    R2 decode      :active, 0, 8
+    R3 queued      :crit, 2, 4
+    R3 decode      :4, 8
+```
+
 The steady-state GEMM batch size follows from counting tokens. A request with prefill length $p$ and decode length $d$ lives for $d + 1$ iterations (one iteration processes all $p$ prompt tokens, then $d$ iterations produce one token each) and contributes $p + d$ token computations over that lifetime. With $B$ requests in flight the average tokens per iteration is
 
 $$\text{GEMM batch size} = \frac{p+d}{d+1}B = B + \frac{p-1}{d+1}B \approx \left(1 + \frac{p}{d}\right)B \text{ for large } d$$
@@ -113,6 +132,9 @@ Two families of mitigation. Prediction-based control uses a small encoder model 
 | Continuous batching | High       | Longer  | Long, unstable   | Low              |
 | Chunked prefill     | Highest    | Longest | Long, controlled | Medium           |
 | PD disaggregation   | Low        | Short   | Short            | High             |
+
+> [!tip] Matching strategy to SLO shape
+> The table doubles as an SLO decision aid. A deadline-shaped SLO tolerates chunked prefill's long TTFT, so take the throughput. TTFT plus average TPOT points toward continuous batching, which keeps queuing short and lets occasional slow iterations average out. TTFT plus maximum TPOT is where prefill interference becomes disqualifying, and that is the case PD disaggregation buys its extra hardware for.
 
 ## Edge cases and open issues
 

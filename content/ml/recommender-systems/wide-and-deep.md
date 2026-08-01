@@ -47,6 +47,26 @@ where:
 
 The point is not the exact formula. The point is that the output layer can use both memorized conjunctions and distributed representations.
 
+```mermaid
+flowchart TD
+    subgraph W["Wide component (memorization)"]
+        SF["Sparse features<br/>+ cross-product transforms"] --> LM["Linear model"]
+    end
+
+    subgraph D["Deep component (generalization)"]
+        CF["Categorical features"] --> EMB["Embeddings"]
+        EMB --> MLP["MLP hidden layers"]
+        MLP --> AL["Last hidden layer"]
+    end
+
+    LM --> OUT["Joint output<br/>sigmoid over the sum"]
+    AL --> OUT
+    OUT --> Y["P(app acquisition)"]
+
+    style W fill:#e3f2fd,stroke:#1565c0
+    style D fill:#e8f5e9,stroke:#2e7d32
+```
+
 ## Memorization Versus Generalization
 
 The paper names the two effects directly.
@@ -59,6 +79,9 @@ That is a good vocabulary for recommender work in general. Whenever a model chan
 ## Why Deep-Only Models Can Fail
 
 This paper makes a point that still gets missed. Dense embeddings produce nonzero similarity almost everywhere. In a sparse recommender problem, that can be wrong. Some user-item pairs should just stay disconnected.
+
+> [!warning] Over-generalization is a real failure mode
+> Embedding geometry is smooth by construction, so a deep-only model will recommend something for nearly every query, including ones where the right answer is nothing similar. The wide component exists to hold sharp exception rules that the embedding space would otherwise smooth over.
 
 That is why the wide part matters. It acts as a place to store exception rules that should not be washed away by smooth embedding geometry.
 

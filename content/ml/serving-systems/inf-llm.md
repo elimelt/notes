@@ -47,6 +47,21 @@ Three design details carry the method:
 - Dynamic offloading. Most memory blocks live in CPU memory. Frequently accessed blocks are cached on GPU with an LRU policy, which is what lets sequences up to 1M tokens run on modest GPU resources.
 - No training anywhere. The retrieval scores reuse the model's existing attention representations, so the method applies to any off-the-shelf LLM.
 
+Per attention step, the current tokens attend over the local window plus whichever memory blocks score as relevant:
+
+```mermaid
+flowchart LR
+    Q["current tokens"] --> LW["sliding window KV<br/>(always on GPU)"]
+    Q --> SCORE["relevance score against<br/>block representative tokens"]
+    SCORE -->|"top-k blocks"| CACHE["GPU block cache (LRU)"]
+    CACHE -.->|"on miss, load block"| CPU["CPU context memory<br/>(all past KV blocks)"]
+    LW --> ATT["attention over window<br/>+ retrieved blocks"]
+    CACHE --> ATT
+```
+
+> [!tip] Same trick as KV offloading
+> The block cache is the offloading pattern from [[ml/serving-systems/memory-management|Memory Management]] applied at attention time. The full KV history lives in cheap CPU memory, an LRU cache keeps hot blocks on GPU, and relevance scoring decides which blocks earn residence. What is new here is using retrieval to bound how much of that history any single attention step touches.
+
 ## Evidence
 
 The paper evaluates on long-context benchmarks against both training-free baselines and models continually trained on long sequences. Findings, per the paper:

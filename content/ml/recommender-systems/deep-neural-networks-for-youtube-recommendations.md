@@ -40,6 +40,21 @@ YouTube has a huge corpus and a tight latency budget. The paper frames recommend
 
 That split is the backbone of modern recommenders. You cannot afford the best model on the full catalog, so you use a cheaper model to decide where the expensive model is even allowed to look.
 
+```mermaid
+flowchart TD
+    C["Video corpus<br/>millions of videos"] -->|"sampled softmax training,<br/>ANN serving"| CG["Candidate generation<br/>coarse personalization"]
+    OS["Other candidate sources"] --> RK
+    CG -->|"hundreds of candidates"| RK["Ranking<br/>hundreds of features,<br/>watch-time-weighted logistic regression"]
+    RK -->|"dozens shown"| UI["Homepage recommendations"]
+
+    style C fill:#e3f2fd,stroke:#1565c0
+    style UI fill:#e8f5e9,stroke:#2e7d32
+```
+
+> [!quote] Why ranking gets richer features
+> "During ranking, we have access to many more features describing the video and the user's relationship to the video because only a few hundred videos are being scored rather than the millions scored in candidate generation."
+> — [Covington, Adams, and Sargin (2016)](https://research.google.com/pubs/archive/45530.pdf), section 4
+
 ## Candidate Generation
 
 The candidate generator is trained as a multiclass classification problem over the video catalog. Given a user context, predict the next video the user will watch. At serving time, the softmax itself is not used directly. Instead, the trained model produces embeddings and an approximate nearest-neighbor lookup returns the top candidates.
@@ -159,6 +174,10 @@ The output layer is trained with logistic loss, then exponentiated at inference 
 The target here is not raw click probability. The system wants expected watch time. To get that, positive examples are weighted by watch time and negatives get unit weight. This turns logistic regression into a watch-time-sensitive classifier whose learned odds approximate expected watch time closely enough to optimize the real product metric better than CTR prediction alone.
 
 That choice matters because CTR can be gamed by short, low-value clicks. A recommender that optimizes CTR too directly will often drift toward clicky junk.
+
+> [!quote] The paper's argument against CTR
+> "Ranking by click-through rate often promotes deceptive videos that the user does not complete ('clickbait') whereas watch time better captures engagement."
+> — [Covington, Adams, and Sargin (2016)](https://research.google.com/pubs/archive/45530.pdf), section 4
 
 ## What the Experiments Say
 

@@ -55,7 +55,23 @@ Elman's paper is important because it framed temporal structure as something the
 
 ## Backpropagation Through Time
 
-Unroll the recurrence over $T$ steps and the RNN becomes a depth-$T$ network with shared parameters.
+Unroll the recurrence over $T$ steps and the RNN becomes a depth-$T$ network with shared parameters:
+
+```mermaid
+flowchart LR
+    h0["h0"] --> c1["cell"]
+    x1["x1"] --> c1
+    c1 --> o1["o1"]
+    c1 -- "h1" --> c2["cell"]
+    x2["x2"] --> c2
+    c2 --> o2["o2"]
+    c2 -- "h2" --> c3["cell"]
+    x3["x3"] --> c3
+    c3 --> o3["o3"]
+    c3 -- "h3" --> etc["..."]
+```
+
+Every "cell" box is the same function with the same $W_{xh}$, $W_{hh}$, $b_h$. The loop in the rolled form becomes depth in the unrolled form, and gradients must traverse that entire horizontal chain to reach early timesteps.
 
 For total loss
 
@@ -77,6 +93,9 @@ $$
 This is the whole vanishing/exploding gradient story. If those Jacobians tend to shrink norms, the product vanishes. If they amplify norms, it explodes.
 
 That is not a quirk of one optimizer. It is structural.
+
+> [!warning] Vanishing gradients are a property of the parameterization
+> The product $\prod_j \partial h_j / \partial h_{j-1}$ multiplies the same recurrent Jacobian $T$ times, so its norm behaves like $\lambda^T$ for the dominant singular value $\lambda$. Unless $\lambda$ sits almost exactly at 1, long-range gradient signal either dies or blows up exponentially in sequence length. Clipping handles the exploding side; the vanishing side needed an architectural fix, which is exactly what the LSTM's additive cell-state update provides.
 
 ## Why a Fixed-Length State Can Be a Bottleneck
 

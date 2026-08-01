@@ -76,7 +76,30 @@ This version is slow. Adjacent threads read addresses that are `num_cols / block
 
 ## Coalesced memory access
 
-Inside one warp, if the 32 threads access contiguous addresses, the hardware batches the accesses into one or a few memory transactions. That batching is what makes global memory bandwidth usable. Getting both the reads and the writes of a transpose to coalesce requires staging tiles in shared memory, which is where [[ml/serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]] picks up.
+Inside one warp, if the 32 threads access contiguous addresses, the hardware batches the accesses into one or a few memory transactions. That batching is what makes global memory bandwidth usable.
+
+In the naive kernel above, each thread owns a slice of $8192 / 1024 = 8$ columns, so on any given loop iteration the warp's 32 loads land 8 elements apart and every load becomes its own transaction. Assigning consecutive elements to consecutive threads lets the hardware fold the same 32 loads into a few transactions:
+
+```mermaid
+flowchart TB
+    subgraph Sliced["Naive: thread i reads from offset 8i"]
+        t0["thread 0"] --> a0["addr 0"]
+        t1["thread 1"] --> a8["addr 8"]
+        t2["thread 2"] --> a16["addr 16"]
+        t31["thread 31"] --> a248["addr 248"]
+    end
+    subgraph Contig["Coalesced: consecutive threads, consecutive addresses"]
+        u0["thread 0"] --> b0["addr 0"]
+        u1["thread 1"] --> b1["addr 1"]
+        u2["thread 2"] --> b2["addr 2"]
+        u31["thread 31"] --> b31["addr 31"]
+    end
+```
+
+> [!tip] Spotting uncoalesced access
+> Check what one warp does in a single instruction, not what one thread does over its whole loop. Each thread here reads contiguous columns over time, and the access pattern is still terrible, because at any instant the warp's addresses are strided. If adjacent threads' addresses differ by more than one element, the loads split into separate transactions.
+
+Getting both the reads and the writes of a transpose to coalesce requires staging tiles in shared memory, which is where [[ml/serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]] picks up.
 
 ## Related notes
 

@@ -74,6 +74,9 @@ Different architectures encode different assumptions.
 
 The architecture is a guess about which symmetries matter. A good guess saves parameters and data. A bad guess makes optimization work harder for no gain.
 
+> [!abstract] Architecture selection is prior selection
+> Every row of this table is a claim about the data: CNNs claim the same pattern matters anywhere in the grid, RNNs claim the past summarizes into a state, GNNs claim neighbors are informative. Picking an architecture is choosing which of these claims to hard-code rather than spend data learning.
+
 ## The Bias-Variance Question Shows Up as Architecture
 
 A high-capacity model can fit strange functions. That is not the same thing as learning the right one under finite data and finite compute.
@@ -195,11 +198,17 @@ Compute-optimal is the right target only if training is the only cost. Serving c
 
 Pre-Chinchilla models were undertrained; post-LLaMA open models are deliberately overtrained, paying extra training compute once to save inference compute on every deployed token. The fitted loss surface quantifies the price: LLaMA-7B's allocation predicts $L \approx 2.052$ where the same $4.2 \times 10^{22}$ FLOPs spent compute-optimally predicts $2.050$ — essentially nothing lost, while inference cost drops by the ratio of model sizes against a compute-optimal ~10B alternative. The flat optimum is what makes overtraining cheap.
 
+> [!tip] The loss optimum is flat; the inference bill is not
+> Moving along the fixed-compute curve away from the Chinchilla optimum costs thousandths of a nat, but halving $N$ halves the cost of every token the model ever serves. Whenever deployment volume is large, that asymmetry makes the smaller, overtrained model the right choice even though it is "suboptimal" by the training-only criterion.
+
 Architecture interacts with the same economics. Sparse mixture-of-experts models decouple parameter count from per-token FLOPs, buying capacity without proportional inference cost, at the price of memory, routing complexity, and harder [[ml/serving-systems/parallelism|parallelism]]; small dense overtrained models are the opposite trade, maximally simple to serve.
 
 ### Data-side caveats
 
 Token count is not a sufficient statistic for $D$. Deduplication matters (repeated near-duplicates waste budget and encourage memorization), mixture composition matters (code, web, books scale differently and interact with downstream tasks), and data can run out: [Muennighoff et al. (2023)](https://arxiv.org/abs/2305.16264) measured that repeating a fixed corpus for up to ~4 epochs costs almost nothing versus fresh data, with returns decaying to zero by ~16 epochs. All the scaling fits also assume the data distribution is fixed while only quantity varies — a data-quality intervention moves the constants, which is precisely why it can be worth more than parameters.
+
+> [!warning] Scaling fits are interpolations, not laws
+> The power-law fits hold over the measured range with the measured data distribution. Extrapolating orders of magnitude beyond the fitted runs, or applying the constants after a major change in data mixture or quality, is conjecture — Chinchilla itself was a correction to Kaplan's fit caused by a subtle learning-rate-schedule confound.
 
 Once the architecture family is competent, data quality and compute allocation usually matter more than small structural edits. The scaling results sharpen that: they say how much loss each marginal parameter or token buys, and the answer is "a power law with a small exponent" for both — so the leverage is in not misallocating between them, and in the constants that data quality controls.
 

@@ -61,6 +61,9 @@ $$
 
 where $M$ is the causal mask. Future positions get $-\infty$ before softmax, so position $t$ can only attend to $1,\dots,t$.
 
+> [!warning] Causal masking is what makes teacher forcing valid
+> Without the mask, position $t$ could attend to position $t+1$ and simply copy the token it is being trained to predict. The mask is not an optimization detail; it is the mechanism that lets every position train in parallel while still matching the autoregressive factorization $p(x_t \mid x_{<t})$ used at generation time.
+
 The $1/\sqrt{d_k}$ scale from Vaswani et al. is there because raw dot products grow with dimension and can otherwise saturate the softmax.
 
 ## Multi-Head Attention
@@ -110,6 +113,27 @@ $$
 often with expansion ratio around $4\times$.
 
 The original transformer used post-norm. GPT-2 moves layer normalization to the input of each sub-block, which the paper explicitly notes, making it resemble a pre-activation residual network.
+
+The full model is this block repeated $N$ times between an embedding and an unembedding:
+
+```mermaid
+flowchart TB
+    tok["Token IDs"] --> emb["Token embedding + positional information"]
+    emb --> ln1
+    subgraph block["Decoder block, repeated N times"]
+        ln1["LayerNorm"] --> attn["Causal self-attention"]
+        attn --> add1["Add"]
+        add1 --> ln2["LayerNorm"]
+        ln2 --> mlp["MLP, ~4x expansion"]
+        mlp --> add2["Add"]
+    end
+    emb -. "residual" .-> add1
+    add1 -. "residual" .-> add2
+    add2 --> lnf["Final LayerNorm"]
+    lnf --> head["Unembedding to vocabulary logits"]
+```
+
+The dotted residual edges are the identity paths. They carry both activations forward and gradients backward untouched, which is what makes 48-layer stacks like GPT-2 1.5B trainable.
 
 ## Positional Information
 

@@ -34,6 +34,18 @@ Diffusion models are easiest to understand if you separate three layers:
 
 The DDPM paper is the canonical reference for that setup.
 
+```mermaid
+flowchart LR
+    x0["x0: data"] -- "q, fixed noising" --> x1["x1"]
+    x1 -- "q" --> mid["..."]
+    mid -- "q" --> xT["xT: pure noise"]
+    xT -. "p, learned denoising" .-> mid
+    mid -. "p" .-> x1
+    x1 -. "p" .-> x0
+```
+
+The solid direction is fixed and has no parameters. All learning happens in the dotted direction.
+
 ## Forward Process
 
 Start from clean data $x_0$. Define a Markov chain:
@@ -133,6 +145,9 @@ L_{simple}
 $$
 
 That is the practical heart of the method. The model is trained as a noise regressor, not as a direct pixel generator.
+
+> [!tip] Why training is cheap even though sampling is slow
+> The closed form $x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\,\epsilon$ means a training step samples a random $t$, produces $x_t$ from $x_0$ in one shot, and regresses the known $\epsilon$ — no simulation of the noising chain, no sequential dependence between timesteps. Every minibatch trains the denoiser at randomly scattered noise levels simultaneously. The $T$-step sequential cost only appears at sampling time.
 
 ## Sampling Algorithm
 

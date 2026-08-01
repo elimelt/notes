@@ -8,13 +8,19 @@ tags:
   - operating systems
   - performance metrics
 date: 2024-03-04
-updated: 2026-07-30
+updated: 2026-08-01
 status: evergreen
-description: Chapter notes on the uniprocessor portion of OSPP chapter 7. FIFO, SJF, Round Robin, max-min fairness, and multi-level feedback queues, with the tradeoffs each makes between response time, throughput, and fairness, and a derivation comparing RR to SJF/FIFO response times.
+description: Single-CPU scheduling policies and what each optimizes. FIFO, SJF and SRPT optimality, Round Robin and processor sharing, max-min fairness, lottery and stride scheduling, starvation and aging, and MLFQ, with a side-by-side trace comparing policies on one workload.
 sources:
   - title: "Operating Systems: Principles and Practice (2nd ed.), Anderson and Dahlin, chapter 7"
     url: https://ospp.cs.washington.edu/
     type: textbook
+  - title: Schrage (1968), A Proof of the Optimality of the Shortest Remaining Processing Time Discipline
+    url: https://dl.acm.org/doi/10.1145/321738.321743
+    type: paper
+  - title: Joseph Hellerstein, CS262 scheduling lecture notes
+    url: https://people.eecs.berkeley.edu/~adj/cs262/Lec_10_22.pdf
+    type: lecture
 ---
 
 ## Purpose
@@ -43,6 +49,12 @@ FIFO works when requests are of roughly equal length. Memcached-style cache serv
 ## Shortest Job First (SJF)
 
 Run the task with the shortest remaining time first. For a given set of tasks this minimizes average response time, and it is also unimplementable as stated, since run times are not known in advance. Its value is as a bound to compare real policies against.
+
+### SRPT and Why It Is Optimal
+
+The preemptive version, **shortest remaining processing time** (SRPT), preempts the running task whenever a new arrival has less remaining work. [Schrage (1968)](https://dl.acm.org/doi/10.1145/321738.321743) proved SRPT optimal: among *all* scheduling disciplines, preemptive or not, with or without knowledge of the future, SRPT minimizes the number of jobs in the system at every instant — and by Little's Law, minimizing time-average jobs-in-system is the same as minimizing mean response time. The exchange-argument intuition: if the schedule ever runs a job with more remaining work while one with less waits, swapping the next unit of service finishes the short one sooner without delaying the long one's completion, reducing the jobs-in-system count during the swapped interval. Repeating the swap until no such pair exists yields SRPT.
+
+The proof's assumptions are the interesting part: one processor, jobs' remaining times known, no switching cost. Every real scheduler violates the middle assumption and must approximate remaining time from observed behavior — which is exactly what MLFQ below does, using "has this task used up its quanta" as a cheap predictor of "does it have a lot of work left."
 
 ### Bias Towards Short Tasks
 
@@ -86,6 +98,10 @@ $$
 
 The difference is $T_{\text{RR}} - T_{\text{FIFO}} = q(t-1)\frac{n-1}{2} \geq 0$, and for large $n$ and $t$ the averages approach $nqt$ versus $nqt/2$: RR roughly doubles the average response time on equal-length tasks while delivering the same throughput. Equal-length tasks are RR's worst case, since time slicing helps only when task lengths vary. If response time is the metric you care most about, round-robin is a poor choice.
 
+### Processor Sharing: the Fluid Ideal Behind RR
+
+As the quantum shrinks toward zero (with zero overhead), RR converges to **processor sharing** (PS): all $n$ runnable tasks progress simultaneously at rate $1/n$ each. PS is to RR what bit-by-bit round robin is to packet scheduling in [[systems/scheduling/3-network-and-packet/fair-queueing-wfq-and-drr|fair queueing]] — the continuous ideal that the discrete policy approximates one quantum at a time. PS has a clean analytical property: in the M/M/1-PS queue, a job of size $x$ has expected response time $x/(1-\rho)$, *proportional to its own size* and independent of the shapes of other jobs. Every job is slowed by the same factor $1/(1-\rho)$ — perfectly proportional pain, no starvation, no need to know job sizes. That insensitivity is why PS is the standard fairness benchmark: SRPT beats it on mean response time by favoring the short, but PS guarantees no job's slowdown depends on being lucky about the competition. Real RR sits between the ideal and FIFO, degraded by quantum granularity (a task waits up to $(n-1)q$ per round) and switch overhead.
+
 ### Silver Lining: Stream Processing
 
 Round-robin is a natural fit when tasks are continuous streams rather than discrete jobs. A video server can send a small chunk to each client in round-robin order, serving all clients evenly with no client starved.
@@ -101,6 +117,73 @@ Max-min fairness maximizes the minimum share of the processor across tasks: give
 If all tasks are compute-bound, max-min reduces to RR. I/O-bound tasks that use less than their full quantum get to run fully, and their unused allocation is split evenly among the remaining tasks, repeating until all CPU time is assigned.
 
 A literal implementation would always schedule the task that has consumed the least processor time so far. That fails in practice because two equally short tasks endlessly alternate, each preempting the other. An approximation tracks CPU usage at quantum granularity and allows a task at most one quantum beyond its ideal max-min allocation. Even that needs a priority queue over tasks, which is more bookkeeping than commercial operating systems are willing to pay per scheduling decision.
+
+## Weighted Fairness: Lottery and Stride
+
+Equal shares are rarely the actual goal — an interactive session should outweigh a batch reindex. Give task $i$ a weight $w_i$ and target allocation $w_i / \sum_j w_j$. Two classic mechanisms from Waldspurger and Weihl implement weighted shares without measuring job lengths:
+
+- **Lottery scheduling**: each task holds $w_i$ tickets; each quantum, draw a ticket uniformly and run the holder. Expected share is exactly proportional to tickets, starvation is impossible (every ticket has positive probability), and the mechanism composes — a task can subdivide its tickets among its own children, giving hierarchical shares for free. The cost is variance: over a window of $k$ quanta a task's actual allocation fluctuates like a binomial, $\sigma \propto \sqrt{k}$, so short-window fairness is poor.
+- **Stride scheduling** is the deterministic version: task $i$ has stride $\propto 1/w_i$ and a pass counter; always run the task with the smallest pass, then advance its pass by its stride. Heavier weight, smaller stride, more frequent turns. Allocation error is bounded by a constant (one quantum) over any window, versus lottery's $\sqrt{k}$ drift.
+
+Stride scheduling is the direct ancestor of Linux CFS's virtual runtime: `vruntime` advances at a rate inversely proportional to weight, and the scheduler always runs the minimum — the same pass/stride idea with different bookkeeping (details in [[systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling|multiprocessor scheduling]]). All of these are the CPU-side siblings of WFQ's virtual finish times in [[systems/scheduling/3-network-and-packet/fair-queueing-wfq-and-drr|fair queueing]].
+
+## Starvation and Aging
+
+Any policy that ranks tasks by a static attribute can starve the bottom rank: SJF starves long jobs while short ones keep arriving, and strict priority starves low priorities under sustained high-priority load. Two structural observations organize the fixes:
+
+- Starvation requires *sustained* competition. Under light load every policy is benign; the failure mode appears exactly when $\rho \to 1$ and the favored class alone can keep the processor busy.
+- The fix is always some form of **aging**: fold waiting time into effective priority so that neglect is self-correcting. A common form raises priority linearly with wait ($p_{\text{eff}} = p_{\text{base}} + \alpha \cdot t_{\text{wait}}$), which bounds worst-case wait by $(p_{\max} - p_{\text{base}})/\alpha$ plus the queue drain time above — a tunable starvation bound, traded directly against how sharply the scheduler favors its preferred class in the short term.
+
+MLFQ's periodic priority boost, lottery's guaranteed ticket probability, stride's bounded pass drift, and CFS's min-vruntime pick are all aging in different costumes. The diagnostic question for any proposed policy is: what unbounded counter, if any, can a task accumulate while never being scheduled? If one exists, the policy starves.
+
+## One Workload, Four Policies
+
+Acceptance test for all of the above: three tasks on one CPU — A arrives at $t=0$ needing 8 units, B at $t=1$ needing 4, C at $t=2$ needing 1. RR quantum = 1. Response time = finish − arrival. (Trace generated by a small simulator in the repo venv; the simulator is the ~40 lines of Python below.)
+
+| Policy | A finishes | B finishes | C finishes | Mean response time |
+| --- | --- | --- | --- | --- |
+| FIFO | 8 | 12 | 13 | 10.00 |
+| SJF (non-preemptive) | 8 | 13 | 9 | 9.00 |
+| SRPT | 13 | 6 | 3 | **6.33** |
+| RR ($q=1$) | 13 | 9 | 4 | 7.67 |
+
+The trace compresses the whole chapter. FIFO makes C (1 unit of work) wait 11 units behind A. Non-preemptive SJF cannot help B and C until A's 8-unit run ends — the damage is done at $t=0$. SRPT preempts A the moment B arrives and achieves the provably minimal mean, at the price of pushing A, the longest job, to last place; its response time goes from 8 to 13, the fairness cost of the optimal mean. RR lands between SRPT and FIFO on the mean, close to SRPT for the short jobs (C at 4 vs. 3) without needing to know any job lengths — which is the practical argument for time slicing: most of SRPT's benefit for short jobs, none of its clairvoyance.
+
+```python
+def rr(tasks, q=1):                       # tasks: (name, arrival, burst)
+    from collections import deque
+    rem = {n: b for n, a, b in tasks}
+    arr = {n: a for n, a, b in tasks}
+    t, run, done, added = 0.0, deque(), {}, set()
+    while len(done) < len(tasks):
+        for n, a, b in tasks:
+            if a <= t and n not in added:
+                run.append(n); added.add(n)
+        if not run:
+            t = min(a for n, a, b in tasks if n not in added); continue
+        n = run.popleft()
+        step = min(q, rem[n]); t += step; rem[n] -= step
+        for m, a, b in tasks:              # arrivals during the slice
+            if a <= t and m not in added:
+                run.append(m); added.add(m)
+        if rem[n] <= 1e-9: done[n] = t
+        else: run.append(n)
+    return {n: done[n] - arr[n] for n in done}
+
+print(rr([("A", 0, 8), ("B", 1, 4), ("C", 2, 1)]))
+```
+
+Output: `{'C': 2.0, 'B': 8.0, 'A': 13.0}` — matching the RR row (response times, not finish times). Swapping the policy function reproduces the other rows.
+
+### What Each Policy Optimizes
+
+| Policy | Optimizes / approximates | At the cost of |
+| --- | --- | --- |
+| FIFO | switching overhead, simplicity; fine when jobs are uniform | mean response time under variable job sizes |
+| SJF / SRPT | mean response time (SRPT provably optimal, Schrage 1968) | long-job response time and variance; needs size estimates |
+| RR / PS | proportional slowdown, no starvation, no job-size knowledge | ~2x mean response time on equal-length jobs |
+| Lottery / stride | weighted proportional shares | lottery: short-window variance; stride: bookkeeping |
+| MLFQ | SRPT-like means without clairvoyance + responsiveness | gameable heuristics, needs aging against starvation |
 
 ## Multi-level Feedback Queue (MLFQ)
 

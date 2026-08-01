@@ -72,6 +72,26 @@ A Log-Structured Merge Tree (LSM-tree) is the combination of an in-memory balanc
 - On a read, check the memtable first, then the most recent on-disk segment, then progressively older segments.
 - Periodically merge and compact segment files in the background.
 
+```mermaid
+flowchart TD
+    W[Write] --> WAL[Append to WAL]
+    WAL --> MT["Memtable (in-memory balanced tree)"]
+    MT -->|"flush when full (a few MB)"| L0
+
+    subgraph Disk[Immutable sorted SSTables on disk]
+        L0[L0 SSTables]
+        L1[L1 SSTables]
+        L2["L2 SSTables (~10x larger)"]
+        L0 -->|compaction| L1
+        L1 -->|compaction| L2
+    end
+
+    R[Read] --> MT
+    MT -.->|miss| L0
+    L0 -.->|miss| L1
+    L1 -.->|miss| L2
+```
+
 Lucene, the index engine behind Elasticsearch and Solr, uses a similar scheme for its term dictionary. Words are the keys and the values are [[ml/nlp/reading/information-retrieval|posting lists]], the ids of documents containing each word. The term dictionary lives in SSTable-like files that are merged periodically.
 
 ### Bloom filters
@@ -97,6 +117,9 @@ The tree grows and shrinks a page at a time. Inserting into a full leaf **splits
 
 Splits are also where B-trees get dangerous: a split touches two leaf pages and a parent, and a crash between those writes leaves an orphaned page or a dangling pointer. This is one reason every serious B-tree engine has a write-ahead log.
 
+> [!warning] A split is a multi-page write
+> There is no atomic way to update two leaves and a parent at once on disk. A crash mid-split corrupts the tree structure itself, not just one record, which is why the WAL rule below is non-negotiable for B-tree engines.
+
 LSM-trees trade read speed for write speed. Writes are sequential appends; reads may touch several segments. Compaction can hurt LSM-tree read performance, especially at high percentiles of read latency, since compaction competes with foreground requests for disk bandwidth. With high enough write throughput you also have to monitor disk space, because compaction can fall behind incoming writes and leave unmerged segments accumulating.
 
 ## Write-ahead logging and crash recovery
@@ -108,6 +131,9 @@ A **checkpoint** bounds recovery time by flushing dirty pages and recording "the
 The two engine families use the log differently. A B-tree engine WALs every page modification, including the structural ones from splits. An LSM engine only needs the WAL to cover the memtable, the one component living in volatile memory; SSTables are immutable once written, so recovery is "replay the WAL into a fresh memtable," and a memtable flush lets its log segment be dropped. This is the sense in which the LSM design is log-structured twice over.
 
 ## Amplification: the three-way trade
+
+> [!abstract] The amplification triangle
+> No storage engine minimizes read, write, and space amplification at once. B-trees favor reads, LSM-trees favor writes, and within the LSM family the compaction policy (size-tiered vs. leveled) tunes the position along the triangle.
 
 Every storage engine can be scored on three ratios — **read amplification** (disk work per logical read), **write amplification** (bytes written to disk per logical byte written), and **space amplification** (bytes on disk per live byte) — and no design minimizes all three. The [LSM-tree paper](https://www.cs.umb.edu/~poneil/lsmtree.pdf) is essentially an argument about this trade: batching writes through memory and merging sequentially buys write efficiency at some read cost.
 

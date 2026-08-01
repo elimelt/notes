@@ -59,6 +59,9 @@ The optimizer needs the size of every intermediate result. Standard machinery: p
 
 Real data is correlated, and multiplication of wrong factors compounds. [Leis et al. (2015)](https://www.vldb.org/pvldb/vol9/p204-leis.pdf) ran PostgreSQL and several commercial optimizers on the Join Order Benchmark (real IMDb data, 113 queries) and found errors growing roughly exponentially with join count: median q-error near 10 by three joins, underestimates of $10^2$-$10^4$ routine at five or more, in every system tested. Underestimates are the dangerous direction — they seduce the planner into nested-loop joins that expect ten rows and receive a million. Their second finding reframes optimizer engineering: with true cardinalities supplied, even a crude cost model picked good plans, so **cardinality quality dominates cost-model quality**. The practical mitigations are unglamorous: multi-column statistics (`CREATE STATISTICS` in PostgreSQL), avoiding predicates the estimator cannot see through (functions on columns), and in newer systems, sampling or learned estimators.
 
+> [!tip] Estimates dominate the cost model
+> With true cardinalities supplied, even a crude cost model picked good plans in every system Leis et al. tested. Effort spent on better statistics buys more than effort spent tuning cost constants.
+
 ## Worked example
 
 Schema: `orders` (1,000 pages, 100,000 tuples), `customers` (50 pages, 5,000 tuples), $B = 102$ buffer pages, query:
@@ -76,6 +79,24 @@ Logical rewrite pushes `country = 'NO'` below the join. Say statistics estimate 
 3. **Grace hash join**: $3(1000 + 50) = 3150$ I/Os, needless here since one input fits in memory (the build side collapses to plan 1's shape in practice).
 4. **Sort-merge**: sorting orders alone costs 4000 I/Os; total $\approx 5150$. Only attractive if output order on `cust_id` were needed later.
 5. **Index nested loop** with an index on `orders.cust_id`: 50 customers $\times$ (index descent + fetch of their orders). With ~20 orders per customer **unclustered**, that is up to $50 \cdot 20 = 1000$ scattered tuple fetches plus descents — comparable to plan 1 at best; with a **clustered** index, matching orders sit on ~10 contiguous pages per customer and this plan wins decisively. Same query, same index, roughly an order of magnitude swing from physical layout alone.
+
+```mermaid
+flowchart TD
+    subgraph LP["Logical plan (after pushdown)"]
+        Lproj["π name, total"] --> Ljoin["⋈ o.cust_id = c.id"]
+        Ljoin --> Lsel["σ country = 'NO'"]
+        Ljoin --> Lord[("orders<br/>1000 pages")]
+        Lsel --> Lcust[("customers<br/>50 pages")]
+    end
+
+    subgraph PP["Chosen physical plan (plan 1, 1050 I/Os)"]
+        Pjoin["Block nested loop join"]
+        Pjoin -->|"outer: 50 I/Os, fits in B-2"| Pcust["Seq scan customers, filter in flight"]
+        Pjoin -->|"inner: one pass, 1000 I/Os"| Pord["Seq scan orders"]
+    end
+
+    LP ==>|"cost-based selection over plans 1-5"| PP
+```
 
 The planner picks plan 1 at these estimates. Now suppose `country` is correlated with a second pushed-down predicate (say `region = 'Scandinavia'`): independence multiplies two 1% selectivities into 0.01% and predicts 0.5 customers, and the planner may flip to a naive per-customer index-probe strategy that would be catastrophic against the actual 50 — the Leis failure mode in miniature.
 

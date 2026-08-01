@@ -23,6 +23,9 @@ sources:
 
 Reading notes on chapter 1 of [Designing Data-Intensive Applications](https://dataintensive.net/) by Martin Kleppmann. The chapter defines the vocabulary the rest of the book leans on: reliability, scalability, and maintainability, and how to reason about each.
 
+> [!abstract] The three pillars
+> **Reliability**: the system continues working correctly even when faults occur. **Scalability**: as load grows, there are reasonable ways of coping with it. **Maintainability**: engineers and operators can work on the system productively over time.
+
 ## Data intensive vs. compute intensive
 
 An application is data-intensive when the hard part is the volume, complexity, or rate of change of its data rather than raw CPU work. Kleppmann's point is that these applications get built from a small set of standard building blocks:
@@ -36,6 +39,9 @@ An application is data-intensive when the hard part is the volume, complexity, o
 ## Reliability
 
 A fault is one component of the system deviating from its spec. A failure is the system as a whole no longer providing the service the user needs. The design goal is to keep faults from turning into failures.
+
+> [!tip] Faults are inevitable, failures are not
+> Fault-tolerant design accepts that components **will** deviate from spec and contains the damage. It can even pay to induce faults deliberately, as Netflix's Chaos Monkey does, to verify that the fault-handling machinery actually works.
 
 ### Hardware faults
 
@@ -73,6 +79,9 @@ Latency is the duration a request waits to be handled, during which it is latent
 ### Measuring response time
 
 Use percentiles rather than averages. Look at the median (p50) alongside the tail, p95 and p99. When a single user request fans out into multiple backend calls, measure the p99 of the overall request, since the slowest backend call dominates the user's experience. Kleppmann calls this tail latency amplification: the more backend calls a request makes, the higher the chance it hits at least one slow one.
+
+> [!warning] Averages hide the tail
+> A mean response time says nothing about how many users are suffering. The customers with the slowest requests are often the ones with the most data, which makes the tail the part of the distribution that matters most.
 
 ### Coping with load
 

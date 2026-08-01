@@ -22,7 +22,7 @@ sources:
 
 ## Purpose
 
-The machine learning notes now split four ways. [[ml/deep-learning/index|Deep learning]] covers neural networks from first principles and the main architecture families. [[ml/nlp/index|NLP]] covers language representations and textbook modeling ideas. [[ml/recommender-systems/index|Recommender systems]] covers retrieval, ranking, and feedback signals in personalization. [[ml/serving-systems/index|Serving systems]] covers the systems side of large-model inference: kernels, memory, batching, and parallelism.
+The machine learning notes now split four ways. [[ml/deep-learning/index|Deep learning]] covers neural networks from first principles and the main architecture families. [[ml/nlp/index|NLP]] covers language representations and textbook modeling ideas. [[ml/recommender-systems/reading-guide|Recommender systems]] covers retrieval, ranking, and feedback signals in personalization. [[ml/serving-systems/index|Serving systems]] covers the systems side of large-model inference: kernels, memory, batching, and parallelism.
 
 These areas connect in useful ways. Deep-learning architecture choices shape what later NLP and recommender models can express, and serving constraints push back on those architecture choices. Large-model serving leans on the same performance reasoning that shows up in [[systems/performance/index|performance engineering]] and the same hardware constraints that show up in [[hardware/index|hardware notes]].
 
@@ -30,7 +30,7 @@ These areas connect in useful ways. Deep-learning architecture choices shape wha
 
 - [[ml/deep-learning/index|Deep learning]]
 - [[ml/nlp/index|Natural language processing]]
-- [[ml/recommender-systems/index|Recommender systems]]
+- [[ml/recommender-systems/reading-guide|Recommender systems]]
 - [[ml/serving-systems/index|Serving systems]]
 
 ## Sources

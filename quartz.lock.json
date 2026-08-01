@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "plugins": {
+    "quartz-jupyter-embed": {
+      "source": "github:vazome/quartz-jupyter-embed",
+      "resolved": "https://github.com/vazome/quartz-jupyter-embed.git",
+      "commit": "e31ebbebbabbb3996d9590d8006bcf35b8169b8c",
+      "installedAt": "2026-07-31T23:38:47.012Z"
+    }
+  }
+}

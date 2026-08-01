@@ -20,6 +20,9 @@ description: The two-phase commit protocol for atomic distributed transactions, 
 
 Updates that span multiple keys, or multiple storage systems, need all-or-nothing semantics so failures leave the data in a sane state. Two-phase commit (2PC) is the protocol that makes a distributed transaction, a group of operations across nodes, commit or abort as a unit. This note covers the machinery 2PC builds on (locking and logging), the protocol itself, its failure handling, and why it blocks.
 
+> [!warning] 2PC blocks
+> 2PC is a **blocking** protocol. If the coordinator fails after participants vote yes, all yes-voting participants must hold their locks and wait for recovery. For non-blocking alternatives, see [[systems/distributed-systems/non-blocking-two-phase-commit|2PC over Paxos]].
+
 ## ACID
 
 2PC exists to give distributed transactions the ACID properties:
@@ -81,6 +84,28 @@ The properties we want:
 
 ### The protocol
 
+```mermaid
+sequenceDiagram
+    participant C as Coordinator
+    participant P1 as Participant 1
+    participant P2 as Participant 2
+
+    Note over C,P2: Phase 1: Voting
+    C->>P1: Prepare
+    C->>P2: Prepare
+    P1-->>C: Vote Yes (promise)
+    P2-->>C: Vote Yes (promise)
+
+    Note over C,P2: Phase 2: Decision
+    C->>P1: Commit
+    C->>P2: Commit
+    P1-->>C: Ack
+    P2-->>C: Ack
+```
+
+> [!tip] A yes vote is a promise
+> When a participant votes yes, it promises to commit if told to. This means acquiring locks and writing to the redo log *before* voting, so the transaction can survive crashes.
+
 - The coordinator sends prepare to every participant
 - Each participant votes, and a yes vote is a promise
   - It acquires locks to prevent or delay conflicting operations
@@ -92,6 +117,22 @@ The properties we want:
 ### Handling failures
 
 Every role logs its state transitions before sending messages, which is what makes the recovery cases below work.
+
+```mermaid
+flowchart TD
+    subgraph Participant Recovery
+        PF1[Participant fails before vote] --> PF1R[Coordinator times out, aborts]
+        PF2[Participant fails after vote] --> PF2R[On recovery, ask coordinator for decision]
+    end
+
+    subgraph Coordinator Recovery
+        CF1[Coordinator fails before prepare] --> CF1R[On recovery, resend prepares]
+        CF2[Coordinator fails after prepare] --> CF2R[On recovery, resend prepares]
+        CF3[Coordinator fails after votes, before decision] --> CF3R[**BLOCKING**: participants wait]
+    end
+
+    style CF3R fill:#f9d0d0,stroke:#c00
+```
 
 #### Participant fails before sending its vote
 
@@ -108,6 +149,9 @@ The coordinator logged the client request, so on recovery it picks the transacti
 #### Coordinator fails after sending prepares
 
 The prepare is in the coordinator's log, so on recovery it resends the prepares. Participants that already voted just repeat their votes.
+
+> [!danger] The blocking case
+> The coordinator fails after participants vote yes and before any decision arrives. Every yes-voting participant has promised to commit, so it **must hold its locks and wait** for the coordinator to recover. This is the fundamental limitation of 2PC.
 
 The painful case is the coordinator failing after participants vote yes and before any decision arrives. Every yes-voting participant has promised to commit, so it must hold its locks and wait for the coordinator to recover. That wait is the blocking behavior named above.
 

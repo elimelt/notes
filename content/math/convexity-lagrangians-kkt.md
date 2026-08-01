@@ -21,7 +21,7 @@ sources:
 
 ## Purpose
 
-The constrained-optimization reference other notes can cite: what convexity buys, how the Lagrangian and dual problem arise, and what the KKT conditions say. [[algorithms/linear-programming|Linear Programming]] is the special case where everything is affine; scheduling notes that allocate resources under constraints use the dual-variables-as-prices idea without naming it. Section and equation references are to [Boyd and Vandenberghe](https://web.stanford.edu/~boyd/cvxbook/), cited as B&V.
+A reference for constrained optimization: what convexity buys, how the Lagrangian and dual problem arise, and what the KKT conditions say. [[algorithms/linear-programming|Linear Programming]] is the special case where everything is affine, and resource allocation under constraints — as in [[systems/scheduling/index|scheduling]] — uses the dual-variables-as-prices idea without naming it. Section and equation references are to [Boyd and Vandenberghe](https://web.stanford.edu/~boyd/cvxbook/), cited as B&V.
 
 ## Convex sets and functions
 
@@ -123,7 +123,7 @@ The two noisy channels ($\alpha = 1.1, 2.0$) sit above the water level $1/\nu^\s
 
 ## Where this shows up
 
-Lagrangian duality is the backbone of more than optimization theory. SVM training is a quadratic program whose dual reveals the support vectors as the points with nonzero multipliers. Regularized regression swaps a constraint $\lVert w \rVert \le t$ for a penalty $\lambda \lVert w \rVert$, the Lagrangian view of the same problem. Utility-maximizing resource allocation, congestion control, and the fair-queueing ideas in the scheduling notes all inherit the price interpretation: a scarce resource earns a positive multiplier, and the multiplier tells you what one more unit of the resource is worth. [[algorithms/linear-programming|Linear Programming]] duality is this note with every function affine, where strong duality holds without Slater's condition.
+Lagrangian duality is the backbone of more than optimization theory. SVM training is a quadratic program whose dual reveals the support vectors as the points with nonzero multipliers. Regularized regression swaps a constraint $\lVert w \rVert \le t$ for a penalty $\lambda \lVert w \rVert$, the Lagrangian view of the same problem. Utility-maximizing resource allocation, congestion control, and [[systems/scheduling/3-network-and-packet/fair-queueing-wfq-and-drr|fair queueing]] all inherit the price interpretation: a scarce resource earns a positive multiplier, and the multiplier tells you what one more unit of the resource is worth. [[algorithms/linear-programming|Linear Programming]] duality is the same theory with every function affine, where strong duality holds without Slater's condition.
 
 ## Sources
 

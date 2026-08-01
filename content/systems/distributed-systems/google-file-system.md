@@ -41,6 +41,9 @@ GFS departs from traditional file systems because Google's workload departs from
 - Well-defined semantics for concurrent appends matter, since a common use of GFS is as a producer-consumer queue
 - High sustained bandwidth takes precedence over latency
 
+> [!quote] Workload assumptions, from the [paper's introduction](https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf)
+> "First, component failures are the norm rather than the exception. [...] Second, files are huge by traditional standards. Multi-GB files are common."
+
 ## Interface
 
 The interface looks familiar but GFS is not POSIX compliant. Files are organized hierarchically in directories and identified by path names, with *create*, *delete*, *open*, *close*, *read*, and *write*. GFS adds *snapshot*, which copies a file or directory tree cheaply, and *record append*, which lets multiple clients append to the same file concurrently while guaranteeing atomicity of each individual record.
@@ -54,6 +57,30 @@ Files are made of fixed-size *chunks*, each identified by an immutable, globally
 The master maintains all filesystem metadata: the namespace, access control information, file-to-chunk mappings, and chunk-to-server mappings. The master and chunkservers exchange *HeartBeat* messages, which let the master monitor and instruct chunkservers and let chunkservers report status.
 
 The GFS client library is linked into each application. All metadata operations go through the master, but data flows directly between clients and chunkservers, with nothing like the Linux vnode layer in the way. Neither clients nor chunkservers cache file data. Clients cache metadata. Chunkservers do get caching of hot data for free through the Linux buffer cache, but that is transparent to GFS.
+
+The dashed edges below carry metadata only; the thick edges carry file data and never touch the master:
+
+```mermaid
+flowchart LR
+    C["Client<br/><i>GFS client library</i>"]
+    M["Master<br/><i>namespace, file→chunk map,<br/>chunk locations</i>"]
+
+    subgraph CS["Chunkservers"]
+        CS1["Chunkserver 1"]
+        CS2["Chunkserver 2"]
+        CS3["Chunkserver 3"]
+    end
+
+    C -.->|"metadata: file name + chunk index<br/>→ chunk handle + replica locations"| M
+    M -.->|"HeartBeat: state,<br/>instructions, lease grants"| CS
+
+    C ==>|"data: read/write by chunk<br/>handle + byte range"| CS1
+    C ==> CS2
+    C ==> CS3
+
+    style M fill:#e3f2fd,stroke:#1565c0
+    style C fill:#e8f5e9,stroke:#2e7d32
+```
 
 ## Single master
 
@@ -72,7 +99,10 @@ Steps 1 and 2 batch across many chunks at almost no extra cost.
 
 Chunks are 64 MB and lazily allocated, which avoids internal fragmentation. Large chunks let clients cache the metadata for a lot of data, reduce the master traffic needed to acquire that metadata, and keep the master's metadata small enough to hold in memory.
 
-The disadvantage is hotspots. A small file occupies few chunks, so hundreds of machines reading the same small file concurrently overload the chunkservers that hold it. Google hit this with an executable stored in GFS being launched across hundreds of machines at once, and fixed it with a higher replication factor on such files plus staggered start times. **Extension idea (mine)**: peer-to-peer sharing between clients could relieve hotspots.
+The disadvantage is hotspots. A small file occupies few chunks, so hundreds of machines reading the same small file concurrently overload the chunkservers that hold it.
+
+> [!warning] Hotspots
+> Google hit this with an executable stored in GFS being launched across hundreds of machines at once, hammering the handful of chunkservers holding its single chunk. The fix was a higher replication factor on such files plus staggered start times. **Extension idea (mine)**: peer-to-peer sharing between clients could relieve hotspots.
 
 ## Metadata
 
@@ -104,9 +134,10 @@ The operation log is the only persistent metadata, and it also defines the seria
 
 File namespace mutations are atomic, since they execute at the single master under locking. File data mutations have looser guarantees, described in terms of regions:
 
-- A region is **defined** after a mutation if it is consistent and reflects that mutation in its entirety
-- A region is consistent but **undefined** when all clients see the same data, but the data is a mingled interleaving of concurrent mutations rather than any single one
-- Failed mutations leave a region inconsistent: different clients may see different data
+> [!info] Region states
+> - **Defined**: the region is consistent and reflects a mutation in its entirety — every client sees the same data, and it is exactly what one writer wrote
+> - **Consistent but undefined**: all clients see the same data, but it is a mingled interleaving of concurrent mutations rather than any single one
+> - **Inconsistent**: a mutation failed, and different clients may see different data
 
 Successful serial mutations leave regions defined. Successful concurrent mutations leave regions consistent but possibly undefined. After a sequence of successful mutations, the file is guaranteed defined and contains the data of the last mutation. GFS achieves this by applying mutations to a chunk in the same order across replicas, and by using chunk version numbers to detect replicas that missed mutations while their server was down.
 
@@ -139,6 +170,32 @@ Leases extend via requests piggybacked on HeartBeat messages. The master can rev
 5. The primary forwards the write request to the secondaries, which apply mutations in the primary's order
 6. The secondaries acknowledge completion to the primary
 7. The primary replies to the client. Any replica errors are reported to the client, leaving the region inconsistent; the client retries the failed mutation, eventually falling back to redoing the entire write
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant M as Master
+    participant P as Primary
+    participant S1 as Secondary 1
+    participant S2 as Secondary 2
+
+    C->>M: 1. Who holds the lease for this chunk?
+    M-->>C: 2. Primary + secondary locations (cached by client)
+
+    Note over C,S2: Data flow — pushed to all replicas, held in LRU buffers
+    C->>P: 3. Push data
+    C->>S1: 3. Push data
+    C->>S2: 3. Push data
+
+    Note over C,S2: Control flow — serialized through the primary
+    C->>P: 4. Write request identifying the pushed data
+    Note over P: Assigns consecutive sequence<br/>numbers, applies locally
+    P->>S1: 5. Forward write in serial order
+    P->>S2: 5. Forward write in serial order
+    S1-->>P: 6. Ack
+    S2-->>P: 6. Ack
+    P-->>C: 7. Reply (any replica error ⇒ region inconsistent, client retries)
+```
 
 ## Related notes
 

@@ -32,7 +32,8 @@ A single server needs 2 messages per request, the request and the reply. It tole
 
 A Paxos group of size $k$ can make progress as long as a majority of nodes are up. With a stable leader, committing one request costs about $3(k-1) + 2$ messages: the client request and reply account for the 2, and the leader exchanges three rounds with each of the $k-1$ other replicas (accept out, acknowledgment back, commit out).
 
-Each step up buys failure tolerance and costs messages. Pick based on how many simultaneous failures you actually need to survive.
+> [!tip] Pay for what you need
+> Each step up buys failure tolerance and costs messages. Pick based on how many simultaneous failures you actually need to survive.
 
 ## Paxos as a lease server
 
@@ -44,7 +45,28 @@ The workflow:
 2. The primary serves requests until the lease expires, forwarding writes to its backup
 3. If the primary fails to renew the lease, the group grants a lease to the next primary
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant P1 as Primary (leaseholder)
+    participant PX as Paxos group
+    participant P2 as Next primary
+
+    PX->>P1: Grant lease (term + epsilon)
+    C->>P1: Request
+    P1-->>C: Reply (no Paxos messages)
+    P1->>PX: Renew lease
+    Note over P1: Primary crashes
+    Note over PX: No renewal, wait out the lease term
+    PX->>P2: Grant lease
+    C->>P2: Request
+    P2-->>C: Reply
+```
+
 [Chubby](https://static.googleusercontent.com/media/research.google.com/en//archive/chubby-osdi06.pdf), the lock service behind Bigtable at Google, is built this way, and ZooKeeper fills the same role in many open source systems. As long as clock drift stays within the epsilon padding, at most one node holds the lease at a time, which rules out split brain. Since the leaseholder is the unique primary, it can serve reads locally and manage cache invalidation without consulting the group. With write ahead logging you can drop the explicit backup entirely and recover by replaying the log on a fresh primary.
+
+> [!warning] The epsilon carries the safety argument
+> Split brain is ruled out only while clock drift stays within the epsilon padding. A leaseholder whose clock runs slow can believe it still holds the lease after the group has granted it to a successor, so the drift bound is a correctness assumption, not a tuning knob.
 
 ## Related notes
 

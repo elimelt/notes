@@ -37,11 +37,29 @@ There are two communication models:
 
 Coda merges automatically when it can. When two users edit the same file, it creates a conflict file and leaves resolution to the user.
 
+```mermaid
+sequenceDiagram
+    participant C as Coda client
+    participant S as Server
+
+    Note over C,S: Connected: partial replica, aggressive caching
+    Note over C,S: Network partition
+    C->>C: Record changes in write-ahead log
+    Note over C,S: Reconnection
+    C->>S: Replay log
+    alt No concurrent edit
+        S-->>C: Changes merged atomically
+    else Two users edited the same file
+        S-->>C: Conflict file created, user resolves
+    end
+```
+
 ## Offline-capable web apps
 
 Apps like Gmail and Google Docs support offline editing with a local cache plus a log of changes. On reconnection the log is sent to the server and merged, with conflicts resolved by application-level rules.
 
-A common building block is the **version vector**: each client has a unique ID, each change is tagged with it, and comparing vectors during a merge tells you which changes are newer and which are concurrent. This is the same mechanism as [[systems/distributed-systems/clocks|vector clocks]].
+> [!info] Version vectors
+> A common building block is the **version vector**: each client has a unique ID, each change is tagged with it, and comparing vectors during a merge tells you which changes are newer and which are concurrent. This is the same mechanism as [[systems/distributed-systems/clocks|vector clocks]].
 
 ## Source code control
 

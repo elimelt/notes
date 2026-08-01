@@ -68,7 +68,38 @@ At any given time, clients speak to only one server, the primary. Data is replic
 
 The view service is a server that provides a consistent view of the system. Clients ask it for the primary's address to find out where to send operations. Even if the view service misjudges a failure, the system stays consistent, because the view service is the single authority on who the primary is.
 
+> [!tip] One authority on who is primary
+> The key insight is that the view service is the single authority on who the primary is. Failure detection can be wrong (a slow or partitioned server is not dead), but wrong detection only costs availability, never consistency: servers and clients act on views, not on their own guesses about liveness.
+
 That authority makes it a single point of failure. The hard part is guaranteeing only one primary at a time without making every operation check in with the view service.
+
+```mermaid
+flowchart LR
+    C[Clients]
+    VS[View service]
+    P[Primary]
+    B[Backup]
+    I[Idle servers]
+
+    C -->|"query current view"| VS
+    P -.->|ping| VS
+    B -.->|ping| VS
+    I -.->|ping| VS
+    VS -.->|"view in ping responses"| P
+    VS -.->|"view in ping responses"| B
+    VS -.->|"view in ping responses"| I
+
+    C -->|"put/get"| P
+    P -->|"forward op"| B
+    B -->|ack| P
+    P -->|reply| C
+
+    style VS fill:#fff3e0,stroke:#ef6c00
+    style P fill:#e8f5e9,stroke:#2e7d32
+    style B fill:#e3f2fd,stroke:#1565c0
+```
+
+Dashed edges carry pings and view updates; solid edges carry client operations. Operations never pass through the view service.
 
 ### Detecting server failures
 
@@ -90,6 +121,32 @@ When the view service detects a failure, it creates a new view, which is the sys
 
 If the primary dies with no idle servers available, the backup becomes the primary and there is no backup.
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant VS as View service
+    participant P as Primary (view i)
+    participant B as Backup (view i)
+    participant S as Idle server
+
+    P--xVS: ping ❌ (n missed pings)
+    Note over VS: Declare primary dead.<br/>New view i+1: B primary, S backup.
+
+    B->>VS: ping
+    VS-->>B: view i+1
+    S->>VS: ping
+    VS-->>S: view i+1
+
+    B->>S: state transfer
+    S-->>B: ack (state initialized)
+    B->>VS: ack view i+1
+
+    C->>P: put(k, v) — times out
+    C->>VS: query current view
+    VS-->>C: view i+1 (primary = B)
+    C->>B: put(k, v) (resend)
+```
+
 ### Managing servers
 
 Keep a pool of idle servers that can be promoted. If the primary dies, the new view has the old backup as primary and an idle server as backup. If the backup dies, the new view has an idle server as the new backup.
@@ -97,6 +154,9 @@ Keep a pool of idle servers that can be promoted. If the primary dies, the new v
 ## Split brain
 
 A primary that appears offline may really just be partitioned from the view service, which will elect a new primary anyway. Now two servers each believe they are the primary. This is split brain. Correctness survives it as long as believing is all they do: the protocol must ensure that at most one server can ever act as primary. The rules below arrange that, since the old primary cannot complete operations without the backup accepting its forwarded requests.
+
+> [!danger] Split brain
+> A partitioned primary keeps serving clients that can still reach it, while the view service promotes the backup. Two servers now believe they are the primary. The rules below make believing harmless: the old primary must forward every operation to its backup before replying (rule 2), and the backup rejects forwarded requests once its view has moved on (rule 3). So the old primary can no longer complete any operation, and at most one server ever *acts* as primary.
 
 ## Rules
 

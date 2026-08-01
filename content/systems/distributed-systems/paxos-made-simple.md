@@ -62,11 +62,29 @@ $$
 \text{P2b} \implies \text{P2a} \implies \text{P2}
 $$
 
+```mermaid
+flowchart LR
+    P2c["P2c<br/><i>proposer constraint</i>"]
+    P2b["P2b<br/><i>proposer issues consistent values</i>"]
+    P2a["P2a<br/><i>acceptor accepts consistent values</i>"]
+    P2["P2<br/><i>chosen values are consistent</i>"]
+
+    P2c -->|implies| P2b -->|implies| P2a -->|implies| P2
+
+    style P2c fill:#e8f5e9,stroke:#2e7d32
+    style P2b fill:#e3f2fd,stroke:#1565c0
+    style P2a fill:#fff3e0,stroke:#ef6c00
+    style P2 fill:#fce4ec,stroke:#c2185b
+```
+
 To implement P2b, constrain how a proposer picks its value:
 
 #### P2c: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, there is a set $S$ consisting of a majority of acceptors such that either (a) no acceptor in $S$ has accepted any proposal numbered less than $n$, or (b) $v$ is the value of the highest-numbered proposal among all proposals numbered less than $n$ accepted by the acceptors in $S$
 
 Maintaining P2c as an invariant satisfies P2b. To keep the invariant, a proposer issuing proposal $n$ must learn the highest-numbered accepted proposal below $n$ from some majority, and propose that value if one exists. Learning about the past is easy; the trick is preventing the future from invalidating what you learned, which is what the promise in the prepare phase does.
+
+> [!tip] Why adopt the highest-numbered value?
+> When a proposer gathers promises from a majority, any previously chosen value must appear in those responses—because "chosen" means accepted by a majority, and any two majorities share at least one acceptor. By adopting the highest-numbered accepted value, the proposer guarantees it will not propose anything that conflicts with an already-chosen value, preserving safety even without knowing whether that value was actually chosen.
 
 ### Proposition algorithm
 
@@ -95,6 +113,43 @@ P1a implies P1.
 - (a) If the proposer receives responses from a majority of acceptors, it sends an *accept* request to each acceptor with number $n$ and value $v$, where $v$ is the value of the highest-numbered proposal among the responses, or a value of its choosing if no proposals were reported.
 - (b) If an acceptor receives an *accept* request numbered $n$, it accepts the proposal unless it has already responded to a *prepare* request with a number greater than $n$.
 
+```mermaid
+sequenceDiagram
+    participant P as Proposer
+    participant A1 as Acceptor 1
+    participant A2 as Acceptor 2
+    participant A3 as Acceptor 3
+
+    Note over P,A3: Phase 1 — Prepare
+
+    P->>A1: prepare(n)
+    P->>A2: prepare(n)
+    P->>A3: prepare(n)
+
+    Note right of A1: Check: is n > highest seen?<br/>If yes, promise not to accept < n
+
+    A1-->>P: promise(n, accepted: none)
+    A2-->>P: promise(n, accepted: (m, v))
+    Note right of A2: Reports highest accepted proposal < n
+    A3-->>P: promise(n, accepted: none)
+
+    Note over P: Majority responded.<br/>Pick v from highest-numbered<br/>accepted proposal, or choose freely.
+
+    Note over P,A3: Phase 2 — Accept
+
+    P->>A1: accept(n, v)
+    P->>A2: accept(n, v)
+    P->>A3: accept(n, v)
+
+    Note right of A1: Check: have I promised > n?<br/>If no, accept the proposal.
+
+    A1-->>P: accepted(n, v)
+    A2-->>P: accepted(n, v)
+    A3-->>P: accepted(n, v)
+
+    Note over P: Majority accepted.<br/>Value v is now chosen.
+```
+
 As a performance tweak, an acceptor that ignores a request because it has promised a higher number can send the proposer a *reject* so the proposer stops retrying. Correctness does not depend on this.
 
 ## Learning a chosen value
@@ -106,6 +161,9 @@ Because messages can be dropped, a value can be chosen without any learner findi
 ## Progress
 
 Two proposers can one-up each other forever, each new prepare invalidating the other's pending accept, so no proposal ever completes. The remedy is a single *distinguished* proposer, the only one allowed to issue proposals, with a new one elected if it fails. By [FLP](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf), any such election mechanism must rely on randomness or on real time (timeouts) to guarantee progress.
+
+> [!warning] Livelock
+> Suppose proposer A completes phase 1 with proposal number $n$ and is about to send accept requests. Before those messages arrive, proposer B runs phase 1 with number $n+1$, causing acceptors to promise $n+1$ and reject A's accept. Now A retries with $n+2$, invalidating B's pending accept, and the cycle repeats. No value is ever chosen, even though every message is delivered. This is why Paxos requires a leader election mechanism—not for safety, but for liveness.
 
 ## Implementing a state machine
 

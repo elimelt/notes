@@ -73,13 +73,25 @@ sync_plugins() {
 
 # Mermaid only wraps sequence-diagram note/message text when the client
 # config sets sequence.wrap, and the obsidian-flavored-markdown plugin does
-# not expose mermaid options. Inject the default into its bundled initialize
-# call after every plugin install (the checkout is disposable).
+# not expose mermaid options. It also renders before webfonts finish loading,
+# so box sizes get measured with a fallback font and the real (wider) code
+# font overflows them. Inject both fixes into the bundled client script after
+# every plugin install (the checkout is disposable).
 patch_mermaid_defaults() {
   local ofm_dist="$QUARTZ_DIR/node_modules/@quartz-community/obsidian-flavored-markdown/dist/index.js"
-  if [[ -f "$ofm_dist" ]] && ! grep -q 'sequence:{wrap:!0}' "$ofm_dist"; then
+  if [[ ! -f "$ofm_dist" ]]; then
+    return
+  fi
+  if ! grep -q 'sequence:{wrap:!0}' "$ofm_dist"; then
     sed -i.bak 's/initialize({startOnLoad:!1,/initialize({startOnLoad:!1,sequence:{wrap:!0},/' "$ofm_dist"
     rm -f "$ofm_dist.bak"
+  fi
+  if ! grep -q 'document\.fonts\.ready' "$ofm_dist"; then
+    sed -i.bak 's/await t.run({nodes:e})/await document.fonts.ready,await t.run({nodes:e})/' "$ofm_dist"
+    rm -f "$ofm_dist.bak"
+  fi
+  if ! grep -q 'sequence:{wrap:!0}' "$ofm_dist" || ! grep -q 'document\.fonts\.ready' "$ofm_dist"; then
+    echo "warning: mermaid default patch did not apply cleanly to $ofm_dist" >&2
   fi
 }
 

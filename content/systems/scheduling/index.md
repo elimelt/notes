@@ -64,6 +64,7 @@ The best route is to start with the math, then the single-resource policies, the
   - [[systems/operating-systems/v2-concurrency/4-concurrency-and-threads|threads and scheduler activations]]
 - Parallel and locality-aware scheduling:
   - [[systems/scheduling/2-parallel-and-multiprocessor/work-stealing-affinity-and-numa|work stealing, affinity, and NUMA]]
+  - [[systems/scheduling/2-parallel-and-multiprocessor/numa-aware-scheduling-and-locality|NUMA-aware scheduling and locality]]
 - Resource contention and waiting:
   - [[systems/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects|synchronization and scheduler interaction]]
   - [[systems/research/locality-principle|locality, working sets, and thrashing]]

@@ -496,6 +496,24 @@ evaluation tables. Next lever per the spec: Wikipedia-keyphraseness
 pretraining for the naturalness head and more negative anchor labels,
 not LoRA.
 
+**Tuning round 1** closed the loop the spec designed for: a case-by-case
+review of all 160 shipped proposals measured honest precision (baseline
+37.4%, learned 4.3%), four mechanical selection rules lifted the baseline
+to **66.7% precision at 88.2% good-link retention** (the production list
+is now 45 links, every one carrying a review verdict), and feeding the
+review decisions back as per-head training labels raised the naturalness
+head's held-out AUC from 0.664 to **0.767**. The retrain also exposed a
+textbook PU-learning trap: the reranker's listwise loss is
+shift-invariant, and its negative-only BCE term — dormant while the audit
+had zero Tier-D rows — let the optimizer collapse every absolute
+probability to zero the moment real wrong-target negatives arrived; the
+fix anchors the BCE with true pairs. A 53-case frozen expert benchmark
+(seven judgment kinds, built entirely from unlinked spans) then found
+both engines scoring identically (0.547) because the binding constraint
+sits upstream of both: span candidate generation never proposes
+never-before-linked lowercase phrases, so no head can score them. Full
+measurements: `linkdiscovery/reports/inline-tuning-round-1-2026-08-01.md`.
+
 ## Edge cases or limits
 
 - Existing links are biased supervision: recovery metrics measure agreement

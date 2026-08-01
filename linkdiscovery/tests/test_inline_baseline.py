@@ -12,6 +12,7 @@ from linkdiscovery.contracts.units import Span
 from linkdiscovery.errors import ConfigError
 from linkdiscovery.inline import (
     BaselineConfig,
+    InlineProposal,
     LinkRegionKind,
     SpanCandidate,
     levenshtein_ratio,
@@ -100,6 +101,18 @@ class TestBaselineConfig:
         with pytest.raises(ConfigError, match="keyphraseness_weight"):
             BaselineConfig(keyphraseness_weight=0.0, match_weight=0.0)
 
+    @pytest.mark.parametrize("value", [-0.1, 1.5])
+    def test_out_of_range_cross_family_penalty_raises(self, value: float) -> None:
+        with pytest.raises(ConfigError, match="cross_family_penalty"):
+            BaselineConfig(cross_family_penalty=value)
+
+    def test_cross_family_penalty_enters_the_fingerprint(self) -> None:
+        # Intended: the new field changes the config fingerprint and thus
+        # every draft's model_version.
+        assert "cross_family_penalty" in BaselineConfig().resolved_dict()
+        changed = BaselineConfig(cross_family_penalty=0.5)
+        assert changed.fingerprint() != BaselineConfig().fingerprint()
+
 
 class TestScoreBaseline:
     CONFIG = BaselineConfig()
@@ -112,6 +125,7 @@ class TestScoreBaseline:
         target_vector_sim: float = 0.5,
         ambiguity: int = 1,
         levenshtein_title: float = 0.5,
+        same_family: float | None = None,
     ) -> tuple[float, float, float]:
         return score_baseline(
             candidate,
@@ -120,6 +134,7 @@ class TestScoreBaseline:
             target_vector_sim=target_vector_sim,
             ambiguity=ambiguity,
             levenshtein_title=levenshtein_title,
+            same_family=same_family,
             config=self.CONFIG,
         )
 
@@ -188,6 +203,37 @@ class TestScoreBaseline:
     def test_region_prose_feature_backs_up_the_region_kind(self) -> None:
         listed = make_candidate(region_kind=LinkRegionKind.LIST, features={"region_prose": 1.0})
         assert self.score(listed)[2] == pytest.approx(1.0)
+
+    def test_cross_family_penalty_scales_target_correctness_exactly(self) -> None:
+        candidate = make_candidate()
+        baseline = self.score(candidate)[1]
+        penalized = self.score(candidate, same_family=0.0)[1]
+        assert penalized == pytest.approx(baseline * (1.0 - self.CONFIG.cross_family_penalty))
+
+    def test_same_family_one_and_none_are_no_ops(self) -> None:
+        candidate = make_candidate()
+        baseline = self.score(candidate)
+        assert self.score(candidate, same_family=1.0) == pytest.approx(baseline)
+        assert self.score(candidate, same_family=None) == pytest.approx(baseline)
+
+    def test_target_correctness_is_monotone_in_same_family(self) -> None:
+        candidate = make_candidate()
+        low = self.score(candidate, same_family=0.0)[1]
+        mid = self.score(candidate, same_family=0.5)[1]
+        high = self.score(candidate, same_family=1.0)[1]
+        assert low < mid < high
+
+    def test_same_family_is_clamped_to_the_unit_interval(self) -> None:
+        candidate = make_candidate()
+        assert self.score(candidate, same_family=-2.0) == self.score(candidate, same_family=0.0)
+        assert self.score(candidate, same_family=3.0) == self.score(candidate, same_family=1.0)
+
+    def test_penalty_only_touches_the_target_head(self) -> None:
+        candidate = make_candidate(features={"keyphraseness": 0.1, "sentence_position": 0.5})
+        plain = self.score(candidate)
+        penalized = self.score(candidate, same_family=0.0)
+        assert penalized[0] == plain[0]
+        assert penalized[2] == plain[2]
 
 
 def lookup_mapreduce(mention: str) -> Mapping[str, int]:
@@ -309,6 +355,62 @@ class TestProposeBaseline:
         )
         assert len(proposals) == 1
         assert proposals[0].features["embedding_similarity"] == 0.0
+
+    def propose_with_families(
+        self, candidate: SpanCandidate, families: dict[str, str] | None
+    ) -> tuple[InlineProposal, ...]:
+        return propose_baseline(
+            {candidate.document_id: [candidate]},
+            lookup_mapreduce,
+            self.DOC_VECTORS,
+            None,
+            self.TITLES,
+            config=BaselineConfig(),
+            families=families,
+        )
+
+    def test_cross_family_target_is_penalized_and_feature_recorded(self) -> None:
+        # Lowercase, non-acronym anchor: the family prior applies.
+        candidate = make_candidate(text="mapreduce", features={"keyphraseness": 0.2})
+        (plain,) = self.propose_with_families(candidate, None)
+        (penalized,) = self.propose_with_families(candidate, {"src": "os", "t1": "ml", "t2": "ml"})
+        assert penalized.target_document_id == plain.target_document_id
+        assert penalized.features["same_family"] == 0.0
+        assert penalized.target_correctness == pytest.approx(
+            plain.target_correctness * (1.0 - BaselineConfig().cross_family_penalty)
+        )
+        assert "same_family" not in plain.features
+
+    def test_same_family_target_is_not_penalized(self) -> None:
+        candidate = make_candidate(text="mapreduce", features={"keyphraseness": 0.2})
+        (plain,) = self.propose_with_families(candidate, None)
+        (same,) = self.propose_with_families(candidate, {"src": "os", "t1": "os", "t2": "os"})
+        assert same.features["same_family"] == 1.0
+        assert same.target_correctness == pytest.approx(plain.target_correctness)
+
+    @pytest.mark.parametrize("shape_feature", ["is_titlecase", "is_acronym"])
+    def test_proper_name_shaped_anchors_are_exempt(self, shape_feature: str) -> None:
+        candidate = make_candidate(
+            text="MapReduce", features={"keyphraseness": 0.2, shape_feature: 1.0}
+        )
+        (plain,) = self.propose_with_families(candidate, None)
+        (exempt,) = self.propose_with_families(candidate, {"src": "os", "t1": "ml", "t2": "ml"})
+        assert "same_family" not in exempt.features
+        assert exempt.target_correctness == pytest.approx(plain.target_correctness)
+
+    @pytest.mark.parametrize(
+        "families",
+        [
+            {"src": "os"},  # target families unknown
+            {"t1": "ml", "t2": "ml"},  # source family unknown
+        ],
+    )
+    def test_unknown_families_are_never_penalized(self, families: dict[str, str]) -> None:
+        candidate = make_candidate(text="mapreduce", features={"keyphraseness": 0.2})
+        (plain,) = self.propose_with_families(candidate, None)
+        (unknown,) = self.propose_with_families(candidate, families)
+        assert "same_family" not in unknown.features
+        assert unknown.target_correctness == pytest.approx(plain.target_correctness)
 
     def test_top_k_caps_the_scored_targets(self) -> None:
         def lookup(mention: str) -> Mapping[str, int]:

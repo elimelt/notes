@@ -83,7 +83,7 @@ Correct-looking designs fail subtly here. [Kleppmann et al.](https://martin.klep
 - **No global invariants.** SEC guarantees replicas agree, not that the agreed state satisfies cross-object constraints. "Balance never negative," "username unique," "at most one winner" all require forbidding one of two concurrent operations, which is precisely the coordination CRDTs decline to do. Systems needing such invariants need consensus on that path — [[systems/distributed-systems/paxos-intro|Paxos]]-class machinery — and CRDTs everywhere else.
 - **Resolution is policy, chosen in advance.** Add-wins, remove-wins, LWW: each is a fixed answer to "what should concurrent conflicting intent mean," baked into the type. The Dynamo shopping cart's deleted-item-reappears anomaly is the add-wins policy under another name; picking the CRDT *is* picking the anomaly you can live with.
 
-In production terms: Riak ships counters/sets/maps as datatypes, Redis Enterprise's active-active geo-replication runs on CRDTs, and Automerge/Yjs carry the collaborative-editing ecosystem. On the consistency spectrum of [[systems/distributed-systems/consistency|the consistency note]], CRDT systems sit at causal-plus-convergent: below linearizability, above ad-hoc eventual consistency, with availability and partition tolerance as the entire point.
+In production terms: Riak ships counters/sets/maps as datatypes, Redis Enterprise's active-active geo-replication runs on CRDTs, and Automerge/Yjs carry the collaborative-editing ecosystem. On the [[systems/distributed-systems/consistency|consistency]] spectrum, CRDT systems sit at causal-plus-convergent: below linearizability, above ad-hoc eventual consistency, with availability and partition tolerance as the entire point.
 
 ## Related notes
 

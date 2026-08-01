@@ -258,7 +258,7 @@ Decoder-only models are simpler. Still, when one sequence is given in full and t
 
 ## Related Notes
 
-- [[deep-learning/decoder-only-transformer-on-wikitext-2|Decoder-Only Transformer on WikiText-2]]
+- [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers and the WikiText-2 experiment]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
 - [[ml/deep-learning/recurrent-neural-networks|Recurrent Neural Networks]]
 

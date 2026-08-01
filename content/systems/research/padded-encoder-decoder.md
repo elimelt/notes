@@ -3,9 +3,18 @@ title: Accelerating Padded Encoder-Decoder Transformer Models
 aliases:
   - systems-research/padded-encoder-decoder
 category: Systems Research
-tags: nlp, transformer, encoder-decoder, sparsity, pruning
+tags:
+  - nlp
+  - transformer
+  - encoder-decoder
+  - sparsity
+  - pruning
 date: 2025-03-10
 description: An overview of my research on accelerating inference on encoder-decoder transformer models using OpenAI's Whisper model
+sources:
+  - title: Robust Speech Recognition via Large-Scale Weak Supervision
+    url: https://arxiv.org/abs/2212.04356
+    type: paper
 ---
 
 ## Abstract
@@ -254,7 +263,7 @@ Looking forward, our work opens up several promising directions for further opti
 
 ## Related notes
 
-- [[deep-learning/decoder-only-transformer-on-wikitext-2|Decoder-Only Transformer on WikiText-2]]
+- [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers and the WikiText-2 experiment]]
 - [[ml/deep-learning/encoder-decoder-transformers|Encoder-Decoder Transformers]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
 - [[ml/serving-systems/transformers|Transformer Architecture and Implementation]]

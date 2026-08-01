@@ -1,5 +1,8 @@
 ---
 title: Recurrent Neural Networks
+aliases:
+  - /ml/deep-learning/character-level-rnn-on-wikitext-2
+  - /deep-learning/character-level-rnn-on-wikitext-2
 category: Deep Learning
 tags:
   - deep learning
@@ -203,6 +206,12 @@ class LSTMLM(nn.Module):
         return self.lm_head(h)
 ```
 
+## Executable Experiment
+
+This companion trains a compact character-level GRU on a cropped WikiText-2 corpus. The loss curve, generated sample, and hidden-state behavior turn the recurrence equations into an inspectable training run.
+
+[Run the character-level RNN experiment](/ml/deep-learning/character-level-rnn-on-wikitext-2.ipynb)
+
 ## Where RNNs Still Matter
 
 - streaming settings where strict online updates are natural
@@ -213,7 +222,6 @@ Their core weakness remains the same: the hidden state is a narrow information b
 
 ## Related Notes
 
-- [[deep-learning/character-level-rnn-on-wikitext-2|Character-Level RNN on WikiText-2]]
 - [[ml/nlp/reading/neural-networks|Feedforward Neural Networks]]
 - [[systems/research/sparsity-notes|Faster Causal Self Attention]]
 - [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]]

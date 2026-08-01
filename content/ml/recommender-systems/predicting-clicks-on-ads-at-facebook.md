@@ -239,7 +239,7 @@ This is one of the better lessons in the paper. Sampling changes the label distr
 
 ## Related Notes
 
-- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
+- [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval and the MovieLens 100K experiment]]
 - [[ml/recommender-systems/recommender-systems|Recommender Systems]]
 - [[ml/recommender-systems/retrieval-and-ranking|Retrieval and Ranking]]
 - [[ml/recommender-systems/intro-mapreduce-spark|MapReduce and Spark]]

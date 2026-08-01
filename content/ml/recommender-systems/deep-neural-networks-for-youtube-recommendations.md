@@ -29,7 +29,7 @@ This paper is one of the clearest production writeups of the classic recommender
 
 ## Related notes
 
-- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
+- [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval and the MovieLens 100K experiment]]
 
 ## The Setup
 

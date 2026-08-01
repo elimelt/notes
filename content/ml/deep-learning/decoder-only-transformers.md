@@ -1,5 +1,8 @@
 ---
 title: Decoder-Only Transformers
+aliases:
+  - /ml/deep-learning/decoder-only-transformer-on-wikitext-2
+  - /deep-learning/decoder-only-transformer-on-wikitext-2
 category: Deep Learning
 tags:
   - deep learning
@@ -237,6 +240,12 @@ class DecoderBlock(nn.Module):
         x = x + self.mlp(self.ln2(x))
         return x
 ```
+
+## Executable Experiment
+
+The companion notebook trains a small character-level decoder on WikiText-2, plots optimization progress, samples text, and visualizes learned attention maps. Its scale is small enough for a laptop while preserving the causal mask, residual blocks, and next-token objective used by larger models.
+
+[Run the decoder-only Transformer experiment](/ml/deep-learning/decoder-only-transformer-on-wikitext-2.ipynb)
 
 ## Complexity
 

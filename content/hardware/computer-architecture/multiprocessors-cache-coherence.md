@@ -1,7 +1,5 @@
 ---
 title: Multiprocessors, Cache Coherence, and Memory Consistency
-aliases:
-  - hardware/computer-architecture/multiprocessors-cache-coherence
 category: Computer Architecture
 tags:
   - multiprocessor

@@ -106,6 +106,21 @@ def parse_frontmatter(lines: list[str]) -> dict[str, object]:
     return data
 
 
+def normalize_page_slug(value: str) -> str:
+    slug = value.strip().strip("\"'").split("#", 1)[0].split("?", 1)[0]
+    slug = slug.strip("/")
+    if slug.endswith(".html"):
+        slug = slug[: -len(".html")]
+    if slug.endswith("/index"):
+        slug = slug[: -len("/index")]
+    return slug
+
+
+def canonical_slug(path: Path) -> str:
+    relative = path.relative_to(CONTENT_ROOT).with_suffix("").as_posix()
+    return normalize_page_slug(relative)
+
+
 def validate_file(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     errors: list[str] = []
@@ -117,6 +132,15 @@ def validate_file(path: Path) -> list[str]:
 
     frontmatter = parse_frontmatter(frontmatter_lines)
     special_case = path in SPECIAL_CASES
+
+    aliases = frontmatter.get("aliases", [])
+    if isinstance(aliases, list):
+        slug = canonical_slug(path)
+        for alias in aliases:
+            if normalize_page_slug(alias) == slug:
+                errors.append(
+                    f"{rel}: alias `{alias}` resolves to the note's canonical path"
+                )
 
     required_fields = ("title",) if special_case else REQUIRED_FIELDS
     for field in required_fields:

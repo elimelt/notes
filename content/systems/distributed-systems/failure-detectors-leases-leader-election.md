@@ -51,7 +51,7 @@ This is the safety/liveness split in one sentence: **timeouts and elections prov
 
 **ZooKeeper**'s election recipe: every candidate creates a sequential-ephemeral znode; the lowest sequence number is leader; each other node watches only its immediate predecessor. When the leader's session dies, its znode vanishes and exactly one successor wakes — avoiding the thundering herd of everyone re-racing. **etcd** exposes election directly over its lease API: campaign on a key bound to a lease, leadership persists while the lease is kept alive, and the key's creation revision serves as the fencing token. **Raft** internalizes election into the consensus protocol: followers that miss heartbeats become candidates after a *randomized* timeout (the randomization is the entire split-vote-avoidance mechanism), majority vote elects, and the incremented term number fences the old leader — any RPC carrying a stale term is rejected by protocol rule.
 
-All three reduce to the same layering, which is the note's takeaway:
+All three reduce to the same layering:
 
 ```text
 suspicion:  heartbeats + timeouts        (approximate an eventual leader hint)

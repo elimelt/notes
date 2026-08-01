@@ -124,6 +124,9 @@ s.t., & z_1 - z_1' + y_2 \le 3\\
 \end{array}
 $$
 
+> [!abstract] Standard form in one line
+> Maximize $\langle c, x \rangle$ subject to $Ax \le b$ and $x \ge 0$. Four transformations reach it from any LP: negate the objective to turn min into max, negate a constraint to flip $\ge$ into $\le$, split an equality into two inequalities, and write an unconstrained variable as the difference of two non-negative ones.
+
 ## Components of a Linear Program
 
 When formulating a problem as an LP, decide each of these:
@@ -157,6 +160,9 @@ s.t.,   & \sum_{e \text{ out of } v} x_e = \sum_{e \text{ into } v} x_e & \foral
 $$
 
 The optimal LP solution is not necessarily an integer flow, though for max-flow an integer optimum always exists when capacities are integers.
+
+> [!tip] Duality intuition
+> Every maximization LP has a dual minimization LP with the same optimal value. The dual of the max-flow LP is a fractional min-cut, so the [[algorithms/network-flows|max-flow min-cut theorem]] is LP duality specialized to this program.
 
 ## Min-Cost Flow
 
@@ -195,6 +201,9 @@ $$
 $$
 
 which makes this a 2-approximation for weighted vertex cover.
+
+> [!warning] The LP optimum can sit strictly below OPT
+> On a triangle with unit costs, $x_v = \frac{1}{2}$ everywhere is feasible with value $\frac{3}{2}$, while the smallest vertex cover has two vertices. On $K_n$ the gap between $OPT = n - 1$ and $LP^* = \frac{n}{2}$ approaches a factor of $2$, so any analysis that bounds the output against $LP^*$ cannot prove a ratio better than $2$ for this relaxation.
 
 ## Related notes
 

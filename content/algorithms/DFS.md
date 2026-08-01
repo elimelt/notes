@@ -28,6 +28,26 @@ Unlike the [[algorithms/BFS|BFS]] tree, a DFS tree has no minimum-depth guarante
 
 **Proof**: Without loss of generality, assume $x$ is discovered first. When $dfs(x)$ is called, $y$ is still undiscovered. The call $dfs(x)$ does not return until every neighbor of $x$ has been discovered, since it visits each neighbor and recurses on the undiscovered ones. So $y$ is discovered during $dfs(x)$, which places $y$ somewhere in the subtree rooted at $x$, making $x$ an ancestor of $y$. $\blacksquare$
 
+A DFS from vertex 1 that visits 1, 2, 3, 4, backtracks, then visits 5 and 6. Solid edges are tree edges, dashed edges are the non-tree edges of $G$:
+
+```mermaid
+flowchart TD
+    v1((1)) --- v2((2))
+    v2 --- v3((3))
+    v3 --- v4((4))
+    v1 --- v5((5))
+    v5 --- v6((6))
+    v4 -.- v2
+    v6 -.- v1
+
+    style v1 fill:#e3f2fd,stroke:#1565c0
+```
+
+Both dashed edges climb from a vertex to one of its ancestors. No edge joins the subtree of 2 to the subtree of 5, and the lemma says no such edge can exist.
+
+> [!tip] Where non-tree edges can go
+> BFS and DFS trees constrain non-tree edges in opposite directions. In a [[algorithms/BFS|BFS]] tree, a non-tree edge stays within one level but can join unrelated subtrees. In a DFS tree, a non-tree edge can span many levels but always joins a vertex to an ancestor. Each traversal forbids exactly the edges the other allows.
+
 ## Implementation
 
 ```python
@@ -53,6 +73,9 @@ def dfs_iterative(G, src, f=print):
         for v in G[curr]:
             stack.append(v)
 ```
+
+> [!warning] Recursion depth
+> `dfs_recursive` adds a stack frame for every vertex on the current path, so a long path graph exceeds Python's default recursion limit of 1000 and raises `RecursionError`. Use `dfs_iterative` when the input can be deep.
 
 ## Properties of DFS Spanning Trees
 

@@ -20,6 +20,9 @@ sources:
 
 You can design dynamic programming algorithms by [[algorithms/induction|induction]], with the added construct of caching previously solved subproblems. The work is in finding a valid recurrence relation that relates a given instance of the problem to its composite subproblems. This note collects worked problems, each with a recurrence, a correctness argument, and an implementation. Every code sample here has been checked against a brute force solution on small random inputs.
 
+> [!tip] Two properties a problem needs before DP applies
+> **Optimal substructure**: an optimal solution is built from optimal solutions to subproblems, which is what lets each recurrence below take a max or min over smaller cases. **Overlapping subproblems**: the recursion revisits the same subproblems many times, which is what makes memoization pay off. Weighted interval scheduling has both once the jobs are sorted; the unsorted formulation has optimal substructure but $2^n$ distinct subproblems, so caching buys nothing.
+
 ## Weighted Interval Scheduling
 
 **Problem**: Given a set of jobs $J$ with start times $s_i$, finish times $f_i$, and weights $w_i$, find the maximum weight subset of jobs that are compatible with each other.
@@ -72,6 +75,23 @@ def max_weighted_interval_subset(J: tuple[int, int, int]) -> int:
 
     return dp(n - 1)
 ```
+
+Each subproblem `dp(n)` depends on only two smaller subproblems, `dp(n - 1)` and `dp(p(n))`. Uncached, the recursion tree has exponentially many nodes because both branches keep re-deriving the same prefixes. Memoization collapses that tree into a DAG with one node per prefix. For a 5-job instance with $p(5) = 3$, $p(4) = 2$, $p(3) = 1$, $p(2) = 0$:
+
+```mermaid
+flowchart TD
+    d5["dp(5)"] --> d4["dp(4)"]
+    d5 -->|"p(5) = 3"| d3["dp(3)"]
+    d4 --> d3
+    d4 -->|"p(4) = 2"| d2["dp(2)"]
+    d3 --> d2
+    d3 -->|"p(3) = 1"| d1["dp(1)"]
+    d2 --> d1
+    d2 -->|"p(2) = 0"| d0["dp(0) = 0"]
+    d1 --> d0
+```
+
+`dp(3)` is reachable along two paths, and deeper nodes along many more, yet each is computed once. The $O(2^n)$ tree becomes $O(n)$ table entries.
 
 ## Knapsack Problem
 
@@ -126,6 +146,9 @@ def knapsack_it(W: int, w: list[int], v: list[int]) -> int:
 
     return M[n][W]
 ```
+
+> [!warning] The running time is pseudo-polynomial
+> The table has $O(nW)$ entries, and $W$ is a numeric value, not an input length. Encoding $W$ takes $\log W$ bits, so $O(nW)$ is exponential in the input size, and knapsack remains NP-complete despite this algorithm. [[#P1 - Knapsack Approximation|P1 below]] asks for time polynomial in $n$ and $\log W$, which is why it settles for a 2-approximation instead of the exact optimum.
 
 ## String Building
 

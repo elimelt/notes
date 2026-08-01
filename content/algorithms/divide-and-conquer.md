@@ -36,6 +36,37 @@ $$
 T(n) = 2T\left(\frac{n}{2}\right) + O(n) = O(n \log n)
 $$
 
+The recursion tree makes the bound visible. Subproblems shrink geometrically, but their count doubles at each level, so every level does the same total merge work:
+
+```mermaid
+flowchart TD
+    subgraph L0["level 0 &nbsp;·&nbsp; 1 × n = n work"]
+        A["n"]
+    end
+    subgraph L1["level 1 &nbsp;·&nbsp; 2 × n/2 = n work"]
+        B1["n/2"]
+        B2["n/2"]
+    end
+    subgraph L2["level 2 &nbsp;·&nbsp; 4 × n/4 = n work"]
+        C1["n/4"]
+        C2["n/4"]
+        C3["n/4"]
+        C4["n/4"]
+    end
+    A --> B1
+    A --> B2
+    B1 --> C1
+    B1 --> C2
+    B2 --> C3
+    B2 --> C4
+    C1 --> D1["⋮"]
+    C2 --> D2["⋮"]
+    C3 --> D3["⋮"]
+    C4 --> D4["⋮"]
+```
+
+Halving continues for $\log_2 n$ levels before subproblems hit constant size, and each level sums to $n$, giving the $O(n \log n)$ total.
+
 In practice the best approach is often to recurse down to a small problem size and finish with the iterative brute force algorithm, which avoids recursion overhead on tiny inputs. Quick sort with random splitters is implemented this way.
 
 ## Finding the Root of a Function
@@ -108,6 +139,9 @@ Now sort the points in the strip $x \in [L - \delta, L + \delta]$ by $y$-coordin
 **Proof**: The strip is $2\delta$ wide, so each row of squares in the strip contains 4 squares, each holding at most one point. Any point more than two rows away from $s_i$ has vertical distance greater than $\delta$ from $s_i$. Within two rows of $s_i$ there are at most 3 other points in its own row and 8 in the two rows above (or below), so any point more than $8 + 3 = 11$ positions away in $y$-sorted order is more than two rows away, and thus at distance greater than $\delta$. $\blacksquare$
 
 So the merge step only compares each strip point to its 11 neighbors in $y$-sorted order, which keeps the merge linear after sorting and gives $T(n) = 2T(\frac{n}{2}) + O(n \log n)$, which is $O(n \log^2 n)$. Presorting by $y$ tightens this to $O(n \log n)$.
+
+> [!tip] The constant 11 is not tunable downward
+> The neighbor bound comes from the packing argument, not from profiling. Shrinking the window below 11 can miss the closest straddling pair on adversarial inputs, while enlarging it only wastes comparisons. The implementation below checks indices $i - 11$ through $i + 11$, matching the claim exactly. It also switches to brute force at $n \le 10$, the small-input cutoff discussed under [[#Why Balanced Partitioning?|balanced partitioning]].
 
 ### Implementation
 

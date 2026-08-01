@@ -26,6 +26,9 @@ $$
 
 An upper or lower bound on $\alpha$ turns a heuristic into an algorithm you can reason about. For a minimization problem, an $\alpha$-approximation guarantees $OPT \le ALG \le \alpha \cdot OPT$.
 
+> [!tip] Bounding against an unknown OPT
+> Neither proof below ever computes $OPT$. Each finds a quantity that provably lower-bounds it, the matching size for vertex cover and the $\frac{1}{k}$-coverage argument for set cover, then compares the algorithm's output to that bound instead.
+
 ## 2-Approximation for Vertex Cover
 
 **Problem**: find a minimal subset $S$ of vertices in a graph such that every edge has at least one endpoint in $S$.
@@ -39,6 +42,9 @@ OPT(G) \le ALG(G) \le 2 \cdot OPT(G)
 $$
 
 so $\alpha = 2$.
+
+> [!warning] Both endpoints, not one
+> Adding a single endpoint of each uncovered edge loses the guarantee. On a star, picking the leaf endpoint every time collects all $n - 1$ leaves while the optimum is the single center. Taking both endpoints is exactly what ties $|S|$ to a matching.
 
 ## ln(n) Approximation for Set Cover
 

@@ -25,6 +25,29 @@ An undirected graph $G = (V, E)$ is bipartite if there exists a partition of $V$
 
 Equivalently, $G$ is bipartite when it has a proper 2-coloring: an assignment of one of two colors to each vertex such that no edge joins two vertices of the same color. The two color classes are exactly $V_1$ and $V_2$.
 
+```mermaid
+flowchart LR
+    subgraph V1["V1"]
+        a((a))
+        b((b))
+    end
+    subgraph V2["V2"]
+        x((x))
+        y((y))
+        z((z))
+    end
+    a --- x
+    a --- y
+    b --- y
+    b --- z
+
+    style a fill:#e3f2fd,stroke:#1565c0
+    style b fill:#e3f2fd,stroke:#1565c0
+    style x fill:#fde8c8,stroke:#c80
+    style y fill:#fde8c8,stroke:#c80
+    style z fill:#fde8c8,stroke:#c80
+```
+
 Bipartite structure shows up whenever the vertices naturally split into two kinds, for example machines and jobs in scheduling, or companies and applicants in [[algorithms/stable-matching|stable matching]]. Many problems that are hard on general graphs get easier on bipartite graphs, maximum matching being the standard example (see [[algorithms/network-flows|network flows]]).
 
 ## Odd-Length Cycles
@@ -41,6 +64,23 @@ Bipartite structure shows up whenever the vertices naturally split into two kind
 **Proof**: In case 1, every edge joins vertices in adjacent layers (BFS layers differ by at most one across an edge), so coloring even layers one color and odd layers the other gives a proper 2-coloring.
 
 In case 2, let $(x, y)$ be an edge with $L(x) = L(y)$, and let $z$ be the lowest common ancestor of $x$ and $y$ in the BFS tree. The tree paths from $z$ to $x$ and from $z$ to $y$ have the same length, say $k$, because $x$ and $y$ sit in the same layer. Those two paths plus the edge $(x, y)$ form a cycle of length $2k + 1$, which is odd. $\blacksquare$
+
+Case 2 with $k = 2$: the tree paths $z, p, x$ and $z, q, y$ plus the same-layer edge $(x, y)$ form a cycle of length 5.
+
+```mermaid
+flowchart TD
+    z((z)) --- p((p))
+    z --- q((q))
+    p --- x((x))
+    q --- y((y))
+    x -.- y
+
+    style x fill:#f9d0d0,stroke:#c00
+    style y fill:#f9d0d0,stroke:#c00
+```
+
+> [!abstract] Characterization
+> A graph is bipartite if and only if it contains no odd-length cycle. The first lemma gives the forward direction. The second gives the converse for connected graphs, and applying it per [[algorithms/connected-components|component]] covers the general case, since a graph is bipartite exactly when every component is.
 
 ## Algorithm
 

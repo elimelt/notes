@@ -15,6 +15,13 @@ description: Two worked induction proofs, the closed form for the sum of the fir
 
 Induction is the main proof technique behind recursive algorithms, so it pays to have the mechanics down cold. This note works two small proofs in full: the closed form for $\sum_{i=1}^{n} i$, and the pigeonhole principle. Both follow the same skeleton of base case, inductive hypothesis, and inductive step.
 
+> [!abstract] Proof skeleton
+>
+> 1. Define the predicate $P(n)$ so the claim is exactly $\forall n \ge n_0,\ P(n)$.
+> 2. **Base case**: prove $P(n_0)$ directly.
+> 3. **Inductive hypothesis**: assume $P(n - 1)$ for an arbitrary $n > n_0$.
+> 4. **Inductive step**: derive $P(n)$ from the hypothesis.
+
 ## Sum of the First n Naturals
 
 **Claim**:
@@ -56,6 +63,9 @@ $P(n) :=$ *for any way to put $n + 1$ balls into $n$ bins, there exists a bin wi
 - If $b_1$ holds 2 or more balls, we are done.
 - If $b_1$ holds exactly 1 ball, discard $b_1$ and its ball. That leaves $n$ balls in the $n - 1$ bins $b_2, \ldots, b_n$, so $P(n - 1)$ gives a bin with $\ge 2$ balls.
 - If $b_1$ is empty, discard $b_1$ and one arbitrary ball. Again $n$ balls sit in $n - 1$ bins, and $P(n - 1)$ applies. $\blacksquare$
+
+> [!warning] The build-up error
+> The inductive step must start from an arbitrary instance of size $n$ and shrink it. The pigeonhole proof takes any placement of $n + 1$ balls and discards a bin. Arguing in the other direction, by extending a size $n - 1$ instance, only covers the instances you can reach that way, and the proof silently skips the rest.
 
 ## The General Pattern
 

@@ -24,6 +24,23 @@ Given an undirected graph $G = (V, E)$, you can partition $V$ into connected com
 
 Scan the vertices in order. Each time you hit a vertex that has no label yet, it starts a new component: run BFS (or DFS) from it and stamp every vertex you reach with the current label, then increment the label. Each traversal stays inside one component because BFS only follows edges, and it covers the whole component because BFS reaches everything connected to its source. Store the labels in an array (if vertices are numbered) or a hash map.
 
+On the graph below the scan starts traversals at vertices 0, 3, and 5, and each traversal stamps one box:
+
+```mermaid
+flowchart LR
+    subgraph C0["label 0"]
+        n0((0)) --- n1((1))
+        n1 --- n2((2))
+        n2 --- n0
+    end
+    subgraph C1["label 1"]
+        n3((3)) --- n4((4))
+    end
+    subgraph C2["label 2"]
+        n5((5)) --- n6((6))
+    end
+```
+
 ```python
 from collections import deque, defaultdict
 
@@ -56,6 +73,9 @@ def component_sets(G):
 ```
 
 The label array doubles as the visited set, so every vertex enters the queue at most once and the total work over all traversals is $O(|V| + |E|)$.
+
+> [!warning] Undirected graphs only
+> The labeling argument relies on connectivity being symmetric. In a directed graph reachability is not symmetric, so this scan computes weakly connected components at best. Strongly connected components need Tarjan's or Kosaraju's algorithm.
 
 ## Strategy for Unconnected Graphs
 

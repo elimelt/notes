@@ -21,6 +21,6 @@ The best starting path is [[systems/databases/foundations/ch1-reliable-scalable-
 ## Notes
 
 - Foundations: [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|chapter 1]], [[systems/databases/foundations/ch2-data-models-and-query-languages|chapter 2]], [[systems/databases/foundations/ch3-storage-and-retrieval|chapter 3]], [[systems/databases/foundations/ch4-encoding-and-evolution|chapter 4]]
-- Transactions: [[systems/databases/transactions-serializability-isolation|transactions, serializability, and isolation levels]]
+- Transactions: [[systems/databases/transactions-serializability-isolation|transactions, serializability, and isolation levels]], [[systems/databases/mvcc-snapshot-isolation|MVCC and snapshot isolation]]
 - Distributed data: [[systems/databases/distributed-data/preface|preface]], [[systems/databases/distributed-data/ch5-replication|chapter 5]]
 - Derived data: [[systems/databases/derived-data/ch10-batch-processing|chapter 10]]

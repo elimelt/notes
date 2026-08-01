@@ -1,6 +1,6 @@
 """Command-line interface for the missing-link discovery pipeline.
 
-Standard-library ``argparse`` only. Three subcommands:
+Standard-library ``argparse`` only. Top-level subcommands:
 
 - ``run`` — execute a full batch run from a YAML configuration and print a
   human summary (counts, device, cache reuse, top proposals, report paths).
@@ -8,6 +8,12 @@ Standard-library ``argparse`` only. Three subcommands:
   discovery, and print held-out recovery metrics.
 - ``review-queue`` — build the stratified human review queue from a
   ``proposals.jsonl`` file.
+- ``export-embeddings`` — join a completed run's vectors and metadata into a
+  self-contained NumPy bundle for reranking experiments.
+- ``inline <sub>`` — the learned inline-link subsystem
+  (SPEC-INLINE-LINKING.md §11): ``audit-sample``, ``annotate``,
+  ``audit-report``, ``anchors``, ``recall-check``, ``train``, and
+  ``propose``.
 
 Exit codes: ``0`` on success; ``2`` for usage errors (via argparse) and for
 any :class:`~linkdiscovery.errors.LinkDiscoveryError` or I/O failure, which
@@ -35,8 +41,19 @@ from linkdiscovery.contracts.proposals import (
     LinkProposal,
     ProposalSet,
 )
-from linkdiscovery.errors import ContractError, LinkDiscoveryError
+from linkdiscovery.errors import ConfigError, ContractError, LinkDiscoveryError
+from linkdiscovery.experiment_export import export_experiment_embeddings
 from linkdiscovery.fingerprint import canonical_json
+from linkdiscovery.inline import workflow
+from linkdiscovery.inline.anchors import AnchorConfig
+from linkdiscovery.inline.audit.annotate import load_audit_labels, run_annotation_session
+from linkdiscovery.inline.audit.tiers import build_audit_report
+from linkdiscovery.inline.baseline import BaselineConfig
+from linkdiscovery.inline.heads import TrainedHeads
+from linkdiscovery.inline.report import write_inline_report
+from linkdiscovery.inline.select import SelectionConfig
+from linkdiscovery.inline.spans import SpanConfig
+from linkdiscovery.inline.train import TrainConfig
 from linkdiscovery.pipeline import PRODUCER_VERSION, Pipeline, RunResult
 from linkdiscovery.report import build_review_queue
 from linkdiscovery.report._io import atomic_write_text
@@ -45,6 +62,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from linkdiscovery.contracts.manifests import RunManifest, StageStats
+    from linkdiscovery.inline.records import AuditLabel
 
 __all__ = ["build_parser", "main"]
 
@@ -145,7 +163,155 @@ def build_parser() -> argparse.ArgumentParser:
         "--out", type=Path, default=None, help="write the queue here as JSONL (default: stdout)"
     )
     queue.set_defaults(handler=_cmd_review_queue)
+
+    export = commands.add_parser(
+        "export-embeddings",
+        parents=[common],
+        help="export document and semantic-unit embeddings for experiments",
+        description=(
+            "Export a completed run's document matrix, full unit matrix, and "
+            "inline-link metadata to one compressed NumPy archive."
+        ),
+    )
+    export.add_argument(
+        "--artifacts", required=True, type=Path, help="artifact store root directory"
+    )
+    export.add_argument("--run-id", required=True, help="completed run ID, e.g. run-...")
+    export.add_argument("--out", required=True, type=Path, help="output .npz path")
+    export.set_defaults(handler=_cmd_export_embeddings)
+
+    _add_inline_commands(commands, common)
     return parser
+
+
+def _add_inline_commands(
+    commands: argparse._SubParsersAction[argparse.ArgumentParser],
+    common: argparse.ArgumentParser,
+) -> None:
+    """Register the ``inline`` subcommand group (SPEC-INLINE-LINKING.md §11)."""
+    inline = commands.add_parser(
+        "inline",
+        parents=[common],
+        help="learned inline-link discovery (audit, anchors, train, propose)",
+        description="Phased inline-link subsystem: audit -> recall check -> train -> propose.",
+    )
+    subcommands = inline.add_subparsers(dest="inline_command", required=True, metavar="SUBCOMMAND")
+
+    def pipeline_args(sub: argparse.ArgumentParser) -> None:
+        sub.add_argument("--config", required=True, type=Path, help="pipeline YAML configuration")
+        sub.add_argument(
+            "--artifacts", required=True, type=Path, help="artifact store root directory"
+        )
+
+    audit_sample = subcommands.add_parser(
+        "audit-sample",
+        parents=[common],
+        help="draw the stratified audit sample of existing links (phase 1)",
+        description="Sample existing links for the data audit and write JSON+Markdown.",
+    )
+    pipeline_args(audit_sample)
+    audit_sample.add_argument(
+        "--size", type=int, default=150, help="sample size (default: 150, per the spec)"
+    )
+    audit_sample.add_argument("--seed", required=True, type=int, help="stratified sampling seed")
+    audit_sample.add_argument("--out", required=True, type=Path, help="output directory")
+    audit_sample.set_defaults(handler=_cmd_inline_audit_sample)
+
+    annotate = subcommands.add_parser(
+        "annotate",
+        parents=[common],
+        help="label the audit sample interactively (phase 1)",
+        description="Run the terminal annotation session over an audit sample.",
+    )
+    annotate.add_argument("--sample", required=True, type=Path, help="audit-sample.json path")
+    annotate.add_argument("--annotator", required=True, help="annotator name recorded on labels")
+    annotate.add_argument("--labels", required=True, type=Path, help="labels JSONL path (appended)")
+    annotate.set_defaults(handler=_cmd_inline_annotate)
+
+    audit_report = subcommands.add_parser(
+        "audit-report",
+        parents=[common],
+        help="agreement, tier distribution, and the GO/NO-GO verdict (phase 1)",
+        description="Merge label files and print the audit go/no-go decision.",
+    )
+    audit_report.add_argument("--sample", required=True, type=Path, help="audit-sample.json path")
+    audit_report.add_argument(
+        "--labels",
+        required=True,
+        type=Path,
+        action="append",
+        help="labels JSONL path (repeatable: one per annotator file)",
+    )
+    audit_report.add_argument(
+        "--labels2",
+        type=Path,
+        action="append",
+        default=[],
+        help="additional labels JSONL path(s) to merge",
+    )
+    audit_report.set_defaults(handler=_cmd_inline_audit_report)
+
+    anchors = subcommands.add_parser(
+        "anchors",
+        parents=[common],
+        help="build the anchor dictionary and keyphraseness statistics",
+        description="Mine the self-corpus anchor dictionary and write its artifacts.",
+    )
+    pipeline_args(anchors)
+    anchors.add_argument("--out", required=True, type=Path, help="output directory")
+    anchors.set_defaults(handler=_cmd_inline_anchors)
+
+    recall = subcommands.add_parser(
+        "recall-check",
+        parents=[common],
+        help="span-generator recall over audited prose anchors (phase 2 gate)",
+        description="Verify the high-recall span generator covers the audited anchors.",
+    )
+    pipeline_args(recall)
+    recall.add_argument("--sample", required=True, type=Path, help="audit-sample.json path")
+    recall.set_defaults(handler=_cmd_inline_recall_check)
+
+    train = subcommands.add_parser(
+        "train",
+        parents=[common],
+        help="train the three frozen-encoder heads on audited labels (phase 3)",
+        description="Assemble tier-routed training data and train Architecture A heads.",
+    )
+    pipeline_args(train)
+    train.add_argument("--sample", required=True, type=Path, help="audit-sample.json path")
+    train.add_argument("--labels", required=True, type=Path, help="labels JSONL path")
+    train.add_argument("--out", required=True, type=Path, help="trained-heads output directory")
+    train.add_argument("--epochs", type=int, default=30, help="training epochs (default: 30)")
+    train.add_argument("--seed", type=int, default=0, help="training seed (default: 0)")
+    train.set_defaults(handler=_cmd_inline_train)
+
+    propose = subcommands.add_parser(
+        "propose",
+        parents=[common],
+        help="propose inline links with the baseline or learned engine",
+        description="Run span proposal, scoring, and global selection; write review files.",
+    )
+    pipeline_args(propose)
+    propose.add_argument(
+        "--engine",
+        required=True,
+        choices=("baseline", "learned"),
+        help="scoring engine: deterministic baseline or trained heads",
+    )
+    propose.add_argument(
+        "--heads", type=Path, default=None, help="trained-heads directory (learned engine)"
+    )
+    propose.add_argument("--out", required=True, type=Path, help="report output directory")
+    propose.add_argument(
+        "--threshold", type=float, default=None, help="override the accept threshold"
+    )
+    propose.add_argument(
+        "--budget-words", type=int, default=None, help="override words-per-link budget"
+    )
+    propose.add_argument(
+        "--max-per-note", type=int, default=None, help="override the per-note link cap"
+    )
+    propose.set_defaults(handler=_cmd_inline_propose)
 
 
 _LOG_LEVELS = (logging.WARNING, logging.INFO, logging.DEBUG)
@@ -343,6 +509,233 @@ def _cmd_review_queue(args: argparse.Namespace) -> int:
     else:
         for line in lines:
             print(line)
+    return 0
+
+
+def _cmd_export_embeddings(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery export-embeddings``."""
+    result = export_experiment_embeddings(args.artifacts, args.run_id, args.out)
+    print(f"Wrote experiment embedding bundle to {result['output']}")
+    print(
+        f"  documents  {result['documents']}  matrix {tuple(result['document_shape'])}; "
+        f"units  {result['units']}  matrix {tuple(result['unit_shape'])}"
+    )
+    return 0
+
+
+# ------------------------------------------------------------------- inline
+
+
+def _print_rows(rows: list[tuple[str, str]]) -> None:
+    """Print aligned ``name  value`` rows (the house summary style)."""
+    width = max(len(name) for name, _ in rows)
+    for name, value in rows:
+        print(f"  {name:<{width}}  {value}")
+
+
+def _inline_inputs(args: argparse.Namespace) -> workflow.InlineInputs:
+    """Load the shared v1-stage inputs for an inline subcommand."""
+    config = load_config(args.config)
+    return workflow.load_inline_inputs(config, artifacts_root=args.artifacts)
+
+
+def _cmd_inline_audit_sample(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline audit-sample``."""
+    inputs = _inline_inputs(args)
+    sample = workflow.build_audit_artifacts(
+        inputs, size=args.size, seed=args.seed, out_dir=args.out
+    )
+    print(f"Audit sample written to {args.out}")
+    print()
+    _print_rows(
+        [
+            ("items", str(len(sample.items))),
+            ("strata", str(len(sample.strata_counts))),
+            ("requested size", str(args.size)),
+            ("seed", str(args.seed)),
+            ("files", "audit-sample.json, audit-sample.md"),
+        ]
+    )
+    return 0
+
+
+def _cmd_inline_annotate(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline annotate`` (interactive)."""
+    sample = workflow.load_audit_sample(args.sample)
+    run_annotation_session(sample, annotator=args.annotator, labels_path=args.labels)
+    return 0
+
+
+def _cmd_inline_audit_report(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline audit-report``."""
+    sample = workflow.load_audit_sample(args.sample)
+    label_paths = [*args.labels, *args.labels2]
+    labels: list[AuditLabel] = []
+    for path in label_paths:
+        if not Path(path).exists():
+            raise ContractError(f"labels file {path} does not exist")
+        labels.extend(load_audit_labels(path))
+    report = build_audit_report(sample, labels)
+    print(f"Audit report over {report.n_labeled} labeled of {report.n_items} sampled item(s)")
+    print()
+    print("Tier distribution (consensus per item):")
+    _print_rows(
+        [(f"tier {tier.upper()}", str(count)) for tier, count in sorted(report.tier_counts.items())]
+    )
+    print()
+    if report.agreement:
+        print("Agreement (Cohen's kappa / Krippendorff's alpha per field):")
+        _print_rows([(name, f"{value:.3f}") for name, value in sorted(report.agreement.items())])
+    else:
+        print("Agreement: unavailable (no item labeled by two or more annotators)")
+    print()
+    clean = report.tier_counts.get("a", 0) + report.tier_counts.get("b", 0)
+    verdict = "GO" if report.go else "NO-GO"
+    print(
+        f"Verdict: {verdict}  (thresholds: every kappa >= 0.6 and "
+        f"Tier A+B positives >= 150; observed clean positives: {clean})"
+    )
+    for note in report.notes:
+        print(f"  note: {note}")
+    return 0
+
+
+def _cmd_inline_anchors(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline anchors``."""
+    inputs = _inline_inputs(args)
+    dictionary = workflow.build_anchor_artifacts(inputs, config=AnchorConfig(), out_dir=args.out)
+    mentions = dictionary.mentions()
+    eligible = sum(1 for mention in mentions if dictionary.eligible(mention))
+    print(f"Anchor dictionary written to {args.out}")
+    print()
+    _print_rows(
+        [
+            ("mentions", str(len(mentions))),
+            ("eligible", str(eligible)),
+            ("keyphraseness floor", f"{dictionary.config.keyphraseness_floor:.3f}"),
+            ("files", "anchor-dictionary.json, anchor-stats.json"),
+        ]
+    )
+    return 0
+
+
+def _cmd_inline_recall_check(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline recall-check``."""
+    inputs = _inline_inputs(args)
+    sample = workflow.load_audit_sample(args.sample)
+    metrics = workflow.check_span_recall(
+        inputs, sample, anchor_config=AnchorConfig(), span_config=SpanConfig()
+    )
+    gate = 0.85
+    verdict = "PASS" if metrics["overlap_recall"] >= gate else "FAIL"
+    print("Span-generator recall over audited prose anchors (spec §11 phase 2)")
+    print()
+    _print_rows(
+        [
+            ("prose items", f"{metrics['n_prose_items']:.0f}"),
+            ("exact recall", f"{metrics['exact_recall']:.3f}"),
+            ("overlap recall", f"{metrics['overlap_recall']:.3f}"),
+            ("gate (>= 0.85)", verdict),
+        ]
+    )
+    if verdict == "FAIL":
+        print()
+        print("Recall below the §12 ceiling: fix span generation before any modeling.")
+    return 0
+
+
+def _cmd_inline_train(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline train``."""
+    inputs = _inline_inputs(args)
+    train_config = TrainConfig(epochs=args.epochs)
+    heads = workflow.train_inline_heads(
+        inputs,
+        args.labels,
+        args.sample,
+        train_config=train_config,
+        seed=args.seed,
+        out_dir=args.out,
+    )
+    print(f"Trained heads saved to {args.out}")
+    print()
+    rows: list[tuple[str, str]] = [
+        ("epochs", str(args.epochs)),
+        ("seed", str(args.seed)),
+        ("encoder", heads.encoder_fingerprint[:24] + "..."),
+        ("model version", heads.model_version[:24] + "..."),
+    ]
+    for head, losses in sorted(heads.loss_history.items()):
+        rows.append((f"{head} final loss", f"{losses[-1]:.4f}" if losses else "n/a (no data)"))
+    _print_rows(rows)
+    return 0
+
+
+def _selection_config(args: argparse.Namespace) -> SelectionConfig:
+    """Selection defaults with the CLI overrides applied."""
+    defaults = SelectionConfig()
+    return SelectionConfig(
+        accept_threshold=(
+            args.threshold if args.threshold is not None else defaults.accept_threshold
+        ),
+        words_per_link=(
+            args.budget_words if args.budget_words is not None else defaults.words_per_link
+        ),
+        max_links_per_note=(
+            args.max_per_note if args.max_per_note is not None else defaults.max_links_per_note
+        ),
+    )
+
+
+def _cmd_inline_propose(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline propose``."""
+    inputs = _inline_inputs(args)
+    selection = _selection_config(args)
+    run_id = f"inline-{args.engine}"
+    if args.engine == "learned":
+        if args.heads is None:
+            raise ConfigError("inline propose: --heads is required with --engine learned")
+        heads = TrainedHeads.load(args.heads)
+        proposals = workflow.propose_inline_learned(
+            inputs,
+            heads,
+            anchor_config=AnchorConfig(),
+            span_config=SpanConfig(),
+            selection_config=selection,
+            run_id=run_id,
+        )
+    else:
+        proposals = workflow.propose_inline_baseline(
+            inputs,
+            anchor_config=AnchorConfig(),
+            span_config=SpanConfig(),
+            baseline_config=BaselineConfig(),
+            selection_config=selection,
+            run_id=run_id,
+        )
+    paths = write_inline_report(proposals, inputs.corpus, out_dir=args.out)
+    accepted = [p for p in proposals.proposals if not p.abstained]
+    flagged = sum(1 for p in accepted if p.features.get("suggest_better_anchor", 0.0))
+    print(f"Inline proposals ({args.engine} engine) written to {args.out}")
+    print()
+    _print_rows(
+        [
+            ("accepted", str(len(accepted))),
+            ("abstained", str(len(proposals.proposals) - len(accepted))),
+            ("anchor-improvement flags", str(flagged)),
+            ("source notes", str(len({p.source_document_id for p in accepted}))),
+            ("accept threshold", f"{selection.accept_threshold:.2f}"),
+            ("files", ", ".join(path.name for path in paths)),
+        ]
+    )
+    top = accepted[:5]
+    if top:
+        print()
+        print(f"Top {len(top)} accepted proposals:")
+        for proposal in top:
+            print(
+                f"  {proposal.combined_score:.3f}  {proposal.source_document_id}"
+                f" [{proposal.anchor_text!r}] -> {proposal.target_document_id}"
+            )
     return 0
 
 

@@ -5,6 +5,7 @@ core_principles:
   - every_nontrivial_claim_must_be_cited_derived_or_measured
   - intuition_and_rigor_should_coexist
   - examples_should_pull_their_weight
+  - executable_artifacts_should_clarify_or_test_the_idea
   - prose_should_follow_the_shape_of_the_idea
 
 required_elements:
@@ -89,3 +90,4 @@ review_prompts:
   - does_each_section_move_the_argument_forward
   - is_any_sentence_only_there_to_sound_nice
   - can_a_reader_reproduce_the_result_or_follow_the_derivation
+  - would_code_a_benchmark_or_a_notebook_make_the_mechanism_or_evidence_clearer

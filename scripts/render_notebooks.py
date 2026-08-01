@@ -200,6 +200,23 @@ def source_url(base_url: str, notebook_path: Path) -> str:
     return f"{base_url.rstrip('/')}/{quote(rel, safe='/')}"
 
 
+def asset_url(notebook_path: Path) -> str:
+    rel = notebook_path.relative_to(CONTENT_ROOT).as_posix()
+    return f"/{quote(rel, safe='/')}"
+
+
+def frontmatter_bool(value: object, default: bool) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized == "true":
+            return True
+        if normalized == "false":
+            return False
+    return default
+
+
 def notebook_without_frontmatter(
     notebook: dict[str, object], first_cell_remainder: str | None
 ) -> dict[str, object]:
@@ -233,19 +250,25 @@ def render_notebook(path: Path, args: argparse.Namespace) -> None:
     frontmatter, remainder = notebook_frontmatter(notebook, path)
     url = source_url(args.source_base_url, path)
     target = path.with_suffix(".md")
-    ensure_generated_target(target)
-    wrapper = (
-        f"{dump_frontmatter(frontmatter)}\n\n"
-        f"{GENERATED_MARKER}{path.relative_to(ROOT).as_posix()}; do not edit. -->\n\n"
-        f"[Open notebook source]({url})\n"
-    )
-    write_if_changed(target, wrapper)
+    publish_page = frontmatter_bool(frontmatter.pop("notebook_page", True), True)
+    if publish_page:
+        ensure_generated_target(target)
+        wrapper = (
+            f"{dump_frontmatter(frontmatter)}\n\n"
+            f"{GENERATED_MARKER}{path.relative_to(ROOT).as_posix()}; do not edit. -->\n\n"
+            f"[Open notebook source]({url})\n"
+        )
+        write_if_changed(target, wrapper)
+    elif target.exists() and GENERATED_MARKER in target.read_text(encoding="utf-8"):
+        target.unlink()
 
     archived = frontmatter.get("archive") is True or str(frontmatter.get("archive", "")).lower() == "true"
     if args.cache_dir and not archived:
         args.cache_dir.mkdir(parents=True, exist_ok=True)
         cached = notebook_without_frontmatter(notebook, remainder)
-        write_if_changed(cache_path(args.cache_dir, url), json.dumps(cached, separators=(",", ":")))
+        payload = json.dumps(cached, separators=(",", ":"))
+        for cache_url in (url, asset_url(path)):
+            write_if_changed(cache_path(args.cache_dir, cache_url), payload)
 
 
 def main() -> int:
@@ -256,7 +279,7 @@ def main() -> int:
     notebooks = iter_notebooks(args.paths)
     for notebook in notebooks:
         render_notebook(notebook, args)
-    print(f"Prepared {len(notebooks)} notebook page(s).")
+    print(f"Prepared {len(notebooks)} notebook(s).")
     return 0
 
 

@@ -140,7 +140,7 @@ Demand paging pulls the pages in from there.
 - **Temporal locality**: a memory location accessed now is likely to be accessed again soon.
 - **Spatial locality**: locations near an accessed location are likely to be accessed soon.
 
-Locality is why paging can be infrequent and why the OS can profitably bring in multiple pages at once. It assumes that a page brought in gets used many times, and that on average you use the pages you bring in.
+[[systems/research/locality-principle|Locality]] is why paging can be infrequent and why the OS can profitably bring in multiple pages at once. It assumes that a page brought in gets used many times, and that on average you use the pages you bring in.
 
 ## Local vs global replacement
 
@@ -170,3 +170,5 @@ The goal is to reduce page faults by keeping each process's working set in memor
 - [[systems/operating-systems/lecture-notes/page-faults|page faults]]
 - [[systems/operating-systems/lecture-notes/tlb|translation lookaside buffers]]
 - [[systems/operating-systems/lecture-notes/windows-memory-management|Windows memory management]]
+- [[systems/research/locality-principle|The Locality Principle]]
+- [[systems/operating-systems/section-notes/lab-3-questions|Lab 3 Questions]]

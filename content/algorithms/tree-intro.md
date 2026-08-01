@@ -70,3 +70,5 @@ This gives a cheap tree test: count the edges and check either connectivity or a
 - [[algorithms/graphs-intro|graph fundamentals]]
 - [[algorithms/BFS|breadth-first search]]
 - [[algorithms/DFS|depth-first search]]
+- [[algorithms/problems/graphs-and-trees|Graphs and Trees Problems]]
+- [[reference/cheatsheets/algorithms/graphs|Graph Theory]]

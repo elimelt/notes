@@ -123,3 +123,4 @@ Causal masking drops in cleanly: masked positions get $-\infty$ before the softm
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
 - [[ml/serving-systems/inf-llm|InfLLM]]
 - [[ml/serving-systems/transformers|Transformer Architecture]]
+- [[systems/research/sparsity-notes|Faster Causal Self Attention]]

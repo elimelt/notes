@@ -95,6 +95,7 @@ A phasor is a complex number that represents the amplitude and phase of a sinuso
 
 ## Related
 
+- [[hardware/signal-conditioning/lecture-notes/lecture-2|Electricity]]
 - [[hardware/signal-conditioning/lecture-notes/lecture-3|Resistance]]
 - [[reference/cheatsheets/circuits/components|Electronic Components]]
 - [[reference/cheatsheets/circuits/electricity|Electric Circuit Analysis]]

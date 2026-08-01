@@ -179,6 +179,10 @@ $$
 
 Note: BERT was trained using `[CLS] sen A [SEP] sen B [SEP]`. `[SEP]` helps the model distinguish the two sentences, and `[CLS]` represents the whole input.
 
+## Related notes
+
+- [[systems/databases/foundations/ch3-storage-and-retrieval|Storage and Retrieval Techniques for Database Systems]]
+
 ## Sources
 
 - [Jurafsky & Martin, Speech and Language Processing (3rd ed. draft)](https://web.stanford.edu/~jurafsky/slp3/)

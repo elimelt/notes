@@ -109,4 +109,5 @@ Drawbacks:
 ## Related notes
 
 - [[systems/operating-systems/v4-persistent-storage/11-file-systems-overview|file-system overview]]
+- [[systems/databases/foundations/ch3-storage-and-retrieval|storage and retrieval techniques]]
 - [[systems/operating-systems/lecture-notes/file-systems|file systems]]

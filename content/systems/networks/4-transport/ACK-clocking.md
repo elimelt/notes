@@ -27,7 +27,7 @@ Explain the ACK clock, the mechanism by which a sliding window sender ends up tr
 
 ## Core idea
 
-Each in-order ACK advances the sliding window and lets one new segment enter the network. New data goes out exactly as fast as ACKs come back, and ACKs come back at the rate the bottleneck link can deliver data. The sender is clocked by the network itself.
+Each in-order ACK advances the [[algorithms/patterns/sliding-window|sliding window]] and lets one new segment enter the network. New data goes out exactly as fast as ACKs come back, and ACKs come back at the rate the bottleneck link can deliver data. The sender is clocked by the network itself.
 
 ## Intuition
 
@@ -45,3 +45,4 @@ Fixing this takes an explicit mechanism where the receiver tells the sender how 
 
 - [[systems/networks/4-transport/flow-control|flow control]]
 - [[systems/networks/4-transport/TCP|TCP]]
+- [[algorithms/patterns/sliding-window|Sliding Window Pattern]]

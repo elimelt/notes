@@ -31,3 +31,7 @@ Keep the four OSPP volumes in one place so the rest of the operating systems not
 - [volume 2, concurrency](https://www.kea.nu/files/textbooks/ospp/osppv2.pdf)
 - [volume 3, memory management](https://www.kea.nu/files/textbooks/ospp/osppv3.pdf)
 - [volume 4, persistent storage](https://www.kea.nu/files/textbooks/ospp/osppv4.pdf)
+
+## Related notes
+
+- [[systems/operating-systems/lecture-notes/components|Components of an OS]]

@@ -6,6 +6,7 @@ tags:
   - graph algorithms
   - graph traversal
   - shortest-path
+  - connected components
 date: 2024-04-14
 updated: 2026-07-30
 status: draft
@@ -43,10 +44,11 @@ Each level $L_i$ is exactly the set of vertices at distance $i$ from $s$. A quic
 ## What it solves
 
 - Shortest paths in unweighted graphs.
-- Connected components, by running BFS from every unvisited vertex.
+- [[algorithms/connected-components|Connected components]], by running BFS from every unvisited vertex.
 - Bipartiteness checks, since an edge between two vertices in the same level implies an odd cycle.
 
 ## Related notes
 
 - [[reference/cheatsheets/algorithms/graphs|Graph Theory]]
 - [[algorithms/patterns/sliding-window|Sliding Window Pattern]]
+- [[algorithms/connected-components|Finding Connected Components]]

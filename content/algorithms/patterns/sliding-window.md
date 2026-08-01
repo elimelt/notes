@@ -66,3 +66,5 @@ The nested loop looks quadratic. Both pointers only move forward though, so each
 ## Related notes
 
 - [[algorithms/patterns/BFS|Breadth First Search Pattern]]
+- [[systems/networks/4-transport/flow-control|Flow Control]]
+- [[systems/networks/4-transport/ACK-clocking|Sliding Window ACK Clock]]

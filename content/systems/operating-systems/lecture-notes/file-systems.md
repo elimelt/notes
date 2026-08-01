@@ -84,3 +84,5 @@ The reserved area holds the boot sector and metadata about the file system and d
 ## Related notes
 
 - [[systems/operating-systems/lecture-notes/io-systems-secondary-storage|I/O systems and secondary storage]]
+- [[systems/research/unix-timesharing-system|Unix timesharing system]]
+- [[systems/operating-systems/v4-persistent-storage/11-file-systems-overview|file systems overview]]

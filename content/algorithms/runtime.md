@@ -69,3 +69,4 @@ Polynomial time is the standard bar for an efficient algorithm, and it has a use
 
 - [[algorithms/divide-and-conquer|divide and conquer]]
 - [[algorithms/dynamic-programming|dynamic programming]]
+- [[reference/cheatsheets/algorithms/intervals|interval scheduling]]

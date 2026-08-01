@@ -70,5 +70,6 @@ def is_bipartite(G):
 ## Related notes
 
 - [[algorithms/BFS|breadth-first search]]
+- [[algorithms/connected-components|connected components]]
 - [[algorithms/network-flows|network flows]]
 - [[algorithms/graphs-intro|graph fundamentals]]

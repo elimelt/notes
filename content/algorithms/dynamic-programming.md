@@ -765,5 +765,7 @@ Since we call $f(v, k)$ on all vertices in the tree, and each call takes at most
 ## Related notes
 
 - [[algorithms/divide-and-conquer|divide and conquer]]
+- [[algorithms/practice/4|problem set 4]]
+- [[reference/cheatsheets/algorithms/intervals|interval scheduling and partitioning]]
 - [[algorithms/DAGs|directed acyclic graphs]]
 - [[algorithms/induction|induction]]

@@ -43,7 +43,7 @@ This is still a working note. Questions 7 through 10 are incomplete, and the fin
 
 > Hint: the shell will go into the `case PIPE` case in `user/sh.c:runcmd` when it receives a cmd with the pipe operator `|`.
 
-> Fun fact: the `|` operator behaves this way in most UNIX shells, and is why the infamous forkbomb command `:(){ :|:& };:` _forks_. [More on the forkbomb LINK](https://en.wikipedia.org/wiki/Fork_bomb).
+> Fun fact: the `|` operator behaves this way in most UNIX shells, and is why the infamous forkbomb command `:(){ :|:& };:` _[[systems/operating-systems/lecture-notes/handle-tables|forks]]_. [More on the forkbomb LINK](https://en.wikipedia.org/wiki/Fork_bomb).
 
 *A:* The shell will create two child processes, one for `ls` and one for `wc`. The `ls` process will write to the pipe, and the `wc` process will read from the pipe.
 
@@ -57,7 +57,7 @@ This is still a working note. Questions 7 through 10 are incomplete, and the fin
 
 ## Question #5:
 
-*Q:* When a syscall completes, user-level execution resumes with the instruction immediately after the syscall. When a page fault exception completes, where does user-level execution resume? (~1 sentence).
+*Q:* When a syscall completes, user-level execution resumes with the instruction immediately after the syscall. When a [[systems/operating-systems/lecture-notes/page-faults|page fault]] exception completes, where does user-level execution resume? (~1 sentence).
 
 It resumes at the instruction that caused the page fault. The processor exception saves the state of the program, and then the kernel handles the page fault. Once the kernel has resolved the page fault, it restores the state of the program and resumes execution at the instruction that caused the page fault (not the one after it).
 
@@ -86,6 +86,14 @@ The faulting address needs to be within `stack->va_base >= addr >= stack->va_bas
 ## Question #10
 
 *Q:* What did you like or dislike about this lab? Is there anything you wish you knew earlier?
+
+## Related notes
+
+- [[systems/operating-systems/v1-kernels-and-processes/3-the-programming-interface|Syscall API Reference]]
+- [[systems/operating-systems/lecture-notes/handle-tables|Handle Tables]]
+- [[systems/operating-systems/lecture-notes/page-faults|page faults]]
+- [[systems/operating-systems/section-notes/section-1|C and GDB Review]]
+- [[systems/operating-systems/lecture-notes/windows-rtz|Hard Lessons Learned: Windows RtlZeroMemory]]
 
 
 

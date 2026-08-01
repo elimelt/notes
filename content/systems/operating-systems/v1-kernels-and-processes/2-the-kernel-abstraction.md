@@ -328,3 +328,5 @@ Working answers to some of the chapter exercises.
 
 - [[systems/operating-systems/v1-kernels-and-processes/3-the-programming-interface|the programming interface]]
 - [[systems/operating-systems/v1-kernels-and-processes/1-introductions|what is an operating system]]
+- [[systems/research/exokernel|Exokernel: An Operating System Architecture for Application-Level Resource Management]]
+- [[systems/operating-systems/lecture-notes/handle-tables|Handle Tables]]

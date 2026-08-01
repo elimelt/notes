@@ -380,4 +380,6 @@ The semaphore ensures at most 20 chunks are processed concurrently. Batching tas
 ## Related notes
 
 - [[systems/performance/latency-throughput-and-utilization|latency, throughput, and utilization]]
+- [[systems/operating-systems/benchmarks/bandwidth|Memory Bandwidth Benchmarks]]
+- [[systems/databases/derived-data/ch10-batch-processing|Batch Processing Systems and MapReduce Fundamentals]]
 - [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|Cache Line Efficiency Benchmark]]

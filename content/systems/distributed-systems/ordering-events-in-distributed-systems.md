@@ -159,3 +159,4 @@ The paper proves that with these rules, clocks that communicate often enough con
 - [[systems/distributed-systems/clocks|distributed clocks]]
 - [[systems/distributed-systems/consistent-global-state|consistent global state]]
 - [[systems/distributed-systems/mutual-exclusion|mutual exclusion]]
+- [[systems/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects|Synchronizing Access to Shared Objects]]

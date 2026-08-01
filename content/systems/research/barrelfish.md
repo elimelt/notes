@@ -48,6 +48,11 @@ Instead of protecting a global structure with locks, each core keeps a local rep
 
 ## Why message passing over shared memory
 
+## Related notes
+
+- [[systems/operating-systems/lecture-notes/components|Components of an OS]]
+- [[systems/operating-systems/v1-kernels-and-processes/1-introductions|What Is an Operating System?]]
+
 The paper backs this reframing with a few observations:
 
 - Machines, and even individual cores within a machine, are diverse. Hardware-specific shared-memory optimizations do not transfer across them.

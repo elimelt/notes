@@ -9,6 +9,8 @@ tags:
   - reliability
   - architecture
   - distributed-systems
+  - caching
+  - replication
 date: 2025-03-05
 description: Presentation covering basic techniques and architectures for solving common scalability and reliability problems in systems.
 sources:
@@ -44,7 +46,7 @@ This note condenses a slide deck on common system-design patterns for scaling an
 
 Problem: I have too many requests! My single server can't take it anymore 😭
 
-Solution: Horizontal scaling with a load balancer -- distribute requests across multiple servers
+Solution: Horizontal scaling with a [[systems/distributed-systems/scaling-web-services|load balancer]] -- distribute requests across multiple servers
 
 ![w:900px](./assets/load-balancer.png)
 
@@ -166,7 +168,7 @@ Solution: Use an API Gateway to route requests to the appropriate service
 - Availability: System is operational and accessible
 - Reliability: System performs as expected under normal conditions
 
-Why do we need a reliable system?
+Why do we need a [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|reliable]] system?
 
 - 99.999% uptime = 5.26 minutes of downtime per year
 - With 100 services, each with 99.999% uptime, the system *could* be down for 8.76 hours per year (assuming everything is a single point of failure)
@@ -183,7 +185,7 @@ So building on top of cloud services still requires going the extra mile to ensu
 
 Problem: I have a stateful, purpose-built service that needs to be highly available 😅
 
-Solution: Primary forwards writes to replicas, which can take over if the primary fails
+Solution: [[systems/distributed-systems/primary-backup|Primary]] forwards writes to [[systems/databases/distributed-data/ch5-replication|replicas]], which can take over if the primary fails
 
 ![](./assets/replication.png)
 
@@ -218,3 +220,8 @@ Limit hard dependencies and keep services decoupled
 
 - [[reference/slides/system-design-interviews|System Design Interviews]]
 - [[systems/research/hints-for-computer-system-design|Hints for Computer System Design]]
+- [[systems/distributed-systems/scaling-web-services|Scaling Web Services with Distributed Architectures]]
+- [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|Fundamentals of Data-Intensive Application Design and Scalability]]
+- [[systems/databases/distributed-data/preface|Scalable Distributed Data Systems]]
+- [[systems/databases/distributed-data/ch5-replication|Replication Strategies in Distributed Data Systems]]
+- [[systems/distributed-systems/primary-backup|Primary Backup]]

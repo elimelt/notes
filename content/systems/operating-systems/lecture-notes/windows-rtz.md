@@ -39,3 +39,4 @@ Two locally sound optimizations combined into a system-wide failure, and the per
 ## Related notes
 
 - [[systems/operating-systems/lecture-notes/windows-memory-management|Windows memory management]]
+- [[systems/operating-systems/section-notes/lab-3-questions|Lab 3 Questions]]

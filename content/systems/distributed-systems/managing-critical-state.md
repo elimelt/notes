@@ -128,3 +128,4 @@ One common pitfall with single-leader replication is that a client's perceived l
 
 - [[systems/distributed-systems/paxos-intro|Paxos]]
 - [[systems/distributed-systems/consistency|consistency]]
+- [[systems/distributed-systems/two-phase-commit|Two Phase Commit]]

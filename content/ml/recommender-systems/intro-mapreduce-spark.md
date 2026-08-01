@@ -122,6 +122,11 @@ For recommender teams, Spark usually wins because feature pipelines, joins, and 
 
 When a paper says "we trained on billions of examples," there is always a data system underneath it. In recommenders, the model is often only the last few percent of the engineering problem.
 
+## Related notes
+
+- [[systems/distributed-systems/bigtable|Bigtable, A Distributed Storage System for Structured Data]]
+- [[systems/databases/distributed-data/preface|Scalable Distributed Data Systems]]
+
 ## Sources
 
 - [Dean & Ghemawat (2004), MapReduce: Simplified Data Processing on Large Clusters](https://static.googleusercontent.com/media/research.google.com/en//archive/mapreduce-osdi04.pdf)

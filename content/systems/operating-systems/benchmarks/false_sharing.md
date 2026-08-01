@@ -101,3 +101,4 @@ Pad hot per-thread fields to a cache line boundary, align them with `__attribute
 
 - [[systems/operating-systems/benchmarks/reductions|parallel reductions]]
 - [[systems/operating-systems/benchmarks/bandwidth|memory bandwidth]]
+- [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|cache line efficiency]]

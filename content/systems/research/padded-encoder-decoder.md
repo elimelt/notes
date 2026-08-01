@@ -3,14 +3,14 @@ title: Accelerating Padded Encoder-Decoder Transformer Models
 aliases:
   - systems-research/padded-encoder-decoder
 category: Systems Research
-tags: nlp, transformer, encoder-decoder
+tags: nlp, transformer, encoder-decoder, sparsity, pruning
 date: 2025-03-10
 description: An overview of my research on accelerating inference on encoder-decoder transformer models using OpenAI's Whisper model
 ---
 
 ## Abstract
 
-Encoder-decoder transformer models like OpenAI's Whisper have demonstrated impressive performance on automatic speech recognition (ASR) tasks. However, these models are typically trained on fixed-length audio samples (e.g., 30 seconds), requiring the same fixed-length processing during inference regardless of the actual audio content length. This characteristic leads to significant computational inefficiency, especially when processing shorter audio clips, as the model still processes the full padded sequence.
+[[ml/deep-learning/encoder-decoder-transformers|Encoder-decoder transformer]] models like OpenAI's Whisper have demonstrated impressive performance on automatic speech recognition (ASR) tasks. However, these models are typically trained on fixed-length audio samples (e.g., 30 seconds), requiring the same fixed-length processing during inference regardless of the actual audio content length. This characteristic leads to significant computational inefficiency, especially when processing shorter audio clips, as the model still processes the full padded sequence.
 
 In this work, we propose an approach to accelerate inference in padded encoder-decoder transformer models by identifying and removing unnecessary padding tokens during the encoding phase. By analyzing the attention patterns in both self-attention and cross-attention layers, we identify regions in the encoded representation that can be safely pruned without significantly impacting model performance. We implement and evaluate two pruning strategies: one using fixed padding around the actual audio content and another using percentage-based padding. Our experiments on OpenAI's Whisper model demonstrate that our pruning approach achieves up to X% speedup in inference time with minimal degradation in transcription accuracy, making it particularly valuable for edge deployments where computational resources are limited.
 
@@ -252,6 +252,11 @@ Looking forward, our work opens up several promising directions for further opti
 
 **TODO**: Include actual attention visualization analysis that motivated the pruning approach.
 
-## Related
+## Related notes
 
+- [[deep-learning/decoder-only-transformer-on-wikitext-2|Decoder-Only Transformer on WikiText-2]]
+- [[ml/deep-learning/encoder-decoder-transformers|Encoder-Decoder Transformers]]
+- [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
+- [[ml/serving-systems/transformers|Transformer Architecture and Implementation]]
+- [[ml/serving-systems/sparsity-and-pruning|Sparsity and Pruning in LLM Serving Systems]]
 - [[systems/research/sparsity-notes|Faster Causal Self Attention]]

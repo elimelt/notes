@@ -36,3 +36,4 @@ Applications built on [[systems/networks/4-transport/TCP|TCP]] can transfer arbi
 - [[systems/networks/5-application/DNS|DNS]]
 - [[systems/networks/5-application/CDNs|content delivery networks]]
 - [[systems/networks/4-transport/transport-overview|transport layer overview]]
+- [[systems/research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]

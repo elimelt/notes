@@ -241,6 +241,13 @@ NN optimization is a non-convex problem, so it needs a few techniques to work we
 - Dropout: randomly (with probability $p$) set some hidden units to 0, then renormalize other inputs to prevent overfitting
 - Hyperparameters: learning rate, mini-batch size, number of hidden units, number of layers, choice of activation function, etc.
 
+## Related notes
+
+- [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]]
+- [[deep-learning/mlp-from-scratch-on-mnist|MLP from Scratch on MNIST]]
+- [[ml/deep-learning/recurrent-neural-networks|Recurrent Neural Networks]]
+- [[deep-learning/checking-manual-gradients-against-autodiff-on-mnist|Checking Manual Gradients Against Autodiff on MNIST]]
+
 ## Sources
 
 - [Jurafsky & Martin, Speech and Language Processing (3rd ed. draft), Neural Networks chapter](https://web.stanford.edu/~jurafsky/slp3/7.pdf)

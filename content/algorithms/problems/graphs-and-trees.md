@@ -18,7 +18,7 @@ sources:
 
 ## Purpose
 
-Work through a pair of short graph theory exercises. The first is a full inductive proof. The second is now written as a compact contradiction argument instead of stopping mid-proof.
+Work through a pair of short graph theory exercises. The first is a full [[algorithms/induction|inductive proof]]. The second is now written as a compact contradiction argument instead of stopping mid-proof.
 
 ## Problem 1
 Let $G$ be a tree. Use induction to prove that the number of leaves of $G$ is at least the number of vertices of degree at least $3$ in $G$.
@@ -55,7 +55,7 @@ In all cases, $G$ has at least as many leaves as vertices of degree at least $3$
 
 ## Problem 2
 
-Let $G$ be a graph with $n$ vertices and at least $n$ edges. Show that $G$ has a cycle.
+Let $G$ be a [[algorithms/graphs-intro|graph]] with $n$ vertices and at least $n$ edges. Show that $G$ has a cycle.
 
 #### Solution
 
@@ -74,3 +74,11 @@ $$
 $$
 
 But $G$ is assumed to have at least $n$ edges, which contradicts the bound above. Therefore $G$ must contain a cycle.
+
+## Related notes
+
+- [[algorithms/graphs-intro|Graph Fundamentals]]
+- [[reference/cheatsheets/algorithms/graphs|Graph Theory]]
+- [[algorithms/induction|Mathematical Induction]]
+- [[algorithms/DFS|Depth First Search]]
+- [[algorithms/index|Algorithms]]

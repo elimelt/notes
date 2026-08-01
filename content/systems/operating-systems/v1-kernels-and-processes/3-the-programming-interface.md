@@ -488,3 +488,8 @@ Unanswered chapter exercises, kept here for practice.
 ## Related notes
 
 - [[systems/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction|the kernel abstraction]]
+- [[systems/operating-systems/lecture-notes/handle-tables|Handle Tables]]
+- [[systems/operating-systems/lecture-notes/components|Components of an OS]]
+- [[systems/research/unix-timesharing-system|The Unix Timesharing System]]
+- [[systems/operating-systems/lecture-notes/windows-objects-handles-refcounts|Objects Handles and Reference Counts]]
+- [[systems/networks/sockets|Socket Reference]]

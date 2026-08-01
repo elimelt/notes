@@ -32,4 +32,5 @@ Quick reference for the annotations I reach for when setting up a Spring Boot ap
 
 ## Related
 
+- [[software/java/collections-and-records|Creating Collections and Data Types in Modern Java]]
 - [[reference/cheatsheets/java-spring-boot/running|Spring Boot Quickstart Guide]]

@@ -327,9 +327,12 @@ This is shorter because autograd is doing exactly the backpropagation derivation
 
 ## Related Notes
 
+- [[deep-learning/mlp-from-scratch-on-mnist|MLP from Scratch on MNIST]]
+- [[deep-learning/checking-manual-gradients-against-autodiff-on-mnist|Checking Manual Gradients Against Autodiff on MNIST]]
 - [[ml/deep-learning/modeling-architecture-and-data|Modeling, Architecture, and Data]]
 - [[ml/deep-learning/convolutional-neural-networks|Convolutional Neural Networks]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
+- [[ml/deep-learning/recurrent-neural-networks|Recurrent Neural Networks]]
 
 ## Sources
 

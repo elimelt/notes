@@ -27,6 +27,10 @@ This paper is one of the clearest production writeups of the classic recommender
 
 - [Deep Neural Networks for YouTube Recommendations (Covington, Adams, and Sargin, RecSys 2016)](https://research.google.com/pubs/archive/45530.pdf)
 
+## Related notes
+
+- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
+
 ## The Setup
 
 YouTube has a huge corpus and a tight latency budget. The paper frames recommendation as two distinct problems:

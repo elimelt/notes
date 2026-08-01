@@ -111,3 +111,5 @@ Real code sits somewhere between the fully serial chase and the fully parallel r
 - [[systems/operating-systems/benchmarks/README|measuring real DRAM latency]]
 - [[systems/operating-systems/benchmarks/prefetch|software prefetching]]
 - [[systems/operating-systems/benchmarks/bandwidth|memory bandwidth]]
+- [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|cache line efficiency]]
+- [[systems/operating-systems/benchmarks/store_fwd|store-to-load forwarding]]

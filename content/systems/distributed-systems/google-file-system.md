@@ -144,3 +144,5 @@ Leases extend via requests piggybacked on HeartBeat messages. The master can rev
 
 - [[systems/distributed-systems/bigtable|Bigtable]]
 - [[systems/distributed-systems/primary-backup|primary-backup replication]]
+- [[systems/operating-systems/lecture-notes/file-systems|File Systems]]
+- [[systems/operating-systems/v4-persistent-storage/11-file-systems-overview|File Systems, Introduction and Overview]]

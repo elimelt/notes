@@ -163,3 +163,5 @@ This is a condensed checklist for making the most of an internship and maximizin
 ## Related
 
 - Personal onboarding notes
+- [[thoughts/leadership/applications|SWECC Leadership Applications 2025-2026]]
+- [[reference/slides/system-design-interviews|System Design Interviews]]

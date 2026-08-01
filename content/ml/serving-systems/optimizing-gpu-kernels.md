@@ -164,3 +164,4 @@ PYBIND11_MODULE(my_addition, m) {
 - [[ml/serving-systems/how-to-write-a-fast-kernel|How to write a fast kernel]]
 - [[ml/serving-systems/triton|Triton]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
+- [[systems/operating-systems/benchmarks/reductions|Parallel Reductions Benchmarks]]

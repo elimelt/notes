@@ -44,7 +44,7 @@ Reported results: 2.0x training speedup at 8,192 tokens and 3.3x at 16,384 token
 
 That constant-size selection gives linear time complexity and a constant memory footprint during generation, and the mechanism stays efficient for both training and inference. It integrates with sliding window attention, works with pre-trained LLMs through fine-tuning, and uses an IO-aware implementation built on FlashAttention. The paper reports better perplexity than baseline sparse attention methods while matching or exceeding full attention quality.
 
-Limits the authors call out: validation only reaches modest model sizes and context lengths due to compute constraints, only decoder-only architectures and text tasks are tested, and short sequences pay some overhead.
+Limits the authors call out: validation only reaches modest model sizes and context lengths due to compute constraints, only [[ml/deep-learning/decoder-only-transformers|decoder-only architectures]] and text tasks are tested, and short sequences pay some overhead.
 
 ## MoA (Mixture of Sparse Attention)
 
@@ -57,3 +57,13 @@ Reported results: 3.9x longer effective context length than baseline methods at 
 ## Related notes
 
 - [[systems/research/padded-encoder-decoder|Accelerating Padded Encoder-Decoder Transformer Models]]
+- [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
+- [[deep-learning/decoder-only-transformer-on-wikitext-2|Decoder-Only Transformer on WikiText-2]]
+- [[ml/serving-systems/transformers|Transformer Architecture and Implementation]]
+- [[ml/serving-systems/inf-llm|InfLLM: Training-Free Long-Context Extrapolation for LLMs]]
+- [[ml/deep-learning/encoder-decoder-transformers|Encoder-Decoder Transformers]]
+- [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
+- [[deep-learning/decoder-only-transformer-on-wikitext-2|Decoder-Only Transformer on WikiText-2]]
+- [[ml/serving-systems/transformers|Transformer Architecture and Implementation]]
+- [[ml/serving-systems/inf-llm|InfLLM: Training-Free Long-Context Extrapolation]]
+- [[ml/deep-learning/encoder-decoder-transformers|Encoder-Decoder Transformers]]

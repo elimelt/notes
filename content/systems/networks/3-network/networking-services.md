@@ -52,3 +52,5 @@ The failure row is worth unpacking. When a link dies under a datagram service, r
 
 - [[systems/networks/3-network/motivation|motivation behind the network layer]]
 - [[systems/networks/3-network/internetworking|internetworking]]
+- [[systems/networks/4-transport/transport-overview|Transport Layer Overview]]
+- [[systems/networks/2-direct-links/switching|Switched Ethernet]]

@@ -149,6 +149,8 @@ If you measure only end-to-end CTR, you lose the ability to tell which stage got
 - [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval]]
 - [[ml/recommender-systems/wide-and-deep|Wide and Deep]]
 - [[ml/recommender-systems/bias-and-marketplace-effects|Bias, Marketplace Effects, and Counterfactual Evaluation]]
+- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
+- [[ml/nlp/reading/information-retrieval|Indexing and Information Retrieval]]
 
 ## Sources
 

@@ -140,6 +140,8 @@ Once the catalog and traffic grow, this usually matters more than arguing about 
 - [[ml/recommender-systems/recommender-systems|Recommender Systems]]
 - [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval]]
 - [[ml/recommender-systems/bias-and-marketplace-effects|Bias, Marketplace Effects, and Counterfactual Evaluation]]
+- [[systems/research/sparsity-notes|Faster Causal Self Attention]]
+- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
 
 ## Sources
 

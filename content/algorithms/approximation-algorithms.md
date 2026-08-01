@@ -58,3 +58,4 @@ Setting $t = k \ln(n)$ drives this below $1$, so greedy selects at most $k \ln(n
 
 - [[algorithms/greedy-algorithms|greedy algorithms]]
 - [[algorithms/linear-programming|linear programming]]
+- [[reference/cheatsheets/algorithms/intervals|interval scheduling and partitioning]]

@@ -90,6 +90,17 @@ Forwarding control compares the destination register of instructions ahead in th
 source registers of the instruction currently in EX, selecting the freshest matching value (EX/MEM
 over MEM/WB, since EX/MEM is one cycle newer).
 
+```mermaid
+flowchart LR
+    IF --> ID --> EX --> MEM --> WB
+    EX --> EXMEM[EX/MEM register]
+    MEM --> MEMWB[MEM/WB register]
+    EXMEM -.forward, 1 cycle newer.-> EX
+    MEMWB -.forward.-> EX
+    ID -->|compare dest regs ahead vs. src regs in EX| HZ[Hazard/forward control]
+    HZ -.load-use: stall PC & IF/ID, bubble ID/EX.-> ID
+```
+
 The one RAW case forwarding cannot fix is the **load-use hazard**: a load's result isn't available
 until the end of MEM, one stage later than an ALU result at the end of EX. If the very next instruction
 needs that loaded value, forwarding has nothing to forward yet, so the pipeline must insert one bubble

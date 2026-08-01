@@ -44,6 +44,24 @@ Associativity is a trade: direct-mapped ($A=1$) is fast and simple but two addre
 
 **Write policy** is a separate axis from associativity. *Write-back* caches dirty data locally and write it out only on eviction; *write-through* pushes every store to the next level immediately. *Write-allocate* pulls a line into cache on a write miss before writing it (paired with write-back, since you'll write the freshly dirtied line again soon); *no-write-allocate* writes straight through to the next level on a miss and leaves nothing cached. Rocket's L1 data cache is write-back with write-allocate for cacheable addresses, visible in the `MSHR` state machine below, which drives an `AcquireBlock` (fetch-for-ownership) on a tag miss.
 
+The full path from a virtual address to a value touches translation and every cache level in sequence:
+
+```mermaid
+flowchart LR
+    CPU[CPU core: load/store] --> TLB{TLB}
+    TLB -->|hit: physical addr| L1[L1 cache]
+    TLB -->|miss| PTW[Hardware page-table walker]
+    PTW -->|refill| TLB
+    PTW -->|no valid mapping| FAULT[Page fault to OS]
+    L1 -->|hit| CPU
+    L1 -->|miss: allocate MSHR| L2[L2 cache]
+    L2 -->|hit| L1
+    L2 -->|miss| L3[L3 cache]
+    L3 -->|hit| L2
+    L3 -->|miss| DRAM[(DRAM row buffer)]
+    DRAM --> L3
+```
+
 ## MSHRs and non-blocking misses
 
 A blocking cache stalls the whole pipeline on any miss. A **non-blocking cache** tracks each in-flight miss in a **Miss Status Holding Register (MSHR)** and keeps issuing new requests underneath older misses that haven't returned yet. The MSHR count is a hard ceiling on memory-level parallelism (MLP): once every MSHR is occupied, the next miss stalls no matter how many outstanding requests the memory system could otherwise absorb.

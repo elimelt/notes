@@ -88,6 +88,22 @@ Elementwise vector add, `c[i] = a[i] + b[i]`, looks like this in each model:
 
 The RVV column is what makes it different from both neighbors: it keeps the "let the compiler write one instruction stream for arbitrary widths" property of SIMT while keeping the "one instruction, explicit element count" property of fixed SIMD.
 
+```mermaid
+flowchart TB
+    subgraph Scalar["Scalar: one instruction, one lane"]
+        S0[ALU]
+    end
+    subgraph SIMD["Fixed SIMD, e.g. AVX2: one instruction, fixed 4 lanes"]
+        I1[vpaddq] --> D0[Lane 0] & D1[Lane 1] & D2[Lane 2] & D3[Lane 3]
+    end
+    subgraph SIMT["GPU SIMT: one instruction, one PC, warp of 32 threads"]
+        I2[Warp instruction] --> T0[Thread 0] & T1[Thread 1] & Tdots[...] & T31[Thread 31]
+        MASK[Active-thread mask, from control flow] -.gates.-> T0
+        MASK -.gates.-> T1
+        MASK -.gates.-> T31
+    end
+```
+
 ## RTL: a masked vector ALU lane
 
 A single lane of a vector ALU, generalized so a mask bit gates whether the lane's result gets written. This is the mechanism behind RVV's `.t` suffix and, at a smaller scale, AVX-512's per-lane `k`-register masking.

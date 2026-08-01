@@ -99,6 +99,28 @@ immediate), `ALUOp` (which ALU operation), `MemRead`/`MemWrite`, `RegWrite`, `Me
 loaded value), and `PCSrc` (PC+4 vs. branch/jump target). Because the whole instruction finishes in one
 cycle, there is no hazard logic: the next instruction always sees a fully updated register file and PC.
 
+```mermaid
+flowchart LR
+    PC[PC] --> IMEM[Instruction memory]
+    IMEM --> DEC[Decode: opcode / funct3 / funct7]
+    DEC --> RF[Register file read: rs1, rs2]
+    DEC --> IMM[Immediate generate + sign-extend]
+    DEC -->|opcode/funct| CTRL[Control logic]
+    RF --> ALU[ALU]
+    IMM --> ALU
+    CTRL -->|ALUSrc, ALUOp| ALU
+    ALU --> DMEM[Data memory]
+    CTRL -->|MemRead, MemWrite| DMEM
+    ALU --> WBMUX{MemToReg mux}
+    DMEM --> WBMUX
+    WBMUX --> RF
+    CTRL -->|RegWrite| RF
+    ALU --> PCMUX{PCSrc mux}
+    PC --> PCMUX
+    CTRL -->|PCSrc| PCMUX
+    PCMUX --> PC
+```
+
 CVA6's register file is exactly the flip-flop-based structure this model assumes, parameterized over
 read/commit ports:
 

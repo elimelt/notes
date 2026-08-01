@@ -119,6 +119,7 @@ def execute_notebook(path: Path, timeout: int, kernel_name: str | None) -> None:
         first_code_cell.source = f"{WARNING_SETUP}\n{original_source}"
     client_options = {
         "timeout": timeout,
+        "extra_arguments": ["--Application.log_level=ERROR"],
         "resources": {"metadata": {"path": str(path.parent)}},
     }
     if kernel_name:

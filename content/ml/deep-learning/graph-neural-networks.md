@@ -18,6 +18,9 @@ sources:
   - title: Velickovic et al. (2017), Graph Attention Networks
     url: https://arxiv.org/abs/1710.10903
     type: paper
+  - title: LINQS Cora Dataset
+    url: https://linqs-data.soe.ucsc.edu/public/lbc/cora.tgz
+    type: dataset
 ---
 
 ## Purpose
@@ -97,6 +100,12 @@ The paper evaluates on citation-network benchmarks:
 and also on NELL. The problem is semi-supervised node classification with few labels.
 
 This framing matters because it is one reason GCN became popular so quickly. The update rule is short, scalable, and effective on a benchmark family many people cared about.
+
+## Executable Cora Experiment
+
+The companion notebook implements sparse graph convolution with PyTorch and uses the official LINQS Cora archive. It compares a feature-only MLP, a GCN over observed citations, and the same GCN after edge destinations are shuffled. Five initialization seeds expose run-to-run variation, while edge-label agreement and the rewired null show when neighborhood aggregation has useful structure to exploit.
+
+[Run the Cora node-classification experiment](/ml/deep-learning/graph-neural-networks.ipynb)
 
 ## GAT
 
@@ -216,3 +225,4 @@ The papers here do not solve all of that. They just establish two key design poi
 
 - [Kipf and Welling (2016), Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/abs/1609.02907)
 - [Velickovic et al. (2017), Graph Attention Networks](https://arxiv.org/abs/1710.10903)
+- [LINQS Cora dataset](https://linqs-data.soe.ucsc.edu/public/lbc/cora.tgz)

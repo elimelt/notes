@@ -1,5 +1,10 @@
 ---
 title: Neural Networks from Scratch
+aliases:
+  - /ml/deep-learning/mlp-from-scratch-on-mnist
+  - /deep-learning/mlp-from-scratch-on-mnist
+  - /ml/deep-learning/checking-manual-gradients-against-autodiff-on-mnist
+  - /deep-learning/checking-manual-gradients-against-autodiff-on-mnist
 category: Deep Learning
 tags:
   - deep learning
@@ -318,6 +323,16 @@ loss.backward()
 
 This is shorter because autograd is doing exactly the backpropagation derivation from above.
 
+## Executable Experiments
+
+The first notebook trains the NumPy model on MNIST and exposes the loss curve, predictions, and failure cases discussed above.
+
+[Run the MLP-from-scratch experiment](/ml/deep-learning/mlp-from-scratch-on-mnist.ipynb)
+
+The second isolates softmax regression so the symbolic gradient, finite differences, and PyTorch autograd can be compared on the same real minibatch.
+
+[Check manual gradients against autodiff](/ml/deep-learning/checking-manual-gradients-against-autodiff-on-mnist.ipynb)
+
 ## What to Carry Forward
 
 - Backpropagation is just repeated local application of the chain rule.
@@ -327,8 +342,6 @@ This is shorter because autograd is doing exactly the backpropagation derivation
 
 ## Related Notes
 
-- [[deep-learning/mlp-from-scratch-on-mnist|MLP from Scratch on MNIST]]
-- [[deep-learning/checking-manual-gradients-against-autodiff-on-mnist|Checking Manual Gradients Against Autodiff on MNIST]]
 - [[ml/deep-learning/modeling-architecture-and-data|Modeling, Architecture, and Data]]
 - [[ml/deep-learning/convolutional-neural-networks|Convolutional Neural Networks]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]

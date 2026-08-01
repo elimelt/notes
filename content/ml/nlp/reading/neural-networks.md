@@ -244,9 +244,9 @@ NN optimization is a non-convex problem, so it needs a few techniques to work we
 ## Related notes
 
 - [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]]
-- [[deep-learning/mlp-from-scratch-on-mnist|MLP from Scratch on MNIST]]
+- [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch and the MNIST experiment]]
 - [[ml/deep-learning/recurrent-neural-networks|Recurrent Neural Networks]]
-- [[deep-learning/checking-manual-gradients-against-autodiff-on-mnist|Checking Manual Gradients Against Autodiff on MNIST]]
+- [[ml/deep-learning/neural-networks-from-scratch|Manual Gradients and Autodiff]]
 
 ## Sources
 

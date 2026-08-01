@@ -154,7 +154,7 @@ That last one connects to [[ml/recommender-systems/bias-and-marketplace-effects|
 - [[ml/recommender-systems/recommender-systems|Recommender Systems]]
 - [[ml/recommender-systems/retrieval-and-ranking|Retrieval and Ranking]]
 - [[ml/recommender-systems/bias-and-marketplace-effects|Bias, Marketplace Effects, and Counterfactual Evaluation]]
-- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
+- [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval and the MovieLens 100K experiment]]
 
 ## Sources
 

@@ -2,6 +2,7 @@
 title: Indexing and Information Retrieval
 aliases:
   - natural-language-processing/reading/information-retrieval
+  - /ml/nlp/ppmi
 category: Natural Language Processing
 tags:
   - tf-idf
@@ -178,6 +179,12 @@ $$
 $$
 
 Note: BERT was trained using `[CLS] sen A [SEP] sen B [SEP]`. `[SEP]` helps the model distinguish the two sentences, and `[CLS]` represents the whole input.
+
+## Executable PPMI Experiment
+
+Positive pointwise mutual information is a count-based bridge between sparse term statistics and semantic vectors. The companion notebook builds a PPMI matrix over the notes corpus and plots selected word associations. It demonstrates corpus-derived geometry rather than a production retrieval benchmark.
+
+[Build the PPMI matrix](/ml/nlp/ppmi.ipynb)
 
 ## Related notes
 

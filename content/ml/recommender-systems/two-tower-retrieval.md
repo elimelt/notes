@@ -1,5 +1,8 @@
 ---
 title: Two-Tower Retrieval
+aliases:
+  - /ml/recommender-systems/movielens-100k-two-tower-retrieval
+  - /recc-sys/movielens-100k-two-tower-retrieval
 category: Recommender Systems
 tags:
   - recommender systems
@@ -116,6 +119,12 @@ The downside is that very hard negatives can become false negatives. You can end
 Two-tower retrieval is usually not asked to produce the final order. Its job is recall. A good retrieval stage finds most of the items the ranker would have wanted, while staying inside the latency budget.
 
 That changes how you judge it. Absolute calibration barely matters here. Candidate recall, diversity of candidate sources, and tail coverage matter a lot more.
+
+## Executable Experiment
+
+The companion notebook turns MovieLens 100K ratings into implicit positives, trains user and item towers with sampled negatives, and evaluates retrieval with Recall at $K$. It also inspects nearest items in the learned embedding space.
+
+[Run the MovieLens two-tower experiment](/ml/recommender-systems/movielens-100k-two-tower-retrieval.ipynb)
 
 ## When Not to Use It
 

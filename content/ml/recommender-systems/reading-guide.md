@@ -49,7 +49,7 @@ After that, the paper notes land better:
 - Labels and losses: [[ml/recommender-systems/ranking-objectives|ranking objectives and implicit feedback]]
 - Pipeline shape: [[ml/recommender-systems/retrieval-and-ranking|retrieval and ranking]]
 - Retrieval architecture: [[ml/recommender-systems/two-tower-retrieval|two-tower retrieval]]
-- Retrieval experiment: [[ml/recommender-systems/movielens-100k-two-tower-retrieval|MovieLens 100K two-tower retrieval]]
+- Retrieval architecture and experiment: [[ml/recommender-systems/two-tower-retrieval|two-tower retrieval with MovieLens 100K]]
 - Ranking architecture: [[ml/recommender-systems/wide-and-deep|wide and deep]]
 - Temporal and structural signals: [[ml/recommender-systems/sequential-recommendation|sequential and graph recommenders]]
 - Evaluation and ecosystem effects: [[ml/recommender-systems/bias-and-marketplace-effects|bias, marketplace effects, and counterfactual evaluation]]
@@ -60,7 +60,7 @@ After that, the paper notes land better:
 
 ## Related notes
 
-- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
+- [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval and the MovieLens 100K experiment]]
 
 ## Sources
 

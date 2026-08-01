@@ -10,6 +10,10 @@ date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
 description: Overview of the NLP notes, from tokenization and linear classifiers to neural models and prompting.
+sources:
+  - title: Speech and Language Processing
+    url: https://web.stanford.edu/~jurafsky/slp3/
+    type: textbook
 ---
 
 ## Purpose
@@ -20,11 +24,11 @@ The section also holds practical notes that sit closer to modern language models
 
 ## Suggested path
 
-- Represent text: [[ml/nlp/reading/tokenization|tokenization]], [[ml/nlp/ppmi|PPMI]], [[ml/nlp/reading/information-retrieval|information retrieval]]
+- Represent and retrieve text: [[ml/nlp/reading/tokenization|tokenization]], [[ml/nlp/reading/information-retrieval|information retrieval and the PPMI experiment]]
 - Build classifiers: [[ml/nlp/reading/classification|classification]], [[ml/nlp/reading/multinomial-logistic-regression|multinomial logistic regression]]
 - Add nonlinear models: [[ml/nlp/reading/neural-networks|neural networks]]
 - Use current models: [[ml/nlp/prompting|prompting]]
 
 ## Related notes
 
-- [[deep-learning/character-level-rnn-on-wikitext-2|Character-Level RNN on WikiText-2]]
+- [[ml/deep-learning/recurrent-neural-networks|Recurrent Neural Networks]]

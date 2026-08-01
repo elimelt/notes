@@ -68,6 +68,16 @@ The on-device memory hierarchy (H100-class figures from lecture):
 - Shared memory ("smem"): 228 KB per SM at ~20 TB/s
 - Registers: 64K x 32-bit per SM at ~600 TB/s
 
+```mermaid
+flowchart TD
+    HBM["Global memory (HBM)<br/>80 GB, ~3 TB/s"] --> L2["L2 cache<br/>50 MB, ~10 TB/s"]
+    L2 --> SMEM["Shared memory<br/>228 KB per SM, ~20 TB/s"]
+    SMEM --> REG["Registers<br/>64K x 32-bit per SM, ~600 TB/s"]
+```
+
+> [!tip] Reading the hierarchy
+> Each step down the diagram buys roughly an order of magnitude of bandwidth at a steep cost in capacity. The kernel techniques in [[ml/serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]] are all ways of moving data reuse toward the fast, small end of this ladder.
+
 Compute lives in streaming multiprocessors (SMs). Each SM contains CUDA cores for scalar work, tensor cores for small dense matrix multiplies, and the shared memory that serves as a program-managed scratchpad.
 
 ## Programming model

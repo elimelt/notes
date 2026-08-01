@@ -43,6 +43,9 @@ Each level buys roughly an order of magnitude in bandwidth. The four techniques 
 3. Bank conflict avoidance
 4. Branch divergence minimization
 
+> [!tip] Know your bound before optimizing
+> Place the kernel on the roofline first (the arithmetic intensity check in [[ml/serving-systems/performance-modeling|Performance Modeling]]). The first three techniques are bandwidth work and only pay off for memory-bound kernels. A transpose does no arithmetic at all, so it sits at the far memory-bound end and bandwidth is the entire game, which is why it makes a clean case study.
+
 ## Case study 1: matrix transpose
 
 The transpose is a pure data-movement kernel, so it isolates the memory techniques. Reads are row-major, writes are column-major, and one of the two will fight the hardware unless you restructure the access pattern. Total traffic for 8192x8192 FP32 is $8192^2 \times 4 \times 2 \approx 537$ MB per pass, which converts each timing below into an achieved bandwidth.
@@ -77,6 +80,18 @@ my_kernel<<<grid, block, shared_mem_size_in_bytes>>>(...);
 ### V4: padding away bank conflicts
 
 Shared memory is divided into 32 banks, with consecutive 4-byte words striped across banks round-robin. When multiple threads in a warp hit different addresses in the same bank, the accesses serialize. A transposed tile column maps every element to the same bank when the tile width is a multiple of 32, which is exactly the 32-way conflict V3 shows. Padding each tile row by one element shifts consecutive rows to different bank offsets and breaks the pattern. Measured: 280 us, about 1.9 TB/s, a 13x improvement over V1.
+
+The whole progression, with the profiler finding that motivated each step:
+
+```mermaid
+flowchart LR
+    V0["V0 PyTorch<br/>0.561 ms"]
+    V1["V1 row-wise<br/>3.65 ms<br/>88% traffic wasted"]
+    V2["V2 coalesced reads<br/>1.40 ms<br/>strided writes remain"]
+    V3["V3 smem tiles<br/>312 us<br/>32-way bank conflict"]
+    V4["V4 padded tiles<br/>280 us<br/>~1.9 TB/s"]
+    V1 -->|"coalesce reads"| V2 -->|"stage tiles in smem"| V3 -->|"pad rows by one"| V4
+```
 
 ## Branch divergence
 

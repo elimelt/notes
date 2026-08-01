@@ -127,6 +127,20 @@ for i, pair in enumerate(merge_operations, 1):
     print(f"{i}. Merged '{pair[0]}' with '{pair[1]}'")
 ```
 
+> [!example] Tracing the first merges on this corpus
+> Every word starts as single characters. Each round counts adjacent pairs across the whole corpus and merges the most frequent one (ties go to the pair seen first, since `max` keeps the first maximum in insertion order):
+>
+> | Round | Best pair | Count | New symbol | Affected words |
+> | --- | --- | --- | --- | --- |
+> | 1 | `l` + `o` | 2 | `lo` | `lo w`, `lo w e s t` |
+> | 2 | `lo` + `w` | 2 | `low` | `low`, `low e s t` |
+> | 3 | `n` + `e` | 2 | `ne` | `ne w e r`, `ne w` |
+> | 4 | `ne` + `w` | 2 | `new` | `new e r`, `new` |
+> | 5 | `e` + `r` | 2 | `er` | `new er`, `w i d er` |
+> | 6 | `w` + `i` | 2 | `wi` | `wi d er`, `wi d t h` |
+>
+> After six merges, `low` and `new` are single tokens, and `newer` and `wider` share the suffix token `er`. That shared suffix is the point: merges learned from frequent words transfer to segmenting rarer ones.
+
 ## Segmentation and Tokenization
 
 NLTK's built-ins. Segment into sentences first, then tokenize and POS-tag the words within each sentence.

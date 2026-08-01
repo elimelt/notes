@@ -46,6 +46,26 @@ At training time, both towers are learned jointly from historical interactions. 
 
 That turns catalog-sized search into sublinear nearest-neighbor search.
 
+```mermaid
+flowchart TD
+    subgraph UT["User tower (online)"]
+        UF["User features<br/>history, queries, context"] --> UE["Encoder f"]
+        UE --> UV["User embedding f(u)"]
+    end
+
+    subgraph IT["Item tower (offline)"]
+        IF["Item features<br/>ID, metadata, content"] --> IE["Encoder g"]
+        IE --> IV["Item embeddings g(i)"]
+    end
+
+    IV -->|precompute and index| ANN["ANN index"]
+    UV -->|"dot product f(u)·g(i)"| ANN
+    ANN --> K["Top-k candidates"]
+
+    style UT fill:#e3f2fd,stroke:#1565c0
+    style IT fill:#e8f5e9,stroke:#2e7d32
+```
+
 ## Why It Became the Default
 
 The main gain is decomposition. The user and item encoders can be evaluated separately. Since the item tower is offline, online retrieval costs almost nothing beyond user encoding and ANN lookup.
@@ -111,6 +131,9 @@ The common fix is to train with harder negatives:
 - co-exposed but skipped items
 - items retrieved by a previous model and rejected downstream
 - semantically close items
+
+> [!warning] Very hard negatives become false negatives
+> Items that are semantically close to the positive, or co-exposed and skipped, are often items the user would have liked if they had noticed them. Training against them as negatives pushes apart pairs that should stay close.
 
 The downside is that very hard negatives can become false negatives. You can end up pushing apart items the user would have liked if they had seen them.
 

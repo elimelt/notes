@@ -76,6 +76,9 @@ with $x_{\max} = 100$, $\alpha = 3/4$. The weighting keeps the huge mass of freq
 
 ## Where the geometry misleads
 
+> [!warning] Distributional similarity is not semantic similarity
+> These spaces put words close together when they appear in similar contexts. Antonyms, senses of a polysemous word, and hub vectors all exploit that gap in different ways.
+
 Nearest-neighbor structure in these spaces rewards distributional similarity, which is not the same as semantic similarity:
 
 - **Antonyms cluster together.** "cheap" and "expensive" occur in nearly identical contexts, so their vectors are close. Distance cannot distinguish synonym from antonym.

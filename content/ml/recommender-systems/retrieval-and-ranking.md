@@ -43,6 +43,17 @@ $$
 
 That is the basic economic reason the split exists.
 
+```mermaid
+flowchart TD
+    C["Full catalog<br/>N items, millions"] -->|"cheap scoring,<br/>optimize recall"| R["Retrieval<br/>candidate generation"]
+    R -->|"k ≪ N candidates,<br/>hundreds"| RK["Ranking<br/>rich features, optimize precision"]
+    RK -->|"ordered candidates,<br/>dozens"| RR["Re-ranking<br/>diversity, business rules, filters"]
+    RR --> S["Final slate"]
+
+    style C fill:#e3f2fd,stroke:#1565c0
+    style S fill:#e8f5e9,stroke:#2e7d32
+```
+
 The retrieval stage spends little compute per item and tries to preserve good options. The ranking stage spends much more compute per item and tries to order those options well.
 
 ## Retrieval Is a Recall Problem
@@ -124,6 +135,9 @@ Ranking still does not end the story. After the main score is computed, systems 
 This is a sign that recommendation is not only prediction. It is also allocation under constraints.
 
 ## Failure Modes at the Boundary
+
+> [!warning] The boundary hides failures
+> A ranker can only order what retrieval hands it. If recall drops or the candidate mix collapses toward popular items, end-to-end metrics degrade with nothing visibly wrong in either stage's own dashboards.
 
 The boundary between retrieval and ranking is where many silent failures show up.
 

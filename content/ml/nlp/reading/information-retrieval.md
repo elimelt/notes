@@ -38,18 +38,17 @@ A user poses a **query** to a retrieval system, which returns an ordered set of 
 
 A simple architecture for an IR system has four parts. The document collection sits in persistent storage. An indexing and preprocessing module converts documents into an inverted index. A query processing module turns user queries into query vectors. A search module takes query vectors, searches the inverted index, and returns ranked documents.
 
-```text
-persistent storage
- +-----------+++
- | Documents ||| ----> Indexing/Preprocessing ----> Inverted Index
- +-----------+++                                         |
-                                                         |
-                                                         v
+```mermaid
+flowchart LR
+    D[("Documents<br/>persistent storage")] --> IP["Indexing /<br/>Preprocessing"]
+    IP --> II["Inverted Index"]
+    Q["User Query"] --> QP["Query Processing"]
+    QP -->|query vector| S["Search"]
+    II --> S
+    S -->|ranked docs| Q
 
- User Query ---> Query Processing ---(query vector)--> Search
-    ^                                                    |
-    |                                                    |
-    +---------------(ranked docs)------------------------+
+    style D fill:#e3f2fd,stroke:#1565c0
+    style II fill:#e8f5e9,stroke:#2e7d32
 ```
 
 Usually we'll want to persist the inverted index to disk so we don't recompute it on every search, but online queries will usually be served from an in-memory index.

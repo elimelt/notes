@@ -45,6 +45,9 @@ In implicit-feedback datasets, the log is mostly behavior:
 
 The problem is that a missing interaction is ambiguous. Did the user dislike the item? Did they never see it? Did they see it at a bad moment? Did the system fail to expose it? A zero in the matrix does not mean the same thing as a one-star rating.
 
+> [!warning] A zero is not a negative label
+> Treating every missing interaction as a true negative bakes the old exposure policy into the model. Items the system never showed become items the model learns to avoid showing.
+
 ## Confidence-Weighted Matrix Factorization
 
 Hu, Koren, and Volinsky make a clean move. They split the implicit signal into:
@@ -137,6 +140,9 @@ There is no universal winner. The right objective depends on what the serving la
 | Candidate retrieval | Pairwise or sampled-softmax classification | Relative order matters more than exact calibration. |
 | Search or recommendation reranking | Pairwise or listwise | Metric depends on top-of-list order. |
 | Mixed business constraints | Pointwise score plus reranking, or multi-objective ranking | One loss rarely captures the whole slate objective. |
+
+> [!tip] Match the loss to what the serving layer consumes
+> If downstream logic reads the score as a probability, as ad auctions and pacing do, train pointwise and calibrate. If downstream logic only reads the order, pairwise or listwise losses spend capacity where it moves the metric.
 
 The main mistake is to choose the loss because it is fashionable rather than because it matches the downstream decision rule.
 

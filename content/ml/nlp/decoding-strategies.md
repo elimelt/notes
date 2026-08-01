@@ -40,6 +40,9 @@ Beam search keeps the $k$ highest-scoring partial hypotheses at each step, exten
 
 ### The beam curse and length bias
 
+> [!warning] Wider beams can make output worse
+> A larger beam finds sequences the model scores higher, and in translation those sequences are systematically shorter and score worse on BLEU. Better search exposes the model's length bias rather than fixing it.
+
 Wider beams should find higher-probability sequences, and they do. In translation this makes BLEU worse, not better. [Murray and Chiang (2018)](https://aclanthology.org/W18-6322.pdf) show that wider beams find shorter translations, and trace both problems to label bias: locally normalized models multiply a factor less than one per token, so shorter hypotheses accumulate less probability decay and the true mode of the model is biased toward brevity. Their experiments show that correcting the brevity problem almost eliminates the beam problem.
 
 The standard corrections rescore a hypothesis $e$ with score $s(e)$ by length $|e|$:
@@ -114,6 +117,21 @@ At $T = 0.8$ with $p = 0.9$, the nucleus holds three of eight tokens and the tai
 Greedy and beam search over the same interface are a search loop rather than a sampling call. A minimal beam step scores every extension of every hypothesis and keeps the top $k$ by summed log-probability, which is where the length bias enters: each extension adds a negative term, so shorter hypotheses look better unless the score is corrected.
 
 ## Task tradeoffs
+
+```mermaid
+flowchart TD
+    Q{"Is the output tightly<br/>constrained by the input?"}
+    Q -->|"yes: translation,<br/>summarization, captioning"| B["Beam search<br/>+ length correction"]
+    Q -->|"no: continuation,<br/>dialogue, stories"| S["Truncated sampling"]
+    S --> T["Temperature<br/>reshape the distribution"]
+    T --> K{"Truncation rule"}
+    K -->|"fixed cutoff"| TK["Top-k<br/>keep k most probable"]
+    K -->|"adaptive cutoff"| TP["Top-p (nucleus)<br/>keep smallest set with mass ≥ p"]
+    B -.->|"beam width 1"| G["Greedy decoding"]
+
+    style B fill:#e3f2fd,stroke:#1565c0
+    style TP fill:#e8f5e9,stroke:#2e7d32
+```
 
 The search-versus-sampling split follows the task. When the output is heavily determined by the input, translation, summarization, speech transcription, the mode is meaningful and beam search with a length correction is the right tool. When the task is open-ended, continuation, dialogue, story generation, the mode is degenerate and truncated sampling wins; this is the central empirical claim of [Holtzman et al.](https://arxiv.org/abs/1904.09751), who found beam search text far more repetitive than human text while nucleus sampling matched human statistics most closely. The objective mismatch is the same in both cases. Likelihood was the training objective, and decoding gets to choose how literally to take it.
 

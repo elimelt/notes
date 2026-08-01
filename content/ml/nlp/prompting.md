@@ -41,6 +41,9 @@ A working reference for the prompt patterns I reach for most, each with a small 
 
 Where an instruction sits in the context matters. Models use information at the start and end of a long context more reliably than information buried in the middle ([Liu et al. 2023](https://arxiv.org/abs/2307.03172)), so put critical instructions near the end of the prompt, close to where generation begins.
 
+> [!tip] Position beats phrasing in long contexts
+> The lost-in-the-middle effect is U-shaped: performance is highest when the relevant material sits at the very beginning or very end of the context. Before rewording an instruction the model keeps ignoring, try moving it.
+
 Signal the response format you want through examples or explicit instructions. Format-by-example works best on base models, which complete text patterns. Chat-tuned models respond better to explicit formatting instructions, since instruction tuning trains them to follow directions.
 
 Asking the model to adopt a persona ("You are an expert radiologist") steers tone and domain vocabulary. Treat it as a soft prior on style.

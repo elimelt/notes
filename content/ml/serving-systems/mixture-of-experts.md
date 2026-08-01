@@ -64,6 +64,21 @@ $$h_t^l = \sum_{i=1}^{N} g_{i,t} \cdot \text{FFN}_i^{(l)}(u_t) + u_t$$
 
 where $u_t$ is the token's hidden state, $g_{i,t}$ is the gating weight for expert $i$ (zero for unselected experts), and the routing scores come from a learned projection, $s_{i,t} = \text{Softmax}_i(u_t^T W_g)$. The alternative is expert choice routing, where each expert selects the tokens it will process, which guarantees balanced expert load at the price of tokens receiving varying amounts of compute.
 
+A top-2 layer with one shared expert, for a token routed to experts 2 and 5:
+
+```mermaid
+flowchart LR
+    U["token hidden state u_t"] --> G["router<br/>s_i = Softmax_i(u_t^T W_g)"]
+    U --> SH["shared expert FFN<br/>(every token)"]
+    G -->|"g_2"| E2["FFN_2"]
+    G -->|"g_5"| E5["FFN_5"]
+    G -.->|"g = 0, not in top-k"| EO["FFN_1, FFN_3, FFN_4, ..."]
+    E2 --> SUM["weighted sum + residual u_t"]
+    E5 --> SUM
+    SH --> SUM
+    SUM --> H["h_t"]
+```
+
 Configurations in deployed models:
 
 | Model       | Routed experts | Active routed | Shared experts |
@@ -81,6 +96,9 @@ Shared experts run for every token; routed experts are conditionally activated. 
 Top-k selection is a discrete decision, so only the selected experts receive gradients and the routing decision itself is not differentiable. Workarounds include REINFORCE-style estimators, stochastic perturbations of the router logits, and, most commonly in practice, auxiliary balancing losses layered on top of the standard gradient path.
 
 Balancing matters for a second reason beyond gradients: systems efficiency. If routing concentrates on a few experts, the devices hosting them bottleneck the whole step. The lecture notes that unbalanced training runs degenerate to a handful of hot experts.
+
+> [!warning] Router collapse is self-reinforcing
+> An expert that receives more tokens gets more gradient updates, improves faster, and wins more routing decisions. A small early imbalance can amplify until a few experts absorb nearly all traffic and the rest stay untrained. The balancing losses below exist to break this feedback loop before it locks in.
 
 The [Switch Transformer](https://arxiv.org/abs/2101.03961) auxiliary loss is the canonical fix:
 

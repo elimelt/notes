@@ -71,6 +71,26 @@ kv_data:    [actual KV cache data...]          # MaxPage elements
 
 Request $i$ owns pages `kv_indices[kv_indptr[i]:kv_indptr[i+1]]`, and `kv_data[page_id]` holds the actual KV entries. The attention kernel walks this table during decode.
 
+> [!example] Walking the table
+> Request 2 owns `kv_indices[kv_indptr[2]:kv_indptr[3]] = kv_indices[3:6]`, which names physical pages 2, 5, and 0. With 16-token pages, its tokens 0-15 sit in `kv_data[2]`, tokens 16-31 in `kv_data[5]`, and tokens 32-47 in `kv_data[0]`. Logical order and physical placement are fully decoupled:
+
+```mermaid
+flowchart LR
+    subgraph Logical["Request 2, logical positions"]
+        B0["tokens 0-15"]
+        B1["tokens 16-31"]
+        B2["tokens 32-47"]
+    end
+    subgraph Physical["kv_data physical pages"]
+        P0["page 0"]
+        P2["page 2"]
+        P5["page 5"]
+    end
+    B0 --> P2
+    B1 --> P5
+    B2 --> P0
+```
+
 ## Prefix sharing
 
 Requests frequently share a prefix: the same system prompt across users, or the accumulated history in a multi-round conversation.

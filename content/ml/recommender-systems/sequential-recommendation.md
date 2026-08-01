@@ -111,6 +111,10 @@ LightGCN is the cleanest corrective note in this line of work. The paper argues 
 
 Its claim is that simple linear neighborhood aggregation is enough, and often better. The reported result is about **16% relative improvement on average** over NGCF under the same setting.
 
+> [!quote] The ablation finding
+> "We empirically find that the two most common designs in GCNs -- feature transformation and nonlinear activation -- contribute little to the performance of collaborative filtering. Even worse, including them adds to the difficulty of training and degrades recommendation performance."
+> — [He et al. (2020), LightGCN](https://arxiv.org/abs/2002.02126), abstract
+
 That is a good lesson beyond graph models. If the graph signal is already expressive, piling on extra nonlinear machinery may just make training harder.
 
 ## Sequence Versus Graph

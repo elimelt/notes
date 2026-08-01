@@ -50,6 +50,21 @@ $$
 
 Most named GNN architectures are concrete instantiations of `MSG`, `AGG`, and `UPDATE`.
 
+```mermaid
+flowchart TD
+    j1["h_j1"] -- "MSG" --> agg["AGG over neighbors"]
+    j2["h_j2"] -- "MSG" --> agg
+    j3["h_j3"] -- "MSG" --> agg
+    agg --> upd["UPDATE"]
+    hi["h_i, current layer"] --> upd
+    upd --> hnext["h_i, next layer"]
+```
+
+One layer moves information one hop. Stacking $\ell$ layers gives each node a receptive field of its $\ell$-hop neighborhood, which is the graph analogue of stacking convolutions.
+
+> [!tip] GCN and GAT differ only in how AGG weighs neighbors
+> GCN fixes the weights from graph structure: neighbor $j$ contributes with weight $1/\sqrt{\tilde{d}_i \tilde{d}_j}$, determined entirely by degrees. GAT learns the weights: $\alpha_{ij}$ comes from an attention score over the node features themselves. Both fit the message-passing template above; the choice is whether neighbor importance should be structural or content-dependent.
+
 ## GCN from Spectral Approximation
 
 Kipf and Welling motivate GCN as a localized first-order approximation to spectral graph convolutions. The resulting propagation rule is:
@@ -210,6 +225,9 @@ GNNs often run into:
 - oversquashing
 - noisy neighborhoods
 - weak or missing node features
+
+> [!warning] Deeper is not better by default
+> Because each layer averages over neighborhoods, stacking many layers drives node representations toward each other — oversmoothing. This is why the strong Cora baselines here are only two layers deep. Depth in a GNN widens the receptive field to more hops, and past the graph's useful correlation length that mostly mixes in noise.
 
 The papers here do not solve all of that. They just establish two key design points:
 

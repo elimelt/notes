@@ -108,6 +108,25 @@ $$
 
 This falls out of differentiating the softmax and cross-entropy together. The rest is the chain rule.
 
+The forward pass builds the computation left to right; the backward pass walks the same graph in reverse:
+
+```mermaid
+flowchart LR
+    x["x"] --> z1["z1 = W1 x + b1"]
+    z1 --> a1["a1 = phi(z1)"]
+    a1 --> z2["z2 = W2 a1 + b2"]
+    z2 --> yhat["y-hat = softmax(z2)"]
+    yhat --> L["loss"]
+    L -. "dL/dz2 = y-hat - y" .-> z2
+    z2 -. "dL/da1 = W2^T dz2" .-> a1
+    a1 -. "dL/dz1 = da1 * phi'(z1)" .-> z1
+```
+
+The solid edges are the forward pass; the dotted edges are the gradients flowing back through the same nodes.
+
+> [!tip] Backpropagation is local
+> Each node only needs two things: the gradient arriving from above and the values it cached during the forward pass. The parameter gradients below are outer products of exactly those two quantities — $\partial \mathcal{L}/\partial W_2 = (\hat{y} - y)a_1^\top$ pairs the upstream gradient with the cached input. This locality is why the forward pass must store activations, and why autodiff frameworks can differentiate any composition of primitives without global analysis.
+
 ### Output Layer
 
 Because $z_2 = W_2a_1 + b_2$:

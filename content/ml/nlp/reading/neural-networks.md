@@ -215,13 +215,15 @@ Gradients pass backward through the network to update the weights, using the cha
 
 Consider the function $L(a, b, c) = c(a + 2b)$. Create a computation graph with nodes $a, b, c$ for the inputs, and $d = 2b, e = a + d, L = ce$ for the intermediate computations.
 
-```text
-(a) ---------------- \
-                      (e) ------------ (L)
-                     /                /
-(b) --------(d)-----    /-------------
-                       /
-(c) -------------------
+```mermaid
+flowchart LR
+    a((a)) --> e(("e = a + d"))
+    b((b)) --> d(("d = 2b"))
+    d --> e
+    e --> L(("L = ce"))
+    c((c)) --> L
+
+    style L fill:#e3f2fd,stroke:#1565c0
 ```
 
 $$

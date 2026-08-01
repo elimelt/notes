@@ -106,6 +106,23 @@ Each decoder layer contains three sublayers:
 
 That middle step is cross-attention.
 
+```mermaid
+flowchart LR
+    subgraph enc["Encoder, x N"]
+        src["Source tokens + positions"] --> esa["Self-attention, unmasked"]
+        esa --> effn["Feed-forward"]
+    end
+    subgraph dec["Decoder, x N"]
+        tgt["Target prefix + positions"] --> dsa["Masked self-attention"]
+        dsa --> xattn["Cross-attention"]
+        xattn --> dffn["Feed-forward"]
+    end
+    effn -- "K, V" --> xattn
+    dffn --> out["Softmax over target vocabulary"]
+```
+
+The single edge from encoder to decoder is the whole coupling between the two stacks. The encoder runs once per source sequence; the decoder consumes its output at every layer and every generation step.
+
 ## Cross-Attention
 
 Cross-attention differs from self-attention only in the origin of $Q$, $K$, and $V$:
@@ -123,6 +140,9 @@ $$
 $$
 
 This is the mechanism that lets target position $t$ align to whichever source positions matter for predicting $y_t$.
+
+> [!tip] Cross-attention is self-attention with one substitution
+> The computation is identical to self-attention; only the inputs change. Queries come from the decoder, keys and values from the encoder. No causal mask is needed because the entire source is legitimately observable. Everything else in the layer — heads, scaling, softmax, output projection — is unchanged.
 
 ## Positional Encoding
 

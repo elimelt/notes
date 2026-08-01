@@ -27,7 +27,7 @@ sources:
 
 ## Purpose
 
-Every policy in this section decides which queued task runs next. This note is about the decision before that one: whether work should enter the queue at all. Past saturation, the queueing math of [[systems/scheduling/0-foundations/queueing-models-and-tail-latency|the foundations notes]] stops describing a steady state and starts describing a backlog growing without bound — and the scheduling problem becomes choosing what to refuse, how to signal upstream, and how to avoid the failure modes where overload sustains itself.
+Every policy in this section decides which queued task runs next. This note is about the decision before that one: whether work should enter the queue at all. Past saturation, the steady-state queueing math in [[systems/scheduling/0-foundations/queueing-models-and-tail-latency|queueing models and tail latency]] stops applying and starts describing a backlog growing without bound — and the scheduling problem becomes choosing what to refuse, how to signal upstream, and how to avoid the failure modes where overload sustains itself.
 
 ## Goodput is the objective, not throughput
 
@@ -82,17 +82,17 @@ The choice between shedding and backpressure is a statement about the workload: 
 
 ## Metastable failures: when overload outlives its cause
 
-The most instructive overload pathology is the one that persists after its trigger is gone. [Bronson et al.](https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf) name the pattern: a system in a *vulnerable* state (high but stable load) takes a transient hit — a brief outage, a load spike, a cache flush — and lands in a state where a **sustaining feedback loop** keeps it overloaded even at the original, previously-fine load. Their canonical examples map onto this note's tools:
+The most instructive overload pathology is the one that persists after its trigger is gone. [Bronson et al.](https://sigops.org/s/conferences/hotos/2021/papers/hotos21-s11-bronson.pdf) name the pattern: a system in a *vulnerable* state (high but stable load) takes a transient hit — a brief outage, a load spike, a cache flush — and lands in a state where a **sustaining feedback loop** keeps it overloaded even at the original, previously-fine load. Their canonical examples map onto the tools above:
 
 - **Retry storms**: timeouts breed retries, retries deepen queues, deeper queues breed timeouts. The load that sustains the failure is manufactured by the failure.
 - **Cold caches**: a cache restart sends the full miss load at a backend provisioned only for the miss *rate* at steady state; the backend saturates, misses stay slow, the cache never refills. The trigger (restart) is long gone; the sustaining loop (empty cache -> overload -> empty cache) remains.
 - **Slow-start death spirals**: a recovering server gets the full load balancer share while its caches are cold, saturates, gets marked unhealthy, restarts — the loop in [[systems/distributed-systems/load-balancing|load balancing]] terms.
 
-The design consequence: recovery requires *breaking the loop*, not removing the trigger — shed to below the sustaining threshold, disable retries, warm caches before admitting traffic. And the prevention tools are exactly this note's: retry budgets cap the storm's gain below 1; bounded queues keep timeout-breeding latency from forming; admission control holds the vulnerable region's utilization margin. Overload management is cheap insurance against a failure class that capacity planning alone cannot prevent, because the sustaining loop's demand is endogenous.
+The design consequence: recovery requires *breaking the loop*, not removing the trigger — shed to below the sustaining threshold, disable retries, warm caches before admitting traffic. And the prevention tools are exactly the ones above: retry budgets cap the storm's gain below 1; bounded queues keep timeout-breeding latency from forming; admission control holds the vulnerable region's utilization margin. Overload management is cheap insurance against a failure class that capacity planning alone cannot prevent, because the sustaining loop's demand is endogenous.
 
 ## Where this lands in real systems
 
-RPC servers: bounded thread pools and queues, criticality-tagged shedding, deadline propagation (gRPC deadlines), circuit breakers as client-side refusal after repeated failure. Stream processors: credit-based flow control between operators (Flink), demand-based pull, watermark-driven load shedding for late data. Model serving: admission before the batch queue, since a GPU batch admitted is capacity committed for a full iteration — the [[ml/serving-systems/batching|batching note's]] continuous-batching admission decision and the KV-cache pressure limits in [[ml/serving-systems/memory-management|memory management]] are this note's bounded-queue argument with VRAM as the buffer.
+RPC servers: bounded thread pools and queues, criticality-tagged shedding, deadline propagation (gRPC deadlines), circuit breakers as client-side refusal after repeated failure. Stream processors: credit-based flow control between operators (Flink), demand-based pull, watermark-driven load shedding for late data. Model serving: admission before the batch queue, since a GPU batch admitted is capacity committed for a full iteration — the continuous-batching admission decision in [[ml/serving-systems/batching|batching]] and the KV-cache pressure limits in [[ml/serving-systems/memory-management|memory management]] are the same bounded-queue argument with VRAM as the buffer.
 
 ## Related Notes
 

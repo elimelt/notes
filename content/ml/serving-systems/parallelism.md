@@ -200,6 +200,7 @@ A checkpoint under any sharded strategy has to record which shard of parameters,
 - [[ml/serving-systems/memory-management|Memory Management]]
 - [[ml/serving-systems/mixture-of-experts|Mixture of Experts]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
+- [[ml/serving-systems/peft-and-preference-optimization|PEFT and Preference Optimization]]
 - [[ml/serving-systems/batching|Batching]]
 - [[ml/serving-systems/distributed-training|Distributed Training of Large Language Models]]
 - [[ml/serving-systems/distributed-ml-runtimes|Distributed ML Runtimes]]

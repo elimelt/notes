@@ -1,0 +1,51 @@
+# Pipeline configuration for the notes corpus at ../content.
+#
+# Loads with linkdiscovery.config.load_config. A relative source root
+# resolves against the current working directory, so run the pipeline from
+# the linkdiscovery/ checkout directory; a relative report output_dir
+# resolves against the --artifacts root (one directory holds everything a
+# run produced).
+schema_version: 1
+
+source:
+  adapter: linkdiscovery_markdown.adapter:MarkdownSourceAdapter
+  options:
+    root: ../content
+    exclude:
+      - "templates/**"
+
+preprocess:
+  parser: linkdiscovery_markdown.parser:MarkdownRegionParser
+  views: [document, section, title]
+  target_tokens: 384
+  max_tokens: 512
+  overlap_tokens: 48
+  exclude_regions: [boilerplate, metadata]
+
+embedding:
+  provider: sentence-transformers
+  model: Qwen/Qwen3-Embedding-0.6B
+  # Pin to an immutable commit before production runs.
+  revision: 97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3
+  dimensions: 1024
+  normalize: true
+  device_preference: [mps, cpu]
+  precision: float32
+  batch_size: auto
+
+candidates:
+  backend: auto
+  neighbors_per_unit: 50
+  existing_relationship_kinds: [explicit-link]
+  max_pairs_per_document: 100
+
+ranking:
+  profile: weighted-v1
+  minimum_relatedness: 0.0
+  results_per_document: 10
+  diversity: 0.2
+
+report:
+  formats: [jsonl, markdown]
+  output_dir: reports
+  include_evidence_text: true

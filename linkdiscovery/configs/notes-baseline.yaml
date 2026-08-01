@@ -1,0 +1,64 @@
+# Baseline pipeline configuration for the notes corpus at ../content.
+#
+# Identical to notes.yaml except for the embedding section: the deterministic
+# character-n-gram hashing provider replaces the neural model. Nothing is
+# downloaded and no torch/transformers install is needed, so this is the
+# no-dependency smoke configuration and the SPEC's "compact baseline" — the
+# quality floor that a real embedding model must beat on held-out link
+# recovery (acceptance criterion 10):
+#
+#   linkdiscovery evaluate --config configs/notes-baseline.yaml \
+#       --artifacts .artifacts-baseline --holdout-fraction 0.2 --seed 7
+#
+# Relative paths (source root, report output_dir) resolve against the current
+# working directory / the artifacts root respectively; run from the
+# linkdiscovery/ checkout directory.
+schema_version: 1
+
+source:
+  adapter: linkdiscovery_markdown.adapter:MarkdownSourceAdapter
+  options:
+    root: ../content
+    exclude:
+      - "templates/**"
+
+preprocess:
+  parser: linkdiscovery_markdown.parser:MarkdownRegionParser
+  views: [document, section, title]
+  target_tokens: 384
+  max_tokens: 512
+  overlap_tokens: 48
+  exclude_regions: [boilerplate, metadata]
+
+embedding:
+  # The hashing provider is CPU-only and fully deterministic; "model" and
+  # "revision" label the profile in fingerprints and reports rather than
+  # naming a downloadable artifact.
+  provider: hashing
+  model: hashing-baseline
+  revision: v1
+  # 512 buckets keeps hash collisions tolerable on a few hundred documents
+  # while staying fast; raise it before trusting baseline numbers on corpora
+  # of tens of thousands of documents.
+  dimensions: 512
+  normalize: true
+  device_preference: [cpu]
+  precision: float32
+  batch_size: auto
+
+candidates:
+  backend: auto
+  neighbors_per_unit: 50
+  existing_relationship_kinds: [explicit-link]
+  max_pairs_per_document: 100
+
+ranking:
+  profile: weighted-v1
+  minimum_relatedness: 0.0
+  results_per_document: 10
+  diversity: 0.2
+
+report:
+  formats: [jsonl, markdown]
+  output_dir: reports
+  include_evidence_text: true

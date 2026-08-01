@@ -465,13 +465,36 @@ uv run linkdiscovery inline propose --config configs/notes.yaml \
 ```
 
 On this corpus the span generator covers 93% of audited prose anchors (spec
-gate: ≥ 85%), and the deterministic baseline engine — the kill-criterion
-fallback if the learned heads can't reach precision@1 ≥ 0.70 — already
-proposes 485 anchored links (e.g. "load balancing" in the HTTP note →
-the load-balancing note). Training the learned heads is gated on the human
-audit; the v1 quality bar is precision@1 ≈ 0.75–0.80 at ~40% recall,
-mirroring the deployed Wikimedia add-a-link system. Nothing in this
-subsystem edits notes: like v1, it emits proposals for review.
+gate: ≥ 85%). Nothing in this subsystem edits notes: like v1, it emits
+proposals for review.
+
+**Results.** The full loop has now run end to end. The audit (300
+stratified links, two independent annotators, one guideline-refinement
+round after κ on anchor-naturalness dropped to 0.41 on title-shaped
+anchors — the exact underspecification the spec predicted) finished at
+κ(target) = 1.00, κ(anchor natural) = 0.98, κ(placement) = 0.88, with
+consensus tiers 124 A / 29 B / 147 C / 0 D → GO. The single best corpus
+finding: **zero wrong-target links in 300 audited** — all link noise here
+is anchor phrasing (long title-dump anchors) and duplicated Related-notes
+placements, never the destination.
+
+Training on those labels produced a clean natural experiment in encoder
+choice. With the test-grade hashing token encoder, the retrieval head
+never beat uniform (held-out recall@1 = 0.0); swapping in windowed Qwen
+token states fixed it outright (recall@1 = 0.964, tying the anchor
+dictionary), confirming the spec's §9 prediction that token-level
+representations were the bottleneck. The binding constraint then moved to
+the **naturalness head** (AUC 0.664 against only 9 held-out negative
+anchors) — a label-limited problem, so by the spec's own decision
+thresholds the verdict is *plateau*: the audited deterministic baseline
+(keyphraseness + anchor dictionary + embedding features) remains the
+production engine, with the learned engine as a supplementary stream. The
+baseline's high-confidence list — **91 anchored links across 67 notes**
+at threshold 0.65 — is published for review in
+[PR #138](https://github.com/elimelt/notes/pull/138), alongside the full
+evaluation tables. Next lever per the spec: Wikipedia-keyphraseness
+pretraining for the naturalness head and more negative anchor labels,
+not LoRA.
 
 ## Edge cases or limits
 

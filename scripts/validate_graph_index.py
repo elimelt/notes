@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reject generated taxonomy pages in the graph's content index."""
+"""Validate the graph's prepared content hierarchy."""
 
 from __future__ import annotations
 
@@ -23,7 +23,20 @@ def main() -> int:
             f"Graph index contains {len(tag_pages)} generated tag pages: {preview}"
         )
 
-    print(f"Validated graph index: {len(index)} authored pages, no generated tag nodes.")
+    empty_indexes = sorted(
+        slug
+        for slug, details in index.items()
+        if (slug == "index" or slug.endswith("/index"))
+        and not details.get("content")
+        and not details.get("links")
+    )
+    if empty_indexes:
+        preview = ", ".join(empty_indexes[:5])
+        raise SystemExit(
+            f"Graph index contains {len(empty_indexes)} unconnected folder pages: {preview}"
+        )
+
+    print(f"Validated graph index: {len(index)} content and folder pages, no tag nodes.")
     return 0
 
 

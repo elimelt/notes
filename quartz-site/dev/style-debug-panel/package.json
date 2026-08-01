@@ -1,0 +1,25 @@
+{
+  "name": "notes-style-debug-panel",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./components": "./components.js"
+  },
+  "quartz": {
+    "name": "style-debug-panel",
+    "displayName": "Style Debug Panel",
+    "description": "Local-only controls for tuning Quartz design tokens.",
+    "category": "component",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "defaultEnabled": true,
+    "components": {
+      "StyleDebugPanel": {
+        "displayName": "Style Debug Panel",
+        "defaultPosition": "footer",
+        "defaultPriority": 1000
+      }
+    }
+  }
+}

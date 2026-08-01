@@ -60,6 +60,10 @@ sync_site() {
   fi
 }
 
+enable_style_debug_panel() {
+  python3 "$ROOT/scripts/enable_style_debug_panel.py" "$QUARTZ_DIR/quartz.config.yaml"
+}
+
 install_plugins() {
   (cd "$QUARTZ_DIR" && npx quartz plugin install --concurrency 2)
   patch_mermaid_defaults
@@ -117,8 +121,9 @@ case "$command" in
     bootstrap
     prepare_notebooks
     sync_site
+    enable_style_debug_panel
     install_plugins
-    (cd "$QUARTZ_DIR" && npx quartz build --serve)
+    (cd "$QUARTZ_DIR" && npx quartz build --serve --port "${QUARTZ_PORT:-8080}")
     ;;
   sync)
     bootstrap

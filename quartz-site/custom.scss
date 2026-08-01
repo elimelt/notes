@@ -4,6 +4,16 @@
 // upgrades stay straightforward.
 :root {
   --content-width: 780px;
+  --site-page-width: 1440px;
+  --site-article-width: 48rem;
+  --site-column-gap: 2rem;
+  --site-body-size: 1rem;
+  --site-body-leading: 1.7;
+  --site-paragraph-gap: 1rem;
+  --site-title-size: 2.25rem;
+  --site-heading-size: 1.5rem;
+  --site-code-radius: 0.75rem;
+  --site-media-radius: 0.4rem;
 }
 
 .page-title a {
@@ -12,11 +22,11 @@
 }
 
 .page {
-  max-width: 1440px;
+  max-width: var(--site-page-width);
 }
 
 #quartz-body {
-  column-gap: 2rem;
+  column-gap: var(--site-column-gap);
 }
 
 .page-header {
@@ -32,6 +42,7 @@
   margin-top: 0;
   margin-bottom: 0.35rem;
   line-height: 1.1;
+  font-size: var(--site-title-size);
 }
 
 .content-meta {
@@ -44,16 +55,25 @@
 }
 
 .center > article {
-  max-width: 48rem;
+  max-width: var(--site-article-width);
 }
 
 article {
-  line-height: 1.7;
+  font-size: var(--site-body-size);
+  line-height: var(--site-body-leading);
+}
+
+article p {
+  margin-block: var(--site-paragraph-gap);
+}
+
+article > h2 {
+  font-size: var(--site-heading-size);
 }
 
 article pre {
   border: 1px solid var(--lightgray);
-  border-radius: 0.75rem;
+  border-radius: var(--site-code-radius);
   padding: 1rem;
 }
 
@@ -61,7 +81,7 @@ article img,
 article video {
   display: block;
   max-width: 100%;
-  border-radius: 0.4rem;
+  border-radius: var(--site-media-radius);
   margin: 1.5rem auto;
 }
 
@@ -70,7 +90,7 @@ article table {
   max-width: 100%;
   overflow-x: auto;
   border: 1px solid var(--lightgray);
-  border-radius: 0.75rem;
+  border-radius: var(--site-code-radius);
   padding: 0.25rem;
   background: color-mix(in srgb, var(--lightgray) 20%, transparent);
 }

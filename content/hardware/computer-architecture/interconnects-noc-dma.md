@@ -1,7 +1,5 @@
 ---
 title: Interconnects, NoCs, DMA, and Memory Controllers
-aliases:
-  - hardware/computer-architecture/interconnects-noc-dma
 category: Computer Architecture
 tags:
   - interconnect

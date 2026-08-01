@@ -1,7 +1,5 @@
 ---
 title: Caches, Virtual Memory, and Memory Systems
-aliases:
-  - hardware/computer-architecture/caches-virtual-memory
 category: Computer Architecture
 tags:
   - cache

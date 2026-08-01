@@ -34,7 +34,7 @@ A quick synthetic example (lognormal with $\sigma = 1$, a million samples, run i
 
 ## Variance inflates the queue before saturation does
 
-The response-time blowup $R = S/(1-\rho)$ from [[systems/operating-systems/v2-concurrency/7-queueing-theory|the queueing note]] is the M/M/1 story. The M/G/1 generalization — Poisson arrivals, *any* service distribution — makes the role of variability explicit. The Pollaczek-Khinchine formula for mean queueing delay:
+The response-time blowup $R = S/(1-\rho)$ from [[systems/operating-systems/v2-concurrency/7-queueing-theory|Queueing Theory]] is the M/M/1 story. The M/G/1 generalization — Poisson arrivals, *any* service distribution — makes the role of variability explicit. The Pollaczek-Khinchine formula for mean queueing delay:
 
 $$
 W_q = \frac{\rho}{1-\rho} \cdot \frac{1 + C_s^2}{2} \cdot S,
@@ -42,7 +42,7 @@ $$
 
 where $C_s^2 = \operatorname{Var}[S]/\mathbb{E}[S]^2$ is the squared coefficient of variation of service time. Two separate multipliers: the utilization pole $\rho/(1-\rho)$, and a **variance factor** $(1+C_s^2)/2$. Deterministic service ($C_s^2 = 0$) halves the M/M/1 wait; a heavy-tailed service distribution with $C_s^2 = 10$ waits 5.5x longer than M/M/1 *at identical utilization*. Occasional slow requests — the 100 ms compaction stall among 1 ms lookups — poison the queue for everyone behind them, and no amount of average-utilization headroom fixes a variance problem.
 
-Percentiles inherit the pole. For M/M/1 the response-time distribution is exponential, so the $q$-th percentile is $R_q = -\ln(1-q) \cdot R$: p99 is 4.6x the mean and p99.9 is 6.9x, and since the mean itself scales as $1/(1-\rho)$, tail percentiles explode near saturation at the same rate, multiplied up. Bursty (correlated) arrivals hurt for the same reason: an arrival-side $C_a^2 > 1$ enters the approximation symmetrically, which is the formula-level version of the burst example in the queueing note.
+Percentiles inherit the pole. For M/M/1 the response-time distribution is exponential, so the $q$-th percentile is $R_q = -\ln(1-q) \cdot R$: p99 is 4.6x the mean and p99.9 is 6.9x, and since the mean itself scales as $1/(1-\rho)$, tail percentiles explode near saturation at the same rate, multiplied up. Bursty (correlated) arrivals hurt for the same reason: an arrival-side $C_a^2 > 1$ enters the approximation symmetrically, which is the formula-level version of the burst example in [[systems/operating-systems/v2-concurrency/7-queueing-theory|Queueing Theory]].
 
 ## Fan-out: rare becomes common
 

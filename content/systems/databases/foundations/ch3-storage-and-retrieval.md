@@ -11,13 +11,22 @@ tags:
   - trie
   - inverted index
 date: 2023-12-20
-updated: 2026-07-30
+updated: 2026-08-01
 status: evergreen
-description: Reading notes on chapter 3 of Designing Data-Intensive Applications. Covers log-structured storage, hash indexes, LSM-trees versus B-trees, OLTP versus OLAP, and column-oriented storage.
+description: Storage-engine mechanics built up from chapter 3 of Designing Data-Intensive Applications. Covers log-structured storage, hash indexes, write-ahead logging and recovery, B-tree page splits, LSM compaction policies, Bloom filters, read/write/space amplification, and column-oriented storage.
 sources:
   - title: Designing Data-Intensive Applications, Martin Kleppmann
     url: https://dataintensive.net/
     type: book
+  - title: O'Neil et al. (1996), The Log-Structured Merge-Tree
+    url: https://www.cs.umb.edu/~poneil/lsmtree.pdf
+    type: paper
+  - title: PostgreSQL docs, Write-Ahead Logging
+    url: https://www.postgresql.org/docs/current/wal-intro.html
+    type: docs
+  - title: Chang et al. (2006), Bigtable - A Distributed Storage System for Structured Data
+    url: https://research.google/pubs/pub27898/
+    type: paper
 ---
 
 ## Purpose
@@ -65,19 +74,50 @@ A Log-Structured Merge Tree (LSM-tree) is the combination of an in-memory balanc
 
 Lucene, the index engine behind Elasticsearch and Solr, uses a similar scheme for its term dictionary. Words are the keys and the values are [[ml/nlp/reading/information-retrieval|posting lists]], the ids of documents containing each word. The term dictionary lives in SSTable-like files that are merged periodically.
 
-### Performance optimizations
+### Bloom filters
 
-A Bloom filter is a memory-efficient structure that approximates set membership, giving false positives but never false negatives. LSM-tree reads consult one per segment to skip SSTables that cannot contain the key, which protects the read path for missing keys.
+A Bloom filter is a bit array plus $k$ hash functions approximating set membership: inserting a key sets $k$ bits, and a lookup reports "possibly present" only if all $k$ bits are set — false positives happen, false negatives never do. The false-positive rate is tunable by space: at $m$ bits for $n$ keys the optimal $k = (m/n)\ln 2$ gives rate $\approx 0.6185^{m/n}$, so the common 10 bits/key yields about 1%. LSM reads consult one filter per SSTable and skip any segment that cannot contain the key. This matters most for **missing** keys, which otherwise pay the worst case of checking every level; [Bigtable](https://research.google/pubs/pub27898/) reports Bloom filters drastically reducing disk seeks for exactly that lookup pattern.
 
-Compaction strategy also matters. Size-tiered compaction merges segments once they reach a certain size. Leveled compaction keeps key ranges split across smaller per-level SSTables. Either way, keeping writes append-only keeps write throughput high.
+### Compaction policies
+
+Compaction strategy determines where the LSM pays its costs:
+
+- **Size-tiered** (Cassandra's default, HBase): collect segments of similar size, merge several into one bigger segment when enough accumulate. Each key is rewritten only $O(\log(\text{data}))$ times as it moves up size classes, so write amplification is low — but a key may exist in every tier at once, so reads check more segments and space amplification is high (transient 2x during a big merge, and overlapping stale versions in between).
+- **Leveled** (LevelDB, RocksDB default): levels $L_1, L_2, \ldots$ each hold non-overlapping SSTables covering the whole key range, with $L_{i+1}$ about 10x larger than $L_i$. A key lives in at most one SSTable per level, so reads touch few files and space overhead stays near 10%; but pushing one SSTable from $L_i$ into $L_{i+1}$ rewrites ~10 overlapping SSTables there, so write amplification is roughly 10x per level crossed.
+
+The rule of thumb: size-tiered for write-heavy workloads, leveled for read-heavy or space-constrained ones. This is the read/write/space amplification triangle made concrete, below.
 
 ## B-trees vs. LSM-trees
 
-B-trees trade write speed for read speed. A B-tree is an n-ary tree with sorted keys in every node, updated in place a page at a time. A high branching factor keeps the tree shallow, which minimizes disk seeks.
+B-trees trade write speed for read speed. A B-tree is an n-ary tree with sorted keys in every node, updated in place a page at a time. A high branching factor (hundreds of keys per 4-16 KB page) keeps the tree shallow — four levels of 4 KB pages with branching factor 500 address $500^4 \cdot 4\,\text{KB} = 256$ TB — which minimizes disk seeks.
 
-LSM-trees trade read speed for write speed. Writes are sequential appends; reads may touch several segments. Write amplification, meaning multiple physical writes to disk per logical database write, affects both structures, but LSM-trees usually sustain higher write throughput.
+### Page splits and merges
 
-Compaction can hurt LSM-tree read performance, especially at high percentiles of read latency, since compaction competes with foreground requests for disk bandwidth. Keeping few SSTables per level mitigates this. With high enough write throughput you also have to monitor disk space, because compaction can fall behind incoming writes and leave unmerged segments accumulating.
+The tree grows and shrinks a page at a time. Inserting into a full leaf **splits** it: allocate a new page, move the upper half of the keys there, and insert a separator key pointing at the new page into the parent. If that overflows the parent, the split cascades upward; splitting the root is the only way the tree gets taller, which is what keeps it balanced without rebalancing passes. Deletion runs in reverse: a page that falls below half full **merges** with a sibling (or steals keys from it), removing a separator from the parent. Many production engines skip merges and only reuse emptied pages, accepting some fragmentation.
+
+Splits are also where B-trees get dangerous: a split touches two leaf pages and a parent, and a crash between those writes leaves an orphaned page or a dangling pointer. This is one reason every serious B-tree engine has a write-ahead log.
+
+LSM-trees trade read speed for write speed. Writes are sequential appends; reads may touch several segments. Compaction can hurt LSM-tree read performance, especially at high percentiles of read latency, since compaction competes with foreground requests for disk bandwidth. With high enough write throughput you also have to monitor disk space, because compaction can fall behind incoming writes and leave unmerged segments accumulating.
+
+## Write-ahead logging and crash recovery
+
+Both engine families rely on the same durability rule: before any in-place change to a data structure hits disk, a record describing the change is appended to a log and flushed. The [PostgreSQL WAL docs](https://www.postgresql.org/docs/current/wal-intro.html) state the contract: "changes to data files ... must be written only after those changes have been logged." Two things follow. Durability gets cheap: a commit needs only a sequential log flush, not a flush of every dirty page, turning scattered random writes into one sequential stream. And crashes become recoverable: after a crash, **replay** the log forward from the last checkpoint, redoing changes that never reached the data files; because torn half-written pages are restored from logged full-page images (or repaired via redo), a partially completed page split stops being fatal.
+
+A **checkpoint** bounds recovery time by flushing dirty pages and recording "the log before this point is fully applied," letting old log segments be recycled. The knobs trade write burst against recovery time: frequent checkpoints mean fast recovery but more repeated page writes.
+
+The two engine families use the log differently. A B-tree engine WALs every page modification, including the structural ones from splits. An LSM engine only needs the WAL to cover the memtable, the one component living in volatile memory; SSTables are immutable once written, so recovery is "replay the WAL into a fresh memtable," and a memtable flush lets its log segment be dropped. This is the sense in which the LSM design is log-structured twice over.
+
+## Amplification: the three-way trade
+
+Every storage engine can be scored on three ratios — **read amplification** (disk work per logical read), **write amplification** (bytes written to disk per logical byte written), and **space amplification** (bytes on disk per live byte) — and no design minimizes all three. The [LSM-tree paper](https://www.cs.umb.edu/~poneil/lsmtree.pdf) is essentially an argument about this trade: batching writes through memory and merging sequentially buys write efficiency at some read cost.
+
+Following one write through each engine makes the amplification sources visible.
+
+**B-tree write path** for `put(k, v)`: descend to the leaf (reads); append the change to the WAL and flush; modify the page in the buffer pool; if full, split (two or three more pages dirtied plus WAL records); eventually write dirtied pages back. Write amplification: the WAL copy, plus a whole page written for one changed row (a 100-byte row in a 4 KB page is 40x right there), again per split page. Read amplification: one page per level, mitigated by caching upper levels. Space amplification: modest, from half-empty pages and fragmentation.
+
+**LSM write path** for the same put: append to WAL, insert into the memtable — the foreground work ends here, which is why write latency is low. Later the memtable flushes as an SSTable ($L_0$), and compaction rewrites the key once per level it descends. Write amplification: WAL + flush + one rewrite per level; with leveled compaction and ~10x fanout, 20-30x total is typical in practice, but all of it sequential and in the background. Read amplification: memtable, then $L_0$ segments, then one SSTable per level — each a Bloom-filter check and possibly a seek; a miss without filters pays the maximum. Space amplification: stale versions and tombstones pending compaction.
+
+The practical summary: B-trees pay foreground random writes for cheap point reads and predictable latency; LSMs pay background rewrite bandwidth and multi-segment reads for sequential-write throughput and better compression (sorted runs compress well). Which side of the trade to take depends on the read/write mix, and the compaction-policy choice above tunes position within the LSM side.
 
 ## Secondary indexes
 
@@ -140,6 +180,9 @@ A materialized view is a precomputed, stored query result, usually a join or agg
 ## Sources
 
 - [Designing Data-Intensive Applications](https://dataintensive.net/), Martin Kleppmann, chapter 3
+- [O'Neil, Cheng, Gawlick, O'Neil (1996), The Log-Structured Merge-Tree](https://www.cs.umb.edu/~poneil/lsmtree.pdf)
+- [PostgreSQL docs, Write-Ahead Logging](https://www.postgresql.org/docs/current/wal-intro.html)
+- [Chang et al. (2006), Bigtable: A Distributed Storage System for Structured Data](https://research.google/pubs/pub27898/)
 
 ## Related notes
 

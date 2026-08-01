@@ -32,7 +32,7 @@ writing to contain more mistakes than most frontier models.
 All that being said, yeah, there are probably a few errors here and there. I'd
 expect the majority of them are caused either directly by my prompt, or by
 errors in source documents I/the model cite. Still, any time I notice one, I
-try to fix it. If you're the type of person that must write the wrong you
+try to fix it. If you're the type of person that must right the wrong you
 notice in the world, feel free to open a [PR](https://github.com/elimelt/notes)
 to correct it.
 

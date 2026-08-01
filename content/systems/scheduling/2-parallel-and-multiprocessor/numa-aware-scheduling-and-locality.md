@@ -53,7 +53,7 @@ Two canonical traps compound it:
 
 ## Locality vs. Fairness vs. Utilization
 
-The three-way tension is the policy content of this note:
+Three tensions drive placement policy:
 
 - **Locality vs. utilization**: leaving a core idle on node 1 rather than migrating a node-0 thread to it preserves locality and wastes capacity; the break-even depends on the thread's miss rate and working-set size. Linux encodes the reluctance structurally — load balancing across NUMA domains runs less often and demands larger imbalance than within-socket balancing — a static compromise standing in for the per-thread calculation nobody can do cheaply.
 - **Locality vs. fairness**: a fair scheduler in the [[systems/scheduling/3-network-and-packet/fair-queueing-wfq-and-drr|max-min sense]] equalizes CPU time, but equal CPU time at unequal memory distance is unequal *progress* — a remote-running thread does less work per cycle awarded. True fairness on NUMA would need to account cycles weighted by achieved IPC, which no mainstream scheduler attempts; the practical proxy is keeping placement stable enough that the distortion stays small.

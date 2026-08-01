@@ -62,11 +62,25 @@ sync_site() {
 
 install_plugins() {
   (cd "$QUARTZ_DIR" && npx quartz plugin install --concurrency 2)
+  patch_mermaid_defaults
 }
 
 sync_plugins() {
   (cd "$QUARTZ_DIR" && npx quartz plugin install --from-config --concurrency 2)
   cp "$QUARTZ_DIR/quartz.lock.json" "$ROOT/quartz.lock.json"
+  patch_mermaid_defaults
+}
+
+# Mermaid only wraps sequence-diagram note/message text when the client
+# config sets sequence.wrap, and the obsidian-flavored-markdown plugin does
+# not expose mermaid options. Inject the default into its bundled initialize
+# call after every plugin install (the checkout is disposable).
+patch_mermaid_defaults() {
+  local ofm_dist="$QUARTZ_DIR/node_modules/@quartz-community/obsidian-flavored-markdown/dist/index.js"
+  if [[ -f "$ofm_dist" ]] && ! grep -q 'sequence:{wrap:!0}' "$ofm_dist"; then
+    sed -i.bak 's/initialize({startOnLoad:!1,/initialize({startOnLoad:!1,sequence:{wrap:!0},/' "$ofm_dist"
+    rm -f "$ofm_dist.bak"
+  fi
 }
 
 prepare_notebooks() {

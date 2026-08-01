@@ -32,3 +32,4 @@ For the conceptual path, start with [[systems/operating-systems/v1-kernels-and-p
 - Memory and translation: [[systems/operating-systems/lecture-notes/paging|paging]], [[systems/operating-systems/lecture-notes/tlb|TLB]], [[systems/operating-systems/benchmarks/tlb|TLB benchmark]]
 - Storage: [[systems/operating-systems/v4-persistent-storage/11-file-systems-overview|file systems overview]], [[systems/operating-systems/v4-persistent-storage/13-files-and-directories|files and directories]]
 - Measurements: [[systems/operating-systems/benchmarks/README|benchmark guide]], [[systems/operating-systems/benchmarks/false_sharing|false sharing]], [[systems/operating-systems/benchmarks/bandwidth|memory bandwidth]]
+- Reference material: [[systems/operating-systems/reference|OSPP volumes]], [[systems/operating-systems/section-notes/section-1|C and GDB review]]

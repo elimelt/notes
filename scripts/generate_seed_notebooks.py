@@ -1126,11 +1126,11 @@ def movielens_retrieval() -> list[dict[str, object]]:
 
 
 def main() -> int:
-    write_notebook("content/deep-learning/mlp-from-scratch-on-mnist.ipynb", deep_learning_mlp())
-    write_notebook("content/deep-learning/checking-manual-gradients-against-autodiff-on-mnist.ipynb", deep_learning_autodiff())
-    write_notebook("content/deep-learning/character-level-rnn-on-wikitext-2.ipynb", char_rnn())
-    write_notebook("content/deep-learning/decoder-only-transformer-on-wikitext-2.ipynb", decoder_only_transformer())
-    write_notebook("content/recc-sys/movielens-100k-two-tower-retrieval.ipynb", movielens_retrieval())
+    write_notebook("content/ml/deep-learning/mlp-from-scratch-on-mnist.ipynb", deep_learning_mlp())
+    write_notebook("content/ml/deep-learning/checking-manual-gradients-against-autodiff-on-mnist.ipynb", deep_learning_autodiff())
+    write_notebook("content/ml/deep-learning/character-level-rnn-on-wikitext-2.ipynb", char_rnn())
+    write_notebook("content/ml/deep-learning/decoder-only-transformer-on-wikitext-2.ipynb", decoder_only_transformer())
+    write_notebook("content/ml/recommender-systems/movielens-100k-two-tower-retrieval.ipynb", movielens_retrieval())
     return 0
 
 

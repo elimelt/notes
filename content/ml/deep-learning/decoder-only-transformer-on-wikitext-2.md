@@ -13,8 +13,10 @@ description: Build a small decoder-only Transformer for character-level language
 sources:
   - "https://huggingface.co/datasets/Salesforce/wikitext"
   - "https://docs.pytorch.org/tutorials/intermediate/transformer_building_blocks.html"
+aliases:
+  - /deep-learning/decoder-only-transformer-on-wikitext-2
 ---
 
-<!-- Generated from content/deep-learning/decoder-only-transformer-on-wikitext-2.ipynb; do not edit. -->
+<!-- Generated from content/ml/deep-learning/decoder-only-transformer-on-wikitext-2.ipynb; do not edit. -->
 
-[Open notebook source](https://github.com/elimelt/notes/blob/main/content/deep-learning/decoder-only-transformer-on-wikitext-2.ipynb)
+[Open notebook source](https://github.com/elimelt/notes/blob/main/content/ml/deep-learning/decoder-only-transformer-on-wikitext-2.ipynb)

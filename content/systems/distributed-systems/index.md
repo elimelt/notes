@@ -21,6 +21,6 @@ From there, the section branches into system-building patterns such as [[systems
 ## Entry points
 
 - Time and ordering: [[systems/distributed-systems/clocks|clocks]], [[systems/distributed-systems/ordering-events-in-distributed-systems|ordering events]], [[systems/distributed-systems/consistent-global-state|consistent global state]]
-- Replication and consistency: [[systems/distributed-systems/consistency|consistency]], [[systems/distributed-systems/primary-backup|primary backup]], [[systems/distributed-systems/non-blocking-two-phase-commit|non-blocking two-phase commit]]
+- Replication and consistency: [[systems/distributed-systems/consistency|consistency]], [[systems/distributed-systems/crdts|CRDTs]], [[systems/distributed-systems/primary-backup|primary backup]], [[systems/distributed-systems/non-blocking-two-phase-commit|non-blocking two-phase commit]]
 - Scalable services: [[systems/distributed-systems/load-balancing|load balancing]], [[systems/distributed-systems/sharding|sharding]], [[systems/distributed-systems/scaling-web-services|scaling web services]]
 - Case studies: [[systems/distributed-systems/google-file-system|Google File System]], [[systems/distributed-systems/bigtable|Bigtable]], [[systems/distributed-systems/dynamo-db|Dynamo]]

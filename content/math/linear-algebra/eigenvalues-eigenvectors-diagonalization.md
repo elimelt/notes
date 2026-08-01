@@ -24,7 +24,7 @@ sources:
 
 ## Purpose
 
-This note builds eigenvalues and diagonalization from the definition up, then uses them for the thing they are actually good at: understanding what happens when you apply the same linear map over and over. It is meant as the reference other notes can cite for eigendecompositions, matrix powers, and stability. Broader matrix background lives in [[math/linear-algebra/cheatsheet|Matrix Theory]].
+This note builds eigenvalues and diagonalization from the definition up, then uses them for the thing they are actually good at: understanding what happens when you apply the same linear map over and over. It is a reference for eigendecompositions, matrix powers, and stability. Broader matrix background lives in [[math/linear-algebra/cheatsheet|Matrix Theory]].
 
 ## Eigenpairs are invariant directions
 

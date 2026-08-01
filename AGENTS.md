@@ -98,6 +98,32 @@ backlog.
 - Keep prose direct. Avoid formulaic contrasts, fake certainty, and generic
   conclusions.
 
+## Writing and linking style
+
+- Treat the notes as a connected body of thought, not a hierarchy that must be
+  completed from top to bottom. Folder placement is storage; links carry the
+  conceptual structure.
+- Give larger narrative notes the job of explaining the landscape and pointing
+  to focused notes, experiments, source readings, and implementation branches.
+  Keep the detailed mechanism in the focused note rather than duplicating it in
+  every narrative.
+- Let focused notes stand on their own: state the question or mechanism,
+  explain enough context to make it useful, and expose the next questions or
+  branches that follow from it.
+- Put links at the moment a concept branches or a claim needs support. A
+  related-notes list is useful for navigation, but it should not be the only
+  connection between notes.
+- Prefer concrete mechanisms, code, diagrams, derivations, measurements, and
+  source excerpts over broad summaries. When a note is exploratory or
+  incomplete, say what is known, what was measured, what is inferred, and what
+  remains open.
+- Preserve multiple valid entry points. A reader may arrive through a
+  benchmark result, an implementation detail, a paper, or a high-level
+  explanation; each should link naturally to the others.
+- Do not force a premature taxonomy or canonical reading order. Add structure
+  when it helps a reader move through the material, not to make the collection
+  look finished.
+
 ## When backfilling
 
 - Normalize frontmatter first.

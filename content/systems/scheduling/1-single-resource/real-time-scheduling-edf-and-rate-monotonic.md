@@ -9,13 +9,16 @@ tags:
   - deadlines
   - schedulability
 date: 2026-07-31
-updated: 2026-07-31
+updated: 2026-08-01
 status: evergreen
-description: Deadline-driven single-resource scheduling, with the classic EDF and rate-monotonic results, schedulability tests, and small worked examples.
+description: Deadline-driven single-resource scheduling - the Liu-Layland task model, EDF optimality and its exact utilization test, the RM bound with response-time analysis, a simulated trace separating the two at U = 0.97, and the hard-real-time vs low-latency distinction.
 sources:
-  - title: "Scheduling Algorithms for Multiprogramming in a Hard-Real-Time Environment"
-    url: https://dl.acm.org/doi/10.1145/321738.321743
+  - title: "Liu and Layland (1973), Scheduling Algorithms for Multiprogramming in a Hard-Real-Time Environment"
+    url: https://people.eecs.berkeley.edu/~culler/cs252-s05/papers/liu-layland.pdf
     type: paper
+  - title: "Baker, the RM utilization bound (course notes)"
+    url: https://www.cs.fsu.edu/~baker/realtime/restricted/notes/rmutilizationbound.html
+    type: lecture
 ---
 
 ## Purpose
@@ -46,6 +49,8 @@ $$
 U = \sum_i \frac{C_i}{T_i}
 $$
 
+The model comes from [Liu and Layland (1973)](https://people.eecs.berkeley.edu/~culler/cs252-s05/papers/liu-layland.pdf), whose assumptions are worth stating because every clean theorem below depends on them: tasks are periodic and independent, deadlines coincide with periods, worst-case execution times are known, preemption is free, and there is one processor. A **critical instant** — the release pattern producing a task's worst response time — occurs when a task is released simultaneously with all higher-priority tasks (their Theorem 1), which is why all the analyses check the synchronous release case only.
+
 ## Earliest Deadline First
 
 EDF is dynamic priority scheduling:
@@ -60,9 +65,9 @@ $$
 U \le 1
 $$
 
-and for implicit deadlines on one processor this is also sufficient for EDF.
+and for implicit deadlines on one processor this is also sufficient for EDF (Liu and Layland, Theorem 7).
 
-That is a remarkably clean result.
+The optimality intuition is an exchange argument, the same one that proves SRPT optimal for mean response time: take any feasible schedule and find the first time it runs a job whose deadline is later than some other ready job's. Swapping the next unit of execution between them keeps both jobs feasible — the earlier-deadline job finishes sooner, and the later-deadline job inherits a slot that still precedes its (later) deadline. Repeated swaps transform any feasible schedule into the EDF schedule without introducing a miss, so if EDF misses a deadline, no policy avoids it. The $U \le 1$ sufficiency then follows because EDF wastes no capacity: the processor idles only when no work exists.
 
 ## Rate Monotonic
 
@@ -84,7 +89,28 @@ $$
 \ln 2 \approx 0.693
 $$
 
-So RM has a safe utilization bound around 69.3% in the worst case, even though many concrete task sets above that are still schedulable.
+So RM has a safe utilization bound around 69.3% in the worst case, even though many concrete task sets above that are still schedulable. The bound is tight in the sense that task sets exist just above it that RM cannot schedule, but it is only *sufficient*: failing the bound proves nothing. The priority assignment itself is provably the best fixed one — Liu and Layland show that if *any* fixed-priority assignment schedules a task set, rate-monotonic order does (Theorem 2), so RM's capacity gap versus EDF is the cost of fixing priorities at all, not of choosing them badly.
+
+### Response-Time Analysis
+
+The exact fixed-priority test (beyond the pessimistic bound) computes each task's worst-case response time as a fixed point. For task $i$ with higher-priority tasks $j$:
+
+$$
+R_i = C_i + \sum_{j \in hp(i)} \left\lceil \frac{R_i}{T_j} \right\rceil C_j
+$$
+
+iterated from $R_i = C_i$ until it converges (schedulable if $R_i \le D_i$) or exceeds the deadline. The ceiling term counts how many times each higher-priority task preempts during the window. This test is exact under the model assumptions, and it handles $D_i < T_i$ cases the utilization bound cannot.
+
+## The Separating Example
+
+The cleanest way to see the RM/EDF gap is a task set between the two bounds: $\tau_1 = (C{=}2, T{=}5)$, $\tau_2 = (C{=}4, T{=}7)$, so $U = 2/5 + 4/7 = 0.971$ — above RM's 0.828 bound, below EDF's 1.0. Simulated over the hyperperiod of 35 ticks (repo venv; simulator releases jobs at period boundaries and picks by policy each tick):
+
+```plaintext
+RM:  1122211222112.211222...   tau2 MISSES at t=7
+EDF: 11222211222211211222...   no misses over the full hyperperiod
+```
+
+Under RM, $\tau_1$'s release at $t=5$ preempts $\tau_2$ (fixed priority: shorter period wins), leaving $\tau_2$ only 5 of the 7 ticks before its deadline — it needs $4 + \lceil R/5 \rceil \cdot 2$ and the response-time recurrence diverges past 7 ($R_2$ iterates $4 \to 6 \to 8 > 7$: unschedulable, confirming the trace). Under EDF, at $t=5$ the running $\tau_2$ has deadline 7 while the newly released $\tau_1$ has deadline 10, so $\tau_2$ *keeps the processor* — dynamic priority makes exactly the decision fixed priority cannot, and the set is schedulable at 97% utilization.
 
 ## Small Example
 
@@ -136,6 +162,20 @@ print("EDF feasible?", u <= 1.0)
 print("RM sufficient test?", u <= rm_bound(len(tasks)))
 ```
 
+## Hard Real-Time Is Not Low Latency
+
+The two goals are routinely conflated and are close to opposites in method:
+
+| | Hard real-time (EDF/RM) | Interactive low latency (MLFQ/EEVDF) |
+| --- | --- | --- |
+| Question | does *every* job meet its deadline? | are *most* responses fast? |
+| Failure | one miss = system failure | a slow p99 = degraded, not broken |
+| Analysis | offline schedulability proof from worst cases | online measurement of distributions |
+| Load | admission-controlled to proven-feasible sets | best effort at any load |
+| Optimizes | feasibility, then nothing else | means and percentiles |
+
+A hard real-time system happily runs a task set with terrible average latency, provided the proofs hold; an interactive scheduler happily misses any individual "deadline," provided the tail stays acceptable. The engineering split follows: real-time systems buy predictability (WCET analysis, lock-free or priority-inheritance protocols, cache partitioning) while interactive systems buy adaptivity. Linux carries both: `SCHED_DEADLINE` is a bandwidth-enforced EDF class sitting above the fair-share scheduler, admission-tested on declared $(C, D, T)$ per task, while ordinary threads get EEVDF's soft-latency treatment ([[systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling|multiprocessor scheduling]]).
+
 ## Caveats
 
 The clean theorems above assume a lot:
@@ -146,7 +186,7 @@ The clean theorems above assume a lot:
 - known worst-case execution times
 - periodic or sporadic release models
 
-Once locks, I/O, multicore interference, or cache effects show up, schedulability analysis gets much messier.
+Once locks, I/O, multicore interference, or cache effects show up, schedulability analysis gets much messier. The classic hazard is **priority inversion** — a high-priority task blocked on a lock held by a low-priority task that a medium-priority task keeps preempting; the Mars Pathfinder reset loop is the canonical incident, and priority inheritance is the standard mitigation. Every relaxation of the assumptions (deadlines shorter than periods, jitter, blocking terms) has a corresponding extension of the response-time test; the recurrence above is the base case of a large literature.
 
 ## Related Notes
 

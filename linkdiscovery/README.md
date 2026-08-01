@@ -108,7 +108,8 @@ re-embeds anything.
 | `embedding.max_input_tokens` | `null` | input cap; exceeding it counts as a truncation |
 | `candidates.backend` | `auto` | `auto`, `exact`, or `hnsw`; `auto` switches by corpus size. Changing this section invalidates candidates and proposals only |
 | `candidates.neighbors_per_unit` | `50` | high-recall retrieval breadth |
-| `candidates.existing_relationship_kinds` | `[explicit-link]` | relationship kinds treated as an existing direct link (hard-excluded) |
+| `candidates.existing_relationship_kinds` | `[explicit-link]` | relationship kinds treated as an existing direct link |
+| `candidates.existing_relationship_policy` | `exclude` | `exclude` preserves missing-link semantics; `penalize` or `reward` retains existing pairs with a signed token/lexical feature |
 | `candidates.max_pairs_per_document` | `100` | per-document recall bound |
 | `candidates.max_total_pairs` | `null` | global bound (`null` = unbounded) |
 | `ranking.profile` | `weighted-v1` | ranker policy name. Changing this section invalidates proposals only |
@@ -116,6 +117,14 @@ re-embeds anything.
 | `ranking.minimum_relatedness` | `0.0` | floor on the relatedness estimate |
 | `ranking.results_per_document` | `10` | presentation cap per source document |
 | `ranking.diversity` | `0.2` | maximal-marginal-relevance trade-off in `[0, 1]` |
+
+The optional `candidates.existing_relationship_policy` is intended for the
+token/lexical suggestion phase. `exclude` is the default and keeps existing
+direct links out of missing-link proposals. `penalize` and `reward` retain
+those pairs and expose `existing_link_adjustment` as `-1` or `+1`; the
+`ranking.weights.w_existing_link` value controls how much that signal moves a
+score. Changing this candidate policy invalidates candidates and proposals,
+while changing only its ranking weight invalidates proposals.
 | `report.formats` | `[jsonl, markdown]` | also `json`. Changing this section invalidates rendered reports only |
 | `report.output_dir` | `reports` | relative paths resolve against the artifacts root |
 | `report.include_evidence_text` | `true` | `false` omits excerpt text but keeps ids, spans, similarities |
@@ -189,6 +198,97 @@ key — which is what makes invalidation exact: edit one document and only its
 units re-embed; change `preprocess.target_tokens` and everything re-chunks
 and re-embeds; change `ranking.weights` and only proposals and reports are
 recomputed.
+
+## Inline-link discovery (experimental)
+
+Where the main pipeline proposes *document pairs*, the inline subsystem
+proposes **anchored inline links**: a specific span of prose in one note
+pointing at another note, with an explicit no-link rejection option. It is a
+staged mention-detection + closed-world entity-linking pipeline (span
+proposal → naturalness → target retrieval → rerank → calibrated rejection →
+sparse global selection) specified in `SPEC-INLINE-LINKING.md`; read that
+document for the design rationale, quality bars, and literature grounding.
+
+The build is phased (SPEC §11), and the phases are strictly ordered — each
+later stage is gated on the one before it:
+
+1. **Audit** — sample ~150 existing links stratified by region/anchor
+   length/topic/source type, label them with two annotators, and compute
+   Cohen's κ / Krippendorff's α plus the A/B/C/D supervision-tier
+   distribution. *Go/no-go gate:* every per-field κ ≥ 0.6 **and** ≥ 150
+   clean Tier A+B positives → proceed to modeling; κ < 0.4 on naturalness →
+   re-scope the annotation guidelines instead of training on incoherent
+   labels.
+2. **Recall check** — verify the deterministic high-recall span generator
+   actually covers the audited prose anchors. *Kill criterion:* overlap
+   recall < ~85% means no downstream model can recover — fix generation
+   first.
+3. **Train** — Architecture A: a frozen token encoder plus three small
+   trained heads (naturalness, full-catalog-softmax retrieval, reranker),
+   with PU-weighted pseudo-negatives and denoised hard negatives.
+4. **Propose** — either engine writes a review report; nothing ever edits
+   source documents. *Kill criterion:* if the learned engine cannot reach
+   precision@1 ≈ 0.70 at ≥ 20% recall on the frozen benchmark, ship the
+   deterministic baseline engine instead (it is always available and needs
+   zero training data).
+
+Exact CLI walkthrough for this repo's notes corpus (run from
+`linkdiscovery/`; `configs/notes.yaml` targets `../content`):
+
+```sh
+# Phase 1: draw and annotate the stratified audit sample.
+uv run linkdiscovery inline audit-sample \
+    --config configs/notes.yaml --artifacts .artifacts \
+    --size 150 --seed 7 --out .inline/audit
+uv run linkdiscovery inline annotate \
+    --sample .inline/audit/audit-sample.json \
+    --annotator you --labels .inline/audit/labels-you.jsonl
+# (second annotator labels an overlapping subset into labels-other.jsonl)
+uv run linkdiscovery inline audit-report \
+    --sample .inline/audit/audit-sample.json \
+    --labels .inline/audit/labels-you.jsonl \
+    --labels2 .inline/audit/labels-other.jsonl   # prints kappa/alpha + GO/NO-GO
+
+# Anchor dictionary + keyphraseness statistics (SPEC §5 weak supervision).
+uv run linkdiscovery inline anchors \
+    --config configs/notes.yaml --artifacts .artifacts --out .inline/anchors
+
+# Phase 2: the recall-ceiling gate.
+uv run linkdiscovery inline recall-check \
+    --config configs/notes.yaml --artifacts .artifacts \
+    --sample .inline/audit/audit-sample.json
+
+# Deterministic baseline engine (works with zero training data).
+uv run linkdiscovery inline propose \
+    --config configs/notes.yaml --artifacts .artifacts \
+    --engine baseline --out .inline/proposals
+
+# Phase 3: train the three heads on the audited labels, then propose.
+uv run linkdiscovery inline train \
+    --config configs/notes.yaml --artifacts .artifacts \
+    --sample .inline/audit/audit-sample.json \
+    --labels .inline/audit/labels-you.jsonl \
+    --out .inline/heads --epochs 30 --seed 0
+uv run linkdiscovery inline propose \
+    --config configs/notes.yaml --artifacts .artifacts \
+    --engine learned --heads .inline/heads --out .inline/proposals-learned
+```
+
+`inline propose` accepts `--threshold`, `--budget-words`, and
+`--max-per-note` to override the selection defaults (accept threshold 0.5,
+~1 link per 175 words, hard cap 10 per note). Review output lands as
+`inline-proposals.md` (accepted links grouped by note, anchor shown in
+context, three head scores; anchor-improvement suggestions flagged) plus
+`inline-proposals.jsonl` (every draft including audited abstentions).
+
+Honesty note on encoders: the default token encoder is the dependency-free
+hashing baseline, which makes every command runnable without downloads — its
+representations are for wiring and testing, not quality. The production path
+injects the frozen Qwen token encoder
+(`linkdiscovery.inline.encode.QwenTokenEncoder`) through the workflow API's
+`encoder_factory`; the learned path re-derives target vectors in that
+encoder's hidden space (the v1 bi-encoder vectors are used only by the
+baseline engine's cosine feature).
 
 ## Development
 

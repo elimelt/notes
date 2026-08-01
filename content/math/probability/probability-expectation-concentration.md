@@ -25,7 +25,7 @@ sources:
 
 ## Purpose
 
-This is the probability note other sections can cite instead of re-deriving concentration arguments ad hoc. It fixes definitions for expectation, variance, covariance, and conditional expectation, then builds the inequality chain Markov, Chebyshev, Chernoff, Hoeffding, each one a strictly stronger use of information about the random variable. The payoff is quantitative: how many samples you need before an empirical average can be trusted, which is the question underneath A/B tests, offline recommender metrics, and benchmark noise.
+A reference for concentration arguments, so they do not have to be re-derived ad hoc. It fixes definitions for expectation, variance, covariance, and conditional expectation, then builds the inequality chain Markov, Chebyshev, Chernoff, Hoeffding, each one a strictly stronger use of information about the random variable. The payoff is quantitative: how many samples you need before an empirical average can be trusted, which is the question underneath A/B tests, offline recommender metrics, and benchmark noise.
 
 ## Random variables and expectation
 

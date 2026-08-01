@@ -24,6 +24,12 @@ publish_legacy_docs() {
   fi
 }
 
+publish_standalone_routes() {
+  if [[ -d "$ROOT/quartz-site/routes" ]]; then
+    cp -R "$ROOT/quartz-site/routes/." "$ROOT/public/"
+  fi
+}
+
 bootstrap() {
   local ref_stamp="$QUARTZ_DIR/.notes-quartz-ref"
   if [[ ! -d "$QUARTZ_DIR/.git" ]] || [[ ! -f "$ref_stamp" ]] || [[ "$(<"$ref_stamp")" != "$QUARTZ_REF" ]]; then
@@ -76,6 +82,7 @@ case "$command" in
     sync_site
     install_plugins
     (cd "$QUARTZ_DIR" && npx quartz build --output "$ROOT/public")
+    publish_standalone_routes
     python3 "$ROOT/scripts/validate_graph_index.py" "$ROOT/public/static/contentIndex.json"
     publish_legacy_docs
     ;;

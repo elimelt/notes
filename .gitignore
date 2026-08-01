@@ -22,3 +22,4 @@ embeddings.jsonl
 
 # Exception: track template HTML files
 !scripts/template/*.html
+!quartz-site/routes/**/*.html

@@ -50,16 +50,16 @@ A blocking cache stalls the whole pipeline on any miss. A **non-blocking cache**
 
 Rocket's `MSHRFile` allocates one `MSHR` module per outstanding block miss and arbitrates their `TLBundleA` requests onto the outer memory bus:
 
-<augment_code_snippet path="rocket-chip: src/main/scala/rocket/NBDcache.scala" mode="EXCERPT">
-````scala
+```scala
 class MSHR(id: Int)(implicit edge: TLEdgeOut, p: Parameters) extends L1HellaCacheModule()(p) {
   val s_invalid :: s_wb_req :: s_wb_resp :: s_meta_clear ::
       s_refill_req :: s_refill_resp :: s_meta_write_req ::
       s_meta_write_resp :: s_drain_rpq :: Nil = Enum(9)
   val sec_rdy = idx_match && (state.isOneOf(states_before_refill) ||
     (state.isOneOf(s_refill_req, s_refill_resp) && !cmd_requires_second_acquire && !refill_done))
-````
-</augment_code_snippet>
+```
+
+(from [rocket-chip `NBDcache.scala`](https://github.com/chipsalliance/rocket-chip/blob/master/src/main/scala/rocket/NBDcache.scala))
 
 Two things stand out. First, `sec_rdy` is a *secondary miss* check: a second request to the same in-flight block does not allocate a new MSHR, it queues onto the existing one (`rpq`, the replay queue) and is satisfied when the first miss returns. This is why hitting the same cache line repeatedly while it is still being fetched is nearly free. Second, `MSHRFile` arbitrates all MSHRs' outgoing requests with `TLArbiter.lowestFromSeq`, so the number of *simultaneously outstanding, distinct* block misses is bounded by `cfg.nMSHRs`, a build-time parameter.
 
@@ -69,14 +69,14 @@ This ceiling is directly measurable. [[systems/operating-systems/benchmarks/mlp|
 
 A **TLB** caches virtual-to-physical translations so most loads skip the page table. Rocket's `TLB` module encodes the lookup as three separate structures rather than one flat array: a set-associative array for normal 4 KB pages (with *sectored* entries, where several adjacent PTEs share one tag to amortize tag storage), a small fully-associative array just for superpages, and (when PMP granularity is finer than a page) one dedicated entry for the sub-page permission checker:
 
-<augment_code_snippet path="rocket-chip: src/main/scala/rocket/TLB.scala" mode="EXCERPT">
-````scala
+```scala
 val sectored_entries = Reg(Vec(cfg.nSets, Vec(cfg.nWays / cfg.nSectors,
   new TLBEntry(cfg.nSectors, false, false))))
 val superpage_entries = Reg(Vec(cfg.nSuperpageEntries, new TLBEntry(1, true, true)))
 val s_ready :: s_request :: s_wait :: s_wait_invalidate :: Nil = Enum(4)
-````
-</augment_code_snippet>
+```
+
+(from [rocket-chip `TLB.scala`](https://github.com/chipsalliance/rocket-chip/blob/master/src/main/scala/rocket/TLB.scala))
 
 On a miss the TLB moves `s_ready -> s_request -> s_wait`, sending the faulting VPN to the page-table walker (PTW, RISC-V's hardware page walker) and stalling the requesting pipeline until `io.ptw.resp` fires. `SFENCE.VMA` is handled as its own transient path (`s_wait_invalidate`) because a fence arriving mid-refill has to invalidate the entry that's about to land rather than let it commit stale.
 

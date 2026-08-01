@@ -44,16 +44,16 @@ Every cache miss, coherence message, DMA transfer, and MMIO access eventually ha
 
 Every switch point where multiple requesters can target the same output needs an arbitration policy. Rocket-chip's `TLArbiter` implements three, generically over any `DecoupledIO` channel:
 
-<augment_code_snippet path="rocket-chip: src/main/scala/tilelink/Arbiter.scala" mode="EXCERPT">
-````scala
+```scala
 val lowestIndexFirst: Policy = (width, valids, select) => ~(leftOR(valids) << 1)(width-1, 0)
 val highestIndexFirst: Policy = (width, valids, select) => ~((rightOR(valids) >> 1).pad(width))
 val roundRobin: Policy = (width, valids, select) => if (width == 1) 1.U(1.W) else {
   val mask = RegInit(((BigInt(1) << width)-1).U(width-1,0))
   ...
 }
-````
-</augment_code_snippet>
+```
+
+(from [rocket-chip `Arbiter.scala`](https://github.com/chipsalliance/rocket-chip/blob/master/src/main/scala/tilelink/Arbiter.scala))
 
 `lowestIndexFirst` and `highestIndexFirst` are fixed-priority: fast to compute, but a low-priority requester can be starved indefinitely under sustained high-priority traffic. `roundRobin` fixes that: a `mask` register remembers who won last, and the next grant is masked away from that requester until every other pending requester has had a turn, guaranteeing bounded latency (fairness) at the cost of one register per arbitration point. `TLXbar.circuit` wires these into every fan-in point in the crossbar (`out(o).a`, `out(o).c`, `out(o).e`, `in(i).b`, `in(i).d`), one arbiter instance per channel per port, and defaults the whole crossbar to `roundRobin`.
 

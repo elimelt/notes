@@ -42,8 +42,7 @@ A coherent system guarantees, for every memory location: (1) a core's own reads 
 
 gem5's `MESI_Two_Level-L1cache.sm` SLICC source names states exactly this way, plus the transient states a real implementation needs while a request is in flight:
 
-<augment_code_snippet path="gem5: src/mem/ruby/protocol/MESI_Two_Level-L1cache.sm" mode="EXCERPT">
-````text
+```text
 state_declaration(State, desc="Cache states", default="L1Cache_State_I") {
   NP, AccessPermission:Invalid, desc="Not present in either cache";
   I, AccessPermission:Invalid, desc="a L1 cache entry Idle";
@@ -52,13 +51,13 @@ state_declaration(State, desc="Cache states", default="L1Cache_State_I") {
   M, AccessPermission:Read_Write, desc="a L1 cache entry Modified";
   IS, AccessPermission:Busy, desc="L1 idle, issued GETS, have not seen response yet";
   IM, AccessPermission:Busy, desc="L1 idle, issued GETX, have not seen response yet";
-````
-</augment_code_snippet>
+```
+
+(from [gem5 `MESI_Two_Level-L1cache.sm`](https://github.com/gem5/gem5/blob/stable/src/mem/ruby/protocol/MESI_Two_Level-L1cache.sm))
 
 The transient states (`IS`, `IM`, `M_I`, ...) exist because a real protocol is not instantaneous: between issuing a `GETX` (get-exclusive) request and receiving data, the line is neither fully invalid nor fully modified, and the state machine has to define what happens if a forwarded request from another core (`Fwd_GETX`, `Fwd_GETS`) arrives during that window. This is the **invalidation race**: two cores can want the same line at once, and the directory has to serialize their requests into some order, whichever wins first blocking the other until it retries. Looking at the actual transitions:
 
-<augment_code_snippet path="gem5: src/mem/ruby/protocol/MESI_Two_Level-L1cache.sm" mode="EXCERPT">
-````text
+```text
 transition(E, Fwd_GETX, I) {
   forward_eviction_to_cpu;
   d_sendDataToRequestor;
@@ -69,8 +68,9 @@ transition(E, {Fwd_GETS, Fwd_GET_INSTR}, S) {
   d2_sendDataToL2;
   l_popRequestQueue;
 }
-````
-</augment_code_snippet>
+```
+
+(from [gem5 `MESI_Two_Level-L1cache.sm`](https://github.com/gem5/gem5/blob/stable/src/mem/ruby/protocol/MESI_Two_Level-L1cache.sm))
 
 A core holding a line **E**xclusive downgrades to **I** if another core wants to write it (`Fwd_GETX`), the requester takes full ownership and the old holder loses its copy entirely, but only downgrades to **S** on a read request (`Fwd_GETS`), keeping a shared clean copy while also forwarding data to both the requester and the L2 (`d2_sendDataToL2`), since L2 needs an up-to-date copy once no core holds exclusive/modified state. **Silent eviction** is visible too: `E` can be silently dropped without notifying anyone because the copy was clean and no one else has claimed it, whereas `M` (dirty) must write back before eviction (`g_issuePUTX`, sending data to L2), the entire reason write-back caches need eviction protocols and write-through caches don't.
 

@@ -10,7 +10,7 @@ tags:
   - memory-efficiency
   - machine-learning
 date: 2025-05-25
-updated: 2026-07-30
+updated: 2026-08-01
 status: needs-review
 description: MoE architecture, routing and load balancing, the DeepSeek design lineage, and the systems problems (all-to-all communication, expert placement, offloading) that MoE creates for training and serving.
 sources:
@@ -33,6 +33,15 @@ sources:
     type: paper
   - title: "Fiddler: CPU-GPU Orchestration for Fast Inference of Mixture-of-Experts Models"
     url: https://arxiv.org/abs/2402.07033
+    type: paper
+  - title: "Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer"
+    url: https://arxiv.org/abs/1701.06538
+    type: paper
+  - title: "GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding"
+    url: https://arxiv.org/abs/2006.16668
+    type: paper
+  - title: "MegaBlocks: Efficient Sparse Training with Mixture-of-Experts"
+    url: https://arxiv.org/abs/2211.15841
     type: paper
 ---
 
@@ -151,8 +160,68 @@ At the large scale end, [DeepSeek-V3's deployment](https://arxiv.org/abs/2412.19
 
 Within one device, running each expert's tokens as a separate GEMM wastes the batching benefit. The GroupGemm pattern restores it: route, then permute tokens so each expert's tokens are contiguous, run all experts in one grouped GEMM kernel, un-permute, and mix outputs with the gating weights. The permutation indices come from a prefix sum over the expert-selection mask (binary mask, cumsum over the flattened transpose, reshape), which parallelizes cleanly on GPU.
 
+## Lineage: from sparsely-gated MoE to dropless routing
+
+The systems ideas in this note did not start with DeepSeek. [Shazeer et al. (2017)](https://arxiv.org/abs/1701.06538) introduced the sparsely-gated MoE layer itself: up to thousands of expert FFNs between stacked LSTM layers, with a trainable gate selecting a sparse combination per example, reporting over 1000x model capacity increase with only minor efficiency losses. The system problem it already had to solve is the one this note keeps returning to: routing decisions are data-dependent, so the amount of work sent to each device varies at runtime.
+
+[GShard](https://arxiv.org/abs/2006.16668) (Lepikhin et al. 2020) turned that into a distributed systems problem: a set of lightweight sharding annotations plus an XLA compiler extension that automatically inserts the cross-device communication for a Sparsely-Gated MoE Transformer, scaling multilingual machine translation past 600 billion parameters across 2048 TPU v3 cores in 4 days. GShard is also where capacity factor and hard token dropping enter the design (below), because a compiler-generated program needs statically-shaped tensors, and expert token counts are only known at runtime.
+
+Switch Transformers ([already cited](https://arxiv.org/abs/2101.03961) above) simplified the routing to top-1 and popularized the auxiliary balancing loss described earlier in this note. [MegaBlocks](https://arxiv.org/abs/2211.15841) (Gale et al. 2022) attacks the capacity-factor/token-dropping tradeoff from the kernel side instead of the algorithm side: it reformulates MoE computation as block-sparse matrix operations with custom GPU kernels, so that variable per-expert token counts map onto hardware without padding to a fixed capacity or dropping the overflow. The paper reports end-to-end training speedups up to 40% over Tutel and 2.4x over dense Megatron-LM training at matched quality. This is the "dropless routing" alternative referenced below.
+
+## Capacity factor and token dropping
+
+A compiler or a fixed-shape kernel needs to allocate a fixed-size buffer per expert before it knows how many tokens will route there. Given $T$ tokens, $N$ experts, and top-$k$ routing, the expected tokens per expert is $\frac{kT}{N}$; the **capacity factor** $c$ scales that into an actual buffer size, $\text{capacity} = c \cdot \frac{kT}{N}$. GShard-style systems set $c > 1$ (commonly 1.25-2) to absorb the imbalance that a router produces even with a balancing loss pushing toward uniformity. Tokens that route to an expert already at capacity are **dropped**: their contribution from that expert is zero (only the residual/shared-expert path, if any, carries them forward), which both wastes the token's gradient signal for that expert and worsens quality on the dropped tokens specifically. Raising $c$ reduces drop rate but increases wasted compute and memory, since every expert allocates its full capacity buffer whether or not tokens fill it. **Dropless routing** (MegaBlocks) sidesteps the tradeoff entirely by using block-sparse kernels that size per-expert work exactly to the tokens actually routed, at the cost of losing the fixed-shape assumption that made the compiler-driven GShard approach simple to generate code for.
+
+## Token-to-expert routing and all-to-all path
+
+Expert parallelism spreads $N$ experts across $P$ devices. A token's activation is computed wherever the token lives, then must physically move to the device holding its selected expert, and the output must move back. That round trip is the two all-to-all collectives already introduced above (dispatch, combine); the diagram below makes the routing decision that drives them explicit for two tokens on two devices, top-1 routing:
+
+```mermaid
+flowchart LR
+    subgraph Dev0["Device 0"]
+        T0["token A<br/>(lives here)"]
+        E0["Expert 0<br/>(lives here)"]
+    end
+    subgraph Dev1["Device 1"]
+        T1["token B<br/>(lives here)"]
+        E1["Expert 1<br/>(lives here)"]
+    end
+    T0 -- "router picks Expert 1<br/>(dispatch all-to-all)" --> E1
+    T1 -- "router picks Expert 0<br/>(dispatch all-to-all)" --> E0
+    E1 -- "output back to token A<br/>(combine all-to-all)" --> T0
+    E0 -- "output back to token B<br/>(combine all-to-all)" --> T1
+```
+
+Every token whose chosen expert is off-device pays this cross-device hop twice per MoE layer, which is why all-to-all volume (not FLOPs) is usually what caps MoE training throughput at scale, matching the 34.1% step-time figure cited above.
+
+## Expert, tensor, and data parallelism for MoE: cost comparison
+
+The three axes shard different things and pay different communication bills for an MoE layer with $N$ experts, model dimension $d$, and $T$ tokens per device per step:
+
+| Strategy | What it shards | Communication per MoE layer | Scales with |
+| --- | --- | --- | --- |
+| Expert parallelism | experts across devices | 2 all-to-alls of routed-token activations, size $\approx kTd$ bytes total | number of devices $P$ (more hops, same total payload) |
+| Tensor parallelism | each expert's weight matrices | AllReduce per expert-local GEMM, same $8bsh$-style cost as dense TP (see [[ml/serving-systems/parallelism|Parallelism]]) | tensor-parallel width $t$, independent of $N$ |
+| Data parallelism | full model (incl. all experts) replicated | AllReduce of gradients for every parameter, incl. every expert's weights, every step | total parameter count, which is $N\times$ larger with more experts |
+
+Expert parallelism is the only one of the three whose communication volume scales with *token count* rather than *parameter count*, which is exactly the property that makes MoE's parameter/compute decoupling pay off systems-wise: growing $N$ (more experts) grows data-parallel and tensor-parallel communication (more weights to sync or shard) but leaves expert-parallel communication roughly flat (same tokens, just spread over more, smaller experts). In practice, as the DeepSeek-V3 deployment example above shows, production systems compose all three: TP within a node for attention and each expert's own GEMMs, EP to place experts, and DP to replicate everything else.
+
+## Why training-time balance does not guarantee serving-time balance
+
+The balancing losses in this note optimize the *training* distribution over a batch, which mixes many prompts and topics; they say nothing about the distribution any single production request or topic-cluster of traffic will produce. This is inference, not a specific published measurement: a router trained to balance load in aggregate can still send an overwhelming share of a topically narrow request stream (all customer-support tickets about billing, say) to whichever few experts specialized on that content during training, because those experts genuinely are the best fit for that traffic even though the aggregate training batch stayed balanced. Serving-time popularity being skewed and non-uniform is exactly the premise Fiddler's placement problem and the "popularity-aware placement" approach both start from, described above; DeepSeek-V3's own deployment addresses it directly by replicating hot experts redundantly at inference rather than relying on the training-time balance to hold.
+
+## Comparing deployed MoE designs
+
+| Design | Routing | Balancing mechanism | Capacity handling | Notable systems trick |
+| --- | --- | --- | --- | --- |
+| Switch Transformer | top-1 | auxiliary load-balancing loss | fixed capacity factor, drops overflow | simplifies top-k to top-1 for speed |
+| MegaBlocks | top-k, framework-agnostic | inherited from base model | dropless (block-sparse kernels) | reformulates MoE as block-sparse GEMM |
+| Mixtral | top-2, no shared experts | implicit (no aux loss reported) | standard capacity-factor framework | fewer, larger experts (8 total) |
+| DeepSeek v3 | top-8 of 256, sigmoid scoring | aux-loss-free per-expert bias | fine-grained experts, top-M device routing | hot-expert replication at serving, prefill/decode disaggregated EP width |
+
 ## Related notes
 
 - [[ml/serving-systems/parallelism|Parallelism]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
 - [[ml/serving-systems/batching|Batching]]
+- [[ml/serving-systems/distributed-training|Distributed Training of Large Language Models]]

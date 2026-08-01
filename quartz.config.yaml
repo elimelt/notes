@@ -15,8 +15,8 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: true
     typography:
-      header: Inter
-      body: Source Sans Pro
+      header: Noto Serif
+      body: Noto Serif
       code: IBM Plex Mono
     colors:
       lightMode:
@@ -104,6 +104,12 @@ plugins:
     order: 80
   - source: "@quartz-community/quartz-fonts"
     enabled: true
+    options:
+      fontOrigin: googleFonts
+      title: Noto Serif
+      header: Noto Serif
+      body: Noto Serif
+      code: IBM Plex Mono
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/alias-redirects"
@@ -139,6 +145,12 @@ plugins:
         focusOnHover: true
       globalGraph:
         showTags: false
+        scale: 0.8
+        repelForce: 0.75
+        centerForce: 0.12
+        linkDistance: 48
+        fontSize: 0.55
+        enableRadial: false
     layout:
       position: right
       priority: 10

@@ -120,3 +120,4 @@ The AOI output is inverted, so `VN` is low when the selected input is high, and 
 - [[hardware/digital-design/369/combinational-logic|Combinational Logic]]
 - [[hardware/digital-design/369/sequential-logic|Sequential Logic]]
 - [[hardware/digital-design/369/quartus-workflow|the Quartus and ModelSim workflow]]
+- [[hardware/computer-architecture/rtl-reading-lab|Open-Source CPU RTL Reading Lab]]

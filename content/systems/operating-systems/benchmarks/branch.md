@@ -88,3 +88,4 @@ On the hardware side, predictors track the history of each branch and the recent
 - [[systems/operating-systems/benchmarks/prefetch|software prefetching]]
 - [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|Cache Line Efficiency Benchmark]]
 - [[systems/operating-systems/benchmarks/reductions|Parallel Reductions Benchmarks]]
+- [[hardware/computer-architecture/rtl-reading-lab|Open-Source CPU RTL Reading Lab]]

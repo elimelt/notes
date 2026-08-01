@@ -10,6 +10,10 @@ date: 2026-07-31
 updated: 2026-07-31
 status: evergreen
 description: Overview of the distributed systems notes, from ordering and consistency to replication, consensus, and scalable services.
+sources:
+  - title: "Large Scale Distributed Deep Networks"
+    url: https://papers.neurips.cc/paper/4687-large-scale-distributed-deep-networks.pdf
+    type: paper
 ---
 
 ## Purpose
@@ -25,3 +29,4 @@ From there, the section branches into system-building patterns such as [[systems
 - Coordination: [[systems/distributed-systems/failure-detectors-leases-leader-election|failure detectors, leases, and leader election]], [[systems/distributed-systems/mutual-exclusion|mutual exclusion]]
 - Scalable services: [[systems/distributed-systems/load-balancing|load balancing]], [[systems/distributed-systems/sharding|sharding]], [[systems/distributed-systems/scaling-web-services|scaling web services]]
 - Case studies: [[systems/distributed-systems/google-file-system|Google File System]], [[systems/distributed-systems/bigtable|Bigtable]], [[systems/distributed-systems/dynamo-db|Dynamo]]
+- ML training runtimes: [[ml/serving-systems/distributed-ml-runtimes|distributed ML runtime architecture]], [[ml/serving-systems/distributed-training|distributed training of LLMs]]

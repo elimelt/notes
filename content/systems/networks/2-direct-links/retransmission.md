@@ -35,6 +35,35 @@ ARQ is used when errors are common or must be corrected, wireless links being th
 - **Sliding window ARQ**: send up to $n$ frames before requiring an ACK. With window size $n$, the sender moves $n$ frames per RTT.
 - **Go-back-N ARQ**: a sliding window where a lost frame forces the sender to retransmit that frame and everything after it.
 
+Stop-and-wait, with the two failure cases every ARQ scheme has to handle:
+
+```mermaid
+sequenceDiagram
+    participant S as Sender
+    participant R as Receiver
+
+    Note over S,R: normal case
+    S->>R: Frame 0
+    R-->>S: ACK 0
+
+    Note over S,R: lost frame
+    S-xR: Frame 1 (lost)
+    Note over S: timeout
+    S->>R: Frame 1 (retransmit)
+    R-->>S: ACK 1
+
+    Note over S,R: lost ACK
+    S->>R: Frame 0
+    R--xS: ACK 0 (lost)
+    Note over S: timeout
+    S->>R: Frame 0 (retransmit)
+    Note over R: sequence number 0 repeats, discard duplicate, re-ACK
+    R-->>S: ACK 0
+```
+
+> [!warning] Duplicates are the sneaky case
+> A lost ACK and a lost frame look identical to the sender, so it retransmits either way. Without sequence numbers the receiver would accept the retransmission as new data. The sequence number is what lets it discard the duplicate and just re-ACK.
+
 ### Timeouts
 
 The timeout can't be too long, or the link sits idle after a loss. It can't be too short, or the sender retransmits frames that were fine. Timeouts are easy to set on a LAN, where latency is predictable, and hard over the Internet, where it varies widely.
@@ -46,6 +75,25 @@ Frames and ACKs both carry sequence numbers so the sender knows exactly which fr
 ### Limitations of stop-and-wait
 
 Only one frame is outstanding at a time, so the link carries at most one frame per RTT no matter how fat it is. That's fine on a LAN and wasteful on any link with a high [[systems/networks/1-physical/coding-and-modulation|bandwidth-delay product]], where keeping the pipe full requires many frames in flight.
+
+Sliding window fixes this by pipelining. New frames go out as ACKs come back, so the window stays full:
+
+```mermaid
+sequenceDiagram
+    participant S as Sender
+    participant R as Receiver
+
+    Note over S,R: window size 3, frames pipelined
+    S->>R: Frame 0
+    S->>R: Frame 1
+    S->>R: Frame 2
+    R-->>S: ACK 0
+    Note over S: window slides, frame 3 may go
+    S->>R: Frame 3
+    R-->>S: ACK 1
+    S->>R: Frame 4
+    R-->>S: ACK 2
+```
 
 ## Pseudocode sketches
 

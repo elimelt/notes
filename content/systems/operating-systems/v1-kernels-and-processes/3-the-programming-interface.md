@@ -238,6 +238,25 @@ main() {
 }
 ```
 
+The same loop as a message flow, including the window where the child rewires its descriptors:
+
+```mermaid
+sequenceDiagram
+    participant Shell
+    participant Kernel
+    participant Child
+
+    Shell->>Kernel: fork()
+    Kernel-->>Shell: returns child pid
+    Kernel-->>Child: returns 0
+    Note over Child: rewires stdin/stdout with dup2 if redirecting
+    Child->>Kernel: exec(prog, args)
+    Note over Child: same process, new program
+    Shell->>Kernel: wait(pid), blocks
+    Child->>Kernel: exit()
+    Kernel-->>Shell: wait returns exit status
+```
+
 Since commands read and write file descriptors, programs are decoupled from their input and output. That buys:
 
 - **A file of commands is a program**: the shell can read commands from a file and execute them as if typed. A script names its _interpreter_ on the first line with a shebang, e.g. `#!/bin/sh`.

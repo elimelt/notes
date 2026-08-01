@@ -22,6 +22,31 @@ sources:
 
 Quick reference for the BSD sockets API, with each call shown in C and Python side by side. The C signatures follow the [socket(2) man pages](https://man7.org/linux/man-pages/man2/socket.2.html), and the full client and server at the bottom come from [Computer Networks: A Systems Approach](https://book.systemsapproach.org/). For what TCP and UDP do underneath these calls, see [[systems/networks/4-transport/TCP|TCP]] and [[systems/networks/4-transport/UDP|UDP]].
 
+The lifecycle the calls below implement, with the server's passive open on the left and the client's active open on the right:
+
+```mermaid
+flowchart TD
+    subgraph Server [Server, passive open]
+        S1[socket] --> S2[bind]
+        S2 --> S3[listen]
+        S3 --> S4[accept, blocks for a connection]
+        S4 --> S5[recv / send on the new socket]
+        S5 --> S6[close the connection socket]
+        S6 --> S4
+    end
+
+    subgraph Client [Client, active open]
+        C1[socket] --> C2[connect]
+        C2 --> C3[send / recv]
+        C3 --> C4[close]
+    end
+
+    C2 -.->|TCP handshake| S4
+
+    style S4 fill:#e3f2fd
+    style C2 fill:#e3f2fd
+```
+
 ## Creating a Socket
 
 ```c

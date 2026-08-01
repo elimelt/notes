@@ -44,6 +44,18 @@ The kernel itself has no process of its own; it is a block of code. The CPU is a
 
 The OS typically keeps a queue of `proc`s for each state a process can be in (`WAITING`, `READY`, and so on). There can be many wait queues, one for each kind of wait: a particular device, a timer, a message.
 
+The queues implement the canonical process state machine, with each transition moving the proc between queues:
+
+```mermaid
+stateDiagram-v2
+    [*] --> READY: fork places child on ready queue
+    READY --> RUNNING: scheduler dispatches, context switch in
+    RUNNING --> READY: preempted, context switch out
+    RUNNING --> WAITING: blocks on device, timer, or message
+    WAITING --> READY: awaited event occurs
+    RUNNING --> [*]: exit
+```
+
 procs are plain data structures, dynamically allocated in OS memory. Existing processes create new ones. The creator is the parent, and the created process is the child.
 
 ## Creating processes

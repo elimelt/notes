@@ -41,6 +41,19 @@ The DHCP server assigns IP addresses on the network. It is typically a router or
 3. The device sends a **DHCP Request** for that address.
 4. The server confirms with a **DHCP Ack**.
 
+```mermaid
+sequenceDiagram
+    participant C as Client (no IP yet)
+    participant S as DHCP server
+
+    Note over C,S: Client broadcasts, it has no address and knows no server
+    C->>S: DHCP Discover (broadcast)
+    S-->>C: DHCP Offer (proposed IP)
+    C->>S: DHCP Request (for the offered IP)
+    S-->>C: DHCP Ack (lease confirmed)
+    Note over C: Client configures the leased IP
+```
+
 A network can run more than one DHCP server for fault tolerance. If one server fails, a client can get an address from another.
 
 ## DHCP client

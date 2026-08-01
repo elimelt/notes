@@ -53,6 +53,9 @@ The basic problem of routing is finding lowest-cost paths between nodes. You cou
 
 So routing protocols are distributed and adaptive, running independently on each router.
 
+> [!abstract] The two families
+> **Distance vector** routers tell their *neighbors* about *everything they can reach*, and each router trusts its neighbors' summaries. **Link state** routers tell *everyone* about *their own neighborhood*, and each router computes paths from the full map itself. The rest of this note works through one protocol from each family, RIP and OSPF.
+
 ## Distance vector routing (RIP)
 
 The **Routing Information Protocol (RIP)** ([RFC 2453](https://datatracker.ietf.org/doc/html/rfc2453)) is the classic distance vector protocol. Each router exchanges routing information with its neighbors and builds up a distributed picture of the network. The update rule is the same one used by **Bellman-Ford**.
@@ -68,6 +71,9 @@ How it operates:
 What it does well: the protocol is simple to implement and understand, updates propagate quickly, and it works fine in small networks.
 
 Where it falls down: hop count ignores bandwidth and delay, so the chosen path can be a bad one. Distance vector protocols are prone to the counting-to-infinity problem, where two routers keep raising each other's estimate of a dead route one hop at a time. Split horizon mitigates it (don't advertise a route back to the neighbor you learned it from). In large networks, frequent updates load the routers and convergence slows down.
+
+> [!warning] Count to infinity
+> When a destination dies, a router that lost its route can hear a stale advertisement from a neighbor whose path runs *through the router itself*. The two then raise each other's estimate one hop per update, and the dead route ages out only when the count reaches the protocol's infinity. This is why RIP defines 16 as unreachable: a small infinity bounds how long the counting lasts.
 
 ### Implementation
 

@@ -92,6 +92,21 @@ Each switch listens to the configuration messages it receives and remembers the 
 
 When a switch adopts a better root, it adds one to the advertised distance and rebroadcasts. A switch that realizes it isn't the root stops originating configuration messages and only forwards the root's (still adding 1 to the distance). A switch that hears a better path over a port stops sending messages out that port. When the system stabilizes, only the root originates configuration messages, and every other switch just forwards them along the tree.
 
+On the smallest loopy topology, a triangle of switches, the algorithm elects the lowest ID as root and blocks one link to break the cycle:
+
+```mermaid
+flowchart TD
+    S1[S1, lowest ID, elected root]
+    S2[S2]
+    S3[S3]
+    S1 ---|on the tree| S2
+    S1 ---|on the tree| S3
+    S2 -. blocked, loop broken .- S3
+    style S1 fill:#e8f5e9,stroke:#2e7d32
+```
+
+Frames between S2 and S3 now detour through the root, which is the price of a loop-free topology. The blocked port keeps listening, so if a tree link dies the algorithm reconverges and reopens it.
+
 ```c
 // Pseudocode for the distributed spanning tree algorithm
 

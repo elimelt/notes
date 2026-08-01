@@ -244,6 +244,24 @@ void Scheduler::makeReady(TCB *thread) {
 
 Note that on `release`, when a waiter exists, the lock value stays `BUSY` and ownership passes directly to the woken thread.
 
+The contended path end to end:
+
+```mermaid
+sequenceDiagram
+    participant T1 as Thread 1, holder
+    participant L as Lock
+    participant T2 as Thread 2
+
+    T2->>L: acquire()
+    Note over L: value is BUSY
+    L->>L: add T2 to wait queue
+    Note over T2: suspended via scheduler.suspend, off the ready list
+    T1->>L: release()
+    Note over L: waiter exists, value stays BUSY
+    L->>T2: scheduler.makeReady(T2)
+    Note over T2: back on the ready list, owns the lock when it runs
+```
+
 ### Case Study: Linux 2.6 Kernel Mutex Lock
 
 In Linux, most locks are `FREE` most of the time, and even a `BUSY` lock usually has no other waiters. The Linux mutex optimizes this common case with a fast path that acquires and releases the lock without touching the spinlock or disabling interrupts, using x86 atomic instructions directly. The mutex has three states:
@@ -306,6 +324,9 @@ lock.release();
 ```
 
 The `while` (rather than `if`) matters because under Mesa semantics, which is what practical systems implement, `signal` only moves a waiter to the ready list. Between the wakeup and the waiter actually reacquiring the lock, another thread can run and change the state, so the condition has to be re-checked.
+
+> [!warning] wait goes inside a while loop, never an if
+> `signal` under Mesa semantics is a hint, not a handoff: it moves a waiter to the ready list, and by the time that waiter reacquires the lock, another thread may have consumed the state change. Implementations are also free to wake waiters spuriously. Re-checking the condition in a `while` loop makes both failure modes harmless; an `if` turns them into corruption bugs.
 
 This section only scratches the surface. The full chapter treatment (bounded buffer with condition variables, readers/writers, design patterns for shared objects) still needs to be written up.
 

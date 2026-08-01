@@ -47,6 +47,22 @@ HTTP/1.1 processes one request at a time per connection: a response must complet
 
 The application-layer HOL problem is gone: a slow response no longer blocks the connection, since other streams keep flowing between its frames. But the fix stops at the TCP boundary. **TCP delivers a single ordered byte stream**, so a single lost segment stalls delivery of *everything* behind it — frames from all streams, including streams whose own packets all arrived — until the retransmission lands. Multiplexing concentrated all the eggs into one basket precisely so that one lost packet could drop them all: under loss, HTTP/2 can perform *worse* than HTTP/1.1's six independent connections, which localize each loss to one-sixth of the traffic. Two further TCP-inherited limits: the handshake tax remains (TCP then TLS, sequentially), and a connection is identified by its 4-tuple, so changing networks — WiFi to cellular — kills every connection.
 
+```mermaid
+flowchart TD
+    subgraph H2 [HTTP/2 over TCP]
+        L1[One packet lost] --> B1[TCP byte stream stalls at the gap]
+        B1 --> S1[All streams blocked until retransmission lands]
+    end
+
+    subgraph H3 [HTTP/3 over QUIC]
+        L2[One packet lost] --> B2[Only streams with data in that packet stall]
+        B2 --> S2[Every other stream keeps delivering]
+    end
+
+    style S1 fill:#f9d0d0,stroke:#c00
+    style S2 fill:#e8f5e9
+```
+
 ## QUIC: rebuilding the transport on UDP
 
 [QUIC (RFC 9000)](https://www.rfc-editor.org/rfc/rfc9000) is a connection-oriented, encrypted, multiplexed transport that runs over UDP. UDP is not the point — it is the deployment vehicle: middleboxes drop or mangle unknown IP protocols, so a new transport must masquerade as an existing one, and user-space implementation lets endpoints ship protocol changes at application-update speed rather than OS-kernel speed ([Langley et al.](https://dl.acm.org/doi/10.1145/3098822.3098842) cite both ossification and iteration velocity as the design drivers; Google shipped multiple QUIC versions per year this way). The design answers each TCP limitation directly:

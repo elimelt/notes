@@ -49,6 +49,22 @@ Terms worth having down cold: **directory**, **root directory**, **home director
 
 The mapping between a name and a file is a **hard link**. A file system that allows multiple hard links to one file stops being a tree and becomes a directed acyclic graph. A **symbolic link** maps a name to another file name instead of to the file itself, which lets you reference files on other volumes or systems. Some operating systems layer similar features above the file system. Windows has **shortcuts**, ordinary files that Windows recognizes and redirects through. MacOS has **aliases**, which behave like symbolic links and also fix themselves up when the target file moves.
 
+```mermaid
+flowchart LR
+    subgraph HL[Hard links: two names, one file]
+        A[Name: /home/a/notes.txt]
+        B[Name: /home/b/shared.txt]
+    end
+    F[(File data + metadata)]
+    A --> F
+    B --> F
+    subgraph SL[Symbolic link: a name for a name]
+        S[Name: /home/c/link.txt]
+    end
+    S -.->|stores the path| A
+    style F fill:#e3f2fd,stroke:#1565c0
+```
+
 ### Volumes
 
 A **volume** is a collection of physical storage resources forming one logical storage device. In the simplest case a volume is a single disk. A disk can also be partitioned into multiple volumes, and a single volume can span multiple disks.

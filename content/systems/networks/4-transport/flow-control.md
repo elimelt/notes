@@ -63,11 +63,49 @@ The receiver keeps a single packet buffer and tracks LAS, the sequence number of
 
 The sender uses one timer. On timeout it retransmits everything from $LAS + 1$ onward. One lost packet therefore costs a full window of retransmissions, which is the price paid for the tiny receiver.
 
+```mermaid
+sequenceDiagram
+    participant S as Sender
+    participant R as Receiver
+
+    S->>R: segment 1
+    R-->>S: ACK 1
+    S-xR: segment 2 (lost)
+    S->>R: segment 3
+    Note over R: Out of order, discarded
+    S->>R: segment 4
+    Note over R: Out of order, discarded
+    Note over S: Timeout, resend everything past LAS
+    S->>R: segment 2 (retransmit)
+    S->>R: segment 3 (retransmit)
+    S->>R: segment 4 (retransmit)
+```
+
 ### Selective Repeat ARQ
 
 The receiver buffers up to $w$ segments, accepting anything in the range $[LAS + 1, LAS + w]$. When $LAS + 1$ arrives, it updates LAS past any buffered in-order segments and ACKs. An out-of-order segment gets buffered, and the receiver re-ACKs the last in-order segment so the sender learns where the gap is. Duplicates trigger the same re-ACK.
 
 The sender keeps a timer per segment and retransmits only the segment that timed out. One loss costs one retransmission, which is the payoff for the extra receiver buffering and bookkeeping.
+
+```mermaid
+sequenceDiagram
+    participant S as Sender
+    participant R as Receiver
+
+    S->>R: segment 1
+    R-->>S: ACK 1
+    S-xR: segment 2 (lost)
+    S->>R: segment 3
+    Note over R: Buffered out of order
+    R-->>S: ACK 1 (duplicate, gap after 1)
+    S->>R: segment 4
+    Note over R: Buffered out of order
+    R-->>S: ACK 1 (duplicate)
+    Note over S: Timer for segment 2 expires
+    S->>R: segment 2 (retransmit, only the loss)
+    Note over R: Delivers 2, 3, 4 in order
+    R-->>S: ACK 4
+```
 
 ## Sequence numbers
 

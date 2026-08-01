@@ -51,6 +51,22 @@ When a device wants to send a packet to another device on the same network, it f
 
 The request reaches every node on the link, but only some act on it. The node that owns the requested IP sends back an ARP reply carrying its MAC address. Nodes that already have an entry for the sender can use the request to refresh that entry. Everyone else drops the request.
 
+The full exchange, with the request broadcast to the link and the reply unicast back:
+
+```mermaid
+sequenceDiagram
+    participant A as Host A (wants MAC for 10.0.0.9)
+    participant B as Host B (10.0.0.5)
+    participant C as Host C (10.0.0.9)
+
+    Note over A,C: Request is broadcast to FF:FF:FF:FF:FF:FF
+    A->>B: ARP request: who has 10.0.0.9?
+    A->>C: ARP request: who has 10.0.0.9?
+    Note over B: Not my IP, drop
+    C-->>A: ARP reply (unicast): 10.0.0.9 is at C's MAC
+    Note over A: Cache the mapping in the ARP table
+```
+
 ## Related notes
 
 - [[systems/networks/3-network/internetworking|internetworking]]

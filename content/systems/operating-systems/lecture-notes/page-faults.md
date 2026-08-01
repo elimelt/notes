@@ -30,6 +30,24 @@ On a fault, an interrupt drops the CPU into the page fault handler, which:
 - fixes up the PTE: marks it valid, clears the referenced and modified bits, sets the protection bits appropriately, and points it at the page frame
 - puts the process back on the ready queue
 
+```mermaid
+flowchart TD
+    F[Access to invalid PTE traps into kernel] --> H[Page fault handler runs]
+    H --> D[Look up page's disk address via PID + VPN]
+    D --> FR{Free frame available?}
+    FR -->|yes| IO[Read page from disk, let another process run]
+    FR -->|no| RP[Run page replacement to pick a victim]
+    RP --> CL{Victim dirty?}
+    CL -->|clean| INV[Mark victim PTE invalid]
+    CL -->|dirty| WB[Mark victim PTE invalid, write victim out]
+    INV --> IO
+    WB --> IO
+    IO --> FIX[Fix up PTE: valid, protection bits, frame number]
+    FIX --> R[Back on ready queue, restart faulting instruction]
+    style F fill:#f9d0d0,stroke:#c00
+    style R fill:#e8f5e9,stroke:#2e7d32
+```
+
 ### Finding the page on disk
 
 - the processor makes the process ID and the faulting virtual address available to the page fault handler
@@ -76,6 +94,22 @@ Add another level of indirection, a page table of page tables. This works becaus
 ##### Two-level page tables
 
 The virtual address splits into three parts: a master page number, a secondary page number, and an offset. The master page table maps the master page number to a secondary page table. The secondary page table maps the secondary page number to a page frame number. The PFN plus the offset yields the physical address.
+
+```mermaid
+flowchart LR
+    VA[Virtual address] --> M[Master page number]
+    VA --> S[Secondary page number]
+    VA --> O[Offset]
+    M -->|index| MPT[(Master page table)]
+    MPT -->|points to| SPT[(Secondary page table)]
+    S -->|index| SPT
+    SPT --> PFN[Page frame number]
+    PFN --> PA[Physical address]
+    O --> PA
+    style MPT fill:#e3f2fd,stroke:#1565c0
+    style SPT fill:#e3f2fd,stroke:#1565c0
+    style PA fill:#e8f5e9,stroke:#2e7d32
+```
 
 #### Other alternatives
 

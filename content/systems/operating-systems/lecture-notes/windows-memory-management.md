@@ -43,6 +43,19 @@ Every physical page has a state in the **page frame number (PFN) database**:
 
 Windows mixes local and global page replacement. Each process has a working set, and pages get trimmed from it in roughly LRU order. Trimmed pages don't leave memory right away. Clean ones go to the standby list and dirty ones to the modified list, both of which behave FIFO, and a process that touches one of its trimmed pages gets it back with a cheap soft fault. The working sets give local, LRU-flavored replacement, and the standby list gives trimmed pages a global second chance.
 
+```mermaid
+stateDiagram-v2
+    Active --> Standby: trimmed while clean
+    Active --> Modified: trimmed while dirty
+    Standby --> Active: soft fault, contents still valid
+    Modified --> Active: soft fault, contents still valid
+    Modified --> Standby: written out to disk
+    Standby --> Free: frame reused for another page
+    Free --> Zeroed: zeroed in the background
+    Zeroed --> Active: satisfies a fresh allocation
+    Free --> Active: reallocated
+```
+
 ## The idle process problem in early Windows
 
 Under a pure **working set** replacement model, a process that goes idle for a long period loses all of its pages from memory. Background processes like antivirus and indexing services make it worse by demanding memory while the user is away. When the user comes back to the process, it has to wait for every page to be read back in from disk.

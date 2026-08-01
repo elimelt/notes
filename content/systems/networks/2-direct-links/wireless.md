@@ -35,9 +35,30 @@ The wireless medium is an unbounded region of space rather than a wire with two 
 
 Two nodes sit out of range of each other, both in range of a third node between them. Each sender hears a quiet channel, so both transmit, and their frames collide at the node in the middle. Carrier sense gave the wrong answer.
 
+```mermaid
+flowchart LR
+    A((A)) -->|frame| B((B))
+    C((C)) -->|frame| B
+    A -.-|out of range, cannot hear each other| C
+    style B fill:#f9d0d0,stroke:#c00
+```
+
+A and C each hear silence, both send, and the frames collide at B.
+
 ## Exposed terminal problem
 
 Two nearby nodes send to different receivers that are out of each other's range. Each sender hears the other and backs off, even though both transmissions would have succeeded. Carrier sense gave the wrong answer in the other direction, wasting capacity instead of causing collisions.
+
+```mermaid
+flowchart LR
+    B((B)) -->|to A| A((A))
+    C((C)) -->|to D| D((D))
+    B ---|hear each other| C
+    style A fill:#e8f5e9,stroke:#2e7d32
+    style D fill:#e8f5e9,stroke:#2e7d32
+```
+
+Both transmissions would succeed at their receivers, but B and C hear each other and needlessly back off.
 
 ## Multiple Access with Collision Avoidance (MACA)
 
@@ -48,6 +69,18 @@ MACA drops carrier sense for a short handshake. Collisions remain possible, on t
 3. **Data**: the sender transmits while nodes that heard the CTS stay silent for the frame's duration.
 
 The handshake fixes both problems above. A hidden terminal hears the receiver's CTS even though it can't hear the sender, so it stays quiet. An exposed terminal hears the RTS but no CTS, so it knows its own transmission won't interfere.
+
+```mermaid
+sequenceDiagram
+    participant A as A (sender)
+    participant B as B (receiver)
+    participant C as C (hidden from A)
+
+    A->>B: RTS with frame size
+    B->>A: CTS echoing frame size
+    Note over C: hears the CTS, stays silent for the frame duration
+    A->>B: Data
+```
 
 ## 802.11 (WiFi)
 

@@ -43,6 +43,9 @@ Naming is hierarchical: files live in directories, and directories nest. The ope
 
 Unix always moves with the `rename` system call. Windows renames only when the file stays on the same volume; a move across volumes becomes a copy followed by a delete.
 
+> [!warning] Atomicity
+> `rename` within a volume is atomic on Unix, which is why editors save by writing a temp file and renaming it over the original; a cross-volume rename fails with `EXDEV` rather than silently degrading. Windows' copy-then-delete across volumes is not atomic, so a failure partway can leave the file in both places or split between them.
+
 ### Deleting files
 
 Unix separates a file's name from the file itself. [`unlink`](https://man7.org/linux/man-pages/man2/unlink.2.html) removes the name, and the storage is reclaimed only after the last reference to the file (an open descriptor or a remaining hard link) goes away, so deleting a file that some process still has open works fine. Windows ties deletion to open handles instead. By default you cannot delete a file while a process has it open, which is where "file in use" errors come from.
@@ -80,6 +83,21 @@ The **File Allocation Table** file system from DOS and early Windows keeps its o
 ```
 
 The reserved area holds the boot sector and metadata about the file system and disk layout. Each FAT area holds a copy of the file allocation table, which has one entry per data cluster, and each entry points to the next cluster of the file it belongs to, so a file is a linked chain through the table. Directory entries in the data area map file names to a file's starting cluster and metadata. The data area holds the actual file contents.
+
+```mermaid
+flowchart LR
+    subgraph DIR[Directory entry]
+        DE[file.txt starts at cluster 4]
+    end
+    subgraph FAT[File allocation table]
+        E4[entry 4: next is 7]
+        E7[entry 7: next is 10]
+        E10[entry 10: end of file]
+    end
+    DE --> E4 --> E7 --> E10
+    style DIR fill:#e3f2fd,stroke:#1565c0
+    style E10 fill:#e8f5e9,stroke:#2e7d32
+```
 
 ## Related notes
 

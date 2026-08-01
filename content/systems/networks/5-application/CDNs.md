@@ -29,6 +29,20 @@ sources:
 
 Answer one question, how do you place content near clients, and walk through the three mechanisms that do it at increasing distance from the user.
 
+```mermaid
+flowchart TD
+    B[Browser cache] -->|miss| P[Proxy cache]
+    P -->|miss| E[CDN edge location]
+    E -->|miss| O[Origin server]
+
+    style B fill:#e8f5e9
+    style P fill:#e3f2fd
+    style E fill:#e3f2fd
+    style O fill:#f9d0d0
+```
+
+Each layer answers what it can, and only misses travel further from the user.
+
 ## Browser cache
 
 The cache closest to the user lives in the browser itself. Browsers cache static content like stylesheets, scripts, images, and some AJAX responses, which speeds up repeat visits.

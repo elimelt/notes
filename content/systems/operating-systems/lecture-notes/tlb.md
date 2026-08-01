@@ -42,6 +42,23 @@ Who handles the miss splits two ways:
 - Hardware, via the MMU, as on x86. The hardware knows where the page table sits in memory and walks it itself. The OS maintains the page table, and it must keep it in the hardware-defined format.
 - Software-loaded TLBs, where the OS does it. A TLB miss traps to the OS like a page fault. The OS finds the page table entry, loads it into the TLB, and restarts the instruction that missed. The handler has to be very fast since it runs on every miss, so the CPU's ISA includes special instructions for loading TLB entries.
 
+```mermaid
+flowchart TD
+    A[Memory access with virtual address] --> T{TLB hit?}
+    T -->|hit| PA[Translation ready, access proceeds]
+    T -->|miss| W[Walk page table, hardware MMU or OS trap]
+    W --> V{PTE valid?}
+    V -->|valid| FILL[Insert translation into TLB, evicting an entry]
+    FILL --> RETRY[Retry the access, now a hit]
+    V -->|invalid| PF[Page fault: OS must load the page first]
+    style PA fill:#e8f5e9,stroke:#2e7d32
+    style RETRY fill:#e8f5e9,stroke:#2e7d32
+    style PF fill:#f9d0d0,stroke:#c00
+```
+
+> [!tip] Measured cost
+> On x86-64 a miss costs a walk of up to four dependent memory loads. The [[systems/operating-systems/benchmarks/tlb|TLB benchmarks]] measure this at roughly 7 ns extra per access once every access lands on a fresh page.
+
 ### Context switching
 
 The OS has to keep the TLB and the page table consistent, so when the page table changes it invalidates the affected TLB entries. When a process is switched in, the OS must invalidate or flush the entire TLB, and the flood of misses that follows is a big part of context switch overhead. Including the PID in the TLB lookup avoids the flush by making the TLB safely shared between processes.

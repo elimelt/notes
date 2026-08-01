@@ -36,6 +36,19 @@ Traffic falls into two kinds from an AS's point of view. Transit traffic passes 
 - **Multihomed AS**: connects to more than one other AS but still refuses transit traffic.
 - **Transit AS**: connects to more than one other AS and carries both local and transit traffic.
 
+```mermaid
+flowchart TD
+    T1[Transit AS] ---|peer to peer| T2[Transit AS]
+    M[Multihomed AS] -->|customer of| T1
+    M -->|customer of| T2
+    S[Stub AS] -->|customer of| T1
+
+    style T1 fill:#e3f2fd
+    style T2 fill:#e3f2fd
+    style M fill:#e8f5e9
+    style S fill:#e8f5e9
+```
+
 BGP ([RFC 4271](https://datatracker.ietf.org/doc/html/rfc4271)) is the protocol that routes traffic between ASes. Intra-domain protocols like OSPF and RIP optimize a cost metric. BGP has no cost metric to optimize, since cost is not a well-defined concept across independently run ASes. It advertises reachability and lets each AS choose among reachable paths according to its own policies.
 
 ## Mechanism
@@ -57,6 +70,9 @@ An AS pairs with its neighbors in one of two arrangements, and the arrangement d
 - **Peer and peer**: two ASes exchange traffic between their respective customers without money changing hands. Each peer advertises customer routes to the other and advertises the peer's routes to its own customers. Routes learned from a peer never go to a provider or to another peer.
 
 ## Route selection
+
+> [!tip] Follow the money
+> Every selection and export rule falls out of the economics. Customer paths earn revenue, peer paths are free, and provider paths cost money, so an AS prefers customer over peer over provider, and it only advertises a route when carrying the resulting traffic pays or costs nothing.
 
 When an AS knows several paths to the same destination, it prefers a path through a customer over a path through a peer, and a path through a peer over a path through a provider. Customer paths earn money, peer paths are free, and provider paths cost money. Among paths of the same class it picks the one with the fewest AS hops.
 

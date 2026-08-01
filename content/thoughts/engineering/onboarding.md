@@ -1,5 +1,5 @@
 ---
-title: How I Onboard
+title: Onboarding
 category: Career
 tags:
   - internships

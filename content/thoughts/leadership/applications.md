@@ -57,4 +57,4 @@ For those applying for president, there will be two interview rounds. The first 
 ## Related notes
 
 - [[reference/slides/getting-a-return-offer|How to Get a Return Offer]]
-- [[thoughts/engineering/onboarding|How I Onboard]]
+- [[thoughts/engineering/onboarding|Onboarding]]

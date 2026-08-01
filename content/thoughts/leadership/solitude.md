@@ -1,5 +1,5 @@
 ---
-title: I'm Glad I Read Solitude and Leadership
+title: Solitude and Leadership
 category: Thoughts
 tags:
   - leadership

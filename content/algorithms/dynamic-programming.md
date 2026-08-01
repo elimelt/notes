@@ -1,5 +1,5 @@
 ---
-title: Dynamic Programming Algorithms and Problem Solutions Guide
+title: Dynamic Programming
 category: Algorithms
 tags:
   - dynamic programming

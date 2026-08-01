@@ -177,5 +177,5 @@ The sort has to produce a new list, since `List.of` gives us an immutable one. T
 
 ## Related
 
-- [[software/java/lambdas-and-streams|A Soft Introduction to Java Streams and Lambdas]]
+- [[software/java/lambdas-and-streams|Java Streams and Lambdas]]
 - [[reference/cheatsheets/java-spring-boot/reference|Spring Boot Annotations]]

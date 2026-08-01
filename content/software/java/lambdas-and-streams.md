@@ -1,5 +1,5 @@
 ---
-title: A Soft Introduction to Java Streams and Lambdas
+title: Java Streams and Lambdas
 aliases:
   - teaching/modern-java/lambdas-and-streams
 category: Software Engineering

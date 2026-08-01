@@ -104,6 +104,12 @@ plugins:
     order: 80
   - source: "@quartz-community/quartz-fonts"
     enabled: true
+    options:
+      fontOrigin: googleFonts
+      title: Noto Serif
+      header: Noto Serif
+      body: Noto Serif
+      code: IBM Plex Mono
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/alias-redirects"

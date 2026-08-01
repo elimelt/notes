@@ -35,3 +35,13 @@ errors in source documents I/the model cite. Still, any time I notice one, I
 try to fix it. If you're the type of person that must write the wrong you
 notice in the world, feel free to open a [PR](https://github.com/elimelt/notes)
 to correct it.
+
+## Browse
+
+- [[algorithms/index|Algorithms]]
+- [[hardware/index|Hardware]]
+- [[math/index|Mathematics]]
+- [[ml/index|Machine learning]]
+- [[software/index|Software engineering]]
+- [[systems/index|Systems]]
+- [[reference/index|Reference material]]

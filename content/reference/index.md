@@ -19,3 +19,4 @@ Not every page needs to be a full note. This branch is where quick reference mat
 
 - Cheatsheets: [[reference/cheatsheets/algorithms/graphs|graph theory]], [[reference/cheatsheets/algorithms/divide-and-conquer|divide and conquer]], [[reference/cheatsheets/circuits/components|circuits components]]
 - Slides: [[reference/slides/system-design|system design]], [[reference/slides/system-design-interviews|system design interviews]]
+- Recipes: [[thoughts/recipe/smore-brownie|s'more blondies]]

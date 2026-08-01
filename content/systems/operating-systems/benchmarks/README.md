@@ -235,3 +235,4 @@ make
 - [[systems/operating-systems/benchmarks/tlb|TLB and page walks]]
 - [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|Cache Line Efficiency Benchmark]]
 - [[systems/performance/streaming|Streaming Data]]
+- [[hardware/computer-architecture/experiments-and-benchmarking|Experiments and Benchmarking in Computer Architecture]]

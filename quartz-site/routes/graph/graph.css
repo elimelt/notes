@@ -39,7 +39,9 @@ body {
     radial-gradient(circle at 15% 10%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 35%),
     var(--paper);
   color: var(--ink);
-  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  font-family: "Noto Serif", serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 100;
 }
 
 .graph-shell {
@@ -72,7 +74,7 @@ body {
 
 h1 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Noto Serif", serif;
   font-size: clamp(1.8rem, 5vw, 3.4rem);
   font-weight: 500;
   letter-spacing: -0.045em;

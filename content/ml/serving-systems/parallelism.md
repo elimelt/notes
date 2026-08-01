@@ -203,3 +203,5 @@ A checkpoint under any sharded strategy has to record which shard of parameters,
 - [[ml/serving-systems/batching|Batching]]
 - [[ml/serving-systems/distributed-training|Distributed Training of Large Language Models]]
 - [[ml/serving-systems/distributed-ml-runtimes|Distributed ML Runtimes]]
+- [[ml/serving-systems/gpu-interconnects|GPU Interconnects and Collective Communication]] for the physical hierarchy behind this note's bandwidth numbers, NCCL's topology mapping, and a ring-AllReduce bandwidth derivation
+- [[hardware/computer-architecture/simd-vectors-gpus-accelerators|From SIMD to SIMT: Vectors, GPUs, and Accelerators]]

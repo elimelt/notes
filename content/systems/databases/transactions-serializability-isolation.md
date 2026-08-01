@@ -24,11 +24,11 @@ sources:
 
 ## Purpose
 
-The transaction-processing foundation for the database branch: what a transaction promises, exactly which interleavings each isolation level rules out, and the theory (conflict serializability, two-phase locking) that makes "serializable" a checkable property rather than a slogan. Anomalies are given as concrete schedules, in the notation of the [Critique paper](https://arxiv.org/abs/cs/0701157): $r_1[x]$ means transaction 1 reads $x$, $w_1[x]$ writes it, $c_1$ commits, $a_1$ aborts. The mechanism that dominates practice, multiversioning, gets its own note in [[systems/databases/mvcc-snapshot-isolation|MVCC and Snapshot Isolation]].
+The transaction-processing foundation for the database branch: what a transaction promises, exactly which interleavings each isolation level rules out, and the theory (conflict serializability, two-phase locking) that makes "serializable" a checkable property rather than a slogan. Anomalies are given as concrete schedules, in the notation of the [Critique paper](https://arxiv.org/abs/cs/0701157): $r_1[x]$ means transaction 1 reads $x$, $w_1[x]$ writes it, $c_1$ commits, $a_1$ aborts. The mechanism that dominates practice, multiversioning, is covered in [[systems/databases/mvcc-snapshot-isolation|MVCC and Snapshot Isolation]].
 
 ## ACID, briefly and skeptically
 
-A transaction groups reads and writes into a unit that commits or aborts atomically. The ACID mnemonic: atomicity (all-or-nothing on abort or crash), consistency (application invariants preserved — a property of the application's transactions, not something the database can supply), isolation (concurrent transactions do not interfere), durability (committed data survives crashes). [Kleppmann](https://dataintensive.net/) is blunt that the terms are used loosely enough that "ACID" is closer to marketing than specification; the substantive engineering lives in what *isolation* means, which is the rest of this note.
+A transaction groups reads and writes into a unit that commits or aborts atomically. The ACID mnemonic: atomicity (all-or-nothing on abort or crash), consistency (application invariants preserved — a property of the application's transactions, not something the database can supply), isolation (concurrent transactions do not interfere), durability (committed data survives crashes). [Kleppmann](https://dataintensive.net/) is blunt that the terms are used loosely enough that "ACID" is closer to marketing than specification; the substantive engineering lives in what *isolation* means.
 
 ## The anomaly zoo, as schedules
 
@@ -46,7 +46,7 @@ Isolation levels are defined by which of these interleavings they exclude. Prose
 
 **A5A, read skew.** $r_1[x] \ldots w_2[x] \ldots w_2[y] \ldots c_2 \ldots r_1[y]$. T1 reads $x$ before T2's update and $y$ after it: a non-atomic view across two items related by an invariant (e.g., $x + y = 100$).
 
-**A5B, write skew.** $r_1[x] \ldots r_2[y] \ldots w_1[y] \ldots w_2[x] \ldots (c_1, c_2)$. Each transaction reads a constraint involving both items and writes the *other* item. Neither writes what the other wrote, so no write-write conflict exists, yet the combined effect can violate an invariant that each transaction individually checked. This is the anomaly snapshot isolation famously permits; the worked example is in [[systems/databases/mvcc-snapshot-isolation|the MVCC note]].
+**A5B, write skew.** $r_1[x] \ldots r_2[y] \ldots w_1[y] \ldots w_2[x] \ldots (c_1, c_2)$. Each transaction reads a constraint involving both items and writes the *other* item. Neither writes what the other wrote, so no write-write conflict exists, yet the combined effect can violate an invariant that each transaction individually checked. This is the anomaly snapshot isolation famously permits; the worked example is in [[systems/databases/mvcc-snapshot-isolation|MVCC and Snapshot Isolation]].
 
 The paper distinguishes broad interpretations (P, the pattern *could* cause an anomaly) from strict ones (A, the anomaly actually materialized in the committed history), and shows the ANSI standard's English wording only pins down the strict readings — which is too weak. Locking implementations exclude the broad patterns.
 

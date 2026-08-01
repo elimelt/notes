@@ -112,3 +112,5 @@ The recurring lesson is that sparsity only helps when the hardware can skip the 
 - [[ml/serving-systems/quantization|Quantization]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
 - [[ml/serving-systems/memory-management|Memory Management]]
+- [[systems/research/sparsity-notes|Faster Causal Self Attention]]
+- [[systems/research/padded-encoder-decoder|Accelerating Padded Encoder-Decoder Transformer Models]]

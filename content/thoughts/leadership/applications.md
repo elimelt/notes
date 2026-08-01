@@ -53,3 +53,8 @@ No experience required for any of the roles!
 For those applying to be an officer, there is only one 30-minute interview. When answering questions, you'll want to highlight what you specifically want to do in the role you're applying for.
 
 For those applying for president, there will be two interview rounds. The first will be a 20-minute interview with the current president, and the second will be a 30-minute interview with a panel of current officers.
+
+## Related notes
+
+- [[reference/slides/getting-a-return-offer|How to Get a Return Offer]]
+- [[thoughts/engineering/onboarding|How I Onboard]]

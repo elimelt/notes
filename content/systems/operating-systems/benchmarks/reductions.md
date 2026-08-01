@@ -190,3 +190,7 @@ done
 
 - [[systems/operating-systems/benchmarks/bandwidth|memory bandwidth]]
 - [[systems/operating-systems/benchmarks/false_sharing|false sharing]]
+- [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|cache line efficiency]]
+- [[ml/serving-systems/roofline-reference|roofline model]]
+- [[systems/operating-systems/benchmarks/branch|branch prediction]]
+- [[systems/performance/streaming|streaming data]]

@@ -9,6 +9,8 @@ tags:
   - systems
   - networking
   - paper-notes
+  - packet-switching
+  - datagrams
 date: 2025-01-14
 updated: 2026-07-30
 status: evergreen
@@ -51,7 +53,7 @@ The secondary goals, in the paper's order of importance:
 
 ## Datagrams
 
-The datagram is the key building block. It is a connectionless service with no state established ahead of time, and each packet is independent. UDP is the application-level interface to the internet's datagram service, and other protocols build on top of it conceptually; TCP adds connections, reliability, and in-order delivery, while UDP itself stays unreliable and unordered, with no QoS guarantees from the lower level.
+The [[systems/networks/3-network/networking-services|datagram]] is the key building block. It is a connectionless service with no state established ahead of time, and each packet is independent. UDP is the application-level interface to the internet's datagram service, and other protocols build on top of it conceptually; TCP adds connections, reliability, and in-order delivery, while UDP itself stays unreliable and unordered, with no QoS guarantees from the lower level.
 
 ## Supporting a variety of networks
 
@@ -79,3 +81,8 @@ The datagram is a simple idea that scales and distributes naturally, and the str
 
 - [[systems/research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]
 - [[systems/research/development-of-the-dns|Development of the Domain Name System]]
+- [[systems/networks/3-network/networking-services|Networking Services]]
+- [[systems/networks/0-foundation/1-network-components-and-protocols|Network Components and Protocols]]
+- [[systems/networks/2-direct-links/multiple-access|Multiple Access]]
+- [[systems/networks/5-application/overview|Application Layer Overview]]
+- [[systems/networks/3-network/motivation|Motivation behind the Network Layer]]

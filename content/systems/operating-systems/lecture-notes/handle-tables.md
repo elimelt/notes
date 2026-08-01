@@ -64,3 +64,5 @@ Copy-on-write is the modern approach. The child gets its own page table, but eve
 
 - [[systems/operating-systems/lecture-notes/processes|processes]]
 - [[systems/operating-systems/lecture-notes/windows-objects-handles-refcounts|Windows objects, handles, and reference counts]]
+- [[systems/operating-systems/lecture-notes/page-faults|page faults]]
+- [[systems/operating-systems/lecture-notes/windows-memory-management|Windows Memory Management]]

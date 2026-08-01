@@ -199,3 +199,4 @@ Map<String, List<User>> usersByRole = users.stream()
 ## Related
 
 - [[software/java/collections-and-records|Creating Collections and Data Types in Modern Java]]
+- [[systems/databases/derived-data/ch10-batch-processing|Batch Processing Systems and MapReduce Fundamentals]]

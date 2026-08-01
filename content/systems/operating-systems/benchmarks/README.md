@@ -211,7 +211,7 @@ Sequential:    1.3M LLC loads    (for 537M accesses)
 Random:        1.07B LLC loads   (for 537M accesses)
 ```
 
-With sequential access, only about 0.2% of accesses ever reach L3. The prefetcher pulls lines into L1 and L2 before the load instruction even executes. Each 64-byte line covers 8 adjacent `uint64_t` values, and the prefetcher tracks multiple concurrent streams with strides up to a few KB.
+With sequential access, only about 0.2% of accesses ever reach L3. The prefetcher pulls lines into L1 and L2 before the load instruction even executes. Each 64-byte [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|cache line]] covers 8 adjacent `uint64_t` values, and the prefetcher tracks multiple concurrent streams with strides up to a few KB.
 
 ## Reading the 97 ns number
 
@@ -233,3 +233,5 @@ make
 - [[systems/operating-systems/benchmarks/mlp|memory-level parallelism]]
 - [[systems/operating-systems/benchmarks/bandwidth|memory bandwidth]]
 - [[systems/operating-systems/benchmarks/tlb|TLB and page walks]]
+- [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|Cache Line Efficiency Benchmark]]
+- [[systems/performance/streaming|Streaming Data]]

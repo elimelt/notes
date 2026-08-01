@@ -56,5 +56,10 @@ Given a continuous function $f$ and two points $a < b$ such that $f(a) \cdot f(b
 
 ## Related
 
+- [[algorithms/divide-and-conquer|Divide and Conquer Examples and Analysis]]
+- [[algorithms/runtime|Algorithm Efficiency and Asymptotic Notation]]
+- [[algorithms/approximation-algorithms|Approximation Algorithms]]
+- [[algorithms/dynamic-programming|Dynamic Programming]]
+- [[algorithms/greedy-algorithms|Greedy Algorithms]]
 - [[reference/cheatsheets/algorithms/graphs|Graph Theory]]
 - [[reference/cheatsheets/algorithms/intervals|Interval Scheduling/Partitioning]]

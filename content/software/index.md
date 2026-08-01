@@ -19,3 +19,7 @@ This branch is intentionally narrow for now. It holds practical language-level n
 
 - [[software/java/collections-and-records|Creating Collections and Data Types in Modern Java]]
 - [[software/java/lambdas-and-streams|A Soft Introduction to Java Streams and Lambdas]]
+
+## Related notes
+
+- [[reference/index|Reference]]

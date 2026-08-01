@@ -8,6 +8,7 @@ tags:
   - systems
   - operating systems
   - paper-notes
+  - file-systems
 date: 2025-01-16
 updated: 2026-07-30
 status: draft
@@ -32,7 +33,7 @@ The problem statement is deliberately unspecific. The authors were burnt by Mult
 
 ## File system implementation
 
-The file system is a tree, and additional file systems get mounted onto a file. A system table of i-numbers (the i-list) holds an i-node of metadata for each file. Path names don't distinguish between files and directories, and a mount table tracks mounted file systems.
+The [[systems/operating-systems/lecture-notes/file-systems|file system]] is a tree, and additional file systems get mounted onto a file. A system table of i-numbers (the i-list) holds an i-node of metadata for each file. Path names don't distinguish between files and directories, and a mount table tracks mounted file systems.
 
 Buffering is built into the kernel and transparent to the user, with write-behind flushing to disk when the buffer fills.
 
@@ -52,3 +53,9 @@ An **image** is an execution environment, a rough parallel to a container. A **p
 
 - [[systems/research/exokernel|Exokernel]]
 - [[systems/research/xen|Xen and the Art of Virtualization]]
+- [[systems/operating-systems/lecture-notes/file-systems|File Systems]]
+- [[systems/operating-systems/v4-persistent-storage/13-files-and-directories|Files and Directories]]
+- [[systems/operating-systems/lecture-notes/io-systems-secondary-storage|I/O Systems and Secondary Storage]]
+- [[systems/operating-systems/lecture-notes/file-systems|File Systems]]
+- [[systems/operating-systems/v4-persistent-storage/13-files-and-directories|Files and Directories]]
+- [[systems/operating-systems/lecture-notes/io-systems-secondary-storage|I/O Systems and Secondary Storage]]

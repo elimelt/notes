@@ -127,6 +127,7 @@ def level_order_traversal(graph, start):
 
 ## Related notes
 
+- [[algorithms/patterns/BFS|BFS pattern]]
 - [[algorithms/graphs-intro|Graph fundamentals]]
 - [[algorithms/DFS|depth-first search]]
 - [[algorithms/connected-components|connected components]]

@@ -199,3 +199,4 @@ In real deployments, metrics change rarely, if at all, and only under the contro
 - [[systems/networks/3-network/BGP|BGP]]
 - [[systems/networks/3-network/global-internet|the global Internet]]
 - [[algorithms/graphs-intro|graph fundamentals]]
+- [[systems/networks/2-direct-links/switching|Switched Ethernet]]

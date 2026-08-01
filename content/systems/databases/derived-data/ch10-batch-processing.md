@@ -10,6 +10,8 @@ tags:
   - distributed-filesystems
   - data-analysis
   - etl
+  - streaming
+  - throughput
 date: 2023-12-23
 updated: 2026-07-30
 status: evergreen
@@ -30,7 +32,7 @@ Reading notes on chapter 10 of [Designing Data-Intensive Applications](https://d
 
 **Batch processing** (offline systems) runs scheduled jobs that process accumulated data. Performance is measured in throughput.
 
-**Stream processing** (near-real-time systems) sits between the two. A stream processor consumes a stream of events and computes aggregates as events arrive rather than on a schedule, and performance is measured in latency.
+**[[systems/performance/streaming|Stream processing]]** (near-real-time systems) sits between the two. A stream processor consumes a stream of events and computes aggregates as events arrive rather than on a schedule, and performance is measured in latency.
 
 ## Batch processing with Unix tools
 
@@ -60,7 +62,7 @@ The Python version keeps its counts in an in-memory hash table. The Unix pipelin
 
 ## MapReduce and distributed filesystems
 
-**MapReduce** is a programming model for processing large amounts of data in bulk across many machines. A job runs a user-defined map function in parallel over many input records, then runs a user-defined reduce function over the map output grouped by key.
+**[[ml/recommender-systems/intro-mapreduce-spark|MapReduce]]** is a programming model for processing large amounts of data in bulk across many machines. A job runs a user-defined map function in parallel over many input records, then runs a user-defined reduce function over the map output grouped by key.
 
 **Hadoop** is the main open source MapReduce implementation, and it ships with **HDFS** (Hadoop Distributed Filesystem). HDFS stores large files for streaming access, optimized for throughput over latency, and follows the design of the Google File System. It differs from an object store like Amazon S3 in that computation runs on the machines storing the data.
 
@@ -210,3 +212,6 @@ def query(user_id):
 
 - [[systems/databases/foundations/ch3-storage-and-retrieval|storage and retrieval]]
 - [[systems/distributed-systems/google-file-system|distributed file systems]]
+- [[ml/recommender-systems/intro-mapreduce-spark|Distributed Computing for Data Mining]]
+- [[systems/performance/streaming|Streaming Data]]
+- [[reference/slides/system-design-interviews|System Design Interviews]]

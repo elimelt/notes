@@ -119,4 +119,5 @@ Connected side by side, on branches that originate from the same point. The curr
 
 ## Related
 
+- [[hardware/signal-conditioning/lecture-notes/lecture-3|Resistance]]
 - [[reference/cheatsheets/circuits/components|Electronic Components]]

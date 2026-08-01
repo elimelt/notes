@@ -129,3 +129,4 @@ Rolling upgrades still require compatible message encodings across framework ver
 
 - [[systems/databases/distributed-data/ch5-replication|replication]]
 - [[systems/distributed-systems/RPC|RPC]]
+- [[reference/slides/system-design-interviews|System Design Interviews]]

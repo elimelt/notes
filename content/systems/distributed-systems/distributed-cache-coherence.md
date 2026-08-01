@@ -112,3 +112,8 @@ Write back caching creates a durability problem, since a cache failure can lose 
 
 - [[systems/distributed-systems/consistency|consistency]]
 - [[systems/distributed-systems/primary-backup|primary-backup replication]]
+- [[systems/research/development-of-the-dns|Development of the Domain Name System]]
+- [[systems/networks/5-application/DNS|Domain Name System (DNS)]]
+- [[systems/operating-systems/benchmarks/false_sharing|False Sharing Benchmarks]]
+- [[systems/research/hints-for-computer-system-design|Hints for Computer System Design]]
+- [[systems/databases/distributed-data/preface|Scalable Distributed Data Systems]]

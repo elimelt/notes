@@ -133,6 +133,10 @@ What are the weaknesses of the original prompt? How could it be improved to bett
 After analyzing the weaknesses, provide an improved version of the prompt."""
 ```
 
+## Related notes
+
+- [[index|(not) Elijah's Notes]]
+
 ## Sources
 
 - [Brown et al. (2020), Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)

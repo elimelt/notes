@@ -9,6 +9,8 @@ tags:
   - graph-databases
   - data-modeling
   - query-languages
+  - mapreduce
+  - distributed-storage
 date: 2023-12-19
 updated: 2026-07-30
 status: evergreen
@@ -115,11 +117,11 @@ Choose whichever model simplifies your application code the most and matches you
 
 Data locality means related data items sit together on the same storage device, for example the same disk block or the same server node. Queries that touch collocated data avoid extra seeks and network hops.
 
-A document database has to load an entire document even when the query needs a small part of it, so keep documents small. Google Spanner gets locality in a relational model by letting rows be interleaved (nested) within a parent table. Column-family databases such as Bigtable, HBase, and Cassandra manage locality with a similar idea. Many relational databases also have XML and JSON column types, which store documents inside a row of a table.
+A document database has to load an entire document even when the query needs a small part of it, so keep documents small. Google Spanner gets locality in a relational model by letting rows be interleaved (nested) within a parent table. Column-family databases such as [[systems/distributed-systems/bigtable|Bigtable]], HBase, and Cassandra manage locality with a similar idea. Many relational databases also have XML and JSON column types, which store documents inside a row of a table.
 
 ## MapReduce querying
 
-MapReduce is a programming model for processing large amounts of data in bulk across many machines, popularized by Google. It has two steps. The map step takes a document as input and produces intermediate key-value pairs. The reduce step takes all values emitted for a key and collapses them into a result, which can be a single value or a more complex structure.
+[[ml/recommender-systems/intro-mapreduce-spark|MapReduce]] is a programming model for processing large amounts of data in bulk across many machines, popularized by Google. It has two steps. The map step takes a document as input and produces intermediate key-value pairs. The reduce step takes all values emitted for a key and collapses them into a result, which can be a single value or a more complex structure.
 
 MapReduce fits batch processing. It does not fit interactive queries that need low latency. Some NoSQL databases, for example MongoDB and CouchDB, expose a limited form of MapReduce for reading batches of documents. The same aggregation looks like this in SQL, MongoDB's mapReduce API, and MongoDB's aggregation pipeline:
 
@@ -218,3 +220,7 @@ A triple-store holds three-part statements of the form `(subject, predicate, obj
 
 - [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|reliable, scalable systems]]
 - [[systems/databases/foundations/ch3-storage-and-retrieval|storage and retrieval]]
+- [[ml/recommender-systems/intro-mapreduce-spark|Distributed Computing for Data Mining]]
+- [[reference/slides/system-design-interviews|System Design Interviews]]
+- [[systems/distributed-systems/bigtable|Bigtable, A Distributed Storage System for Structured Data]]
+- [[reference/slides/system-design|Patterns for Scalability and Reliability in Systems]]

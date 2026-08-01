@@ -69,7 +69,7 @@ The base API provides:
 
 ## Building blocks
 
-Bigtable stores log and data files in [[systems/distributed-systems/google-file-system|GFS]]. On-disk data uses the *SSTable* format, a persistent, ordered, immutable map from byte-string keys to byte-string values. An SSTable supports point lookups and range iteration. Internally it is a sequence of blocks (64KB by default, configurable) with a block index at the end of the file. The index is loaded into memory when the SSTable is opened, so a lookup is a binary search in memory to find the block, then one disk seek to read and scan it. An SSTable can also be mapped fully into memory to avoid disk entirely.
+Bigtable stores log and data files in [[systems/distributed-systems/google-file-system|GFS]]. On-disk data uses the [[systems/databases/foundations/ch3-storage-and-retrieval|SSTable]] format, a persistent, ordered, immutable map from byte-string keys to byte-string values. An SSTable supports point lookups and range iteration. Internally it is a sequence of blocks (64KB by default, configurable) with a block index at the end of the file. The index is loaded into memory when the SSTable is opened, so a lookup is a binary search in memory to find the block, then one disk seek to read and scan it. An SSTable can also be mapped fully into memory to avoid disk entirely.
 
 Bigtable also depends on *Chubby*, Google's distributed lock service, which runs a five-node Paxos group with one leader serving requests. Chubby provides locks and small-file storage, and Bigtable uses it for:
 
@@ -159,7 +159,7 @@ The paper's evaluation shows scaling that is real but far from linear. Going fro
 
 ### Google Analytics
 
-Google Analytics embeds a JavaScript snippet in pages, records per-visit information, and surfaces reports to site owners. Two of its Bigtable tables: a raw click table with a row per end-user session, and a summary table of predefined per-site summaries computed periodically by MapReduce over the raw click table. The click table's row keys make sessions for the same site contiguous and chronologically sorted. The paper reports the click table compressing to 14% of its original ~200 TB, and the summary table to 29% of its ~20 TB.
+Google Analytics embeds a JavaScript snippet in pages, records per-visit information, and surfaces reports to site owners. Two of its Bigtable tables: a raw click table with a row per end-user session, and a summary table of predefined per-site summaries computed periodically by [[ml/recommender-systems/intro-mapreduce-spark|MapReduce]] over the raw click table. The click table's row keys make sessions for the same site contiguous and chronologically sorted. The paper reports the click table compressing to 14% of its original ~200 TB, and the summary table to 29% of its ~20 TB.
 
 ### Google Earth
 
@@ -169,3 +169,5 @@ Google Maps and Google Earth store part of their data in Bigtable, with one tabl
 
 - [[systems/distributed-systems/google-file-system|Google File System]]
 - [[systems/distributed-systems/sharding|sharding]]
+- [[systems/databases/foundations/ch3-storage-and-retrieval|Storage and Retrieval Techniques]]
+- [[ml/recommender-systems/intro-mapreduce-spark|Distributed Computing for Data Mining]]

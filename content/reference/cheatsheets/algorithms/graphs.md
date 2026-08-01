@@ -105,5 +105,10 @@ An ordering of nodes $v_1, v_2, \ldots, v_n$ so that for every edge $(v_i, v_j)$
 
 ## Related
 
+- [[algorithms/BFS|Breadth First Search Algorithm]]
+- [[algorithms/graphs-intro|Introduction to Undirected Graphs]]
+- [[algorithms/bipartite-graphs|Bipartite Graphs]]
+- [[algorithms/tree-intro|Tree Properties and Edge Count]]
+- [[algorithms/DFS|Depth First Search Algorithm]]
 - [[reference/cheatsheets/algorithms/divide-and-conquer|Divide and Conquer Algorithms]]
 - [[reference/cheatsheets/algorithms/intervals|Interval Scheduling/Partitioning]]

@@ -106,3 +106,6 @@ The isolation between components buys reliability, and a smaller kernel means le
 - [[systems/operating-systems/lecture-notes/kernel-abstraction|hardware modes]]
 - [[systems/operating-systems/lecture-notes/processes|processes]]
 - [[systems/operating-systems/lecture-notes/file-systems|file systems]]
+- [[systems/research/unix-timesharing-system|Unix timesharing system]]
+- [[systems/operating-systems/reference|operating systems reference]]
+- [[systems/research/barrelfish|multikernel]]

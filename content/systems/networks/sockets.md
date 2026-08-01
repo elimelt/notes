@@ -399,3 +399,4 @@ while True:
 - [[systems/networks/4-transport/TCP|TCP]]
 - [[systems/networks/4-transport/UDP|UDP]]
 - [[systems/networks/reference|networks reference]]
+- [[systems/networks/3-network/DHCP|Dynamic Host Configuration Protocol (DHCP)]]

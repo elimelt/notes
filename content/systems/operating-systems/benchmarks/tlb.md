@@ -89,3 +89,6 @@ Huge pages attack the same problem from the other side. A 2 MB page covers 512 t
 
 - [[systems/operating-systems/benchmarks/README|measuring real DRAM latency]]
 - [[systems/operating-systems/benchmarks/mlp|memory-level parallelism]]
+- [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|cache line efficiency]]
+- [[systems/operating-systems/benchmarks/branch|branch prediction]]
+- [[systems/operating-systems/benchmarks/store_fwd|store-to-load forwarding]]

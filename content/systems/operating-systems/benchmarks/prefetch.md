@@ -86,3 +86,6 @@ Prefetching does nothing for a pointer chase, since `array[array[i]]` needs `arr
 
 - [[systems/operating-systems/benchmarks/mlp|memory-level parallelism]]
 - [[systems/operating-systems/benchmarks/README|measuring real DRAM latency]]
+- [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|cache line efficiency]]
+- [[systems/operating-systems/benchmarks/reductions|parallel reductions]]
+- [[systems/operating-systems/benchmarks/tlb|TLB and page walks]]

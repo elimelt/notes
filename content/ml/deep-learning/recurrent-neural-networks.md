@@ -213,6 +213,10 @@ Their core weakness remains the same: the hidden state is a narrow information b
 
 ## Related Notes
 
+- [[deep-learning/character-level-rnn-on-wikitext-2|Character-Level RNN on WikiText-2]]
+- [[ml/nlp/reading/neural-networks|Feedforward Neural Networks]]
+- [[systems/research/sparsity-notes|Faster Causal Self Attention]]
+- [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]]
 - [[ml/deep-learning/encoder-decoder-transformers|Encoder-Decoder Transformers]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
 

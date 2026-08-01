@@ -24,3 +24,7 @@ The section also holds practical notes that sit closer to modern language models
 - Build classifiers: [[ml/nlp/reading/classification|classification]], [[ml/nlp/reading/multinomial-logistic-regression|multinomial logistic regression]]
 - Add nonlinear models: [[ml/nlp/reading/neural-networks|neural networks]]
 - Use current models: [[ml/nlp/prompting|prompting]]
+
+## Related notes
+
+- [[deep-learning/character-level-rnn-on-wikitext-2|Character-Level RNN on WikiText-2]]

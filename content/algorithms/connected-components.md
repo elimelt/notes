@@ -66,3 +66,4 @@ When solving a graph problem, first assume the graph is connected. Once you have
 - [[algorithms/BFS|breadth-first search]]
 - [[algorithms/DFS|depth-first search]]
 - [[algorithms/graphs-intro|graph fundamentals]]
+- [[reference/cheatsheets/algorithms/graphs|graph theory cheatsheet]]

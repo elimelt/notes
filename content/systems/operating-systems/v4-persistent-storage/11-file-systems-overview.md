@@ -55,5 +55,6 @@ A **volume** is a collection of physical storage resources forming one logical s
 
 ## Related notes
 
+- [[systems/research/unix-timesharing-system|The Unix Timesharing System]]
 - [[systems/operating-systems/v4-persistent-storage/13-files-and-directories|files and directories]]
 - [[systems/operating-systems/lecture-notes/io-systems-secondary-storage|secondary storage]]

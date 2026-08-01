@@ -68,3 +68,5 @@ How much would lightweight training of the block segmentation and representative
 
 - [[ml/serving-systems/memory-management|Memory Management in LLM Serving Systems]]
 - [[ml/serving-systems/sparsity-and-pruning|Sparsity and Pruning]]
+- [[systems/research/sparsity-notes|Faster Causal Self Attention]]
+- [[ml/nlp/prompting|Prompting Language Models]]

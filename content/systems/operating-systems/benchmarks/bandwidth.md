@@ -78,3 +78,4 @@ Use arrays of 1 GB or more so the run stays memory-bound instead of measuring ca
 - [[systems/operating-systems/benchmarks/README|measuring real DRAM latency]]
 - [[systems/operating-systems/benchmarks/mlp|memory-level parallelism]]
 - [[systems/operating-systems/benchmarks/reductions|parallel reductions]]
+- [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|Cache Line Efficiency Benchmark]]

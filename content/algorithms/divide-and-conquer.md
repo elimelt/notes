@@ -189,6 +189,8 @@ def closest_points(P):
 
 ## Related notes
 
+- [[reference/cheatsheets/algorithms/divide-and-conquer|divide and conquer cheatsheet]]
+- [[algorithms/practice/4|problem set 4]]
 - [[algorithms/induction|induction]]
 - [[algorithms/runtime|runtime analysis]]
 - [[algorithms/dynamic-programming|dynamic programming]]

@@ -98,3 +98,5 @@ Decentralized management brings inconsistency in cached answers, difficulty push
 
 - [[systems/research/internet-design-philosophy|Design Philosophy of DARPA Internet Protocols]]
 - [[systems/research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]
+- [[reference/slides/system-design-interviews|System Design Interviews]]
+- [[systems/databases/distributed-data/preface|Scalable Distributed Data Systems]]

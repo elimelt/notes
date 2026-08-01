@@ -36,5 +36,9 @@ Greedy algorithms for the two classic interval problems, with proof sketches.
 
 ## Related
 
+- [[algorithms/greedy-algorithms|Greedy Algorithms]]
+- [[algorithms/practice/4|Problem Set 4 Notes]]
+- [[algorithms/approximation-algorithms|Approximation Algorithms]]
+- [[algorithms/network-flows|Network Flow Algorithms]]
 - [[reference/cheatsheets/algorithms/divide-and-conquer|Divide and Conquer Algorithms]]
 - [[reference/cheatsheets/algorithms/graphs|Graph Theory]]

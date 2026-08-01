@@ -62,6 +62,9 @@ Compatibility work gets kicked up into user space. Every application developer o
 
 ## Related notes
 
+- [[systems/operating-systems/lecture-notes/components|Components of an OS]]
+- [[systems/operating-systems/v1-kernels-and-processes/1-introductions|What Is an Operating System?]]
+- [[systems/operating-systems/v1-kernels-and-processes/2-the-kernel-abstraction|The Kernel Abstraction]]
 - [[systems/research/unix-timesharing-system|The Unix Timesharing System]]
 - [[systems/research/xen|Xen and the Art of Virtualization]]
 - [[systems/research/barrelfish|The Multikernel]]

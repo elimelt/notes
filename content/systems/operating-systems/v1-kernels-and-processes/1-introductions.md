@@ -241,3 +241,11 @@ Extensive testing like in other forms of software (unit, integration, fuzzing, f
 ### 13. For the computer you are currently using, how should the operating system designers prioritize among reliability, security, portability, performance, and adoption? Explain why.
 
 As a user of a MacBook Pro, security, performance, and adoption are extremely important. As a developer it would also be nice to have a portable and, secondarily, a reliable system. One area where Apple has clearly deprioritized portability is hardware support, although that is also wrapped up with adoption of Apple Silicon.
+
+## Related notes
+
+- [[systems/research/hints-for-computer-system-design|Hints for Computer System Design]]
+- [[systems/operating-systems/reference|Operating Systems Reference]]
+- [[systems/research/xen|Xen and the Art of Virtualization]]
+- [[systems/operating-systems/lecture-notes/io-systems-secondary-storage|I/O Systems and Secondary Storage]]
+- [[systems/research/barrelfish|The Multikernel, A new OS architecture for scalable multicore systems]]

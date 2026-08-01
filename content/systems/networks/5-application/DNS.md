@@ -86,3 +86,4 @@ Plain DNS has no authentication, so responses can be spoofed. DNSSEC adds signat
 - [[systems/networks/5-application/HTTP|HTTP]]
 - [[systems/networks/5-application/CDNs|content delivery networks]]
 - [[systems/networks/3-network/global-internet|the global Internet]]
+- [[systems/research/development-of-the-dns|Development of the Domain Name System]]

@@ -58,6 +58,10 @@ After that, the paper notes land better:
   - [[ml/recommender-systems/deep-neural-networks-for-youtube-recommendations|YouTube recommendations]]
   - [[ml/recommender-systems/predicting-clicks-on-ads-at-facebook|Facebook ads CTR]]
 
+## Related notes
+
+- [[recc-sys/movielens-100k-two-tower-retrieval|MovieLens 100K Two-Tower Retrieval]]
+
 ## Sources
 
 - [Covington, Adams, and Sargin (2016), Deep Neural Networks for YouTube Recommendations](https://research.google.com/pubs/archive/45530.pdf)

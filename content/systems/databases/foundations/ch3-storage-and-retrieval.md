@@ -56,14 +56,14 @@ For concurrency, keep a single write thread and multiple read threads. Writes se
 
 A Sorted String Table (SSTable) stores key-value pairs sorted by key. Segments are organized by time: reads search from the most recent segment backwards, and a background process merges older segments. Because segments are sorted, merging works like mergesort, keeping only the most recent value for each key, and range queries are fast. A sparse in-memory index of byte offsets is enough, since sorted order lets you scan from the nearest indexed key.
 
-A Log-Structured Merge Tree (LSM-tree) is the combination of an in-memory balanced tree with on-disk SSTables. The simplified algorithm used by LevelDB, and similarly by Cassandra and HBase (both inspired by Bigtable):
+A Log-Structured Merge Tree (LSM-tree) is the combination of an in-memory balanced tree with on-disk SSTables. The simplified algorithm used by LevelDB, and similarly by Cassandra and HBase (both inspired by [[systems/distributed-systems/bigtable|Bigtable]]):
 
 - When a write comes in, add it to an in-memory balanced tree (the memtable).
 - When the memtable exceeds some threshold, typically a few megabytes, write it out to disk as an SSTable file. Writes continue to a fresh memtable meanwhile.
 - On a read, check the memtable first, then the most recent on-disk segment, then progressively older segments.
 - Periodically merge and compact segment files in the background.
 
-Lucene, the index engine behind Elasticsearch and Solr, uses a similar scheme for its term dictionary. Words are the keys and the values are posting lists, the ids of documents containing each word. The term dictionary lives in SSTable-like files that are merged periodically.
+Lucene, the index engine behind Elasticsearch and Solr, uses a similar scheme for its term dictionary. Words are the keys and the values are [[ml/nlp/reading/information-retrieval|posting lists]], the ids of documents containing each word. The term dictionary lives in SSTable-like files that are merged periodically.
 
 ### Performance optimizations
 
@@ -145,3 +145,5 @@ A materialized view is a precomputed, stored query result, usually a join or agg
 
 - [[systems/databases/foundations/ch2-data-models-and-query-languages|data models]]
 - [[systems/databases/distributed-data/ch5-replication|replication]]
+- [[systems/distributed-systems/bigtable|Bigtable, A Distributed Storage System for Structured Data]]
+- [[ml/nlp/reading/information-retrieval|Indexing and Information Retrieval]]

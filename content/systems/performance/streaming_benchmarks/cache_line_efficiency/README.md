@@ -74,3 +74,6 @@ The Makefile builds `benchmark.c` with the flags above. The `-march=armv8.5-a+si
 ## Related notes
 
 - [[systems/performance/streaming|Streaming Data]]
+- [[systems/operating-systems/benchmarks/bandwidth|Memory Bandwidth Benchmarks]]
+- [[systems/operating-systems/benchmarks/store_fwd|Store-to-Load Forwarding Benchmarks]]
+- [[systems/operating-systems/benchmarks/branch|Branch Prediction Benchmarks]]

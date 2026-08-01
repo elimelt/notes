@@ -120,7 +120,7 @@ This only works if the operation is **idempotent**, meaning repeated execution h
 
 Does TCP solve this? Not really, despite being reliable. Most RPCs travel over TCP, which guarantees in-order delivery with retransmission and duplicate detection. It still cannot give exactly-once semantics. If the server crashes after processing the request and before sending the response, the client retransmits and the server executes the request again.
 
-**End to end principle**: functionality should be implemented where it can be completely handled, rather than partially handled at each layer. Handling retries at the RPC layer rather than trusting TCP is an instance of this.
+**[[systems/research/end-to-end-arguments-in-sys-design|End to end principle]]**: functionality should be implemented where it can be completely handled, rather than partially handled at each layer. Handling retries at the RPC layer rather than trusting TCP is an instance of this.
 
 Examples of idempotent workloads:
 
@@ -147,3 +147,4 @@ The problem is that after sending any message, the sender cannot know it was del
 
 - [[systems/distributed-systems/two-phase-commit|two-phase commit]]
 - [[systems/distributed-systems/primary-backup|primary backup]]
+- [[systems/research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]

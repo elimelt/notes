@@ -230,3 +230,5 @@ for i in range(len(res)):
 - [[algorithms/bipartite-graphs|bipartite graphs]]
 - [[algorithms/greedy-algorithms|greedy algorithms]]
 - [[algorithms/induction|induction]]
+- [[algorithms/practice/4|Problem Set 4 Notes]]
+- [[reference/cheatsheets/algorithms/intervals|Interval Scheduling/Partitioning]]

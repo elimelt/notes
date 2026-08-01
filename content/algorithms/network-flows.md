@@ -295,3 +295,4 @@ Let $I \subseteq V$ be a maximum independent set of $G$, and $k$ the maximum num
 - [[algorithms/graphs-intro|graph fundamentals]]
 - [[algorithms/bipartite-graphs|bipartite graphs]]
 - [[algorithms/linear-programming|linear programming]]
+- [[algorithms/practice/4|Problem Set 4 Notes]]

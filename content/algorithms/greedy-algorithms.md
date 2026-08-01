@@ -21,7 +21,7 @@ A greedy algorithm makes the most attractive choice at each step and hopes this 
 
 ## Interval Scheduling
 
-Job $j$ starts at $s(j)$ and finishes at $f(j)$. Two jobs are compatible if they don't overlap. The goal is to schedule as many jobs as possible without overlap.
+Job $j$ starts at $s(j)$ and finishes at $f(j)$. Two jobs are compatible if they don't overlap. The goal is to schedule as many jobs as possible without overlap. This is one of the classic [[reference/cheatsheets/algorithms/intervals|interval scheduling]] problems.
 
 Sort the jobs by $f(j)$, iterate in order, and take every job that is compatible with the last one taken.
 
@@ -67,7 +67,7 @@ Transform the optimal solution into the greedy solution without changing its val
 
 ## Interval Partitioning
 
-Given a set of intervals $I$, partition them into the minimum number of sets $S_1, S_2, \ldots, S_k$ such that each $S_i$ contains no overlapping intervals. The usual framing is scheduling lectures into the minimum number of classrooms.
+Given a set of intervals $I$, partition them into the minimum number of sets $S_1, S_2, \ldots, S_k$ such that each $S_i$ contains no overlapping intervals. The usual framing is scheduling lectures into the minimum number of classrooms. This is the second classic [[reference/cheatsheets/algorithms/intervals|interval partitioning]] problem.
 
 Sort by start time and place each interval into any existing classroom that fits, opening a new classroom only when none fits.
 
@@ -117,6 +117,7 @@ Define the **depth** of the input as the maximum number of intervals that overla
 
 ## Related notes
 
+- [[algorithms/practice/4|problem set 4]]
 - [[algorithms/dynamic-programming|dynamic programming]]
 - [[algorithms/approximation-algorithms|approximation algorithms]]
 - [[algorithms/stable-matching|stable matching]]

@@ -198,5 +198,7 @@ which makes this a 2-approximation for weighted vertex cover.
 
 ## Related notes
 
+- [[math/linear-algebra/cheatsheet|matrix theory]]
+- [[math/linear-algebra/elementry-linear-algebra|linear algebra glossary]]
 - [[algorithms/network-flows|network flows]]
 - [[algorithms/approximation-algorithms|approximation algorithms]]

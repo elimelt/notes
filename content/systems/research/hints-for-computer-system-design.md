@@ -89,4 +89,5 @@ Most successful systems repeat a small set of themes, many of which this paper n
 ## Related notes
 
 - [[systems/research/end-to-end-arguments-in-sys-design|End-to-End Arguments in System Design]]
+- [[systems/operating-systems/v1-kernels-and-processes/1-introductions|What Is an Operating System?]]
 - [[systems/research/locality-principle|The Locality Principle]]

@@ -202,4 +202,5 @@ In practice, real Op-Amps have two additional terminals for a positive supply an
 
 ## Related
 
+- [[hardware/signal-conditioning/lecture-notes/lecture-3|Resistance]]
 - [[reference/cheatsheets/circuits/electricity|Electric Circuit Analysis]]

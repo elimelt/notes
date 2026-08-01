@@ -34,7 +34,7 @@ Full virtualization emulates the underlying hardware completely so an unmodified
 
 ## Main idea
 
-Xen is a hypervisor that runs multiple OSes on the same hardware through **paravirtualization**. Guest OSes are modified to be aware of the hypervisor and make calls to it for access to hardware features. Xen implements efficient mechanisms for memory management, scheduling, event delivery, and I/O inside the hypervisor, and delegates resources to guests through them. The paper demonstrates the resulting performance on **XenoLinux**, their port of Linux.
+Xen is a hypervisor that runs multiple [[systems/operating-systems/v1-kernels-and-processes/1-introductions|operating systems]] on the same hardware through **paravirtualization**. Guest OSes are modified to be aware of the hypervisor and make calls to it for access to hardware features. Xen implements efficient mechanisms for memory management, scheduling, event delivery, and I/O inside the hypervisor, and delegates resources to guests through them. The paper demonstrates the resulting performance on **XenoLinux**, their port of Linux.
 
 ## Key insights
 
@@ -63,3 +63,5 @@ Guest OSes still need modification, which raises the cost of adoption for any ne
 
 - [[systems/research/exokernel|Exokernel]]
 - [[systems/research/barrelfish|The Multikernel]]
+- [[systems/operating-systems/v1-kernels-and-processes/1-introductions|What Is an Operating System?]]
+- [[systems/operating-systems/v1-kernels-and-processes/1-introductions|What Is an Operating System?]]

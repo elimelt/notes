@@ -62,3 +62,4 @@ The algorithm tolerates no failures: one crashed node stops every acquisition, s
 
 - [[systems/distributed-systems/clocks|clocks]]
 - [[systems/distributed-systems/ordering-events-in-distributed-systems|ordering distributed events]]
+- [[systems/operating-systems/v2-concurrency/5-synchronizing-access-to-shared-objects|Synchronizing Access to Shared Objects]]

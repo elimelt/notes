@@ -107,3 +107,4 @@ $$\frac{360 \times 10^6\,\text{J}}{2000\,\text{J/s}} = 180{,}000\,\text{s} = 50\
 
 - [[hardware/signal-conditioning/lecture-notes/lecture-3|Resistance]]
 - [[reference/cheatsheets/circuits/electricity|Electric Circuit Analysis]]
+- [[reference/cheatsheets/circuits/components|Electronic Components]]

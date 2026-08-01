@@ -63,6 +63,8 @@ Both proofs reduce $P(n)$ to $P(n - 1)$ by peeling one element off the instance.
 
 ## Related notes
 
+- [[algorithms/problems/graphs-and-trees|graphs and trees problems]]
+- [[reference/cheatsheets/algorithms/divide-and-conquer|divide and conquer cheatsheet]]
 - [[algorithms/divide-and-conquer|divide and conquer]]
 - [[algorithms/tree-intro|trees]]
 - [[algorithms/dynamic-programming|dynamic programming]]

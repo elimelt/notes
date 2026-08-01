@@ -32,13 +32,13 @@ Moving up a level to data systems that run on multiple machines, the motivations
 
 ## Scaling up
 
-A **shared memory architecture** is a single computer with many CPUs sharing memory over a common bus. Doubling the power of one machine costs far more than double the price, and the shared bus becomes a bottleneck anyway.
+A **[[systems/research/barrelfish|shared memory architecture]]** is a single computer with many CPUs sharing memory over a common bus. Doubling the power of one machine costs far more than double the price, and the shared bus becomes a bottleneck anyway.
 
 A **shared disk architecture** gives each machine its own CPU and memory while all machines access the same disks over the network. This stretches further, and then the shared disks and the locking needed to coordinate access become the bottleneck.
 
 ## Scaling out
 
-In a **shared nothing architecture**, each machine has its own CPU, memory, and disk. Each machine, physical or virtual, is a **node**, and nodes coordinate purely by sending messages over the network in software. This is the most scalable arrangement, and it pushes all the coordination problems into software, which is what the rest of part 2 is about.
+In a **shared nothing architecture**, each machine has its own CPU, memory, and disk. Each machine, physical or virtual, is a **node**, and nodes coordinate purely by sending messages over the network in software. This is the most [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|scalable]] arrangement, and it pushes all the coordination problems into software, which is what the rest of part 2 is about.
 
 Part 2 of the book focuses on shared nothing architectures.
 
@@ -49,3 +49,7 @@ Part 2 of the book focuses on shared nothing architectures.
 ## Related notes
 
 - [[systems/databases/distributed-data/ch5-replication|replication]]
+- [[systems/research/barrelfish|The Multikernel, A new OS architecture for scalable multicore systems]]
+- [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|Fundamentals of Data-Intensive Application Design and Scalability]]
+- [[ml/recommender-systems/intro-mapreduce-spark|Distributed Computing for Data Mining]]
+- [[systems/research/development-of-the-dns|Development of the Domain Name System]]

@@ -62,3 +62,4 @@ The lecture presented the question without a worked answer, so only the setup is
 - [[systems/operating-systems/lecture-notes/paging|paging]]
 - [[systems/operating-systems/lecture-notes/tlb|translation lookaside buffers]]
 - [[systems/operating-systems/lecture-notes/windows-rtz|Windows RtlZeroMemory]]
+- [[systems/research/locality-principle|The Locality Principle]]

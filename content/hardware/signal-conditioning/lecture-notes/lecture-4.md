@@ -91,3 +91,5 @@ The equivalent resistance is $R = V/I = 3.8\,\text{V} / 7.55\,\text{mA} \approx 
 
 - [[hardware/signal-conditioning/lecture-notes/lecture-3|Resistance]]
 - [[hardware/signal-conditioning/lecture-notes/lecture-5|Thevenin's Theorem]]
+- [[reference/cheatsheets/circuits/electricity|Electric Circuit Analysis]]
+- [[reference/cheatsheets/circuits/components|Electronic Components]]

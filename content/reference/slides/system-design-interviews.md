@@ -8,6 +8,8 @@ tags:
   - interviews
   - career
   - technical interviews
+  - scalability
+  - performance
 date: 2025-03-05
 description: Overview of system design interviews, covering format, structure, and basic principles.
 sources:
@@ -69,7 +71,7 @@ Note: there is not one right way of doing them, and you might not need to touch 
 
 ### Back-of-envelope estimations (scale, throughput, storage)
 
-Calculate the expected scale of your system
+Calculate the expected [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|scale]] of your system
 - e.g. 100M new URLs per month = ~40 URLs/second
 Estimate storage requirements-
 - e.g. 500 bytes per URL × 100M = 50- GB/month
@@ -89,7 +91,7 @@ Define the API endpoints/interfaces
 - e.g. getOriginalURL(short_url)
 Specify input/output parameters
 - e.g. Returns: shortened_url or error message
-Define data models and schemas
+Define [[systems/databases/foundations/ch2-data-models-and-query-languages|data models]] and schemas
 - e.g. URL object: {id, original_url, short_key, created_at, expires_at}
 
 ---
@@ -159,3 +161,7 @@ Future improvements
 ## Related
 
 - [[reference/slides/system-design|Patterns for Scalability and Reliability in Systems]]
+- [[reference/slides/getting-a-return-offer|How to Get a Return Offer]]
+- [[systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications|Fundamentals of Data-Intensive Application Design and Scalability]]
+- [[systems/databases/foundations/ch2-data-models-and-query-languages|Data Models and Relationships in Database Systems]]
+- [[systems/databases/derived-data/ch10-batch-processing|Batch Processing Systems and MapReduce Fundamentals]]

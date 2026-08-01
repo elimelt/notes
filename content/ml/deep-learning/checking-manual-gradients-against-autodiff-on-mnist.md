@@ -12,8 +12,10 @@ description: Compare a hand-derived softmax regression gradient against PyTorch 
 sources:
   - "https://huggingface.co/datasets/ylecun/mnist"
   - "https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html"
+aliases:
+  - /deep-learning/checking-manual-gradients-against-autodiff-on-mnist
 ---
 
-<!-- Generated from content/deep-learning/checking-manual-gradients-against-autodiff-on-mnist.ipynb; do not edit. -->
+<!-- Generated from content/ml/deep-learning/checking-manual-gradients-against-autodiff-on-mnist.ipynb; do not edit. -->
 
-[Open notebook source](https://github.com/elimelt/notes/blob/main/content/deep-learning/checking-manual-gradients-against-autodiff-on-mnist.ipynb)
+[Open notebook source](https://github.com/elimelt/notes/blob/main/content/ml/deep-learning/checking-manual-gradients-against-autodiff-on-mnist.ipynb)

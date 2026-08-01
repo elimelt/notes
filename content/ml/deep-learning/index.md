@@ -62,6 +62,13 @@ The goal is not only to say what each model is. The goal is to make the implemen
   - [[ml/deep-learning/diffusion-models|diffusion models]]
 - Structured domains: [[ml/deep-learning/graph-neural-networks|graph neural networks]]
 
+## Executable Notebooks
+
+- [[ml/deep-learning/mlp-from-scratch-on-mnist|MLP from Scratch on MNIST]] connects the forward and backward equations to a NumPy implementation trained on real images.
+- [[ml/deep-learning/checking-manual-gradients-against-autodiff-on-mnist|Checking Manual Gradients Against Autodiff on MNIST]] verifies a derived softmax gradient against PyTorch.
+- [[ml/deep-learning/character-level-rnn-on-wikitext-2|Character-Level RNN on WikiText-2]] trains a compact recurrent language model and exposes its state transitions.
+- [[ml/deep-learning/decoder-only-transformer-on-wikitext-2|Decoder-Only Transformer on WikiText-2]] implements and trains a small causal Transformer.
+
 ## Sources
 
 - [Rumelhart, Hinton, and Williams (1986), Learning Representations by Back-Propagating Errors](https://www.nature.com/articles/323533a0)

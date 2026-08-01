@@ -13,8 +13,10 @@ description: Train a small recurrent language model on WikiText-2 and inspect ho
 sources:
   - "https://huggingface.co/datasets/Salesforce/wikitext"
   - "https://docs.pytorch.org/tutorials/beginner/nlp/sequence_models_tutorial.html"
+aliases:
+  - /deep-learning/character-level-rnn-on-wikitext-2
 ---
 
-<!-- Generated from content/deep-learning/character-level-rnn-on-wikitext-2.ipynb; do not edit. -->
+<!-- Generated from content/ml/deep-learning/character-level-rnn-on-wikitext-2.ipynb; do not edit. -->
 
-[Open notebook source](https://github.com/elimelt/notes/blob/main/content/deep-learning/character-level-rnn-on-wikitext-2.ipynb)
+[Open notebook source](https://github.com/elimelt/notes/blob/main/content/ml/deep-learning/character-level-rnn-on-wikitext-2.ipynb)

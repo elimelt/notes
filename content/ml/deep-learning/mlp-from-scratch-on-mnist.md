@@ -12,8 +12,10 @@ description: Implement a small multilayer perceptron with NumPy and train it on 
 sources:
   - "https://huggingface.co/datasets/ylecun/mnist"
   - "https://numpy.org/numpy-tutorials/tutorial-deep-learning-on-mnist/"
+aliases:
+  - /deep-learning/mlp-from-scratch-on-mnist
 ---
 
-<!-- Generated from content/deep-learning/mlp-from-scratch-on-mnist.ipynb; do not edit. -->
+<!-- Generated from content/ml/deep-learning/mlp-from-scratch-on-mnist.ipynb; do not edit. -->
 
-[Open notebook source](https://github.com/elimelt/notes/blob/main/content/deep-learning/mlp-from-scratch-on-mnist.ipynb)
+[Open notebook source](https://github.com/elimelt/notes/blob/main/content/ml/deep-learning/mlp-from-scratch-on-mnist.ipynb)

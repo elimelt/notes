@@ -15,8 +15,10 @@ sources:
   - "https://files.grouplens.org/datasets/movielens/ml-100k/u.data"
   - "https://files.grouplens.org/datasets/movielens/ml-100k/u.item"
   - "https://www.tensorflow.org/recommenders/examples/basic_retrieval"
+aliases:
+  - /recc-sys/movielens-100k-two-tower-retrieval
 ---
 
-<!-- Generated from content/recc-sys/movielens-100k-two-tower-retrieval.ipynb; do not edit. -->
+<!-- Generated from content/ml/recommender-systems/movielens-100k-two-tower-retrieval.ipynb; do not edit. -->
 
-[Open notebook source](https://github.com/elimelt/notes/blob/main/content/recc-sys/movielens-100k-two-tower-retrieval.ipynb)
+[Open notebook source](https://github.com/elimelt/notes/blob/main/content/ml/recommender-systems/movielens-100k-two-tower-retrieval.ipynb)

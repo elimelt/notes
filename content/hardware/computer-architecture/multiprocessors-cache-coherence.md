@@ -40,6 +40,21 @@ A coherent system guarantees, for every memory location: (1) a core's own reads 
 
 **MESI** gives each cached line one of four states: **M**odified (dirty, sole owner, may write silently), **E**xclusive (clean, sole owner, may write without asking anyone), **S**hared (clean, possibly cached elsewhere, must ask before writing), **I**nvalid (not present). A **directory** protocol tracks, per line, which cores currently hold a copy and in what state, so a writer only has to message the directory and the directory forwards invalidations to the actual sharers — no core has to broadcast to every other core (that's *snooping*, the alternative that doesn't scale past a shared bus).
 
+```mermaid
+stateDiagram-v2
+    [*] --> I
+    I --> S: GETS, read miss, sharers exist
+    I --> E: GETS, read miss, no sharers
+    I --> M: GETX, write miss
+    S --> M: GETX, upgrade, invalidate other sharers
+    S --> I: Fwd_GETX, another core writes
+    E --> M: local write, silent upgrade
+    E --> S: Fwd_GETS, another core reads
+    E --> I: Fwd_GETX, or silent eviction
+    M --> S: Fwd_GETS, writeback + share
+    M --> I: Fwd_GETX, writeback + invalidate
+```
+
 gem5's `MESI_Two_Level-L1cache.sm` SLICC source names states exactly this way, plus the transient states a real implementation needs while a request is in flight:
 
 ```text

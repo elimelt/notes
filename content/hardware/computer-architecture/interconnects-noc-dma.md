@@ -40,6 +40,20 @@ Every cache miss, coherence message, DMA transfer, and MMIO access eventually ha
 - **Ring**: each node connects to two neighbors; a request hops node to node until it reaches its destination. $O(N)$ wiring, but worst-case latency is $O(N)$ hops too, and a single ring saturates once enough nodes inject traffic simultaneously (every hop consumes ring bandwidth even for messages just passing through).
 - **2D mesh**: nodes arranged on a grid, each connected to its 4 (or fewer, at edges) neighbors. Wiring cost is $O(N)$, worst-case hop count is $O(\sqrt{N})$, and it's the standard choice past a few dozen cores — gem5's Ruby memory system ships a `Mesh_XY` topology precisely for this regime, using **dimension-order (XY) routing**: route all the way in X, then all the way in Y, which is deadlock-free by construction since it never creates a cyclic dependency between the two dimensions' buffer resources.
 
+A 4x4 mesh (the same size the worked simulation below uses) looks like this, each node a router+core tile connected only to its grid neighbors:
+
+```mermaid
+flowchart TD
+    R00((0,0)) --- R01((1,0)) --- R02((2,0)) --- R03((3,0))
+    R10((0,1)) --- R11((1,1)) --- R12((2,1)) --- R13((3,1))
+    R20((0,2)) --- R21((1,2)) --- R22((2,2)) --- R23((3,2))
+    R30((0,3)) --- R31((1,3)) --- R32((2,3)) --- R33((3,3))
+    R00 --- R10 --- R20 --- R30
+    R01 --- R11 --- R21 --- R31
+    R02 --- R12 --- R22 --- R32
+    R03 --- R13 --- R23 --- R33
+```
+
 ## Arbitration: who wins when two requesters collide
 
 Every switch point where multiple requesters can target the same output needs an arbitration policy. Rocket-chip's `TLArbiter` implements three, generically over any `DecoupledIO` channel:

@@ -46,6 +46,18 @@ on it has six logical stages:
 Fetch -> Decode/Rename -> Dispatch -> Issue -> Execute -> Writeback -> Retire (in-order)
 ```
 
+```mermaid
+flowchart LR
+    F[Fetch] --> DR[Decode / Rename]
+    DR --> DISP[Dispatch: alloc ROB entry + RS slot]
+    DISP --> RS[Reservation stations / issue queue]
+    RS -->|operands ready + FU free: wakeup/select| EXE[Execute]
+    EXE --> CDB[Common data bus: broadcast tag + result]
+    CDB -.wakeup waiting RS entries.-> RS
+    CDB --> ROBM[Mark ROB entry complete]
+    ROBM -->|in-order, from head| RET[Retire: commit architectural state]
+```
+
 **Rename** replaces architectural register names with physical register tags, breaking false
 dependencies. **Dispatch** allocates a reorder buffer (ROB) entry and an issue-queue (reservation
 station) slot. **Issue** happens when an instruction's operands are ready and a functional unit is

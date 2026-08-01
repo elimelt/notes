@@ -37,6 +37,9 @@ $$
 cap(A, B) = \sum_{u \in A, v \in B, (u, v) \in E} c(u, v)
 $$
 
+> [!abstract] Max-flow min-cut theorem
+> The maximum value of an $s$-$t$ flow equals the minimum capacity over all $s$-$t$ cuts. Ford-Fulkerson proves both directions at once: when no augmenting path remains, the vertices reachable from $s$ in the residual graph form the $A$ side of a cut whose capacity equals the current flow value.
+
 ## Ford Fulkerson Algorithm
 
 The **residual graph** $G_f$ represents remaining capacity. If edge $(u, v)$ has capacity $c$ and current flow $f(u, v)$, the residual capacity forward is $c - f(u, v)$, and there is a backward residual edge $(v, u)$ with capacity $f(u, v)$ that lets the algorithm undo flow it committed earlier.
@@ -44,6 +47,22 @@ The **residual graph** $G_f$ represents remaining capacity. If edge $(u, v)$ has
 An **augmenting path** is a path from $s$ to $t$ in $G_f$ using only edges with positive residual capacity. Ford-Fulkerson repeatedly finds an augmenting path and pushes the bottleneck (minimum residual capacity along the path) through it, until no augmenting path exists. At that point the flow is maximum, and the vertices reachable from $s$ in the residual graph form the $A$ side of a minimum cut.
 
 Pushing flow along a forward edge increases the flow on that edge. Pushing flow along a backward residual edge decreases the flow on the corresponding forward edge, rerouting flow that an earlier iteration placed badly.
+
+The network below shows the backward edge doing that work. Every capacity is $1$ and the max flow is $2$:
+
+```mermaid
+flowchart LR
+    s((s)) -->|1| a((a))
+    s -->|1| b((b))
+    a -->|1| b
+    a -->|1| t((t))
+    b -->|1| t
+
+    style s fill:#e8f5e9,stroke:#2e7d32
+    style t fill:#e3f2fd,stroke:#1565c0
+```
+
+A DFS that first augments along $s \to a \to b \to t$ saturates $(a, b)$ and leaves a flow of value $1$. The second augmenting path is $s \to b \to a \to t$: it crosses the backward residual edge $(b, a)$, canceling the unit on $(a, b)$. The final flow routes $s \to a \to t$ and $s \to b \to t$ with nothing on the middle edge.
 
 ```python
 from collections import defaultdict
@@ -91,6 +110,9 @@ Assume all capacities are integers between $1$ and $C$. Invariantly, every flow 
 Only $s$ produces flow, and at most $n - 1$ edges leave $s$, each with capacity at most $C$, so $v(f^*) \le (n - 1)C$. Each iteration increases the flow value by at least $1$ (flows stay integral), which bounds the iteration count.
 
 Each iteration finds an augmenting path via DFS in $O(m)$, giving an overall runtime of $O(mnC)$, or more generally $O(m \cdot v(f^*))$.
+
+> [!warning] The bound is pseudo-polynomial
+> $C$ occupies only $\log_2 C$ bits of input, so $O(mnC)$ can be exponential in the input size. The diamond network above with capacities $C, C, C, C$ on the outer edges and $1$ on $(a, b)$ realizes the blowup: a path search that keeps routing through the middle edge alternates $s \to a \to b \to t$ with $s \to b \to a \to t$, gaining $1$ unit per iteration and taking $2C$ iterations to reach the max flow of $2C$.
 
 ## Maximum Matching
 

@@ -21,7 +21,18 @@ A directed acyclic graph (DAG) is a directed graph with no cycles. DAGs model an
 
 ## Topological Orderings
 
-A **topological ordering** of a directed graph $G = (V, E)$ is a linear ordering $u_1, u_2, \ldots, u_n$ of its vertices such that for every directed edge $(u_i, u_j) \in E$, we have $i < j$. Every edge points forward in the ordering.
+A **topological ordering** of a directed graph $G = (V, E)$ is a linear ordering $u_1, u_2, \ldots, u_n$ of its vertices such that for every directed edge $(u_i, u_j) \in E$, we have $i < j$. Every edge points forward in the ordering. Laid out in topological order, every edge points rightward:
+
+```mermaid
+flowchart LR
+    v1((v1)) --> v2((v2))
+    v1 --> v3((v3))
+    v2 --> v4((v4))
+    v3 --> v4
+    v3 --> v5((v5))
+    v4 --> v6((v6))
+    v5 --> v6
+```
 
 **Lemma**: If $G$ has a topological ordering, then $G$ is a DAG.
 
@@ -30,6 +41,9 @@ A **topological ordering** of a directed graph $G = (V, E)$ is a linear ordering
 **Lemma**: If $G$ is a DAG, then $G$ has a source vertex, i.e. a vertex with $indeg(v) = 0$.
 
 **Proof**: Suppose for contradiction that every vertex has $indeg(v) \ge 1$. Start at an arbitrary vertex $v_1$ and repeatedly step backward along some incoming edge. Every vertex has an incoming edge, so this walk never gets stuck. The graph has finitely many vertices, so the walk must eventually revisit a vertex, and the segment between the two visits is a cycle. This contradicts $G$ being acyclic. $\blacksquare$
+
+> [!tip] The source lemma does the algorithmic work
+> Removing a source from a DAG leaves a DAG, so sources never run out until the graph is empty. Kahn's algorithm below is this lemma applied repeatedly.
 
 **Lemma**: If $G$ is a DAG, then $G$ has a topological ordering.
 

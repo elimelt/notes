@@ -23,6 +23,17 @@ A tree is a connected graph with no cycles. This note proves the edge count of a
 
 **Claim**: every tree with $n$ vertices has $n - 1$ edges.
 
+A tree on $6$ vertices has $5$ edges, and removing any leaf leaves a tree on $5$ vertices with $4$ edges. The proof below runs that deletion in reverse:
+
+```mermaid
+flowchart TD
+    a((a)) --- b((b))
+    a --- c((c))
+    b --- d((d))
+    b --- e((e))
+    c --- f((f))
+```
+
 **Proof**: by induction on $n$.
 
 **Base case**: $n = 1$. A tree with 1 vertex has 0 edges.
@@ -64,6 +75,9 @@ Any graph $G$ satisfying two of the following properties must satisfy the third,
 - $G$ has $|V| - 1$ edges
 
 This gives a cheap tree test: count the edges and check either connectivity or acyclicity with a single [[algorithms/BFS|BFS]] or [[algorithms/DFS|DFS]] traversal.
+
+> [!warning] One property alone is not enough
+> A two-component forest is acyclic without being connected. A triangle plus an isolated vertex has $|V| - 1$ edges and still contains a cycle. The test needs two of the three properties.
 
 ## Related notes
 

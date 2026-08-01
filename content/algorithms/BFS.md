@@ -60,6 +60,37 @@ $$
 3. Level $i$ of the tree contains exactly the vertices $v$ such that the shortest path from $s$ to $v$ has $i$ edges.
 4. All non-tree edges of $G$ connect vertices in the same level or adjacent levels.
 
+A BFS from $s$ on a small graph shows all four facts at once. Solid edges are tree edges, dashed edges are the non-tree edges of $G$, and every dashed edge stays within one level of itself:
+
+```mermaid
+flowchart TD
+    subgraph L0["Level 0"]
+        s((s))
+    end
+    subgraph L1["Level 1"]
+        a((a))
+        b((b))
+    end
+    subgraph L2["Level 2"]
+        c((c))
+        d((d))
+        e((e))
+    end
+    s --- a
+    s --- b
+    a --- c
+    a --- d
+    b --- e
+    a -.- b
+    c -.- d
+    b -.- d
+
+    style s fill:#e3f2fd,stroke:#1565c0
+```
+
+> [!tip] Non-tree edges never skip a level
+> Fact 4 is the structural payoff of using a queue. If an edge spanned two or more levels, its deeper endpoint would have a shorter path than its level allows, contradicting the shortest-path claim below. The same-level case is exactly what the [[algorithms/bipartite-graphs|bipartiteness test]] looks for, since a same-level edge closes an odd cycle.
+
 ### Difference in levels
 
 Let $L(v)$ be the level of vertex $v$ in the BFS tree.

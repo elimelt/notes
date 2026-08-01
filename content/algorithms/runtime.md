@@ -29,6 +29,14 @@ Given two functions $f(n)$ and $g(n)$, we say that $f(n)$ is $\Omega(g(n))$ if t
 
 Given two functions $f(n)$ and $g(n)$, we say that $f(n)$ is $\Theta(g(n))$ if there exist constants $c_1$, $c_2$, and $n_0$ such that $0 \leq c_1 \cdot g(n) \leq f(n) \leq c_2 \cdot g(n)$ for all $n \geq n_0$.
 
+> [!abstract] The three bounds
+>
+> | Notation | Role | Guarantee for all $n \ge n_0$ |
+> | --- | --- | --- |
+> | $O(g)$ | upper bound | $f(n) \le c \cdot g(n)$ |
+> | $\Omega(g)$ | lower bound | $f(n) \ge c \cdot g(n)$ |
+> | $\Theta(g)$ | tight bound | both, with separate constants |
+
 ## Common Bounds
 
 Logarithms grow slower than every polynomial $n^\epsilon$ with $\epsilon > 0$, and every polynomial grows slower than every exponential $b^n$ with $b > 1$.

@@ -19,6 +19,11 @@ sources:
 
 A greedy algorithm makes the most attractive choice at each step and hopes this leads to an optimal solution. Most greedy strategies are wrong, so the proof of correctness carries the weight. This note works through interval scheduling and interval partitioning, which between them show the three standard proof techniques: greedy stays ahead, exchange arguments, and structural bounds.
 
+> [!abstract] The three proof techniques
+> **Greedy stays ahead**: define a progress measure, then show by induction that after every step greedy is at least as far along as any optimal solution. Used for interval scheduling via the lemma $f(i_r) \le f(j_r)$.
+> **Exchange argument**: transform an optimal solution into the greedy one through swaps that never hurt its value, so greedy's value equals the optimum. Used as the alternate interval scheduling proof.
+> **Structural bound**: exhibit a quantity that lower-bounds every solution, then show greedy meets it exactly. Used for interval partitioning, where the bound is the depth of the input.
+
 ## Interval Scheduling
 
 Job $j$ starts at $s(j)$ and finishes at $f(j)$. Two jobs are compatible if they don't overlap. The goal is to schedule as many jobs as possible without overlap. This is one of the classic [[reference/cheatsheets/algorithms/intervals|interval scheduling]] problems.
@@ -104,6 +109,9 @@ If these intervals are processed in finish-time order, the algorithm opens three
 - $(2, 5)$ now conflicts with the last interval in both rooms, so it opens $C_2$
 
 That is not optimal. The input has depth $2$, since no point is covered by more than two intervals, so two classrooms suffice. The fix is to sort by **start** time. Then, when a new classroom is opened, every existing classroom already contains an interval that overlaps the new one, which is exactly the fact the correctness proof needs.
+
+> [!warning] A plausible choice rule is not a correct one
+> Earliest finish time is optimal for interval scheduling and suboptimal for interval partitioning, even though the problems look nearly identical. The failure shows up in the proof before it shows up in testing: with finish-time order, nothing guarantees that the intervals blocking a new classroom all overlap at one point, so the depth argument falls apart. If the choice rule does not hand the proof a usable invariant, treat the greedy algorithm as unproven.
 
 ### Proof of Correctness
 

@@ -81,6 +81,27 @@ def gale_shapley(company_prefs, student_prefs):
     return match
 ```
 
+> [!example] A run with two companies
+> Take preferences $c_1: s_1 > s_2$, $c_2: s_1 > s_2$, $s_1: c_2 > c_1$, $s_2: c_1 > c_2$. Both companies want $s_1$, so one of them gets bumped:
+
+```mermaid
+sequenceDiagram
+    participant c1 as c1
+    participant c2 as c2
+    participant s1 as s1
+    participant s2 as s2
+
+    c1->>s1: propose
+    Note over s1: free, accepts c1
+    c2->>s1: propose
+    Note over s1: prefers c2, drops c1
+    c1->>s2: propose
+    Note over s2: free, accepts c1
+    Note over c1,s2: output {(c2, s1), (c1, s2)}
+```
+
+The run shows both directions of movement at once: $s_1$ trades up from $c_1$ to $c_2$, while $c_1$ walks down its list from $s_1$ to $s_2$.
+
 ### Properties
 
 - Companies propose to students in decreasing order of preference.
@@ -106,6 +127,9 @@ A company only ends unmatched after proposing to and being rejected by every stu
 Since $c$ proposes in decreasing order of preference and ended with $a'$, it proposed to $a$ earlier and was rejected. Students only reject in favor of companies they prefer, and only trade up afterward, so $a$'s final match $c'$ satisfies $c' >_a c$. That contradicts $a$ preferring $c$ over $c'$. $\blacksquare$
 
 ## GS Solution Properties
+
+> [!tip] The invariant behind both results
+> Each proposer walks down its preference list, so its situation only worsens over the run, while each receiver only trades up, so its match only improves. This asymmetry drives everything below: whichever side proposes gets its best valid partner, and the receiving side gets its worst.
 
 ### Company Optimal Assignments
 

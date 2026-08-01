@@ -23,6 +23,9 @@ Problems typically fall into one of two categories:
 1. **Fixed size window**: the window size never changes as you iterate. These are typically easier to solve.
 2. **Variable size window**: the window grows and shrinks as you iterate, depending on the state of your algorithm. These are harder, since you have to decide when to expand and when to contract.
 
+> [!tip] Recognition cues
+> The input is a linear structure, the answer concerns a contiguous run of elements, and the brute force re-scans overlapping subarrays. When those line up, a window that carries incremental state usually removes a factor of $n$ from the runtime.
+
 ## Fixed size window
 
 Any time you're given a linear data structure and asked for a minimal or maximal contiguous subset of elements with a known size, think fixed size sliding window.
@@ -55,6 +58,24 @@ A typical algorithm:
 - Update the result whenever the window is valid. For longest-window problems that's after the shrink loop restores validity. For shortest-window problems, shrink while the window stays valid and record the size before it breaks.
 
 The nested loop looks quadratic. Both pointers only move forward though, so each element enters and leaves the window at most once, and the whole pass costs $O(n)$ state updates.
+
+> [!example] Minimum size subarray with sum at least 7
+>
+> ```text
+> A = [2, 3, 1, 2, 4, 3]
+>
+> [2  3  1  2] 4  3     sum 8,  valid   -> best = 4, shrink
+>  2 [3  1  2] 4  3     sum 6,  invalid -> expand
+>  2 [3  1  2  4] 3     sum 10, valid   -> best = 4, shrink
+>  2  3 [1  2  4] 3     sum 7,  valid   -> best = 3, shrink
+>  2  3  1 [2  4] 3     sum 6,  invalid -> expand
+>  2  3  1 [2  4  3]    sum 9,  valid   -> best = 3, shrink
+>  2  3  1  2 [4  3]    sum 7,  valid   -> best = 2, shrink
+>  2  3  1  2  4 [3]    sum 3,  invalid, array exhausted -> answer 2
+> ```
+
+> [!warning] Negative numbers break the shrink step
+> The shrink loop relies on removals moving the window state monotonically, so a too-large sum only shrinks toward the target. A negative element lets the sum grow as the window shrinks, and the two-pointer argument collapses. Shortest subarray with sum at least $k$ on signed input needs prefix sums with a monotonic deque instead.
 
 ## Practice problems
 

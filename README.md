@@ -97,6 +97,31 @@ Notebook pages use the
 4. Let Quartz render Markdown, code, tables, plots, and stored outputs directly
    from the checked-in notebook JSON.
 
+Scaffold notebooks from the tracked templates instead of copying an existing
+experiment:
+
+```sh
+npm run new:notebook -- content/ml/example/topic.ipynb \
+  --template experiment \
+  --title "Topic experiment" \
+  --category "Machine Learning" \
+  --tags topic evaluation \
+  --sources https://example.org/paper https://example.org/dataset \
+  --description "Measure how the method behaves on a small public dataset."
+```
+
+Available templates are `experiment`, `derivation`, and `benchmark`. List them
+from the CLI so newly added templates appear automatically:
+
+```sh
+npm run new:notebook -- --list-templates
+```
+
+Embedded-only companions are the default. Pass `--standalone` when the notebook
+should have its own graph node and page. Template files live in
+`notebook-templates/`; adding another `.ipynb` there makes it available to the
+generator without a code change.
+
 The normal site commands already do the render step for you:
 
 ```sh
@@ -119,6 +144,16 @@ python3.12 -m venv .venv
 .venv/bin/python -m pip install -U pip
 .venv/bin/python -m pip install numpy pandas matplotlib torch datasets nbclient ipykernel
 .venv/bin/python scripts/execute_notebooks.py content/path/to/notebook.ipynb
+```
+
+The executor suppresses Python warnings and common Hugging Face progress noise,
+then removes warning streams from stored outputs. Templates include the same
+setup so interactive Jupyter runs remain quiet. To clean warning output already
+stored in one or more notebooks without rerunning their experiments:
+
+```sh
+.venv/bin/python scripts/execute_notebooks.py --clean-only \
+  content/path/to/first.ipynb content/path/to/second.ipynb
 ```
 
 The `.ipynb` file is the source of truth. For a standalone notebook page, omit
@@ -148,6 +183,15 @@ stored code outputs, tables, HTML, and plots. The root-relative source asset is
 also published, and the notebook header links to it. Run
 `python3 scripts/render_notebooks.py` after changing the notebook, then run
 `npm run build` to seed the offline embed cache and verify the result.
+
+The complete workflow for a new embedded companion is:
+
+1. Run `npm run new:notebook` with the appropriate template.
+2. Replace template prompts with code, math, provenance, and interpretation.
+3. Execute it with `npm run execute:notebooks -- content/path/topic.ipynb`.
+4. Add `[Open the executable companion](/path/topic.ipynb)` to its parent note.
+5. Run `npm run render:notebooks`, `npm run test:notebooks`, and `npm run build`.
+6. Commit the `.ipynb`, parent note, and any generated wrapper for a standalone notebook.
 
 ## Embedding the graph
 

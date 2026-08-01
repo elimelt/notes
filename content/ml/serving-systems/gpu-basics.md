@@ -217,3 +217,4 @@ Features to know by generation: unified memory addressing and NVLink (P100+), th
 - [[ml/serving-systems/triton|Triton]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
 - [[ml/serving-systems/how-to-write-a-fast-kernel|How to write a fast kernel]]
+- [[hardware/computer-architecture/simd-vectors-gpus-accelerators|From SIMD to SIMT: Vectors, GPUs, and Accelerators]]

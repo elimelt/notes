@@ -194,3 +194,5 @@ done
 - [[ml/serving-systems/roofline-reference|roofline model]]
 - [[systems/operating-systems/benchmarks/branch|branch prediction]]
 - [[systems/performance/streaming|streaming data]]
+- [[hardware/computer-architecture/simd-vectors-gpus-accelerators|From SIMD to SIMT: Vectors, GPUs, and Accelerators]]
+- [[hardware/computer-architecture/experiments-and-benchmarking|Experiments and Benchmarking in Computer Architecture]]

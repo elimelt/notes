@@ -211,3 +211,4 @@ endmodule // datapath
 - [[hardware/digital-design/369/sequential-logic|Sequential Logic]]
 - [[hardware/digital-design/371/verilog-review|SystemVerilog Review]]
 - [[hardware/digital-design/371/static-timing-analysis|Static Timing Analysis]]
+- [[hardware/computer-architecture/rtl-reading-lab|Open-Source CPU RTL Reading Lab]]

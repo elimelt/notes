@@ -79,6 +79,16 @@ article table {
   gap: 1rem;
 }
 
+// Quartz component styles are layered, so the unlayered base heading margins
+// otherwise make these toggles taller than their collapsed containers.
+.explorer button.mobile-explorer h2,
+.explorer button.desktop-explorer h2,
+button.toc-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.2rem;
+}
+
 @media all and (max-width: 800px) {
   .page-header {
     margin-bottom: 0.75rem;

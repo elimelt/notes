@@ -213,11 +213,11 @@ async function loadGraph() {
     status.textContent = `${nodes.length} notes · ${links.length} links`
 
     simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id((node) => node.id).distance(42).strength(0.25))
-      .force("charge", d3.forceManyBody().strength(-42).distanceMax(420))
-      .force("collide", d3.forceCollide().radius((node) => 5 + Math.sqrt(node.degree)).iterations(2))
-      .force("x", d3.forceX(width / 2).strength(0.035))
-      .force("y", d3.forceY(height / 2).strength(0.035))
+      .force("link", d3.forceLink(links).id((node) => node.id).distance(76).strength(0.18))
+      .force("charge", d3.forceManyBody().strength(-105).distanceMax(800))
+      .force("collide", d3.forceCollide().radius((node) => 9 + Math.sqrt(node.degree) * 1.4).iterations(3))
+      .force("x", d3.forceX(width / 2).strength(0.012))
+      .force("y", d3.forceY(height / 2).strength(0.012))
       .on("tick", draw)
       .on("end", () => fitGraph(false))
   } catch (error) {

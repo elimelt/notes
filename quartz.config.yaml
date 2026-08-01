@@ -139,6 +139,12 @@ plugins:
         focusOnHover: true
       globalGraph:
         showTags: false
+        scale: 0.8
+        repelForce: 0.75
+        centerForce: 0.12
+        linkDistance: 48
+        fontSize: 0.55
+        enableRadial: false
     layout:
       position: right
       priority: 10

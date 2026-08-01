@@ -21,5 +21,6 @@ Then read [[systems/performance/streaming|streaming data]] for a concrete bandwi
 ## Notes
 
 - Foundations: [[systems/performance/latency-throughput-and-utilization|latency, throughput, and utilization]], [[systems/performance/tail-latency-percentiles|tail latency, percentiles, and queueing distributions]], [[systems/performance/amdahl-gustafson-scalability|Amdahl, Gustafson, and scalability limits]]
+- Measurement: [[systems/performance/profiling-tracing-flame-graphs|profiling, tracing, and flame graphs]]
 - Bandwidth and streaming: [[systems/performance/streaming|streaming data]], [[systems/performance/streaming_benchmarks/cache_line_efficiency/README|cache-line efficiency benchmark]]
 - Case study: [[systems/performance/efficiently-implementing-state-pattern-JVM|efficiently implementing the state pattern on the JVM]]

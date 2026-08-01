@@ -83,6 +83,7 @@ case "$command" in
     install_plugins
     (cd "$QUARTZ_DIR" && npx quartz build --output "$ROOT/public")
     publish_standalone_routes
+    python3 "$ROOT/scripts/prepare_graph_index.py" "$ROOT/public/static/contentIndex.json"
     python3 "$ROOT/scripts/validate_graph_index.py" "$ROOT/public/static/contentIndex.json"
     publish_legacy_docs
     ;;

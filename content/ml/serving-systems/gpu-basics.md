@@ -330,3 +330,4 @@ The practical upshot: quoting a GPU's peak TFLOPs number for a serving workload 
 - [[ml/serving-systems/how-to-write-a-fast-kernel|How to write a fast kernel]]
 - [[hardware/gpu-architecture|GPU Architecture from First Principles]]
 - [[ml/serving-systems/gpu-interconnects|GPU Interconnects and Collective Communication]]
+- [[hardware/computer-architecture/simd-vectors-gpus-accelerators|From SIMD to SIMT: Vectors, GPUs, and Accelerators]]

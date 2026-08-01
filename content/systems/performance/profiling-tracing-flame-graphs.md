@@ -73,7 +73,7 @@ Two prerequisites break silently. Stack walks need frame pointers, and most dist
 - **Averaged mixtures.** A profile summed over day and night traffic, or over two request classes, can show a blend no single request experiences — the same failure as averaging latency distributions. Segment before profiling when workloads differ.
 - **Missing symbols and truncated stacks** produce confidently wrong pictures rather than errors; treat a profile with unresolved frames or grass-like fragments as broken tooling, not as data.
 
-The benchmark suites under [[systems/operating-systems/benchmarks/README|the OS benchmarks]] are the controlled-environment counterpart of this note: same counters, no production noise.
+The benchmark suites under [[systems/operating-systems/benchmarks/README|the OS benchmarks]] are the controlled-environment counterpart of these tools: same counters, no production noise.
 
 ## Related notes
 

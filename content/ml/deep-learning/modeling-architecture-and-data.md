@@ -10,9 +10,9 @@ tags:
   - attention
   - resnet
 date: 2026-07-31
-updated: 2026-07-31
+updated: 2026-08-01
 status: evergreen
-description: How to choose a model class, objective, data representation, and training setup, with emphasis on inductive bias, optimization stability, and compute-data tradeoffs.
+description: How to choose a model class, objective, data representation, and training setup, with emphasis on inductive bias, optimization stability, scaling laws, compute-optimal training, and inference economics.
 sources:
   - title: Deep Residual Learning for Image Recognition
     url: https://arxiv.org/abs/1512.03385
@@ -25,6 +25,12 @@ sources:
     type: paper
   - title: Kaplan et al. (2020), Scaling Laws for Neural Language Models
     url: https://arxiv.org/abs/2001.08361
+    type: paper
+  - title: Hoffmann et al. (2022), Training Compute-Optimal Large Language Models
+    url: https://arxiv.org/abs/2203.15556
+    type: paper
+  - title: Touvron et al. (2023), LLaMA - Open and Efficient Foundation Language Models
+    url: https://arxiv.org/abs/2302.13971
     type: paper
   - title: Srivastava et al. (2014), Dropout
     url: https://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf
@@ -131,16 +137,71 @@ For sequence models this can change the task completely. Bahdanau attention was 
 
 ## Compute, Data, and Scale
 
-Kaplan et al. study how language-model loss changes with model size, dataset size, and compute. The main conclusion is that loss follows broad **power-law** trends over a large range, while width-versus-depth choices matter relatively little inside a reasonable regime.
+For language models, the relationship between loss, model size, data, and compute is quantified well enough to plan against. The variables: $N$ is non-embedding parameter count, $D$ is training tokens, $C$ is training compute in FLOPs, and $L$ is autoregressive cross-entropy loss in nats per token. For dense transformers, training cost is approximately
 
-Two consequences from that paper are worth remembering:
+$$
+C \approx 6ND
+$$
 
-- larger models are more sample-efficient
-- compute-optimal training may involve stopping before full convergence
+FLOPs — a forward pass costs about $2N$ FLOPs per token, the backward about $4N$ ([Kaplan et al. 2020](https://arxiv.org/abs/2001.08361), §2.1). Everything below is an empirical fit to training runs, not a derived law; the fits hold impressively over many orders of magnitude but extrapolation beyond the measured range is conjecture.
 
-The paper explicitly says that optimally compute-efficient training means training **very large models on a relatively modest amount of data and stopping significantly before convergence**.
+### Kaplan-style scaling
 
-That is useful because it changes how to reason about "the best architecture." Once the architecture family is competent, data quality and compute allocation may matter more than small structural edits.
+[Kaplan et al. (2020)](https://arxiv.org/abs/2001.08361) found that when only one resource binds, loss follows a power law in that resource:
+
+$$
+L(N) = \left(\frac{N_c}{N}\right)^{\alpha_N}, \quad
+L(D) = \left(\frac{D_c}{D}\right)^{\alpha_D}, \quad
+\alpha_N \approx 0.076, \;\; \alpha_D \approx 0.095,
+$$
+
+with $N_c \approx 8.8 \times 10^{13}$, $D_c \approx 5.4 \times 10^{13}$, and loss along the compute-efficient frontier falling as $L \propto C^{-0.050}$. Width-versus-depth choices matter little inside a reasonable regime; scale dominates shape. Two consequences: larger models are more sample-efficient, and compute-optimal training stops well before convergence. Allocating a fixed budget, the paper concluded $N \propto C^{0.73}$ — spend most of the marginal compute on model size, training **very large models on a relatively modest amount of data and stopping significantly before convergence**.
+
+### Chinchilla: compute-optimal rebalanced
+
+[Hoffmann et al. (2022)](https://arxiv.org/abs/2203.15556) redid the measurement with the learning-rate schedule matched to each token budget — Kaplan's runs reused schedules tuned for longer horizons, which understated how much extra data helps — and fit a parametric loss surface (their eq. 10):
+
+$$
+L(N, D) = E + \frac{A}{N^{\alpha}} + \frac{B}{D^{\beta}},
+\qquad
+E \approx 1.69,\; A \approx 406.4,\; B \approx 410.7,\; \alpha \approx 0.34,\; \beta \approx 0.28.
+$$
+
+$E$ is the irreducible entropy of text; the other two terms are the finite-model and finite-data penalties. Minimizing subject to $C = 6ND$ gives $N^\star \propto C^{0.46}$, $D^\star \propto C^{0.54}$: parameters and tokens should scale **together**, roughly 20 tokens per parameter at their measured scales, not $C^{0.73}$ on parameters. The headline validation: Chinchilla (70B params, 1.4T tokens) beat Gopher (280B params, 300B tokens) across benchmarks on the same training budget. The fitted surface shows why — plugging into $L(N,D)$ with both at $C \approx 5.8 \times 10^{23}$ gives 1.937 for Chinchilla's allocation versus 1.993 for Gopher's, and a 4x smaller model is also 4x cheaper at inference.
+
+### A worked sizing example
+
+Suppose the training budget is $C = 10^{23}$ FLOPs. Sweep $N$ with $D = C/6N$ through the Chinchilla fit (computed with the constants above; script run in the repo venv):
+
+| Allocation | $N$ | $D$ | predicted $L$ |
+| --- | --- | --- | --- |
+| fit optimum | 15B | 1.1T | 2.005 |
+| 2x larger model | 30B | 0.56T | 2.013 |
+| Gopher-style | 280B | 60B | 2.137 |
+
+The optimum at this budget sits near 15B parameters and 1.1T tokens (about 78 tokens per parameter — the fitted exponents $\alpha \ne \beta$ make the ratio drift upward with budget rather than staying at exactly 20). The instructive part is the asymmetry: doubling parameters past the optimum costs little, but a Gopher-style allocation starved of tokens gives up 0.13 nats, which at these scales is roughly the gap between successive model generations.
+
+### Inference changes the optimum
+
+Compute-optimal is the right target only if training is the only cost. Serving cost scales with $N$ per token generated, forever. [LLaMA](https://arxiv.org/abs/2302.13971) made this argument explicit: the Chinchilla objective "disregards the inference budget," and given a target quality level "the preferred model is not the fastest to train, but the fastest at inference" — so they trained 7B-65B models on 1-1.4T tokens, far past the ~20 tokens/parameter guideline, and [Llama 2](https://arxiv.org/abs/2307.09288) pushed to 2T. The pattern across the well-known models:
+
+| Model | $N$ | $D$ | tokens/param |
+| --- | --- | --- | --- |
+| GPT-3 (2020) | 175B | 300B | ~1.7 |
+| Gopher (2021) | 280B | 300B | ~1.1 |
+| Chinchilla (2022) | 70B | 1.4T | 20 |
+| LLaMA-7B (2023) | 7B | 1T | ~143 |
+| Llama 2-70B (2023) | 70B | 2T | ~29 |
+
+Pre-Chinchilla models were undertrained; post-LLaMA open models are deliberately overtrained, paying extra training compute once to save inference compute on every deployed token. The fitted loss surface quantifies the price: LLaMA-7B's allocation predicts $L \approx 2.052$ where the same $4.2 \times 10^{22}$ FLOPs spent compute-optimally predicts $2.050$ — essentially nothing lost, while inference cost drops by the ratio of model sizes against a compute-optimal ~10B alternative. The flat optimum is what makes overtraining cheap.
+
+Architecture interacts with the same economics. Sparse mixture-of-experts models decouple parameter count from per-token FLOPs, buying capacity without proportional inference cost, at the price of memory, routing complexity, and harder [[ml/serving-systems/parallelism|parallelism]]; small dense overtrained models are the opposite trade, maximally simple to serve.
+
+### Data-side caveats
+
+Token count is not a sufficient statistic for $D$. Deduplication matters (repeated near-duplicates waste budget and encourage memorization), mixture composition matters (code, web, books scale differently and interact with downstream tasks), and data can run out: [Muennighoff et al. (2023)](https://arxiv.org/abs/2305.16264) measured that repeating a fixed corpus for up to ~4 epochs costs almost nothing versus fresh data, with returns decaying to zero by ~16 epochs. All the scaling fits also assume the data distribution is fixed while only quantity varies — a data-quality intervention moves the constants, which is precisely why it can be worth more than parameters.
+
+Once the architecture family is competent, data quality and compute allocation usually matter more than small structural edits. The scaling results sharpen that: they say how much loss each marginal parameter or token buys, and the answer is "a power law with a small exponent" for both — so the leverage is in not misallocating between them, and in the constants that data quality controls.
 
 ## A Practical Decision Order
 
@@ -216,6 +277,8 @@ This is simple on purpose. Good modeling work starts by pinning down the interfa
 - [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
 - [[ml/deep-learning/convolutional-neural-networks|Convolutional Neural Networks]]
+- [[ml/serving-systems/parallelism|Parallelism]]
+- [[ml/serving-systems/performance-modeling|Performance Modeling]]
 
 ## Sources
 
@@ -223,4 +286,8 @@ This is simple on purpose. Good modeling work starts by pinning down the interfa
 - [Vaswani et al. (2017), Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 - [Ioffe and Szegedy (2015), Batch Normalization](https://arxiv.org/abs/1502.03167)
 - [Kaplan et al. (2020), Scaling Laws for Neural Language Models](https://arxiv.org/abs/2001.08361)
+- [Hoffmann et al. (2022), Training Compute-Optimal Large Language Models](https://arxiv.org/abs/2203.15556)
+- [Touvron et al. (2023), LLaMA: Open and Efficient Foundation Language Models](https://arxiv.org/abs/2302.13971)
+- [Touvron et al. (2023), Llama 2: Open Foundation and Fine-Tuned Chat Models](https://arxiv.org/abs/2307.09288)
+- [Muennighoff et al. (2023), Scaling Data-Constrained Language Models](https://arxiv.org/abs/2305.16264)
 - [Srivastava et al. (2014), Dropout](https://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)

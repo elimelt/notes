@@ -93,7 +93,7 @@ $$
 | --- | --- | --- | --- | --- | --- |
 | $R/S$ | 2 | 5 | 10 | 20 | 100 |
 
-The pole at $\rho = 1$ separates two regimes worth naming precisely. **Stable** ($\lambda < \mu$): queues form and drain, response time is finite, and the table above prices the headroom. **Unstable** ($\lambda \ge \mu$): the queue grows without bound, $R$ is no longer a function of load but of *time* — every second of overload adds to a backlog that must be repaid — and throughput pins at $\mu$ while arrivals keep accumulating. A system past saturation does not degrade gracefully; it falls behind linearly. Simulation confirming the table, plus the variance and burstiness effects the M/M/1 model hides, are in the queueing note.
+The pole at $\rho = 1$ separates two regimes worth naming precisely. **Stable** ($\lambda < \mu$): queues form and drain, response time is finite, and the table above prices the headroom. **Unstable** ($\lambda \ge \mu$): the queue grows without bound, $R$ is no longer a function of load but of *time* — every second of overload adds to a backlog that must be repaid — and throughput pins at $\mu$ while arrivals keep accumulating. A system past saturation does not degrade gracefully; it falls behind linearly. Simulation confirming the table, plus the variance and burstiness effects the M/M/1 model hides, are in [[systems/operating-systems/v2-concurrency/7-queueing-theory|Queueing Theory]].
 
 The curve also explains the knee heuristic: below $\rho \approx 0.7$-0.8, added load costs little latency; above it, each point of utilization costs more than the last. Operators leave headroom not from superstition but because the marginal price of utilization is convex.
 
@@ -103,7 +103,7 @@ Real queues are bounded. A finite buffer converts unbounded delay into loss: whe
 
 ## When the averages lie
 
-Everything above is stated in means, and means hide two things. First, the *distribution* of $R$: at $\rho$ near 1 the tail grows faster than the mean (for M/M/1 the p99 is 4.6x the mean, and both scale as $1/(1-\rho)$), so an SLO on p99 saturates far earlier than a mean-based capacity plan predicts. Second, *mixtures*: a mean over two request classes, or over bursty and quiet periods, describes no real request — and burstiness raises queueing pain at identical average $\rho$ (worked example in the queueing note). The rule of thumb: plan capacity with the formulas here, but state objectives and read dashboards in percentiles — the full argument is in [[systems/performance/tail-latency-percentiles|Tail Latency, Percentiles, and Queueing Distributions]].
+Everything above is stated in means, and means hide two things. First, the *distribution* of $R$: at $\rho$ near 1 the tail grows faster than the mean (for M/M/1 the p99 is 4.6x the mean, and both scale as $1/(1-\rho)$), so an SLO on p99 saturates far earlier than a mean-based capacity plan predicts. Second, *mixtures*: a mean over two request classes, or over bursty and quiet periods, describes no real request — and burstiness raises queueing pain at identical average $\rho$ (worked example in [[systems/operating-systems/v2-concurrency/7-queueing-theory|Queueing Theory]]). The rule of thumb: plan capacity with the formulas here, but state objectives and read dashboards in percentiles — the full argument is in [[systems/performance/tail-latency-percentiles|Tail Latency, Percentiles, and Queueing Distributions]].
 
 ## Worked example
 

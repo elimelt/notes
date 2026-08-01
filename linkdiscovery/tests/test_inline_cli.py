@@ -294,6 +294,57 @@ class TestProposeBaseline:
         for line in jsonl.read_text(encoding="utf-8").splitlines():
             InlineProposal.from_dict(json.loads(line))
 
+    def test_family_depth_zero_disables_the_cross_family_prior(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        code = main(
+            [
+                "inline",
+                "propose",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--engine",
+                "baseline",
+                "--out",
+                str(tmp_path),
+                "--threshold",
+                "0.2",
+                "--family-depth",
+                "0",
+            ]
+        )
+        assert code == 0
+        assert "baseline engine" in capsys.readouterr().out
+        jsonl = tmp_path / "inline-proposals.jsonl"
+        assert jsonl.is_file()
+        for line in jsonl.read_text(encoding="utf-8").splitlines():
+            proposal = InlineProposal.from_dict(json.loads(line))
+            assert "same_family" not in proposal.features
+
+    def test_negative_family_depth_is_error(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        code = main(
+            [
+                "inline",
+                "propose",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--engine",
+                "baseline",
+                "--out",
+                str(tmp_path),
+                "--family-depth",
+                "-1",
+            ]
+        )
+        assert code == 2
+        assert "depth must be >= 1" in capsys.readouterr().err
+
     def test_unknown_engine_is_usage_error(self, workspace: Workspace) -> None:
         with pytest.raises(SystemExit) as excinfo:
             main(
@@ -331,6 +382,341 @@ class TestProposeBaseline:
         )
         assert code == 2
         assert "--heads is required" in capsys.readouterr().err
+
+
+def write_review_decisions(path: Path, engines: tuple[str, ...] = ("baseline", "learned")) -> None:
+    """A synthetic wire-format decisions.jsonl: accepts high, rejects low."""
+    lines: list[dict[str, object]] = []
+    for engine in engines:
+        for index in range(8):
+            lines.append(
+                {
+                    "engine": engine,
+                    "id": f"sha256:{engine}-{index}",
+                    "source": "systems/dynamo",
+                    "target": "systems/consistency",
+                    "anchor": "consistency",
+                    "start": index * 10,
+                    "end": index * 10 + 6,
+                    "score": 0.55 + index * 0.04,
+                    "flag": False,
+                    "rank": index,
+                    "verdict": "accept",
+                    "target_ok": True,
+                    "anchor_ok": True,
+                    "placement_ok": True,
+                    "reason": "good",
+                    "note": "",
+                }
+            )
+        lines.extend(
+            {
+                "engine": engine,
+                "id": f"sha256:{engine}-r{index}",
+                "source": "systems/dynamo",
+                "target": "systems/consistency",
+                "anchor": "consistency",
+                "start": 200 + index * 10,
+                "end": 200 + index * 10 + 6,
+                "score": 0.15 + index * 0.05,
+                "flag": True,
+                "rank": 100 + index,
+                "verdict": "reject",
+                "target_ok": False,
+                "anchor_ok": False,
+                "placement_ok": False,
+                "reason": "wrong_target",
+                "note": "",
+            }
+            for index in range(6)
+        )
+    path.write_text("".join(json.dumps(line) + "\n" for line in lines), encoding="utf-8")
+
+
+def write_benchmark_file(path: Path) -> None:
+    """A two-case benchmark over the fixture corpus (anchor-text located)."""
+    data = {
+        "header": {
+            "schema_version": 1,
+            "run_id": "bm-test",
+            "corpus_id": "corpus-test",
+            "created_at": "2026-08-01T00:00:00+00:00",
+            "config_fingerprint": "sha256:cfg",
+            "producer_version": "test",
+        },
+        "cases": [
+            {
+                "id": "bm-natural",
+                "kind": "natural_span",
+                "source_document_id": "systems/dynamo",
+                "span": None,
+                "anchor_text": "consistency",
+                "target_document_id": None,
+                "expected": True,
+                "hard_case": False,
+                "note": "",
+            },
+            {
+                "id": "bm-no-link",
+                "kind": "no_link",
+                "source_document_id": "systems/dynamo",
+                "span": None,
+                "anchor_text": "availability",
+                "target_document_id": None,
+                "expected": True,
+                "hard_case": True,
+                "note": "",
+            },
+        ],
+    }
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+
+class TestCalibrate:
+    def test_fits_both_engines_and_writes_json(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        reviews = tmp_path / "decisions.jsonl"
+        write_review_decisions(reviews)
+        out = tmp_path / "calibration.json"
+        code = main(["inline", "calibrate", "--reviews", str(reviews), "--out", str(out)])
+        assert code == 0
+        captured = capsys.readouterr().out
+        assert "temperature" in captured
+        assert "baseline" in captured
+        assert "learned" in captured
+        data = json.loads(out.read_text(encoding="utf-8"))
+        assert set(data) == {"baseline", "learned"}
+        for entry in data.values():
+            assert entry["temperature"] > 0
+            assert entry["n"] == 14
+            assert "conformal" in entry
+
+    def test_missing_reviews_file_is_error(
+        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        code = main(
+            [
+                "inline",
+                "calibrate",
+                "--reviews",
+                str(tmp_path / "missing.jsonl"),
+                "--out",
+                str(tmp_path / "calibration.json"),
+            ]
+        )
+        assert code == 2
+        assert "error:" in capsys.readouterr().err
+
+
+class TestProposeWithCalibration:
+    def test_baseline_calibration_populates_calibrated_probability(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        reviews = tmp_path / "decisions.jsonl"
+        write_review_decisions(reviews, engines=("baseline",))
+        calibration = tmp_path / "calibration.json"
+        assert (
+            main(["inline", "calibrate", "--reviews", str(reviews), "--out", str(calibration)]) == 0
+        )
+        capsys.readouterr()
+        report_dir = tmp_path / "report"
+        code = main(
+            [
+                "inline",
+                "propose",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--engine",
+                "baseline",
+                "--out",
+                str(report_dir),
+                "--threshold",
+                "0.2",
+                "--calibration",
+                str(calibration),
+            ]
+        )
+        assert code == 0
+        assert "baseline engine" in capsys.readouterr().out
+        jsonl = report_dir / "inline-proposals.jsonl"
+        proposals = [
+            InlineProposal.from_dict(json.loads(line))
+            for line in jsonl.read_text(encoding="utf-8").splitlines()
+        ]
+        assert proposals
+        assert all(p.calibrated_probability is not None for p in proposals)
+
+    def test_engine_absent_from_calibration_file_is_error(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        reviews = tmp_path / "decisions.jsonl"
+        write_review_decisions(reviews, engines=("learned",))
+        calibration = tmp_path / "calibration.json"
+        assert (
+            main(["inline", "calibrate", "--reviews", str(reviews), "--out", str(calibration)]) == 0
+        )
+        capsys.readouterr()
+        code = main(
+            [
+                "inline",
+                "propose",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--engine",
+                "baseline",
+                "--out",
+                str(tmp_path / "report"),
+                "--calibration",
+                str(calibration),
+            ]
+        )
+        assert code == 2
+        assert "no entry for engine" in capsys.readouterr().err
+
+
+class TestBenchmark:
+    def test_writes_scores_and_prints_per_kind_rows(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        benchmark_path = tmp_path / "benchmark.json"
+        write_benchmark_file(benchmark_path)
+        out = tmp_path / "scores.json"
+        code = main(
+            [
+                "inline",
+                "benchmark",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--benchmark",
+                str(benchmark_path),
+                "--engine",
+                "baseline",
+                "--out",
+                str(out),
+            ]
+        )
+        assert code == 0
+        captured = capsys.readouterr().out
+        assert "natural_span" in captured
+        assert "overall" in captured
+        scores = json.loads(out.read_text(encoding="utf-8"))
+        assert scores["overall"]["total"] == 2.0
+        assert scores["overall"]["evaluated"] == 2.0
+        assert scores["natural_span"]["total"] == 1.0
+        assert scores["hard_case"]["total"] == 1.0
+
+    def test_learned_without_heads_is_error(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        benchmark_path = tmp_path / "benchmark.json"
+        write_benchmark_file(benchmark_path)
+        code = main(
+            [
+                "inline",
+                "benchmark",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--benchmark",
+                str(benchmark_path),
+                "--engine",
+                "learned",
+                "--out",
+                str(tmp_path / "scores.json"),
+            ]
+        )
+        assert code == 2
+        assert "--heads is required" in capsys.readouterr().err
+
+    def test_missing_benchmark_file_is_error(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        code = main(
+            [
+                "inline",
+                "benchmark",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--benchmark",
+                str(tmp_path / "missing.json"),
+                "--engine",
+                "baseline",
+                "--out",
+                str(tmp_path / "scores.json"),
+            ]
+        )
+        assert code == 2
+        assert "error:" in capsys.readouterr().err
+
+
+class TestTrainWithReviews:
+    def test_train_accepts_a_reviews_file(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        alice, _ = write_synthetic_labels(workspace, tmp_path)
+        reviews = tmp_path / "decisions.jsonl"
+        write_review_decisions(reviews, engines=("learned",))
+        heads_dir = tmp_path / "heads-reviews"
+        code = main(
+            [
+                "inline",
+                "train",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--sample",
+                str(workspace.sample),
+                "--labels",
+                str(alice),
+                "--out",
+                str(heads_dir),
+                "--epochs",
+                "1",
+                "--reviews",
+                str(reviews),
+            ]
+        )
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "review decisions" in out
+        assert "14" in out
+        assert (heads_dir / "weights.pt").is_file()
+
+    def test_missing_reviews_file_is_error(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        alice, _ = write_synthetic_labels(workspace, tmp_path)
+        code = main(
+            [
+                "inline",
+                "train",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--sample",
+                str(workspace.sample),
+                "--labels",
+                str(alice),
+                "--out",
+                str(tmp_path / "heads"),
+                "--reviews",
+                str(tmp_path / "missing.jsonl"),
+            ]
+        )
+        assert code == 2
+        assert "error:" in capsys.readouterr().err
 
 
 class TestTrainAndProposeLearned:

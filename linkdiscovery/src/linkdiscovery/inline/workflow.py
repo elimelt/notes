@@ -47,7 +47,7 @@ from linkdiscovery.contracts.units import Span
 from linkdiscovery.embed import DefaultEmbedder
 from linkdiscovery.embed.runtime import qualify_device
 from linkdiscovery.embed.vectors import load_vector_table
-from linkdiscovery.errors import ContractError
+from linkdiscovery.errors import ConfigError, ContractError
 from linkdiscovery.fingerprint import canonical_json, combine_fingerprints, fingerprint
 from linkdiscovery.inline.anchors import AnchorConfig, AnchorDictionary, build_anchor_dictionary
 from linkdiscovery.inline.audit.annotate import load_audit_labels
@@ -58,7 +58,14 @@ from linkdiscovery.inline.baseline import (
     propose_baseline,
     score_baseline,
 )
-from linkdiscovery.inline.calibrate import apply_temperature
+from linkdiscovery.inline.benchmark import run_benchmark
+from linkdiscovery.inline.calibrate import (
+    ConformalAbstainer,
+    apply_temperature,
+    expected_calibration_error,
+    fit_temperature,
+    reliability_table,
+)
 from linkdiscovery.inline.encode import (
     HashingTokenEncoder,
     QwenTokenEncoder,
@@ -67,18 +74,27 @@ from linkdiscovery.inline.encode import (
     WindowedTokenEncoder,
     span_representation,
 )
-from linkdiscovery.inline.evaluate import retrieval_metrics, three_way_split
+from linkdiscovery.inline.evaluate import retrieval_metrics, score_benchmark, three_way_split
 from linkdiscovery.inline.heads import build_pair_features
 from linkdiscovery.inline.records import (
+    REVIEW_ENGINES,
     AuditItem,
     AuditSample,
+    Benchmark,
     InlineProposal,
+    InlineReviewDecision,
     LinkRegionKind,
     SpanCandidate,
     Tier,
 )
 from linkdiscovery.inline.select import SelectionConfig, combine_scores, select_proposals
-from linkdiscovery.inline.spans import SpanConfig, propose_spans, span_recall
+from linkdiscovery.inline.spans import (
+    SpanConfig,
+    _contains,
+    _related_notes_spans,
+    propose_spans,
+    span_recall,
+)
 from linkdiscovery.inline.train import (
     SpanRepTable,
     TargetCatalog,
@@ -86,6 +102,7 @@ from linkdiscovery.inline.train import (
     _consensus_tier,
     build_training_data,
     default_pair_hand_features,
+    review_span_key,
     train_heads,
 )
 from linkdiscovery.interfaces import RegionParser, SourceAdapter
@@ -99,7 +116,7 @@ from linkdiscovery.preprocess import DefaultPreprocessor
 from linkdiscovery.report._io import atomic_write_text
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
+    from collections.abc import Callable, Iterable, Mapping, Sequence
 
     from numpy.typing import NDArray
 
@@ -116,16 +133,23 @@ __all__ = [
     "QWEN_STRIDE_TOKENS",
     "QWEN_WINDOW_TOKENS",
     "InlineInputs",
+    "benchmark_engine",
     "build_anchor_artifacts",
     "build_audit_artifacts",
     "build_qwen_token_encoder",
     "check_span_recall",
     "evaluate_inline_engines",
+    "families_from_document_ids",
+    "fit_review_calibration",
     "load_audit_sample",
+    "load_benchmark",
     "load_inline_inputs",
+    "load_review_calibration",
+    "load_review_decisions",
     "propose_inline_baseline",
     "propose_inline_learned",
     "train_inline_heads",
+    "write_review_calibration",
 ]
 
 _LOGGER = logging.getLogger(__name__)
@@ -168,6 +192,9 @@ _PLACEMENT_NON_PROSE_FLOOR: Final = 0.05
 
 _PROBABILITY_EPSILON: Final = 1e-6
 """Clamp keeping combined scores strictly inside (0, 1) before the logit."""
+
+_REVIEW_CONFORMAL_ALPHA: Final = 0.2
+"""Conformal target error rate fitted alongside review-outcome calibration."""
 
 _ACRONYM = re.compile(r"[A-Z][A-Z0-9]+")
 _HYPHENATED = re.compile(r"[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+")
@@ -250,6 +277,56 @@ def load_audit_sample(path: Path) -> AuditSample:
     if not isinstance(raw, dict):
         raise ContractError(f"audit sample {path} must be a JSON object")
     return AuditSample.from_dict(raw)
+
+
+def load_review_decisions(path: Path) -> tuple[InlineReviewDecision, ...]:
+    """Load a ``decisions.jsonl`` review file (the human-standard review).
+
+    Each non-blank line must be one JSON-encoded review decision in the
+    :meth:`~linkdiscovery.inline.records.InlineReviewDecision.from_dict`
+    wire format. Order is preserved (the downstream routing and skips are
+    deterministic in file order). Raises :class:`~linkdiscovery.errors.
+    ContractError` naming the file — and the line, for per-line failures —
+    when the file is missing, unreadable, or violates the contract; a review
+    file is always passed explicitly, so an absent one is an error rather
+    than an empty decision set.
+    """
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ContractError(f"cannot read review decisions {path}: {exc}") from exc
+    decisions: list[InlineReviewDecision] = []
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            data = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ContractError(f"{path}: line {line_number} is not valid JSON: {exc}") from exc
+        if not isinstance(data, dict):
+            raise ContractError(
+                f"{path}: line {line_number} must be a JSON object, got {type(data).__name__}"
+            )
+        decisions.append(InlineReviewDecision.from_dict(data))
+    return tuple(decisions)
+
+
+def load_benchmark(path: Path) -> Benchmark:
+    """Load a frozen expert benchmark (``expert-benchmark-v1.json`` shape).
+
+    Raises :class:`~linkdiscovery.errors.ContractError` when the file is
+    missing, unreadable, or violates the :class:`~linkdiscovery.inline.
+    records.Benchmark` contract.
+    """
+    try:
+        raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    except OSError as exc:
+        raise ContractError(f"cannot read benchmark {path}: {exc}") from exc
+    except json.JSONDecodeError as exc:
+        raise ContractError(f"benchmark {path} is not valid JSON: {exc}") from exc
+    if not isinstance(raw, dict):
+        raise ContractError(f"benchmark {path} must be a JSON object")
+    return Benchmark.from_dict(raw)
 
 
 def _escape_md(text: str) -> str:
@@ -421,7 +498,118 @@ def _document_vectors(inputs: InlineInputs) -> dict[str, NDArray[np.float32]]:
     }
 
 
-def propose_inline_baseline(
+def families_from_document_ids(document_ids: Iterable[str], *, depth: int = 1) -> dict[str, str]:
+    """Topic-family labels derived from hierarchical document ids.
+
+    Convention-based helper for corpora whose document ids are
+    ``/``-separated paths (``distributed-systems/sharding``): the family of
+    an id containing ``/`` is the ``"/".join`` of its first ``depth`` path
+    segments; ids without ``/`` are omitted from the result (unknown
+    family, never penalized). The core never assumes document ids are paths
+    — callers opt into this convention by building the mapping here and
+    passing it to :func:`~linkdiscovery.inline.baseline.propose_baseline`.
+    Deterministic: output order follows input order.
+
+    Raises :class:`~linkdiscovery.errors.ConfigError` when ``depth`` < 1.
+    """
+    if depth < 1:
+        raise ConfigError(f"families_from_document_ids: depth must be >= 1, got {depth}")
+    families: dict[str, str] = {}
+    for document_id in document_ids:
+        if "/" not in document_id:
+            continue
+        families[document_id] = "/".join(document_id.split("/")[:depth])
+    return families
+
+
+def _existing_span_links(
+    relationships: RelationshipSet, processed: ProcessedCorpus
+) -> dict[str, list[tuple[Span, str]]]:
+    """(source_span, target_id) per source document for span-carrying links.
+
+    The ``existing_links`` input of :func:`~linkdiscovery.inline.select.
+    select_proposals` (same-target proximity suppression). Every span-
+    carrying relationship counts whatever its kind, EXCEPT links whose span
+    falls inside a Related-notes zone of the source document (the same
+    zones the span stage derives via ``_related_notes_spans``). Rationale
+    (audit guideline "Duplication rule"): when a target is linked both in
+    prose and in a Related-notes entry, the Related-notes entry is the
+    duplicate — prose is the preferred home — so a navigation entry must
+    never suppress a nearby prose proposal for the same target. Measured on
+    the 160-item human-standard review: the only review-ACCEPTED baseline
+    items Rule A removed were blocked solely by Related-notes entries.
+    Prose existing links suppress as before. Order within each source
+    follows the relationship set's order.
+    """
+    related_zones = {
+        processed_doc.document_id: _related_notes_spans(processed_doc)
+        for processed_doc in processed.documents
+    }
+    links: dict[str, list[tuple[Span, str]]] = {}
+    for relationship in relationships.relationships:
+        span = relationship.source_span
+        if span is None:
+            continue
+        zones = related_zones.get(relationship.source_id, ())
+        if any(_contains(zone, span) for zone in zones):
+            continue
+        links.setdefault(relationship.source_id, []).append((span, relationship.target_id))
+    return links
+
+
+def _baseline_run(  # noqa: PLR0913 -- internal helper threading fixed per-run context
+    inputs: InlineInputs,
+    *,
+    anchor_config: AnchorConfig,
+    span_config: SpanConfig,
+    baseline_config: BaselineConfig,
+    selection_config: SelectionConfig,
+    run_id: str,
+    family_depth: int,
+    temperature: float | None,
+) -> tuple[list[InlineProposal], InlineProposalSet]:
+    """The baseline engine's shared body: (pre-selection drafts, selected set).
+
+    Factored out of :func:`propose_inline_baseline` so
+    :func:`benchmark_engine` can see BOTH sides of the selection boundary
+    without re-running the pipeline. Drafts are returned post-calibration
+    (:func:`_calibrate_drafts`) — exactly what selection consumed.
+    """
+    dictionary = _prepared_dictionary(inputs.corpus, anchor_config)
+    candidates = _propose_all_spans(inputs, dictionary, span_config, inputs.relationships)
+    families = (
+        None
+        if family_depth == 0
+        else families_from_document_ids(
+            (document.id for document in inputs.corpus.documents), depth=family_depth
+        )
+    )
+    drafts = _calibrate_drafts(
+        propose_baseline(
+            candidates,
+            dictionary.lookup,
+            _document_vectors(inputs),
+            None,
+            _titles(inputs),
+            config=baseline_config,
+            run_id=run_id,
+            corpus_id=inputs.corpus.header.corpus_id,
+            families=families,
+        ),
+        temperature,
+    )
+    selected = select_proposals(
+        drafts,
+        _documents_by_id(inputs),
+        config=selection_config,
+        run_id=run_id,
+        corpus_id=inputs.corpus.header.corpus_id,
+        existing_links=_existing_span_links(inputs.relationships, inputs.processed),
+    )
+    return drafts, selected
+
+
+def propose_inline_baseline(  # noqa: PLR0913 -- stage-boundary signature fixed by the task
     inputs: InlineInputs,
     *,
     anchor_config: AnchorConfig,
@@ -429,6 +617,8 @@ def propose_inline_baseline(
     baseline_config: BaselineConfig,
     selection_config: SelectionConfig,
     run_id: str = "adhoc",
+    family_depth: int = 1,
+    temperature: float | None = None,
 ) -> InlineProposalSet:
     """The full deterministic fallback path (SPEC §12 kill-criterion engine).
 
@@ -436,30 +626,37 @@ def propose_inline_baseline(
     prose document -> draft proposals via :func:`~linkdiscovery.inline.
     baseline.propose_baseline` (target lookup = dictionary, document vectors
     from the v1 document-view embedding index, ``span_vectors=None`` so the
-    embedding-cosine term is 0) -> :func:`~linkdiscovery.inline.select.
-    select_proposals` for thresholds, per-note budget, and MMR. Self-links
-    are excluded by the baseline; overlap with existing links is excluded by
-    the span stage. Fully deterministic: no RNG anywhere on this path.
+    embedding-cosine term is 0, topic families from
+    :func:`families_from_document_ids` at ``family_depth`` path segments —
+    0 disables the cross-family prior) -> :func:`~linkdiscovery.inline.
+    select.select_proposals` for thresholds, per-note budget, MMR, and
+    same-target proximity suppression against the existing span-carrying
+    links of ``inputs.relationships`` — the SAME relationship set the span
+    stage sees on this path, so suppression and span exclusion agree —
+    minus Related-notes navigation entries (see :func:`_existing_span_links`:
+    per the guideline duplication rule they must not suppress prose).
+    Self-links are excluded by the baseline; overlap with existing links is
+    excluded by the span stage. Fully deterministic: no RNG anywhere on
+    this path.
+
+    ``temperature`` optionally applies review-fitted temperature scaling to
+    every draft's combined score before selection (:func:`_calibrate_drafts`
+    — the same single application point the learned engine uses), populating
+    ``calibrated_probability`` so the accept threshold operates on a
+    calibrated probability. Fit it with :func:`fit_review_calibration` over
+    THIS engine's review decisions; temperatures are engine-specific.
     """
-    dictionary = _prepared_dictionary(inputs.corpus, anchor_config)
-    candidates = _propose_all_spans(inputs, dictionary, span_config, inputs.relationships)
-    drafts = propose_baseline(
-        candidates,
-        dictionary.lookup,
-        _document_vectors(inputs),
-        None,
-        _titles(inputs),
-        config=baseline_config,
+    _, selected = _baseline_run(
+        inputs,
+        anchor_config=anchor_config,
+        span_config=span_config,
+        baseline_config=baseline_config,
+        selection_config=selection_config,
         run_id=run_id,
-        corpus_id=inputs.corpus.header.corpus_id,
+        family_depth=family_depth,
+        temperature=temperature,
     )
-    return select_proposals(
-        drafts,
-        _documents_by_id(inputs),
-        config=selection_config,
-        run_id=run_id,
-        corpus_id=inputs.corpus.header.corpus_id,
-    )
+    return selected
 
 
 def _display_text_offset(markup: str, anchor_text: str) -> int:
@@ -633,16 +830,21 @@ def _hand_features(features: Mapping[str, float]) -> tuple[float, ...]:
     return tuple(float(features.get(name, 0.0)) for name in INLINE_FEATURE_NAMES)
 
 
-def _audit_item_features(
-    item: AuditItem, document: SourceDocument, dictionary: AnchorDictionary, span: Span
+def _span_hand_features(
+    document: SourceDocument,
+    dictionary: AnchorDictionary,
+    span: Span,
+    *,
+    region_kind: LinkRegionKind,
 ) -> dict[str, float]:
-    """Hand features for an audited link span, mirroring the span-stage vocabulary.
+    """Hand features for a labeled span, mirroring the span-stage vocabulary.
 
-    Audited spans overlap existing links, so the span stage never emits
-    candidates for them; this helper recomputes the same feature vocabulary
-    directly. One honest approximation: ``sentence_position`` is the span's
-    relative position within the whole document rather than within its
-    containing region (the region is not re-derived here).
+    Audited spans overlap existing links (and reviewed spans belong to past
+    engine runs), so the span stage never emits candidates for them; this
+    helper recomputes the same feature vocabulary directly. One honest
+    approximation: ``sentence_position`` is the span's relative position
+    within the whole document rather than within its containing region (the
+    region is not re-derived here).
     """
     text = document.content[span.start : span.end]
     targets = dictionary.lookup(text)
@@ -668,7 +870,7 @@ def _audit_item_features(
             1.0 if _HYPHENATED.fullmatch(text) and any(c.isalpha() for c in text) else 0.0
         ),
         "sentence_position": min(1.0, span.start / max(1, len(document.content))),
-        "region_prose": 1.0 if item.region_kind is LinkRegionKind.PROSE else 0.0,
+        "region_prose": 1.0 if region_kind is LinkRegionKind.PROSE else 0.0,
     }
 
 
@@ -817,10 +1019,49 @@ def _labeled_item_reps(
         narrowed = _narrow_to_anchor(item, documents)
         span = narrowed.source_span
         assert span is not None  # _narrow_to_anchor never drops the span
-        features = _audit_item_features(narrowed, document, dictionary, span)
+        features = _span_hand_features(document, dictionary, span, region_kind=narrowed.region_kind)
         reps[item.id] = span_representation(
             doc_encoder.states_for(document),
             span,
+            hand_features=_hand_features(features),
+        )
+    return reps
+
+
+def _review_item_reps(
+    decisions: Sequence[InlineReviewDecision],
+    documents: Mapping[str, SourceDocument],
+    dictionary: AnchorDictionary,
+    doc_encoder: _DocumentEncoder,
+) -> dict[str, NDArray[np.float32]]:
+    """Span representations for review decisions, keyed by ``review_span_key``.
+
+    Mirrors :func:`_labeled_item_reps` with one deliberate difference:
+    review spans are NOT narrowed. A decision's span came from an engine
+    proposal — a plain-text anchor span in the same raw document content the
+    audit items index — so there is no link markup to strip, and narrowing
+    would corrupt the coordinates. Hand features use the same
+    :func:`_span_hand_features` vocabulary; the region is not re-derived
+    (proposals only ever come from prose/list candidate spans), so
+    ``region_kind`` is the honest prose approximation. Decisions whose
+    reason is ``broken_span`` (untrustworthy coordinates) or whose source
+    document is unknown are skipped — the same decisions the routing in
+    :func:`~linkdiscovery.inline.train.review_training_examples` skips or
+    cannot reach.
+    """
+    reps: dict[str, NDArray[np.float32]] = {}
+    for decision in decisions:
+        if decision.reason == "broken_span":
+            continue
+        document = documents.get(decision.source_document_id)
+        if document is None:
+            continue
+        features = _span_hand_features(
+            document, dictionary, decision.span, region_kind=LinkRegionKind.PROSE
+        )
+        reps[review_span_key(decision)] = span_representation(
+            doc_encoder.states_for(document),
+            decision.span,
             hand_features=_hand_features(features),
         )
     return reps
@@ -838,6 +1079,7 @@ def train_inline_heads(  # noqa: PLR0913 -- stage-boundary signature fixed by th
     span_config: SpanConfig | None = None,
     encoder_factory: Callable[[], TokenStateEncoder] | None = None,
     token_state_cache: ArtifactCache | None = None,
+    reviews: Sequence[InlineReviewDecision] = (),
 ) -> TrainedHeads:
     """Phase 3: assemble representations, route tiers, train, and save the heads.
 
@@ -862,6 +1104,13 @@ def train_inline_heads(  # noqa: PLR0913 -- stage-boundary signature fixed by th
     CPU for a fixed ``seed``. ``token_state_cache`` optionally persists
     per-document token states and catalog vectors across runs (keyed by
     encoder fingerprint + content hash — see :class:`_DocumentEncoder`).
+
+    ``reviews`` optionally adds human-standard review decisions as
+    per-head-labeled examples: each decision's span is encoded exactly like
+    an audit item's (same encoder, same hand-feature vocabulary) but WITHOUT
+    anchor narrowing — review spans are already plain-text anchor spans (see
+    :func:`_review_item_reps`) — and routed per head by
+    :func:`~linkdiscovery.inline.train.review_training_examples`.
     """
     sample = load_audit_sample(Path(sample_path))
     labels = load_audit_labels(Path(labels_path))
@@ -877,6 +1126,7 @@ def train_inline_heads(  # noqa: PLR0913 -- stage-boundary signature fixed by th
     reps = _candidate_reps(candidates, documents, doc_encoder)
     labeled_ids = {label.item_id for label in labels}
     reps.update(_labeled_item_reps(sample, labeled_ids, documents, dictionary, doc_encoder))
+    reps.update(_review_item_reps(reviews, documents, dictionary, doc_encoder))
     catalog = _target_catalog(inputs, encoder, cache=token_state_cache)
     table = SpanRepTable(
         reps,
@@ -896,6 +1146,7 @@ def train_inline_heads(  # noqa: PLR0913 -- stage-boundary signature fixed by th
         reps=table,
         catalog=catalog,
         best_target_scores=best_scores,
+        reviews=reviews,
     )
     heads = train_heads(data, config=train_config, seed=seed)
     heads.save(Path(out_dir))
@@ -938,6 +1189,148 @@ def _calibrated(combined: float, temperature: float) -> float:
     return float(apply_temperature(logit, temperature)[0])
 
 
+def _calibrate_drafts(
+    drafts: Sequence[InlineProposal], temperature: float | None
+) -> list[InlineProposal]:
+    """The single temperature-application point shared by BOTH engines.
+
+    With a temperature, every draft's ``calibrated_probability`` becomes
+    ``_calibrated(combined_score, T)`` before selection (selection prefers
+    the calibrated probability via its ``_effective_score``); with ``None``
+    drafts pass through untouched. Applying here — once, between drafting
+    and selection — is what keeps the learned path from double-applying: no
+    draft constructor sets ``calibrated_probability`` itself.
+    """
+    if temperature is None:
+        return list(drafts)
+    return [
+        replace(draft, calibrated_probability=_calibrated(draft.combined_score, temperature))
+        for draft in drafts
+    ]
+
+
+def fit_review_calibration(
+    decisions: Sequence[InlineReviewDecision], *, engine: str
+) -> dict[str, Any]:
+    """Fit temperature scaling (and a conformal abstainer) from review outcomes.
+
+    The human-standard review is exactly the held-out judgment set spec §6
+    Q26 asks for: ``verdict == "accept"`` is the binary label, and the
+    engine's ``combined_score`` — clamped strictly inside (0, 1) and pushed
+    through its logit — is the raw confidence. :func:`~linkdiscovery.inline.
+    calibrate.fit_temperature` fits T on the engine's decisions only (score
+    scales are not comparable across engines), and the report carries the
+    before/after :func:`~linkdiscovery.inline.calibrate.
+    expected_calibration_error` plus the full :func:`~linkdiscovery.inline.
+    calibrate.reliability_table` so the improvement is inspectable, not just
+    asserted. A :class:`~linkdiscovery.inline.calibrate.ConformalAbstainer`
+    is additionally fitted on the calibrated probabilities at
+    ``target_error =`` :data:`_REVIEW_CONFORMAL_ALPHA` and serialized under
+    ``"conformal"`` (threshold, target error, calibration counts) for the
+    spec's stronger reject option.
+
+    Returns a JSON-safe dict: ``{"engine", "n", "positives", "temperature",
+    "ece_before", "ece_after", "reliability", "conformal"}``. Raises
+    :class:`~linkdiscovery.errors.ConfigError` for an unknown engine and
+    :class:`~linkdiscovery.errors.ContractError` when the engine has no
+    decisions or its labels are degenerate (all one class — calibration
+    needs both accepted and rejected examples).
+    """
+    if engine not in REVIEW_ENGINES:
+        expected = ", ".join(sorted(REVIEW_ENGINES))
+        raise ConfigError(
+            f"fit_review_calibration: unknown engine {engine!r}; expected one of: {expected}"
+        )
+    subset = [decision for decision in decisions if decision.engine == engine]
+    if not subset:
+        raise ContractError(
+            f"fit_review_calibration: no review decisions for engine {engine!r}; "
+            "review that engine's proposals first"
+        )
+    scores = np.asarray([decision.combined_score for decision in subset], dtype=np.float64)
+    clipped = np.clip(scores, _PROBABILITY_EPSILON, 1.0 - _PROBABILITY_EPSILON)
+    logits = np.log(clipped / (1.0 - clipped))
+    labels = np.asarray([decision.verdict == "accept" for decision in subset], dtype=np.bool_)
+    try:
+        temperature = fit_temperature(logits, labels)
+        calibrated = apply_temperature(logits, temperature)
+        abstainer = ConformalAbstainer().fit(
+            calibrated, labels, target_error=_REVIEW_CONFORMAL_ALPHA
+        )
+    except ValueError as exc:
+        raise ContractError(f"fit_review_calibration: engine {engine!r}: {exc}") from exc
+    return {
+        "engine": engine,
+        "n": len(subset),
+        "positives": int(labels.sum()),
+        "temperature": float(temperature),
+        "ece_before": expected_calibration_error(clipped, labels),
+        "ece_after": expected_calibration_error(calibrated, labels),
+        "reliability": reliability_table(calibrated, labels),
+        "conformal": abstainer.to_dict(),
+    }
+
+
+def write_review_calibration(path: Path, results: Mapping[str, Mapping[str, Any]]) -> None:
+    """Write review-calibration results as JSON, one entry per engine.
+
+    ``results`` maps engine name to the :func:`fit_review_calibration` dict
+    for that engine. Written atomically as canonical JSON, reloadable via
+    :func:`load_review_calibration`. Raises :class:`~linkdiscovery.errors.
+    ConfigError` for unknown engine keys.
+    """
+    unknown = sorted(set(results) - REVIEW_ENGINES)
+    if unknown:
+        expected = ", ".join(sorted(REVIEW_ENGINES))
+        raise ConfigError(
+            f"write_review_calibration: unknown engine key(s) {unknown}; expected only: {expected}"
+        )
+    payload = {engine: dict(result) for engine, result in results.items()}
+    atomic_write_text(Path(path), canonical_json(payload) + "\n")
+
+
+def load_review_calibration(path: Path) -> dict[str, dict[str, Any]]:
+    """Load a review-calibration file written by :func:`write_review_calibration`.
+
+    Validates the shape a caller depends on — a JSON object keyed by known
+    engine names, each entry carrying a finite positive ``temperature`` —
+    and raises :class:`~linkdiscovery.errors.ContractError` otherwise (the
+    remaining report fields are informational and pass through untouched).
+    """
+    try:
+        raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    except OSError as exc:
+        raise ContractError(f"cannot read review calibration {path}: {exc}") from exc
+    except json.JSONDecodeError as exc:
+        raise ContractError(f"review calibration {path} is not valid JSON: {exc}") from exc
+    if not isinstance(raw, dict):
+        raise ContractError(f"review calibration {path} must be a JSON object")
+    result: dict[str, dict[str, Any]] = {}
+    for engine, entry in raw.items():
+        if engine not in REVIEW_ENGINES:
+            expected = ", ".join(sorted(REVIEW_ENGINES))
+            raise ContractError(
+                f"review calibration {path}: unknown engine {engine!r}; expected one of: {expected}"
+            )
+        if not isinstance(entry, dict):
+            raise ContractError(
+                f"review calibration {path}: entry for {engine!r} must be a JSON object"
+            )
+        temperature = entry.get("temperature")
+        if (
+            isinstance(temperature, bool)
+            or not isinstance(temperature, int | float)
+            or not np.isfinite(temperature)
+            or temperature <= 0.0
+        ):
+            raise ContractError(
+                f"review calibration {path}: entry for {engine!r} must carry a finite "
+                f"positive 'temperature', got {temperature!r}"
+            )
+        result[engine] = entry
+    return result
+
+
 def _learned_draft(  # noqa: PLR0913 -- internal helper threading fixed per-run context
     candidate: SpanCandidate,
     rep: NDArray[np.float32],
@@ -947,11 +1340,15 @@ def _learned_draft(  # noqa: PLR0913 -- internal helper threading fixed per-run 
     retrieval_row: NDArray[np.float32],
     *,
     combine_weights: Mapping[str, float],
-    calibration: float | None,
     run_id: str,
     corpus_id: str,
 ) -> InlineProposal | None:
-    """Shortlist by retrieval probability, rerank, and draft the best target."""
+    """Shortlist by retrieval probability, rerank, and draft the best target.
+
+    Drafts always carry ``calibrated_probability=None``: temperature scaling
+    is applied in one shared post-draft pass (:func:`_calibrate_drafts`) so
+    the baseline and learned engines cannot diverge — or double-apply.
+    """
     order = np.argsort(-retrieval_row, kind="stable")
     shortlist = [
         int(index) for index in order if catalog.document_ids[int(index)] != candidate.document_id
@@ -1008,9 +1405,7 @@ def _learned_draft(  # noqa: PLR0913 -- internal helper threading fixed per-run 
         target_correctness=target_correctness,
         placement_validity=placement,
         combined_score=combined,
-        calibrated_probability=(
-            _calibrated(combined, calibration) if calibration is not None else None
-        ),
+        calibrated_probability=None,
         abstained=False,
         features={
             "retrieval_probability": float(retrieval_row[target_index]),
@@ -1029,7 +1424,6 @@ def _learned_drafts(  # noqa: PLR0913 -- internal helper threading fixed per-run
     catalog: TargetCatalog,
     *,
     combine_weights: Mapping[str, float],
-    calibration: float | None,
     run_id: str,
     corpus_id: str,
 ) -> list[InlineProposal]:
@@ -1050,7 +1444,6 @@ def _learned_drafts(  # noqa: PLR0913 -- internal helper threading fixed per-run
                 float(naturalness[row]),
                 retrieval[row],
                 combine_weights=combine_weights,
-                calibration=calibration,
                 run_id=run_id,
                 corpus_id=corpus_id,
             )
@@ -1060,38 +1453,24 @@ def _learned_drafts(  # noqa: PLR0913 -- internal helper threading fixed per-run
     return drafts
 
 
-def propose_inline_learned(  # noqa: PLR0913 -- stage-boundary signature fixed by the task
+def _learned_run(  # noqa: PLR0913 -- internal helper threading fixed per-run context
     inputs: InlineInputs,
     heads: TrainedHeads,
     *,
     anchor_config: AnchorConfig,
     span_config: SpanConfig,
     selection_config: SelectionConfig,
-    calibration: float | None = None,
+    temperature: float | None,
     run_id: str,
-    encoder_factory: Callable[[], TokenStateEncoder] | None = None,
-    token_state_cache: ArtifactCache | None = None,
-) -> InlineProposalSet:
-    """The learned engine: spans -> reps -> three head scores -> selection.
+    encoder_factory: Callable[[], TokenStateEncoder] | None,
+    token_state_cache: ArtifactCache | None,
+) -> tuple[list[InlineProposal], InlineProposalSet]:
+    """The learned engine's shared body: (pre-selection drafts, selected set).
 
-    For every candidate span: the naturalness head scores linkability, the
-    retrieval head's full-catalog softmax shortlists the top targets
-    (self-link excluded), the reranker head picks the best target
-    (``target_correctness``), and placement uses the deterministic §4 rule
-    (see :func:`_placement_validity` — Architecture A trains no placement
-    head). The combined score is the weighted geometric mean under
-    ``selection_config.combine_weights``; ``calibration`` optionally applies
-    temperature scaling to the combined score's logit, populating
-    ``calibrated_probability``. Drafts then flow through
-    :func:`~linkdiscovery.inline.select.select_proposals`.
-
-    ``encoder_factory`` must produce the SAME encoder the heads were trained
-    on; the fingerprint recorded at training time is verified and a mismatch
-    raises :class:`~linkdiscovery.errors.ContractError`. Default: the
-    ``HashingTokenEncoder`` at the heads' hidden size (the Qwen encoder is
-    the production path — inject it here for real runs).
-    ``token_state_cache`` optionally persists per-document token states and
-    catalog vectors across runs (see :class:`_DocumentEncoder`).
+    Factored out of :func:`propose_inline_learned` so
+    :func:`benchmark_engine` can see BOTH sides of the selection boundary
+    without re-running the pipeline. Drafts are returned post-calibration
+    (:func:`_calibrate_drafts`) — exactly what selection consumed.
     """
     encoder = (
         encoder_factory() if encoder_factory is not None else HashingTokenEncoder(heads.hidden_size)
@@ -1112,24 +1491,172 @@ def propose_inline_learned(  # noqa: PLR0913 -- stage-boundary signature fixed b
     documents = _documents_by_id(inputs)
     doc_encoder = _DocumentEncoder(encoder, cache=token_state_cache)
     catalog = _target_catalog(inputs, encoder, cache=token_state_cache)
-    drafts = _learned_drafts(
-        candidates,
-        documents,
-        doc_encoder,
-        heads,
-        catalog,
-        combine_weights=selection_config.combine_weights,
-        calibration=calibration,
-        run_id=run_id,
-        corpus_id=inputs.corpus.header.corpus_id,
+    drafts = _calibrate_drafts(
+        _learned_drafts(
+            candidates,
+            documents,
+            doc_encoder,
+            heads,
+            catalog,
+            combine_weights=selection_config.combine_weights,
+            run_id=run_id,
+            corpus_id=inputs.corpus.header.corpus_id,
+        ),
+        temperature,
     )
-    return select_proposals(
+    selected = select_proposals(
         drafts,
         documents,
         config=selection_config,
         run_id=run_id,
         corpus_id=inputs.corpus.header.corpus_id,
+        existing_links=_existing_span_links(inputs.relationships, inputs.processed),
     )
+    return drafts, selected
+
+
+def propose_inline_learned(  # noqa: PLR0913 -- stage-boundary signature fixed by the task
+    inputs: InlineInputs,
+    heads: TrainedHeads,
+    *,
+    anchor_config: AnchorConfig,
+    span_config: SpanConfig,
+    selection_config: SelectionConfig,
+    calibration: float | None = None,
+    temperature: float | None = None,
+    run_id: str,
+    encoder_factory: Callable[[], TokenStateEncoder] | None = None,
+    token_state_cache: ArtifactCache | None = None,
+) -> InlineProposalSet:
+    """The learned engine: spans -> reps -> three head scores -> selection.
+
+    For every candidate span: the naturalness head scores linkability, the
+    retrieval head's full-catalog softmax shortlists the top targets
+    (self-link excluded), the reranker head picks the best target
+    (``target_correctness``), and placement uses the deterministic §4 rule
+    (see :func:`_placement_validity` — Architecture A trains no placement
+    head). The combined score is the weighted geometric mean under
+    ``selection_config.combine_weights``. Drafts then flow through
+    :func:`~linkdiscovery.inline.select.select_proposals`, with same-target
+    proximity suppression against the existing span-carrying links of
+    ``inputs.relationships`` — the SAME relationship set the span stage sees
+    on this path — minus Related-notes navigation entries (see
+    :func:`_existing_span_links`). (The topic-family prior is baseline-only;
+    the learned reranker is expected to learn that signal from data.)
+
+    Temperature scaling: ``temperature`` and ``calibration`` are the SAME
+    knob. ``calibration`` is this function's original parameter name;
+    ``temperature`` is the engine-neutral name shared with
+    :func:`propose_inline_baseline` since review-fitted calibration
+    (:func:`fit_review_calibration`) landed. Both apply one post-draft
+    temperature-scaling pass (:func:`_calibrate_drafts`) — drafts themselves
+    never set ``calibrated_probability``, so the value is applied exactly
+    once. Passing both raises :class:`~linkdiscovery.errors.ConfigError`
+    (ambiguous, even when equal).
+
+    ``encoder_factory`` must produce the SAME encoder the heads were trained
+    on; the fingerprint recorded at training time is verified and a mismatch
+    raises :class:`~linkdiscovery.errors.ContractError`. Default: the
+    ``HashingTokenEncoder`` at the heads' hidden size (the Qwen encoder is
+    the production path — inject it here for real runs).
+    ``token_state_cache`` optionally persists per-document token states and
+    catalog vectors across runs (see :class:`_DocumentEncoder`).
+    """
+    if calibration is not None and temperature is not None:
+        raise ConfigError(
+            "propose_inline_learned: pass either 'temperature' or the legacy 'calibration' "
+            "alias, not both; they are the same temperature-scaling knob"
+        )
+    _, selected = _learned_run(
+        inputs,
+        heads,
+        anchor_config=anchor_config,
+        span_config=span_config,
+        selection_config=selection_config,
+        temperature=temperature if temperature is not None else calibration,
+        run_id=run_id,
+        encoder_factory=encoder_factory,
+        token_state_cache=token_state_cache,
+    )
+    return selected
+
+
+def benchmark_engine(  # noqa: PLR0913 -- stage-boundary signature fixed by the task
+    inputs: InlineInputs,
+    benchmark: Benchmark,
+    *,
+    engine: str,
+    heads: TrainedHeads | None = None,
+    anchor_config: AnchorConfig | None = None,
+    span_config: SpanConfig | None = None,
+    selection_config: SelectionConfig | None = None,
+    baseline_config: BaselineConfig | None = None,
+    family_depth: int = 1,
+    temperature: float | None = None,
+    run_id: str = "benchmark",
+    encoder_factory: Callable[[], TokenStateEncoder] | None = None,
+    token_state_cache: ArtifactCache | None = None,
+) -> dict[str, Any]:
+    """Run one engine over the real corpus and score the frozen benchmark.
+
+    Reuses the exact draft-then-select bodies of the propose functions
+    (:func:`_baseline_run` / :func:`_learned_run` — same configs, same
+    calibration point, same suppression inputs), so the benchmark judges
+    the engine precisely as it ships, then hands both sides of the
+    selection boundary to :func:`~linkdiscovery.inline.benchmark.
+    run_benchmark`: pre-selection drafts feed the head-quality kinds,
+    the accepted post-selection proposals feed the commitment kinds (see
+    that function for the per-kind semantics). ``temperature`` applies the
+    engine's review-fitted temperature (:func:`fit_review_calibration`)
+    exactly as ``inline propose`` would.
+
+    Returns ``{"outcomes": {case_id: bool}, "scores":
+    score_benchmark(benchmark, outcomes)}`` — cases whose source document
+    is missing or whose span cannot be located are omitted from
+    ``outcomes`` and reported as unevaluated by the scores. Raises
+    :class:`~linkdiscovery.errors.ConfigError` for an unknown ``engine`` or
+    a learned run without ``heads``.
+    """
+    resolved_selection = selection_config if selection_config is not None else SelectionConfig()
+    if engine == "baseline":
+        drafts, selected = _baseline_run(
+            inputs,
+            anchor_config=anchor_config or AnchorConfig(),
+            span_config=span_config or SpanConfig(),
+            baseline_config=baseline_config or BaselineConfig(),
+            selection_config=resolved_selection,
+            run_id=run_id,
+            family_depth=family_depth,
+            temperature=temperature,
+        )
+    elif engine == "learned":
+        if heads is None:
+            raise ConfigError("benchmark_engine: heads are required with engine 'learned'")
+        drafts, selected = _learned_run(
+            inputs,
+            heads,
+            anchor_config=anchor_config or AnchorConfig(),
+            span_config=span_config or SpanConfig(),
+            selection_config=resolved_selection,
+            temperature=temperature,
+            run_id=run_id,
+            encoder_factory=encoder_factory,
+            token_state_cache=token_state_cache,
+        )
+    else:
+        raise ConfigError(
+            f"benchmark_engine: unknown engine {engine!r}; expected 'baseline' or 'learned'"
+        )
+    outcomes = run_benchmark(
+        benchmark, drafts=drafts, selected=selected, documents=_documents_by_id(inputs)
+    )
+    _LOGGER.info(
+        "benchmark (%s engine): %d of %d cases evaluated",
+        engine,
+        len(outcomes),
+        len(benchmark.cases),
+    )
+    return {"outcomes": outcomes, "scores": score_benchmark(benchmark, outcomes)}
 
 
 # ------------------------------------------------------------- evaluation
@@ -1206,7 +1733,7 @@ def _eval_test_items(
         narrowed = _narrow_to_anchor(item, documents)
         span = narrowed.source_span
         assert span is not None  # _narrow_to_anchor never drops the span
-        features = _audit_item_features(narrowed, document, dictionary, span)
+        features = _span_hand_features(document, dictionary, span, region_kind=narrowed.region_kind)
         rep = span_representation(
             doc_encoder.states_for(document), span, hand_features=_hand_features(features)
         )
@@ -1445,7 +1972,6 @@ class _EngineContext:
             self.heads,
             self.catalog,
             combine_weights=self.selection_config.combine_weights,
-            calibration=None,
             run_id=f"{run_id}-learned",
             corpus_id=corpus_id,
         )
@@ -1462,9 +1988,21 @@ class _EngineContext:
         return learned, baseline
 
     def select(
-        self, drafts: Sequence[InlineProposal], config: SelectionConfig, run_id: str
+        self,
+        drafts: Sequence[InlineProposal],
+        config: SelectionConfig,
+        run_id: str,
+        *,
+        existing_links: Mapping[str, Sequence[tuple[Span, str]]] | None = None,
     ) -> list[InlineProposal]:
-        """Accepted proposals (rank order) after global selection of ``drafts``."""
+        """Accepted proposals (rank order) after global selection of ``drafts``.
+
+        INVARIANT (same-target proximity suppression): ``existing_links``
+        must be derived from the SAME relationship set the caller passed to
+        :meth:`drafts_for` — the eval-recovery path hides held-out links
+        from the span stage, and deriving suppression from the full set
+        there would wrongly suppress recovery of the hidden positives.
+        """
         return _accepted(
             select_proposals(
                 drafts,
@@ -1472,6 +2010,7 @@ class _EngineContext:
                 config=config,
                 run_id=run_id,
                 corpus_id=self.inputs.corpus.header.corpus_id,
+                existing_links=existing_links,
             )
         )
 
@@ -1487,13 +2026,22 @@ def _eval_recovery(context: _EngineContext, positives: Sequence[_EvalItem]) -> d
     spec asks for, since threshold scales are not comparable across engines.
     Honesty note: the anchor dictionary is still built from the full corpus
     (hiding links would collapse keyphraseness); both engines see the same
-    dictionary, so the comparison stays fair.
+    dictionary, so the comparison stays fair. Same-target proximity
+    suppression is likewise driven by the STRIPPED relationship set (the
+    same one the span stage sees here): the hidden positives being recovered
+    ARE existing links, and suppressing near the full set would wrongly
+    reject exactly the recoveries this evaluation measures.
     """
     visible = _without_span_links(context.inputs.relationships)
+    existing = _existing_span_links(visible, context.inputs.processed)
     learned_drafts, baseline_drafts = context.drafts_for(visible, "eval-recovery")
     ranking_config = replace(context.selection_config, accept_threshold=_EVAL_RANKING_THRESHOLD)
-    learned_ranked = context.select(learned_drafts, ranking_config, "eval-recovery-learned")
-    baseline_ranked = context.select(baseline_drafts, ranking_config, "eval-recovery-baseline")
+    learned_ranked = context.select(
+        learned_drafts, ranking_config, "eval-recovery-learned", existing_links=existing
+    )
+    baseline_ranked = context.select(
+        baseline_drafts, ranking_config, "eval-recovery-baseline", existing_links=existing
+    )
     budgets = sorted(
         {
             *(_EVAL_BUDGETS),
@@ -1527,15 +2075,22 @@ def _eval_recovery(context: _EngineContext, positives: Sequence[_EvalItem]) -> d
 def _eval_corpus(
     context: _EngineContext, sweep_thresholds: Sequence[float], top_n: int
 ) -> dict[str, Any]:
-    """Full-corpus comparison with existing links visible (production shape)."""
+    """Full-corpus comparison with existing links visible (production shape).
+
+    Both spans and same-target proximity suppression run against the FULL
+    relationship set (``context.inputs.relationships``) — the production
+    shape, where suppressing proposals that duplicate an author's nearby
+    link is exactly the intended behavior.
+    """
+    existing = _existing_span_links(context.inputs.relationships, context.inputs.processed)
     learned_drafts, baseline_drafts = context.drafts_for(
         context.inputs.relationships, "eval-corpus"
     )
     learned_accepted = context.select(
-        learned_drafts, context.selection_config, "eval-corpus-learned"
+        learned_drafts, context.selection_config, "eval-corpus-learned", existing_links=existing
     )
     baseline_accepted = context.select(
-        baseline_drafts, context.baseline_selection, "eval-corpus-baseline"
+        baseline_drafts, context.baseline_selection, "eval-corpus-baseline", existing_links=existing
     )
     pairs_learned = {
         (p.source_document_id, p.span.start, p.span.end, p.target_document_id)
@@ -1556,6 +2111,7 @@ def _eval_corpus(
                         learned_drafts,
                         replace(context.selection_config, accept_threshold=threshold),
                         "eval-sweep-learned",
+                        existing_links=existing,
                     )
                 )
             ),
@@ -1565,6 +2121,7 @@ def _eval_corpus(
                         baseline_drafts,
                         replace(context.selection_config, accept_threshold=threshold),
                         "eval-sweep-baseline",
+                        existing_links=existing,
                     )
                 )
             ),

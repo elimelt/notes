@@ -20,26 +20,32 @@ from linkdiscovery import PipelineConfig, config_from_dict
 from linkdiscovery.artifacts.cache import ArtifactCache
 from linkdiscovery.artifacts.store import ArtifactStore
 from linkdiscovery.contracts import SourceDocument, Span
-from linkdiscovery.errors import ContractError
+from linkdiscovery.errors import ConfigError, ContractError
 from linkdiscovery.inline import workflow
 from linkdiscovery.inline.anchors import AnchorConfig, AnchorDictionary
 from linkdiscovery.inline.audit.annotate import save_audit_labels
 from linkdiscovery.inline.audit.tiers import derive_tier
 from linkdiscovery.inline.baseline import BaselineConfig
-from linkdiscovery.inline.encode import HashingTokenEncoder
+from linkdiscovery.inline.calibrate import TEMPERATURE_MAX, TEMPERATURE_MIN
+from linkdiscovery.inline.encode import HashingTokenEncoder, span_representation
 from linkdiscovery.inline.heads import TrainedHeads
 from linkdiscovery.inline.records import (
     AuditItem,
     AuditLabel,
     AuditSample,
+    Benchmark,
+    BenchmarkCase,
+    BenchmarkKind,
     InlineProposal,
     InlineProposalSet,
+    InlineReviewDecision,
     LinkRegionKind,
 )
 from linkdiscovery.inline.report import write_inline_report
 from linkdiscovery.inline.select import SelectionConfig
 from linkdiscovery.inline.spans import SpanConfig
-from linkdiscovery.inline.train import TrainConfig
+from linkdiscovery.inline.train import TrainConfig, review_span_key
+from tests.conftest import make_header
 
 FIXTURE_ROOT = Path(__file__).parent / "fixtures" / "markdown_corpus"
 
@@ -50,13 +56,16 @@ TEST_THRESHOLD = 0.2
 """A low accept threshold so the tiny fixture corpus yields accepted proposals."""
 
 
-def make_config() -> PipelineConfig:
-    """The hashing-provider configuration over the fixture corpus."""
+def config_for_root(root: Path, exclude: list[str] | None = None) -> PipelineConfig:
+    """A hashing-provider configuration over any markdown corpus root."""
+    options: dict[str, Any] = {"root": str(root)}
+    if exclude is not None:
+        options["exclude"] = exclude
     data: dict[str, Any] = {
         "schema_version": 1,
         "source": {
             "adapter": "linkdiscovery_markdown.adapter:MarkdownSourceAdapter",
-            "options": {"root": str(FIXTURE_ROOT), "exclude": ["templates/**"]},
+            "options": options,
         },
         "preprocess": {
             "parser": "linkdiscovery_markdown.parser:MarkdownRegionParser",
@@ -74,6 +83,11 @@ def make_config() -> PipelineConfig:
         },
     }
     return config_from_dict(data)
+
+
+def make_config() -> PipelineConfig:
+    """The hashing-provider configuration over the fixture corpus."""
+    return config_for_root(FIXTURE_ROOT, exclude=["templates/**"])
 
 
 def synthetic_labels(sample: AuditSample) -> list[AuditLabel]:
@@ -116,6 +130,21 @@ def sample(audit_dir: Path) -> AuditSample:
     return workflow.load_audit_sample(audit_dir / "audit-sample.json")
 
 
+BASELINE_SELECTION = SelectionConfig(
+    accept_threshold=TEST_THRESHOLD,
+    existing_target_window_chars=0,
+    single_word_naturalness_floor=0.2,
+)
+"""Shared-fixture selection config with the precision rules relaxed. The
+fixture corpus's only above-threshold baseline draft ("consistency" in the
+dynamo note) is BOTH a same-target near-duplicate (28 characters from an
+existing link to the same target) AND a generic single lowercase word below
+the raised floor — i.e. exactly what the new rules reject — and this fixture
+needs at least one *accepted* proposal to exercise the happy path. The
+precision rules themselves are integration-tested on a purpose-built corpus
+in :class:`TestPrecisionRules`."""
+
+
 @pytest.fixture(scope="module")
 def baseline_set(inputs: workflow.InlineInputs) -> InlineProposalSet:
     return workflow.propose_inline_baseline(
@@ -123,7 +152,7 @@ def baseline_set(inputs: workflow.InlineInputs) -> InlineProposalSet:
         anchor_config=AnchorConfig(),
         span_config=SpanConfig(),
         baseline_config=BaselineConfig(),
-        selection_config=SelectionConfig(accept_threshold=TEST_THRESHOLD),
+        selection_config=BASELINE_SELECTION,
         run_id="wf-baseline",
     )
 
@@ -350,13 +379,150 @@ class TestBaselinePropose:
             anchor_config=AnchorConfig(),
             span_config=SpanConfig(),
             baseline_config=BaselineConfig(),
-            selection_config=SelectionConfig(accept_threshold=TEST_THRESHOLD),
+            selection_config=BASELINE_SELECTION,
             run_id="wf-baseline",
         )
         assert [p.id for p in again.proposals] == [p.id for p in baseline_set.proposals]
         assert [p.combined_score for p in again.proposals] == [
             p.combined_score for p in baseline_set.proposals
         ]
+
+
+class TestFamiliesFromDocumentIds:
+    def test_depth_one_takes_the_first_path_segment(self) -> None:
+        families = workflow.families_from_document_ids(
+            ["systems/dynamo", "plain", "math/attention/scaled"]
+        )
+        assert families == {
+            "systems/dynamo": "systems",
+            "math/attention/scaled": "math",
+        }
+
+    def test_depth_two_joins_the_first_two_segments(self) -> None:
+        families = workflow.families_from_document_ids(["a/b/c/d", "a/b", "flat"], depth=2)
+        assert families == {"a/b/c/d": "a/b", "a/b": "a/b"}
+
+    def test_ids_without_slash_are_omitted(self) -> None:
+        assert workflow.families_from_document_ids(["plain", "index"]) == {}
+
+    def test_depth_below_one_raises(self) -> None:
+        with pytest.raises(ConfigError, match="depth"):
+            workflow.families_from_document_ids(["a/b"], depth=0)
+
+
+PRECISION_CORPUS = {
+    "os/source.md": (
+        "---\ntitle: Source Note\n---\n\n# Source Note\n\n"
+        "Read [[ml/target|Target Note]] for background on the idea. Later in\n"
+        "the same paragraph the phrase Target Note shows up again in plain\n"
+        "prose, well inside the suppression window, restating the concept.\n"
+    ),
+    "ml/target.md": (
+        "---\ntitle: Target Note\naliases:\n  - shared memory\n---\n\n# Target Note\n\n"
+        "The target concept explained at length, including how shared memory\n"
+        "behaves under contention.\n"
+    ),
+    "os/other.md": (
+        "---\ntitle: Other Note\n---\n\n# Other Note\n\n"
+        "The kernel tracks shared memory regions carefully across process\n"
+        "boundaries and reclaims them on exit.\n"
+    ),
+    "os/related.md": (
+        "---\ntitle: Related Holder\n---\n\n# Related Holder\n\n"
+        "This prose paragraph mentions Target Note as a plain phrase with no\n"
+        "inline link anywhere near it in the running text.\n\n"
+        "## Related notes\n\n"
+        "- [[ml/target|Target Note]]\n"
+    ),
+}
+"""A purpose-built corpus for the precision rules: ``os/source`` already
+links ``ml/target`` in PROSE and repeats the anchor phrase nearby (Rule A
+suppresses), ``os/other`` mentions a lowercase alias of the cross-family
+``ml/target`` (Rule B), and ``os/related`` links ``ml/target`` only from a
+Related-notes navigation entry near a prose mention (Rule A must NOT
+suppress — guideline duplication rule: prose is the preferred home)."""
+
+
+@pytest.fixture(scope="module")
+def precision_inputs(tmp_path_factory: pytest.TempPathFactory) -> workflow.InlineInputs:
+    root = tmp_path_factory.mktemp("precision-corpus")
+    for name, content in PRECISION_CORPUS.items():
+        path = root / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+    artifacts = tmp_path_factory.mktemp("precision-artifacts")
+    return workflow.load_inline_inputs(config_for_root(root), artifacts_root=artifacts)
+
+
+def propose_precision(inputs: workflow.InlineInputs, family_depth: int) -> InlineProposalSet:
+    return workflow.propose_inline_baseline(
+        inputs,
+        anchor_config=AnchorConfig(),
+        span_config=SpanConfig(),
+        baseline_config=BaselineConfig(),
+        selection_config=SelectionConfig(accept_threshold=0.05),
+        run_id="wf-precision",
+        family_depth=family_depth,
+    )
+
+
+class TestPrecisionRules:
+    """Workflow-level integration of the report §5-6 precision rules."""
+
+    def test_existing_link_suppresses_nearby_same_target_proposal(
+        self, precision_inputs: workflow.InlineInputs
+    ) -> None:
+        result = propose_precision(precision_inputs, family_depth=1)
+        suppressed = [
+            p
+            for p in result.proposals
+            if p.abstained and p.features.get("rejected_near_existing_same_target") == 1.0
+        ]
+        assert suppressed, "the repeated 'Target Note' phrase should be suppressed"
+        for proposal in suppressed:
+            assert proposal.source_document_id == "os/source"
+            assert proposal.target_document_id == "ml/target"
+            assert 0.0 <= proposal.features["existing_same_target_gap"] <= 600.0
+        # The suppressed span never surfaces in the accepted list.
+        for proposal in result.proposals:
+            if not proposal.abstained and proposal.source_document_id == "os/source":
+                assert proposal.target_document_id != "ml/target"
+
+    def test_related_notes_link_does_not_suppress_prose_draft(
+        self, precision_inputs: workflow.InlineInputs
+    ) -> None:
+        """Guideline duplication rule: a Related-notes entry is the duplicate,
+        prose the preferred home — so a navigation-zone link must never
+        suppress a nearby same-target prose proposal (the only two
+        review-ACCEPTED items Rule A removed were blocked this way)."""
+        result = propose_precision(precision_inputs, family_depth=1)
+        from_related = [p for p in result.proposals if p.source_document_id == "os/related"]
+        assert all(
+            p.features.get("rejected_near_existing_same_target") != 1.0 for p in from_related
+        )
+        accepted = [
+            p for p in from_related if not p.abstained and p.target_document_id == "ml/target"
+        ]
+        assert accepted, "the prose 'Target Note' mention should survive selection"
+
+    def test_cross_family_prior_fires_for_lowercase_alias(
+        self, precision_inputs: workflow.InlineInputs
+    ) -> None:
+        result = propose_precision(precision_inputs, family_depth=1)
+        cross_family = [
+            p
+            for p in result.proposals
+            if p.features.get("same_family") == 0.0
+            and p.source_document_id == "os/other"
+            and p.target_document_id == "ml/target"
+        ]
+        assert cross_family, "the 'shared memory' alias mention should carry same_family=0.0"
+
+    def test_family_depth_zero_disables_the_prior(
+        self, precision_inputs: workflow.InlineInputs
+    ) -> None:
+        result = propose_precision(precision_inputs, family_depth=0)
+        assert all("same_family" not in p.features for p in result.proposals)
 
 
 class TestTrainAndLearned:
@@ -611,3 +777,387 @@ class TestReport:
         paths = write_inline_report(empty, inputs.corpus, out_dir=tmp_path)
         assert paths[0].read_text(encoding="utf-8") == ""
         assert "successful empty result" in paths[1].read_text(encoding="utf-8")
+
+
+def review_decision(
+    *,
+    engine: str = "baseline",
+    verdict: str = "accept",
+    score: float = 0.7,
+    start: int = 0,
+    end: int | None = None,
+    source: str = "doc-a",
+    target: str = "doc-b",
+    anchor_ok: bool = True,
+    target_ok: bool = True,
+    reason: str = "good",
+) -> InlineReviewDecision:
+    return InlineReviewDecision(
+        engine=engine,
+        source_document_id=source,
+        span=Span(start=start, end=end if end is not None else start + 6),
+        anchor_text="anchor",
+        target_document_id=target,
+        verdict=verdict,
+        target_ok=target_ok,
+        anchor_ok=anchor_ok,
+        placement_ok=verdict == "accept",
+        reason=reason,
+        note="",
+        combined_score=score,
+    )
+
+
+def synthetic_review_decisions(engine: str) -> list[InlineReviewDecision]:
+    """20 score-separated decisions: accepts high, rejects low (both classes)."""
+    decisions = [
+        review_decision(engine=engine, verdict="accept", score=0.55 + index * 0.03, start=index)
+        for index in range(12)
+    ]
+    decisions.extend(
+        review_decision(
+            engine=engine,
+            verdict="reject",
+            score=0.15 + index * 0.04,
+            start=100 + index,
+            target_ok=False,
+            anchor_ok=False,
+            reason="wrong_target",
+        )
+        for index in range(8)
+    )
+    return decisions
+
+
+class TestLoadReviewDecisions:
+    def test_round_trips_a_jsonl_file(self, tmp_path: Path) -> None:
+        decisions = synthetic_review_decisions("baseline")[:3]
+        path = tmp_path / "decisions.jsonl"
+        path.write_text(
+            "".join(json.dumps(decision.to_dict()) + "\n" for decision in decisions),
+            encoding="utf-8",
+        )
+        assert workflow.load_review_decisions(path) == tuple(decisions)
+
+    def test_missing_file_is_an_error(self, tmp_path: Path) -> None:
+        with pytest.raises(ContractError, match="cannot read review decisions"):
+            workflow.load_review_decisions(tmp_path / "missing.jsonl")
+
+    def test_malformed_line_names_the_line(self, tmp_path: Path) -> None:
+        path = tmp_path / "decisions.jsonl"
+        path.write_text(json.dumps(review_decision().to_dict()) + "\nnot json\n", encoding="utf-8")
+        with pytest.raises(ContractError, match="line 2"):
+            workflow.load_review_decisions(path)
+
+
+class TestReviewCalibration:
+    def test_fit_reports_temperature_and_calibration_quality(self) -> None:
+        decisions = synthetic_review_decisions("baseline")
+        result = workflow.fit_review_calibration(decisions, engine="baseline")
+        assert set(result) == {
+            "engine",
+            "n",
+            "positives",
+            "temperature",
+            "ece_before",
+            "ece_after",
+            "reliability",
+            "conformal",
+        }
+        assert result["engine"] == "baseline"
+        assert result["n"] == 20
+        assert result["positives"] == 12
+        assert TEMPERATURE_MIN <= result["temperature"] <= TEMPERATURE_MAX
+        assert 0.0 <= result["ece_after"] <= result["ece_before"] <= 1.0
+        assert len(result["reliability"]) == 10
+        assert set(result["conformal"]) == {
+            "threshold",
+            "target_error",
+            "n_calibration",
+            "n_errors",
+        }
+        assert result["conformal"]["target_error"] == pytest.approx(0.2)
+        assert result["conformal"]["n_calibration"] == 20
+        json.dumps(result)  # the report must be JSON-safe
+
+    def test_fit_filters_to_the_requested_engine(self) -> None:
+        decisions = synthetic_review_decisions("baseline") + synthetic_review_decisions("learned")
+        result = workflow.fit_review_calibration(decisions, engine="learned")
+        assert result["engine"] == "learned"
+        assert result["n"] == 20
+
+    def test_unknown_engine_raises_config_error(self) -> None:
+        with pytest.raises(ConfigError, match="unknown engine"):
+            workflow.fit_review_calibration([], engine="quantum")
+
+    def test_no_decisions_for_engine_raises(self) -> None:
+        decisions = synthetic_review_decisions("baseline")
+        with pytest.raises(ContractError, match="no review decisions"):
+            workflow.fit_review_calibration(decisions, engine="learned")
+
+    def test_one_class_labels_raise(self) -> None:
+        accepts_only = [
+            decision
+            for decision in synthetic_review_decisions("baseline")
+            if decision.verdict == "accept"
+        ]
+        with pytest.raises(ContractError, match="one class"):
+            workflow.fit_review_calibration(accepts_only, engine="baseline")
+
+    def test_write_load_round_trip(self, tmp_path: Path) -> None:
+        results = {
+            engine: workflow.fit_review_calibration(
+                synthetic_review_decisions(engine), engine=engine
+            )
+            for engine in ("baseline", "learned")
+        }
+        path = tmp_path / "calibration.json"
+        workflow.write_review_calibration(path, results)
+        loaded = workflow.load_review_calibration(path)
+        assert set(loaded) == {"baseline", "learned"}
+        for engine, result in results.items():
+            assert loaded[engine]["temperature"] == pytest.approx(result["temperature"])
+            assert loaded[engine]["n"] == result["n"]
+
+    def test_write_rejects_unknown_engine_keys(self, tmp_path: Path) -> None:
+        with pytest.raises(ConfigError, match="unknown engine key"):
+            workflow.write_review_calibration(
+                tmp_path / "calibration.json", {"quantum": {"temperature": 1.0}}
+            )
+
+    def test_load_validates_shape_and_temperature(self, tmp_path: Path) -> None:
+        path = tmp_path / "calibration.json"
+        path.write_text("[]", encoding="utf-8")
+        with pytest.raises(ContractError, match="must be a JSON object"):
+            workflow.load_review_calibration(path)
+        path.write_text(json.dumps({"quantum": {"temperature": 1.0}}), encoding="utf-8")
+        with pytest.raises(ContractError, match="unknown engine"):
+            workflow.load_review_calibration(path)
+        path.write_text(json.dumps({"baseline": {"temperature": -2.0}}), encoding="utf-8")
+        with pytest.raises(ContractError, match="finite positive 'temperature'"):
+            workflow.load_review_calibration(path)
+        with pytest.raises(ContractError, match="cannot read"):
+            workflow.load_review_calibration(tmp_path / "missing.json")
+
+
+class TestTemperatureApplication:
+    """One shared temperature-application point across both engines."""
+
+    def test_baseline_temperature_populates_calibrated_probability(
+        self, inputs: workflow.InlineInputs, baseline_set: InlineProposalSet
+    ) -> None:
+        calibrated = workflow.propose_inline_baseline(
+            inputs,
+            anchor_config=AnchorConfig(),
+            span_config=SpanConfig(),
+            baseline_config=BaselineConfig(),
+            selection_config=BASELINE_SELECTION,
+            run_id="wf-baseline",
+            temperature=1.0,
+        )
+        assert calibrated.proposals
+        for proposal in calibrated.proposals:
+            assert proposal.calibrated_probability is not None
+            # T=1.0 is the identity through the logit round trip.
+            assert proposal.calibrated_probability == pytest.approx(
+                proposal.combined_score, abs=1e-9
+            )
+        # Without a temperature the baseline stays uncalibrated (the
+        # pre-existing behavior, pinned by baseline_set).
+        assert all(p.calibrated_probability is None for p in baseline_set.proposals)
+
+    def test_learned_temperature_and_calibration_are_the_same_knob(
+        self, heads_dir: Path, inputs: workflow.InlineInputs
+    ) -> None:
+        heads = TrainedHeads.load(heads_dir)
+
+        def propose(
+            *, calibration: float | None = None, temperature: float | None = None
+        ) -> InlineProposalSet:
+            return workflow.propose_inline_learned(
+                inputs,
+                heads,
+                anchor_config=AnchorConfig(),
+                span_config=SpanConfig(),
+                selection_config=SelectionConfig(accept_threshold=TEST_THRESHOLD),
+                calibration=calibration,
+                temperature=temperature,
+                run_id="wf-learned",
+            )
+
+        via_calibration = propose(calibration=1.5)
+        via_temperature = propose(temperature=1.5)
+        assert [p.id for p in via_calibration.proposals] == [
+            p.id for p in via_temperature.proposals
+        ]
+        assert [p.calibrated_probability for p in via_calibration.proposals] == [
+            p.calibrated_probability for p in via_temperature.proposals
+        ]
+        assert any(p.calibrated_probability is not None for p in via_temperature.proposals)
+
+    def test_passing_both_knobs_is_rejected(
+        self, heads_dir: Path, inputs: workflow.InlineInputs
+    ) -> None:
+        heads = TrainedHeads.load(heads_dir)
+        with pytest.raises(ConfigError, match="not both"):
+            workflow.propose_inline_learned(
+                inputs,
+                heads,
+                anchor_config=AnchorConfig(),
+                span_config=SpanConfig(),
+                selection_config=SelectionConfig(),
+                calibration=1.5,
+                temperature=1.5,
+                run_id="wf-learned",
+            )
+
+
+class TestTrainWithReviews:
+    def test_review_spans_are_encoded_without_narrowing(
+        self,
+        inputs: workflow.InlineInputs,
+        audit_dir: Path,
+        sample: AuditSample,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Seam pin: review spans reach the encoder verbatim (they are
+        plain-text anchor spans already), and broken_span decisions are
+        never encoded."""
+        labels_path = tmp_path / "labels.jsonl"
+        save_audit_labels(synthetic_labels(sample), labels_path)
+        documents = sorted(
+            (d for d in inputs.corpus.documents if len(d.content) > 60), key=lambda d: d.id
+        )
+        source, target = documents[0], documents[1]
+        kept = review_decision(
+            engine="learned", source=source.id, target=target.id, start=5, end=17
+        )
+        broken = review_decision(
+            engine="learned",
+            source=source.id,
+            target=target.id,
+            start=25,
+            end=37,
+            verdict="reject",
+            target_ok=False,
+            anchor_ok=False,
+            reason="broken_span",
+        )
+        recorded: list[tuple[int, int]] = []
+        original = span_representation
+
+        def spy(states: Any, span: Any, *, hand_features: Any) -> Any:
+            recorded.append((span.start, span.end))
+            return original(states, span, hand_features=hand_features)
+
+        monkeypatch.setattr(workflow, "span_representation", spy)
+        workflow.train_inline_heads(
+            inputs,
+            labels_path,
+            audit_dir / "audit-sample.json",
+            train_config=TrainConfig(epochs=0),
+            seed=0,
+            out_dir=tmp_path / "heads",
+            reviews=[kept, broken],
+        )
+        assert (5, 17) in recorded
+        assert (25, 37) not in recorded
+
+    def test_review_rep_key_matches_the_trainer_contract(
+        self, inputs: workflow.InlineInputs
+    ) -> None:
+        decision = review_decision()
+        assert review_span_key(decision).startswith("review:")
+
+
+def make_benchmark_case(
+    case_id: str,
+    kind: BenchmarkKind,
+    *,
+    source: str,
+    anchor: str,
+    target: str | None = None,
+    expected: bool = True,
+) -> BenchmarkCase:
+    return BenchmarkCase(
+        id=case_id,
+        kind=kind,
+        source_document_id=source,
+        span=None,
+        anchor_text=anchor,
+        target_document_id=target,
+        expected=expected,
+    )
+
+
+@pytest.fixture(scope="module")
+def benchmark() -> Benchmark:
+    """Two locatable fixture-corpus cases plus one over a missing document."""
+    return Benchmark(
+        header=make_header(),
+        cases=(
+            make_benchmark_case(
+                "bm-natural",
+                BenchmarkKind.NATURAL_SPAN,
+                source="systems/dynamo",
+                anchor="consistency",
+            ),
+            make_benchmark_case(
+                "bm-no-link",
+                BenchmarkKind.NO_LINK,
+                source="systems/dynamo",
+                anchor="availability",
+            ),
+            make_benchmark_case(
+                "bm-ghost",
+                BenchmarkKind.NO_LINK,
+                source="ghost/missing",
+                anchor="anything",
+            ),
+        ),
+    )
+
+
+class TestBenchmarkEngine:
+    def test_baseline_engine_scores_locatable_cases(
+        self, inputs: workflow.InlineInputs, benchmark: Benchmark
+    ) -> None:
+        result = workflow.benchmark_engine(
+            inputs, benchmark, engine="baseline", selection_config=BASELINE_SELECTION
+        )
+        assert set(result) == {"outcomes", "scores"}
+        assert set(result["outcomes"]) == {"bm-natural", "bm-no-link"}
+        scores = result["scores"]
+        expected_slices = {kind.value for kind in BenchmarkKind} | {"overall", "hard_case"}
+        assert set(scores) == expected_slices
+        assert scores["overall"]["evaluated"] == 2.0
+        assert scores["overall"]["unevaluated"] == 1.0
+        json.dumps(result)
+
+    def test_learned_engine_runs_end_to_end(
+        self, inputs: workflow.InlineInputs, heads_dir: Path, benchmark: Benchmark
+    ) -> None:
+        heads = TrainedHeads.load(heads_dir)
+        result = workflow.benchmark_engine(
+            inputs,
+            benchmark,
+            engine="learned",
+            heads=heads,
+            selection_config=SelectionConfig(accept_threshold=TEST_THRESHOLD),
+            temperature=1.5,
+        )
+        assert set(result["outcomes"]) == {"bm-natural", "bm-no-link"}
+        assert result["scores"]["overall"]["evaluated"] == 2.0
+
+    def test_unknown_engine_raises(
+        self, inputs: workflow.InlineInputs, benchmark: Benchmark
+    ) -> None:
+        with pytest.raises(ConfigError, match="unknown engine"):
+            workflow.benchmark_engine(inputs, benchmark, engine="quantum")
+
+    def test_learned_without_heads_raises(
+        self, inputs: workflow.InlineInputs, benchmark: Benchmark
+    ) -> None:
+        with pytest.raises(ConfigError, match="heads are required"):
+            workflow.benchmark_engine(inputs, benchmark, engine="learned")

@@ -119,6 +119,9 @@ $$
 
 Usually either the bandwidth or the delay is the bottleneck, and BD tells you the overall capacity of the pipe. It matters for [[systems/networks/2-direct-links/retransmission|retransmission]] protocols, which must keep BD bits outstanding to use the link fully.
 
+> [!example] A fat, long pipe
+> A 100 Mbps cross-country link with 25 ms propagation delay holds $BD = 10^8 \cdot 0.025 = 2.5$ Mbit, about 312 KB in flight. A protocol that sends one 1500-byte frame and then waits a full 50 ms round trip for the reply moves 12,000 bits per 50 ms, about 240 kbps, using under 0.3% of the link.
+
 ## Related notes
 
 - [[systems/networks/1-physical/media|media]]

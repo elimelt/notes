@@ -72,6 +72,22 @@ Classic Ethernet adds collision detection. A sender that detects a collision sto
 
 A collision can take up to $2 \cdot D_{\text{propagation}}$ to detect (the signal crosses the wire, collides at the far end, and the interference crosses back). If a sender could finish its frame before that window closes, it would never learn about the collision. So the standard imposes a minimum frame length that takes at least $2 \cdot D_{\text{propagation}}$ to transmit, plus a maximum network length. That is why Ethernet has a 64-byte minimum frame, a 500 m limit for coaxial Ethernet, and a 100 m limit for twisted pair.
 
+The worst case, with D standing for the one-way propagation delay:
+
+```mermaid
+sequenceDiagram
+    participant A as Node A
+    participant B as Node B
+
+    Note over A: t = 0, channel sounds idle, A starts sending
+    A->>B: leading edge of A's frame
+    Note over B: just before t = D, channel still sounds idle, B starts sending
+    Note over B: t = D, A's signal arrives, collision at B, B stops
+    B->>A: interference from the collision
+    Note over A: t = 2D, A finally hears the collision
+    Note over A,B: A must still be transmitting at t = 2D, hence the minimum frame length
+```
+
 #### CSMA persistence
 
 Waiting for the channel to go free and then sending immediately fails, because every queued sender does the same thing and they all collide the moment the channel clears. The design goal instead is that with $N$ queued senders, each sends with probability about $1/N$.

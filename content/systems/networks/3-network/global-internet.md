@@ -36,6 +36,26 @@ OSPF already divides a network into areas to shrink routing tables (see [[system
 
 Routing between ASes is a separate problem from routing within one, because ASes are independently managed and don't share a cost metric. The interior routers handle traffic within the AS, the border routers handle traffic between ASes, and the protocol the border routers speak is [[systems/networks/3-network/BGP|BGP]].
 
+```mermaid
+flowchart LR
+    subgraph AS1 [AS 1, runs OSPF internally]
+        A1[interior router] --- A2[interior router]
+        A2 --- AB[border router]
+    end
+
+    subgraph AS2 [AS 2, runs RIP internally]
+        BB[border router] --- B1[interior router]
+        B1 --- B2[interior router]
+    end
+
+    AB ---|BGP| BB
+
+    style AB fill:#e3f2fd
+    style BB fill:#e3f2fd
+```
+
+Each AS picks its own interior protocol and metric, and BGP between the border routers is the only thing they have to agree on.
+
 ## Related notes
 
 - [[systems/networks/3-network/BGP|BGP]]

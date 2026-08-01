@@ -136,6 +136,9 @@ for each entry in the forwarding table:
 deliver packet to best.NextHop
 ```
 
+> [!example] Longest prefix match
+> Suppose the table holds `128.13.0.0/16 -> A` and `128.13.42.0/24 -> B`. A packet for `128.13.42.7` matches both entries, and the `/24` wins because it is more specific, so the packet goes to B. A packet for `128.13.7.9` matches only the `/16` and goes to A.
+
 ## Related notes
 
 - [[systems/networks/3-network/routing|routing]]

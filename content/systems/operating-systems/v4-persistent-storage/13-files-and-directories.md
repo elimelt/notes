@@ -38,6 +38,16 @@ Most implementations are built from four ideas:
 
 Resolving a file name and offset to a storage block happens in two steps. The directory maps the name to a file number, then the index structure maps that file number and offset to a block. The index is usually some form of tree.
 
+```mermaid
+flowchart LR
+    N[File name + offset] --> D[(Directory)]
+    D -->|file number| IX[(Index structure)]
+    IX -->|block address| B[Storage block]
+    style D fill:#e3f2fd,stroke:#1565c0
+    style IX fill:#e3f2fd,stroke:#1565c0
+    style B fill:#e8f5e9,stroke:#2e7d32
+```
+
 ### Free Space Maps
 
 The free space map tracks which blocks are free and which are in use. At minimum it just has to work, but a good one also allocates blocks so files get better spatial locality. Many file systems implement the free space map as a bitmap in persistent storage.
@@ -98,9 +108,38 @@ Drawbacks:
 - Limited volume and file sizes (the $2^{28}$ block and $2^{32} - 1$ byte limits above)
 - No support for transactional updates
 
+> [!example] Why random access hurts
+> Reaching an offset means walking the chain from the file's first FAT entry. Reading the last block of a 1 GB file with 4 KB clusters walks 262,144 FAT entries before the first byte of data arrives.
+
 ## Other Index Structures
 
 **Unix Fast File System (FFS)**: a tree-based multi-level index (the inode with direct, indirect, double-indirect pointers), plus many locality heuristics for good spatial locality. Linux's ext2 and ext3 are based on FFS.
+
+```mermaid
+flowchart TD
+    subgraph INODE[Inode]
+        M[Metadata]
+        DP[Direct pointers]
+        IP[Indirect pointer]
+        DIP[Double-indirect pointer]
+    end
+    DP --> D1[Data block]
+    DP --> D2[Data block]
+    IP --> IB[Indirect block of pointers]
+    IB --> D3[Data block]
+    IB --> D4[Data block]
+    DIP --> DIB[Double-indirect block]
+    DIB --> IB2[Indirect block of pointers]
+    IB2 --> D5[Data block]
+    style INODE fill:#e3f2fd,stroke:#1565c0
+    style D1 fill:#e8f5e9,stroke:#2e7d32
+    style D2 fill:#e8f5e9,stroke:#2e7d32
+    style D3 fill:#e8f5e9,stroke:#2e7d32
+    style D4 fill:#e8f5e9,stroke:#2e7d32
+    style D5 fill:#e8f5e9,stroke:#2e7d32
+```
+
+Small files stay cheap because their blocks hang directly off the inode, while each level of indirection multiplies reach by the number of pointers per block, which is how the same fixed structure scales to large files.
 
 **NTFS**: a tree-based structure more flexible than FFS's fixed indexing scheme, indexing variable-sized extents instead of individual blocks. Beyond Windows, NTFS's techniques appear in many modern file systems (ext4, XFS, HFS, HFS+).
 

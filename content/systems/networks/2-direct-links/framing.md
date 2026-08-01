@@ -36,6 +36,16 @@ DDCMP puts the frame's byte count in the header, and the receiver counts bytes u
 
 BISYNC instead marks frame boundaries with special characters (SYN, STX, ETX). The problem is that the payload can contain those same characters. The fix is to escape them, inserting an escape character before any sentinel byte that appears in the data, the same way C strings escape quotes. This is byte stuffing.
 
+> [!example] Byte stuffing trace
+> With STX marking frame start, ETX marking frame end, and DLE as the escape byte, a payload that contains ETX gets stuffed on the way out:
+>
+> ```txt
+> payload:  A  ETX  B
+> on wire:  STX  A  DLE  ETX  B  ETX
+> ```
+>
+> The receiver strips the DLE and keeps the following ETX as data; the unescaped ETX ends the frame. A DLE in the payload is itself escaped as DLE DLE.
+
 ### PPP frame format
 
 PPP carries IP packets over point-to-point links. Its flag field, 01111110, marks the start of a frame, several of its field sizes are negotiable, and a CRC protects the frame.
@@ -51,6 +61,16 @@ HDLC marks both the start and end of a frame with the bit sequence 01111110. Lik
 ### Bit stuffing
 
 The sender inserts a 0 after every five consecutive 1s in the body. The receiver, on seeing five 1s, looks at the next bit. A 0 was stuffed, so it gets removed. A 1 means this is either the end-of-frame marker or an error, and the bit after that decides which.
+
+> [!example] Bit stuffing trace
+> A payload containing the flag pattern 01111110 can't be sent raw, or the receiver would end the frame early. After five 1s the sender stuffs a 0:
+>
+> ```txt
+> payload:  0 1 1 1 1 1 1 0
+> on wire:  0 1 1 1 1 1 0 1 0
+> ```
+>
+> The receiver counts five 1s, sees a 0 next, and deletes it, recovering the original bits. Only the real flag reaches the receiver with six 1s in a row.
 
 ## Frame size
 

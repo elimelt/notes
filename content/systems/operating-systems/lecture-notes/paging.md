@@ -55,6 +55,20 @@ Marking the first page invalid turns NULL pointer dereferences into exceptions.
 
 The OS manages page tables and stores them in memory. There is one PTE per page, i.e. one per VPN. Each process has its own page table, and the PTBR points at the running process's table.
 
+```mermaid
+flowchart LR
+    VA[Virtual address] --> VPN[Virtual page number]
+    VA --> OFF[Offset]
+    subgraph PT[Page table in memory, PTBR points at base]
+        PTE[PTE holds frame number + bits]
+    end
+    VPN -->|index| PTE
+    PTE --> PFN[Frame number]
+    PFN --> PA[Physical address]
+    OFF --> PA
+    style PA fill:#e8f5e9,stroke:#2e7d32
+```
+
 ## Shared frames
 
 Multiple processes can map the same frame. Shared libraries and shared memory between processes use this. It also underlies **copy-on-write (COW)**, which makes things like read-only fork and exec cheap.
@@ -98,6 +112,9 @@ Pages come into main memory only when they are referenced, so only the code and 
 ## Page replacement
 
 Reading in a page either uses an existing free frame or evicts something. Good eviction targets are pages that won't be used for a while and pages that haven't been modified, since clean pages don't need to be written back. The OS typically keeps a pool of free pages so allocations don't have to evict, and tries to keep clean pages around for cheap eviction.
+
+> [!tip] How the algorithms relate
+> Belady's optimal is the unimplementable yardstick, exact LRU is the ideal that costs too much bookkeeping per access, and the clock algorithm is the LRU approximation real systems actually ship.
 
 ### Belady's optimal algorithm
 

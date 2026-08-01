@@ -33,6 +33,26 @@ Each in-order ACK advances the [[algorithms/patterns/sliding-window|sliding wind
 
 Say the sender sits on a fast link and the path crosses a slow link downstream. The first burst of segments arrives at the slow link faster than it can forward them, so they queue there and leave spaced out in time. The receiver generates ACKs with that same spacing, and the spacing survives the trip back because ACKs are small. When those ACKs arrive, the sender releases new segments one per ACK, already spread out to match the bottleneck rate. The network smooths the first burst once, and the ACK clock carries that smooth timing back to the sender for the rest of the transfer.
 
+```mermaid
+sequenceDiagram
+    participant S as Sender (fast link)
+    participant Q as Bottleneck router
+    participant R as Receiver
+
+    Note over S,Q: First window leaves back to back
+    S->>Q: segments 1, 2, 3 in a burst
+    Note over Q: Queue drains at the slow link rate
+    Q->>R: segment 1
+    Q->>R: segment 2 (spaced out)
+    Q->>R: segment 3 (spaced out)
+    R-->>S: ACK 1
+    Note over S: Each ACK releases one new segment
+    S->>Q: segment 4
+    R-->>S: ACK 2
+    S->>Q: segment 5
+    Note over S,R: Sender now transmits at the bottleneck rate
+```
+
 This keeps queues at the slow link small, which keeps loss and queueing delay low. TCP depends on this behavior. The window bounds how many segments are in the network at once, and the ACK clock stops later segments from arriving in bursts that would refill the queue.
 
 ## Problem at the receiver

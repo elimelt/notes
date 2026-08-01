@@ -147,6 +147,31 @@ Acceptance test for all of the above: three tasks on one CPU — A arrives at $t
 | SRPT | 13 | 6 | 3 | **6.33** |
 | RR ($q=1$) | 13 | 9 | 4 | 7.67 |
 
+The same trace as a timeline (RR omitted — it interleaves thirteen one-unit slices):
+
+```mermaid
+gantt
+    dateFormat X
+    axisFormat %s
+
+    section FIFO
+    A :f1, 0, 8s
+    B :f2, 8, 4s
+    C :f3, 12, 1s
+
+    section SJF
+    A :s1, 0, 8s
+    C :s2, 8, 1s
+    B :s3, 9, 4s
+
+    section SRPT
+    A :r1, 0, 1s
+    B :r2, 1, 1s
+    C :r3, 2, 1s
+    B :r4, 3, 3s
+    A :r5, 6, 7s
+```
+
 The trace compresses the whole chapter. FIFO makes C (1 unit of work) wait 11 units behind A. Non-preemptive SJF cannot help B and C until A's 8-unit run ends — the damage is done at $t=0$. SRPT preempts A the moment B arrives and achieves the provably minimal mean, at the price of pushing A, the longest job, to last place; its response time goes from 8 to 13, the fairness cost of the optimal mean. RR lands between SRPT and FIFO on the mean, close to SRPT for the short jobs (C at 4 vs. 3) without needing to know any job lengths — which is the practical argument for time slicing: most of SRPT's benefit for short jobs, none of its clairvoyance.
 
 ```python
@@ -202,6 +227,22 @@ Think grocery store express lanes, with multiple priority tiers. MLFQ is the com
 Maintain multiple RR queues, each with its own priority and time quantum. Higher priority queues get smaller quanta and preempt lower priority queues. Tasks at the same level run round-robin.
 
 A new task enters the highest priority queue. A task that uses its entire quantum gets demoted a level; a task that yields before its quantum expires stays put or gets promoted. The effect approximates SJF: short interactive tasks stay at high priority while long CPU-bound tasks sink.
+
+```mermaid
+flowchart TD
+    NEW[New task] --> Q0
+    subgraph MLFQ[Priority levels]
+        Q0[Queue 0, highest priority, shortest quantum]
+        Q1[Queue 1, middle priority, longer quantum]
+        Q2[Queue 2, lowest priority, longest quantum]
+    end
+    Q0 -- uses full quantum --> Q1
+    Q1 -- uses full quantum --> Q2
+    Q2 -- yields early or falls behind fair share --> Q1
+    Q1 -- yields early or falls behind fair share --> Q0
+    style Q0 fill:#e8f5e9
+    style Q2 fill:#fce4ec
+```
 
 To avoid starvation and approximate max-min fairness, the scheduler also monitors per-process CPU time and schedules the processes that have yet to receive their fair share, demoting processes that already got theirs and promoting processes that fell behind.
 

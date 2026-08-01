@@ -50,6 +50,22 @@ protocol://host:port/path
 5. Fetch embedded resources, execute scripts, and render the page
 6. Close the TCP connection
 
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant D as DNS resolver
+    participant S as Web server
+
+    B->>D: resolve host name
+    D-->>B: IP address
+    Note over B,S: TCP handshake, one RTT before any data
+    B->>S: SYN
+    S-->>B: SYN ACK
+    B->>S: ACK, then HTTP GET /path
+    S-->>B: HTTP response (page)
+    Note over B: Parse page, fetch embedded resources, render
+```
+
 Static pages are pre-built and served as-is. Dynamic pages are built on the server per request, or shipped as code, usually JavaScript, that runs in the client.
 
 ## Methods
@@ -93,6 +109,9 @@ HTTP/1.0 opened one TCP connection per request and issued requests sequentially.
 - Move content closer to the client, with CDNs and edge caching
 
 Browsers first attacked this by opening several parallel HTTP connections to fetch resources. That backfires under load, since the parallel connections amplify network bursts and loss. The alternative is one TCP connection to the server with multiple HTTP requests multiplexed over it. That raises the question of how long to keep the connection open, and for some access patterns it is actually slower than parallel connections.
+
+> [!tip] Where this leads
+> Multiplexing over one connection is exactly the HTTP/2 design, and the head-of-line blocking it exposes at the TCP layer is what QUIC and HTTP/3 fix. That evolution is covered in [[systems/networks/5-application/quic-http2-http3|QUIC, HTTP/2, and HTTP/3]].
 
 ## Caching and proxies
 

@@ -43,6 +43,23 @@ The I/O system has to cope with a wide variety of devices that differ in transfe
 - **Interrupt-driven I/O**: the CPU issues the command and keeps executing. When the I/O completes, the device interrupts the CPU, which then handles the completion. The process may or may not block while waiting, but the processor stays free.
 - **Direct Memory Access (DMA)**: the DMA module moves a block of data between the I/O module and main memory using physical addresses. The processor requests the transfer and gets interrupted when it finishes, so it never has to touch the data in between.
 
+> [!tip] What each step buys
+> Each option down the list frees more CPU: polling burns it for the whole transfer, interrupts free it between transfers, and DMA frees it during them.
+
+```mermaid
+sequenceDiagram
+    participant P as Process
+    participant OS as OS driver
+    participant D as Controller + DMA
+
+    P->>OS: read request
+    OS->>D: issue command, set up DMA transfer
+    Note over P,OS: process blocks, CPU runs other work
+    D->>D: move block directly into main memory
+    D-->>OS: interrupt on completion
+    OS-->>P: wake process, return data
+```
+
 ## Secondary storage
 
 Everything outside primary memory (RAM) counts as **secondary storage**: hard drives, SSDs, and other storage devices. Secondary storage doesn't allow direct execution of instructions or data access via load/store instructions; access goes through I/O operations.

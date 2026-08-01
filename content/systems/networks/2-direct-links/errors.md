@@ -76,6 +76,9 @@ $$
 - A code of distance $d + 1$ can detect $d$ errors, since $d$ flips can't reach another valid codeword.
 - A code of distance $2d + 1$ can correct $d$ errors by mapping the received word to the closest codeword. With fewer than $d+1$ flips, the original codeword is still the unique nearest one.
 
+> [!example] Distance 3 in miniature
+> Take the code $\{000, 111\}$, repeating each bit three times. Its distance is 3, so it detects 2 errors and corrects 1. Receive $001$ and the unique nearest codeword is $000$: detected and corrected. Receive $011$ (two flips of $000$) and the error is detected, but nearest-codeword correction picks $111$, the wrong answer, which is why a distance-3 code corrects only one flip. Three flips land silently on the other codeword.
+
 ## Internet checksum
 
 Sum the data in fixed-size chunks and append the sum. The receiver sums the data plus the checksum and checks for the expected result.
@@ -83,6 +86,9 @@ Sum the data in fixed-size chunks and append the sum. The receiver sums the data
 The real Internet checksum ([RFC 1071](https://www.rfc-editor.org/rfc/rfc1071)) sums 16-bit words in ones' complement arithmetic, folding carries back in, and transmits the complement of the sum. The version below is the simplified form from lecture.
 
 This code has distance 2, so it detects single-bit errors and corrects nothing.
+
+> [!warning] What the checksum misses
+> Addition is commutative, so reordering entire 16-bit words leaves the sum unchanged, and two flips that cancel (one adds what the other subtracts) slip through too. The checksum guarantees only distance 2, catching any single bit flip. It survives in IP, TCP, and UDP because it is cheap in software and the link layer below already runs a stronger CRC.
 
 ### Internet checksum algorithm
 

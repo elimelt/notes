@@ -187,6 +187,18 @@ Program code, statically allocated global variables, and dynamically allocated h
 | WAITING  | Synchronization variable's waiting list | TCB                   |
 | FINISHED | Finished list then deleted              | TCB or deleted        |
 
+```mermaid
+stateDiagram-v2
+    [*] --> INIT: thread_create
+    INIT --> READY: TCB on the ready list
+    READY --> RUNNING: scheduler loads registers from TCB
+    RUNNING --> READY: preempted or thread_yield
+    RUNNING --> WAITING: I/O, thread_join, lock
+    WAITING --> READY: awaited event occurs
+    RUNNING --> FINISHED: thread_exit
+    FINISHED --> [*]: TCB freed after exit status is read
+```
+
 ### INIT
 
 - Put the thread into INIT state and allocate and initialize its per-thread data structures.
@@ -358,6 +370,32 @@ Preemption at user level rides on **signals**. To preempt within process **P**:
 ### User-Level Threads with Kernel Support
 
 A process uses $M$ kernel threads, each with its own user-level scheduler multiplexing $N$ user-level threads. The kernel schedules the kernel threads, and the user-level scheduler schedules its threads on top of them. The problem remains that a kernel thread blocked on I/O takes its whole user-level scheduler down with it for the duration.
+
+```mermaid
+flowchart TD
+    subgraph P[Process, N user-level threads]
+        U1[User thread 1]
+        U2[User thread 2]
+        U3[User thread 3]
+        U4[User thread 4]
+        S1[User-level scheduler A]
+        S2[User-level scheduler B]
+        U1 --> S1
+        U2 --> S1
+        U3 --> S2
+        U4 --> S2
+    end
+    subgraph K[Kernel, M kernel threads]
+        KT1[Kernel thread 1]
+        KT2[Kernel thread 2]
+    end
+    S1 --> KT1
+    S2 --> KT2
+    KT1 --> C1[Processor 1]
+    KT2 --> C2[Processor 2]
+    style KT1 fill:#e3f2fd
+    style KT2 fill:#e3f2fd
+```
 
 #### Scheduler Activations
 

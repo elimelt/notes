@@ -61,6 +61,21 @@ For parallel programs that generate tasks dynamically (fork-join, divide-and-con
 - An idle worker becomes a **thief**: it picks a victim **uniformly at random** and **steals from the top** of the victim's deque (FIFO) — the *oldest* task, which in divide-and-conquer is the largest unexplored subtree, so one steal buys the thief a long stretch of independent work.
 - Owner and thief operate on opposite ends, so synchronization is nearly free in the common case; the standard lock-free implementation (the Chase-Lev deque) needs a compare-and-swap only when they collide on a nearly-empty deque.
 
+```mermaid
+flowchart TD
+    subgraph DQ[Victim worker's deque]
+        TOP[Top, oldest task, largest unexplored subtree]
+        MID[older tasks]
+        BOT[Bottom, newest spawned task]
+        TOP --- MID
+        MID --- BOT
+    end
+    OWN[Owner] -- push and pop, LIFO, cache-hot --> BOT
+    THF[Idle thief, picks victim at random] -- steal, FIFO --> TOP
+    style BOT fill:#e8f5e9
+    style TOP fill:#e3f2fd
+```
+
 The theory says this greedy, uncoordinated scheme is near-optimal. Model the program as a DAG with total work $T_1$ (time on one processor) and span $T_\infty$ (critical path). Any scheduler obeys the work law $T_P \ge T_1/P$ and span law $T_P \ge T_\infty$. [Blumofe and Leiserson](https://dl.acm.org/doi/10.1145/324133.324234) proved randomized work stealing achieves
 
 $$

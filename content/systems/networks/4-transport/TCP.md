@@ -48,6 +48,18 @@ Each side probes the other with a fresh Initial Sequence Number (ISN). A side an
 2. Server replies with SYN(y)ACK(x+1)
 3. Client replies with ACK(y+1)
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+
+    Note over C,S: Each side announces a fresh ISN
+    C->>S: SYN, seq = x
+    S-->>C: SYN, seq = y, ACK x+1
+    C->>S: ACK y+1
+    Note over C,S: Connection established, data can flow
+```
+
 Lost SYNs are retransmitted. The fresh ISNs make the handshake robust against stale segments from earlier connections, at the cost of one extra round trip before data can flow.
 
 ### Connection release
@@ -56,6 +68,19 @@ TCP closes in two halves. Each side finishes sending its data and sends a FIN se
 
 1. The active closer sends FIN(x), the passive side ACKs
 2. The passive side sends FIN(y), the active side ACKs
+
+```mermaid
+sequenceDiagram
+    participant A as Active closer
+    participant P as Passive side
+
+    A->>P: FIN, seq = x
+    P-->>A: ACK x+1
+    Note over P: May keep sending data on its half
+    P->>A: FIN, seq = y
+    A-->>P: ACK y+1
+    Note over A: TIME_WAIT, twice the maximum segment lifetime
+```
 
 Lost FINs are retransmitted, just like SYNs.
 
@@ -136,6 +161,23 @@ Duplicate ACKs carry a second piece of information. Each one means some packet d
 ![TCP Reno congestion window over time, showing slow start, the sawtooth of additive increase, and multiplicative decrease on loss](./TCP-sawtooth.png)
 
 Fast recovery only works when duplicate ACKs keep arriving. If several packets in a row are lost, the ACK stream dries up, the sender times out, and it falls back to slow start at cwnd = 1.
+
+The phases fit together as a state machine. Every timeout leads back to slow start, because a timeout means the ACK clock is gone:
+
+```mermaid
+stateDiagram-v2
+    state "Slow start (double cwnd per RTT)" as SS
+    state "Additive increase (add one packet per RTT)" as AI
+    state "Fast recovery (hold at halved cwnd)" as FR
+
+    [*] --> SS: cwnd = 1
+    SS --> AI: cwnd crosses ssthresh
+    SS --> SS: timeout, ssthresh = cwnd/2, cwnd = 1
+    AI --> FR: three duplicate ACKs, fast retransmit, halve cwnd
+    FR --> AI: new ACK arrives
+    AI --> SS: timeout, ssthresh = cwnd/2, cwnd = 1
+    FR --> SS: timeout
+```
 
 ### Reno, NewReno, and SACK
 

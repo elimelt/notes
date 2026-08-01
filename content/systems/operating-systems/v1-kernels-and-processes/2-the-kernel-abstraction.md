@@ -72,6 +72,22 @@ Older versions of MacOS lacked this. They used cooperative multitasking, where a
 
 A busy server may cross between kernel and user mode thousands of times per second, so the transfer has to be both fast and safe.
 
+```mermaid
+flowchart TD
+    subgraph UM[User mode]
+        APP[Application]
+    end
+    subgraph KM[Kernel mode]
+        H[Handler runs on the kernel interrupt stack]
+    end
+    APP -- interrupt, external event --> H
+    APP -- exception, page fault or divide by zero --> H
+    APP -- system call, trap instruction --> H
+    H -- resume process, start new process, switch process, or upcall --> APP
+    style APP fill:#e3f2fd
+    style H fill:#e8f5e9
+```
+
 ### User to Kernel
 
 Three events move the processor from user to kernel mode. _Trapping_ is the general term for synchronously switching into the kernel.
@@ -167,6 +183,23 @@ The kernel constructs a restricted environment for each process. Whenever a proc
 3. Hardware transfers control to the kernel stub, which validates arguments and runs the real syscall.
 4. The syscall returns through the kernel stub to the instruction after the trap in the user stub, which returns to the user program.
 
+```mermaid
+sequenceDiagram
+    participant App as User program
+    participant US as User stub
+    participant KS as Kernel stub
+    participant K as Kernel routine
+
+    App->>US: open(filename)
+    US->>KS: trap with syscall number in eax
+    Note over US,KS: hardware saves PC, SP, eflags on the kernel interrupt stack
+    KS->>KS: copy arguments into kernel memory, validate them
+    KS->>K: Kernel_Open(localCopy)
+    K-->>KS: file handle or error code
+    KS-->>US: iret, return value in eax
+    US-->>App: return
+```
+
 The user-level stub for `open` on x86:
 
 ```asm
@@ -191,6 +224,9 @@ The user-level stub for `open` on x86:
 **Validate parameters.** The stub checks that the arguments describe a legal operation. For `open`, that means the file exists, the user has permission to open it, and so on.
 
 **Copy before check.** The stub copies arguments into kernel memory before checking them. Otherwise a process could pass arguments that look valid, then modify them from another thread after the check but before use. This is the time of check vs. time of use (TOCTOU) attack.
+
+> [!warning] Check the copy, not the original
+> The order is copy first, then validate. Any check performed on data still in user memory can be invalidated by another thread rewriting it between the check and the use — the TOCTOU race. The kernel stub below copies the filename into kernel memory precisely so the checked bytes are the used bytes.
 
 **Copy results back.** The stub copies results into user memory before returning, since the user program cannot read kernel memory.
 

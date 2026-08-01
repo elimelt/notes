@@ -54,6 +54,17 @@ Simplifying assumptions used throughout:
 - **Tasks in the system ($N$)**: tasks in the system, both in service and queued.
     - $N = Q + U$ on average, since utilization equals the average number of tasks in service at a single server.
 
+All of the symbols in one picture:
+
+```mermaid
+flowchart LR
+    A[Arrivals, rate lambda] --> Q[Queue, length Q, wait W]
+    Q --> S[Server, service time S, rate mu]
+    S --> D[Departures, throughput X]
+    style Q fill:#fce4ec
+    style S fill:#e8f5e9
+```
+
 ## Little's Law
 
 For any stable system, regardless of arrival distribution or scheduling policy:
@@ -130,6 +141,9 @@ R = \frac{S}{1 - U}
 $$
 
 The shape of this curve is the practical takeaway. At low utilization, response time barely rises above $S$. As $U$ approaches 1, the denominator goes to zero and response time blows up. At $U = 0.5$ you pay 2x the service time, at $U = 0.9$ you pay 10x. This is why operators leave headroom instead of running servers near full utilization.
+
+> [!warning] The hockey stick has no safe side of the bend
+> Plotted against $U$, the curve $R = S/(1-U)$ is nearly flat below $U \approx 0.5$, bends visibly around $0.7$, and goes vertical approaching $1$: each halving of the remaining headroom doubles response time (2x at 0.5, 10x at 0.9, 100x at 0.99). A system provisioned at 95% utilization is not "5% away from trouble" — it is already at 20x its unloaded latency, and any burst pushes it toward the asymptote.
 
 ## M/M/1 Reference Results
 

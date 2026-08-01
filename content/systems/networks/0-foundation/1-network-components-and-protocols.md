@@ -170,6 +170,25 @@ The message on the wire for the stack above looks like this as it descends:
 
 The sender builds these layers up until the data is ready for the physical medium. The receiver peels them back until it reaches the application layer. Real traffic is messier than the diagram. Protocols add trailers as well as headers, content gets encrypted or compressed, and messages get segmented and reassembled along the way.
 
+The full round trip runs down the sending host's stack, across the physical medium, and back up the receiver's:
+
+```mermaid
+flowchart LR
+    subgraph Sender[Sending host]
+        direction TB
+        AH[HTTP] --> AT[TCP] --> AI[IP] --> AW[802.11]
+    end
+    subgraph Receiver[Receiving host]
+        direction TB
+        BW[802.11] --> BI[IP] --> BT[TCP] --> BH[HTTP]
+    end
+    AW -->|bits on the physical medium| BW
+    style AH fill:#e3f2fd
+    style BH fill:#e3f2fd
+```
+
+Each layer on the way down adds its header, and each layer on the way up strips the matching header and hands the payload to the protocol its demultiplexing key names.
+
 ### Demultiplexing
 
 A received message must be handed to exactly the protocols that should process it. **Demultiplexing keys** in each header make this possible. The IP protocol field and the TCP port number are demultiplexing keys.

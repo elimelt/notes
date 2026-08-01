@@ -36,6 +36,23 @@ One useful control message is the **ICMP Redirect**, which tells a host that a b
 
 `traceroute` sends packets with increasing TTLs and listens for ICMP Time Exceeded messages. Each router along the path decrements the TTL, and the router where it hits 0 sends a Time Exceeded message back to the source. That message carries the router's IP address as its source, so a packet with TTL $n$ exposes the $n$-th router on the path. `traceroute` records the round-trip time to each router itself, prints the router's address and the timing, and keeps increasing the TTL until packets reach the destination.
 
+```mermaid
+sequenceDiagram
+    participant S as Source
+    participant R1 as Router 1
+    participant R2 as Router 2
+    participant D as Destination
+
+    S->>R1: probe, TTL 1
+    Note over R1: TTL hits 0, drop
+    R1-->>S: ICMP Time Exceeded (reveals Router 1)
+    S->>R2: probe, TTL 2 (forwarded by Router 1)
+    Note over R2: TTL hits 0, drop
+    R2-->>S: ICMP Time Exceeded (reveals Router 2)
+    S->>D: probe, TTL 3
+    D-->>S: reply (destination reached, stop)
+```
+
 ## Ping
 
 `ping` sends ICMP Echo Request messages to the destination and listens for ICMP Echo Reply messages. A host that receives an Echo Request answers with an Echo Reply, which gives the sender a connectivity check and a round-trip time. It repeats until the user stops the command.

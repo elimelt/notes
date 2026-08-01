@@ -101,6 +101,31 @@ Microkernels showed up in the late 80s and early 90s. The idea is to shrink the 
 
 The isolation between components buys reliability, and a smaller kernel means less code to port to new hardware. Extending the system means adding a server rather than patching the kernel. The cost is speed. Requests that a monolithic kernel would handle with a procedure call now cross address space boundaries, so a microkernel is probably slower.
 
+The structural difference is where services live and what a request crossing costs:
+
+```mermaid
+flowchart TD
+    subgraph MONO[Monolithic]
+        UP1[User programs]
+        K1[One kernel with FS, network, drivers, VM, scheduling]
+        UP1 -- syscall, then procedure calls inside the kernel --> K1
+    end
+    subgraph MICRO[Microkernel]
+        UP2[User programs]
+        FS2[File system server]
+        NET2[Network server]
+        MK2[Microkernel with processes, memory, basic I/O]
+        UP2 -- IPC across address spaces --> FS2
+        UP2 -- IPC across address spaces --> NET2
+        FS2 --> MK2
+        NET2 --> MK2
+    end
+    style K1 fill:#e8f5e9
+    style MK2 fill:#e8f5e9
+    style FS2 fill:#e3f2fd
+    style NET2 fill:#e3f2fd
+```
+
 ## Related notes
 
 - [[systems/operating-systems/lecture-notes/kernel-abstraction|hardware modes]]

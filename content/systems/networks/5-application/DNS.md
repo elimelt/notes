@@ -63,6 +63,29 @@ In a recursive query, the resolver asks a server to return the final answer dire
 
 Recursive service takes the resolution burden off the client and lets the server build a cache shared across its whole pool of clients. Iterative service keeps the server simple, which makes high-load servers easier to build, and leaves the client in control of the process. Root and TLD servers answer iteratively, and local resolvers typically offer recursion to their clients.
 
+Both modes appear in one ordinary lookup. The client asks its resolver recursively, and the resolver walks the hierarchy iteratively:
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant L as Local resolver
+    participant Root as Root server
+    participant TLD as TLD server (.edu)
+    participant Auth as Authoritative server
+
+    Note over C,L: Recursive query, resolver does the walking
+    C->>L: resolve cs.washington.edu
+    Note over L,Auth: Iterative queries, each answer names the next server
+    L->>Root: cs.washington.edu?
+    Root-->>L: ask the .edu TLD server
+    L->>TLD: cs.washington.edu?
+    TLD-->>L: ask the washington.edu name server
+    L->>Auth: cs.washington.edu?
+    Auth-->>L: IP address
+    L-->>C: IP address
+    Note over L: Every partial answer is cached for its TTL
+```
+
 ### Caching
 
 Resolution sits on the critical path of nearly every connection, so latency matters and caching does the heavy lifting. Nameservers cache query results, including the partial answers from iterative resolution, for the duration of each record's TTL. The caching follows the hierarchy. Answers near the root change rarely and get cached widely, which is what keeps the root servers from being crushed by the world's lookups.

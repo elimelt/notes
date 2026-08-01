@@ -26,6 +26,9 @@ sources:
 
 Two classical results bound how fast any channel can carry bits. The Nyquist limit bounds the symbol rate of a band-limited channel, and the Shannon capacity bounds the bit rate once noise enters the picture. Every physical link in these notes lives under both bounds.
 
+> [!abstract] Two limits, two regimes
+> Nyquist assumes a noiseless channel and bounds the *symbol rate*: bandwidth alone caps how many signal changes per second the channel can carry. Shannon adds noise and bounds the *bit rate*: the signal-to-noise ratio caps how many levels per symbol the receiver can tell apart. Nyquist says how often you can signal, Shannon says how much each signal can say.
+
 ## Key channel properties
 
 - **Bandwidth** $B$ (Hz): the range of frequencies the channel can carry.

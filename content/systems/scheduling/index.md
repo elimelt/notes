@@ -72,6 +72,7 @@ The best route is to start with the math, then the single-resource policies, the
 - Cluster and datacenter scheduling:
   - [[systems/scheduling/4-cluster-and-datacenter/cluster-scheduling-and-dominant-resource-fairness|cluster scheduling and DRF]]
   - [[systems/scheduling/4-cluster-and-datacenter/stragglers-speculation-and-overload|stragglers, speculation, and overload]]
+  - [[systems/scheduling/4-cluster-and-datacenter/admission-control-backpressure-overload|admission control, backpressure, and overload management]]
 - Model-serving scheduling:
   - [[systems/scheduling/5-ml-and-serving/request-scheduling-for-llm-serving|request scheduling for LLM serving]]
   - [[ml/serving-systems/batching|batching]]

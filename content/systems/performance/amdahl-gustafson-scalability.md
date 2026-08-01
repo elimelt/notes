@@ -27,7 +27,7 @@ sources:
 
 ## Purpose
 
-These are the laws that make parallel-scaling claims falsifiable: given a measured speedup curve, they say whether the workload is limited by serial work, by communication, or by nothing yet. The numeric tables below are computed directly from the formulas (script run in the repo venv). This note is the model layer under measurement notes like [[systems/operating-systems/benchmarks/reductions|the reductions benchmark]], which is an Amdahl story in miniature.
+These are the laws that make parallel-scaling claims falsifiable: given a measured speedup curve, they say whether the workload is limited by serial work, by communication, or by nothing yet. The numeric tables below are computed directly from the formulas (script run in the repo venv). These laws are the model layer under measurements like [[systems/operating-systems/benchmarks/reductions|the reductions benchmark]], which is an Amdahl story in miniature.
 
 ## Amdahl's law
 

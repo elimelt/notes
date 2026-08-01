@@ -40,11 +40,32 @@ The seat belt light is on if the driver's belt is unfastened, or if a passenger 
 SeatBeltLight = (NOT DriverSeatBeltFastened) OR (NOT PassengerSeatBeltFastened AND PassengerPresent)
 ```
 
+The same expression drawn as a gate network:
+
+```mermaid
+flowchart LR
+    dsb["DriverSeatBeltFastened"] --> n1["NOT"]
+    psb["PassengerSeatBeltFastened"] --> n2["NOT"]
+    n2 --> a1["AND"]
+    pp["PassengerPresent"] --> a1
+    n1 --> o1["OR"]
+    a1 --> o1
+    o1 --> out["SeatBeltLight"]
+
+    style dsb fill:#e3f2fd,stroke:#1565c0
+    style psb fill:#e3f2fd,stroke:#1565c0
+    style pp fill:#e3f2fd,stroke:#1565c0
+    style out fill:#e8f5e9,stroke:#2e7d32
+```
+
 ## Truth table to boolean expression
 
 Sum of products: for each row where the output is 1, AND the inputs together, complementing any input that is 0 in that row. OR all of those product terms.
 
 Product of sums: for each row where the output is 0, OR the inputs together, complementing any input that is 1 in that row. AND all of those sum terms.
+
+> [!tip] Pick the form from the truth table
+> Sum of products generates one term per 1 in the output column, and product of sums one term per 0. When the output is mostly 0s, SOP starts smaller; when it is mostly 1s, POS does. Both minimize to equivalent logic, so start from the shorter one.
 
 ## Boolean identities
 

@@ -36,6 +36,25 @@ Full virtualization emulates the underlying hardware completely so an unmodified
 
 Xen is a hypervisor that runs multiple [[systems/operating-systems/v1-kernels-and-processes/1-introductions|operating systems]] on the same hardware through **paravirtualization**. Guest OSes are modified to be aware of the hypervisor and make calls to it for access to hardware features. Xen implements efficient mechanisms for memory management, scheduling, event delivery, and I/O inside the hypervisor, and delegates resources to guests through them. The paper demonstrates the resulting performance on **XenoLinux**, their port of Linux.
 
+Control transfers in both directions, hypercalls going down and events coming back up:
+
+```mermaid
+flowchart TD
+    subgraph GUESTS[Paravirtualized guests]
+        G1[XenoLinux]
+        G2[Another ported guest OS]
+    end
+    XEN[Xen hypervisor, memory management, scheduling, event delivery, I/O]
+    HW[Hardware]
+    G1 -- hypercalls --> XEN
+    G2 -- hypercalls --> XEN
+    XEN -- events --> G1
+    XEN -- events --> G2
+    XEN --> HW
+    style GUESTS fill:#e8f5e9,stroke:#2e7d32
+    style XEN fill:#e3f2fd,stroke:#1565c0
+```
+
 ## Key insights
 
 Guests benefit from knowing they are virtualized, both for correctness (clocks, paging) and performance (fast handlers). Paravirtualization delivers a large performance improvement over full virtualization in exchange for modifying the guest, and Xen keeps the modification small by exposing a simple, clean interface that ports to new OSes without touching much guest source.

@@ -55,6 +55,9 @@ min_delay = min(clk_to_q + min_cl_delay, min_cl_delay)
 min_delay >= t_hold
 ```
 
+> [!warning] A slower clock never fixes a hold violation
+> The hold constraint compares `min_delay` against $t_{hold}$, and the clock period appears nowhere in it. If the shortest path is too fast, the only fix is adding delay to that path or using a flip-flop with a smaller hold time. Slowing the clock only buys margin for setup violations.
+
 ### Maximum clock frequency
 
 The clock can only run as fast as the slowest path that must deliver a correct next state to a register:

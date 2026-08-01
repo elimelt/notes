@@ -45,6 +45,9 @@ If the probability of an error inside the network is low, adding checks in the m
 - Catching errors only at the endpoints delays detection. A corrupted message has to travel the whole path before anyone notices.
 - Leaving checks out of the middle hurts maintainability, since failures surface far from where they happen.
 
+> [!tip] Deciding where a function lives
+> The endpoint check has to exist for correctness no matter what the network does. Put a copy of the function in a lower layer only when it pays off as a performance optimization, as hop-by-hop error recovery does on lossy links where end-to-end retransmission would cost far more.
+
 ## Sources
 
 - [End-to-End Arguments in System Design](https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf)

@@ -76,6 +76,21 @@ class Worker:
 
 Real runtimes avoid `pop(0)` because it is linear in Python lists, but the policy is the point.
 
+```mermaid
+flowchart TD
+    subgraph DQ[Worker W0 deque]
+        TOP[Top: oldest spawn, biggest unexplored subtree]
+        MID[...]
+        BOT[Bottom: newest spawn]
+    end
+    W0[Owner W0: push and pop at the bottom, sequential order] --> BOT
+    W1[Idle thief W1: steal from the top, rare path] --> TOP
+    style W0 fill:#e8f5e9
+    style BOT fill:#e8f5e9
+    style W1 fill:#e3f2fd
+    style TOP fill:#e3f2fd
+```
+
 There is a second, quieter argument for this exact discipline: the owner's bottom-LIFO order is *the sequential execution order*. A worker that never gets robbed executes the DAG exactly as a single-threaded program would — same order, same cache behavior, same stack depth. This is the **work-first principle** from the [Cilk-5 papers](https://dl.acm.org/doi/10.1145/277650.277725): put the scheduling overhead on the *steal* path, not the *spawn* path, because in a well-parallelized program spawns happen $T_1$ times but steals happen only $O(P \cdot T_\infty)$ times. Cilk's implementation makes a spawn cost only a few instructions more than a function call, while a steal pays for locks, continuation packaging, and cache misses — the rare path absorbs the cost. The same asymmetry shows up as *continuation stealing* (Cilk: the thief takes the caller's continuation, the owner keeps executing the child it just spawned, depth-first) versus *child stealing* (TBB, ForkJoinPool: the spawned child is queued and the owner continues in the caller; simpler to implement in a library without compiler support, at the cost of unbounded queue growth in pathological spawn patterns).
 
 ## A DAG and Its Trace

@@ -202,6 +202,24 @@ With [sendfile](https://man7.org/linux/man-pages/man2/sendfile.2.html), those tw
 
 The CPU never touches the data, which frees up memory bandwidth for other operations. The file transfer rate is then limited by the minimum of storage throughput, network throughput, and kernel path overheads rather than memory bandwidth.
 
+```mermaid
+flowchart LR
+    subgraph RW[read plus write: two CPU copies]
+        D1[Disk] -->|DMA| K1[Kernel buffer]
+        K1 -->|CPU copy| U1[User buffer]
+        U1 -->|CPU copy| S1[Socket buffer]
+        S1 -->|DMA| N1[NIC]
+    end
+    subgraph SF[sendfile: zero CPU copies]
+        D2[Disk] -->|DMA| K2[Kernel buffer]
+        K2 -->|DMA| N2[NIC]
+    end
+    style U1 fill:#f9d0d0,stroke:#c00
+    style S1 fill:#f9d0d0,stroke:#c00
+    style K2 fill:#e8f5e9
+    style N2 fill:#e8f5e9
+```
+
 ## Implementations
 
 ### Java virtual threads

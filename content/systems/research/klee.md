@@ -44,6 +44,23 @@ Testing large and complex programs is difficult. Writing manual tests is extreme
 
 KLEE runs a program on symbolic inputs and maintains a set of constraints describing every operation performed on those inputs down each path. At each branch it forks the execution state and adds the branch condition (or its negation) to each side's constraints. Solving the constraints for a path yields a concrete test case that drives the real program down that exact path. The same machinery finds bugs, by checking whether any path reaches an error state, and checks functional equivalence, by comparing the constraints two programs generate on the same symbolic input.
 
+Each branch on a symbolic value forks the state, so a run explores a tree of paths, each carrying its own constraint set:
+
+```mermaid
+flowchart TD
+    S0[Symbolic input, empty constraint set]
+    S0 -->|branch A true| S1[Constraints include A]
+    S0 -->|branch A false| S2[Constraints include not A]
+    S1 -->|branch B true| S3[Constraints include A and B]
+    S1 -->|branch B false| S4[Constraints include A and not B]
+    S2 --> T2[Solve constraints, emit a concrete test]
+    S3 --> T3[Solve constraints, emit a concrete test]
+    S4 --> E4[Error state, bug report plus the test that triggers it]
+    style T2 fill:#e8f5e9,stroke:#2e7d32
+    style T3 fill:#e8f5e9,stroke:#2e7d32
+    style E4 fill:#f9d0d0,stroke:#c00
+```
+
 ## Mechanism
 
 Two design details carry most of the weight:

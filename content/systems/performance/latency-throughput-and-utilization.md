@@ -95,6 +95,9 @@ $$
 
 The pole at $\rho = 1$ separates two regimes worth naming precisely. **Stable** ($\lambda < \mu$): queues form and drain, response time is finite, and the table above prices the headroom. **Unstable** ($\lambda \ge \mu$): the queue grows without bound, $R$ is no longer a function of load but of *time* — every second of overload adds to a backlog that must be repaid — and throughput pins at $\mu$ while arrivals keep accumulating. A system past saturation does not degrade gracefully; it falls behind linearly. Simulation confirming the table, plus the variance and burstiness effects the M/M/1 model hides, are in [[systems/operating-systems/v2-concurrency/7-queueing-theory|Queueing Theory]].
 
+> [!warning] Past saturation, latency is a function of time, not load
+> The $R = S/(1-\rho)$ curve only describes the stable regime. At $\rho \ge 1$ there is no steady state to plot: every second of overload adds $\lambda - \mu$ requests to a backlog that must be repaid before latency recovers. The dashboard signature is throughput pinned flat at capacity while latency climbs linearly with wall-clock time — and stays high after load drops, until the backlog drains.
+
 The curve also explains the knee heuristic: below $\rho \approx 0.7$-0.8, added load costs little latency; above it, each point of utilization costs more than the last. Operators leave headroom not from superstition but because the marginal price of utilization is convex.
 
 ## Finite buffers and dropped work

@@ -68,6 +68,9 @@ $$
 
 These are the normal equations ([ILA §6.5](https://textbooks.math.gatech.edu/ila/chap-orthogonality.html)). The same equation drops out of calculus, since $\nabla_x \lVert Ax - b\rVert^2 = 2 A^T(Ax - b)$. $A^T A$ is invertible exactly when $A$ has full column rank, and then $\hat{x} = (A^T A)^{-1} A^T b$ is unique.
 
+> [!tip] The normal equations are an orthogonality statement
+> $A^T A \hat{x} = A^T b$ is nothing but $A^T r = 0$ rearranged: the residual $r = b - A\hat{x}$ is perpendicular to every column of $A$. If you remember one thing, remember the geometry, "the best fit is the one whose error the model cannot see," and the algebra reconstructs itself. It also gives free sanity checks on any fitted model: compute $A^T r$ and confirm it is numerically zero, as the worked example below does.
+
 The residual orthogonality is worth internalizing. The error the fit cannot remove is perpendicular to everything the model can express. In a regression with an intercept column of ones, orthogonality against that column forces the residuals to sum to zero. Orthogonality against a feature column means the residual is uncorrelated with that feature; whatever structure remains in the residual is structure the column space cannot represent.
 
 ## Worked example
@@ -102,6 +105,9 @@ print(np.allclose(P @ P, P))           # True, projecting twice is a no-op
 ## Why QR instead of the normal equations
 
 Forming $A^T A$ squares the conditioning of the problem: for full-column-rank $A$, $\kappa(A^T A) = \kappa(A)^2$ (Trefethen and Bau, lecture 19; Golub and Van Loan, ch. 5). A matrix with $\kappa(A) = 10^6$ is unpleasant; its normal equations have $\kappa = 10^{12}$ and can lose all useful digits in double precision. The QR route factors $A = QR$ with orthonormal $Q$ and triangular $R$, then solves $R\hat{x} = Q^T b$ by back substitution. Orthogonal transformations preserve norms and hence conditioning, and Householder QR is backward stable (Trefethen and Bau, lecture 16), so the accuracy tracks $\kappa(A)$ rather than $\kappa(A)^2$.
+
+> [!warning] Derive with the normal equations, solve with QR or SVD
+> The normal equations are the right tool for understanding least squares and the wrong tool for computing it. Explicitly forming $A^T A$ squares the condition number, so a problem that is merely ill-conditioned becomes numerically hopeless. In double precision, $\kappa(A) \approx 10^8$ already puts $\kappa(A^T A) \approx 10^{16}$ at the edge of machine epsilon. Library solvers (`lstsq`, R's `lm`, LAPACK drivers) use QR or SVD for exactly this reason.
 
 [numpy.linalg.lstsq](https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html) goes one step further and uses an SVD-based LAPACK driver (`gelsd`). SVD costs more than QR but handles rank deficiency: singular values below `rcond` times the largest are treated as zero, and among all minimizers `lstsq` returns the minimum-norm one. That pseudoinverse story continues in [[math/linear-algebra/svd-and-pseudoinverse|SVD and the Pseudoinverse]].
 

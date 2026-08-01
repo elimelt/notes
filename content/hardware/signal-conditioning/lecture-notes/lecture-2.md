@@ -77,6 +77,9 @@ Nodal analysis lets you break circuits down and black-box them. You represent ea
 
 ## Worked problems
 
+> [!warning] mAh is charge, not energy
+> Battery capacity in mAh measures charge. Multiplying by the battery voltage gives energy, which is why the iPhone calculation below starts with 2900 mAh times 3.8 V. Two batteries with the same mAh rating but different voltages store different amounts of energy.
+
 **iPhone battery energy.** An iPhone contains a lithium battery with a voltage of 3.8 V and a capacity of 2900 mAh. Energy stored, in Watt-hours and Joules:
 
 $$2900\,\text{mAh} \times 3.8\,\text{V} = 11{,}020\,\text{mWh} = 11.02\,\text{Wh}$$

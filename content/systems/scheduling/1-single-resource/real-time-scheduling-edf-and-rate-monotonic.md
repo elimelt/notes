@@ -91,6 +91,9 @@ $$
 
 So RM has a safe utilization bound around 69.3% in the worst case, even though many concrete task sets above that are still schedulable. The bound is tight in the sense that task sets exist just above it that RM cannot schedule, but it is only *sufficient*: failing the bound proves nothing. The priority assignment itself is provably the best fixed one — Liu and Layland show that if *any* fixed-priority assignment schedules a task set, rate-monotonic order does (Theorem 2), so RM's capacity gap versus EDF is the cost of fixing priorities at all, not of choosing them badly.
 
+> [!warning] The two utilization tests make different kinds of claim
+> EDF's $U \le 1$ is exact for implicit deadlines: pass means schedulable, fail means no policy can schedule the set. RM's $n(2^{1/n}-1) \to 0.693$ bound is *sufficient only* — a task set failing it may still be schedulable under RM, and the response-time analysis below is the exact test. The gap between 0.693 and 1.0 is the capacity price of fixing priorities statically.
+
 ### Response-Time Analysis
 
 The exact fixed-priority test (beyond the pessimistic bound) computes each task's worst-case response time as a fixed point. For task $i$ with higher-priority tasks $j$:
@@ -111,6 +114,25 @@ EDF: 11222211222211211222...   no misses over the full hyperperiod
 ```
 
 Under RM, $\tau_1$'s release at $t=5$ preempts $\tau_2$ (fixed priority: shorter period wins), leaving $\tau_2$ only 5 of the 7 ticks before its deadline — it needs $4 + \lceil R/5 \rceil \cdot 2$ and the response-time recurrence diverges past 7 ($R_2$ iterates $4 \to 6 \to 8 > 7$: unschedulable, confirming the trace). Under EDF, at $t=5$ the running $\tau_2$ has deadline 7 while the newly released $\tau_1$ has deadline 10, so $\tau_2$ *keeps the processor* — dynamic priority makes exactly the decision fixed priority cannot, and the set is schedulable at 97% utilization.
+
+The first eight ticks, drawn — the divergence is the single decision at $t=5$:
+
+```mermaid
+gantt
+    dateFormat X
+    axisFormat %s
+    section RM tau1
+    job 1 :0, 2
+    job 2 :5, 7
+    section RM tau2
+    3 of 4 ticks :2, 5
+    deadline 7 missed :crit, 7, 8
+    section EDF tau1
+    job 1 :0, 2
+    job 2 :6, 8
+    section EDF tau2
+    job 1 :2, 6
+```
 
 ## Small Example
 

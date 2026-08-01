@@ -30,7 +30,13 @@ A K-map redraws a truth table as a grid where adjacent cells differ in exactly o
 4. Group the 1s into rectangles whose sizes are powers of two. Groups can span both axes and can wrap around the edges of the map.
 5. Group any leftover 1s with adjacent 1s where possible.
 
+> [!tip] Label the axes in Gray code
+> Order each axis 00, 01, 11, 10 rather than counting in binary. Gray code ordering changes exactly one variable between neighboring rows and columns, which is what makes cells that touch on the grid actual logical neighbors. Binary ordering (00, 01, 10, 11) breaks that property between 01 and 10, and every grouping you read off the map after that is suspect.
+
 A group of size $2^k$ covers cells that agree on all but $k$ of the variables, so its product term drops those $k$ variables. Bigger groups mean simpler terms, which is why you want the largest power-of-two groupings you can find.
+
+> [!warning] The map wraps around
+> Cells on opposite edges are adjacent. The leftmost and rightmost columns differ in one variable, and so do the top and bottom rows, so a group can span the edge of the map. In a 4-variable map the four corners form a legal group of 4. Missing a wrap-around group leaves an unnecessarily large expression even though every grouping you did find is correct.
 
 ## Verilog procedural blocks
 

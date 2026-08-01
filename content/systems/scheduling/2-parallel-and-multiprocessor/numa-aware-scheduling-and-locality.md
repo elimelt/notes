@@ -30,6 +30,19 @@ On a NUMA machine the scheduler's cost model acquires a second dimension: not ju
 
 A multi-socket machine is a network of nodes, each a package of cores with its own memory controller and local DRAM, joined by a cache-coherent interconnect (QPI/UPI, Infinity Fabric). Local access goes through the on-package controller; remote access crosses the link, adding latency and contending for link bandwidth. Representative numbers: [Lameter's Queue article](https://queue.acm.org/detail.cfm?id=2513149) puts the remote penalty for a 2017-era two-socket Intel system at roughly **1.8x local latency**, with earlier SMP interconnects far worse; [Drepper](https://www.akkadia.org/drepper/cpumemory.pdf) measured read latency growing steadily with hop count on multi-hop AMD topologies (1.2-1.5x one hop, approaching 2x at two). Bandwidth divides the same way — the interconnect's capacity is a fraction of aggregate local DRAM bandwidth, so remote-heavy workloads saturate the link long before the memory controllers. The single-socket ceiling that motivates multi-threaded bandwidth in [[systems/operating-systems/benchmarks/bandwidth|the bandwidth benchmark]] gets a second, lower ceiling for remote traffic; the [[systems/operating-systems/benchmarks/mlp|MLP benchmark's]] overlap arithmetic also degrades, since each outstanding remote miss occupies its miss-handling slot longer.
 
+```mermaid
+flowchart LR
+    C0[Node 0 cores] --> M0[Node 0 DRAM: local, 1x]
+    C1[Node 1 cores] --> M1[Node 1 DRAM: local, 1x]
+    C0 --> X[Interconnect: about 1.8x latency, fraction of local bandwidth]
+    X --> M1
+    style C0 fill:#e3f2fd
+    style C1 fill:#e3f2fd
+    style M0 fill:#e8f5e9
+    style M1 fill:#e8f5e9
+    style X fill:#f9d0d0,stroke:#c00
+```
+
 The scheduling-relevant shape: the penalty is per-access and *persistent*. A thread migrated across sockets does not pay a one-time cost like a cache refill; it pays ~1.5-2x on every miss until its pages move too. That is what makes NUMA placement a scheduling problem rather than a warmup problem.
 
 ## Why CPU Balance Alone Fails

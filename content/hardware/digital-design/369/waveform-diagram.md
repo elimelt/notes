@@ -29,6 +29,9 @@ Group related bits into a **bus**, also called a **bit vector**. A waveform diag
 
 Every gate has some fixed delay. In reality you look delays up in the part's data sheet. For hand analysis in this course, assume every gate has a delay of 1 ns, which corresponds to 3 simulation ticks.
 
+> [!warning] Outputs can glitch before settling
+> Different paths through a circuit have different delays, so after an input change the output can pass through wrong intermediate values before the longest path settles. Expect brief pulses in a waveform that the truth table never predicts, and read the output value only after every path has had time to propagate.
+
 ## Verilog buses
 
 `[n-1:0]` declares an $n$-bit bus. Access individual bits with array syntax, and take a slice of the bus with `bus[msb:lsb]`.

@@ -36,6 +36,30 @@ Shrink the kernel's job to securely multiplexing hardware and leave the abstract
 
 The interface the kernel exposes should sit as close to the hardware as possible, using physical names like physical addresses directly. The paper also lets applications download code into the kernel to shortcut the user-kernel boundary, which reads a lot like an early version of what eBPF does today.
 
+The same abstractions exist in both architectures; the exokernel just moves them above the protection boundary:
+
+```mermaid
+flowchart TD
+    subgraph MONO[Monolithic]
+        APP1[Application]
+        K1[Kernel with VM policy, file system, network stack, protection]
+        HW1[Hardware]
+        APP1 --> K1
+        K1 --> HW1
+    end
+    subgraph EXO[Exokernel]
+        APP2[Application]
+        LIB[Library OS with VM policy, file system, network stack]
+        XK[Exokernel, secure bindings and protection only]
+        HW2[Hardware]
+        APP2 --> LIB
+        LIB --> XK
+        XK --> HW2
+    end
+    style LIB fill:#e8f5e9,stroke:#2e7d32
+    style XK fill:#e3f2fd,stroke:#1565c0
+```
+
 ## Why this helps
 
 General-purpose kernel abstractions carry overhead in two ways. First, resources are so thoroughly abstracted that applications cannot manage them at all; exposing hardware-level names gives that control back. Second, applications constantly cross into the kernel for operations that could run in user space, and the context switches add up.

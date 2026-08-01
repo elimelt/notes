@@ -49,6 +49,19 @@ Autoregressive serving has two major phases:
 
 Prefill wants large matrix multiplies and is compute hungry. Decode is dominated much more by KV-cache reads and memory traffic.
 
+```mermaid
+flowchart LR
+    P[Prompt: p tokens] --> PF[Prefill: one pass, compute-bound, cost scales with p]
+    PF --> KV[KV cache: held for the request lifetime]
+    KV --> D[Decode: one token per step, memory-bandwidth-bound]
+    D -->|append new token| KV
+    D --> T[Streamed output]
+    style P fill:#e3f2fd
+    style PF fill:#e3f2fd
+    style KV fill:#f9d0d0,stroke:#c00
+    style D fill:#e8f5e9
+```
+
 The simple cost model that drives everything (constants derived in [[ml/serving-systems/performance-modeling|Performance Modeling]]): a prefill over $p$ prompt tokens costs one pass of compute proportional to $p$ — a 2,000-token prompt is roughly 2,000 tokens' worth of FLOPs in one iteration — while a decode step costs one token of compute per request but must stream the *entire model plus that request's KV cache* through memory. Decode alone is therefore memory-bandwidth-bound at any realistic batch size, and batching decodes is nearly free in time until the batch approaches the compute roofline. The scheduling consequences:
 
 - A batch of decodes runs at essentially the speed of one decode; filling the batch is pure throughput.

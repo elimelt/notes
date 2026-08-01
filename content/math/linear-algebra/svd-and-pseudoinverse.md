@@ -53,6 +53,17 @@ Sanity check both eigenproblems: $A^T A = V \Sigma^T \Sigma V^T$ and $A A^T = U 
 
 The SVD says every linear map is rotate, stretch, rotate. $V^T$ rotates the input so the axes line up with $v_1, \dots, v_n$, $\Sigma$ stretches axis $i$ by $\sigma_i$ (killing axes past rank $r$), and $U$ rotates into output space. The image of the unit sphere under any $A$ is a hyperellipse whose semi-axes have lengths $\sigma_1, \dots, \sigma_r$ pointing along $u_1, \dots, u_r$ (Trefethen and Bau open the whole subject with this picture in lecture 4). $\sigma_1 = \lVert A \rVert_2$ is the largest stretch factor any unit vector experiences, and $\sigma_r$ the smallest nonzero one; their ratio $\sigma_1/\sigma_r$ is the condition number.
 
+```mermaid
+flowchart LR
+    X["input x"] --> VT["V transpose: rotate input axes onto right singular vectors"]
+    VT --> SIG["Sigma: stretch axis i by sigma i, drop axes past rank r"]
+    SIG --> U["U: rotate onto left singular vectors in output space"]
+    U --> Y["output Ax"]
+    style VT fill:#e3f2fd
+    style SIG fill:#e8f5e9
+    style U fill:#e3f2fd
+```
+
 ## The Moore-Penrose pseudoinverse
 
 Invert what is invertible and leave the rest alone:
@@ -65,6 +76,15 @@ $$
 $A^{+}$ is the unique matrix satisfying the four Penrose conditions: $A A^{+} A = A$, $A^{+} A A^{+} = A^{+}$, and both $A A^{+}$ and $A^{+} A$ symmetric (Golub and Van Loan, ch. 5). When $A$ is square and invertible, $A^{+} = A^{-1}$. When $A$ has full column rank, $A^{+} = (A^T A)^{-1} A^T$, the least-squares operator from the normal equations.
 
 The general statement: $\hat{x} = A^{+} b$ is always a least-squares solution of $Ax = b$, and among all least-squares solutions it is the one with minimum norm. Rank deficiency makes the minimizer non-unique, adding any null-space component leaves the residual unchanged, and $A^{+} b$ is the choice with zero null-space component. This is exactly what `np.linalg.lstsq` returns, since its SVD-based driver applies a truncated pseudoinverse ([numpy.linalg.lstsq docs](https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html)).
+
+> [!abstract] SVD, pseudoinverse, and least squares are one package
+> Undo the three-step geometry in reverse: rotate with $U^T$, divide by the nonzero $\sigma_i$ (zero out the rest), rotate back with $V$. That is $A^{+} = V\Sigma^{+}U^T$, and it solves least squares in every rank case at once:
+>
+> - Square invertible $A$: $A^{+} = A^{-1}$, the exact solution.
+> - Full column rank: $A^{+} = (A^TA)^{-1}A^T$, the normal-equations solution.
+> - Rank deficient: $A^{+}b$ is the *minimum-norm* least-squares solution, the unique minimizer with no null-space component.
+>
+> The normal equations only cover the middle case; the SVD route degrades gracefully through all three.
 
 ## Eckart-Young: best low-rank approximation
 

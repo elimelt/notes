@@ -57,6 +57,16 @@ Conditional expectation $\mathbb{E}[X \mid Y]$ is the best guess of $X$ given $Y
 
 Each inequality below uses one more piece of structure and buys an exponentially better tail.
 
+> [!abstract] The ladder: pay more structure, get a better tail
+> | Bound | Requires | Tail decay |
+> |---|---|---|
+> | Markov | $X \ge 0$, a mean | $1/a$ |
+> | Chebyshev | a variance | $1/\epsilon^2$, and $1/n$ for averages |
+> | Chernoff | a moment generating function | $e^{-cn}$, exponential in $n$ |
+> | Hoeffding | bounded range $[a_i, b_i]$ | $2e^{-2n\epsilon^2}$, explicit constants |
+>
+> Every rung is Markov applied to a transformed variable: Chebyshev is Markov on $(X-\mu)^2$, Chernoff is Markov on $e^{tX}$ with $t$ optimized. Climb only as high as your assumptions allow, a heavy-tailed variable with no MGF stops at Chebyshev, but for bounded iid samples go straight to Hoeffding and read off the sample size.
+
 **Markov** (needs: nonnegativity and a mean). For $X \ge 0$ and $a > 0$:
 
 $$

@@ -46,6 +46,31 @@ The design rests on three principles stated in the paper:
 
 Instead of protecting a global structure with locks, each core keeps a local replica and the OS keeps replicas consistent by exchanging messages. Sharing becomes an optimization you apply where the hardware makes it cheap, rather than the default.
 
+```mermaid
+flowchart LR
+    subgraph C1[Core 1]
+        OS1[OS node]
+        R1[State replica]
+        OS1 --- R1
+    end
+    subgraph C2[Core 2]
+        OS2[OS node]
+        R2[State replica]
+        OS2 --- R2
+    end
+    subgraph C3[Core 3]
+        OS3[OS node]
+        R3[State replica]
+        OS3 --- R3
+    end
+    OS1 <-->|messages| OS2
+    OS2 <-->|messages| OS3
+    OS1 <-->|messages| OS3
+    style R1 fill:#e8f5e9,stroke:#2e7d32
+    style R2 fill:#e8f5e9,stroke:#2e7d32
+    style R3 fill:#e8f5e9,stroke:#2e7d32
+```
+
 ## Why message passing over shared memory
 
 ## Related notes

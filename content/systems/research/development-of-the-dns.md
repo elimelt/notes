@@ -77,6 +77,9 @@ The hierarchy is doing a lot of work. It models namespaces after organizations, 
 
 Stepping back, a distributed namespace was the inevitable shape of the solution. `HOSTS.TXT` could not scale with the internet's growth in either complexity or size. The design requirements were deliberately general, and the balance struck between flexibility and simplicity is a big part of why adoption went as well as it did.
 
+> [!tip] Two decisions carried the design
+> The hierarchy models organizations, so the structure that names things also delegates control over them. Caching, negative caching included, made the common case fast enough to survive a network far slower than the designers planned for.
+
 ## Evidence
 
 The paper is a retrospective, so its evidence is deployment experience. DNS replaced `HOSTS.TXT` and absorbed the internet's growth. The underlying network turned out far less performant than the designers expected, and DNS coped because the common case, a cached answer, is fast, and multiple levels of caching cut the round trips needed after the initial queries.

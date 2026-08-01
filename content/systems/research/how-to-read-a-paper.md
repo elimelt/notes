@@ -28,6 +28,22 @@ Researchers spend hundreds of hours reading papers every year, so they ought to 
 
 ## The three-pass approach
 
+Each pass ends with a decision about whether the paper deserves the next one:
+
+```mermaid
+flowchart TD
+    P1[First pass, 5 to 10 minutes, title, abstract, intro, conclusion, headers]
+    P1 --> D1{Worth a second pass?}
+    D1 -->|no| OUT[Set the paper aside]
+    D1 -->|yes| P2[Second pass, about an hour, full read, skip proofs, annotate]
+    P2 --> D2{Can you summarize it to a peer?}
+    D2 -->|not yet| RE[Set it aside, chase references, or push on]
+    D2 -->|yes, and depth is needed| P3[Third pass, 1 to 5 hours, virtually re-implement the paper]
+    style P1 fill:#e3f2fd,stroke:#1565c0
+    style P2 fill:#e3f2fd,stroke:#1565c0
+    style P3 fill:#e8f5e9,stroke:#2e7d32
+```
+
 ### First pass
 
 Gives you a general idea of what the paper is about. Read the title, abstract, introduction, and conclusion. Only read section and sub-section headers. Also glance over the references and note which you've read. This should only take 5-10 minutes.

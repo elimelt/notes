@@ -54,7 +54,13 @@ $$
 
 Read right to left: $P^{-1}$ rewrites a vector in eigenvector coordinates, $D$ scales each coordinate independently, and $P$ translates back. In the right basis, $A$ is just $n$ separate scalar multiplications.
 
+> [!tip] Diagonalization is a change of basis, not a new matrix
+> $A = PDP^{-1}$ says $A$ and $D$ are the *same linear map* written in different coordinates. Anything preserved by similarity, eigenvalues, determinant, trace, rank, can be read off $D$ for free. Whenever a computation involves applying $A$ repeatedly (powers, exponentials, recurrences), switch to the eigenbasis first, do scalar arithmetic, and switch back.
+
 $A$ is diagonalizable if and only if the geometric multiplicities sum to $n$, equivalently every eigenvalue's geometric multiplicity equals its algebraic multiplicity ([ILA §5.4](https://textbooks.math.gatech.edu/ila/chap-eigenvalues.html)). Distinct eigenvalues always give independent eigenvectors, so a matrix with $n$ distinct eigenvalues is automatically diagonalizable. The failure mode is a repeated root that comes up short on eigenvectors: $\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ has $\lambda = 1$ with algebraic multiplicity 2 but only one eigenvector direction, so it is defective and not diagonalizable.
+
+> [!warning] Not every square matrix is diagonalizable
+> Having $n$ eigenvalues (with multiplicity) does not mean having $n$ independent eigenvectors. A defective matrix like $\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ has no eigenbasis, so $A = PDP^{-1}$ simply does not exist for it, and any argument that starts "diagonalize $A$..." silently fails. The repair is the Jordan form (or the Schur decomposition numerically). Nearly defective matrices are just as dangerous in floating point: $P$ exists but is close to singular, so $P^{-1}$ amplifies error, a point the NumPy caveats below return to.
 
 Symmetric matrices are the best case. If $A = A^T$, all eigenvalues are real, eigenvectors for distinct eigenvalues are orthogonal, and there is always an orthonormal eigenbasis, giving the spectral decomposition $A = Q D Q^T$ with $Q$ orthogonal ([ILA chapter 5](https://textbooks.math.gatech.edu/ila/chap-eigenvalues.html); Strang covers this in [18.06 lecture 25](https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/)).
 

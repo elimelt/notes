@@ -28,7 +28,7 @@ sources:
 
 ## Purpose
 
-A reusable derivation note for the handful of matrix-calculus facts that carry nearly all of deep learning: layout conventions, the core identities, the four gradients that appear in every training loop (affine, quadratic, least squares, softmax cross-entropy), and the JVP/VJP framing that autodiff systems actually implement. Notes like [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]] and [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]] use these identities implicitly; this is where they are derived.
+A reusable derivation note for the handful of matrix-calculus facts that carry nearly all of deep learning: layout conventions, the core identities, the four gradients that appear in every training loop (affine, quadratic, least squares, softmax cross-entropy), and the JVP/VJP framing that autodiff systems actually implement. [[ml/deep-learning/neural-networks-from-scratch|Neural Networks from Scratch]] and [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]] use these identities implicitly; this is where they are derived.
 
 ## Notation and layout
 

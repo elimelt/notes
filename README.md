@@ -63,15 +63,39 @@ To scan the full corpus instead of only changed Markdown files:
 npm run validate:notes:all
 ```
 
-## Notebook-backed notes
+## Code and benchmarks
+
+Use a fenced code block for a short example that belongs in the narrative. Put
+a reusable program or benchmark harness under `content/` beside its note, link
+the source file from the note, and include the exact build or run command. Files
+under `content/` are published as static assets; the site does not execute them.
+
+Start empirical work from the benchmark template:
+
+```sh
+npm run new:note -- content/path/benchmark.md \
+  --template benchmark \
+  --title "Benchmark title" \
+  --category "Performance Engineering" \
+  --tags benchmarks
+```
+
+Record the environment, workload, controls, warmup, repetitions, units, and
+variability. Commit the source and measured results, then run
+`npm run validate:notes` and `npm run build`. The complete artifact-selection
+and publication policy lives in `.notes/artifacts.yml`.
+
+## Notebook-backed and embedded notes
 
 Notebook pages use the
 [`quartz-jupyter-embed`](https://github.com/vazome/quartz-jupyter-embed) plugin:
 
-1. Author the notebook in `content/**/*.ipynb`.
-2. Generate a small sibling Markdown wrapper with `scripts/render_notebooks.py`.
-3. Let Quartz render the notebook's Markdown, code, tables, plots, and stored
-   outputs directly from the checked-in notebook JSON.
+1. Author and execute the notebook under `content/` beside its related note.
+2. Choose a standalone notebook page or an embedded-only companion.
+3. Run `scripts/render_notebooks.py` to generate standalone wrappers and prepare
+   notebook metadata.
+4. Let Quartz render Markdown, code, tables, plots, and stored outputs directly
+   from the checked-in notebook JSON.
 
 The normal site commands already do the render step for you:
 
@@ -97,8 +121,33 @@ python3.12 -m venv .venv
 .venv/bin/python scripts/execute_notebooks.py content/path/to/notebook.ipynb
 ```
 
-The `.ipynb` file is the source of truth. The generated `.md` sibling contains
-only page metadata and the public source link and should not be edited by hand.
+The `.ipynb` file is the source of truth. For a standalone notebook page, omit
+`notebook_page` or set it to `true` in the first Markdown cell's YAML
+frontmatter. The generated `.md` sibling contains only page metadata and the
+public source link and should not be edited by hand.
+
+To embed a notebook inside an existing note without creating another page, put
+this frontmatter in the notebook's first Markdown cell:
+
+```yaml
+---
+notebook_page: false
+---
+```
+
+The notebook may share the note's stem, for example `topic.md` and
+`topic.ipynb`. Add its content-root-relative link to the Markdown note in a
+paragraph of its own:
+
+```markdown
+[Open the executable companion notebook](/ml/deep-learning/topic.ipynb)
+```
+
+During the build, that link is replaced by the rendered notebook, including
+stored code outputs, tables, HTML, and plots. The root-relative source asset is
+also published, and the notebook header links to it. Run
+`python3 scripts/render_notebooks.py` after changing the notebook, then run
+`npm run build` to seed the offline embed cache and verify the result.
 
 ## Embedding the graph
 
@@ -131,8 +180,8 @@ instead of opening a new tab.
 - Use `content/templates/` as the starting point for new concept, paper, and
   benchmark notes. Quartz ignores that directory during site generation.
 - Treat `.notes/` as the repository's authoring contract. `prose.yml`,
-  `content.yml`, and `frontmatter.yml` define the target style for future notes
-  and for the backfill of existing notes.
+  `content.yml`, `frontmatter.yml`, and `artifacts.yml` define the target style
+  for future notes and for the backfill of existing notes.
 - Use `npm run new:note -- ...` to scaffold a note from one of the tracked
   templates instead of copying and editing template files by hand.
 - Put site-wide visual overrides in `quartz-site/custom.scss` and Quartz layout

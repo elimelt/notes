@@ -36,6 +36,11 @@ optional:
   archive:
     type: boolean
     effect: exclude_note_from_build_indexes_and_navigation
+  notebook_page:
+    type: boolean
+    scope: notebook_first_markdown_cell
+    default: true
+    effect: false_keeps_the_notebook_embeddable_without_generating_a_standalone_note
 
 conventions:
   title_lives_in_frontmatter: true

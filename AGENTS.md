@@ -8,6 +8,7 @@ This repository is a Quartz-backed notes site. Most edits are content edits.
 - `.notes/prose.yml`
 - `.notes/content.yml`
 - `.notes/frontmatter.yml`
+- `.notes/artifacts.yml`
 - `content/templates/`
 
 These files define the current authoring contract. Treat them as the default
@@ -26,8 +27,11 @@ target for any new note or backfill pass.
 ## Notebook workflow
 
 - Notebook source of truth lives in `content/**/*.ipynb`.
-- Generated `*.md` wrappers live beside the notebooks and contain only
+- Standalone notebooks generate `*.md` wrappers beside the notebook containing
   frontmatter plus the source link consumed by `quartz-jupyter-embed`.
+- A companion notebook can be embedded in an existing note without generating
+  another page. Put `notebook_page: false` in the notebook's first-cell YAML
+  frontmatter, then link `/path/from/content/root.ipynb` in its own paragraph.
 - Do not hand-edit generated notebook wrappers. Edit the notebook, then
   regenerate them.
 - `npm run build`, `npm run dev`, and `npm run sync:quartz` already call
@@ -39,6 +43,19 @@ target for any new note or backfill pass.
   it, then use `.venv/bin/python scripts/execute_notebooks.py <path>.ipynb`.
 - Cache downloaded notebook data under `work/notebook-data/`, not under
   `content/`.
+
+## Executable artifacts
+
+- Consult `.notes/artifacts.yml` before choosing inline code, a source file, a
+  benchmark, or a notebook.
+- Add executable material when it exposes a mechanism, checks a derivation, or
+  supplies evidence used by the note. Do not add code as decoration.
+- Put reusable source and benchmark harnesses under `content/` beside the note,
+  link them from the note, and include exact run commands.
+- For benchmarks, record the environment, workload, controls, warmup,
+  repetitions, units, and variability. Never fabricate missing measurements.
+- Execute claimed-runnable examples and notebooks before publication. Commit
+  notebook outputs that the note discusses.
 
 ## Repo-specific rules
 
@@ -60,6 +77,7 @@ target for any new note or backfill pass.
 npm run new:note -- path/to/note.md --template concept --title "Example title" --category "Algorithms" --tags graph traversal bfs
 npm run validate:notes
 npm run validate:notes:all
+npm run test:notebooks
 npm run build
 npm run dev
 python3 scripts/render_notebooks.py

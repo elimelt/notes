@@ -1,0 +1,99 @@
+version: 1
+
+policy:
+  encourage_executable_artifacts_when_they:
+    - expose_a_mechanism_that_prose_or_math_hides
+    - test_an_empirical_or_performance_claim
+    - make_a_derivation_checkable
+    - let_the_reader_vary_inputs_or_inspect_intermediate_state
+    - produce_a_table_plot_trace_or_failure_case_used_by_the_note
+  avoid_artifacts_when_they:
+    - restate_pseudocode_without_adding_understanding
+    - add_setup_cost_without_supporting_the_notes_purpose
+    - require_large_private_or_unreproducible_inputs
+    - produce_results_that_are_not_interpreted_in_the_note
+
+selection:
+  inline_code:
+    use_when:
+      - the_example_is_short
+      - the_reader_needs_to_see_one_api_or_mechanism
+      - execution_and_stored_outputs_are_not_central
+    requirements:
+      - include_a_language_tag
+      - include_imports_shapes_units_and_other_required_context
+      - prefer_complete_minimal_examples_over_fragments
+  source_file:
+    use_when:
+      - the_program_is_reusable_or_too_large_for_the_narrative
+      - exact_compilation_or_execution_matters
+    requirements:
+      - store_beside_the_related_note_under_content
+      - link_from_the_note
+      - include_the_exact_run_command
+  benchmark:
+    use_when:
+      - the_note_makes_a_latency_throughput_memory_quality_or_scaling_claim
+      - competing_implementations_or_policies_need_comparison
+    requirements:
+      - state_the_question_before_measuring
+      - record_hardware_software_versions_flags_and_dataset_shape
+      - define_controls_baselines_warmup_and_repetition_policy
+      - report_raw_or_summary_results_with_units
+      - include_variance_or_uncertainty_when_runs_can_fluctuate
+      - separate_observation_from_interpretation
+      - never_invent_or_reconstruct_unrecorded_measurements
+  notebook:
+    use_when:
+      - code_math_outputs_and_explanation_need_to_be_read_together
+      - the_result_depends_on_intermediate_tables_plots_or_model_behavior
+      - an_executable_derivation_or_small_real_dataset_improves_the_note
+    requirements:
+      - keep_the_notebook_under_content_beside_its_related_note
+      - execute_it_and_commit_the_outputs_that_support_the_note
+      - use_deterministic_seeds_when_the_library_permits
+      - state_dataset_provenance_and_preprocessing
+      - state_runtime_hardware_and_material_dependency_versions
+      - keep_downloaded_data_under_work_notebook_data
+      - keep_large_models_datasets_and_generated_binaries_out_of_git
+      - explain_the_result_in_the_parent_note_instead_of_delegating_the_argument_to_cells
+
+data_and_measurement:
+  prefer_real_public_data_when_the_claim_depends_on_real_workload_structure: true
+  allow_synthetic_data_for_isolated_mechanisms: true
+  synthetic_data_must_be_labeled: true
+  primary_sources_should_define_standard_datasets_metrics_and_baselines: true
+  failed_or_null_results_should_be_kept_when_they_change_the_conclusion: true
+
+publishing:
+  inline_code:
+    steps:
+      - add_the_fenced_block_to_the_note
+      - run_the_example_locally_when_claimed_runnable
+      - run_npm_run_validate_notes
+      - run_npm_run_build
+  source_file_or_benchmark:
+    steps:
+      - store_the_source_under_content_near_the_note
+      - link_it_from_the_note_and_document_the_run_command
+      - record_results_in_the_note_or_a_checked_in_small_data_file
+      - run_npm_run_validate_notes
+      - run_npm_run_build
+  standalone_notebook:
+    notebook_page: true_or_omitted
+    steps:
+      - put_yaml_frontmatter_in_the_first_markdown_cell
+      - execute_the_notebook_in_place
+      - run_npm_run_render_notebooks
+      - commit_the_ipynb_and_generated_md_wrapper
+      - run_npm_run_build
+  embedded_companion_notebook:
+    notebook_page: false
+    steps:
+      - put_notebook_page_false_in_first_cell_frontmatter
+      - place_the_ipynb_beside_the_existing_markdown_note
+      - add_a_root_relative_ipynb_link_in_its_own_paragraph
+      - execute_the_notebook_in_place
+      - run_npm_run_render_notebooks
+      - commit_the_ipynb_and_parent_note_without_a_generated_wrapper
+      - run_npm_run_build

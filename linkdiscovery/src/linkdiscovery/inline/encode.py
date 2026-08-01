@@ -52,6 +52,7 @@ __all__ = [
     "QwenTokenEncoder",
     "TokenStateEncoder",
     "TokenStates",
+    "WindowedTokenEncoder",
     "span_representation",
     "span_representation_dim",
 ]
@@ -302,6 +303,121 @@ class QwenTokenEncoder:
         offsets = tuple((int(offset_mapping[i][0]), int(offset_mapping[i][1])) for i in keep)
         states = matrix[keep] if keep else np.zeros((0, self._hidden_size), dtype=np.float32)
         return TokenStates(offsets, np.ascontiguousarray(states, dtype=np.float32))
+
+
+class WindowedTokenEncoder:
+    """Overlapping-window wrapper giving ANY span of a long document token states.
+
+    The inner encoder truncates at roughly ``window_tokens`` (for
+    :class:`QwenTokenEncoder`, construct it with ``max_tokens ==
+    window_tokens``), so a long document's tail would otherwise get no
+    states. This wrapper encodes the document in overlapping windows that
+    advance ``stride_tokens`` tokens at a time and stitches the per-window
+    states back into one globally-offset :class:`TokenStates`.
+
+    **Deepest-inside selection (SPEC-INLINE-LINKING §9).** The underlying
+    Qwen model is decoder-style with *causal* masking: a token's state
+    aggregates its left context only, so the best state for a token is the
+    one from the window where the token sits deepest — i.e. with the most
+    left context. Because windows advance left to right, that is always the
+    *earliest* window containing the token; the wrapper therefore keeps each
+    token from the first window that reaches it and discards later windows'
+    shallower re-encodings. Every kept token beyond the first window sees at
+    least ``window_tokens - stride_tokens`` real preceding tokens (128 with
+    the 512/384 defaults); tokens in the first window see their full genuine
+    left context.
+
+    Stitching is by *character position*, not token index: each window keeps
+    exactly the tokens whose global character range extends beyond what
+    earlier windows already covered, which stays correct even when
+    re-tokenizing a window that starts mid-word splits the boundary tokens
+    slightly differently than the previous window did (BPE drift affects
+    only the shallow, discarded window prefix).
+
+    The wrapper satisfies :class:`TokenStateEncoder`, and the windowing
+    parameters are part of the fingerprint alongside the inner encoder's —
+    changing the window or stride changes every produced state matrix, so it
+    must change trained-head identity.
+
+    Requirement on the inner encoder: when its input is truncated it must
+    still return more than ``stride_tokens`` content tokens (Qwen at the
+    512/384 defaults returns ~510 after dropping special tokens, leaving
+    ample slack); otherwise the wrapper would stop before the text ends.
+    """
+
+    def __init__(
+        self,
+        inner: TokenStateEncoder,
+        *,
+        window_tokens: int = 512,
+        stride_tokens: int = 384,
+    ) -> None:
+        """Wrap ``inner``, whose truncation limit should equal ``window_tokens``."""
+        if stride_tokens < 1 or stride_tokens >= window_tokens:
+            raise ContractError(
+                f"WindowedTokenEncoder: need 1 <= stride_tokens < window_tokens, "
+                f"got stride_tokens={stride_tokens}, window_tokens={window_tokens}"
+            )
+        self._inner = inner
+        self._window_tokens = window_tokens
+        self._stride_tokens = stride_tokens
+        self._fingerprint = fingerprint(
+            {
+                "encoder": "windowed-token",
+                "inner": inner.fingerprint,
+                "window_tokens": window_tokens,
+                "stride_tokens": stride_tokens,
+                "version": 1,
+            }
+        )
+
+    @property
+    def hidden_size(self) -> int:
+        """Hidden width of the wrapped encoder."""
+        return self._inner.hidden_size
+
+    @property
+    def fingerprint(self) -> str:
+        """Deterministic identity: inner fingerprint plus windowing parameters."""
+        return self._fingerprint
+
+    def encode_tokens(self, text: str) -> TokenStates:
+        """Encode ``text`` window by window; offsets index the full ``text``.
+
+        Loop invariant: ``covered_end`` is the character position up to which
+        tokens have been emitted; a window keeps exactly the tokens whose
+        global end exceeds it (the earliest — deepest-inside — window wins,
+        per the class docstring). The loop stops once a window returns at
+        most ``stride_tokens`` tokens: an untruncated window covered the
+        remaining text, and a truncated one always returns more (see the
+        inner-encoder requirement above).
+        """
+        offsets: list[tuple[int, int]] = []
+        rows: list[NDArray[np.float32]] = []
+        position = 0
+        covered_end = 0
+        while True:
+            window = self._inner.encode_tokens(text[position:])
+            for index, (start, end) in enumerate(window.token_offsets):
+                global_start, global_end = start + position, end + position
+                if global_end <= covered_end:
+                    continue
+                offsets.append((global_start, global_end))
+                rows.append(np.asarray(window.states[index], dtype=np.float32))
+                covered_end = max(covered_end, global_end)
+            if window.n_tokens <= self._stride_tokens:
+                break
+            advance = window.token_offsets[self._stride_tokens][0]
+            if advance <= 0:
+                raise ContractError(
+                    "WindowedTokenEncoder: inner encoder cannot advance past character "
+                    f"{position} (token {self._stride_tokens} starts at the window origin); "
+                    "the inner tokenization is degenerate"
+                )
+            position += advance
+        if not rows:
+            return TokenStates((), np.zeros((0, self.hidden_size), dtype=np.float32))
+        return TokenStates(tuple(offsets), np.stack(rows))
 
 
 def span_representation_dim(hidden_size: int, hand_feature_count: int) -> int:

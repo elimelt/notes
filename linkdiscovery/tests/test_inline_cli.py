@@ -393,3 +393,57 @@ class TestTrainAndProposeLearned:
         assert "learned engine" in capsys.readouterr().out
         assert (report_dir / "inline-proposals.jsonl").is_file()
         assert (report_dir / "inline-proposals.md").is_file()
+
+    def test_explicit_hashing_token_encoder_is_the_default_path(
+        self, workspace: Workspace, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        alice, _ = write_synthetic_labels(workspace, tmp_path)
+        heads_dir = tmp_path / "heads-hashing"
+        code = main(
+            [
+                "inline",
+                "train",
+                "--config",
+                str(workspace.config),
+                "--artifacts",
+                str(workspace.artifacts),
+                "--sample",
+                str(workspace.sample),
+                "--labels",
+                str(alice),
+                "--out",
+                str(heads_dir),
+                "--epochs",
+                "1",
+                "--token-encoder",
+                "hashing",
+            ]
+        )
+        assert code == 0
+        out = capsys.readouterr().out
+        assert "token encoder    hashing" in out or "hashing" in out
+        assert (heads_dir / "metadata.json").is_file()
+
+    def test_unknown_token_encoder_is_usage_error(
+        self, workspace: Workspace, tmp_path: Path
+    ) -> None:
+        with pytest.raises(SystemExit) as excinfo:
+            main(
+                [
+                    "inline",
+                    "train",
+                    "--config",
+                    str(workspace.config),
+                    "--artifacts",
+                    str(workspace.artifacts),
+                    "--sample",
+                    str(workspace.sample),
+                    "--labels",
+                    str(tmp_path / "missing.jsonl"),
+                    "--out",
+                    str(tmp_path / "heads"),
+                    "--token-encoder",
+                    "bert",
+                ]
+            )
+        assert excinfo.value.code == 2

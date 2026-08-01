@@ -17,6 +17,8 @@ from typing import Any
 import pytest
 
 from linkdiscovery import PipelineConfig, config_from_dict
+from linkdiscovery.artifacts.cache import ArtifactCache
+from linkdiscovery.artifacts.store import ArtifactStore
 from linkdiscovery.contracts import SourceDocument, Span
 from linkdiscovery.errors import ContractError
 from linkdiscovery.inline import workflow
@@ -446,6 +448,135 @@ class TestTrainAndLearned:
                 run_id="wf-learned",
                 encoder_factory=lambda: HashingTokenEncoder(32),
             )
+
+
+@pytest.fixture(scope="module")
+def result(inputs: workflow.InlineInputs, audit_dir: Path, heads_dir: Path) -> dict[str, Any]:
+    """One evaluate_inline_engines run shared by every assertion below."""
+    heads = TrainedHeads.load(heads_dir)
+    return workflow.evaluate_inline_engines(
+        inputs,
+        heads,
+        heads_dir.parent / "labels.jsonl",
+        audit_dir / "audit-sample.json",
+        selection_config=SelectionConfig(accept_threshold=TEST_THRESHOLD),
+        seed=0,
+        sweep_thresholds=(0.1, 0.3, 0.5, 0.7),
+    )
+
+
+class TestEvaluateEngines:
+    def test_split_section_is_coherent(self, result: dict[str, Any], sample: AuditSample) -> None:
+        split = result["split"]
+        assert sum(split["counts"].values()) == len(sample.items)
+        assert abs(sum(split["achieved_fractions"].values()) - 1.0) < 1e-9
+        assert split["group_count"] >= 1
+        assert 0 <= split["test_positives"] <= split["counts"]["test"]
+
+    def test_retrieval_metrics_align_across_engines(self, result: dict[str, Any]) -> None:
+        retrieval = result["retrieval"]
+        assert set(retrieval) == {"learned_retrieval", "learned_reranked", "baseline"}
+        counts = {metrics["query_count"] for metrics in retrieval.values()}
+        assert len(counts) == 1
+        for metrics in retrieval.values():
+            for key, value in metrics.items():
+                if key != "query_count":
+                    assert 0.0 <= value <= 1.0, f"{key}={value}"
+            assert metrics["recall_at_1"] <= metrics["recall_at_10"]
+
+    def test_naturalness_section_reports_both_classes(self, result: dict[str, Any]) -> None:
+        naturalness = result["naturalness"]
+        assert set(naturalness) == {
+            "n_natural",
+            "n_not_natural",
+            "mean_natural",
+            "mean_not_natural",
+            "auc",
+        }
+        assert 0.0 <= naturalness["auc"] <= 1.0
+        assert 0.0 <= naturalness["mean_natural"] <= 1.0
+
+    def test_recovery_is_matched_budget(self, result: dict[str, Any]) -> None:
+        recovery = result["recovery"]
+        budgets = [row["budget"] for row in recovery["at_budget"]]
+        assert budgets == sorted(budgets)
+        for row in recovery["at_budget"]:
+            assert 0.0 <= row["learned_fraction"] <= 1.0
+            assert 0.0 <= row["baseline_fraction"] <= 1.0
+            assert row["learned_recovered"] <= recovery["n_test_positives"]
+
+    def test_corpus_section_and_sweep(self, result: dict[str, Any]) -> None:
+        corpus = result["corpus"]
+        assert corpus["accepted_overlap_span_target"] <= min(
+            corpus["learned_accepted"], corpus["baseline_accepted"]
+        )
+        assert corpus["accepted_overlap_span_target"] <= corpus["accepted_overlap_source_target"]
+        assert len(corpus["learned_top"]) <= 10
+        for entry in corpus["learned_top"]:
+            assert set(entry) == {
+                "source",
+                "anchor",
+                "target",
+                "combined",
+                "naturalness",
+                "target_correctness",
+            }
+        learned_counts = [row["learned_accepted"] for row in corpus["threshold_sweep"]]
+        assert learned_counts == sorted(learned_counts, reverse=True)
+
+    def test_result_is_json_safe(self, result: dict[str, Any]) -> None:
+        json.dumps(result)
+
+    def test_encoder_mismatch_is_rejected(
+        self, inputs: workflow.InlineInputs, audit_dir: Path, heads_dir: Path
+    ) -> None:
+        heads = TrainedHeads.load(heads_dir)
+        with pytest.raises(ContractError, match="fingerprint"):
+            workflow.evaluate_inline_engines(
+                inputs,
+                heads,
+                heads_dir.parent / "labels.jsonl",
+                audit_dir / "audit-sample.json",
+                encoder_factory=lambda: HashingTokenEncoder(32),
+            )
+
+
+class TestTokenStateCache:
+    def test_training_reuses_cached_states_identically(
+        self,
+        inputs: workflow.InlineInputs,
+        audit_dir: Path,
+        sample: AuditSample,
+        tmp_path: Path,
+    ) -> None:
+        labels_path = tmp_path / "labels.jsonl"
+        save_audit_labels(synthetic_labels(sample), labels_path)
+        store = ArtifactStore(tmp_path / "store")
+        config = TrainConfig(epochs=0)
+
+        def train(out: str, cache: ArtifactCache | None) -> TrainedHeads:
+            return workflow.train_inline_heads(
+                inputs,
+                labels_path,
+                audit_dir / "audit-sample.json",
+                train_config=config,
+                seed=0,
+                out_dir=tmp_path / out,
+                token_state_cache=cache,
+            )
+
+        cold = ArtifactCache(store)
+        first = train("heads-cold", cold)
+        assert cold.stats().misses > 0
+        assert cold.stats().hits == 0
+
+        warm = ArtifactCache(store)
+        second = train("heads-warm", warm)
+        assert warm.stats().hits > 0
+        assert warm.stats().misses == 0
+
+        uncached = train("heads-uncached", None)
+        assert first.model_version == second.model_version == uncached.model_version
 
 
 class TestReport:

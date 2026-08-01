@@ -32,6 +32,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from linkdiscovery import __version__
+from linkdiscovery.artifacts.cache import ArtifactCache
+from linkdiscovery.artifacts.store import ArtifactStore
 from linkdiscovery.config import load_config
 from linkdiscovery.contracts.base import ArtifactHeader, utc_now_iso
 from linkdiscovery.contracts.proposals import (
@@ -59,9 +61,10 @@ from linkdiscovery.report import build_review_queue
 from linkdiscovery.report._io import atomic_write_text
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
 
     from linkdiscovery.contracts.manifests import RunManifest, StageStats
+    from linkdiscovery.inline.encode import TokenStateEncoder
     from linkdiscovery.inline.records import AuditLabel
 
 __all__ = ["build_parser", "main"]
@@ -283,6 +286,15 @@ def _add_inline_commands(
     train.add_argument("--out", required=True, type=Path, help="trained-heads output directory")
     train.add_argument("--epochs", type=int, default=30, help="training epochs (default: 30)")
     train.add_argument("--seed", type=int, default=0, help="training seed (default: 0)")
+    train.add_argument(
+        "--token-encoder",
+        choices=("hashing", "qwen"),
+        default="hashing",
+        help=(
+            "frozen token-state encoder: dependency-free hashing (default) or the "
+            "windowed Qwen model from the config's embedding pin"
+        ),
+    )
     train.set_defaults(handler=_cmd_inline_train)
 
     propose = subcommands.add_parser(
@@ -310,6 +322,15 @@ def _add_inline_commands(
     )
     propose.add_argument(
         "--max-per-note", type=int, default=None, help="override the per-note link cap"
+    )
+    propose.add_argument(
+        "--token-encoder",
+        choices=("hashing", "qwen"),
+        default="hashing",
+        help=(
+            "frozen token-state encoder for --engine learned: hashing (default) or the "
+            "windowed Qwen model from the config's embedding pin"
+        ),
     )
     propose.set_defaults(handler=_cmd_inline_propose)
 
@@ -539,6 +560,26 @@ def _inline_inputs(args: argparse.Namespace) -> workflow.InlineInputs:
     return workflow.load_inline_inputs(config, artifacts_root=args.artifacts)
 
 
+def _token_encoder_setup(
+    args: argparse.Namespace, inputs: workflow.InlineInputs
+) -> tuple[Callable[[], TokenStateEncoder] | None, ArtifactCache | None]:
+    """Resolve ``--token-encoder`` into an encoder factory and a state cache.
+
+    ``hashing`` returns ``(None, None)`` so the workflow keeps its
+    dependency-free default. ``qwen`` builds the windowed Qwen encoder from
+    the config's pinned model/revision on the best qualified device (mps
+    first, cpu fallback — the choice is printed because it is not part of
+    the fingerprint) and wires the artifact store's cache group so expensive
+    token states persist across runs.
+    """
+    if args.token_encoder != "qwen":
+        return None, None
+    encoder, device = workflow.build_qwen_token_encoder(inputs.config)
+    print(f"token encoder: windowed qwen on {device}")
+    cache = ArtifactCache(ArtifactStore(Path(args.artifacts)))
+    return (lambda: encoder), cache
+
+
 def _cmd_inline_audit_sample(args: argparse.Namespace) -> int:
     """Handle ``linkdiscovery inline audit-sample``."""
     inputs = _inline_inputs(args)
@@ -647,6 +688,7 @@ def _cmd_inline_recall_check(args: argparse.Namespace) -> int:
 def _cmd_inline_train(args: argparse.Namespace) -> int:
     """Handle ``linkdiscovery inline train``."""
     inputs = _inline_inputs(args)
+    encoder_factory, token_state_cache = _token_encoder_setup(args, inputs)
     train_config = TrainConfig(epochs=args.epochs)
     heads = workflow.train_inline_heads(
         inputs,
@@ -655,12 +697,15 @@ def _cmd_inline_train(args: argparse.Namespace) -> int:
         train_config=train_config,
         seed=args.seed,
         out_dir=args.out,
+        encoder_factory=encoder_factory,
+        token_state_cache=token_state_cache,
     )
     print(f"Trained heads saved to {args.out}")
     print()
     rows: list[tuple[str, str]] = [
         ("epochs", str(args.epochs)),
         ("seed", str(args.seed)),
+        ("token encoder", args.token_encoder),
         ("encoder", heads.encoder_fingerprint[:24] + "..."),
         ("model version", heads.model_version[:24] + "..."),
     ]
@@ -695,6 +740,7 @@ def _cmd_inline_propose(args: argparse.Namespace) -> int:
         if args.heads is None:
             raise ConfigError("inline propose: --heads is required with --engine learned")
         heads = TrainedHeads.load(args.heads)
+        encoder_factory, token_state_cache = _token_encoder_setup(args, inputs)
         proposals = workflow.propose_inline_learned(
             inputs,
             heads,
@@ -702,6 +748,8 @@ def _cmd_inline_propose(args: argparse.Namespace) -> int:
             span_config=SpanConfig(),
             selection_config=selection,
             run_id=run_id,
+            encoder_factory=encoder_factory,
+            token_state_cache=token_state_cache,
         )
     else:
         proposals = workflow.propose_inline_baseline(

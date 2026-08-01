@@ -1,6 +1,8 @@
 ---
 title: Missing-Link Discovery Pipeline
-category: Software Engineering
+aliases:
+  - software/missing-link-discovery
+category: Natural Language Processing
 tags:
   - embeddings
   - information retrieval

@@ -119,6 +119,7 @@ A request touches an API server ($S = 2$ ms CPU) and a database ($S = 8$ ms). Of
 - [[systems/performance/streaming|Streaming Data]]
 - [[ml/serving-systems/performance-modeling|performance modeling for model serving]]
 - [[systems/scheduling/0-foundations/littles-law-and-bottleneck-analysis|Little's Law and bottleneck analysis]]
+- [[ml/serving-systems/distributed-training|distributed training of LLMs]] (throughput, MFU, and goodput for training clusters)
 
 ## Sources
 

@@ -224,3 +224,4 @@ The engineering pattern that follows: mixed-consistency systems. Linearizable op
 - [[systems/distributed-systems/managing-critical-state|managing critical state]]
 - [[systems/distributed-systems/crdts|CRDTs and conflict-free replication]]
 - [[systems/databases/transactions-serializability-isolation|transactions, serializability, and isolation levels]]
+- [[ml/serving-systems/distributed-ml-runtimes|distributed ML runtime architecture]] (staleness in asynchronous parameter servers)

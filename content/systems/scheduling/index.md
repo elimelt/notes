@@ -80,6 +80,8 @@ The best route is to start with the math, then the single-resource policies, the
   - [[ml/serving-systems/parallelism|parallelism]]
   - [[ml/serving-systems/performance-modeling|performance modeling]]
   - [[ml/serving-systems/speculative-decoding|speculative decoding]]
+  - [[ml/serving-systems/distributed-training|distributed training of LLMs]]
+  - [[ml/serving-systems/distributed-ml-runtimes|distributed ML runtime architecture]]
 - Adjacent systems:
   - [[systems/networks/4-transport/TCP|TCP congestion behavior]]
   - [[systems/networks/2-direct-links/multiple-access|scheduled versus random access on links]]

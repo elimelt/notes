@@ -48,6 +48,9 @@ Isolation levels are defined by which of these interleavings they exclude. Prose
 
 **A5B, write skew.** $r_1[x] \ldots r_2[y] \ldots w_1[y] \ldots w_2[x] \ldots (c_1, c_2)$. Each transaction reads a constraint involving both items and writes the *other* item. Neither writes what the other wrote, so no write-write conflict exists, yet the combined effect can violate an invariant that each transaction individually checked. This is the anomaly snapshot isolation famously permits; the worked example is in [[systems/databases/mvcc-snapshot-isolation|MVCC and Snapshot Isolation]].
 
+> [!example] Write skew, concretely
+> Invariant: at least one of $x, y$ equals 1 (one doctor on call); initially $x = y = 1$. T1 reads $x + y = 2$ and writes $y = 0$; T2 reads $x + y = 2$ and writes $x = 0$. Both checks passed against their reads, the write sets are disjoint, both commit — and $x + y = 0$. Neither transaction alone violates the invariant; the schedule does.
+
 The paper distinguishes broad interpretations (P, the pattern *could* cause an anomaly) from strict ones (A, the anomaly actually materialized in the committed history), and shows the ANSI standard's English wording only pins down the strict readings — which is too weak. Locking implementations exclude the broad patterns.
 
 ## Isolation levels as exclusion sets
@@ -61,6 +64,23 @@ The ANSI SQL levels, defined by which phenomena they exclude ([Critique](https:/
 | Repeatable read | excluded | excluded | possible | excluded | excluded |
 | Snapshot isolation | excluded | excluded | mostly excluded | excluded | **possible** |
 | Serializable | excluded | excluded | excluded | excluded | excluded |
+
+```mermaid
+flowchart TD
+    RU["Read uncommitted<br/>permits P1, P2, P3, P4, A5A, A5B"]
+    RC["Read committed<br/>permits P2, P3, P4, A5A, A5B"]
+    RR["Repeatable read<br/>permits P3"]
+    SI["Snapshot isolation<br/>permits A5B (and rare phantoms)"]
+    SER["Serializable<br/>permits nothing"]
+
+    RU -->|exclude dirty reads P1| RC
+    RC -->|hold read locks to commit| RR
+    RC -->|snapshot reads + first-committer-wins| SI
+    RR -->|predicate/range locks| SER
+    SI -->|SSI antidependency tracking| SER
+
+    style SI fill:#f9d0d0,stroke:#c00
+```
 
 The Critique's central results: the ANSI definitions read strictly are so weak that a system could claim serializability while permitting real anomalies, and **snapshot isolation does not fit the ladder at all** — it excludes everything read committed and repeatable read exclude, plus most phantoms, yet still allows write skew, so it is neither above nor below repeatable read. Oracle shipped SI under the name "serializable" for decades, which the paper politely documents.
 

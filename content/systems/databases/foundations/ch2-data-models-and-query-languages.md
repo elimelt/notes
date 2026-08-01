@@ -35,6 +35,9 @@ The awkward translation between in-memory objects and relational tables is often
 
 Use ids to refer to related data instead of embedding it. An id never changes and is often much smaller than the data it points to.
 
+> [!tip] Why ids beat embedded values
+> An id carries no meaning to humans, which is exactly why it never needs to change. Anything human-meaningful that gets duplicated into records has to be updated everywhere it appears when it changes.
+
 One-to-many relationships are by far the most common type of relationship in databases. In SQL they are a foreign key; in a document they are an embedded array of ids.
 
 ```sql
@@ -87,6 +90,9 @@ CREATE TABLE user_groups (
 
 Many-to-many relationships are natural in SQL but awkward in document databases, since joins in document databases are weak or missing. Often the practical answer is to denormalize some of the data into the document:
 
+> [!warning] Denormalization shifts work to writes
+> Copying `group_name` into each document makes reads self-contained, but now every rename must update every document holding a copy, and the application is responsible for keeping the copies consistent.
+
 ```sql
 SELECT * FROM users
 JOIN user_groups USING (user_id)
@@ -112,6 +118,9 @@ Two older and more general models come up when relationships dominate. The netwo
 Schema-on-write is the traditional approach: define a relational schema, then only write data that conforms to it. It enforces data quality and helps performance, at the cost of flexibility. Schema-on-read skips upfront enforcement and interprets structure when data is read. It handles rapidly changing requirements well, and it copes with data written by many different applications.
 
 Choose whichever model simplifies your application code the most and matches your access patterns.
+
+> [!tip] The deciding question
+> If the data has a document-like structure (a tree of one-to-many relationships, loaded all at once), the document model fits. If many-to-many relationships dominate, the relational model handles them better, and highly interconnected data points to a graph model.
 
 ## Data locality
 

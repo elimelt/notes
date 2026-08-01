@@ -37,6 +37,9 @@ Every MVCC design answers three questions: where do old versions live, how does 
 
 **Visibility.** Versions are stamped with the transaction IDs that created and (logically) deleted them. A transaction's snapshot is defined by which transaction IDs had committed when the snapshot was taken; a version is visible if its creator committed before the snapshot and its deleter (if any) did not. Concretely in PostgreSQL, every heap tuple carries hidden columns `xmin` (creating XID) and `xmax` (deleting/updating XID, or 0), and a snapshot is the triple (oldest running XID, next XID, list of in-progress XIDs); the visibility check is a comparison of the tuple's `xmin`/`xmax` against that triple. An `UPDATE` is a delete plus insert: it sets `xmax` on the old version and writes a new tuple with fresh `xmin`, leaving both in the heap.
 
+> [!tip] The visibility rule in one sentence
+> A version is visible to a snapshot iff its creator had committed when the snapshot was taken and its deleter (if any) had not. Everything else — `xmin`/`xmax`, the in-progress XID list — is machinery for evaluating that one comparison quickly.
+
 **Reclamation.** A version is garbage once no live snapshot can see it — its deleter committed before the oldest snapshot still running. This single rule generates most operational MVCC pain, below.
 
 ## Snapshot isolation, precisely
@@ -44,6 +47,25 @@ Every MVCC design answers three questions: where do old versions live, how does 
 Under snapshot isolation, a transaction reads entirely from its start-of-transaction snapshot, and concurrent transactions may not both write the same item: the **first-committer-wins** rule (or first-updater-wins with row locks) aborts the loser of a write-write overlap. This buys a lot: dirty reads, fuzzy reads, read skew, and lost updates are all excluded, since reads are frozen in time and conflicting writes cannot both commit.
 
 What it does not buy is serializability, and the counterexample is worth internalizing. The on-call doctors case ([Kleppmann ch. 7](https://dataintensive.net/), after Cahill): a hospital requires at least one doctor on call. Alice and Bob are both on call. Each runs: read the roster (snapshot shows two on call), verify "someone else is still on", set *own* row to off-call, commit. The write sets are disjoint — Alice writes Alice's row, Bob writes Bob's — so first-committer-wins fires on nothing, both commit, and zero doctors are on call. Each transaction was correct serially; the interleaving is the **write skew** anomaly A5B from [[systems/databases/transactions-serializability-isolation|Transactions, Serializability, and Isolation Levels]]. The read of the snapshot went stale in exactly the dimension the other transaction wrote. SI also permits a subtler read-only anomaly (Fekete et al. 2004): a read-only transaction can observe a state inconsistent with any serial order of the other two.
+
+```mermaid
+sequenceDiagram
+    participant A as Alice's txn
+    participant DB as Roster (both on call)
+    participant B as Bob's txn
+
+    Note over A,B: Both snapshots taken while two doctors are on call
+    A->>DB: read roster → 2 on call, ok to leave
+    B->>DB: read roster → 2 on call, ok to leave
+    A->>DB: set alice = off call
+    B->>DB: set bob = off call
+    A-->>DB: commit (write set {alice})
+    B-->>DB: commit (write set {bob}, disjoint → no conflict)
+    Note over A,B: Committed state: zero doctors on call
+```
+
+> [!warning] Write skew: disjoint writes, broken invariant
+> First-committer-wins only fires on write-write overlap. When two transactions each read a shared invariant and write *different* rows, SI detects nothing and both commit. Each read went stale in exactly the dimension the other transaction wrote.
 
 The fix without giving up MVCC is **serializable snapshot isolation** (Cahill, Röhm, Fekete 2008): every SI anomaly requires a transaction with both an inbound and an outbound read-write antidependency (it read something a concurrent transaction wrote, and something it read was overwritten by another). Track antidependencies at runtime and abort one participant whenever that dangerous structure forms. The test is conservative — false-positive aborts happen — but never admits a real anomaly. PostgreSQL's SERIALIZABLE has been SSI since 9.1, implemented with non-blocking SIREAD predicate locks; the application contract is that any transaction may fail with a serialization error and must be retried.
 

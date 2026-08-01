@@ -31,6 +31,16 @@ Reading notes on chapter 4 of [Designing Data-Intensive Applications](https://da
 
 **Backward compatibility** means new code can read data written by old code. **Forward compatibility** means old code can read data written by new code, usually by ignoring fields it does not recognize. Backward compatibility is the easier of the two, since new code knows about the old format. Forward compatibility requires old code to tolerate additions it has never seen.
 
+```mermaid
+flowchart LR
+    subgraph BC[Backward compatibility - the easy direction]
+        OW[Written by old code] -->|read by| NR[New code]
+    end
+    subgraph FC[Forward compatibility - the hard direction]
+        NW[Written by new code] -->|read by| OR[Old code]
+    end
+```
+
 ## Formats for encoding data
 
 Programs work with at least two representations of data: in-memory data structures (objects, arrays, hash maps) and encoded bytes stored on disk or sent over the network. **Serialization** (also called encoding or marshaling) translates the in-memory form into bytes that can be stored or transmitted and reconstructed later, possibly on a different machine. **Deserialization** (decoding, unmarshaling) is the reverse.
@@ -53,6 +63,9 @@ What makes all three work well:
 
 - **Compact structure.** Data is a sequence of fields identified by schema information rather than repeated names.
 - **Schema evolution.** New fields can be added if they get a fresh tag number and are optional or have a default value. Old code ignores unknown fields; new code fills defaults for missing ones. Fields can be removed or renamed only if their tag numbers are never reused.
+
+> [!warning] Tag numbers are forever
+> In protobuf and Thrift, a removed field's tag number can **never be reused**. Old data encoded with that tag still exists, and a new field wearing the same tag would be silently misinterpreted as the old one.
 
 ### Avro's writer and reader schemas
 
@@ -77,6 +90,9 @@ In every mode, one process encodes and another decodes. The modes differ in who 
 ### Through databases
 
 The writer encodes; every later reader decodes. Multiple processes running different code versions will access the same database at the same time, so both backward and forward compatibility are needed. One subtle trap is preservation of unknown fields: old code that reads a record, updates one field, and writes it back can silently drop fields added by newer code unless the application handles this. Data outlives code, so any value written at any time in the past may still need to be read.
+
+> [!warning] The read-modify-write trap
+> Forward compatibility at decode time is not enough. Old code that decodes a record, changes one field, and re-encodes it will **drop every field it did not recognize** unless unknown fields are explicitly carried through.
 
 ### Dumping to files and archival storage
 

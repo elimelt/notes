@@ -40,6 +40,16 @@ Most replicated data systems follow one of single-leader, multi-leader, or leade
 
 Leader-based replication (historically called master-slave, also active/passive) is the simplest form. One node is the leader and the rest are followers. The leader handles all writes and propagates the changes to the followers, which serve reads. If the leader dies, a follower is promoted.
 
+```mermaid
+flowchart TD
+    C1[Client] -->|writes| L[Leader]
+    L -->|replication log| F1[Follower 1]
+    L -->|replication log| F2[Follower 2]
+    C1 -->|reads| L
+    C2[Client] -->|reads| F1
+    C3[Client] -->|reads| F2
+```
+
 Many relational databases use this setup, as do some non-relational databases and non-database systems like the distributed message brokers Kafka and RabbitMQ.
 
 ## Synchronous versus asynchronous replication
@@ -50,9 +60,36 @@ In practice, enabling synchronous replication usually means **semi-synchronous r
 
 Leader-based replication is often fully **asynchronous**: the leader confirms writes without waiting for any follower. The leader keeps accepting writes even when followers are down, but followers can fall arbitrarily behind, which is called **replication lag**. Durability is weakened too: if the leader fails and an out-of-date follower is promoted, writes that were confirmed but never replicated are lost.
 
+Replication lag is visible to clients. A client that writes to the leader and then reads from a lagging follower can fail to see its own write:
+
+```mermaid
+sequenceDiagram
+    participant U as Client
+    participant L as Leader
+    participant F as Follower
+
+    U->>L: write x = 1
+    L-->>U: ok (no wait for follower)
+    U->>F: read x
+    F-->>U: x = 0 (stale)
+    L->>F: replicate x = 1
+    Note over F: follower catches up too late
+```
+
+> [!warning] Asynchronous means confirmed is not durable
+> A write the leader confirmed exists on **one machine** until replication catches up. Promote a lagging follower after a leader crash and those confirmed writes are gone.
+
 ### Chain replication
 
 Preventing that durability loss without giving up throughput is an active research area. [Chain replication](https://www.cs.cornell.edu/home/rvr/papers/OSDI04.pdf) is a variant of synchronous replication in which nodes form a chain: writes enter at the head, pass node to node down the chain, and are acknowledged from the tail once every node has them. Every acknowledged write therefore exists on all replicas. The protocol handles failures by having a coordination service cut the failed node out of the chain, after which writes resume.
+
+```mermaid
+flowchart LR
+    C[Client] -->|write| H[Head]
+    H --> M[Middle]
+    M --> T[Tail]
+    T -->|ack| C
+```
 
 ## Setting up new followers
 
@@ -84,6 +121,9 @@ Common failure modes:
 - With asynchronous replication, the new leader may lack writes the old leader confirmed. Some systems discard those writes, which sacrifices durability.
 - Two nodes can both believe they are the leader, called **split brain**. If both accept writes, conflicting data is hard or impossible to reconcile. Systems try to detect this and shut one node down, and have to be careful not to shut down both.
 - The failure-detection timeout is a trade-off. Too short causes unnecessary failovers under load spikes; too long stretches the outage.
+
+> [!warning] Split brain
+> An old leader that comes back after failover may still believe it is the leader. If both nodes accept writes, the divergent histories may be impossible to reconcile. This is why many teams prefer to perform failover manually.
 
 ## Implementation of replication logs
 

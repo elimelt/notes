@@ -75,6 +75,24 @@ The URL-counting pipeline as a single-node MapReduce job:
 
 The multi-node version inserts a shuffle: map output is partitioned by hash of key, each partition is written to disk sorted by key, and one reduce task processes each partition. Chaining jobs so one job's output is the next job's input is called a workflow, managed either by convention over files or by a scheduler such as Airflow.
 
+```mermaid
+flowchart LR
+    subgraph Map[Map phase]
+        S1[Input split 1] --> M1[Map task]
+        S2[Input split 2] --> M2[Map task]
+    end
+
+    subgraph Reduce[Reduce phase]
+        R1[Reduce task 1]
+        R2[Reduce task 2]
+    end
+
+    M1 & M2 -->|"shuffle: partition by hash(key), sort"| R1
+    M1 & M2 --> R2
+    R1 --> O1[Output file 1]
+    R2 --> O2[Output file 2]
+```
+
 ## Joins in MapReduce
 
 ### Reduce-side joins
@@ -118,9 +136,15 @@ reduce_group(user_id, values):
 
 Skew breaks the symmetry. If one user has a disproportionate share of events, the reducer handling that user becomes the straggler that delays the whole job. Skew-handling join algorithms exist and are implemented in tools like Pig and Hive.
 
+> [!warning] Hot keys make stragglers
+> The shuffle sends **every** record for a key to a single reducer. One celebrity user's events can make that reducer run long after all others finish, and the job is only done when its slowest reducer is.
+
 ### Map-side joins
 
 The joins above run in the reducer. A **map-side join** performs the join in the mapper, which avoids the shuffle entirely, and works when the inputs are already laid out conveniently.
+
+> [!tip] Map-side joins are a bet on input layout
+> Skipping the shuffle only works because assumptions about the inputs (one dataset fits in memory, or both are partitioned and sorted the same way) replace it. Those assumptions become part of the job's contract with whatever produced the inputs.
 
 A **broadcast hash join** handles joining a large dataset with a small one: load the small dataset into an in-memory hash table on every mapper. Pig calls this a replicated join, Hive a MapJoin. A small dataset that does not fit in memory can sit in a disk index instead, where frequent lookups stay warm in the page cache.
 

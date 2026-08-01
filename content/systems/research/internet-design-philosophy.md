@@ -65,6 +65,9 @@ The same hiding causes problems. Applications can't use hints from the lower lev
 
 Move connection state to the endpoints for survivability. The state shares fate with the endpoint that cares about it, so if a network element fails, the endpoints still hold everything needed to reestablish the connection. This is the [[systems/research/end-to-end-arguments-in-sys-design|end-to-end argument]] applied to network resilience.
 
+> [!tip] Fate sharing in one line
+> Keep connection state at the endpoint that cares about it, so a failure can only destroy state belonging to the party that failed.
+
 ## Strengths and weaknesses
 
 The datagram is a simple idea that scales and distributes naturally, and the strongest evidence for the design is that it works at internet scale. On the other side, the narrow IP interface hurts innovation at the IP level, and hiding lower layers can hurt efficiency.

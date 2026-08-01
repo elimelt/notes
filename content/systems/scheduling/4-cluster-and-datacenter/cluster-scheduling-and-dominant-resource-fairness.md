@@ -107,6 +107,9 @@ After two A tasks and one B task:
 
 So the next fair allocation should go to B.
 
+> [!example] One more grant re-equalizes
+> Give B its second task: B then holds (2 CPU, 6 GB), dominant share $\max(2/12, 6/12) = 1/2$ — level with A's $1/2$ again. Progressive filling is exactly this loop: always grant the next task to the user with the lowest dominant share, so the shares ratchet upward together until some resource runs out.
+
 ## The Canonical Allocation, Traced
 
 The [DRF paper's](https://www.usenix.org/system/files/conference/nsdi11/nsdi11-ghodsi.pdf) running example, executed as progressive filling — repeatedly grant a task to the user with the *lowest* dominant share (script run in the repo venv, this trace verbatim). Cluster (9 CPU, 18 GB); user A's tasks need (1 CPU, 4 GB) — memory-dominant; user B's need (3 CPU, 1 GB) — CPU-dominant:

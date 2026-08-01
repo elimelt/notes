@@ -51,6 +51,9 @@ The derivation is one line — the parallel part shrinks by $N$, the serial part
 
 A 95%-parallel program never exceeds 20x, and at 64 cores it has already burned three quarters of its budget on the serial 5%. Historical footnote: [Amdahl's 1967 paper](https://dl.acm.org/doi/10.1145/1465482.1465560) contains no formula — it is a two-and-a-half-page argument against parallel machines, estimating that data-management housekeeping consumed ~40% of executed instructions and would not parallelize. The algebra was formalized by later commentators.
 
+> [!warning] The ceiling is set entirely by the serial fraction
+> No processor count escapes $S(\infty) = 1/(1-p)$: a 5% serial share caps speedup at 20x forever. The approach is slow, too — at $N = p/(1-p)$ processors (19 for $p = 0.95$) speedup is exactly *half* the ceiling, so the last factor of 2 costs unboundedly many cores. Hardware added past that point competes with the far cheaper option of shrinking $1-p$ itself.
+
 **Reading the serial fraction honestly.** $1-p$ is not "lines of code outside the parallel loop." It is everything whose cost fails to shrink with $N$: lock acquisition and barriers, load imbalance (the barrier waits for the slowest worker), the fork/join and result-merge phases, and — critically on multicore — shared memory bandwidth. A saturated memory bus behaves exactly like serial work: for a bandwidth-bound kernel, speedup caps at (aggregate bandwidth) / (single-core bandwidth demand) no matter how many cores exist. When a measured curve flattens earlier than the code's visible structure suggests, the effective serial fraction is telling you about one of these hidden components, and fitting $1/((1-p)+p/N)$ to the measurements recovers it.
 
 ## Gustafson's law

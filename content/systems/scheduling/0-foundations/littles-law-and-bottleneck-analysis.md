@@ -164,6 +164,16 @@ $$
 
 The CPU side is the bottleneck. Speeding up the RPC pool changes little until CPU demand drops.
 
+```mermaid
+flowchart LR
+    IN[Arriving requests] --> CPU[CPU stage: demand 3 ms, max 333 req/s]
+    CPU --> RPC[RPC pool: 4 workers at 6 ms each, max 667 req/s]
+    RPC --> OUT[Complete]
+    style IN fill:#e3f2fd
+    style CPU fill:#f9d0d0,stroke:#c00
+    style RPC fill:#e8f5e9
+```
+
 ## Why Queueing Starts Late and Then Gets Ugly Fast
 
 Operational laws tell you where the cliff is. Queueing models tell you how the cliff looks. In many systems the shape is:

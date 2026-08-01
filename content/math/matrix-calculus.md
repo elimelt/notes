@@ -40,6 +40,9 @@ $$
 
 Row $i$ is the transposed gradient of output $f_i$. For a scalar loss $L: \mathbb{R}^n \to \mathbb{R}$, the Jacobian is a row vector, and the gradient $\nabla L \in \mathbb{R}^n$ is its transpose, a column the same shape as $x$. The shape-matching rule does most of the error catching: a gradient always has the shape of the thing you differentiate with respect to, so $\partial L/\partial W$ has the shape of $W$. The Hessian $\nabla^2 L \in \mathbb{R}^{n \times n}$ is the Jacobian of the gradient, symmetric when $L$ is twice continuously differentiable.
 
+> [!warning] Layout conventions differ by a transpose
+> There are two incompatible conventions in the literature. Numerator layout (used here and in Parr and Howard) makes $\partial(Ax)/\partial x = A$; denominator layout (common in statistics texts and parts of the Matrix Cookbook) makes it $A^T$, transposing every identity. Mixing sources without checking their convention is the classic way to end up with a chain rule that multiplies in the wrong order or a gradient that is secretly a row vector. Two defenses: fix one convention per derivation, and lean on the shape rule, $\partial L/\partial W$ must have the shape of $W$, since a shape mismatch exposes a convention mix-up immediately.
+
 ## Core identities
 
 Each identity below can be checked by writing out components; sources are [Parr and Howard](https://explained.ai/matrix-calculus/index.html), the [UW matrix calculus notes](https://atmos.washington.edu/~dennis/MatrixCalculus.pdf), and the [Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf).

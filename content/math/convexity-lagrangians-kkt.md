@@ -61,6 +61,19 @@ $$
 
 For any feasible $x$ and any $\lambda \succeq 0$, the penalty terms are nonpositive, so $L(x, \lambda, \nu) \le f_0(x)$, and therefore $g(\lambda, \nu) \le p^\star$, the primal optimum. Every dual point is a lower bound; this is weak duality, and it holds with no convexity at all (B&V §5.1.3). Maximizing the bound gives the dual problem, always concave regardless of the primal, with optimum $d^\star \le p^\star$. The gap $p^\star - d^\star$ closes for convex problems under mild conditions: Slater's condition, existence of a strictly feasible point with $f_i(x) < 0$, guarantees strong duality $d^\star = p^\star$ (B&V §5.2.3).
 
+```mermaid
+flowchart TD
+    P["Primal problem: minimize f0 over the feasible set"] --> L["Lagrangian: replace constraints with prices lambda, nu"]
+    L --> G["Dual function: minimize the Lagrangian over x"]
+    G --> D["Dual problem: maximize the lower bound"]
+    D -- "always" --> W["Weak duality: dual optimum below primal optimum"]
+    D -- "convex plus Slater" --> S["Strong duality: dual optimum equals primal optimum"]
+    style P fill:#e3f2fd
+    style D fill:#e3f2fd
+    style W fill:#f9d0d0
+    style S fill:#e8f5e9
+```
+
 Boyd's interpretation in [EE364a lecture 9](https://see.stanford.edu/materials/lsocoee364a/transcripts/ConvexOptimizationI-Lecture09.html): the optimal $\lambda_i^\star$ are shadow prices. If constraint $i$ is relaxed from $f_i(x) \le 0$ to $f_i(x) \le u_i$, the optimal value moves at rate $-\lambda_i^\star$ in $u_i$ (B&V §5.6.3). A large multiplier marks a constraint the objective is straining against; a zero multiplier marks one you could delete.
 
 ## KKT conditions
@@ -75,6 +88,16 @@ For differentiable problems, the Karush-Kuhn-Tucker conditions bundle everything
 When strong duality holds, any primal-dual optimal pair satisfies KKT (necessity). For convex problems, any point satisfying KKT is optimal (sufficiency), so with Slater's condition, KKT exactly characterizes the solution (B&V §5.5.3).
 
 Complementary slackness is the reading key: either a constraint is inactive and its price is zero, or it binds and may carry a positive price. Stationarity says the objective gradient is a nonnegative combination of active constraint gradients, geometrically, at the optimum there is no feasible descent direction, because every way downhill exits the feasible set.
+
+> [!abstract] KKT as a checklist
+> To verify a candidate pair $(x, \lambda, \nu)$, check four things:
+>
+> 1. $x$ is feasible: $f_i(x) \le 0$ and $h_j(x) = 0$.
+> 2. Prices are legal: $\lambda_i \ge 0$.
+> 3. Every product $\lambda_i f_i(x) = 0$: inactive constraints carry zero price.
+> 4. The Lagrangian gradient in $x$ vanishes: $\nabla f_0 + \sum_i \lambda_i \nabla f_i + \sum_j \nu_j \nabla h_j = 0$.
+>
+> For a convex problem satisfying Slater's condition, passing all four is a proof of optimality, not just a necessary condition. The practical solve pattern, as in water-filling below: case-split on which constraints are active, use slackness to zero out multipliers, and solve stationarity in each case.
 
 ## Worked example: water-filling
 

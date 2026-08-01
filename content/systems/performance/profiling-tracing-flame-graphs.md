@@ -43,6 +43,9 @@ A flame graph renders a set of sampled stacks so that visual area equals time ([
 - The **x-axis is alphabetical, not time**. Identical stacks merge regardless of when they occurred; left-to-right order means nothing.
 - The **top edge** is what was actually executing on-CPU when samples fired. Everything below is ancestry explaining why.
 
+> [!tip] Width is time share, not call order
+> A frame's width is the fraction of samples it appears in — inclusive time for it and everything it called. Left-to-right position is alphabetical and means nothing temporal, so resist reading a flame graph as a timeline. Scan the *top edge* for wide plateaus (code burning CPU itself), then read downward only to learn how execution got there.
+
 Reading one correctly means resisting the widest-box instinct. A wide frame near the bottom (`main`, an event loop) is just ancestry. The actionable signal is a wide *plateau along the top edge* — a function burning CPU itself — or a wide frame whose children fan out into many narrow flames, meaning its descendants collectively dominate and the fix is at the parent's call rate, not in any child. Gregg's origin story is the cautionary tale: a MySQL CPU regression where `perf report`'s top entry was a status command at ~3% of samples; the flame graph made it obvious the real cost sat under `JOIN::exec`, and the eventual fix recovered 40% CPU. The interactive SVGs support click-to-zoom and search with cumulative-percentage readout, which replaces squinting.
 
 Variants worth knowing: **differential** flame graphs (color = change versus a baseline profile, for regression hunts), **off-CPU** flame graphs (sample or trace *blocked* time instead of running time — the complement that catches I/O, lock waits, and scheduler delay), and icicle (inverted) layout for merging from leaves instead of roots.

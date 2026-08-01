@@ -77,6 +77,9 @@ Take $S = 1$ ms.
 
 The service time did not change. The queue did.
 
+> [!warning] Utilization prices latency nonlinearly
+> With $S = 1$ ms, moving from 50% to 90% busy quintuples response time, and 90% to 99% multiplies it by ten again — the work never changed, only the queue. Average-utilization dashboards hide this: the same 0.9 average reached smoothly or in bursts produces very different tails.
+
 ## Deterministic Service Is Kinder
 
 M/M/1 is analytically convenient and operationally pessimistic because exponential service is highly variable. If service time is constant instead, the queue is M/D/1, and the mean waiting time is lower.

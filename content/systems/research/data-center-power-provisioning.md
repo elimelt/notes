@@ -46,6 +46,9 @@ The authors ran a 6-month study of power usage across large-scale workloads at G
 
 Workload diversity across a datacenter, plus the variability between peak and average power per workload, means aggregate peak power is far below the sum of individual peaks. That headroom can be exploited safely as long as a power capping mechanism exists to throttle machines in the rare case the aggregate approaches the budget. Capping converts a hard provisioning problem into a soft enforcement problem, which lets operators deploy more aggressively with minimal risk.
 
+> [!warning] Oversubscription needs the safety net
+> Packing extra machines into the provisioning gap is only safe with power capping in place. Without a throttle for the rare case that aggregate draw approaches the budget, the same headroom becomes an outage risk.
+
 The evaluation covers both well-tuned applications and messier realistic workloads, which makes the deployment estimates more credible than a study of a single benchmark would be.
 
 ## Assumptions and limits

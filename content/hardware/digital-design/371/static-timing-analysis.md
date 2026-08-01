@@ -52,6 +52,27 @@ So there are two constraints to keep in mind:
 
 When reasoning about combinational delay between registers, the hold constraint cares about the fastest possible path and the setup constraint cares about the slowest. So for hold time you find the shortest path through the circuit, and for setup time you find the longest.
 
+The canonical path runs from a launching register through combinational logic to a capturing register, with both registers on the same clock:
+
+```mermaid
+flowchart LR
+    clk["clk"] --> r1
+    clk --> r2
+    r1["Launch register"] -- "t_co after edge" --> cl["Combinational logic, delay t_comb"]
+    cl --> r2["Capture register"]
+
+    style r1 fill:#e3f2fd,stroke:#1565c0
+    style r2 fill:#e3f2fd,stroke:#1565c0
+    style cl fill:#e8f5e9,stroke:#2e7d32
+```
+
+> [!abstract] Register-to-register timing inequalities
+> The capture register's input changes $t_{co} + t_{comb}$ after the clock edge. Substituting that into the window above gives one inequality per constraint:
+>
+> $$t_{co} + t_{comb,max} \leq T_{clk} - t_s \qquad \text{(setup, longest path)}$$
+>
+> $$t_{co} + t_{comb,min} \geq t_h \qquad \text{(hold, shortest path)}$$
+
 A typical exam problem gives you $t_{co}$, $t_{h}$, $t_{s}$, and $T_{clk}$ and asks for the range of tolerable delays for a component on a path between two registers, or for how late an input signal can change after the clock edge. The method is the same either way. Identify the longest and shortest paths through the circuit that involve your component or connect the two registers, then write out the two inequalities above and solve for the unknown delay.
 
 ## In practice

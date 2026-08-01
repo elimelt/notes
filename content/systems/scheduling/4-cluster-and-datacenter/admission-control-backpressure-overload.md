@@ -88,6 +88,21 @@ The most instructive overload pathology is the one that persists after its trigg
 - **Cold caches**: a cache restart sends the full miss load at a backend provisioned only for the miss *rate* at steady state; the backend saturates, misses stay slow, the cache never refills. The trigger (restart) is long gone; the sustaining loop (empty cache -> overload -> empty cache) remains.
 - **Slow-start death spirals**: a recovering server gets the full load balancer share while its caches are cold, saturates, gets marked unhealthy, restarts — the loop in [[systems/distributed-systems/load-balancing|load balancing]] terms.
 
+```mermaid
+flowchart TD
+    V[Vulnerable: high but stable load] -->|transient trigger: spike, outage, cache flush| O[Overloaded: backlog grows]
+    O --> L[Latency exceeds client timeouts]
+    L --> R[Retries multiply offered load]
+    R --> O
+    O -.->|shed below sustaining threshold, cap retries, warm caches| D[Queue drains, loop broken]
+    D --> V
+    style V fill:#e3f2fd
+    style O fill:#f9d0d0,stroke:#c00
+    style L fill:#f9d0d0,stroke:#c00
+    style R fill:#f9d0d0,stroke:#c00
+    style D fill:#e8f5e9,stroke:#2e7d32
+```
+
 The design consequence: recovery requires *breaking the loop*, not removing the trigger — shed to below the sustaining threshold, disable retries, warm caches before admitting traffic. And the prevention tools are exactly the ones above: retry budgets cap the storm's gain below 1; bounded queues keep timeout-breeding latency from forming; admission control holds the vulnerable region's utilization margin. Overload management is cheap insurance against a failure class that capacity planning alone cannot prevent, because the sustaining loop's demand is endogenous.
 
 ## Where this lands in real systems

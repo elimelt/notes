@@ -90,6 +90,9 @@ Review sheet for the SystemVerilog assumed going into EE 271/CSE 371. It stays t
   - Flip-flops are edge-triggered (synchronous)
 - Beware of inadvertent latches from incomplete assignments
 
+> [!warning] Accidental latch inference
+> If any path through a combinational always block leaves an output unassigned, the synthesizer must hold its old value, and it does that by inferring a latch. Assign every output on every path, add a `default` to case statements, or set default values at the top of the block. Using `always_comb` instead of `always @(*)` helps because tools warn when a block declared combinational infers storage.
+
 ## Case statements
 
 - Create combinational logic inside always blocks

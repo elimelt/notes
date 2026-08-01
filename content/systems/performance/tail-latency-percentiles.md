@@ -54,6 +54,24 @@ $$
 
 Their canonical numbers: a server with 10 ms 99th percentile fans out to 100 servers, and $1 - 0.99^{100} = 63\%$ of requests wait longer than 10 ms — the single-server p99 has become the fleet's *median*. In a measured Google service, a leaf p99 of 10 ms became 140 ms at the root after fan-out, and half of all requests spent their time waiting on the slowest 5% of leaves.
 
+```mermaid
+flowchart TD
+    R[Root: fan out to 100 leaves, wait for all] --> L1[Leaf 1: fast]
+    R --> L2[Leaf 2: fast]
+    R --> LD[Leaves 3 to 99: fast]
+    R --> LS[One leaf in its slowest 1%]
+    L1 --> J[Join: response ready when the last leaf answers]
+    L2 --> J
+    LD --> J
+    LS --> J
+    style R fill:#e3f2fd
+    style LS fill:#f9d0d0,stroke:#c00
+    style J fill:#f9d0d0,stroke:#c00
+```
+
+> [!warning] Fan-out amplifies the tail into the median
+> With 100 leaves each slow only 1% of the time, $1 - 0.99^{100} = 63\%$ of root requests are slow — a per-server p99 event happens to *most* requests. Engineering the root's p99 therefore means engineering each leaf's p99.99: the tail you must control is two orders of magnitude deeper than the traffic you serve.
+
 The effect reproduces in ten lines (repo venv, same lognormal population; a request's latency is the max over $k$ independent draws):
 
 ```python

@@ -89,6 +89,9 @@ $$
 
 The capacitor's impedance shrinks as frequency grows, which matches "passes AC, blocks DC" above. The inductor's impedance grows with frequency, matching "passes DC, blocks AC".
 
+> [!tip] Sanity check at the frequency extremes
+> As $\omega \to 0$, $Z_{cap} \to \infty$ (open circuit) and $Z_{ind} \to 0$ (short circuit). As $\omega \to \infty$ the roles flip. Evaluating a derived transfer function at these two limits catches most algebra mistakes before you plot anything.
+
 ## Phasors
 
 A phasor is a complex number that represents the amplitude and phase of a sinusoidal signal. Since impedances obey Ohm's law with phasors, the differential equations from $I_C = C\,dV/dt$ and $V_L = L\,dI/dt$ turn into algebra, and series and parallel combination rules carry over from resistors.

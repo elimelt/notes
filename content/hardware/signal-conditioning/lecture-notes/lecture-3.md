@@ -64,6 +64,9 @@ The current through each resistor can differ, but the total current between the 
 
 $$I_t = \frac{V_t}{R_t} = V_t\left(\frac{1}{R_1} + \frac{1}{R_2} + \ldots + \frac{1}{R_n}\right) = \frac{V_t}{R_1} + \frac{V_t}{R_2} + \ldots + \frac{V_t}{R_n} = I_1 + I_2 + \ldots + I_n$$
 
+> [!tip] Parallel shortcuts
+> For two resistors the reciprocal formula reduces to $R_t = \frac{R_1 R_2}{R_1 + R_2}$, and $n$ equal resistors $R$ in parallel give $R/n$. Either way, the combined resistance always comes out smaller than the smallest branch, since each added branch opens another path for current.
+
 ## Related
 
 - [[hardware/signal-conditioning/lecture-notes/lecture-4|Power Dissipation in a Resistor]]

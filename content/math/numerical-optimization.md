@@ -91,6 +91,18 @@ Weight decay in Adam has a subtlety worth knowing. Adding $\frac{\lambda}{2}\lVe
 
 Learning-rate schedules (step decay, cosine, warmup) are heuristics layered on top. Warmup interacts specifically with Adam: early in training $\hat{v}$ is estimated from few samples, so the first steps can be badly scaled, and ramping $\alpha$ up over the first few thousand steps is the standard mitigation.
 
+> [!abstract] What is proved vs. what is practiced
+> On strongly convex quadratics with condition number $\kappa$:
+>
+> | Method | Iterations to converge | Status |
+> |---|---|---|
+> | Gradient descent, optimal step | $O(\kappa)$, factor $\frac{\kappa-1}{\kappa+1}$ per step | theorem |
+> | Heavy-ball momentum, optimal $\mu$ | $O(\sqrt{\kappa})$ | theorem (Polyak 1964) |
+> | SGD, Robbins-Monro steps | converges in probability | theorem |
+> | Adam / AdamW, constant $\alpha$ | trains well with defaults | heuristic |
+>
+> The theorems live on quadratics; their transfer to deep nets is empirical. But the $O(\kappa)$ vs. $O(\sqrt{\kappa})$ gap is real and large, the measured comparison below shows six orders of magnitude at $\kappa = 100$, and it is the reason momentum in some form is in every practical optimizer.
+
 ## A measured comparison
 
 The claims about conditioning and momentum are checkable on the quadratic where the theory is exact. $J(\theta) = \frac{1}{2}\theta^T \mathrm{diag}(1, 100)\,\theta$, so $\kappa = 100$:

@@ -47,6 +47,9 @@ The working set model $W(t, T)$ defines a process's memory needs as the set of p
 
 The model turns into a control mechanism through admission control on the multiprogramming level. The OS refuses to activate a program whose working set would not fit in available memory. Feedback control on that admission decision prevents thrashing outright, because memory never gets committed past what the active working sets demand. The same coping strategy applies whenever working sets grow too large: queue up requests and control admission.
 
+> [!tip] The thrashing fix in one line
+> Never activate a program whose working set does not fit in available memory. $W(t, T)$ is what makes "fit" a measurable condition.
+
 ## Assumptions and limits
 
 The original model fixes $T$, which makes it behave like an LRU cache of a fixed window, and no single window suits all workloads. Some workloads also break the model's shape entirely, like a job that reads a massive file sequentially and never revisits a page.

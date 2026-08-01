@@ -60,6 +60,9 @@ $$I = \frac{V - V_2}{R_1} = \frac{120 - 109}{1} = 11\,\text{A}$$
 
 $$P_1 = I^2 R_1 = 11^2 \times 1 = 121\,\text{W}$$
 
+> [!warning] The divider formula assumes no load
+> $V_2 = V \cdot \frac{R_2}{R_1 + R_2}$ holds only while nothing draws current from the node between $R_1$ and $R_2$. A load attached there sits in parallel with $R_2$, which lowers the effective resistance and pulls the output voltage down. Recompute with $R_2$ replaced by $R_2 \parallel R_{load}$.
+
 ## Ideal sources
 
 A voltage source produces a *constant* voltage regardless of the current drawn, which is an idealistic assumption. A current source delivers *constant* current to a circuit, with the voltage across it determined by the load resistance (impedance).

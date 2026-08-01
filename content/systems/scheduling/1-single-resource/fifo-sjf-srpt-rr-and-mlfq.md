@@ -129,6 +129,19 @@ Idea:
 
 This approximates "short and interactive jobs first" without oracle knowledge of runtime.
 
+```mermaid
+flowchart TD
+    NEW[New job] --> Q0[Level 0: highest priority, shortest quantum]
+    Q0 -->|used full quantum| Q1[Level 1: medium priority]
+    Q1 -->|used full quantum| Q2[Level 2: lowest priority, longest quantum]
+    Q0 -->|blocked early: stays interactive| Q0
+    Q1 -->|periodic boost| Q0
+    Q2 -->|periodic boost| Q0
+    style NEW fill:#e3f2fd
+    style Q0 fill:#e8f5e9
+    style Q2 fill:#f9d0d0,stroke:#c00
+```
+
 ```python
 for level in priority_levels:
     if level.ready:
@@ -176,6 +189,20 @@ mean completion time:
 $$
 \frac{1+5+13}{3} \approx 6.33
 $$
+
+```mermaid
+gantt
+    dateFormat X
+    axisFormat %s
+    section FIFO
+    J1 size 8 :0, 8
+    J2 size 4 :8, 12
+    J3 size 1 :crit, 12, 13
+    section SJF
+    J3 size 1 :0, 1
+    J2 size 4 :1, 5
+    J1 size 8 :5, 13
+```
 
 RR with $q=1$ is fairer in start time but worse than SJF in mean completion time because the size-1 job keeps revisiting the queue instead of just finishing immediately.
 

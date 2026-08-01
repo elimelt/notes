@@ -38,9 +38,24 @@ Platt argues the fast-moving fields move fast because they apply the scientific 
 2. **Devise a crucial experiment.** Design an experiment that can unambiguously distinguish between the hypotheses, or at least eliminate some of them.
 3. **Carry out the experiment.** Run it and analyze the results.
 
+```mermaid
+flowchart TD
+    H[Devise alternative hypotheses]
+    E[Devise a crucial experiment that can eliminate some of them]
+    R[Carry out the experiment for a clean result]
+    X[Exclude the hypotheses the result rules out]
+    H --> E
+    E --> R
+    R --> X
+    X -->|recycle on what survives| H
+    style H fill:#e3f2fd,stroke:#1565c0
+    style X fill:#f9d0d0,stroke:#c00
+```
+
 Strong inference means running this loop at every vertex of the logical tree of inquiry, systematically. Platt suggests keeping a notebook explicitly for it, and paying particular attention to the hypothesis generation step. The paper spends much of its length on historical examples of the method working in practice, plus a detailed breakdown of applying it.
 
-The two questions worth asking constantly: "How would we know this hypothesis is wrong?" and "What hypothesis does this experiment disprove?"
+> [!quote] The two questions worth asking constantly
+> "How would we know this hypothesis is wrong?" and "What hypothesis does this experiment disprove?"
 
 ## Why it works
 

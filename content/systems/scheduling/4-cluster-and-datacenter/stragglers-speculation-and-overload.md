@@ -69,6 +69,19 @@ It is dangerous when:
 
 Online services use the same idea at request latency. Send the request to one replica; if no response within a delay threshold — typically the ~95th-percentile latency — send a copy to a second replica and take the first answer. Thresholding is what makes it cheap: by construction only ~5% of requests hedge, and those are exactly the ones already in the tail. [The Tail at Scale's](https://research.google/pubs/the-tail-at-scale/) benchmark: reading 1,000 keys across 100 BigTable servers, hedging after a 10 ms wait cut p99.9 from **1,800 ms to 74 ms** for ~2% extra requests.
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as Replica A
+    participant B as Replica B
+
+    C->>A: request
+    Note over C,A: no reply within p95 threshold
+    C->>B: hedged copy (about 5% of requests)
+    B-->>C: first answer wins
+    C->>A: cancel
+```
+
 The distributional shape reproduces in a few lines (repo venv, lognormal population, hedge fires above the p95 at 5.19, second draw independent):
 
 | | p95 | p99 | p99.9 | extra load |

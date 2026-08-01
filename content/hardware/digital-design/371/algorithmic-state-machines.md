@@ -100,6 +100,26 @@ An ASM diagram is a graphical representation of an algorithmic state machine. It
 - **Conditional output boxes**: Rounded boxes containing Mealy-type outputs, which depend on the current state and input conditions. A conditional output box must hang off a decision box.
 - **ASM block**: A single state box grouped with all the decision and conditional output boxes that belong to that state. ASM blocks must not overlap, and a block must not contain an internal feedback loop (shrink the block until the loop goes outside it). All changes in an ASM block happen in a single clock cycle, **particularly at state exit** rather than entrance. That exit-time convention matters when you trace register updates.
 
+One ASM block, with a state box feeding a decision box and a conditional output box hanging off the taken branch:
+
+```mermaid
+flowchart TD
+    subgraph blk["ASM block for S0"]
+        s0["State box S0 with Moore outputs"] --> d{"input x"}
+        d -- "1" --> c(["Conditional output box with Mealy outputs"])
+    end
+    d -- "0" --> s1["State box S1"]
+    c --> s2["State box S2"]
+
+    style s0 fill:#e3f2fd,stroke:#1565c0
+    style c fill:#e8f5e9,stroke:#2e7d32
+```
+
+The Moore outputs in the state box hold for the whole cycle spent in S0. The Mealy outputs in the conditional output box assert only when `x = 1` while in S0. Everything inside the subgraph executes in one clock cycle.
+
+> [!warning] Register updates land at state exit
+> An RTL operation written in an ASM block, say $r \leftarrow r + 1$, does not change $r$ during that state. The datapath computes $r + 1$ over the cycle and the register captures it on the clock edge that exits the block, so any decision box in the same block still sees the old value of $r$.
+
 ## ASMD design procedure
 
 Given some sequential algorithm:

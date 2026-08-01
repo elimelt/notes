@@ -43,6 +43,9 @@ A practical approach is NTP-style synchronization: query a set of time servers a
 
 Huygens achieves clock skew under about 50 ns 99% of the time. That sounds excellent, and it is fine when time is only a hint. It is still not good enough for correctness. At Google's scale, a billion RPCs per second with a 1% chance of exceeding the 50 ns bound means about 10 million RPCs every second whose timestamps you cannot trust to that precision. Ordering by physical timestamp will be wrong often enough to matter.
 
+> [!danger] Physical clocks cannot order events at scale
+> Even with state-of-the-art synchronization achieving ~50ns skew, at 1 billion RPCs/sec the 1% tail means ~10 million misordered events per second. Physical timestamps are useful hints but unsafe for correctness.
+
 ## Virtual clocks
 
 Since physical time cannot be trusted, the goal shifts. Design the system so the ordering of events that can run concurrently does not matter, and the ordering of events that must be sequential is enforced on every possible execution.
@@ -71,6 +74,28 @@ Events $a$ and $b$ are concurrent if neither happens before the other. This is e
 
 This guarantees that if $a$ happens before $b$ then $T(a) < T(b)$. The converse fails: $T(a) < T(b)$ does not imply $a$ happened before $b$, since two concurrent events can get any pair of timestamps.
 
+> [!tip] Logical clocks vs vector clocks
+> Logical clocks give you "if $a \to b$ then $T(a) < T(b)$" but **not** the reverse. Two concurrent events can have any timestamp ordering. Vector clocks give both directions: $T(a) < T(b) \iff a \to b$. This lets you detect concurrency, which logical clocks cannot.
+
+```mermaid
+sequenceDiagram
+    participant P1 as Process 1
+    participant P2 as Process 2
+    participant P3 as Process 3
+
+    Note over P1: T=1 (local event)
+    P1->>P2: msg (T=1)
+    Note over P2: T=max(0,1)+1=2
+    Note over P2: T=3 (local event)
+    P2->>P3: msg (T=3)
+    Note over P3: T=max(0,3)+1=4
+    P3->>P1: msg (T=4)
+    Note over P1: T=max(1,4)+1=5
+    Note over P1: T=6 (local event)
+    P1->>P2: msg (T=6)
+    Note over P2: T=max(3,6)+1=7
+```
+
 ### Vector clocks
 
 Vector clocks strengthen this to a two-way correspondence: $T(a) < T(b) \leftrightarrow a$ happens before $b$, where a vector $T(a)$ is less than $T(b)$ when every entry of $T(a)$ is $\le$ the corresponding entry of $T(b)$ and at least one entry is strictly smaller. If neither vector is less than the other, the events are concurrent. This precise representation of causal relationships is what eventually consistent and causally consistent systems build on, and the same idea shows up in Git and in Amazon's [[systems/distributed-systems/dynamo-db|Dynamo]].
@@ -82,6 +107,31 @@ The algorithm, for a system of $n$ nodes, keeps a vector `C` of length $n$ per n
 - On receipt of a message with vector `C_m` at node `i`:
   - increment `C[i]`
   - for each `j != i`, set `C[j] = max(C[j], C_m[j])`
+
+```mermaid
+sequenceDiagram
+    participant N1 as Node 1
+    participant N2 as Node 2
+    participant N3 as Node 3
+
+    Note over N1: [1,0,0]
+    Note over N2: [0,0,0]
+    Note over N3: [0,0,0]
+
+    N1->>N2: msg with [1,0,0]
+    Note over N2: [1,1,0]
+
+    Note over N3: [0,0,1] (local)
+
+    N2->>N3: msg with [1,1,0]
+    Note over N3: [1,1,2]
+
+    N3->>N1: msg with [1,1,2]
+    Note over N1: [2,1,2]
+
+    Note over N1,N3: Compare [2,1,2] and [1,1,0]:<br/>N1's event happened after N2's send
+    Note over N1,N3: Compare [1,1,0] and [0,0,1]:<br/>Neither ≤ other → concurrent
+```
 
 ```java
 public class VectorClock {

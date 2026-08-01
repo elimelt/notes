@@ -82,6 +82,23 @@ Bigtable also depends on *Chubby*, Google's distributed lock service, which runs
 
 The implementation has three components: a client library, one master, and many tablet servers. The master assigns tablets to tablet servers, drives garbage collection, and handles schema changes. Tablet servers each manage a set of tablets, typically 10 to 1000 per server, and can be added or removed to match load. Clients rarely talk to the master since data moves through tablet servers directly, so the master stays lightly loaded and does not bottleneck the system.
 
+```mermaid
+flowchart TD
+    C[Client library] -->|reads and writes| TS1[Tablet server]
+    C -->|reads and writes| TS2[Tablet server]
+    C -.->|rarely| M[Master]
+    M -->|tablet load requests| TS1
+    M -->|tablet load requests| TS2
+    M <-->|master lock, servers directory| CH[Chubby]
+    TS1 <-->|exclusive server lock| CH
+    TS2 <-->|exclusive server lock| CH
+    TS1 -->|commit logs and SSTables| G[(GFS)]
+    TS2 -->|commit logs and SSTables| G
+```
+
+> [!tip] The master is off the data path
+> Clients find tablets through the location hierarchy and talk to tablet servers directly, so the master handles only assignment, schema changes, and garbage collection. That is why a single master does not bottleneck a cluster of thousands of servers.
+
 A Bigtable *cluster* stores a number of tables, each made of tablets, each tablet holding all data for a row range. A table starts as one tablet and splits automatically as it grows, targeting 100 to 200 MB per tablet by default.
 
 ### Tablet location
@@ -109,11 +126,26 @@ The set of tablets changes only on table creation or deletion, and on tablet spl
 
 The master kills itself if its Chubby session expires. This does not change tablet assignments, since assignment state is reconstructed by the next master.
 
+> [!warning] Chubby availability bounds Bigtable availability
+> Liveness runs entirely through Chubby: a tablet server kills itself if its lock file disappears, and the master kills itself if its Chubby session expires. If Chubby is unreachable for an extended period, Bigtable can neither track servers nor elect a master.
+
 ### Tablet serving
 
 Persistent tablet state lives in GFS. Updates go to a *commit log*; the most recent committed updates sit in an in-memory *memtable*, and older updates sit in a sequence of SSTables.
 
 A read is checked for authorization against a Chubby file, then answered from a merged view over the memtable and the tablet's SSTables. A write is checked for authorization, appended to the commit log using group commit, then inserted into the memtable.
+
+```mermaid
+flowchart LR
+    W[Write] --> AC1[Auth check via Chubby]
+    AC1 --> CL[Commit log in GFS, group commit]
+    CL --> MT[Memtable, in memory]
+    MT -->|minor compaction| SST[SSTables in GFS]
+    R[Read] --> AC2[Auth check via Chubby]
+    AC2 --> MV[Merged view]
+    MT --> MV
+    SST --> MV
+```
 
 ### Compactions
 
@@ -154,6 +186,9 @@ SSTables are immutable, so reads need no synchronization and concurrent row acce
 ## Evidence
 
 The paper's evaluation shows scaling that is real but far from linear. Going from 1 to 500 tablet servers increased random-read-from-disk throughput by only about 100x, because each random read transfers a 64KB block over the network and the network link saturates. Random reads from memory scaled better, around 300x over the same range.
+
+> [!warning] Scaling is sublinear
+> Do not assume aggregate throughput grows linearly with server count. Random reads from disk gained only ~100x from 1 to 500 servers because each read moves a 64KB block over a network link that saturates.
 
 ## Applications
 

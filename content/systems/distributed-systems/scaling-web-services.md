@@ -36,7 +36,17 @@ Load balancers sit between the tiers. They need to map any given client to a fro
 
 Add a set of cache servers to absorb queries before they reach storage. Frontend servers send each query to the cache first, fall back to the storage servers on a miss, and then write the retrieved data into the cache. This pattern is look-aside caching.
 
-Caching can be arranged other ways. The cache could fetch values from storage itself, transparently to the frontend, so misses never need handling in application code. That tightly couples the cache and the storage server, usually forcing all queries through the caching layer and making the two services harder to design independently.
+```mermaid
+flowchart TD
+    C[Clients] --> LB["Load balancer<br/>hash(clientIP, port)"]
+    LB --> FE["Stateless frontend pool"]
+    FE -->|1: query cache first| CACHE[Cache tier]
+    FE -->|2: on miss, fall back| STORE[("Storage tier<br/>primary/backup or Paxos")]
+    FE -->|3: write retrieved data| CACHE
+```
+
+> [!warning] Coupling the cache to storage
+> Caching can be arranged other ways. The cache could fetch values from storage itself, transparently to the frontend, so misses never need handling in application code. That tightly couples the cache and the storage server, usually forcing all queries through the caching layer and making the two services harder to design independently.
 
 The cache tier has to scale too. Cache servers need not be 1:1 with frontend or storage servers, but they should handle the load of the frontends they serve, and they should answer with lower latency than the storage layer they shield.
 

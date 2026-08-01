@@ -50,11 +50,29 @@ Leases let the server get back to a single copy whether caches are up or not. Th
 
 The optimized path uses callbacks, avoiding the wait when nothing has failed. On receiving an update for a cached value, the server sends an invalidation to every node holding a copy, waits for all of them to respond or for their leases to expire, then applies the update.
 
-Either way, the requirement is the same. For linearizability there must be exactly one copy of the data while it is being updated.
+```mermaid
+sequenceDiagram
+    participant W as Writer
+    participant S as Server
+    participant C1 as Cache 1
+    participant C2 as Cache 2 (failed)
+
+    W->>S: Update x
+    S->>C1: Invalidate x
+    S->>C2: Invalidate x
+    C1-->>S: Ack
+    Note over S,C2: No response, server waits for C2's lease to expire
+    Note over S: Single copy remains, apply update
+    S-->>W: OK
+```
+
+> [!info] The one-copy rule
+> Either way, the requirement is the same. For linearizability there must be exactly one copy of the data while it is being updated.
 
 ### Lease timeouts
 
-Using one timeout value for all leases means less state at the server and a shorter worst-case wait to reclaim every lease. Using varied timeouts staggers renewal requests, so the server doesn't get slammed by every cache renewing at once. Pick based on which failure mode you fear more.
+> [!tip] Choosing lease timeouts
+> Using one timeout value for all leases means less state at the server and a shorter worst-case wait to reclaim every lease. Using varied timeouts staggers renewal requests, so the server doesn't get slammed by every cache renewing at once. Pick based on which failure mode you fear more.
 
 ## Weaknesses of linearizable caches
 

@@ -30,6 +30,9 @@ The multi-writer replication problem, solved by algebra instead of coordination.
 
 Plain eventual consistency promises only that replicas *eventually* agree, saying nothing about how — systems that reconcile by rollback or "last writer wins by wall clock" satisfy it while losing data. [Shapiro et al. (2011)](https://hal.inria.fr/inria-00609399/document) define the stronger target CRDTs actually meet, **strong eventual consistency (SEC)**: eventual delivery (every update reaches every replica), plus **strong convergence** — any two replicas that have delivered the *same set* of updates are in the *same state*, immediately and deterministically, regardless of delivery order. No consensus round, no rollback, no conflict cases surfaced to the caller. The [Isabelle/HOL verification work](https://martin.kleppmann.com/papers/crdtops.pdf) machine-checked this property for the main constructions below, which matters because hand proofs in this area have a history of missing interleavings.
 
+> [!tip] The whole trick in one line
+> Same *set* of updates $\Rightarrow$ same state, no matter the delivery order. Merge being a semilattice join (commutative, associative, idempotent) is what makes reordering, duplication, and repetition all harmless — convergence comes from algebra, not coordination.
+
 ## The two recipes
 
 **State-based (CvRDT).** Replicas exchange whole states and merge. Convergence is guaranteed if the states form a **join-semilattice**: a partial order $\le$ in which any two states have a least upper bound $\sqcup$, updates only move state upward ($s \le s'$, inflation), and merge *is* the join. Join is by definition commutative, associative, and idempotent — so merges tolerate reordering, duplication, and repetition for free, and gossip over any eventually-connected topology converges. The proof obligation collapses to "is my merge a join and are my updates inflations."
@@ -40,11 +43,39 @@ Plain eventual consistency promises only that replicas *eventually* agree, sayin
 
 **G-Counter.** A map from replica ID to a local count; increment bumps your own entry, value is the sum, merge is element-wise max. Element-wise max over vectors of naturals is a textbook join; increments are inflations. **PN-Counter**: two G-Counters, increments minus decrements.
 
+```mermaid
+flowchart TD
+    A["Replica A<br/>{A:2, B:1, C:0}<br/>value = 3"] -->|"exchange states"| M["merge = element-wise max<br/>{A:2, B:1, C:1}<br/>value = 4"]
+    B["Replica B<br/>{A:1, B:1, C:1}<br/>value = 3"] -->|"exchange states"| M
+    M -->|"merge again (duplicate)"| M2["{A:2, B:1, C:1}<br/>unchanged - idempotent"]
+```
+
 **G-Set / 2P-Set.** A grow-only set (merge = union) is the simplest CRDT. Adding removal naively gives the 2P-Set — an add set plus a tombstone set, remove wins over add — with the sharp edge that a removed element can *never* be re-added, because the tombstone is permanent.
 
 **LWW-Register.** A (value, timestamp) pair; merge keeps the higher timestamp. Cheap and popular (Cassandra cells work this way), and honest about its trade: concurrent writes are resolved by silently discarding one, ties need a deterministic tiebreaker or replicas diverge, and skewed clocks can make an older write win. LWW is the CRDT that admits it loses data.
 
-**OR-Set (add-wins set).** The construction that fixes 2P-Set. Every add attaches a globally unique tag; remove deletes only the *(element, tag)* pairs the removing replica has *observed*. A concurrent re-add carries a fresh tag the remove never saw, so the element survives: adds win against concurrent removes, and elements are freely re-addable. Verified end to end in the repo venv with a ~25-line implementation:
+**OR-Set (add-wins set).** The construction that fixes 2P-Set. Every add attaches a globally unique tag; remove deletes only the *(element, tag)* pairs the removing replica has *observed*. A concurrent re-add carries a fresh tag the remove never saw, so the element survives: adds win against concurrent removes, and elements are freely re-addable.
+
+```mermaid
+sequenceDiagram
+    participant A as Replica A
+    participant B as Replica B
+
+    A->>A: add("x") with tag (A,1)
+    A->>B: merge state
+    Note over A,B: both hold {("x", (A,1))}
+
+    par concurrent
+        A->>A: remove("x") - tombstones observed tag (A,1)
+        B->>B: add("x") with fresh tag (B,1)
+    end
+
+    A->>B: merge state
+    B->>A: merge state
+    Note over A,B: tag (A,1) removed, tag (B,1) survives<br/>both converge to {"x"} - add wins
+```
+
+Verified end to end in the repo venv with a ~25-line implementation:
 
 ```python
 class ORSet:
@@ -82,6 +113,9 @@ Correct-looking designs fail subtly here. [Kleppmann et al.](https://martin.klep
 - **Metadata growth.** Unique tags, per-replica counter entries, and tombstones accumulate; a long-lived OR-Set or text document can carry metadata dwarfing the payload. Compacting tombstones safely requires knowing every replica has seen the removal — which is a coordination problem again, just moved to garbage collection.
 - **No global invariants.** SEC guarantees replicas agree, not that the agreed state satisfies cross-object constraints. "Balance never negative," "username unique," "at most one winner" all require forbidding one of two concurrent operations, which is precisely the coordination CRDTs decline to do. Systems needing such invariants need consensus on that path — [[systems/distributed-systems/paxos-intro|Paxos]]-class machinery — and CRDTs everywhere else.
 - **Resolution is policy, chosen in advance.** Add-wins, remove-wins, LWW: each is a fixed answer to "what should concurrent conflicting intent mean," baked into the type. The Dynamo shopping cart's deleted-item-reappears anomaly is the add-wins policy under another name; picking the CRDT *is* picking the anomaly you can live with.
+
+> [!warning] Convergence is not correctness
+> SEC guarantees replicas *agree*, not that the agreed state satisfies any cross-object invariant. "Balance never negative" or "username unique" require forbidding one of two concurrent operations — exactly the coordination CRDTs decline to do. Keep consensus on those paths and use CRDTs everywhere else.
 
 In production terms: Riak ships counters/sets/maps as datatypes, Redis Enterprise's active-active geo-replication runs on CRDTs, and Automerge/Yjs carry the collaborative-editing ecosystem. On the [[systems/distributed-systems/consistency|consistency]] spectrum, CRDT systems sit at causal-plus-convergent: below linearizability, above ad-hoc eventual consistency, with availability and partition tolerance as the entire point.
 

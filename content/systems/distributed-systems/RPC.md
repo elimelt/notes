@@ -48,6 +48,28 @@ The compiler defines the protocol for this call. Nothing gets lost between calle
 
 Client and server stubs are usually auto-generated from a procedure spec, as with Google's [Protocol Buffers](https://protobuf.dev).
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant CS as Client Stub
+    participant N as Network
+    participant SS as Server Stub
+    participant S as Server
+
+    C->>CS: call(args)
+    CS->>CS: marshal args
+    CS->>N: send request
+    N->>SS: deliver request
+    SS->>SS: unmarshal args
+    SS->>S: execute(args)
+    S-->>SS: result
+    SS->>SS: marshal result
+    SS->>N: send response
+    N->>CS: deliver response
+    CS->>CS: unmarshal result
+    CS-->>C: return result
+```
+
 ## RPC vs. local procedure call
 
 ### Binding
@@ -102,6 +124,13 @@ Unique request IDs handle the duplication. Include a message ID in each request 
 
 ### RPC semantics
 
+> [!abstract]- RPC semantics at a glance
+> | Semantic | Guarantee on success | Guarantee on failure | Requirements |
+> |----------|---------------------|---------------------|--------------|
+> | At-least-once | Executed ≥1 times | Unknown (0 or more) | Client retry |
+> | At-most-once | Executed exactly once | Executed 0 or 1 times | Duplicate detection |
+> | Exactly-once | Executed exactly once | Executed exactly once | Dedup + persistent state + unbounded retry |
+
 - **At least once**
     - Client resends on timeout, server executes every copy of the request that arrives.
     - If the client gets a response, it knows the server executed the request at least once. Otherwise it doesn't know whether the server executed the request at all.
@@ -118,7 +147,13 @@ The client should do a finite number of retries, eventually giving up and return
 
 This only works if the operation is **idempotent**, meaning repeated execution has the same effect as a single one. All read-only operations are idempotent. Many writes are not: incrementing a counter is not idempotent, while setting the counter to a value is.
 
+> [!tip] Idempotency is the key to surviving at-least-once
+> Design operations so repeating them is harmless. Use absolute values (`SET counter = 5`) instead of deltas (`INCREMENT counter`). Attach client-generated unique IDs so the server can deduplicate. Structure state changes as "apply if not already applied." When idempotency holds, retries become safe and at-least-once becomes good enough.
+
 Does TCP solve this? Not really, despite being reliable. Most RPCs travel over TCP, which guarantees in-order delivery with retransmission and duplicate detection. It still cannot give exactly-once semantics. If the server crashes after processing the request and before sending the response, the client retransmits and the server executes the request again.
+
+> [!warning] TCP doesn't give you exactly-once
+> TCP guarantees reliable, in-order delivery at the transport layer, but it operates below the application. If the server crashes *after* processing a request but *before* sending the response, the TCP connection breaks. The client retries, establishing a new connection, and the server—now recovered—executes the request a second time. The duplicate happens above TCP's view.
 
 **[[systems/research/end-to-end-arguments-in-sys-design|End to end principle]]**: functionality should be implemented where it can be completely handled, rather than partially handled at each layer. Handling retries at the RPC layer rather than trusting TCP is an instance of this.
 
@@ -135,6 +170,31 @@ With multiple clients, operations like `Put(k, v)` stop being safely retryable i
 ## Two generals problem
 
 A thought experiment that shows the hard limit on agreement over a lossy channel. Two generals coordinate an attack on a city. A valley separates them, and they communicate only by messenger. The city can capture the messenger, and the sender never learns whether the message arrived. The generals can only attack together, so they must agree on a time.
+
+```mermaid
+sequenceDiagram
+    participant G1 as General A
+    participant V as Valley (lossy)
+    participant G2 as General B
+
+    Note over G1,G2: Both must attack together or lose
+
+    G1->>V: "Attack at dawn"
+    V--xG2: ❌ captured!
+    Note over G1: Did B receive it?
+
+    G1->>V: "Attack at dawn" (retry)
+    V->>G2: ✓ delivered
+    G2->>V: "ACK: I'll attack"
+    V--xG1: ❌ captured!
+    Note over G2: Did A receive my ACK?
+
+    G2->>V: "ACK: I'll attack" (retry)
+    V->>G1: ✓ delivered
+    G1->>V: "ACK-ACK: confirmed"
+    V--xG2: ❌ captured!
+    Note over G1,G2: No finite confirmations suffice—<br/>the last sender can never be certain
+```
 
 The problem is that after sending any message, the sender cannot know it was delivered. No number of confirmation round trips helps, because the last message sent could always have been the one that dropped. This limit shows up all over distributed systems, for example in the commit problem that [[systems/distributed-systems/two-phase-commit|two-phase commit]] addresses.
 

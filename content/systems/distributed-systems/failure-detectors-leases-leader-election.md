@@ -37,13 +37,50 @@ In an asynchronous system — unbounded message delay, unbounded processing paus
 
 Practical detectors approximate $\Diamond S$ with heartbeats and timeouts. The tuning tension is fundamental: short timeouts detect fast but suspect wrongly under load spikes (and a wrongly-suspected leader triggers a gratuitous election, which causes more load — a classic metastable loop); long timeouts are calm but leave the system leaderless longer after real crashes. Two refinements are standard. The **phi-accrual detector** (Cassandra, Akka) replaces the binary verdict with a suspicion level computed from the observed heartbeat-interval distribution, letting the timeout adapt to current network behavior. **SWIM**-style protocols decouple detection (randomized pings, with indirect probes through third parties before declaring suspicion) from dissemination (gossip), keeping per-node load constant as the cluster grows.
 
+```mermaid
+stateDiagram-v2
+    [*] --> Alive
+    Alive --> Suspected: missed heartbeats / phi crosses threshold
+    Suspected --> Alive: heartbeat or indirect ack arrives
+    Suspected --> Declared_Dead: suspicion confirmed, disseminate
+    Declared_Dead --> [*]
+```
+
+Suspicion is a reversible state — the `Suspected -> Alive` edge is what makes wrong verdicts survivable, and everything downstream (elections, leases, fencing) exists to make traversing it cheap.
+
 ## Leases: authority with an expiry date
 
 A **lease** ([Gray and Cheriton 1989](https://dl.acm.org/doi/10.1145/74850.74870)) is a grant of authority — cache validity, lock ownership, leadership — valid for a bounded time and renewable by communication. The crucial property: expiry needs no communication. If the holder crashes or partitions, the grantor waits out the term and reassigns; a lock with a timeout is a lease. Correctness does not require synchronized clocks, only **bounded drift rate**: grantor and holder each measure the term on their own clock, and if clocks tick within (say) 1% of true rate, the grantor adds a small margin and the holder conservatively expires early. Bounded-rate assumptions are among the safest in systems practice — this is the same clock discussion as [[systems/distributed-systems/clocks|Clocks]], but leaning only on rates, not on synchronization.
 
-The trap is what the holder does at the edge. [Kleppmann's distributed-locking critique](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html): a client acquires a lease, then stalls — GC pause, VM migration, swap storm — past its expiry. The lease service correctly reassigns. The stalled client resumes *believing it holds the lease* (its check ran before the pause) and writes to shared storage: two writers, data corrupted, and no amount of timeout tuning fixes it, because the pause can exceed any timeout. The fix is the **fencing token**: the lease service issues a monotonically increasing number with each grant, every write to the protected resource carries it, and the resource rejects tokens older than the highest seen. The stale writer's token is stale; the write bounces. The same mechanism recurs as Raft's term numbers, ZooKeeper's zxid epochs, and Chubby's lock generation numbers — versioned authority, checked at the point of effect, is the universal answer to "the detector was wrong and the old leader is still moving."
+> [!warning] The stalled leaseholder
+> The trap is what the holder does at the edge. [Kleppmann's distributed-locking critique](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html): a client acquires a lease, then stalls — GC pause, VM migration, swap storm — past its expiry. The lease service correctly reassigns. The stalled client resumes *believing it holds the lease* (its check ran before the pause) and writes to shared storage: two writers, data corrupted, and no amount of timeout tuning fixes it, because the pause can exceed any timeout.
 
-This is the safety/liveness split in one sentence: **timeouts and elections provide liveness** (a dead leader is eventually replaced), while **quorums and fencing provide safety** (a falsely-suspected leader cannot do damage) — wrong suspicion may slow the system, but must never corrupt it.
+The fix is the **fencing token**: the lease service issues a monotonically increasing number with each grant, every write to the protected resource carries it, and the resource rejects tokens older than the highest seen. The stale writer's token is stale; the write bounces.
+
+```mermaid
+sequenceDiagram
+    participant C1 as Client 1
+    participant L as Lease service
+    participant S as Storage
+
+    C1->>L: Acquire lease
+    L-->>C1: Granted, token 33
+    Note over C1: GC pause exceeds lease term
+    L->>L: Lease 33 expires
+    participant C2 as Client 2
+    C2->>L: Acquire lease
+    L-->>C2: Granted, token 34
+    C2->>S: Write (token 34)
+    S-->>C2: OK
+    Note over C1: Pause ends, still believes it holds the lease
+    C1->>S: Write (token 33)
+    S--xC1: Rejected: 33 < 34
+```
+
+The same mechanism recurs as Raft's term numbers, ZooKeeper's zxid epochs, and Chubby's lock generation numbers — versioned authority, checked at the point of effect, is the universal answer to "the detector was wrong and the old leader is still moving."
+
+> [!tip] The safety/liveness split in one sentence
+> **Timeouts and elections provide liveness** (a dead leader is eventually replaced), while **quorums and fencing provide safety** (a falsely-suspected leader cannot do damage) — wrong suspicion may slow the system, but must never corrupt it.
 
 ## Leader election in practice
 

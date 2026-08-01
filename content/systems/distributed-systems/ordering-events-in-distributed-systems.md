@@ -46,6 +46,24 @@ $$
 
 Provided the clocks satisfy the clock condition below, $a \to b \implies a \Rightarrow b$, so the total order extends the partial one. The reverse implication fails, since $\Rightarrow$ also orders concurrent events.
 
+The diagram below shows three processes with local events and two messages. Every path along a process line or a message arrow gives a happened-before chain; events with no such path between them are concurrent.
+
+```mermaid
+sequenceDiagram
+    participant P1 as Process P1
+    participant P2 as Process P2
+    participant P3 as Process P3
+
+    Note over P1: a (local event)
+    P1->>P2: m1 (send = b, receive = c)
+    Note over P3: d (local event)
+    Note over P2: e (local event)
+    P2->>P3: m2 (send = f, receive = g)
+    Note over P3: h (local event)
+    Note over P1,P3: a → b → c → e → f → g → h is a happened-before chain
+    Note over P1,P3: d is concurrent with a, b, c, e, and f (no message path connects them)
+```
+
 ## Clock condition
 
 For any events $a, b$: if $a \to b$, then $C\langle a \rangle < C\langle b \rangle$.
@@ -76,6 +94,28 @@ The protocol requires active participation from every process. If any one proces
    - Its own $T_m:P_i$ *request* is ordered by $\Rightarrow$ before every other *request* in its queue.
    - $P_i$ has received a message timestamped later than $T_m$ from every other process.
 
+```mermaid
+sequenceDiagram
+    participant P1
+    participant P2
+    participant P3
+
+    Note over P1: enqueue T1:P1 request locally
+    P1->>P2: request (T1)
+    P1->>P3: request (T1)
+    Note over P2: enqueue T1:P1 request
+    Note over P3: enqueue T1:P1 request
+    P2-->>P1: reply (T2 > T1)
+    P3-->>P1: reply (T3 > T1)
+    Note over P1: T1:P1 is earliest request in queue and P1 has messages later than T1 from P2 and P3 → granted
+    Note over P1: uses the resource
+    Note over P1: dequeue T1:P1 request
+    P1->>P2: release (T4)
+    P1->>P3: release (T4)
+    Note over P2: dequeue T1:P1 request
+    Note over P3: dequeue T1:P1 request
+```
+
 ### State machine perspective
 
 The algorithm is an instance of replicated state machines. Take $C$ to be a set of commands and $S$ a set of states, with a transition function
@@ -95,6 +135,9 @@ Executing $P_i \text{ request}$ adds the request to the queue, and $P_i \text{ r
 ## Anomalous behavior of the total ordering
 
 Consider a nationwide system. A person issues request $a$ at node $A$, then phones a friend in another city who issues request $b$ at node $B$. The total ordering can place $b \Rightarrow a$ even though $a$ was issued first, because the message that establishes the real ordering (the phone call) is external to the system.
+
+> [!quote] Lamport on anomalous behavior ([Time, Clocks, §Anomalous Behavior](https://lamport.azurewebsites.net/pubs/time-clocks.pdf))
+> Paraphrasing the paper's example: in a nationwide network, a user can issue request $a$ at computer $A$, then telephone a friend in another city who issues request $b$ at computer $B$. It is quite possible for $b$ to receive a lower timestamp and be ordered before $a$, because the causal link between them, the phone call, is invisible to the system. The relevant happened-before relation is the one over *all* events in the world, not just the ones the system can see.
 
 More concretely, let $\mathscr{L}$ be the set of all relevant events in the world and $L$ the set of events inside our system, so $L \subseteq \mathscr{L}$. In the scenario above, $a \to_{\mathscr{L}} b$ but $a \nrightarrow_{L} b$. No algorithm based solely on the events in $L$, without knowledge of $\mathscr{L}$, can be guaranteed to order $a$ before $b$.
 
@@ -137,9 +180,13 @@ $$
 
 So the required synchronization tightness is set by the minimum message delay. Faster networks demand tighter clocks.
 
+> [!abstract] The punchline
+> $\dfrac{\epsilon}{1 - \kappa} \le \mu$: how tightly clocks must be synchronized ($\epsilon$) is set by the minimum interprocess message delay ($\mu$), discounted slightly by the clock rate error ($\kappa$). If information can cross the system faster than the clocks agree with each other, anomalous orderings become possible.
+
 ### Clock synchronization algorithm
 
-Clocks must only ever be adjusted forward. Setting a clock backward can violate the clock condition for events it has already timestamped.
+> [!warning] Never set a clock backward
+> Clocks must only ever be adjusted forward. Setting a clock backward can violate the clock condition for events the clock has already timestamped, since a later event could receive a smaller timestamp than an earlier one.
 
 Let $m$ be a message sent at time $t$ and received at time $t'$. Let $v_m = t' - t$ be the total delay of the message. The receiver does not know $v_m$, but it knows some lower bound $\mu_m$ on the delay. Define $\zeta_m = v_m - \mu_m$ as the unpredictable delay of the message.
 

@@ -38,6 +38,22 @@ This design combines [[systems/distributed-systems/paxos-intro|Paxos consensus]]
 
 Use Paxos to define the order of a state machine running on a set of servers. For a key-value store, split the key space into shards, assigning a set of keys to each shard. A dedicated Paxos group called the **shard master** owns the assignment of keys to shards. Each shard is then its own Paxos group running the state machine for its subset of keys.
 
+```mermaid
+flowchart TD
+    Client[Client] -->|where does key k live?| SM[Shard master<br/>Paxos group]
+    Client -->|request for key k| S2
+
+    subgraph Shards
+        S1[Shard 1<br/>Paxos group<br/>keys a–h]
+        S2[Shard 2<br/>Paxos group<br/>keys i–p]
+        S3[Shard 3<br/>Paxos group<br/>keys q–z]
+    end
+
+    SM -.assigns key ranges.-> S1
+    SM -.-> S2
+    SM -.-> S3
+```
+
 This spreads request load across multiple servers and distributes the data along with it.
 
 ## Edge caching
@@ -58,11 +74,17 @@ The system can be modeled as a Markov chain with states $0, 1, 2, \ldots$, where
 
 In practice load is bursty rather than Poisson, so services get overprovisioned to absorb spikes. The variance result explains why that overprovisioning is worth paying for. Run a server near full utilization and its tail latency becomes enormous.
 
+> [!warning] Utilization drives tail latency
+> As $U \to 1$, both the mean response time and its standard deviation blow up as $\frac{S}{1-U}$. High utilization looks efficient on a dashboard, but it is exactly where tail latency comes from, which is why services deliberately overprovision.
+
 ## Key popularity
 
 The **Zipf distribution** says the $k$th most popular item has frequency proportional to $\frac{1}{k^c}$ for some $1 \le c \le 2$. It roughly fits a lot of observed workloads, including web page hits, file access frequency, file sizes, word frequency, and friend counts on social networks. The consequence for load balancing is that hashing keys uniformly across servers still leaves whichever server holds the hottest keys overloaded.
 
 The **power of two choices** copes with popular keys: hash each key to two (or in general $k$) candidate servers, and forward each request to whichever candidate is under less load. [Mitzenmacher's analysis](https://www.eecs.harvard.edu/~michaelm/postscripts/tpds2001.pdf) shows that moving from one choice to two gives an exponential improvement in the maximum load, while more than two choices adds little.
+
+> [!tip] Two choices is the sweet spot
+> Going from one random choice to two gives an *exponential* improvement in maximum load; going from two to three or more gives only a constant-factor gain. Almost all of the benefit comes from having any choice at all.
 
 ## Related notes
 

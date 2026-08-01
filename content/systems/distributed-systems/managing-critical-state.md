@@ -46,7 +46,8 @@ Some datastores instead offer BASE semantics (Basically Available, Soft state, E
 
 Split brain is when multiple nodes believe they are the leader. A naive defense is a heartbeat mechanism: the leader sends heartbeats to followers, and if two nodes both act as leader, each eventually notices the other's heartbeats and issues a **STONITH** (Shoot The Other Node In The Head) command to kill it.
 
-Networks are asynchronous and unreliable, so heartbeats can be delayed until both nodes issue STONITH at each other and both go down. Worse, detecting split brain reliably is hard in the first place, because a network partition and a node failure look identical from the outside, and nodes can be partitioned from each other in arbitrary ways.
+> [!warning] STONITH standoff
+> Networks are asynchronous and unreliable, so heartbeats can be delayed until both nodes issue STONITH at each other and both go down. Worse, detecting split brain reliably is hard in the first place, because a network partition and a node failure look identical from the outside, and nodes can be partitioned from each other in arbitrary ways.
 
 ### Faulty group membership algorithms
 
@@ -69,6 +70,26 @@ Paxos ensures that a quorum (majority) of nodes agrees on a value. It does not g
 Paxos runs as a sequence of proposals, each of which a quorum may accept or reject. Each proposal carries a `sequenceNumber` that must be unique across all proposals and monotonically increasing, giving proposals a strict order.
 
 In the first phase, a proposer sends a `sequenceNumber` to the acceptors. Each acceptor that has not seen a higher `sequenceNumber` responds with a `promise` to reject any proposal numbered lower. Otherwise it rejects the proposal. Once the proposer holds promises from a majority, it commits by sending a `commit` message carrying a value.
+
+```mermaid
+sequenceDiagram
+    participant P as Proposer
+    participant A1 as Acceptor 1
+    participant A2 as Acceptor 2
+    participant A3 as Acceptor 3
+
+    Note over P,A3: Phase 1: Prepare
+    P->>A1: Prepare(n)
+    P->>A2: Prepare(n)
+    P->>A3: Prepare(n)
+    A1-->>P: Promise(n)
+    A2-->>P: Promise(n)
+    Note over A3: Already promised n' > n, rejects
+
+    Note over P,A2: Phase 2: Commit (majority promised)
+    P->>A1: Commit(n, value)
+    P->>A2: Commit(n, value)
+```
 
 Quorum overlap is what makes this safe. Any two majorities share at least one node, so a committed proposal has a unique committed value. Acceptors must persist a log of the proposals they have seen and accepted, so that they honor their promises even after a crash.
 
@@ -122,7 +143,8 @@ Performance depends on:
   - **Quorum type**: quorum size and geographic placement
   - **Optimizations**: sharding, pipelining, batching
 
-One common pitfall with single-leader replication is that a client's perceived latency is proportional to the round-trip time between the client and the leader, wherever the leader happens to be.
+> [!warning] Leader locality
+> One common pitfall with single-leader replication is that a client's perceived latency is proportional to the round-trip time between the client and the leader, wherever the leader happens to be.
 
 ## Related notes
 

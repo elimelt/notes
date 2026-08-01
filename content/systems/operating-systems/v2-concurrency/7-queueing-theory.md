@@ -8,13 +8,19 @@ tags:
   - systems
   - performance analysis
 date: 2024-03-07
-updated: 2026-07-30
+updated: 2026-08-01
 status: evergreen
-description: Chapter notes on the queueing theory section of OSPP chapter 7. Definitions and notation, Little's Law with worked examples, and how response time behaves under uniform, bursty, and exponential arrival processes.
+description: Queueing reference built out from OSPP chapter 7. Definitions and notation, Little's Law, M/M/1 response time and queue lengths, M/D/1 and M/G/1 via Pollaczek-Khinchine, burstiness effects, and a simulation that checks every formula.
 sources:
   - title: "Operating Systems: Principles and Practice (2nd ed.), Anderson and Dahlin, chapter 7"
     url: https://ospp.cs.washington.edu/
     type: textbook
+  - title: Brewer, CS262 queueing theory notes
+    url: https://people.eecs.berkeley.edu/~brewer/cs262/queueing.pdf
+    type: lecture
+  - title: Larson and Odoni, Urban Operations Research, section 4.7 (M/G/1)
+    url: https://web.mit.edu/urban_or_book/www/book/chapter4/4.7.html
+    type: book
 ---
 
 ## Purpose
@@ -125,9 +131,92 @@ $$
 
 The shape of this curve is the practical takeaway. At low utilization, response time barely rises above $S$. As $U$ approaches 1, the denominator goes to zero and response time blows up. At $U = 0.5$ you pay 2x the service time, at $U = 0.9$ you pay 10x. This is why operators leave headroom instead of running servers near full utilization.
 
+## M/M/1 Reference Results
+
+The exponential-arrivals, exponential-service, single-server queue in Kendall notation is M/M/1 ("M" for memoryless). Writing $\rho = U = \lambda/\mu$, the state machine solves to a geometric distribution over queue states, $P(N = n) = (1-\rho)\rho^n$, and everything follows:
+
+$$
+N = \frac{\rho}{1-\rho}, \qquad
+R = \frac{S}{1-\rho}, \qquad
+Q = \frac{\rho^2}{1-\rho}, \qquad
+W = \frac{\rho S}{1-\rho},
+$$
+
+with $N = XR$ and $Q = XW$ as Little's Law cross-checks. Response time is exponentially distributed with mean $R$, so percentiles are multiples of the mean: the $q$-th percentile is $-\ln(1-q) \cdot R$, giving p50 = $0.69R$, p90 = $2.3R$, p99 = $4.6R$, p99.9 = $6.9R$. Both the mean and every percentile inherit the $1/(1-\rho)$ pole.
+
+Concrete example: $S = 10$ ms, $\lambda = 90$/s, so $\rho = 0.9$. Then $R = 100$ ms, $N = 9$ tasks in system, and p99 response time is $4.6 \times 100 = 460$ ms — a p99 46x the service time, from utilization alone, before any real-world variability is added.
+
+## Service-Time Variability: M/D/1 and M/G/1
+
+Memoryless service is a modeling convenience. The M/G/1 queue keeps Poisson arrivals but allows *any* service distribution, and has an exact mean-wait formula, Pollaczek-Khinchine ([Larson and Odoni §4.7](https://web.mit.edu/urban_or_book/www/book/chapter4/4.7.html)):
+
+$$
+W = \frac{\lambda \, \mathbb{E}[S^2]}{2(1-\rho)}
+= \frac{\rho}{1-\rho} \cdot \frac{1 + C_s^2}{2} \cdot S,
+$$
+
+where $C_s^2 = \operatorname{Var}[S]/\mathbb{E}[S]^2$. The utilization pole is unchanged; service variability enters as a clean multiplier $(1+C_s^2)/2$ on the waiting time:
+
+- **M/D/1** (deterministic service, $C_s^2 = 0$): half the M/M/1 wait. At $\rho = 0.9$, $S = 1$: $R = 1 + 0.9/(2 \cdot 0.1) = 5.5$ versus M/M/1's 10. Fixed-size work units buy a 2x latency improvement at identical load.
+- **M/M/1** ($C_s^2 = 1$): the baseline.
+- **Heavy-tailed service** ($C_s^2 \gg 1$): waits scale linearly in $C_s^2$. A bimodal workload where 5% of requests take 10 s and the rest take 0.53 s (mean 1 s, $C_s^2 = 4.26$) at $\rho = 0.9$ has $R = 24.7$ — 2.5x M/M/1 and 4.5x M/D/1 with the *same mean service time and same utilization*.
+
+The operational reading: variance is a first-class capacity cost. Splitting occasional huge requests into uniform chunks, capping request sizes, or isolating slow request classes in their own queue all reduce $\mathbb{E}[S^2]$ and buy latency without new hardware.
+
+## Checking the Formulas by Simulation
+
+A single-server FIFO queue is four lines of recurrence: a request starts when it arrives or when its predecessor departs, whichever is later. This script (run in the repo venv, 2M requests per case) checks every closed form above:
+
+```python
+import numpy as np
+rng = np.random.default_rng(0)
+
+def sim(rho, sv_fn, n=2_000_000):
+    arr = np.cumsum(rng.exponential(1/rho, n))   # Poisson arrivals, mu = 1
+    sv = sv_fn(n)
+    dep, prev = np.empty(n), 0.0
+    for i in range(n):
+        start = arr[i] if arr[i] > prev else prev
+        dep[i] = start + sv[i]
+        prev = dep[i]
+    R = dep - arr
+    return R.mean(), np.percentile(R, 99)
+
+fast = (1 - 0.05 * 10) / 0.95                    # bimodal: mean 1, cv^2 = 4.26
+bimodal = lambda n: np.where(rng.random(n) < 0.05, 10.0, fast)
+
+print(sim(0.9, lambda n: rng.exponential(1.0, n)))  # M/M/1
+print(sim(0.9, lambda n: np.full(n, 1.0)))          # M/D/1
+print(sim(0.9, bimodal))                            # M/G/1
+```
+
+Measured against predicted, all at $\rho = 0.9$, $\mathbb{E}[S] = 1$:
+
+| Model | predicted $R$ | simulated $R$ | simulated p99 |
+| --- | --- | --- | --- |
+| M/M/1 | 10.00 | 10.18 | 45.2 (predicted 46.1) |
+| M/D/1 | 5.50 | 5.55 | 23.2 |
+| M/G/1 bimodal | 24.68 | 24.71 | 120 |
+
+The Pollaczek-Khinchine prediction for the bimodal case lands within 0.2%, and the p99 column makes the tail cost visible: the heavy-tailed workload's p99 is 5x the M/D/1 queue's at identical mean load.
+
+## Burstiness Revisited
+
+The burst example earlier showed 5.5x mean response time at identical average $\lambda$. The M/G/1 lens generalizes it: variability on the *arrival* side plays the same role as variability on the service side. The standard approximation for a general-arrivals, general-service queue (G/G/1, Kingman's formula) is
+
+$$
+W \approx \frac{\rho}{1-\rho} \cdot \frac{C_a^2 + C_s^2}{2} \cdot S,
+$$
+
+with $C_a^2$ the squared coefficient of variation of interarrival times. Uniform arrivals have $C_a^2 = 0$, Poisson $C_a^2 = 1$, and bursty traffic — retry storms, thundering herds after a cache flush, synchronized cron jobs — pushes $C_a^2$ far above 1. Mean utilization does not appear in $C_a^2$ at all, which is the formula-level statement of why "the server is only 60% busy on average" and "requests time out every hour at :00" are consistent observations. Smoothing arrivals (jittered retries, staggered schedules, admission control) attacks $C_a^2$ exactly as chunking work attacks $C_s^2$.
+
+What tail-focused engineering does with these facts — percentile SLOs, fan-out amplification, hedged requests — is in [[systems/performance/tail-latency-percentiles|Tail Latency, Percentiles, and Queueing Distributions]]; scheduling-policy consequences are in [[systems/scheduling/0-foundations/queueing-models-and-tail-latency|queueing models and tail latency]].
+
 ## Related notes
 
 - [[systems/scheduling/0-foundations/littles-law-and-bottleneck-analysis|Little's Law and bottleneck analysis]]
 - [[systems/scheduling/0-foundations/queueing-models-and-tail-latency|queueing models and tail latency]]
+- [[systems/performance/latency-throughput-and-utilization|latency, throughput, and utilization]]
+- [[systems/performance/tail-latency-percentiles|tail latency, percentiles, and queueing distributions]]
 - [[systems/operating-systems/v2-concurrency/7-uniprocessor-scheduling|uniprocessor scheduling]]
 - [[systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling|multiprocessor scheduling]]

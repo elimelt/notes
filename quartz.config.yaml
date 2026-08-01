@@ -113,6 +113,9 @@ plugins:
     options:
       enableSiteMap: true
       enableRSS: true
+      # Generated tag and empty folder pages remain browsable, but do not
+      # become isolated vertices in graph and search data.
+      includeEmptyFiles: false
   - source: "@quartz-community/favicon"
     enabled: true
   - source: "@quartz-community/cname"

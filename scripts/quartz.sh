@@ -76,6 +76,7 @@ case "$command" in
     sync_site
     install_plugins
     (cd "$QUARTZ_DIR" && npx quartz build --output "$ROOT/public")
+    python3 "$ROOT/scripts/validate_graph_index.py" "$ROOT/public/static/contentIndex.json"
     publish_legacy_docs
     ;;
   serve)

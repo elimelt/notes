@@ -13,9 +13,9 @@ tags:
   - gqa
   - machine-learning
 date: 2025-05-25
-updated: 2026-07-30
+updated: 2026-08-01
 status: needs-review
-description: KV cache sizing, allocation strategies (max-length, vector-style, PagedAttention), prefix sharing, eviction tradeoffs, and FlashAttention, with worked calculations for Llama3-8B on an H100.
+description: KV cache sizing, allocation strategies (max-length, vector-style, PagedAttention), prefix sharing, eviction tradeoffs, FlashAttention/FlashAttention-2, a unified memory budget, MHA/MQA/GQA KV-cache comparison, and long-context strategies, with worked calculations for Llama3-8B on an H100.
 sources:
   - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
     type: lecture
@@ -24,6 +24,15 @@ sources:
     type: paper
   - title: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness"
     url: https://arxiv.org/abs/2205.14135
+    type: paper
+  - title: "FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning"
+    url: https://arxiv.org/abs/2307.08691
+    type: paper
+  - title: "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"
+    url: https://arxiv.org/abs/2305.13245
+    type: paper
+  - title: "SGLang: Efficient Execution of Structured Language Model Programs"
+    url: https://arxiv.org/abs/2312.07104
     type: paper
 ---
 
@@ -44,6 +53,33 @@ Worked example from lecture, Llama3-8B on an 80 GB H100 in FP16. Weights take $2
 $$1536 \times 2 \times 2 \times 8 \times 128 \times 32 \text{ bytes} = 192 \text{ MB per request (average)}$$
 
 Maximum average batch size is then $(80 - 16) / 0.1875 \approx 341$ requests. Compare this against the batch size of 333 needed to reach the compute-bound regime on the H100 (see [[ml/serving-systems/performance-modeling|Performance Modeling]]): the KV cache budget barely covers the batch the compute wants. Per token the cache costs $2 \times 2 \times 8 \times 128 \times 32 = 128$ KB, so the 64 GB budget holds about 512K tokens.
+
+## A unified memory budget
+
+The H100 example above collapses to two terms (weights, KV cache) because serving-time activations are small, but the general accounting has four terms:
+
+$$\text{GPU memory} = \text{Weights} + \text{Activations} + \text{KV cache} + \text{Framework overhead}$$
+
+Weights are fixed once a model and dtype are chosen: $2P$ bytes in FP16/BF16 for $P$ parameters, half that in INT8, a quarter in INT4. Activations during serving are transient (one forward pass's worth of intermediate tensors) and small relative to weights and KV cache, unlike training where activations dominate (see [[ml/serving-systems/parallelism|Parallelism]] for the training-side accounting, where checkpointing and tensor+sequence parallelism exist specifically because training activations are not negligible). Framework overhead covers the CUDA context, cuDNN/cuBLAS workspace, and NCCL communication buffers; it is roughly constant per process, on the order of 1-2 GB, and easy to forget when sizing a deployment against a GPU's advertised capacity.
+
+For the Llama3-8B/H100 example, the budget is 80 GB total, 16 GB weights, about 1-2 GB framework overhead, and the remainder, roughly 62-63 GB, available for KV cache. Every extra GB spent on framework overhead or on wider activation buffers (larger max sequence length staged for prefill, for example) comes directly out of the batch size the KV cache can support. This is the same tradeoff [[ml/serving-systems/parallelism|tensor and pipeline parallelism]] make explicit for training: fixed costs replicate per device, so the marginal budget for the thing that should scale (KV cache here, activations there) shrinks as fixed costs grow.
+
+## MHA, MQA, and GQA: KV-cache comparison
+
+The KV-cache formula above has a $\text{num\_kv\_heads}$ term that is independent of the number of query heads. Multi-head attention (MHA) sets $\text{num\_kv\_heads} = \text{num\_query\_heads}$, so every query head reads its own K/V projection. Multi-query attention (MQA) sets $\text{num\_kv\_heads} = 1$: every query head shares one K/V head, shrinking the cache by the head count but costing model quality. [Grouped-query attention (GQA)](https://arxiv.org/abs/2305.13245) interpolates: query heads are split into $G$ groups, each group sharing one K/V head, so $\text{num\_kv\_heads} = G$. MHA is $G = \text{num\_query\_heads}$, MQA is $G = 1$.
+
+GQA is not a from-scratch architecture choice; the paper's practical recipe is to uptrain an existing MHA checkpoint into GQA using about 5% of the original pretraining compute, mean-pooling each group's original K/V heads to initialize the shared head, which is why GQA shows up retrofitted onto model families (Llama 2 70B, Llama 3, Mistral) rather than only in models designed around it from the start.
+
+Holding head_dim = 128, 32 layers, FP16, and 32 query heads fixed, the per-token KV-cache cost scales linearly with $\text{num\_kv\_heads}$:
+
+| Attention | num_kv_heads | Bytes/token | Relative to MHA |
+| --------- | ------------ | ----------- | ---------------- |
+| MHA       | 32           | 512 KB      | 1x                |
+| GQA-8     | 8            | 128 KB      | 0.25x             |
+| GQA-4     | 4            | 64 KB       | 0.125x            |
+| MQA       | 1            | 16 KB       | 0.03x             |
+
+Llama3-8B's actual configuration (32 query heads, 8 KV heads) is GQA-8: a 4x reduction in KV-cache bytes and KV-cache bandwidth relative to full MHA at the same query-head count, which is most of why the 192 MB/request figure above is affordable at all. Multiplying out the 4x factor against the earlier batch-size arithmetic, an MHA version of the same model would only fit $(80-16)/0.75 \approx 85$ average-size requests instead of 341.
 
 ## The allocation problem
 
@@ -137,6 +173,27 @@ Subtracting $c$ prevents overflow and leaves the result unchanged, since the fac
 
 Causal masking drops in cleanly: masked positions get $-\infty$ before the softmax, contribute $e^{-\infty} = 0$ to the running sum, and blocks that are entirely masked are skipped. Grouped-query attention also fits naturally, since multiple query heads sharing one KV head means the kernel processes several query blocks against the same KV block, cutting KV cache size and KV reads by the group factor.
 
+## FlashAttention-2
+
+The original FlashAttention kernel reached only 25-40% of an A100's theoretical FLOPs/s, and the shortfall was not algorithmic, it was work partitioning: too many non-matmul FLOPs, uneven thread-block occupancy, and shared-memory traffic between warps that a matmul kernel would not pay. [FlashAttention-2](https://arxiv.org/abs/2307.08691) fixes all three without changing the memory complexity story above:
+
+- Fewer non-matmul FLOPs, by rescaling output accumulation only once per block instead of at every step, and by deferring the final division by the softmax denominator to the very end.
+- Parallelize across thread blocks over the sequence dimension in addition to batch and head, so a single long sequence still saturates the GPU even at small batch size, which matters for the long-decode workloads this note is otherwise concerned with.
+- Split the work differently within a thread block: FlashAttention-1 split K/V across warps, forcing each warp to communicate partial results through shared memory; FlashAttention-2 splits Q across warps instead and keeps K/V visible to all of them, so each warp finishes its output slice with no inter-warp communication.
+
+The result is roughly a 2x speedup over FlashAttention-1, reaching 50-73% of theoretical peak on A100, and end-to-end GPT-style training throughput of up to 225 TFLOPs/s (72% model FLOPs utilization). None of this changes the KV-cache sizing or PagedAttention story above; FlashAttention-2 is an attention-kernel improvement that composes with paged, GQA-shaped KV caches rather than replacing them.
+
+## Long-context optimization
+
+Long-context serving stresses every mechanism above simultaneously: KV cache from the sizing formula grows linearly with sequence length, so a 128K-context request costs 128x the per-token bytes of a 1K-context one, and that cost lands even before considering batch size. A few strategies, layered on top of GQA and PagedAttention rather than replacing them:
+
+- **Shrink the per-token cost.** GQA/MQA (above) cut the linear coefficient directly. Quantizing the KV cache itself (INT8 or FP8 keys/values, distinct from weight quantization in [[ml/serving-systems/quantization|Quantization]]) buys another 2-4x at the cost of some attention-score precision.
+- **Share more of the linear cost.** Prefix sharing (above) turns the shared portion of the linear cost into a one-time cost when many requests share a long common prefix, such as a large retrieved-document context reused across queries. [SGLang](https://arxiv.org/abs/2312.07104) generalizes this into RadixAttention, a radix tree over token sequences that automatically finds and reuses shared KV prefixes across arbitrary requests, not just ones an application explicitly marks as sharing a system prompt.
+- **Move some of the cache off the compute-bandwidth path.** [[ml/serving-systems/inf-llm|InfLLM]] treats distant context as external memory, retrieving only the KV blocks relevant to the current query instead of keeping the full history resident and attention-bandwidth-bound.
+- **Bound the budget explicitly.** Since KV cache scales linearly with sequence length but GPU memory does not, systems either cap the maximum context length admitted, evict/offload old entries (the recompute-vs-load tradeoff above), or accept a throughput cliff past some context length where the batch size the KV budget can support drops below what keeps the GPU compute-bound.
+
+These compose: a production long-context server typically runs GQA weights, paged KV allocation, prefix/radix sharing across requests, and an eviction or offload policy for whatever does not fit, all at once, rather than picking one.
+
 ## Related notes
 
 - [[ml/serving-systems/batching|Batching]]
@@ -144,3 +201,4 @@ Causal masking drops in cleanly: masked positions get $-\infty$ before the softm
 - [[ml/serving-systems/inf-llm|InfLLM]]
 - [[ml/serving-systems/transformers|Transformer Architecture]]
 - [[systems/research/sparsity-notes|Faster Causal Self Attention]]
+- [[ml/serving-systems/peft-and-preference-optimization|PEFT and Preference Optimization]]

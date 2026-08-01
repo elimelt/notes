@@ -118,3 +118,4 @@ A cluster of 8-GPU nodes typically runs 8-way tensor parallel inside each node, 
 - [[ml/serving-systems/memory-management|Memory Management]]
 - [[ml/serving-systems/mixture-of-experts|Mixture of Experts]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
+- [[ml/serving-systems/peft-and-preference-optimization|PEFT and Preference Optimization]]

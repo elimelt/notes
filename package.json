@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "render:notebooks": "python3 scripts/render_notebooks.py",
+    "new:notebook": "python3 scripts/new_notebook.py",
+    "execute:notebooks": "python3 scripts/execute_notebooks.py",
     "test:notebooks": "python3 -m unittest discover -s scripts/tests -p 'test_*.py'",
     "build": "bash scripts/quartz.sh build",
     "dev": "bash scripts/quartz.sh serve",

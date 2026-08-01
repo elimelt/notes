@@ -57,6 +57,17 @@ selection:
       - keep_downloaded_data_under_work_notebook_data
       - keep_large_models_datasets_and_generated_binaries_out_of_git
       - explain_the_result_in_the_parent_note_instead_of_delegating_the_argument_to_cells
+    scaffolding:
+      command: npm_run_new_notebook
+      default_template: experiment
+      templates:
+        - experiment
+        - derivation
+        - benchmark
+      embedded_companion_is_default: true
+      standalone_requires_explicit_flag: true
+      templates_are_discovered_from_notebook_templates: true
+      execution_suppresses_and_removes_warning_output: true
 
 data_and_measurement:
   prefer_real_public_data_when_the_claim_depends_on_real_workload_structure: true
@@ -82,6 +93,7 @@ publishing:
   standalone_notebook:
     notebook_page: true_or_omitted
     steps:
+      - scaffold_with_npm_run_new_notebook_and_the_applicable_template
       - put_yaml_frontmatter_in_the_first_markdown_cell
       - execute_the_notebook_in_place
       - run_npm_run_render_notebooks
@@ -90,6 +102,7 @@ publishing:
   embedded_companion_notebook:
     notebook_page: false
     steps:
+      - scaffold_with_npm_run_new_notebook_and_the_applicable_template
       - put_notebook_page_false_in_first_cell_frontmatter
       - place_the_ipynb_beside_the_existing_markdown_note
       - add_a_root_relative_ipynb_link_in_its_own_paragraph

@@ -1,0 +1,81 @@
+[project]
+name = "linkdiscovery"
+version = "0.1.0"
+description = "Missing-link discovery pipeline: data contracts, configuration, and artifact storage."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Elijah Melton" }]
+dependencies = [
+    "numpy>=1.26",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+linkdiscovery = "linkdiscovery.cli:main"
+
+[project.optional-dependencies]
+embeddings = [
+    "sentence-transformers>=3",
+    "torch",
+]
+ann = [
+    "hnswlib",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13",
+    "pytest>=8.3",
+    "ruff>=0.9",
+    "types-pyyaml>=6.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.0,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+# Ship both the core package and the Markdown host-integration package.
+module-name = ["linkdiscovery", "linkdiscovery_markdown"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "RET", # flake8-return
+    "RSE", # flake8-raise
+    "PTH", # flake8-use-pathlib
+    "PL",  # pylint
+    "RUF", # ruff-specific
+]
+
+[tool.ruff.lint.pylint]
+max-args = 7  # validation helpers take (data, field, context, default, bounds)
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "PLR2004", # magic values are fine in test assertions
+    "PLR0913", # test factories may take many keyword arguments
+]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+mypy_path = "src"
+warn_unreachable = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

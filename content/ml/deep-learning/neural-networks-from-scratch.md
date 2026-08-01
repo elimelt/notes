@@ -8,12 +8,21 @@ tags:
   - numpy
   - pytorch
 date: 2026-07-31
-updated: 2026-07-31
+updated: 2026-08-01
 status: evergreen
-description: Neural networks from first principles, including backpropagation derivations, initialization, normalization, regularization, and small implementations in NumPy and PyTorch.
+description: Neural networks from first principles, including backpropagation derivations, loss families and output heads, optimizer updates, schedules and clipping, gradient checking, initialization, normalization, regularization, and small implementations in NumPy and PyTorch.
 sources:
   - title: Rumelhart, Hinton, and Williams (1986), Learning Representations by Back-Propagating Errors
     url: https://www.nature.com/articles/323533a0
+    type: paper
+  - title: Goodfellow, Bengio, and Courville, Deep Learning, chapters 6 and 8
+    url: https://www.deeplearningbook.org/
+    type: book
+  - title: Kingma and Ba (2015), Adam - A Method for Stochastic Optimization
+    url: https://arxiv.org/abs/1412.6980
+    type: paper
+  - title: Sutskever et al. (2013), On the importance of initialization and momentum in deep learning
+    url: https://proceedings.mlr.press/v28/sutskever13.html
     type: paper
   - title: He et al. (2015), Delving Deep into Rectifiers
     url: https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/He_Delving_Deep_into_ICCV_2015_paper.pdf
@@ -170,6 +179,91 @@ $$
 
 In practice the loss is averaged over the batch.
 
+## Output Heads and Loss Families
+
+The softmax-cross-entropy pair above is one instance of a general pattern: match the output head to the loss, and the gradient at the logits collapses to prediction minus target ([Deep Learning ch. 6.2](https://www.deeplearningbook.org/contents/mlp.html)). The three standard pairings:
+
+| Task | Head | Loss | $\partial \mathcal{L} / \partial z$ |
+|---|---|---|---|
+| Regression | linear, $\hat{y} = z$ | MSE $\frac{1}{2}(\hat{y} - y)^2$ | $z - y$ |
+| Binary classification | sigmoid, $\hat{y} = \sigma(z)$ | BCE $-y\log\hat{y} - (1-y)\log(1-\hat{y})$ | $\sigma(z) - y$ |
+| Multiclass | softmax | cross-entropy $-\sum_k y_k \log \hat{y}_k$ | $\hat{y} - y$ |
+
+Each row is the negative log-likelihood of a distribution family (Gaussian, Bernoulli, multinomial) under its canonical parameterization, which is why the clean form is not a coincidence.
+
+The binary case is the promised second worked derivative. With $\hat{y} = \sigma(z)$ and $\sigma'(z) = \sigma(z)(1 - \sigma(z))$:
+
+$$
+\frac{\partial \mathcal{L}}{\partial z}
+= \left( -\frac{y}{\hat{y}} + \frac{1-y}{1-\hat{y}} \right) \hat{y}(1 - \hat{y})
+= -y(1 - \hat{y}) + (1-y)\hat{y}
+= \sigma(z) - y
+$$
+
+The $\hat{y}(1-\hat{y})$ factor from the sigmoid exactly cancels the denominators from the log loss. This cancellation is also the numerical-stability argument for computing loss from logits (`CrossEntropyLoss`, `binary_cross_entropy_with_logits`) rather than from probabilities: the fused form never materializes a $\log$ of a saturated sigmoid or softmax. Pairing MSE with a sigmoid head, by contrast, leaves a $\sigma'(z)$ factor in the gradient that vanishes whenever the unit saturates, which is a classic slow-training bug.
+
+## Optimizer Updates
+
+The `step` method below implements plain SGD: $\theta \leftarrow \theta - \alpha g$. Two upgrades cover most practice; full treatment, including conditioning theory and a measured comparison, is in [[math/numerical-optimization|Numerical Optimization for Machine Learning]].
+
+Momentum accumulates a velocity so that consistent gradient directions compound and oscillating ones cancel:
+
+$$
+v \leftarrow \mu v - \alpha g, \qquad \theta \leftarrow \theta + v
+$$
+
+with $\mu$ typically 0.9 ([Sutskever et al. 2013](https://proceedings.mlr.press/v28/sutskever13.html) schedule it from 0.5 up to 0.99). [Adam](https://arxiv.org/abs/1412.6980) keeps per-parameter moving averages of the gradient and its square, corrects their zero-initialization bias, and scales each coordinate's step:
+
+$$
+\begin{aligned}
+m &\leftarrow \beta_1 m + (1-\beta_1) g, \qquad & \hat{m} &= m / (1 - \beta_1^t) \\
+v &\leftarrow \beta_2 v + (1-\beta_2) g^2, & \hat{v} &= v / (1 - \beta_2^t) \\
+\theta &\leftarrow \theta - \alpha\, \hat{m} / (\sqrt{\hat{v}} + \epsilon) &&
+\end{aligned}
+$$
+
+with paper defaults $\alpha = 10^{-3}$, $\beta_1 = 0.9$, $\beta_2 = 0.999$, $\epsilon = 10^{-8}$. As an implementation sketch on the MLP class below, momentum is three lines:
+
+```python
+def step_momentum(self, grads, state, lr=1e-2, mu=0.9):
+    for name in ("W1", "b1", "W2", "b2"):
+        state[name] = mu * state.get(name, 0.0) - lr * grads[name]
+        setattr(self, name, getattr(self, name) + state[name])
+```
+
+## Schedules and Gradient Clipping
+
+Two knobs sit outside the optimizer proper. Learning-rate schedules decay $\alpha$ over training — step decay (multiply by 0.1 every $N$ epochs), cosine annealing $\alpha_t = \frac{\alpha_0}{2}(1 + \cos(\pi t/T))$, and a linear warmup over the first few hundred or thousand steps, which matters most with Adam because its second-moment estimate is unreliable early ([DL ch. 8.5](https://www.deeplearningbook.org/contents/optimization.html)). Gradient clipping bounds the update when the loss surface produces a rare enormous gradient, as in recurrent nets ([DL ch. 10.11.1](https://www.deeplearningbook.org/contents/rnn.html)); clip-by-norm rescales the whole gradient vector when it exceeds a threshold $\tau$:
+
+$$
+g \leftarrow \begin{cases} g & \lVert g \rVert \le \tau \\ \tau\, g / \lVert g \rVert & \text{otherwise} \end{cases}
+$$
+
+which preserves direction, unlike elementwise clip-by-value.
+
+## Gradient Checking
+
+Before trusting a hand-written backward pass, compare it against a centered finite difference:
+
+$$
+\frac{\partial \mathcal{L}}{\partial \theta_i} \approx \frac{\mathcal{L}(\theta_i + h) - \mathcal{L}(\theta_i - h)}{2h}
+$$
+
+which has $O(h^2)$ error versus $O(h)$ for the one-sided version. The comparison metric is relative error $|g_a - g_n| / \max(|g_a|, |g_n|)$; per the [CS231n conventions](https://cs231n.github.io/neural-networks-3/), below $10^{-7}$ is excellent for smooth networks, up to $10^{-4}$ is acceptable when ReLU kinks are involved, and above $10^{-2}$ means a bug. Use float64 (float32 cancellation error alone can reach $10^{-2}$), $h \approx 10^{-5}$, a handful of examples, and turn off dropout and other stochastic parts while checking.
+
+Checking one entry of each weight matrix of the NumPy MLP below (run in the repo venv, float64, $h = 10^{-5}$):
+
+```python
+i, j, h = 1, 2, 1e-5
+orig = model.W1[i, j]
+model.W1[i, j] = orig + h; lp, _ = model.loss_and_grads(X, y)
+model.W1[i, j] = orig - h; lm, _ = model.loss_and_grads(X, y)
+model.W1[i, j] = orig
+numeric = (lp - lm) / (2 * h)
+```
+
+Measured: `W1[1,2]` analytic $+0.35312938$ vs numeric $+0.35312938$, relative error $4.2 \times 10^{-12}$; `W2[1,2]` relative error $1.7 \times 10^{-10}$. Both are far inside the "excellent" band, which is the expected outcome for this loss because softmax-cross-entropy is smooth in the parameters even though ReLU has a kink in the inputs — the check would only brush the kink if a perturbation flipped a unit's sign.
+
 ## Why Initialization Matters
 
 Very deep networks fail easily if activations or gradients change scale too aggressively across layers.
@@ -230,6 +324,21 @@ $$
 The paper's framing is useful. Training samples an exponential family of "thinned" subnetworks, and test-time inference approximates their average with one full network.
 
 Srivastava et al. describe dropout as a way to prevent units from **co-adapting too much**. In several experiments they found dropping **20% of input units** and **50% of hidden units** worked well.
+
+## Choosing Initialization and Normalization
+
+The pieces above interact, and the common configurations are worth a table:
+
+| Choice | Formula / rule | When |
+|---|---|---|
+| Xavier/Glorot init | $\operatorname{Var}[W] = \tfrac{2}{n_{in} + n_{out}}$ | tanh or sigmoid activations |
+| He init | $\operatorname{Var}[W] = \tfrac{2}{n_{in}}$ | ReLU-family activations |
+| Batch norm | normalize per-dimension over the batch | large batches; convolutional nets |
+| Layer norm | normalize per-example over features | small/variable batches; transformers |
+| L2 / weight decay | add $\tfrac{\lambda}{2}\lVert \theta \rVert^2$ (or decoupled decay) | default regularizer |
+| Dropout | Bernoulli mask, $p \approx 0.5$ hidden / $0.2$ input | large fully connected layers |
+
+The interactions: normalization layers make initialization scale much less critical, because activations get renormalized each layer regardless of what the weights did — with batch norm, a wrong init costs early training speed rather than trainability. Weight decay and He/Xavier initialization pull in compatible directions (both keep weights in a moderate range), but decay interacts with adaptive optimizers in a way that matters; see the decoupled weight decay discussion in [[math/numerical-optimization|Numerical Optimization]]. Dropout raises activation variance during training, which is why implementations use inverted dropout (rescale by $1/(1-p)$ at train time) so that test-time inference needs no correction.
 
 ## NumPy Implementation
 
@@ -321,6 +430,8 @@ This is shorter because autograd is doing exactly the backpropagation derivation
 ## What to Carry Forward
 
 - Backpropagation is just repeated local application of the chain rule.
+- Match the output head to the loss; the logit gradient becomes prediction minus target.
+- Gradient-check any hand-written backward pass before trusting it.
 - Initialization is part of the model, not a clerical detail.
 - Normalization layers often change optimization more than small architecture tweaks do.
 - Dropout is an ensemble-style regularizer implemented inside one training loop.
@@ -333,6 +444,8 @@ This is shorter because autograd is doing exactly the backpropagation derivation
 - [[ml/deep-learning/convolutional-neural-networks|Convolutional Neural Networks]]
 - [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]]
 - [[ml/deep-learning/recurrent-neural-networks|Recurrent Neural Networks]]
+- [[math/numerical-optimization|Numerical Optimization for Machine Learning]]
+- [[math/matrix-calculus|Matrix Calculus for Machine Learning]]
 
 ## Sources
 
@@ -340,3 +453,7 @@ This is shorter because autograd is doing exactly the backpropagation derivation
 - [He et al. (2015), Delving Deep into Rectifiers](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/He_Delving_Deep_into_ICCV_2015_paper.pdf)
 - [Ioffe and Szegedy (2015), Batch Normalization](https://arxiv.org/abs/1502.03167)
 - [Srivastava et al. (2014), Dropout](https://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf)
+- [Goodfellow, Bengio, and Courville, Deep Learning, chapters 6, 8, and 10](https://www.deeplearningbook.org/)
+- [Kingma and Ba (2015), Adam: A Method for Stochastic Optimization](https://arxiv.org/abs/1412.6980)
+- [Sutskever et al. (2013), On the importance of initialization and momentum in deep learning](https://proceedings.mlr.press/v28/sutskever13.html)
+- [CS231n, Neural Networks Part 3: Gradient checks](https://cs231n.github.io/neural-networks-3/)

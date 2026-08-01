@@ -1,5 +1,5 @@
 ---
-title: From SIMD to SIMT: Vectors, GPUs, and Accelerators
+title: "From SIMD to SIMT: Vectors, GPUs, and Accelerators"
 category: Computer Architecture
 tags:
   - simd

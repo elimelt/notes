@@ -100,6 +100,25 @@ python3.12 -m venv .venv
 The `.ipynb` file is the source of truth. The generated `.md` sibling contains
 only page metadata and the public source link and should not be edited by hand.
 
+## Embedding the graph
+
+The build publishes a full-viewport graph at `https://notes.elimelt.com/graph/`.
+It reads the same content index as Quartz, excludes unconnected nodes from the
+visualization, and opens notes in a new tab. Embed it without the surrounding
+Quartz layout:
+
+```html
+<iframe
+  src="https://notes.elimelt.com/graph/"
+  title="Elijah's notes graph"
+  loading="lazy"
+  style="width: 100%; height: 720px; border: 0"
+></iframe>
+```
+
+Append `?target=top` when node selection should navigate the containing window
+instead of opening a new tab.
+
 ## Writing and organizing notes
 
 - Put publishable Markdown and attachments in `content/`.

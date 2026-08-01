@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Notes Graph</title>
+    <link rel="stylesheet" href="./graph.css" />
+  </head>
+  <body>
+    <main class="graph-shell">
+      <header class="graph-header">
+        <div>
+          <p class="eyebrow">Elijah's Notes</p>
+          <h1>Graph</h1>
+        </div>
+        <div class="graph-meta">
+          <span id="graph-status" role="status">Loading notes...</span>
+          <button id="fit-graph" type="button">Fit graph</button>
+        </div>
+      </header>
+      <canvas id="notes-graph" aria-label="Interactive graph of linked notes"></canvas>
+      <div id="graph-tooltip" class="graph-tooltip" hidden></div>
+      <p class="graph-help">Drag to pan, scroll to zoom, select a node to open its note.</p>
+    </main>
+    <script type="module" src="./graph.js"></script>
+  </body>
+</html>

@@ -16,14 +16,14 @@ description: Overview of the NLP notes, from tokenization and linear classifiers
 
 These notes cover the basic pipeline for turning text into something a model can work with. Start with [[ml/nlp/reading/tokenization|tokenization]], then move to [[ml/nlp/reading/classification|classification]] and [[ml/nlp/reading/multinomial-logistic-regression|multinomial logistic regression]]. [[ml/nlp/reading/neural-networks|Neural networks]] shows what changes once linear decision boundaries stop being enough.
 
-The section also holds practical notes that sit closer to modern language models than to textbook NLP. [[ml/nlp/prompting|Prompting]] is the bridge between the older modeling material and the newer model-facing workflow.
+The section also holds practical notes that sit closer to modern language models than to textbook NLP. [[ml/nlp/prompting|Prompting]] is the bridge between the older modeling material and the newer model-facing workflow, and [[ml/nlp/decoding-strategies|decoding strategies]] covers how a trained model is turned into text at inference time.
 
 ## Suggested path
 
 - Represent text: [[ml/nlp/reading/tokenization|tokenization]], [[ml/nlp/ppmi|PPMI]], [[ml/nlp/reading/information-retrieval|information retrieval]]
 - Build classifiers: [[ml/nlp/reading/classification|classification]], [[ml/nlp/reading/multinomial-logistic-regression|multinomial logistic regression]]
 - Add nonlinear models: [[ml/nlp/reading/neural-networks|neural networks]]
-- Use current models: [[ml/nlp/prompting|prompting]]
+- Use current models: [[ml/nlp/prompting|prompting]], [[ml/nlp/decoding-strategies|decoding strategies]]
 
 ## Related notes
 

@@ -131,3 +131,4 @@ $$
 
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
 - [[ml/serving-systems/optimizing-gpu-kernels|Optimizing GPU Kernels]]
+- [[hardware/computer-architecture/simd-vectors-gpus-accelerators|From SIMD to SIMT: Vectors, GPUs, and Accelerators]]

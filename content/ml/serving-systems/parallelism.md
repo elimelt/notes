@@ -12,9 +12,9 @@ tags:
   - serving-systems
   - machine-learning
 date: 2025-05-25
-updated: 2026-07-30
+updated: 2026-08-01
 status: evergreen
-description: Data, pipeline, and tensor parallelism for large models, plus activation memory accounting, sequence parallelism, ZeRO/FSDP sharding, and how to compose them into 3D parallelism.
+description: Data, pipeline, and tensor parallelism for large models, plus activation memory accounting, sequence parallelism, ZeRO/FSDP sharding, pipeline schedules, and how to compose them into 3D parallelism for training and inference.
 sources:
   - title: CSE 599K, LLM Serving Systems, University of Washington, Spring 2025 (lecture notes)
     type: lecture
@@ -30,6 +30,15 @@ sources:
   - title: "GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism"
     url: https://arxiv.org/abs/1811.06965
     type: paper
+  - title: "Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM"
+    url: https://arxiv.org/abs/2104.04473
+    type: paper
+  - title: FullyShardedDataParallel, PyTorch documentation
+    url: https://docs.pytorch.org/docs/stable/fsdp.html
+    type: docs
+  - title: Megatron Core User Guide, NVIDIA
+    url: https://docs.nvidia.com/megatron-core/developer-guide/latest/
+    type: docs
 ---
 
 ## Purpose
@@ -113,8 +122,84 @@ Deployment proceeds in two phases. First make the model fit: tensor parallelism 
 
 A cluster of 8-GPU nodes typically runs 8-way tensor parallel inside each node, pipeline parallel across nodes, and data parallel across node groups. The batch must be large enough to keep the pipeline bubble small, tensor parallelism should not be split so wide that per-GPU GEMMs get thin, and the right configuration ultimately depends on the model shape and the bandwidth topology.
 
+## Comparing the sharding strategies
+
+Every strategy above shards a different subset of {parameters, gradients, optimizer state, activations}, which is the fastest way to compare them:
+
+| Strategy | Params | Gradients | Optimizer state | Activations | Extra communication vs. plain data parallel |
+| --- | --- | --- | --- | --- | --- |
+| Data parallel | replicated | replicated | replicated | replicated (per-sample) | none (baseline AllReduce) |
+| Tensor parallel | sharded | sharded | sharded | partially sharded (see below) | AllReduce per layer, forward and backward |
+| Pipeline parallel | sharded (by layer) | sharded (by layer) | sharded (by layer) | replicated per stage, more in flight | point-to-point activations at stage boundaries |
+| Sequence parallel | sharded (with TP) | sharded (with TP) | sharded (with TP) | fully sharded (with TP) | AllGather/ReduceScatter for the pointwise ops |
+| Expert parallel (MoE) | sharded (by expert) | sharded (by expert) | sharded (by expert) | replicated (routed tokens only) | two all-to-alls per MoE layer (see [[ml/serving-systems/mixture-of-experts|Mixture of Experts]]) |
+| ZeRO-1 / FSDP `SHARD_GRAD_OP`-adjacent | replicated | replicated | sharded | replicated | ReduceScatter (grad) + AllGather (optimizer step readback) |
+| ZeRO-2 | replicated | sharded | sharded | replicated | ReduceScatter only, no extra AllGather |
+| ZeRO-3 / FSDP `FULL_SHARD` | sharded | sharded | sharded | replicated | AllGather (params, fwd+bwd) + ReduceScatter (grad) |
+
+Data parallel and expert parallel are the two strategies whose communication volume tracks something other than parameter count (batch size, and token count respectively); everything else pays a cost proportional to how many parameters or activations it has to move.
+
+## Pipeline schedules: GPipe, 1F1B, and interleaved
+
+The bubble fraction $\frac{p-1}{m}$ from the section above is the same number for every schedule; what differs is how much activation memory the schedule needs to hold to achieve it. GPipe's schedule runs all $m$ forward microbatches before starting any backward, so it must keep $m$ microbatches of activations alive simultaneously:
+
+```mermaid
+gantt
+    dateFormat X
+    axisFormat %s
+    section Stage 0 (GPipe)
+    F1 :done, 0, 1
+    F2 :done, 1, 2
+    F3 :done, 2, 3
+    F4 :done, 3, 4
+    B1 :crit, 4, 5
+    B2 :crit, 5, 6
+    B3 :crit, 6, 7
+    B4 :crit, 7, 8
+```
+
+1F1B (one-forward-one-backward) interleaves as soon as possible: once stage $p-1$'s first backward is ready, every earlier stage alternates one forward with one backward, so at steady state each stage holds only as many in-flight activations as there are stages downstream of it, not all $m$:
+
+```mermaid
+gantt
+    dateFormat X
+    axisFormat %s
+    section Stage 0 (1F1B)
+    F1 :done, 0, 1
+    F2 :done, 1, 2
+    F3 :done, 2, 3
+    B1 :crit, 3, 4
+    F4 :done, 4, 5
+    B2 :crit, 5, 6
+    B3 :crit, 6, 7
+    B4 :crit, 7, 8
+```
+
+Both schedules have the same bubble fraction and the same total step time; 1F1B just bounds peak activation memory to $O(p)$ microbatches instead of $O(m)$, which is why it, not GPipe's naive schedule, is the default in practice.
+
+The interleaved schedule from [Narayanan et al. (2021)](https://arxiv.org/abs/2104.04473) attacks the bubble itself rather than the memory: instead of one contiguous block of layers per device, split the model into more, smaller chunks and assign multiple non-adjacent chunks to each device. A device now gets a fresh microbatch to work on sooner after finishing one chunk, shrinking the effective bubble fraction to $\frac{p-1}{m}\cdot\frac{1}{v}$ for $v$ chunks per device, at the cost of $v\times$ more point-to-point communication (each chunk boundary is a device boundary now) and, per the paper, at "memory footprint comparable to existing approaches." The paper reports throughput improvements over 10% from this schedule change alone, holding the rest of the training configuration fixed.
+
+## Collectives: which links they stress
+
+Building on the four primitives above: AllReduce and AllGather in tensor parallelism run once or twice per transformer layer and move activation-sized tensors ($bsh$-scale), which is why tensor parallelism is confined to NVLink-class intra-node links in practice; at InfiniBand's roughly 25 GB/s, the same traffic pattern would dominate step time. Pipeline parallelism's point-to-point activation sends are the one pattern designed to cross the slow inter-node link, since only one activation tensor per microbatch per boundary needs to move, not an all-to-all or all-reduce over the whole group. Data-parallel and ZeRO/FSDP gradient synchronization (ReduceScatter, AllGather) is bandwidth-bound but latency-tolerant: it happens once per step rather than once per layer, so it can absorb inter-node latency that would be unacceptable at per-layer frequency, which is why data-parallel and sharding groups are usually the axis placed across nodes while tensor parallelism stays inside one.
+
+## Memory worked example: a 70B model
+
+Take $\Psi = 70 \times 10^9$ parameters, mixed-precision Adam ($2\Psi$ params + $2\Psi$ grads + $12\Psi$ optimizer state = $16\Psi$ bytes, from the ZeRO section above): $16 \times 70\text{B} \approx 1.12$ TB of state before activations, roughly 14 H100-80GB GPUs' worth of memory just to hold parameters, gradients, and optimizer state with zero redundancy. Unsharded (plain data parallel replicates all of it), this doesn't fit any single GPU. With ZeRO-3/FSDP `FULL_SHARD` across $N_d = 64$ data-parallel workers: $1.12\text{TB}/64 \approx 17.5$ GB per GPU, leaving roughly 60 GB of the 80 GB budget for activations and the temporarily-unsharded working set that FSDP all-gathers per layer. Activation memory per layer at sequence length $s=4096$, hidden size $h=8192$, batch $b=1$ (per-GPU, before tensor parallelism) from the formula above is $sbh(34 + 5as/h)$ bytes; adding 8-way tensor parallelism divides the bulk of that by $t=8$, per the tensor-plus-sequence row of the earlier table, which is usually the deciding factor in whether a 70B-class model needs tensor parallelism at all or can run on sharding alone.
+
+## Training parallelism vs. inference parallelism
+
+The parallelism strategies above are derived from training's memory profile: large batches, full activation storage or recomputation, and a symmetric forward-backward cost. Inference has none of these properties, which is why [[ml/serving-systems/batching|batching]] and [[ml/serving-systems/performance-modeling|performance modeling]] treat prefill and decode as almost separate workloads. Prefill is compute-bound and batch-parallel like training's forward pass, so it benefits from the same tensor-parallel placement used in training. Decode is memory-bandwidth-bound (one token at a time, per [[ml/serving-systems/performance-modeling|Performance Modeling]]'s roofline analysis) and latency-sensitive rather than throughput-sensitive, so the placement question flips: minimizing the number of sequential communication hops per token matters more than maximizing per-GPU FLOPs, since decode never reaches the compute-bound regime tensor parallelism is designed for. This is why disaggregated serving (in [[ml/serving-systems/batching|Batching]]) puts prefill and decode on separately configured clusters rather than reusing one training-shaped parallelism layout for both, and why DeepSeek-V3's decode deployment (in [[ml/serving-systems/mixture-of-experts|Mixture of Experts]]) uses a wider, differently-shaped parallelism configuration than its prefill deployment even though both serve the same trained weights.
+
+## Checkpointing, restart, and topology placement for long jobs
+
+A checkpoint under any sharded strategy has to record which shard of parameters, gradients, and optimizer state each rank holds, not just the values; restarting with a different data-parallel or tensor-parallel width means either resharding on load or restoring to the exact same process-group layout the checkpoint was written under. FSDP and ZeRO both support the latter as the fast path and the former as a slower fallback that gathers full state before rewriting shards to a new layout. Topology placement matters most for tensor parallelism, since it is the axis most sensitive to link bandwidth: a scheduler that places a tensor-parallel group across a node boundary silently converts a 600 GB/s NVLink-bound collective into a 25 GB/s InfiniBand-bound one, often the single biggest accidental slowdown in a multi-node job. See [[ml/serving-systems/distributed-training|Distributed Training of Large Language Models]] for the full checkpoint-format and straggler discussion, and [[systems/scheduling/4-cluster-and-datacenter/stragglers-speculation-and-overload|Stragglers, Speculation, and Overload]] for the general scheduling treatment.
+
 ## Related notes
 
 - [[ml/serving-systems/memory-management|Memory Management]]
 - [[ml/serving-systems/mixture-of-experts|Mixture of Experts]]
 - [[ml/serving-systems/performance-modeling|Performance Modeling]]
+- [[ml/serving-systems/batching|Batching]]
+- [[ml/serving-systems/distributed-training|Distributed Training of Large Language Models]]
+- [[ml/serving-systems/distributed-ml-runtimes|Distributed ML Runtimes]]

@@ -5,7 +5,13 @@
       "source": "github:vazome/quartz-jupyter-embed",
       "resolved": "https://github.com/vazome/quartz-jupyter-embed.git",
       "commit": "e31ebbebbabbb3996d9590d8006bcf35b8169b8c",
-      "installedAt": "2026-07-31T23:38:47.012Z"
+      "installedAt": "2026-08-02T04:20:01.611Z"
+    },
+    "tts-reader": {
+      "source": "../quartz-site/tts-reader",
+      "resolved": "/Users/emm12/repos/notes/quartz-site/tts-reader",
+      "commit": "local",
+      "installedAt": "2026-08-02T04:20:00.725Z"
     }
   }
 }

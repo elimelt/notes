@@ -101,7 +101,12 @@ plugins:
     enabled: true
     options:
       renderEngine: katex
+      katexOptions:
+        output: htmlAndMathml
     order: 80
+  - source: ../quartz-site/math-tex-source
+    enabled: true
+    order: 85
   - source: "@quartz-community/quartz-fonts"
     enabled: true
     options:

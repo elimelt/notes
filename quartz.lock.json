@@ -1,17 +1,23 @@
 {
   "version": "1.0.0",
   "plugins": {
+    "math-tex-source": {
+      "source": "../quartz-site/math-tex-source",
+      "resolved": "/Users/emm12/repos/notes/quartz-site/math-tex-source",
+      "commit": "local",
+      "installedAt": "2026-08-02T04:45:19.314Z"
+    },
     "quartz-jupyter-embed": {
       "source": "github:vazome/quartz-jupyter-embed",
       "resolved": "https://github.com/vazome/quartz-jupyter-embed.git",
       "commit": "e31ebbebbabbb3996d9590d8006bcf35b8169b8c",
-      "installedAt": "2026-08-02T04:20:01.611Z"
+      "installedAt": "2026-08-02T04:45:20.341Z"
     },
     "tts-reader": {
       "source": "../quartz-site/tts-reader",
       "resolved": "/Users/emm12/repos/notes/quartz-site/tts-reader",
       "commit": "local",
-      "installedAt": "2026-08-02T04:20:00.725Z"
+      "installedAt": "2026-08-02T04:45:19.315Z"
     }
   }
 }

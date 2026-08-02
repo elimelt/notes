@@ -40,13 +40,14 @@ const script = String.raw`
   const LOOKAHEAD = 6, CONCURRENCY = 2
   const RETRY_BASE = 800, RETRY_MAX = 8000, RETRY_LIMIT = 6
   const LLM_API = "https://llm.elimelt.com"
-  // qwen2.5-coder:7b + the few-shot "S3" prompt below scored 18/18 on the
-  // semantic math-reading eval and 1/15 residual LaTeX on full blocks (the
-  // residual is cleaned by speakLeftovers). Do NOT mix in a second "fast"
-  // model: the backend keeps one model resident, and timeline replays showed
-  // alternating models thrashes the server (a llama call measured 39s while
-  // evicted-then-reloaded qwen calls hit 60-107s).
-  const LLM_MODEL = "qwen2.5-coder:7b"
+  // gemma4:e4b (think disabled) + the few-shot "S3" prompt below scored 18/18
+  // on the semantic math-reading eval and 0/15 residual LaTeX on full blocks,
+  // with ~2.5s warm rewrites (vs qwen2.5-coder:7b's 3.4-4s) and half the cold
+  // prompt-eval cost. Do NOT mix in a second "fast" model: the backend keeps
+  // one model resident, and timeline replays showed alternating models
+  // thrashes the server (a llama call measured 39s while evicted-then-reloaded
+  // qwen calls hit 60-107s).
+  const LLM_MODEL = "gemma4:e4b"
   // Timeline replays on real notes showed the ~7.5s quality rewrite stalls
   // playback whenever the audio buffered between the playhead and the chunk
   // is shorter than the rewrite (e.g. a 1s heading followed by a math
@@ -130,9 +131,13 @@ const script = String.raw`
   // CACHE_VERSION whenever the prompt or gate changes so stale rewrites are
   // ignored. CACHE_MAX caps the number of stored entries (LRU-ish eviction).
   const CACHE_KEY = "tts-rewrite-v1"
-  const CACHE_VERSION = "5"
+  const CACHE_VERSION = "6"
   const CACHE_MAX = 2000
-  const BLOCKS = "p, li, dt, dd, h1, h2, h3, h4, h5, h6"
+  // .katex-display is included because Quartz emits display math as a sibling
+  // of paragraphs, not inside them; without it every standalone equation is
+  // silently skipped (402 such blocks across the built site). The parent-block
+  // filter in collect() still drops any display span nested inside a block.
+  const BLOCKS = "p, li, dt, dd, h1, h2, h3, h4, h5, h6, .katex-display"
   const ICONS = {
     play: '<svg class="tts-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
     pause: '<svg class="tts-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>',
@@ -384,6 +389,7 @@ const script = String.raw`
         body: JSON.stringify({
           model: LLM_MODEL,
           stream: false,
+          think: false,
           options: { temperature: 0.2 },
           messages: [
             { role: "system", content: LLM_PROMPT },

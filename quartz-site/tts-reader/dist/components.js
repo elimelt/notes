@@ -42,9 +42,23 @@ const script = String.raw`
   const LLM_API = "https://llm.elimelt.com"
   // qwen2.5-coder:7b + the few-shot "S3" prompt below scored 18/18 on the
   // semantic math-reading eval and 1/15 residual LaTeX on full blocks (the
-  // residual is cleaned by speakLeftovers). llama3.2:3b is ~3x faster but
-  // reads notation symbol-by-symbol ("A to the power of T A").
+  // residual is cleaned by speakLeftovers). Do NOT mix in a second "fast"
+  // model: the backend keeps one model resident, and timeline replays showed
+  // alternating models thrashes the server (a llama call measured 39s while
+  // evicted-then-reloaded qwen calls hit 60-107s).
   const LLM_MODEL = "qwen2.5-coder:7b"
+  // Timeline replays on real notes showed the ~7.5s quality rewrite stalls
+  // playback whenever the audio buffered between the playhead and the chunk
+  // is shorter than the rewrite (e.g. a 1s heading followed by a math
+  // paragraph). So: if the estimated buffered audio ahead of a chunk is below
+  // URGENT_BUFFER_S, skip the LLM for that chunk and speak the deterministic
+  // speakLeftovers() rendering immediately (plainer math reading, but zero
+  // added latency and still no raw LaTeX); meanwhile a background quality
+  // rewrite fills the cache so replays and revisits get the good reading.
+  // CHARS_PER_SECOND is the speech rate used for the buffer estimate
+  // (measured ~15 chars/s on the Kokoro voice).
+  const URGENT_BUFFER_S = 10
+  const CHARS_PER_SECOND = 15
   const LLM_PROMPT =
     "You prepare excerpts from technical notes for a text-to-speech engine. Return the text " +
     "essentially unchanged, EXCEPT convert the specific fragments that do not read aloud well into " +
@@ -337,14 +351,34 @@ const script = String.raw`
       .replace(/[{}]/g, "")
       .replace(/\s+/g, " ").trim()
 
-    // LLM naturalization. On a hard (non-retryable) failure we fall back to the
-    // raw text so the chunk can still be spoken; retryable failures propagate so
-    // the serial queue can back off and retry the same chunk.
-    const rewrite = text => {
-      if (!needsRewrite(text)) return Promise.resolve(text)
-      const cached = rewriteCache.get(text)
-      if (cached != null) return Promise.resolve(cached)
-      return fetch(LLM_API + "/api/chat", {
+    // Estimated seconds of speech buffered between the playhead and chunk i:
+    // the text length of every chunk from the one currently playing up to (but
+    // not including) i, at the measured speech rate. A chunk with little or no
+    // audio in front of it is "urgent" - its rewrite latency lands directly on
+    // the listener - so it uses the fast model.
+    const bufferedSecondsBefore = i => {
+      let chars = 0
+      for (let j = idx; j < i; j++) chars += chunks[j].text.length
+      return chars / CHARS_PER_SECOND
+    }
+
+    // Serialize LLM requests: timeline replays showed the backend collapses
+    // under concurrent generations (two parallel qwen calls took ~100s each,
+    // prompt eval dropping from ~650 t/s to ~17 t/s, vs 7-9s single-flight).
+    // TTS requests parallelize fine, so only the LLM leg is gated.
+    let llmChain = Promise.resolve()
+    const llmSerial = fn => {
+      const run = llmChain.then(fn, fn)
+      llmChain = run.catch(() => {})
+      return run
+    }
+
+    // The full LLM rewrite, always with the quality model. Resolves with the
+    // spoken text and persists it to the cache. Used directly when the chunk
+    // has enough buffered audio in front of it, and as the background
+    // cache-filler when an urgent chunk had to skip the LLM.
+    const llmRewrite = text => llmSerial(() =>
+      fetch(LLM_API + "/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -369,12 +403,28 @@ const script = String.raw`
           const out = speakLeftovers(raw)
           rewriteCache.set(text, out)
           return out
-        })
+        }))
+
+    // LLM naturalization. On a hard (non-retryable) failure we fall back to the
+    // raw text so the chunk can still be spoken; retryable failures propagate so
+    // the queue can back off and retry the same chunk. When the chunk is urgent
+    // (playback would stall waiting on the LLM), speak the deterministic
+    // speakLeftovers rendering now and fill the cache with the quality rewrite
+    // in the background for replays/revisits.
+    const rewrite = (text, urgent) => {
+      if (!needsRewrite(text)) return Promise.resolve(text)
+      const cached = rewriteCache.get(text)
+      if (cached != null) return Promise.resolve(cached)
+      if (urgent) {
+        llmRewrite(text).catch(() => {})
+        return Promise.resolve(speakLeftovers(text))
+      }
+      return llmRewrite(text)
         .catch(e => { if (e && e.retryable) throw e; return text })
     }
 
-    const synth = text =>
-      rewrite(text).then(spoken =>
+    const synth = (text, urgent) =>
+      rewrite(text, urgent).then(spoken =>
         fetch(API + "/v1/audio/speech", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -386,10 +436,13 @@ const script = String.raw`
     // Synthesize one chunk, retrying retryable failures (429/5xx/network) with
     // exponential backoff on the SAME index so each chunk is produced
     // exactly-once. Only a hard failure or exhausted retries rejects.
+    // Urgency is re-evaluated per attempt: playback advances during backoff,
+    // so a chunk that had a comfortable buffer may have become urgent.
     const synthWithRetry = async i => {
       for (let attempt = 0; ; attempt++) {
         if (destroyed) throw new Error("destroyed")
-        try { return await synth(chunks[i].text) }
+        const urgent = bufferedSecondsBefore(i) < URGENT_BUFFER_S
+        try { return await synth(chunks[i].text, urgent) }
         catch (e) {
           if (!(e && e.retryable) || attempt >= RETRY_LIMIT) throw e
           await sleep(Math.min(RETRY_BASE * 2 ** attempt, RETRY_MAX))

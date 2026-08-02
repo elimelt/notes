@@ -26,7 +26,18 @@ const script = String.raw`
   const VOICE = "af_heart"
   const FORMAT = "mp3"
   const TARGET = 260, MAX = 500
-  const SKIP = "pre, code, .katex, .katex-display, .jupyter-notebook-embedded, .notebook-link-unavailable, figure, table, svg, sup.footnote-ref, .footnotes"
+  const LLM_API = "https://llm.elimelt.com"
+  const LLM_MODEL = "llama3.2:3b"
+  const LLM_PROMPT =
+    "You rewrite excerpts from technical notes so they can be read aloud naturally by a " +
+    "text-to-speech engine. Expand math, symbols, code identifiers, and abbreviations into " +
+    "spoken words (for example \"O(n log n)\" becomes \"order n log n\", \"x_i\" becomes \"x sub i\"). " +
+    "LaTeX between \\( and \\) delimiters is inline math: speak it as a person would read the " +
+    "formula aloud and drop the delimiters. Smooth awkward notation into plain sentences but keep " +
+    "the meaning and technical content identical. Do not add, explain, or summarize. Output only " +
+    "the rewritten text with no preamble."
+  const SKIP = "pre, code, .jupyter-notebook-embedded, .notebook-link-unavailable, figure, table, svg, sup.footnote-ref, .footnotes"
+  const MATH = ".katex"
   const BLOCKS = "p, li, dt, dd, h1, h2, h3, h4, h5, h6"
   const ICONS = {
     play: '<svg class="tts-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
@@ -41,12 +52,39 @@ const script = String.raw`
     let out = ""
     node.childNodes.forEach(n => {
       if (n.nodeType === 3) out += n.nodeValue
-      else if (n.nodeType === 1 && !n.matches(SKIP)) out += textOf(n)
+      else if (n.nodeType === 1) {
+        if (n.matches(SKIP)) return
+        if (n.matches(MATH)) {
+          const tex = n.getAttribute("data-tex")
+          out += tex ? " \\(" + tex + "\\) " : " " + textOf(n) + " "
+        } else out += textOf(n)
+      }
     })
     return out
   }
 
   const sentences = t => t.match(/[^.!?]+[.!?]+(?:["')\]]+)?\s*|[^.!?]+$/g) || [t]
+
+  // Character-split an oversized prose segment on whitespace, but never break
+  // inside a \( ... \) math block (splitting LaTeX would corrupt the formula).
+  const splitLong = s => {
+    const parts = s.match(/\\\([^]*?\\\)|[^]+?(?=\\\(|$)/g) || [s]
+    const out = []
+    let buf = ""
+    for (const p of parts) {
+      if (p.startsWith("\\(")) {
+        if (buf) { out.push(buf.trim()); buf = "" }
+        out.push(p.trim())
+      } else {
+        for (const w of p.split(/(\s+)/)) {
+          if ((buf + w).length > MAX && buf) { out.push(buf.trim()); buf = w }
+          else buf += w
+        }
+      }
+    }
+    if (buf.trim()) out.push(buf.trim())
+    return out.filter(Boolean)
+  }
 
   const chunkText = t => {
     const out = []
@@ -54,7 +92,7 @@ const script = String.raw`
     for (const s of sentences(t)) {
       if (s.length > MAX) {
         if (buf) { out.push(buf.trim()); buf = "" }
-        for (let i = 0; i < s.length; i += MAX) out.push(s.slice(i, i + MAX).trim())
+        for (const piece of splitLong(s)) out.push(piece)
         continue
       }
       if ((buf + s).length > TARGET && buf) { out.push(buf.trim()); buf = s }
@@ -79,6 +117,7 @@ const script = String.raw`
   }
 
   const setup = () => {
+    document.querySelectorAll(".tts-control").forEach(el => el.remove())
     const article = document.querySelector(".center article") || document.querySelector("article")
     if (!article) return null
     const chunks = collect(article)
@@ -101,12 +140,30 @@ const script = String.raw`
     const cache = new Map()
     let idx = 0, state = "idle", reading = null, destroyed = false, currentUrl = null
 
-    const synth = text =>
-      fetch(API + "/v1/audio/speech", {
+    const rewrite = text =>
+      fetch(LLM_API + "/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: MODEL, input: text, voice: VOICE, response_format: FORMAT }),
-      }).then(r => { if (!r.ok) throw new Error("speech " + r.status); return r.blob() })
+        body: JSON.stringify({
+          model: LLM_MODEL,
+          stream: false,
+          options: { temperature: 0.2 },
+          messages: [
+            { role: "system", content: LLM_PROMPT },
+            { role: "user", content: text },
+          ],
+        }),
+      }).then(r => { if (!r.ok) throw new Error("llm " + r.status); return r.json() })
+        .then(d => norm((d.message && d.message.content) || "") || text)
+        .catch(() => text)
+
+    const synth = text =>
+      rewrite(text).then(spoken =>
+        fetch(API + "/v1/audio/speech", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: MODEL, input: spoken, voice: VOICE, response_format: FORMAT }),
+        })).then(r => { if (!r.ok) throw new Error("speech " + r.status); return r.blob() })
         .then(b => URL.createObjectURL(b))
 
     const prefetch = i => {
@@ -175,7 +232,7 @@ const script = String.raw`
     })
     stopBtn.addEventListener("click", stop)
 
-    return { destroy() { destroyed = true; stop() } }
+    return { destroy() { destroyed = true; stop(); control.remove() } }
   }
 
   let current = null

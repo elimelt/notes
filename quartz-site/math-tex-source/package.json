@@ -1,0 +1,19 @@
+{
+  "name": "notes-math-tex-source",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "quartz": {
+    "name": "math-tex-source",
+    "displayName": "Math TeX Source",
+    "description": "Stamps the original LaTeX onto each rendered .katex element as data-tex and removes the redundant MathML subtree.",
+    "category": "transformer",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "defaultEnabled": true,
+    "defaultOrder": 85
+  }
+}

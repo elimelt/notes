@@ -4,6 +4,8 @@ category: Performance Engineering
 tags:
   - benchmarks
 date: 2026-07-31
+authors:
+  - elimelt
 status: draft
 description: State what was measured, under what setup, and why it matters.
 sources:

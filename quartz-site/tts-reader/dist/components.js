@@ -26,16 +26,21 @@ const script = String.raw`
   const VOICE = "af_heart"
   const FORMAT = "mp3"
   const TARGET = 260, MAX = 500
+  const LOOKAHEAD = 2
+  const RETRY_BASE = 800, RETRY_MAX = 8000, RETRY_LIMIT = 6
   const LLM_API = "https://llm.elimelt.com"
   const LLM_MODEL = "llama3.2:3b"
   const LLM_PROMPT =
-    "You rewrite excerpts from technical notes so they can be read aloud naturally by a " +
-    "text-to-speech engine. Expand math, symbols, code identifiers, and abbreviations into " +
-    "spoken words (for example \"O(n log n)\" becomes \"order n log n\", \"x_i\" becomes \"x sub i\"). " +
-    "LaTeX between \\( and \\) delimiters is inline math: speak it as a person would read the " +
-    "formula aloud and drop the delimiters. Smooth awkward notation into plain sentences but keep " +
-    "the meaning and technical content identical. Do not add, explain, or summarize. Output only " +
-    "the rewritten text with no preamble."
+    "You prepare excerpts from technical notes for a text-to-speech engine. Return the text " +
+    "essentially unchanged, EXCEPT convert the specific fragments that do not read aloud well into " +
+    "the words a person would say. Only touch: math, LaTeX, symbols, operators, code identifiers, " +
+    "and abbreviations. Examples: \"O(n log n)\" -> \"order n log n\"; \"x_i\" -> \"x sub i\"; " +
+    "\"a != b\" -> \"a not equal to b\". LaTeX between \\( and \\) is inline math: replace just that " +
+    "span with how the formula is read aloud and drop the delimiters. Leave every ordinary word, " +
+    "including its wording, order, punctuation, and sentence structure, exactly as written. Copy any " +
+    "fragment that needs no conversion character for character; if the whole excerpt contains nothing " +
+    "to convert, return it completely unchanged. Do not paraphrase, reword, summarize, add, remove, " +
+    "or explain anything else. Output only the resulting text with no preamble."
   const SKIP = "pre, code, .jupyter-notebook-embedded, .notebook-link-unavailable, figure, table, svg, sup.footnote-ref, .footnotes"
   const MATH = ".katex"
   const BLOCKS = "p, li, dt, dd, h1, h2, h3, h4, h5, h6"
@@ -140,8 +145,31 @@ const script = String.raw`
     const cache = new Map()
     let idx = 0, state = "idle", reading = null, destroyed = false, currentUrl = null
 
-    const rewrite = text =>
-      fetch(LLM_API + "/api/chat", {
+    const retryable = status => status === 429 || status === 408 || status >= 500
+    const httpError = (label, status) => {
+      const e = new Error(label + " " + status)
+      e.retryable = retryable(status)
+      return e
+    }
+    const netError = () => { const e = new Error("network"); e.retryable = true; return e }
+    const sleep = ms => new Promise(r => setTimeout(r, ms))
+
+    // Only chunks that actually contain something unspeakable need the LLM.
+    // Plain prose is sent to TTS verbatim, which keeps the reading faithful to
+    // the written text and avoids needless LLM requests.
+    const needsRewrite = t =>
+      /\\\(/.test(t) ||               // inline math marker
+      /[_^{}\\=<>|~#$%*/]/.test(t) || // math/code symbols and operators
+      /[A-Za-z]\([^)]*\)/.test(t) ||  // function-like calls, e.g. O(n), f(x)
+      /\d[.,]?\d*\s*[+\-*/=xX]\s*\d/.test(t) || // arithmetic expressions
+      /\b[A-Za-z]{2,}[._][A-Za-z0-9]/.test(t)   // code identifiers, e.g. foo.bar, snake_case
+
+    // LLM naturalization. On a hard (non-retryable) failure we fall back to the
+    // raw text so the chunk can still be spoken; retryable failures propagate so
+    // the serial queue can back off and retry the same chunk.
+    const rewrite = text => {
+      if (!needsRewrite(text)) return Promise.resolve(text)
+      return fetch(LLM_API + "/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -153,9 +181,18 @@ const script = String.raw`
             { role: "user", content: text },
           ],
         }),
-      }).then(r => { if (!r.ok) throw new Error("llm " + r.status); return r.json() })
-        .then(d => norm((d.message && d.message.content) || "") || text)
-        .catch(() => text)
+      }).catch(() => { throw netError() })
+        .then(r => { if (!r.ok) throw httpError("llm", r.status); return r.json() })
+        .then(d => {
+          const out = norm((d.message && d.message.content) || "")
+          // Small models occasionally hallucinate or echo the prompt examples,
+          // producing output far longer than the input. Since we only ask for
+          // minimal edits, reject an implausible expansion and read the original.
+          if (!out || out.length > text.length * 2 + 40) return text
+          return out
+        })
+        .catch(e => { if (e && e.retryable) throw e; return text })
+    }
 
     const synth = text =>
       rewrite(text).then(spoken =>
@@ -163,12 +200,65 @@ const script = String.raw`
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ model: MODEL, input: spoken, voice: VOICE, response_format: FORMAT }),
-        })).then(r => { if (!r.ok) throw new Error("speech " + r.status); return r.blob() })
+        }).catch(() => { throw netError() }))
+        .then(r => { if (!r.ok) throw httpError("speech", r.status); return r.blob() })
         .then(b => URL.createObjectURL(b))
 
-    const prefetch = i => {
-      if (i < 0 || i >= chunks.length || cache.has(i)) return
-      cache.set(i, synth(chunks[i].text).catch(e => { cache.delete(i); throw e }))
+    // Synthesize one chunk, retrying retryable failures (429/5xx/network) with
+    // exponential backoff on the SAME index so processing stays exactly-once and
+    // in order. Only a hard failure or exhausted retries rejects.
+    const synthWithRetry = async i => {
+      for (let attempt = 0; ; attempt++) {
+        if (destroyed) throw new Error("destroyed")
+        try { return await synth(chunks[i].text) }
+        catch (e) {
+          if (!(e && e.retryable) || attempt >= RETRY_LIMIT) throw e
+          await sleep(Math.min(RETRY_BASE * 2 ** attempt, RETRY_MAX))
+        }
+      }
+    }
+
+    // Serial queue: one request in flight at a time, advancing strictly in
+    // order and only running ahead of playback by LOOKAHEAD chunks. Waiters
+    // parked on a not-yet-produced index are woken as each entry lands.
+    let head = 0, working = false, epoch = 0
+    const waiters = new Set()
+    const wake = () => { for (const w of waiters) w(); }
+    const pump = async () => {
+      if (working || destroyed) return
+      working = true
+      const gen = epoch
+      try {
+        while (!destroyed && gen === epoch && head < chunks.length && head <= idx + LOOKAHEAD) {
+          if (cache.has(head)) { head++; continue }
+          const i = head
+          let url, err
+          try { url = await synthWithRetry(i) }
+          catch (e) { err = e || new Error("synth failed") }
+          if (destroyed || gen !== epoch) {
+            if (url) URL.revokeObjectURL(url)
+            return
+          }
+          cache.set(i, err ? Promise.reject(err) : Promise.resolve(url))
+          head++
+          wake()
+        }
+      } finally { working = false }
+    }
+
+    // Resolve the cached audio URL for a chunk, waiting for the serial queue to
+    // reach it if necessary. Rejects only if that chunk's synthesis hard-failed.
+    const awaitChunk = i => {
+      if (cache.has(i)) return cache.get(i)
+      const gen = epoch
+      return new Promise((resolve, reject) => {
+        const check = () => {
+          if (destroyed || gen !== epoch) { waiters.delete(check); return reject(new Error("cancelled")) }
+          if (cache.has(i)) { waiters.delete(check); cache.get(i).then(resolve, reject) }
+        }
+        waiters.add(check)
+        pump()
+      })
     }
 
     const setReading = el => {
@@ -191,11 +281,13 @@ const script = String.raw`
 
     const stop = () => {
       state = "idle"
+      epoch++
       audio.pause()
       audio.removeAttribute("src")
       for (const p of cache.values()) p.then(u => URL.revokeObjectURL(u)).catch(() => {})
       cache.clear()
-      idx = 0
+      idx = 0; head = 0
+      wake()
       setReading(null)
       render()
     }
@@ -204,17 +296,22 @@ const script = String.raw`
       if (destroyed) return
       if (i >= chunks.length) return stop()
       idx = i
-      prefetch(i); prefetch(i + 1)
+      const gen = epoch
+      pump()
       state = "loading"; render()
       let url
-      try { url = await cache.get(i) }
-      catch { return playIdx(i + 1) }
-      if (destroyed || state === "paused") return
+      try { url = await awaitChunk(i) }
+      catch {
+        if (destroyed || gen !== epoch || state !== "loading") return
+        return playIdx(i + 1)
+      }
+      if (destroyed || gen !== epoch || state === "paused") return
       setReading(chunks[i].el)
       currentUrl = url
       audio.src = url
       state = "playing"; render()
       audio.play().catch(() => {})
+      pump()
     }
 
     audio.addEventListener("ended", () => {

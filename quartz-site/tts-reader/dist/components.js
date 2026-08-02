@@ -79,6 +79,7 @@ const script = String.raw`
   }
 
   const setup = () => {
+    document.querySelectorAll(".tts-control").forEach(el => el.remove())
     const article = document.querySelector(".center article") || document.querySelector("article")
     if (!article) return null
     const chunks = collect(article)
@@ -175,7 +176,7 @@ const script = String.raw`
     })
     stopBtn.addEventListener("click", stop)
 
-    return { destroy() { destroyed = true; stop() } }
+    return { destroy() { destroyed = true; stop(); control.remove() } }
   }
 
   let current = null

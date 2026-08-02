@@ -210,6 +210,11 @@ plugins:
       position: left
       priority: 25
       display: mobile-only
+  - source: ../quartz-site/tts-reader
+    enabled: true
+    layout:
+      position: footer
+      priority: 5
 layout:
   groups:
     toolbar:

@@ -152,6 +152,10 @@ def validate_file(path: Path) -> list[str]:
         if not isinstance(tags, list):
             errors.append(f"{rel}: `tags` must be a YAML list")
 
+    authors = frontmatter.get("authors")
+    if authors is not None and not isinstance(authors, list):
+        errors.append(f"{rel}: `authors` must be a YAML list")
+
         date = frontmatter.get("date", "")
         if isinstance(date, str) and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
             errors.append(f"{rel}: `date` must use YYYY-MM-DD")

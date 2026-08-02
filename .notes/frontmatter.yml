@@ -33,6 +33,10 @@ recommended:
     format: YYYY-MM-DD
 
 optional:
+  authors:
+    type: array
+    items: string
+    effect: credits_every_author_including_llm_models_that_edited_the_note
   archive:
     type: boolean
     effect: exclude_note_from_build_indexes_and_navigation
@@ -50,6 +54,9 @@ conventions:
   dates_should_be_iso8601: true
   source_urls_should_be_canonical_when_possible: true
   archive_true_removes_note_from_site_output: true
+  authors_use_short_lowercase_slugs: true
+  agents_append_their_model_slug_to_authors_when_editing_a_note: true
+  absence_of_model_entries_in_authors_implies_human_only: true
 
 backfill_targets:
   normalize_tags_to_yaml_lists: true

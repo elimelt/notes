@@ -4,6 +4,8 @@ category: Replace with category
 tags:
   - replace-me
 date: 2026-07-31
+authors:
+  - elimelt
 status: draft
 description: State what this note explains and where it stops.
 sources:

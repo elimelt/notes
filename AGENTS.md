@@ -61,6 +61,15 @@ target for any new note or backfill pass.
 
 - Do not add an in-body `#` heading to a note that already has frontmatter
   `title`.
+- When you create or materially edit a note, append your model slug (for
+  example `claude-fable-5`) to the `authors` frontmatter list. Keep it a flat
+  YAML list of lowercase slugs, keep `elimelt` first, and do not add
+  duplicates. This is the note's LLM blame record; a note without model
+  entries is presumed human-only. The same rule applies to a notebook's
+  first-cell frontmatter.
+- Do not backfill `authors` onto notes you are not otherwise editing. Git
+  history cannot attribute past LLM edits (almost no commits carry
+  `Co-Authored-By` trailers), so the field only accrues going forward.
 - Keep `tags` as YAML lists, not comma-separated strings.
 - Put publishable notes and attachments in `content/`.
 - `content/templates/` is for scaffolding and is ignored by Quartz.

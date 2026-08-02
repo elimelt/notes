@@ -4,6 +4,8 @@ category: Systems Research
 tags:
   - paper-notes
 date: 2026-07-31
+authors:
+  - elimelt
 status: draft
 description: State what this paper tried to solve and what this note extracts from it.
 sources:

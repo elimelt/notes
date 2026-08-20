@@ -183,6 +183,15 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  - source: ../quartz-site/plugins/copy-markdown
+    enabled: true
+    options:
+      outputDir: static/markdown
+      sourceDir: ../content
+    order: 850
+    layout:
+      position: afterBody
+      priority: 10
   - source: "@quartz-community/page-title"
     enabled: true
     layout:

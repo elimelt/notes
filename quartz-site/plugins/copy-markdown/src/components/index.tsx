@@ -9,66 +9,51 @@ interface CopyMarkdownOptions {
 }
 
 const styles = `
-.copy-markdown {
-  display: flex;
+.copy-markdown-control {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  max-width: 48rem;
-  margin-top: 1.5rem;
-  padding: 1rem 1.125rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--lightgray) 18%, transparent);
+  margin-left: 0.6rem;
+  vertical-align: baseline;
 }
 
-.copy-markdown__content {
-  min-width: 0;
+.copy-markdown-control[hidden] {
+  display: none;
 }
 
-.copy-markdown h2 {
-  margin: 0 0 0.25rem;
-  font-size: 1rem;
-  line-height: 1.3;
-}
-
-.copy-markdown p {
-  margin: 0;
-  color: var(--darkgray);
-  font-size: 0.9rem;
-  line-height: 1.45;
-}
-
-.copy-markdown__button {
-  flex: 0 0 auto;
-  min-width: 5.5rem;
-  padding: 0.55rem 0.8rem;
-  border: 1px solid var(--secondary);
-  border-radius: 0.5rem;
-  background: var(--secondary);
-  color: var(--light);
+.copy-markdown-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 6.75rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--gray) 45%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--gray);
   font: inherit;
-  font-size: 0.875rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: 0.72em;
+  line-height: 1.5;
   cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 
-.copy-markdown__button:hover {
-  filter: brightness(1.08);
+.copy-markdown-button:hover {
+  color: var(--secondary);
+  border-color: var(--secondary);
 }
 
-.copy-markdown__button:focus-visible {
-  outline: 2px solid var(--tertiary);
-  outline-offset: 3px;
+.copy-markdown-button:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
 }
 
-.copy-markdown__button:disabled {
+.copy-markdown-button:disabled {
   cursor: wait;
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
-.copy-markdown__status {
+.copy-markdown-status {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -78,18 +63,6 @@ const styles = `
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-@media all and (max-width: 600px) {
-  .copy-markdown {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .copy-markdown__button {
-    width: 100%;
-  }
 }
 `;
 
@@ -121,14 +94,23 @@ const writeMarkdownToClipboard = async (text) => {
 }
 
 const setupCopyMarkdown = () => {
-  for (const button of document.querySelectorAll(".copy-markdown__button")) {
+  for (const control of document.querySelectorAll(".copy-markdown-control")) {
+    const host = document.querySelector(".page-header .content-meta") || document.querySelector(".page-header")
+    if (!host) continue
+
+    const listenControl = host.querySelector(".tts-control")
+    if (listenControl) host.insertBefore(control, listenControl)
+    else host.appendChild(control)
+    control.hidden = false
+
+    const button = control.querySelector(".copy-markdown-button")
+    if (!button) continue
     if (button.dataset.copyMarkdownBound === "true") continue
     button.dataset.copyMarkdownBound = "true"
 
-    const label = button.querySelector(".copy-markdown__label")
-    const section = button.closest(".copy-markdown")
-    const status = section?.querySelector(".copy-markdown__status")
-    const originalLabel = label?.textContent ?? "Copy"
+    const label = button.querySelector(".copy-markdown-label")
+    const status = control.querySelector(".copy-markdown-status")
+    const originalLabel = label?.textContent ?? "Copy Markdown"
     let resetTimer
 
     const setResult = (message, visibleLabel) => {
@@ -203,29 +185,21 @@ const CopyMarkdown = ((options?: CopyMarkdownOptions) => {
 
     const markdownPath = `/${outputDir}/${encodeSlug(slug)}.md`;
     return (
-      <section
-        class={`${displayClass ?? ""} copy-markdown`}
-        aria-labelledby="copy-markdown-title"
-      >
-        <div class="copy-markdown__content">
-          <h2 id="copy-markdown-title">Copy Markdown</h2>
-          <p>
-            Copy this note's source Markdown for your editor or another tool.
-          </p>
-        </div>
+      <span class={`${displayClass ?? ""} copy-markdown-control`} hidden>
         <button
-          class="copy-markdown__button"
+          class="copy-markdown-button"
           type="button"
           data-markdown-path={markdownPath}
+          aria-label="Copy this note as Markdown"
         >
-          <span class="copy-markdown__label">Copy</span>
+          <span class="copy-markdown-label">Copy Markdown</span>
         </button>
         <span
-          class="copy-markdown__status"
+          class="copy-markdown-status"
           role="status"
           aria-live="polite"
         ></span>
-      </section>
+      </span>
     );
   };
 

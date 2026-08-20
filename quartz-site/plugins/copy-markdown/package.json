@@ -28,8 +28,8 @@
       "CopyMarkdown": {
         "displayName": "Copy Markdown",
         "description": "Copies the current note's source Markdown.",
-        "defaultPosition": "afterBody",
-        "defaultPriority": 10
+        "defaultPosition": "footer",
+        "defaultPriority": 4
       }
     }
   }

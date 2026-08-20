@@ -190,8 +190,8 @@ plugins:
       sourceDir: ../content
     order: 850
     layout:
-      position: afterBody
-      priority: 10
+      position: footer
+      priority: 4
   - source: "@quartz-community/page-title"
     enabled: true
     layout:

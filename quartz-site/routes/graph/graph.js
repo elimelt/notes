@@ -241,6 +241,7 @@ canvas.addEventListener("click", (event) => {
   window.open(url, target, "noopener")
 })
 fitButton.addEventListener("click", () => fitGraph())
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw)
 new ResizeObserver(resize).observe(canvas)
 resize()
 loadGraph()

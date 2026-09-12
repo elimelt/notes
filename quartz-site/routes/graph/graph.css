@@ -44,6 +44,12 @@ body {
   font-variation-settings: "wdth" 100;
 }
 
+/* Let an embedding page supply the background in either color scheme. */
+html.embedded,
+html.embedded body {
+  background: transparent;
+}
+
 .graph-shell {
   position: relative;
 }

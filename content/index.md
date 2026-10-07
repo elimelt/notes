@@ -1,9 +1,36 @@
 ---
-title: (not) Elijah's Notes
-description: Technical notes on computer science, systems, machine learning, electronics, and engineering.
+title: Elijah Melton's Technical Notes
+description: Elijah Melton's notes on algorithms, machine learning, recommender systems, LLM serving, software, hardware, and mathematics.
+updated: 2026-10-06
+authors:
+  - elimelt
+  - gpt-5.6-sol
 ---
 
-# (not) Elijah's Notes
+Technical notes by Elijah Melton on algorithms, machine learning, systems,
+software, hardware, and mathematics. I use this site to work through proofs,
+papers, and implementation details that I want to be able to find again.
+
+## Selected notes
+
+- [[algorithms/greedy-algorithms|Why earliest finish time is optimal for interval scheduling]]: greedy-stays-ahead and exchange proofs, plus why interval partitioning sorts by start time instead.
+- [[ml/nlp/decoding-strategies|Beam search, length normalization, and language-model decoding]]: the beam curse, greedy decoding, temperature, top-k, and nucleus sampling.
+- [[ml/recommender-systems/deep-neural-networks-for-youtube-recommendations|Deep Neural Networks for YouTube Recommendations]]: candidate generation, ranking, sampled softmax, and watch-time objectives.
+- [[ml/recommender-systems/predicting-clicks-on-ads-at-facebook|Practical Lessons from Predicting Clicks on Ads at Facebook]]: the GBDT plus logistic-regression model, data freshness, and online learning.
+- [[ml/recommender-systems/two-tower-retrieval|Two-tower retrieval with a MovieLens experiment]]: an executable look at embedding retrieval and ranking.
+- [[systems/operating-systems/benchmarks/store_fwd|Store-to-load forwarding benchmarks]]: recorded timings for aligned, independent, and partially overlapping x86 loads, with the missing setup details called out.
+
+## Browse by topic
+
+- [[algorithms/index|Algorithms]]
+- [[hardware/index|Hardware]]
+- [[math/index|Mathematics]]
+- [[ml/index|Machine learning]]
+- [[software/index|Software engineering]]
+- [[systems/index|Systems]]
+- [[reference/index|Reference material]]
+
+## About these notes
 
 While in most cases I'd prefer reading the prose/thoughts of a fellow human,
 these notes aren't for my own or anyone else's enjoyment, nor am I trying to
@@ -35,13 +62,3 @@ errors in source documents I/the model cite. Still, any time I notice one, I
 try to fix it. If you're the type of person that must right the wrong you
 notice in the world, feel free to open a [PR](https://github.com/elimelt/notes)
 to correct it.
-
-## Browse
-
-- [[algorithms/index|Algorithms]]
-- [[hardware/index|Hardware]]
-- [[math/index|Mathematics]]
-- [[ml/index|Machine learning]]
-- [[software/index|Software engineering]]
-- [[systems/index|Systems]]
-- [[reference/index|Reference material]]

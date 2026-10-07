@@ -13,9 +13,12 @@ tags:
   - online learning
   - spark
 date: 2025-05-17
-updated: 2026-07-31
+updated: 2026-10-06
 status: evergreen
-description: Notes on He et al. (2014) covering the GBDT plus logistic regression architecture, data freshness, online learning, and the systems work needed to train CTR models in real time.
+description: How Facebook's 2014 ads CTR paper combines boosted-tree leaf features with logistic regression, then handles freshness, online learning, and calibration.
+authors:
+  - elimelt
+  - gpt-5.6-sol
 sources:
   - title: He et al. (2014), Practical Lessons from Predicting Clicks on Ads at Facebook
     url: https://quinonero.net/Publications/predicting-clicks-facebook.pdf
@@ -24,7 +27,16 @@ sources:
 
 ## Purpose
 
-This note records the main modeling and systems lessons from He et al.'s Facebook ads CTR paper. The paper is worth reading because it is not just a model comparison. It shows where the gains came from, how much freshness mattered, and what extra infrastructure was needed to make online training usable in production. This is a concrete ranking case study for [[ml/recommender-systems/retrieval-and-ranking|retrieval and ranking]] and [[ml/recommender-systems/recommender-systems|recommender systems]].
+This note records the main modeling and systems lessons from [He et al.'s 2014 Facebook ads CTR paper](https://quinonero.net/Publications/predicting-clicks-facebook.pdf). Its central result is a hybrid model: gradient-boosted decision trees learn non-linear feature combinations, each reached leaf becomes a sparse binary feature, and logistic regression turns those features into a predicted click probability. The paper also measures the effects of training-data freshness, online updates, feature pruning, and negative downsampling. It is a historical production case study, not a description of Facebook's current ads stack.
+
+| Design question | Result reported in the paper |
+| --- | --- |
+| Which model works best? | GBDT leaf features followed by logistic regression beats either component alone on normalized entropy |
+| How much does freshness matter? | Daily rather than weekly retraining improves normalized entropy by about 1% in the reported setup |
+| Which signals matter most? | Historical features provide most of the measured gain; contextual features still help with cold start |
+| How are delayed clicks joined? | An online joiner buffers impressions until a click arrives or the labeling window expires |
+
+This is a concrete ranking case study for [[ml/recommender-systems/retrieval-and-ranking|retrieval and ranking]], [[ml/recommender-systems/ranking-objectives|ranking objectives]], and [[ml/recommender-systems/recommender-systems|recommender systems]].
 
 ## Citation
 

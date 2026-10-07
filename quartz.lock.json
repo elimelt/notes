@@ -3,7 +3,7 @@
   "plugins": {
     "math-tex-source": {
       "source": "../quartz-site/math-tex-source",
-      "resolved": "/Users/emm12/repos/notes/quartz-site/math-tex-source",
+      "resolved": "../quartz-site/math-tex-source",
       "commit": "local",
       "installedAt": "2026-08-02T04:45:19.314Z"
     },
@@ -15,7 +15,7 @@
     },
     "tts-reader": {
       "source": "../quartz-site/tts-reader",
-      "resolved": "/Users/emm12/repos/notes/quartz-site/tts-reader",
+      "resolved": "../quartz-site/tts-reader",
       "commit": "local",
       "installedAt": "2026-08-02T04:45:19.315Z"
     }

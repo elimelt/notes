@@ -50,8 +50,10 @@ sync_site() {
   cp "$ROOT/quartz.config.yaml" "$QUARTZ_DIR/quartz.config.yaml"
   if [[ -f "$ROOT/quartz.lock.json" ]]; then
     cp "$ROOT/quartz.lock.json" "$QUARTZ_DIR/quartz.lock.json"
+    python3 "$ROOT/scripts/materialize_quartz_lock.py" "$QUARTZ_DIR/quartz.lock.json" "$QUARTZ_DIR"
   fi
   cp "$ROOT/quartz-site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
+  cp "$ROOT/quartz-site/overrides/Head.tsx" "$QUARTZ_DIR/quartz/components/Head.tsx"
   mkdir -p "$QUARTZ_DIR/quartz/static"
   cp -R "$ROOT/quartz-site/static/." "$QUARTZ_DIR/quartz/static/"
   if [[ -d "$ROOT/docs" ]]; then
@@ -72,6 +74,8 @@ install_plugins() {
 sync_plugins() {
   (cd "$QUARTZ_DIR" && npx quartz plugin install --from-config --concurrency 2)
   cp "$QUARTZ_DIR/quartz.lock.json" "$ROOT/quartz.lock.json"
+  python3 "$ROOT/scripts/materialize_quartz_lock.py" \
+    "$ROOT/quartz.lock.json" "$QUARTZ_DIR" --portable
   patch_mermaid_defaults
 }
 
@@ -116,6 +120,7 @@ case "$command" in
     python3 "$ROOT/scripts/prepare_graph_index.py" "$ROOT/public/static/contentIndex.json"
     python3 "$ROOT/scripts/validate_graph_index.py" "$ROOT/public/static/contentIndex.json"
     publish_legacy_docs
+    python3 "$ROOT/scripts/validate_seo_output.py" "$ROOT/public"
     ;;
   serve)
     bootstrap

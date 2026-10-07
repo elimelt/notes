@@ -1,5 +1,5 @@
 ---
-title: Decoding Strategies for Language Models
+title: Beam Search, Length Normalization, and Language Model Decoding
 category: Natural Language Processing
 tags:
   - decoding
@@ -9,8 +9,13 @@ tags:
   - top-p
   - language modeling
 date: 2026-08-01
+updated: 2026-10-06
 status: draft
-description: How autoregressive models are turned into sequences at inference time, covering greedy decoding, beam search, temperature, top-k, top-p, and repetition penalties, with toy-logit code examples.
+description: Why beam search has a length bias, how length normalization addresses the beam curse, and when to use greedy decoding, temperature, top-k, or top-p sampling.
+authors:
+  - elimelt
+  - gpt-5.6-sol
+  - gpt-6
 sources:
   - title: Holtzman et al. (2020), The Curious Case of Neural Text Degeneration
     url: https://arxiv.org/abs/1904.09751
@@ -28,7 +33,23 @@ sources:
 
 ## Purpose
 
-A trained autoregressive model gives you $p(x_t \mid x_{<t})$, a distribution over the next token. It does not give you a sequence. This note covers the step that turns the distribution into text: greedy decoding and beam search as search procedures, then temperature, top-k, top-p, and repetition penalties as distribution shaping, and finally where the choice of strategy interacts with the serving stack. The model side of the factorization lives in [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]].
+A trained autoregressive model gives you $p(x_t \mid x_{<t})$, a distribution over the next token. It does not give you a sequence. This note explains how greedy decoding and beam search choose sequences, why wider beams expose a preference for short outputs, how length normalization and per-word rewards correct that bias, and when sampling is a better objective. The model side of the factorization lives in [[ml/deep-learning/decoder-only-transformers|Decoder-Only Transformers]].
+
+<a id="the-beam-curse-and-length-bias"></a>
+
+## Beam curse and length normalization
+
+The **beam curse** is the observation that increasing beam width can produce worse translations. In the translation experiments reported by [Murray and Chiang (2018)](https://aclanthology.org/W18-6322.pdf), wider beams find higher-scoring sequences that are shorter and have worse BLEU. A locally normalized sequence model can assign its highest probability to output that is too short. Each additional token contributes another log-probability term at or below zero, so a longer hypothesis usually gets a more negative raw log-probability.
+
+[Murray and Chiang (2018)](https://aclanthology.org/W18-6322.pdf) connect this length bias to the drop in BLEU observed with wider beams. Their experiments find that correcting the preference for short hypotheses almost eliminates the beam problem.
+
+| Beam score | Formula | What it changes |
+| --- | --- | --- |
+| Raw log-probability | $s(e) = \sum_t \log p(e_t \mid e_{<t})$ | Favors hypotheses that accumulate fewer negative terms, often short output |
+| Length normalization | $s(e) / \lvert e\rvert$ | Compares average log-probability per token; this correction has no additional parameter |
+| Per-word reward | $s(e) + \gamma \lvert e\rvert$ | Adds a tunable reward for each generated token and can be applied while hypotheses remain in the beam |
+
+Length normalization does not make a wider beam inherently better. It changes the score used to compare hypotheses so that search is less dominated by sequence length. The correction must still be evaluated for the task and model; the per-word reward parameter $\gamma$ is tuned on held-out data.
 
 ## Decoding as search
 
@@ -37,18 +58,6 @@ A decoder-only model factorizes sequence probability as $p(x_{1:T}) = \prod_t p(
 Greedy decoding takes $\arg\max_x p(x \mid x_{<t})$ at each step. It is cheap and deterministic, and it can commit to a locally likely token that leads to a globally poor continuation, since the product of conditionals is not maximized by maximizing each factor.
 
 Beam search keeps the $k$ highest-scoring partial hypotheses at each step, extends each by every token, and re-prunes to $k$. It approximates the mode of the sequence distribution far better than greedy, which is why it became standard in machine translation. The [Hugging Face generation docs](https://huggingface.co/docs/transformers/main/en/generation_strategies) recommend it for input-grounded tasks like translation and captioning, where the output is tightly constrained by the input and the mode is a sensible target.
-
-### The beam curse and length bias
-
-> [!warning] Wider beams can make output worse
-> A larger beam finds sequences the model scores higher, and in translation those sequences are systematically shorter and score worse on BLEU. Better search exposes the model's length bias rather than fixing it.
-
-Wider beams should find higher-probability sequences, and they do. In translation this makes BLEU worse, not better. [Murray and Chiang (2018)](https://aclanthology.org/W18-6322.pdf) show that wider beams find shorter translations, and trace both problems to label bias: locally normalized models multiply a factor less than one per token, so shorter hypotheses accumulate less probability decay and the true mode of the model is biased toward brevity. Their experiments show that correcting the brevity problem almost eliminates the beam problem.
-
-The standard corrections rescore a hypothesis $e$ with score $s(e)$ by length $|e|$:
-
-- Length normalization: $s'(e) = s(e) / |e|^{\alpha}$ with tunable $\alpha$.
-- Per-word reward: $s'(e) = s(e) + \gamma\,|e|$, which [Murray and Chiang](https://aclanthology.org/W18-6322.pdf) find works slightly better and is easier to apply to partial hypotheses inside the beam.
 
 ## Decoding as distribution shaping
 

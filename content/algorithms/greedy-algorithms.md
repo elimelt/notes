@@ -1,5 +1,5 @@
 ---
-title: Greedy Algorithms for Interval Scheduling and Partitioning
+title: Why Earliest Finish Time Is Optimal for Interval Scheduling
 category: Algorithms
 tags:
   - algorithms
@@ -8,16 +8,28 @@ tags:
   - partitioning
   - greedy
 date: 2024-04-19
-updated: 2026-07-30
+updated: 2026-10-06
 status: evergreen
-description: Greedy algorithms for interval scheduling and interval partitioning, with correctness proofs by greedy-stays-ahead, exchange argument, and a structural depth bound.
+description: A greedy-stays-ahead proof that earliest finish time is optimal for interval scheduling, plus why interval partitioning uses earliest start time instead.
+authors:
+  - elimelt
+  - gpt-5.6-sol
 sources:
-  - https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
+  - title: Kleinberg and Tardos, Algorithm Design course materials
+    url: https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
+    type: course-materials
 ---
 
 ## Purpose
 
-A greedy algorithm makes the most attractive choice at each step and hopes this leads to an optimal solution. Most greedy strategies are wrong, so the proof of correctness carries the weight. This note works through interval scheduling and interval partitioning, which between them show the three standard proof techniques: greedy stays ahead, exchange arguments, and structural bounds.
+A greedy algorithm makes the most attractive choice at each step. The choice needs a proof. For **interval scheduling**, choosing the compatible interval with the earliest finish time is optimal because it leaves at least as much room for every later choice as any optimal solution. For **interval partitioning**, the goal changes from selecting intervals to assigning all of them, and the correct processing order is earliest start time.
+
+Assume every interval is half-open, $[s(j), f(j))$, so one job may start exactly when another finishes.
+
+| Problem | Goal | Greedy order | Proof idea |
+| --- | --- | --- | --- |
+| Interval scheduling | Select the largest compatible subset | Earliest finish time | Greedy stays ahead: its $r$th selected job finishes no later than the $r$th job in an optimum |
+| Interval partitioning | Use the fewest classrooms for all intervals | Earliest start time | A newly opened room witnesses that many intervals overlapping at the new interval's start |
 
 > [!abstract] The three proof techniques
 > **Greedy stays ahead**: define a progress measure, then show by induction that after every step greedy is at least as far along as any optimal solution. Used for interval scheduling via the lemma $f(i_r) \le f(j_r)$.
@@ -32,17 +44,19 @@ Sort the jobs by $f(j)$, iterate in order, and take every job that is compatible
 
 ```python
 def interval_scheduling(jobs):
-  jobs.sort(key=lambda x: x[1])
-  last = 0
-  S = []
-  for job in jobs:
-    if job[0] >= last:
-      S.append(job)
-      last = job[1]
-  return S
+    jobs.sort(key=lambda x: x[1])
+    last = float("-inf")
+    selected = []
+    for job in jobs:
+        if job[0] >= last:
+            selected.append(job)
+            last = job[1]
+    return selected
 ```
 
-### Greedy Stays Ahead Proof
+<a id="greedy-stays-ahead-proof"></a>
+
+### Why earliest finish time is optimal: greedy stays ahead
 
 Suppose greedy chose jobs with finish times $f(i_1) \le f(i_2) \le \ldots \le f(i_k)$, and some optimal solution chose $f(j_1) \le f(j_2) \le \ldots \le f(j_m)$.
 
@@ -78,19 +92,16 @@ Sort by start time and place each interval into any existing classroom that fits
 
 ```python
 def partition_intervals(I: list[tuple[int, int]]):
-  # sort by start time
-  I.sort(key=lambda x: x[0])
-  S = []
-  for itvl in I:
-    # if some existing partition works, add itvl to it
-    for S_i in S:
-      if itvl[0] >= S_i[-1][1]:
-        S_i.append(itvl)
-        break
-    # otherwise, allocate a new partition holding itvl
-    else:
-      S.append([itvl])
-  return S
+    I.sort(key=lambda x: x[0])
+    partitions = []
+    for interval in I:
+        for partition in partitions:
+            if interval[0] >= partition[-1][1]:
+                partition.append(interval)
+                break
+        else:
+            partitions.append([interval])
+    return partitions
 ```
 
 ### Why the sort order matters
@@ -121,7 +132,11 @@ Define the **depth** of the input as the maximum number of intervals that overla
 
 **Lemma**: the algorithm uses exactly depth many classrooms, and is therefore optimal.
 
-**Proof**: let $d$ be the number of classrooms the algorithm uses. Classroom $d$ was allocated because some job $j$ was incompatible with all $d - 1$ previously allocated classrooms. Since we sorted by start time, each of those incompatible jobs started before $s(j)$ and ends after $s(j)$, so $d$ lectures overlap at time $s(j) + \epsilon$. The depth is therefore at least $d$, and since every solution uses at least depth classrooms, greedy is optimal. $\blacksquare$
+**Proof**: let $d$ be the number of classrooms the algorithm uses. Classroom $d$ was allocated because some job $j$ was incompatible with all $d - 1$ previously allocated classrooms. Since we sorted by start time, the last job in each of those classrooms starts no later than $s(j)$ and finishes after $s(j)$. Under the half-open interval convention, those $d - 1$ jobs and $j$ all contain time $s(j)$. The input depth is therefore at least $d$. Every valid solution needs at least one classroom per interval at that time, while greedy uses $d$, so greedy is optimal. $\blacksquare$
+
+## Sources
+
+- [Kleinberg and Tardos, Algorithm Design course materials](https://www.cs.princeton.edu/~wayne/kleinberg-tardos/)
 
 ## Related notes
 

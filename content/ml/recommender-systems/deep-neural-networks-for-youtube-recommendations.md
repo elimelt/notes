@@ -10,9 +10,12 @@ tags:
   - candidate generation
   - ann
 date: 2026-07-31
-updated: 2026-07-31
+updated: 2026-10-06
 status: evergreen
-description: Notes on Covington, Adams, and Sargin (2016), covering YouTube's split between candidate generation and ranking, the training surrogate choices behind it, and the watch-time objective.
+description: How the 2016 YouTube recommender paper uses sampled-softmax candidate generation, approximate nearest-neighbor retrieval, and watch-time ranking.
+authors:
+  - elimelt
+  - gpt-5.6-sol
 sources:
   - title: Covington, Adams, and Sargin (2016), Deep Neural Networks for YouTube Recommendations
     url: https://research.google.com/pubs/archive/45530.pdf
@@ -21,15 +24,16 @@ sources:
 
 ## Purpose
 
-This paper is one of the clearest production writeups of the classic recommender split: cheap retrieval first, richer ranking second. It is also useful because the interesting parts are not only architectural. The paper explains why the training target had to be chosen carefully, why sequence information was withheld in one place, and why watch time mattered more than CTR.
+This note explains the two-stage system in [Covington, Adams, and Sargin's 2016 paper](https://research.google.com/pubs/archive/45530.pdf). Candidate generation reduces millions of videos to hundreds through a sampled-softmax model served with approximate nearest-neighbor search. A separate neural ranker then uses hundreds of features and a watch-time-weighted objective to order those candidates. The design is a historical production case study, not a description of YouTube's current architecture.
+
+| Stage | Input scale | Model and objective | Serving output |
+| --- | ---: | --- | --- |
+| Candidate generation | Millions of videos | Feed-forward network trained to predict a future watch with sampled softmax | Hundreds of candidates retrieved by approximate nearest-neighbor search |
+| Ranking | Hundreds of candidates | Feed-forward network with rich user-video features and watch-time-weighted logistic loss | A few dozen ordered recommendations |
 
 ## Citation
 
 - [Deep Neural Networks for YouTube Recommendations (Covington, Adams, and Sargin, RecSys 2016)](https://research.google.com/pubs/archive/45530.pdf)
-
-## Related notes
-
-- [[ml/recommender-systems/two-tower-retrieval|Two-Tower Retrieval and the MovieLens 100K experiment]]
 
 ## The Setup
 

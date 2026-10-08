@@ -87,6 +87,16 @@ class BaselineConfig:
     ``levenshtein_weight`` mix the anchor-dictionary commonness prior, the
     bi-encoder cosine similarity, and the normalized Levenshtein similarity
     to the target title; the mix is discounted by ``1/(1 + ln(ambiguity))``.
+    ``cross_family_penalty`` is the topic-family consistency prior for
+    generic anchors (2026-08-01 report failure mode 2): when the caller
+    supplies a ``same_family`` signal, target correctness is further scaled
+    by ``1 - cross_family_penalty * (1 - same_family)`` — a full-strength
+    discount for a cross-family target, none for a same-family one.
+    Proper-name-shaped anchors are exempted upstream (they name globally
+    unique concepts, and cross-family links through them are exactly the
+    valuable novel connections). Note this field enters ``resolved_dict``
+    and therefore changes the config fingerprint and ``model_version`` of
+    every draft — intended, since the scores change.
 
     Placement head: prose spans score ``1 - position_penalty *
     sentence_position``; non-prose spans floor at ``non_prose_placement``
@@ -107,6 +117,7 @@ class BaselineConfig:
     commonness_weight: float = 0.4
     embedding_weight: float = 0.35
     levenshtein_weight: float = 0.25
+    cross_family_penalty: float = 0.35
     position_penalty: float = 0.25
     non_prose_placement: float = 0.05
     top_k_targets: int = 5
@@ -126,6 +137,7 @@ class BaselineConfig:
         for name in (
             "single_word_factor",
             "long_span_floor",
+            "cross_family_penalty",
             "position_penalty",
             "non_prose_placement",
         ):
@@ -161,6 +173,7 @@ class BaselineConfig:
             "commonness_weight": self.commonness_weight,
             "embedding_weight": self.embedding_weight,
             "levenshtein_weight": self.levenshtein_weight,
+            "cross_family_penalty": self.cross_family_penalty,
             "position_penalty": self.position_penalty,
             "non_prose_placement": self.non_prose_placement,
             "top_k_targets": self.top_k_targets,
@@ -206,7 +219,7 @@ def _word_count_factor(word_count: int, config: BaselineConfig) -> float:
     )
 
 
-def score_baseline(
+def score_baseline(  # noqa: PLR0913 -- explicit hand-formula inputs, fixed by the spec
     candidate: SpanCandidate,
     target_id: str,
     *,
@@ -214,6 +227,7 @@ def score_baseline(
     target_vector_sim: float,
     ambiguity: int,
     levenshtein_title: float,
+    same_family: float | None = None,
     config: BaselineConfig,
 ) -> tuple[float, float, float]:
     """Score one (span, target) pair with three explicit hand formulas.
@@ -235,7 +249,13 @@ def score_baseline(
       anchor-dictionary commonness prior, the bi-encoder cosine (negative
       cosines clamp to 0), and the normalized Levenshtein similarity to the
       target title, discounted logarithmically by how many targets compete
-      for the mention. Monotone non-increasing in ambiguity.
+      for the mention. When ``same_family`` is not ``None``, the result is
+      then multiplied by ``1 - cross_family_penalty * (1 -
+      clamp01(same_family))`` — the topic-family consistency prior for
+      family-polysemous anchors ("memory management" means different things
+      in OS notes and LLM-serving notes). ``None`` means "unknown or exempt
+      — no penalty". Monotone non-increasing in ambiguity and monotone
+      non-decreasing in ``same_family``.
     - **Placement validity** = ``prose * (1 - position_penalty *
       sentence_position)``, floored at ``non_prose_placement``; ``prose`` is
       1 for :attr:`~linkdiscovery.inline.records.LinkRegionKind.PROSE` spans
@@ -264,6 +284,9 @@ def score_baseline(
     ) / target_weights
     ambiguity_discount = 1.0 / (1.0 + math.log(max(ambiguity, 1)))
     target_correctness = _clamp01(target_mix * ambiguity_discount)
+    if same_family is not None:
+        family_factor = 1.0 - config.cross_family_penalty * (1.0 - _clamp01(same_family))
+        target_correctness = _clamp01(target_correctness * family_factor)
 
     if candidate.region_kind is LinkRegionKind.PROSE:
         prose = 1.0
@@ -312,7 +335,12 @@ def _shortlist_targets(
 
 @dataclass(frozen=True, slots=True)
 class _ProposalContext:
-    """Shared read-only inputs threaded through per-candidate scoring."""
+    """Shared read-only inputs threaded through per-candidate scoring.
+
+    ``families`` optionally maps document ids to topic-family labels for the
+    cross-family penalty; ids missing from the mapping have an unknown
+    family and are never penalized.
+    """
 
     target_lookup: Callable[[str], Mapping[str, int]]
     doc_vectors: Mapping[str, NDArray[np.float32]]
@@ -322,6 +350,34 @@ class _ProposalContext:
     run_id: str
     corpus_id: str
     model_version: str
+    families: Mapping[str, str] | None = None
+
+
+def _same_family_signal(
+    candidate: SpanCandidate, target_id: str, families: Mapping[str, str] | None
+) -> float | None:
+    """The ``same_family`` value passed to :func:`score_baseline` for one target.
+
+    Proper-name-shaped anchors — span-stage features ``is_titlecase`` or
+    ``is_acronym`` — are exempt (``None``): TitleCase/acronym anchors
+    ("Paxos", "TCP", "Sharding") name globally unique concepts, and
+    cross-family links through them are exactly the valuable novel
+    connections. Lowercase common phrases ("memory management",
+    "scheduling") are family-polysemous — the observed wrong-domain failures
+    (2026-08-01 report, rank 61). ``None`` is also returned when no
+    ``families`` mapping was supplied or either document's family is
+    unknown; otherwise 1.0 for equal families, 0.0 for different ones.
+    """
+    features = candidate.features
+    if features.get("is_titlecase", 0.0) > 0.0 or features.get("is_acronym", 0.0) > 0.0:
+        return None
+    if families is None:
+        return None
+    source_family = families.get(candidate.document_id)
+    target_family = families.get(target_id)
+    if source_family is None or target_family is None:
+        return None
+    return 1.0 if source_family == target_family else 0.0
 
 
 def _propose_for_candidate(
@@ -353,6 +409,7 @@ def _propose_for_candidate(
         levenshtein_title = levenshtein_ratio(
             candidate.text.casefold(), context.titles.get(target_id, "").casefold()
         )
+        same_family = _same_family_signal(candidate, target_id, context.families)
         scores = score_baseline(
             candidate,
             target_id,
@@ -360,6 +417,7 @@ def _propose_for_candidate(
             target_vector_sim=similarity,
             ambiguity=ambiguity,
             levenshtein_title=levenshtein_title,
+            same_family=same_family,
             config=context.config,
         )
         combined = (scores[0] * scores[1] * scores[2]) ** _COMBINE_EXPONENT
@@ -370,6 +428,8 @@ def _propose_for_candidate(
             "ambiguity": float(ambiguity),
             "levenshtein_title": levenshtein_title,
         }
+        if same_family is not None:
+            proposal_features["same_family"] = same_family
         key = (-combined, target_id)
         if best is None or key < (-best[0], best[1]):
             best = (combined, target_id, scores, proposal_features)
@@ -416,6 +476,7 @@ def propose_baseline(  # noqa: PLR0913 -- stage-boundary signature fixed by the 
     config: BaselineConfig,
     run_id: str = "adhoc",
     corpus_id: str = "",
+    families: Mapping[str, str] | None = None,
 ) -> tuple[InlineProposal, ...]:
     """Draft one baseline proposal per candidate span (SPEC §12 fallback).
 
@@ -437,6 +498,14 @@ def propose_baseline(  # noqa: PLR0913 -- stage-boundary signature fixed by the 
     (unreviewed) review state. Spans with an empty target pool draft
     nothing.
 
+    ``families`` optionally maps document ids to topic-family labels
+    (missing ids = unknown family). For anchors that are not
+    proper-name-shaped, a target in a *different* family than the source is
+    discounted by ``config.cross_family_penalty`` (see
+    :func:`_same_family_signal` and :func:`score_baseline`); when the signal
+    fires either way, the draft records feature ``same_family`` (1.0 equal /
+    0.0 different).
+
     No selection happens here: budgets, MMR diversity, and accept
     thresholds (SPEC §7 Q31, §10) are the select stage's job, so *every*
     scoreable span yields a draft and downstream stages decide what
@@ -454,6 +523,7 @@ def propose_baseline(  # noqa: PLR0913 -- stage-boundary signature fixed by the 
         run_id=run_id,
         corpus_id=corpus_id,
         model_version="baseline-" + config.fingerprint(),
+        families=families,
     )
     proposals: list[InlineProposal] = []
     for document_id in sorted(candidates_by_doc):

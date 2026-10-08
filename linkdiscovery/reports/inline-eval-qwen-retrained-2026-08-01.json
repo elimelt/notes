@@ -1,0 +1,324 @@
+{
+ "encoder_fingerprint": "sha256:b97df8c1280dba1bbe93db3018ba1051817822680582617af92174838aae34dc",
+ "model_version": "sha256:13004e0a3f64dcf0cace1da2db19069a362216e9df7fd430eee2428533e7f897",
+ "split": {
+  "seed": 0,
+  "requested": {
+   "test": 0.2,
+   "val": 0.2
+  },
+  "achieved_fractions": {
+   "train": 0.6,
+   "val": 0.2,
+   "test": 0.2
+  },
+  "group_count": 71,
+  "counts": {
+   "train": 180,
+   "val": 60,
+   "test": 60
+  },
+  "test_tier_counts": {
+   "a": 23,
+   "b": 5,
+   "c": 32
+  },
+  "test_positives": 28
+ },
+ "retrieval": {
+  "learned_retrieval": {
+   "recall_at_1": 0.9642857142857143,
+   "recall_at_3": 0.9642857142857143,
+   "recall_at_5": 0.9642857142857143,
+   "recall_at_10": 0.9642857142857143,
+   "mrr": 0.9642857142857143,
+   "query_count": 28.0
+  },
+  "learned_reranked": {
+   "recall_at_1": 0.9642857142857143,
+   "recall_at_3": 0.9642857142857143,
+   "recall_at_5": 0.9642857142857143,
+   "recall_at_10": 0.9642857142857143,
+   "mrr": 0.9642857142857143,
+   "query_count": 28.0
+  },
+  "baseline": {
+   "recall_at_1": 0.9642857142857143,
+   "recall_at_3": 0.9642857142857143,
+   "recall_at_5": 0.9642857142857143,
+   "recall_at_10": 0.9642857142857143,
+   "mrr": 0.9642857142857143,
+   "query_count": 28.0
+  }
+ },
+ "naturalness": {
+  "n_natural": 51,
+  "n_not_natural": 9,
+  "mean_natural": 0.8966678612261746,
+  "mean_not_natural": 0.6435024175379012,
+  "auc": 0.7668845315904139
+ },
+ "recovery": {
+  "n_test_positives": 28,
+  "learned_ranked_total": 1287,
+  "baseline_ranked_total": 547,
+  "at_budget": [
+   {
+    "budget": 25.0,
+    "learned_recovered": 0.0,
+    "baseline_recovered": 1.0,
+    "learned_fraction": 0.0,
+    "baseline_fraction": 0.03571428571428571
+   },
+   {
+    "budget": 50.0,
+    "learned_recovered": 1.0,
+    "baseline_recovered": 2.0,
+    "learned_fraction": 0.03571428571428571,
+    "baseline_fraction": 0.07142857142857142
+   },
+   {
+    "budget": 100.0,
+    "learned_recovered": 2.0,
+    "baseline_recovered": 3.0,
+    "learned_fraction": 0.07142857142857142,
+    "baseline_fraction": 0.10714285714285714
+   },
+   {
+    "budget": 200.0,
+    "learned_recovered": 3.0,
+    "baseline_recovered": 4.0,
+    "learned_fraction": 0.10714285714285714,
+    "baseline_fraction": 0.14285714285714285
+   },
+   {
+    "budget": 400.0,
+    "learned_recovered": 8.0,
+    "baseline_recovered": 5.0,
+    "learned_fraction": 0.2857142857142857,
+    "baseline_fraction": 0.17857142857142858
+   },
+   {
+    "budget": 547.0,
+    "learned_recovered": 8.0,
+    "baseline_recovered": 5.0,
+    "learned_fraction": 0.2857142857142857,
+    "baseline_fraction": 0.17857142857142858
+   }
+  ]
+ },
+ "corpus": {
+  "learned_accepted": 181,
+  "baseline_accepted": 159,
+  "learned_threshold": 0.5,
+  "baseline_threshold": 0.5,
+  "accepted_overlap_span_target": 56,
+  "accepted_overlap_source_target": 63,
+  "learned_top": [
+   {
+    "source": "hardware/digital-design/369/system-verilog",
+    "anchor": "SystemVerilog",
+    "target": "hardware/digital-design/371/algorithmic-state-machines",
+    "combined": 0.9924,
+    "naturalness": 0.9953,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "systems/networks/5-application/overview",
+    "anchor": "flow control",
+    "target": "systems/networks/4-transport/flow-control",
+    "combined": 0.9911,
+    "naturalness": 0.9984,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "systems/networks/3-network/DHCP",
+    "anchor": "UDP",
+    "target": "systems/networks/4-transport/UDP",
+    "combined": 0.9911,
+    "naturalness": 0.9909,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "hardware/computer-architecture/rtl-reading-lab",
+    "anchor": "SystemVerilog",
+    "target": "hardware/digital-design/369/system-verilog",
+    "combined": 0.9889,
+    "naturalness": 0.9857,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "algorithms/connected-components",
+    "anchor": "connected components",
+    "target": "reference/cheatsheets/algorithms/graphs",
+    "combined": 0.9874,
+    "naturalness": 0.9854,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "systems/networks/5-application/quic-http2-http3",
+    "anchor": "UDP",
+    "target": "systems/networks/4-transport/UDP",
+    "combined": 0.9853,
+    "naturalness": 0.9872,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "ml/serving-systems/mixture-of-experts",
+    "anchor": "distributed systems",
+    "target": "systems/distributed-systems/index",
+    "combined": 0.9852,
+    "naturalness": 0.9783,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "systems/networks/2-direct-links/framing",
+    "anchor": "The physical layer",
+    "target": "systems/networks/0-foundation/2-physical-layer",
+    "combined": 0.9849,
+    "naturalness": 0.9576,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "systems/networks/5-application/HTTP",
+    "anchor": "load balancing",
+    "target": "systems/distributed-systems/load-balancing",
+    "combined": 0.9847,
+    "naturalness": 0.9786,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "algorithms/bipartite-graphs",
+    "anchor": "bipartite graphs",
+    "target": "algorithms/connected-components",
+    "combined": 0.9831,
+    "naturalness": 0.9658,
+    "target_correctness": 1.0
+   }
+  ],
+  "baseline_top": [
+   {
+    "source": "systems/networks/2-direct-links/framing",
+    "anchor": "The physical layer",
+    "target": "systems/networks/0-foundation/2-physical-layer",
+    "combined": 0.8662,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/networks/2-direct-links/errors",
+    "anchor": "the physical layer",
+    "target": "systems/networks/0-foundation/2-physical-layer",
+    "combined": 0.8573,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "algorithms/problems/graphs-and-trees",
+    "anchor": "graph theory",
+    "target": "reference/cheatsheets/algorithms/graphs",
+    "combined": 0.856,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/networks/5-application/HTTP",
+    "anchor": "load balancing",
+    "target": "systems/distributed-systems/load-balancing",
+    "combined": 0.855,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/networks/5-application/overview",
+    "anchor": "flow control",
+    "target": "systems/networks/4-transport/flow-control",
+    "combined": 0.8543,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/scheduling/2-parallel-and-multiprocessor/work-stealing-affinity-and-numa",
+    "anchor": "multiprocessor scheduling",
+    "target": "systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling",
+    "combined": 0.8535,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/operating-systems/lecture-notes/file-systems",
+    "anchor": "files and directories",
+    "target": "systems/operating-systems/v4-persistent-storage/13-files-and-directories",
+    "combined": 0.8475,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/scheduling/4-cluster-and-datacenter/admission-control-backpressure-overload",
+    "anchor": "flow control",
+    "target": "systems/networks/4-transport/flow-control",
+    "combined": 0.8442,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/distributed-systems/sharding",
+    "anchor": "Load balancing",
+    "target": "systems/distributed-systems/load-balancing",
+    "combined": 0.8402,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/distributed-systems/bigtable",
+    "anchor": "load balancing",
+    "target": "systems/distributed-systems/load-balancing",
+    "combined": 0.8382,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   }
+  ],
+  "threshold_sweep": [
+   {
+    "threshold": 0.3,
+    "learned_accepted": 362.0,
+    "baseline_accepted": 204.0
+   },
+   {
+    "threshold": 0.4,
+    "learned_accepted": 244.0,
+    "baseline_accepted": 193.0
+   },
+   {
+    "threshold": 0.5,
+    "learned_accepted": 181.0,
+    "baseline_accepted": 159.0
+   },
+   {
+    "threshold": 0.6,
+    "learned_accepted": 133.0,
+    "baseline_accepted": 92.0
+   },
+   {
+    "threshold": 0.65,
+    "learned_accepted": 120.0,
+    "baseline_accepted": 59.0
+   },
+   {
+    "threshold": 0.7,
+    "learned_accepted": 109.0,
+    "baseline_accepted": 29.0
+   },
+   {
+    "threshold": 0.8,
+    "learned_accepted": 93.0,
+    "baseline_accepted": 19.0
+   },
+   {
+    "threshold": 0.9,
+    "learned_accepted": 68.0,
+    "baseline_accepted": 0.0
+   }
+  ]
+ }
+}

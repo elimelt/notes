@@ -1,0 +1,345 @@
+{
+ "encoder_fingerprint": "sha256:b97df8c1280dba1bbe93db3018ba1051817822680582617af92174838aae34dc",
+ "model_version": "sha256:0bd60f695767a53a4a254a44013c5c40a56b0c132361f62a60f3ffb4b860140c",
+ "split": {
+  "seed": 0,
+  "requested": {
+   "test": 0.2,
+   "val": 0.2
+  },
+  "achieved_fractions": {
+   "train": 0.6,
+   "val": 0.2,
+   "test": 0.2
+  },
+  "group_count": 71,
+  "counts": {
+   "train": 180,
+   "val": 60,
+   "test": 60
+  },
+  "test_tier_counts": {
+   "a": 23,
+   "b": 5,
+   "c": 32
+  },
+  "test_positives": 28
+ },
+ "retrieval": {
+  "learned_retrieval": {
+   "recall_at_1": 0.9642857142857143,
+   "recall_at_3": 0.9642857142857143,
+   "recall_at_5": 0.9642857142857143,
+   "recall_at_10": 0.9642857142857143,
+   "mrr": 0.9642857142857143,
+   "query_count": 28.0
+  },
+  "learned_reranked": {
+   "recall_at_1": 0.9642857142857143,
+   "recall_at_3": 0.9642857142857143,
+   "recall_at_5": 0.9642857142857143,
+   "recall_at_10": 0.9642857142857143,
+   "mrr": 0.9642857142857143,
+   "query_count": 28.0
+  },
+  "baseline": {
+   "recall_at_1": 0.9642857142857143,
+   "recall_at_3": 0.9642857142857143,
+   "recall_at_5": 0.9642857142857143,
+   "recall_at_10": 0.9642857142857143,
+   "mrr": 0.9642857142857143,
+   "query_count": 28.0
+  }
+ },
+ "naturalness": {
+  "n_natural": 51,
+  "n_not_natural": 9,
+  "mean_natural": 0.9311479582067799,
+  "mean_not_natural": 0.8787776960266961,
+  "auc": 0.664488017429194
+ },
+ "recovery": {
+  "n_test_positives": 28,
+  "learned_ranked_total": 1330,
+  "baseline_ranked_total": 1184,
+  "at_budget": [
+   {
+    "budget": 25.0,
+    "learned_recovered": 0.0,
+    "baseline_recovered": 1.0,
+    "learned_fraction": 0.0,
+    "baseline_fraction": 0.03571428571428571
+   },
+   {
+    "budget": 50.0,
+    "learned_recovered": 1.0,
+    "baseline_recovered": 2.0,
+    "learned_fraction": 0.03571428571428571,
+    "baseline_fraction": 0.07142857142857142
+   },
+   {
+    "budget": 100.0,
+    "learned_recovered": 2.0,
+    "baseline_recovered": 3.0,
+    "learned_fraction": 0.07142857142857142,
+    "baseline_fraction": 0.10714285714285714
+   },
+   {
+    "budget": 200.0,
+    "learned_recovered": 4.0,
+    "baseline_recovered": 5.0,
+    "learned_fraction": 0.14285714285714285,
+    "baseline_fraction": 0.17857142857142858
+   },
+   {
+    "budget": 400.0,
+    "learned_recovered": 10.0,
+    "baseline_recovered": 6.0,
+    "learned_fraction": 0.35714285714285715,
+    "baseline_fraction": 0.21428571428571427
+   },
+   {
+    "budget": 1184.0,
+    "learned_recovered": 12.0,
+    "baseline_recovered": 6.0,
+    "learned_fraction": 0.42857142857142855,
+    "baseline_fraction": 0.21428571428571427
+   }
+  ]
+ },
+ "corpus": {
+  "learned_accepted": 29,
+  "baseline_accepted": 91,
+  "learned_threshold": 0.5,
+  "baseline_threshold": 0.65,
+  "accepted_overlap_span_target": 1,
+  "accepted_overlap_source_target": 2,
+  "learned_top": [
+   {
+    "source": "math/linear-algebra/eigenvalues-eigenvectors-diagonalization",
+    "anchor": "chapter 5",
+    "target": "math/linear-algebra/svd-and-pseudoinverse",
+    "combined": 0.9171,
+    "naturalness": 0.8555,
+    "target_correctness": 0.9995
+   },
+   {
+    "source": "hardware/computer-architecture/out-of-order-execution",
+    "anchor": "hardware",
+    "target": "hardware/gpu-architecture",
+    "combined": 0.8689,
+    "naturalness": 0.6737,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "hardware/computer-architecture/out-of-order-execution",
+    "anchor": "pipelining\nand hazards",
+    "target": "hardware/computer-architecture/pipelining-hazards-branch-prediction",
+    "combined": 0.8236,
+    "naturalness": 0.5848,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "reference/slides/system-design-interviews",
+    "anchor": "Handle",
+    "target": "systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications",
+    "combined": 0.8024,
+    "naturalness": 0.5331,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "hardware/computer-architecture/experiments-and-benchmarking",
+    "anchor": "computer-architecture",
+    "target": "hardware/gpu-architecture",
+    "combined": 0.779,
+    "naturalness": 0.5058,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "reference/cheatsheets/circuits/electricity",
+    "anchor": "Potential",
+    "target": "hardware/signal-conditioning/lecture-notes/lecture-3",
+    "combined": 0.7307,
+    "naturalness": 0.4086,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "hardware/computer-architecture/pipelining-hazards-branch-prediction",
+    "anchor": "ISA,\ndatapath, and control",
+    "target": "hardware/computer-architecture/isa-datapath-control",
+    "combined": 0.6475,
+    "naturalness": 0.3275,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "hardware/computer-architecture/index",
+    "anchor": "Computer Architecture",
+    "target": "hardware/gpu-architecture",
+    "combined": 0.6391,
+    "naturalness": 0.2832,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "systems/databases/foundations/ch2-data-models-and-query-languages",
+    "anchor": "Designing",
+    "target": "systems/databases/foundations/ch1-reliable-scalable-and-maintainable-applications",
+    "combined": 0.6138,
+    "naturalness": 0.2524,
+    "target_correctness": 1.0
+   },
+   {
+    "source": "systems/distributed-systems/bigtable",
+    "anchor": "bigtable",
+    "target": "systems/databases/distributed-data/preface",
+    "combined": 0.6128,
+    "naturalness": 0.2598,
+    "target_correctness": 1.0
+   }
+  ],
+  "baseline_top": [
+   {
+    "source": "systems/networks/2-direct-links/framing",
+    "anchor": "The physical layer",
+    "target": "systems/networks/0-foundation/2-physical-layer",
+    "combined": 0.8662,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/networks/2-direct-links/errors",
+    "anchor": "the physical layer",
+    "target": "systems/networks/0-foundation/2-physical-layer",
+    "combined": 0.8573,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "algorithms/problems/graphs-and-trees",
+    "anchor": "graph theory",
+    "target": "reference/cheatsheets/algorithms/graphs",
+    "combined": 0.856,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/networks/5-application/HTTP",
+    "anchor": "load balancing",
+    "target": "systems/distributed-systems/load-balancing",
+    "combined": 0.855,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/networks/5-application/overview",
+    "anchor": "flow control",
+    "target": "systems/networks/4-transport/flow-control",
+    "combined": 0.8543,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/scheduling/2-parallel-and-multiprocessor/work-stealing-affinity-and-numa",
+    "anchor": "multiprocessor scheduling",
+    "target": "systems/operating-systems/v2-concurrency/7-multiprocessor-scheduling",
+    "combined": 0.8535,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/operating-systems/lecture-notes/file-systems",
+    "anchor": "files and directories",
+    "target": "systems/operating-systems/v4-persistent-storage/13-files-and-directories",
+    "combined": 0.8475,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/scheduling/4-cluster-and-datacenter/admission-control-backpressure-overload",
+    "anchor": "flow control",
+    "target": "systems/networks/4-transport/flow-control",
+    "combined": 0.8442,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/scheduling/4-cluster-and-datacenter/admission-control-backpressure-overload",
+    "anchor": "flow control",
+    "target": "systems/networks/4-transport/flow-control",
+    "combined": 0.8433,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   },
+   {
+    "source": "systems/distributed-systems/sharding",
+    "anchor": "Load balancing",
+    "target": "systems/distributed-systems/load-balancing",
+    "combined": 0.8402,
+    "naturalness": 1.0,
+    "target_correctness": 0.65
+   }
+  ],
+  "threshold_sweep": [
+   {
+    "threshold": 0.3,
+    "learned_accepted": 119.0,
+    "baseline_accepted": 812.0
+   },
+   {
+    "threshold": 0.4,
+    "learned_accepted": 69.0,
+    "baseline_accepted": 804.0
+   },
+   {
+    "threshold": 0.5,
+    "learned_accepted": 29.0,
+    "baseline_accepted": 575.0
+   },
+   {
+    "threshold": 0.55,
+    "learned_accepted": 17.0,
+    "baseline_accepted": 231.0
+   },
+   {
+    "threshold": 0.6,
+    "learned_accepted": 10.0,
+    "baseline_accepted": 149.0
+   },
+   {
+    "threshold": 0.65,
+    "learned_accepted": 6.0,
+    "baseline_accepted": 91.0
+   },
+   {
+    "threshold": 0.7,
+    "learned_accepted": 6.0,
+    "baseline_accepted": 40.0
+   },
+   {
+    "threshold": 0.75,
+    "learned_accepted": 5.0,
+    "baseline_accepted": 31.0
+   },
+   {
+    "threshold": 0.8,
+    "learned_accepted": 4.0,
+    "baseline_accepted": 21.0
+   },
+   {
+    "threshold": 0.85,
+    "learned_accepted": 2.0,
+    "baseline_accepted": 6.0
+   },
+   {
+    "threshold": 0.9,
+    "learned_accepted": 1.0,
+    "baseline_accepted": 0.0
+   }
+  ]
+ },
+ "wall_seconds": 920.0,
+ "device": "mps",
+ "cache_stats": {
+  "hits": 545,
+  "misses": 0
+ }
+}

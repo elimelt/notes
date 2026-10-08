@@ -13,12 +13,13 @@ from linkdiscovery.contracts.base import ArtifactHeader
 from linkdiscovery.contracts.units import Span
 from linkdiscovery.errors import ConfigError, ContractError
 from linkdiscovery.inline.encode import span_representation_dim
-from linkdiscovery.inline.heads import TrainedHeads
+from linkdiscovery.inline.heads import TrainedHeads, build_pair_features
 from linkdiscovery.inline.records import (
     SCHEMA_VERSION,
     AuditItem,
     AuditLabel,
     AuditSample,
+    InlineReviewDecision,
     LinkRegionKind,
     SpanCandidate,
     Tier,
@@ -30,10 +31,13 @@ from linkdiscovery.inline.train import (
     TrainingData,
     build_training_data,
     confirmed_negative_mask,
+    default_pair_hand_features,
     mine_hard_negatives,
     naturalness_training_arrays,
     reranker_positive_examples,
     retrieval_training_arrays,
+    review_span_key,
+    review_training_examples,
     train_heads,
 )
 
@@ -224,6 +228,183 @@ class TestTierRouting:
             )
 
 
+def make_decision(
+    *,
+    engine: str = "learned",
+    source: str = "src",
+    target: str = "t1",
+    start: int = 30,
+    end: int | None = None,
+    verdict: str = "accept",
+    target_ok: bool = True,
+    anchor_ok: bool = True,
+    reason: str = "good",
+    score: float = 0.7,
+) -> InlineReviewDecision:
+    return InlineReviewDecision(
+        engine=engine,
+        source_document_id=source,
+        span=Span(start, end if end is not None else start + 5),
+        anchor_text="anchor",
+        target_document_id=target,
+        verdict=verdict,
+        target_ok=target_ok,
+        anchor_ok=anchor_ok,
+        placement_ok=verdict == "accept",
+        reason=reason,
+        note="",
+        combined_score=score,
+    )
+
+
+def review_reps(decisions: list[InlineReviewDecision]) -> SpanRepTable:
+    rng = np.random.default_rng(7)
+    return make_rep_table(
+        {review_span_key(decision): planted_rep(0, rng) for decision in decisions}
+    )
+
+
+class TestReviewRouting:
+    """Per-head routing of review decisions (deliberately NOT tier semantics)."""
+
+    def test_accept_routes_tier_a_with_anchor_label(self) -> None:
+        decision = make_decision(verdict="accept", anchor_ok=True, target="t2")
+        [example] = review_training_examples(
+            [decision], reps=review_reps([decision]), catalog=make_catalog()
+        )
+        assert example.tier is Tier.A
+        assert example.naturalness_label == 1.0
+        assert example.target_index == make_catalog().index_for("t2")
+        assert example.key == review_span_key(decision)
+        assert example.key.startswith("review:")
+        assert example.group == "src"
+        assert not example.pseudo_negative
+
+    def test_reject_with_right_target_is_tier_b_labeled_by_anchor(self) -> None:
+        natural = make_decision(
+            verdict="reject", target_ok=True, anchor_ok=True, reason="bad_placement", start=10
+        )
+        unnatural = make_decision(
+            verdict="reject",
+            target_ok=True,
+            anchor_ok=False,
+            reason="unnatural_anchor",
+            start=20,
+        )
+        examples = review_training_examples(
+            [natural, unnatural],
+            reps=review_reps([natural, unnatural]),
+            catalog=make_catalog(),
+        )
+        assert [example.tier for example in examples] == [Tier.B, Tier.B]
+        # Unlike audit Tier B (excluded from the naturalness head), review
+        # decisions carry per-head anchor ground truth: always labeled.
+        assert [example.naturalness_label for example in examples] == [1.0, 0.0]
+
+    def test_wrong_target_is_tier_d_pointing_at_the_wrong_target(self) -> None:
+        decision = make_decision(
+            verdict="reject", target_ok=False, anchor_ok=True, reason="wrong_target", target="t3"
+        )
+        [example] = review_training_examples(
+            [decision], reps=review_reps([decision]), catalog=make_catalog()
+        )
+        assert example.tier is Tier.D
+        # The recorded target IS the wrong one — exactly the (span, wrong
+        # target) pair the reranker's Tier-D negative BCE consumes.
+        assert example.target_index == make_catalog().index_for("t3")
+        assert example.naturalness_label == 1.0
+
+    def test_broken_span_and_unknown_target_are_skipped(self) -> None:
+        kept = make_decision(start=10)
+        broken = make_decision(start=20, reason="broken_span", verdict="reject", target_ok=False)
+        unknown = make_decision(start=40, target="t99")
+        examples = review_training_examples(
+            [kept, broken, unknown], reps=review_reps([kept]), catalog=make_catalog()
+        )
+        assert [example.key for example in examples] == [review_span_key(kept)]
+
+    def test_review_heads_routing_table(self) -> None:
+        """The full routing matrix over the three head consumers."""
+        decisions = [
+            make_decision(start=10, verdict="accept", target="t0"),
+            make_decision(
+                start=20, verdict="reject", target_ok=True, reason="bad_placement", target="t1"
+            ),
+            make_decision(
+                start=30, verdict="reject", target_ok=False, reason="wrong_target", target="t2"
+            ),
+        ]
+        rng = np.random.default_rng(8)
+        reps = make_rep_table(
+            {
+                review_span_key(decision): planted_rep(row, rng)
+                for row, decision in enumerate(decisions)
+            }
+        )
+        data = build_training_data(
+            [], make_sample(()), {}, reps=reps, catalog=make_catalog(), reviews=decisions
+        )
+        _, positives = retrieval_training_arrays(data)
+        np.testing.assert_array_equal(positives, [0, 1])  # A and B only
+        assert [example.target_index for example in reranker_positive_examples(data)] == [0, 1]
+        _, labels, weights, _ = naturalness_training_arrays(data, pi=0.05)
+        np.testing.assert_array_equal(labels, [1.0, 1.0, 1.0])  # anchor_ok everywhere
+        np.testing.assert_array_equal(weights, [1.0, 1.0, 1.0])  # never pi-weighted
+
+    def test_reviewed_spans_are_excluded_from_pu_pseudo_negatives(self) -> None:
+        decision = make_decision(start=10, end=15)
+        other = make_candidate("cand-free", "src", 40, 45)
+        rng = np.random.default_rng(9)
+        reps = make_rep_table(
+            {
+                review_span_key(decision): planted_rep(0, rng),
+                "cand-free": planted_rep(4, rng),
+            }
+        )
+        data = build_training_data(
+            [],
+            make_sample(()),
+            {"src": [make_candidate("cand-reviewed", "src", 10, 15), other]},
+            reps=reps,
+            catalog=make_catalog(),
+            reviews=[decision],
+        )
+        keys = [example.key for example in data.examples]
+        # The candidate coinciding with the reviewed span is dropped; the
+        # unreviewed candidate stays a PU pseudo-negative.
+        assert keys == [review_span_key(decision), "cand-free"]
+        assert not data.examples[0].pseudo_negative
+        assert data.examples[1].pseudo_negative
+
+    def test_review_examples_append_after_audit_examples(self) -> None:
+        rng = np.random.default_rng(10)
+        item = make_item("item-a", "src", "t0", span=Span(0, 5))
+        decision = make_decision(start=10, end=15)
+        reps = make_rep_table(
+            {
+                "item-a": planted_rep(0, rng),
+                review_span_key(decision): planted_rep(1, rng),
+            }
+        )
+        data = build_training_data(
+            [make_label("item-a", Tier.A)],
+            make_sample((item,)),
+            {},
+            reps=reps,
+            catalog=make_catalog(),
+            reviews=[decision],
+        )
+        assert [example.key for example in data.examples] == [
+            "item-a",
+            review_span_key(decision),
+        ]
+
+    def test_missing_review_rep_is_a_contract_error(self) -> None:
+        decision = make_decision()
+        with pytest.raises(ContractError, match="no span representation"):
+            review_training_examples([decision], reps=make_rep_table({}), catalog=make_catalog())
+
+
 class TestConfirmedNegativeMask:
     def test_threshold_split(self) -> None:
         scores = np.array([0.1, 0.19, 0.2, 0.5], dtype=np.float32)
@@ -364,6 +545,57 @@ def retrieval_accuracy(heads: TrainedHeads, data: TrainingData) -> float:
     return float((probabilities.argmax(axis=1) == positives).mean())
 
 
+def mixed_tier_training_data(n_positives: int = 12, n_tier_d: int = 10) -> TrainingData:
+    """Tier-A positives plus Tier-D wrong-target pairs (the review-shaped mix).
+
+    Each Tier-D item's rep points at one target while its recorded
+    ``target_index`` is a DIFFERENT (wrong) target — the (span, wrong
+    target) pair shape the review harvest supplies in volume.
+    """
+    rng = np.random.default_rng(21)
+    items = []
+    labels = []
+    reps: dict[str, np.ndarray] = {}
+    for index in range(n_positives):
+        target_row = index % N_TARGETS
+        item_id = f"pos-{index}"
+        items.append(make_item(item_id, f"doc-{index % 3}", f"t{target_row}"))
+        labels.append(make_label(item_id, Tier.A))
+        reps[item_id] = planted_rep(target_row, rng)
+    for index in range(n_tier_d):
+        wrong_row = (index + 1) % N_TARGETS
+        item_id = f"neg-{index}"
+        items.append(make_item(item_id, f"doc-{index % 3}", f"t{wrong_row}"))
+        labels.append(make_label(item_id, Tier.D))
+        reps[item_id] = planted_rep(index % N_TARGETS, rng)
+    return build_training_data(
+        labels,
+        make_sample(tuple(items)),
+        {},
+        reps=make_rep_table(reps),
+        catalog=make_catalog(),
+    )
+
+
+def pair_rows_for_tier(data: TrainingData, tier: Tier) -> np.ndarray:
+    """The (span, recorded target) reranker input rows of one tier's examples."""
+    catalog = data.catalog
+    rows = [
+        build_pair_features(
+            example.rep,
+            catalog.matrix[example.target_index],
+            catalog.section_matrix[example.target_index],
+            hidden_size=HIDDEN,
+            hand_features=default_pair_hand_features(
+                example.rep, catalog.matrix[example.target_index], hidden_size=HIDDEN
+            ),
+        )
+        for example in data.examples
+        if example.tier is tier
+    ]
+    return np.stack(rows).astype(np.float32)
+
+
 class TestTrainHeads:
     def test_learns_planted_retrieval_signal(self) -> None:
         data = planted_training_data()
@@ -388,6 +620,25 @@ class TestTrainHeads:
         assert heads.train_config_fingerprint == config.fingerprint()
         assert set(heads.loss_history) == {"naturalness", "retrieval", "reranker"}
         assert heads.model_version.startswith("sha256:")
+
+    def test_reranker_absolute_scale_survives_tier_d_negatives(self) -> None:
+        """Regression: the listwise CE is shift-invariant within each group,
+        so a zeros-only per-epoch BCE (Tier-D rows without positive anchors)
+        let the optimizer uniformly shift all in-distribution logits down —
+        rankings intact, training loss near zero, every absolute sigmoid
+        probability collapsed to ~0.0. First observable with the review
+        harvest's Tier-D volume (the audit produced zero Tier-D rows). The
+        fixed BCE anchors true pairs at 1.0, so positives must clear an
+        absolute floor, not merely outrank the wrong-target pairs."""
+        data = mixed_tier_training_data()
+        heads = train_heads(data, config=TrainConfig(epochs=25, lr=0.05, batch_size=32), seed=13)
+        positive_probs = heads.score_pairs(pair_rows_for_tier(data, Tier.A))
+        tier_d_probs = heads.score_pairs(pair_rows_for_tier(data, Tier.D))
+        assert positive_probs.mean() > tier_d_probs.mean()
+        # The absolute floor is what the shift-collapse failure mode broke:
+        # the old code scored ~0.0 here while keeping the ordering above.
+        assert positive_probs.mean() > 0.5
+        assert tier_d_probs.mean() < 0.5
 
     def test_pu_weighting_downweights_pseudo_negatives(self) -> None:
         data = planted_training_data(n_items=5, n_candidates=10)

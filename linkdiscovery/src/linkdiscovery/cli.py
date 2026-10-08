@@ -12,8 +12,8 @@ Standard-library ``argparse`` only. Top-level subcommands:
   self-contained NumPy bundle for reranking experiments.
 - ``inline <sub>`` — the learned inline-link subsystem
   (SPEC-INLINE-LINKING.md §11): ``audit-sample``, ``annotate``,
-  ``audit-report``, ``anchors``, ``recall-check``, ``train``, and
-  ``propose``.
+  ``audit-report``, ``anchors``, ``recall-check``, ``train``, ``propose``,
+  ``calibrate``, and ``benchmark``.
 
 Exit codes: ``0`` on success; ``2`` for usage errors (via argparse) and for
 any :class:`~linkdiscovery.errors.LinkDiscoveryError` or I/O failure, which
@@ -32,6 +32,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from linkdiscovery import __version__
+from linkdiscovery.artifacts.cache import ArtifactCache
+from linkdiscovery.artifacts.store import ArtifactStore
 from linkdiscovery.config import load_config
 from linkdiscovery.contracts.base import ArtifactHeader, utc_now_iso
 from linkdiscovery.contracts.proposals import (
@@ -50,6 +52,7 @@ from linkdiscovery.inline.audit.annotate import load_audit_labels, run_annotatio
 from linkdiscovery.inline.audit.tiers import build_audit_report
 from linkdiscovery.inline.baseline import BaselineConfig
 from linkdiscovery.inline.heads import TrainedHeads
+from linkdiscovery.inline.records import BenchmarkKind
 from linkdiscovery.inline.report import write_inline_report
 from linkdiscovery.inline.select import SelectionConfig
 from linkdiscovery.inline.spans import SpanConfig
@@ -59,9 +62,10 @@ from linkdiscovery.report import build_review_queue
 from linkdiscovery.report._io import atomic_write_text
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
 
     from linkdiscovery.contracts.manifests import RunManifest, StageStats
+    from linkdiscovery.inline.encode import TokenStateEncoder
     from linkdiscovery.inline.records import AuditLabel
 
 __all__ = ["build_parser", "main"]
@@ -283,8 +287,32 @@ def _add_inline_commands(
     train.add_argument("--out", required=True, type=Path, help="trained-heads output directory")
     train.add_argument("--epochs", type=int, default=30, help="training epochs (default: 30)")
     train.add_argument("--seed", type=int, default=0, help="training seed (default: 0)")
+    train.add_argument(
+        "--token-encoder",
+        choices=("hashing", "qwen"),
+        default="hashing",
+        help=(
+            "frozen token-state encoder: dependency-free hashing (default) or the "
+            "windowed Qwen model from the config's embedding pin"
+        ),
+    )
+    train.add_argument(
+        "--reviews",
+        type=Path,
+        default=None,
+        help="review decisions.jsonl adding per-head-labeled training examples (optional)",
+    )
     train.set_defaults(handler=_cmd_inline_train)
 
+    _add_inline_engine_commands(subcommands, common, pipeline_args)
+
+
+def _add_inline_engine_commands(
+    subcommands: argparse._SubParsersAction[argparse.ArgumentParser],
+    common: argparse.ArgumentParser,
+    pipeline_args: Callable[[argparse.ArgumentParser], None],
+) -> None:
+    """Register the engine-facing subcommands: ``propose``, ``calibrate``, ``benchmark``."""
     propose = subcommands.add_parser(
         "propose",
         parents=[common],
@@ -311,7 +339,89 @@ def _add_inline_commands(
     propose.add_argument(
         "--max-per-note", type=int, default=None, help="override the per-note link cap"
     )
+    propose.add_argument(
+        "--family-depth",
+        type=int,
+        default=1,
+        help=(
+            "topic family = first N path segments of the document id; 0 disables the "
+            "cross-family prior; baseline engine only"
+        ),
+    )
+    propose.add_argument(
+        "--token-encoder",
+        choices=("hashing", "qwen"),
+        default="hashing",
+        help=(
+            "frozen token-state encoder for --engine learned: hashing (default) or the "
+            "windowed Qwen model from the config's embedding pin"
+        ),
+    )
+    propose.add_argument(
+        "--calibration",
+        type=Path,
+        default=None,
+        help=(
+            "review-calibration JSON from `inline calibrate`; applies the matching "
+            "engine's temperature to every draft (error if the engine is absent)"
+        ),
+    )
     propose.set_defaults(handler=_cmd_inline_propose)
+
+    calibrate = subcommands.add_parser(
+        "calibrate",
+        parents=[common],
+        help="fit per-engine temperature scaling from review outcomes",
+        description=(
+            "Fit temperature scaling (plus a conformal abstainer) per engine from a "
+            "review decisions.jsonl and write the calibration JSON."
+        ),
+    )
+    calibrate.add_argument(
+        "--reviews", required=True, type=Path, help="review decisions.jsonl path"
+    )
+    calibrate.add_argument("--out", required=True, type=Path, help="calibration JSON output path")
+    calibrate.set_defaults(handler=_cmd_inline_calibrate)
+
+    benchmark = subcommands.add_parser(
+        "benchmark",
+        parents=[common],
+        help="score an engine against the frozen expert benchmark",
+        description=(
+            "Run one engine over the corpus, judge the frozen benchmark cases, and "
+            "write per-kind accuracy scores."
+        ),
+    )
+    pipeline_args(benchmark)
+    benchmark.add_argument(
+        "--benchmark", required=True, type=Path, help="frozen benchmark JSON path"
+    )
+    benchmark.add_argument(
+        "--engine",
+        required=True,
+        choices=("baseline", "learned"),
+        help="scoring engine: deterministic baseline or trained heads",
+    )
+    benchmark.add_argument(
+        "--heads", type=Path, default=None, help="trained-heads directory (learned engine)"
+    )
+    benchmark.add_argument(
+        "--token-encoder",
+        choices=("hashing", "qwen"),
+        default="hashing",
+        help=(
+            "frozen token-state encoder for --engine learned: hashing (default) or the "
+            "windowed Qwen model from the config's embedding pin"
+        ),
+    )
+    benchmark.add_argument(
+        "--calibration",
+        type=Path,
+        default=None,
+        help="review-calibration JSON; applies the matching engine's temperature",
+    )
+    benchmark.add_argument("--out", required=True, type=Path, help="scores JSON output path")
+    benchmark.set_defaults(handler=_cmd_inline_benchmark)
 
 
 _LOG_LEVELS = (logging.WARNING, logging.INFO, logging.DEBUG)
@@ -539,6 +649,26 @@ def _inline_inputs(args: argparse.Namespace) -> workflow.InlineInputs:
     return workflow.load_inline_inputs(config, artifacts_root=args.artifacts)
 
 
+def _token_encoder_setup(
+    args: argparse.Namespace, inputs: workflow.InlineInputs
+) -> tuple[Callable[[], TokenStateEncoder] | None, ArtifactCache | None]:
+    """Resolve ``--token-encoder`` into an encoder factory and a state cache.
+
+    ``hashing`` returns ``(None, None)`` so the workflow keeps its
+    dependency-free default. ``qwen`` builds the windowed Qwen encoder from
+    the config's pinned model/revision on the best qualified device (mps
+    first, cpu fallback — the choice is printed because it is not part of
+    the fingerprint) and wires the artifact store's cache group so expensive
+    token states persist across runs.
+    """
+    if args.token_encoder != "qwen":
+        return None, None
+    encoder, device = workflow.build_qwen_token_encoder(inputs.config)
+    print(f"token encoder: windowed qwen on {device}")
+    cache = ArtifactCache(ArtifactStore(Path(args.artifacts)))
+    return (lambda: encoder), cache
+
+
 def _cmd_inline_audit_sample(args: argparse.Namespace) -> int:
     """Handle ``linkdiscovery inline audit-sample``."""
     inputs = _inline_inputs(args)
@@ -647,6 +777,8 @@ def _cmd_inline_recall_check(args: argparse.Namespace) -> int:
 def _cmd_inline_train(args: argparse.Namespace) -> int:
     """Handle ``linkdiscovery inline train``."""
     inputs = _inline_inputs(args)
+    encoder_factory, token_state_cache = _token_encoder_setup(args, inputs)
+    reviews = workflow.load_review_decisions(args.reviews) if args.reviews is not None else ()
     train_config = TrainConfig(epochs=args.epochs)
     heads = workflow.train_inline_heads(
         inputs,
@@ -655,12 +787,17 @@ def _cmd_inline_train(args: argparse.Namespace) -> int:
         train_config=train_config,
         seed=args.seed,
         out_dir=args.out,
+        encoder_factory=encoder_factory,
+        token_state_cache=token_state_cache,
+        reviews=reviews,
     )
     print(f"Trained heads saved to {args.out}")
     print()
     rows: list[tuple[str, str]] = [
         ("epochs", str(args.epochs)),
         ("seed", str(args.seed)),
+        ("token encoder", args.token_encoder),
+        ("review decisions", str(len(reviews))),
         ("encoder", heads.encoder_fingerprint[:24] + "..."),
         ("model version", heads.model_version[:24] + "..."),
     ]
@@ -686,22 +823,46 @@ def _selection_config(args: argparse.Namespace) -> SelectionConfig:
     )
 
 
+def _calibration_temperature(args: argparse.Namespace) -> float | None:
+    """The engine's temperature from ``--calibration``, or ``None`` without one.
+
+    Raises :class:`~linkdiscovery.errors.ContractError` when the file has no
+    entry for the selected engine: temperatures are engine-specific, so
+    silently proposing uncalibrated would misrepresent the operating point.
+    """
+    if args.calibration is None:
+        return None
+    calibration = workflow.load_review_calibration(args.calibration)
+    entry = calibration.get(args.engine)
+    if entry is None:
+        raise ContractError(
+            f"calibration file {args.calibration} has no entry for engine "
+            f"{args.engine!r}; run `inline calibrate` over reviews of that engine"
+        )
+    return float(entry["temperature"])
+
+
 def _cmd_inline_propose(args: argparse.Namespace) -> int:
     """Handle ``linkdiscovery inline propose``."""
     inputs = _inline_inputs(args)
     selection = _selection_config(args)
+    temperature = _calibration_temperature(args)
     run_id = f"inline-{args.engine}"
     if args.engine == "learned":
         if args.heads is None:
             raise ConfigError("inline propose: --heads is required with --engine learned")
         heads = TrainedHeads.load(args.heads)
+        encoder_factory, token_state_cache = _token_encoder_setup(args, inputs)
         proposals = workflow.propose_inline_learned(
             inputs,
             heads,
             anchor_config=AnchorConfig(),
             span_config=SpanConfig(),
             selection_config=selection,
+            temperature=temperature,
             run_id=run_id,
+            encoder_factory=encoder_factory,
+            token_state_cache=token_state_cache,
         )
     else:
         proposals = workflow.propose_inline_baseline(
@@ -711,6 +872,8 @@ def _cmd_inline_propose(args: argparse.Namespace) -> int:
             baseline_config=BaselineConfig(),
             selection_config=selection,
             run_id=run_id,
+            family_depth=args.family_depth,
+            temperature=temperature,
         )
     paths = write_inline_report(proposals, inputs.corpus, out_dir=args.out)
     accepted = [p for p in proposals.proposals if not p.abstained]
@@ -736,6 +899,62 @@ def _cmd_inline_propose(args: argparse.Namespace) -> int:
                 f"  {proposal.combined_score:.3f}  {proposal.source_document_id}"
                 f" [{proposal.anchor_text!r}] -> {proposal.target_document_id}"
             )
+    return 0
+
+
+def _cmd_inline_calibrate(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline calibrate``."""
+    decisions = workflow.load_review_decisions(args.reviews)
+    engines = sorted({decision.engine for decision in decisions})
+    if not engines:
+        raise ContractError(f"no review decisions found in {args.reviews}")
+    results = {
+        engine: workflow.fit_review_calibration(decisions, engine=engine) for engine in engines
+    }
+    workflow.write_review_calibration(args.out, results)
+    print(f"Review calibration ({', '.join(engines)}) written to {args.out}")
+    print()
+    print(f"  {'engine':<10}{'n':>5}{'temperature':>13}{'ece before':>12}{'ece after':>12}")
+    for engine in engines:
+        result = results[engine]
+        print(
+            f"  {engine:<10}{result['n']:>5}{result['temperature']:>13.4f}"
+            f"{result['ece_before']:>12.4f}{result['ece_after']:>12.4f}"
+        )
+    return 0
+
+
+def _cmd_inline_benchmark(args: argparse.Namespace) -> int:
+    """Handle ``linkdiscovery inline benchmark``."""
+    inputs = _inline_inputs(args)
+    benchmark = workflow.load_benchmark(args.benchmark)
+    temperature = _calibration_temperature(args)
+    if args.engine == "learned":
+        if args.heads is None:
+            raise ConfigError("inline benchmark: --heads is required with --engine learned")
+        heads = TrainedHeads.load(args.heads)
+        encoder_factory, token_state_cache = _token_encoder_setup(args, inputs)
+        result = workflow.benchmark_engine(
+            inputs,
+            benchmark,
+            engine="learned",
+            heads=heads,
+            temperature=temperature,
+            encoder_factory=encoder_factory,
+            token_state_cache=token_state_cache,
+        )
+    else:
+        result = workflow.benchmark_engine(
+            inputs, benchmark, engine="baseline", temperature=temperature
+        )
+    scores = result["scores"]
+    atomic_write_text(args.out, canonical_json(scores) + "\n")
+    print(f"Benchmark scores ({args.engine} engine) written to {args.out}")
+    print()
+    print(f"  {'kind':<20}{'accuracy':>9}{'evaluated':>11}{'total':>7}")
+    for name in [kind.value for kind in BenchmarkKind] + ["hard_case", "overall"]:
+        row = scores[name]
+        print(f"  {name:<20}{row['accuracy']:>9.3f}{row['evaluated']:>11.0f}{row['total']:>7.0f}")
     return 0
 
 

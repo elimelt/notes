@@ -37,6 +37,9 @@ from linkdiscovery.errors import ContractError
 
 __all__ = [
     "PRODUCER_VERSION",
+    "REVIEW_ENGINES",
+    "REVIEW_REASONS",
+    "REVIEW_VERDICTS",
     "SCHEMA_VERSION",
     "AuditItem",
     "AuditLabel",
@@ -47,6 +50,7 @@ __all__ = [
     "BenchmarkKind",
     "InlineProposal",
     "InlineProposalSet",
+    "InlineReviewDecision",
     "LinkRegionKind",
     "SpanCandidate",
     "Tier",
@@ -57,6 +61,26 @@ SCHEMA_VERSION = 1
 
 PRODUCER_VERSION = "linkdiscovery-inline/0.1.0"
 """Producer version recorded in artifact headers written by this subsystem."""
+
+REVIEW_ENGINES = frozenset({"baseline", "learned"})
+"""The engines whose proposals the human-standard review judged."""
+
+REVIEW_VERDICTS = frozenset({"accept", "reject"})
+"""Legal overall verdicts of one review decision."""
+
+REVIEW_REASONS = frozenset(
+    {
+        "good",
+        "wrong_target",
+        "unnatural_anchor",
+        "duplicate_nearby",
+        "generic_low_value",
+        "bad_placement",
+        "broken_span",
+        "other",
+    }
+)
+"""The closed reason taxonomy of the review file (one primary reason per item)."""
 
 _E = TypeVar("_E", bound=StrEnum)
 
@@ -247,6 +271,108 @@ class AuditLabel:
             tier=_parse_enum(Tier, expect_str(mapping, "tier", context), "tier", context),
             note=expect_str(mapping, "note", context, default=""),
             labeled_at=expect_str(mapping, "labeled_at", context, default=""),
+        )
+
+
+def _check_review_domain(value: str, allowed: frozenset[str], field_name: str) -> None:
+    """Validate a review-decision string field against its closed domain."""
+    if value not in allowed:
+        expected = ", ".join(sorted(allowed))
+        raise ContractError(
+            f"InlineReviewDecision: unknown {field_name} {value!r}; expected one of: {expected}"
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class InlineReviewDecision:
+    """One human judgment of one engine proposal from the 160-item review.
+
+    Unlike an :class:`AuditLabel` (which grades an *existing* link through
+    the tier taxonomy), a review decision grades a *proposed* link with
+    per-head ground truth: ``target_ok``, ``anchor_ok``, and ``placement_ok``
+    answer the three head questions directly, ``verdict`` is the overall
+    accept/reject call, and ``reason`` names the primary failure mode from
+    the closed :data:`REVIEW_REASONS` taxonomy. ``span`` indexes the raw
+    source document content — the same coordinate system as audit items and
+    span candidates — and is already a plain-text anchor span (it came from
+    an engine proposal, never from wikilink markup, so it must NOT be
+    narrowed). ``combined_score`` is the engine's combined score at review
+    time, kept so review outcomes can calibrate the score scale.
+
+    Domains (``engine``/``verdict``/``reason``) are validated at
+    construction, so a hand-built decision is as strict as a deserialized
+    one.
+    """
+
+    engine: str
+    source_document_id: str
+    span: Span
+    anchor_text: str
+    target_document_id: str
+    verdict: str
+    target_ok: bool
+    anchor_ok: bool
+    placement_ok: bool
+    reason: str
+    note: str
+    combined_score: float
+
+    def __post_init__(self) -> None:
+        _check_review_domain(self.engine, REVIEW_ENGINES, "engine")
+        _check_review_domain(self.verdict, REVIEW_VERDICTS, "verdict")
+        _check_review_domain(self.reason, REVIEW_REASONS, "reason")
+
+    def to_dict(self) -> dict[str, Any]:
+        """Serialize to the review-file wire format (see :meth:`from_dict`)."""
+        return {
+            "engine": self.engine,
+            "source": self.source_document_id,
+            "target": self.target_document_id,
+            "anchor": self.anchor_text,
+            "start": self.span.start,
+            "end": self.span.end,
+            "score": self.combined_score,
+            "verdict": self.verdict,
+            "target_ok": self.target_ok,
+            "anchor_ok": self.anchor_ok,
+            "placement_ok": self.placement_ok,
+            "reason": self.reason,
+            "note": self.note,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> InlineReviewDecision:
+        """Deserialize from the review-file wire format (``decisions.jsonl``).
+
+        The wire format uses the review tool's short key names, mapped onto
+        the canonical fields here: ``source`` -> ``source_document_id``,
+        ``target`` -> ``target_document_id``, ``anchor`` -> ``anchor_text``,
+        ``start``/``end`` -> ``span`` (character offsets into the raw source
+        document content), and ``score`` -> ``combined_score``. The file's
+        ``id`` (truncated proposal id), ``flag``, and ``rank`` keys are
+        informational review-session bookkeeping and are ignored. Raises
+        :class:`~linkdiscovery.errors.ContractError` on missing fields,
+        wrong types, or out-of-domain ``engine``/``verdict``/``reason``
+        values.
+        """
+        context = "InlineReviewDecision"
+        mapping = expect_mapping(data, context)
+        return cls(
+            engine=expect_str(mapping, "engine", context),
+            source_document_id=expect_str(mapping, "source", context),
+            span=Span(
+                start=expect_int(mapping, "start", context),
+                end=expect_int(mapping, "end", context),
+            ),
+            anchor_text=expect_str(mapping, "anchor", context),
+            target_document_id=expect_str(mapping, "target", context),
+            verdict=expect_str(mapping, "verdict", context),
+            target_ok=expect_bool(mapping, "target_ok", context),
+            anchor_ok=expect_bool(mapping, "anchor_ok", context),
+            placement_ok=expect_bool(mapping, "placement_ok", context),
+            reason=expect_str(mapping, "reason", context),
+            note=expect_str(mapping, "note", context, default=""),
+            combined_score=expect_float(mapping, "score", context),
         )
 
 

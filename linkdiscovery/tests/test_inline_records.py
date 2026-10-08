@@ -22,6 +22,12 @@ from linkdiscovery.inline import (
     SpanCandidate,
     Tier,
 )
+from linkdiscovery.inline.records import (
+    REVIEW_ENGINES,
+    REVIEW_REASONS,
+    REVIEW_VERDICTS,
+    InlineReviewDecision,
+)
 from tests.conftest import make_header
 
 
@@ -120,6 +126,46 @@ def make_inline_proposal(proposal_id: str = "prop-1") -> InlineProposal:
     )
 
 
+def make_review_decision() -> InlineReviewDecision:
+    """A fully populated review decision."""
+    return InlineReviewDecision(
+        engine="learned",
+        source_document_id="systems/scheduling",
+        span=Span(start=40, end=49),
+        anchor_text="MapReduce",
+        target_document_id="distributed/mapreduce",
+        verdict="accept",
+        target_ok=True,
+        anchor_ok=True,
+        placement_ok=True,
+        reason="good",
+        note="clean pairing",
+        combined_score=0.71,
+    )
+
+
+def review_wire_dict() -> dict[str, Any]:
+    """One ``decisions.jsonl`` line: the wire format including ignored keys."""
+    return {
+        "engine": "learned",
+        "id": "sha256:4ab1a9dd1c95f",  # informational, ignored
+        "source": "systems/scheduling",
+        "target": "distributed/mapreduce",
+        "anchor": "MapReduce",
+        "start": 40,
+        "end": 49,
+        "score": 0.71,
+        "flag": False,  # informational, ignored
+        "rank": 12,  # informational, ignored
+        "verdict": "accept",
+        "target_ok": True,
+        "anchor_ok": True,
+        "placement_ok": True,
+        "reason": "good",
+        "note": "clean pairing",
+    }
+
+
 def make_benchmark_case(case_id: str = "case-1") -> BenchmarkCase:
     """A fully populated benchmark case."""
     return BenchmarkCase(
@@ -168,6 +214,7 @@ class TestRoundTrips:
                 header=make_header(),
                 cases=(make_benchmark_case("c1"), make_benchmark_case("c2")),
             ),
+            make_review_decision(),
         ],
         ids=lambda record: type(record).__name__,
     )
@@ -303,3 +350,82 @@ class TestValidation:
         data["header"]["schema_version"] = 99
         with pytest.raises(ContractError, match="unknown schema_version 99"):
             type(artifact).from_dict(data)
+
+
+class TestReviewDecision:
+    """The decisions.jsonl wire format and its closed domains."""
+
+    def test_domains_cover_the_review_taxonomy(self) -> None:
+        assert {"baseline", "learned"} == REVIEW_ENGINES
+        assert {"accept", "reject"} == REVIEW_VERDICTS
+        assert len(REVIEW_REASONS) == 8
+        assert "broken_span" in REVIEW_REASONS
+
+    def test_from_dict_maps_the_wire_format(self) -> None:
+        decision = InlineReviewDecision.from_dict(review_wire_dict())
+        assert decision.engine == "learned"
+        assert decision.source_document_id == "systems/scheduling"
+        assert decision.target_document_id == "distributed/mapreduce"
+        assert decision.anchor_text == "MapReduce"
+        assert decision.span == Span(start=40, end=49)
+        assert decision.combined_score == pytest.approx(0.71)
+        assert decision.verdict == "accept"
+        assert decision.target_ok and decision.anchor_ok and decision.placement_ok
+        assert decision.reason == "good"
+        assert decision.note == "clean pairing"
+
+    def test_informational_wire_keys_are_ignored_and_not_reemitted(self) -> None:
+        decision = InlineReviewDecision.from_dict(review_wire_dict())
+        emitted = decision.to_dict()
+        assert set(emitted).isdisjoint({"id", "flag", "rank"})
+        assert InlineReviewDecision.from_dict(emitted) == decision
+
+    def test_note_defaults_to_empty_when_absent(self) -> None:
+        data = review_wire_dict()
+        del data["note"]
+        assert InlineReviewDecision.from_dict(data).note == ""
+
+    def test_missing_required_wire_field_raises(self) -> None:
+        data = review_wire_dict()
+        del data["source"]
+        with pytest.raises(ContractError, match="missing required field 'source'"):
+            InlineReviewDecision.from_dict(data)
+
+    def test_wrong_type_raises_with_field_name(self) -> None:
+        data = review_wire_dict()
+        data["target_ok"] = "yes"
+        with pytest.raises(ContractError, match="'target_ok' must be a boolean"):
+            InlineReviewDecision.from_dict(data)
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [("engine", "quantum"), ("verdict", "maybe"), ("reason", "vibes")],
+    )
+    def test_out_of_domain_values_rejected(self, field: str, value: str) -> None:
+        data = review_wire_dict()
+        data[field] = value
+        with pytest.raises(ContractError, match=f"unknown {field} {value!r}"):
+            InlineReviewDecision.from_dict(data)
+
+    def test_direct_construction_is_validated_too(self) -> None:
+        with pytest.raises(ContractError, match="unknown reason 'vibes'"):
+            InlineReviewDecision(
+                engine="baseline",
+                source_document_id="a",
+                span=Span(start=0, end=1),
+                anchor_text="x",
+                target_document_id="b",
+                verdict="reject",
+                target_ok=False,
+                anchor_ok=False,
+                placement_ok=False,
+                reason="vibes",
+                note="",
+                combined_score=0.5,
+            )
+
+    def test_invalid_span_range_rejected(self) -> None:
+        data = review_wire_dict()
+        data["start"], data["end"] = 49, 40
+        with pytest.raises(ContractError, match="invalid range"):
+            InlineReviewDecision.from_dict(data)

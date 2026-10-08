@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 import numpy as np
 import pytest
 
@@ -34,6 +36,7 @@ def make_draft(
     source: str = "note",
     target: str = "target",
     span: tuple[int, int] = (0, 5),
+    anchor: str = "anchor phrase",
     naturalness: float = 0.8,
     target_correctness: float = 0.8,
     placement_validity: float = 0.8,
@@ -42,12 +45,16 @@ def make_draft(
     abstained: bool = False,
     features: dict[str, float] | None = None,
 ) -> InlineProposal:
-    """A draft proposal with every selection-relevant knob controllable."""
+    """A draft proposal with every selection-relevant knob controllable.
+
+    The default anchor is two words so drafts face the ordinary naturalness
+    floor; single-word tests pass ``anchor`` explicitly.
+    """
     return InlineProposal(
         id=draft_id,
         source_document_id=source,
         span=Span(*span),
-        anchor_text="anchor",
+        anchor_text=anchor,
         target_document_id=target,
         target_section=None,
         naturalness=naturalness,
@@ -80,6 +87,9 @@ class TestSelectionConfig:
             "mmr_lambda": 0.6,
             "target_redundancy_penalty": 0.3,
             "naturalness_floor": 0.2,
+            "existing_target_window_chars": 600,
+            "single_word_naturalness_floor": 0.5,
+            "max_per_target_per_note": 1,
             "combine_weights": {"naturalness": 0.35, "target": 0.45, "placement": 0.20},
         }
 
@@ -100,6 +110,9 @@ class TestSelectionConfig:
             ("mmr_lambda", -0.1),
             ("target_redundancy_penalty", -1.0),
             ("naturalness_floor", 2.0),
+            ("existing_target_window_chars", -1),
+            ("single_word_naturalness_floor", 2.0),
+            ("max_per_target_per_note", 0),
         ],
     )
     def test_out_of_domain_fields_rejected(self, field_name: str, value: float) -> None:
@@ -147,7 +160,9 @@ class TestBudget:
     def test_599_word_note_gets_three_links_at_175_words_per_link(self) -> None:
         docs = {"note": make_doc("note", 599)}
         drafts = [
-            make_draft(f"d{i}", span=(i * 10, i * 10 + 5), calibrated=0.9 - i * 0.01)
+            make_draft(
+                f"d{i}", target=f"t{i}", span=(i * 10, i * 10 + 5), calibrated=0.9 - i * 0.01
+            )
             for i in range(5)
         ]
         result = select_proposals(drafts, docs, config=SelectionConfig())
@@ -167,7 +182,9 @@ class TestBudget:
     def test_hard_cap_applies(self) -> None:
         docs = {"note": make_doc("note", 10_000)}
         drafts = [
-            make_draft(f"d{i}", span=(i * 10, i * 10 + 5), calibrated=0.99 - i * 0.01)
+            make_draft(
+                f"d{i}", target=f"t{i}", span=(i * 10, i * 10 + 5), calibrated=0.99 - i * 0.01
+            )
             for i in range(12)
         ]
         result = select_proposals(drafts, docs, config=SelectionConfig(max_links_per_note=10))
@@ -222,7 +239,7 @@ class TestThresholdsAndQ25:
         # Budget of one: the higher-probability Q25 draft takes the slot.
         docs = {"note": make_doc("note", 100)}
         q25 = make_draft("q25", naturalness=0.1, target_correctness=0.9, calibrated=0.9)
-        plain = make_draft("plain", span=(10, 15), calibrated=0.7)
+        plain = make_draft("plain", target="other", span=(10, 15), calibrated=0.7)
         result = select_proposals([q25, plain], docs, config=SelectionConfig())
         assert [p.id for p in accepted_of(result)] == ["q25"]
         (rejected,) = rejected_of(result)
@@ -241,11 +258,14 @@ class TestMMR:
         # Budget 2 (350 words). Round 1 picks d1 (highest relevance). Round 2:
         # d2 shares d1's target (sim 1.0): 0.6*0.85 - 0.4 - 0.3 = -0.19;
         # d3 has a fresh target: 0.6*0.7 = 0.42 -> d3 wins despite lower prob.
+        # max_per_target_per_note=2 keeps the same-target cap out of the way
+        # so the test pins pure MMR ordering.
         docs = {"note": make_doc("note", 350)}
+        config = SelectionConfig(max_per_target_per_note=2)
         d1 = make_draft("d1", target="t1", span=(0, 5), calibrated=0.9)
         d2 = make_draft("d2", target="t1", span=(10, 15), calibrated=0.85)
         d3 = make_draft("d3", target="t2", span=(20, 25), calibrated=0.7)
-        result = select_proposals([d1, d2, d3], docs, config=SelectionConfig())
+        result = select_proposals([d1, d2, d3], docs, config=config)
         assert sorted(p.id for p in accepted_of(result)) == ["d1", "d3"]
         (rejected,) = rejected_of(result)
         assert rejected.id == "d2"
@@ -264,7 +284,9 @@ class TestMMR:
         # lambda = 1.0 removes the similarity term; only the same-target
         # penalty acts: d2 scores 0.85 - 0.3 = 0.55 < d3's 0.7.
         docs = {"note": make_doc("note", 350)}
-        config = SelectionConfig(mmr_lambda=1.0, target_redundancy_penalty=0.3)
+        config = SelectionConfig(
+            mmr_lambda=1.0, target_redundancy_penalty=0.3, max_per_target_per_note=2
+        )
         d1 = make_draft("d1", target="t1", span=(0, 5), calibrated=0.9)
         d2 = make_draft("d2", target="t1", span=(10, 15), calibrated=0.85)
         d3 = make_draft("d3", target="t2", span=(20, 25), calibrated=0.7)
@@ -308,8 +330,8 @@ class TestHardConstraints:
 
     def test_touching_spans_do_not_overlap(self) -> None:
         docs = {"note": make_doc("note", 2000)}
-        a = make_draft("a", span=(0, 10), calibrated=0.9)
-        b = make_draft("b", span=(10, 20), calibrated=0.8)
+        a = make_draft("a", target="t1", span=(0, 10), calibrated=0.9)
+        b = make_draft("b", target="t2", span=(10, 20), calibrated=0.8)
         result = select_proposals([a, b], docs, config=SelectionConfig())
         assert len(accepted_of(result)) == 2
 
@@ -324,13 +346,181 @@ class TestHardConstraints:
             select_proposals([make_draft("d0")], {}, config=SelectionConfig())
 
 
+class TestExistingTargetProximity:
+    """Rule A: suppression near links the author already wrote (report mode 3)."""
+
+    DOCS: ClassVar[dict[str, SourceDocument]] = {"note": make_doc("note", 200)}
+
+    def test_same_target_within_window_is_rejected_with_gap_feature(self) -> None:
+        existing = {"note": [(Span(50, 60), "target")]}
+        result = select_proposals(
+            [make_draft("d0", span=(0, 5))],
+            self.DOCS,
+            config=SelectionConfig(),
+            existing_links=existing,
+        )
+        assert not accepted_of(result)
+        (rejected,) = rejected_of(result)
+        assert rejected.abstained is True
+        assert rejected.features["rejected_near_existing_same_target"] == 1.0
+        assert rejected.features["selection_rejected"] == 1.0
+        assert rejected.features["existing_same_target_gap"] == 45.0  # 50 - 5
+
+    def test_overlapping_existing_link_has_gap_zero(self) -> None:
+        existing = {"note": [(Span(3, 10), "target")]}
+        result = select_proposals(
+            [make_draft("d0", span=(0, 5))],
+            self.DOCS,
+            config=SelectionConfig(),
+            existing_links=existing,
+        )
+        (rejected,) = rejected_of(result)
+        assert rejected.features["existing_same_target_gap"] == 0.0
+
+    def test_gap_is_to_the_nearest_same_target_link(self) -> None:
+        existing = {"note": [(Span(310, 320), "target"), (Span(50, 60), "target")]}
+        result = select_proposals(
+            [make_draft("d0", span=(0, 5))],
+            self.DOCS,
+            config=SelectionConfig(),
+            existing_links=existing,
+        )
+        (rejected,) = rejected_of(result)
+        assert rejected.features["existing_same_target_gap"] == 45.0
+
+    def test_same_target_outside_window_is_kept(self) -> None:
+        existing = {"note": [(Span(700, 710), "target")]}  # gap 695 > 600
+        result = select_proposals(
+            [make_draft("d0", span=(0, 5))],
+            self.DOCS,
+            config=SelectionConfig(),
+            existing_links=existing,
+        )
+        assert [p.id for p in accepted_of(result)] == ["d0"]
+
+    def test_different_target_nearby_is_kept(self) -> None:
+        existing = {"note": [(Span(10, 20), "other")]}
+        result = select_proposals(
+            [make_draft("d0", span=(0, 5))],
+            self.DOCS,
+            config=SelectionConfig(),
+            existing_links=existing,
+        )
+        assert [p.id for p in accepted_of(result)] == ["d0"]
+
+    def test_window_zero_disables_the_rule(self) -> None:
+        existing = {"note": [(Span(10, 20), "target")]}
+        result = select_proposals(
+            [make_draft("d0", span=(0, 5))],
+            self.DOCS,
+            config=SelectionConfig(existing_target_window_chars=0),
+            existing_links=existing,
+        )
+        assert [p.id for p in accepted_of(result)] == ["d0"]
+
+    def test_links_in_other_documents_never_trigger(self) -> None:
+        existing = {"other-note": [(Span(0, 10), "target")]}
+        result = select_proposals(
+            [make_draft("d0", span=(0, 5))],
+            self.DOCS,
+            config=SelectionConfig(),
+            existing_links=existing,
+        )
+        assert [p.id for p in accepted_of(result)] == ["d0"]
+
+
+class TestSingleWordFloor:
+    """Rule C: raised naturalness floor for generic single words (report mode 4)."""
+
+    DOCS: ClassVar[dict[str, SourceDocument]] = {"note": make_doc("note", 200)}
+
+    def test_lowercase_single_word_below_floor_is_rejected(self) -> None:
+        # Above the ordinary floor (0.2) but below the single-word one (0.5).
+        draft = make_draft("res", anchor="resistance", naturalness=0.3, target_correctness=0.5)
+        result = select_proposals([draft], self.DOCS, config=SelectionConfig())
+        assert not accepted_of(result)
+        (rejected,) = rejected_of(result)
+        assert rejected.features["rejected_below_single_word_floor"] == 1.0
+
+    @pytest.mark.parametrize("anchor", ["Paxos", "TCP"])
+    def test_title_shaped_single_word_keeps_the_ordinary_floor(self, anchor: str) -> None:
+        draft = make_draft("d0", anchor=anchor, naturalness=0.3, target_correctness=0.5)
+        result = select_proposals([draft], self.DOCS, config=SelectionConfig())
+        assert [p.id for p in accepted_of(result)] == ["d0"]
+
+    def test_two_word_anchor_keeps_the_ordinary_floor(self) -> None:
+        draft = make_draft(
+            "d0", anchor="memory management", naturalness=0.3, target_correctness=0.5
+        )
+        result = select_proposals([draft], self.DOCS, config=SelectionConfig())
+        assert [p.id for p in accepted_of(result)] == ["d0"]
+
+    def test_q25_rescue_still_fires_for_single_words(self) -> None:
+        draft = make_draft("q25", anchor="resistance", naturalness=0.3, target_correctness=0.9)
+        result = select_proposals([draft], self.DOCS, config=SelectionConfig())
+        (accepted,) = accepted_of(result)
+        assert accepted.id == "q25"
+        assert accepted.features["suggest_better_anchor"] == 1.0
+
+    def test_effective_floor_is_the_max_of_the_two_floors(self) -> None:
+        # A single-word floor BELOW the ordinary floor never lowers it.
+        config = SelectionConfig(naturalness_floor=0.4, single_word_naturalness_floor=0.0)
+        draft = make_draft("res", anchor="resistance", naturalness=0.3, target_correctness=0.5)
+        result = select_proposals([draft], self.DOCS, config=config)
+        (rejected,) = rejected_of(result)
+        assert rejected.features["rejected_below_single_word_floor"] == 1.0
+
+
+class TestSameTargetNoteCap:
+    """Rule D: hard per-note cap on accepted proposals sharing one target.
+
+    The MMR redundancy penalty only reorders picks; acceptance is
+    thresholded on the raw effective score, so without the cap one note can
+    accept the same target many times.
+    """
+
+    DOCS: ClassVar[dict[str, SourceDocument]] = {"note": make_doc("note", 599)}  # budget 3
+
+    def drafts(self) -> list[InlineProposal]:
+        return [
+            make_draft("d1", span=(0, 5), calibrated=0.9),
+            make_draft("d2", span=(10, 15), calibrated=0.85),
+            make_draft("d3", span=(20, 25), calibrated=0.8),
+        ]  # all share the default target
+
+    def test_default_cap_accepts_only_the_best_same_target_draft(self) -> None:
+        result = select_proposals(self.drafts(), self.DOCS, config=SelectionConfig())
+        assert [p.id for p in accepted_of(result)] == ["d1"]
+        rejected = rejected_of(result)
+        assert {p.id for p in rejected} == {"d2", "d3"}
+        assert all(p.features["rejected_same_target_note_cap"] == 1.0 for p in rejected)
+        assert all(p.abstained for p in rejected)
+
+    def test_cap_of_two_accepts_the_two_best(self) -> None:
+        config = SelectionConfig(max_per_target_per_note=2)
+        result = select_proposals(self.drafts(), self.DOCS, config=config)
+        assert sorted(p.id for p in accepted_of(result)) == ["d1", "d2"]
+        (rejected,) = rejected_of(result)
+        assert rejected.id == "d3"
+        assert rejected.features["rejected_same_target_note_cap"] == 1.0
+
+    def test_different_targets_are_unaffected(self) -> None:
+        drafts = [
+            make_draft("d1", target="t1", span=(0, 5), calibrated=0.9),
+            make_draft("d2", target="t2", span=(10, 15), calibrated=0.85),
+            make_draft("d3", target="t3", span=(20, 25), calibrated=0.8),
+        ]
+        result = select_proposals(drafts, self.DOCS, config=SelectionConfig())
+        assert sorted(p.id for p in accepted_of(result)) == ["d1", "d2", "d3"]
+
+
 class TestGlobalOrderingAndArtifact:
     def test_accepted_ranked_by_probability_desc_across_notes(self) -> None:
         docs = {"n1": make_doc("n1", 400), "n2": make_doc("n2", 400)}
         drafts = [
-            make_draft("a", source="n1", calibrated=0.7),
-            make_draft("b", source="n2", calibrated=0.9),
-            make_draft("c", source="n1", span=(20, 25), calibrated=0.8),
+            make_draft("a", source="n1", target="t1", calibrated=0.7),
+            make_draft("b", source="n2", target="t2", calibrated=0.9),
+            make_draft("c", source="n1", target="t3", span=(20, 25), calibrated=0.8),
         ]
         result = select_proposals(drafts, docs, config=SelectionConfig())
         accepted = accepted_of(result)
@@ -340,8 +530,8 @@ class TestGlobalOrderingAndArtifact:
     def test_rank_ties_break_deterministically(self) -> None:
         docs = {"note": make_doc("note", 400)}
         drafts = [
-            make_draft("zz", span=(0, 5), calibrated=0.8),
-            make_draft("aa", span=(10, 15), calibrated=0.8),
+            make_draft("zz", target="t1", span=(0, 5), calibrated=0.8),
+            make_draft("aa", target="t2", span=(10, 15), calibrated=0.8),
         ]
         result = select_proposals(drafts, docs, config=SelectionConfig())
         # Equal probability: earlier span start wins the tie.

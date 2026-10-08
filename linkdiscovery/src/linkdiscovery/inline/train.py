@@ -28,7 +28,11 @@ Losses (§6):
   negatives upweighted inside the softmax.
 - Reranker: listwise cross-entropy over each retrieved candidate list (one
   positive versus mined negatives at the §10 ratio of 1:4-8, hard negatives
-  a minority), plus plain BCE on Tier-D wrong-target pairs.
+  a minority), plus an absolute-scale BCE anchored by both true pairs (1)
+  and Tier-D wrong-target pairs (0) — the listwise term is shift-invariant
+  within each group, so without positive anchors a zeros-only BCE lets the
+  optimizer collapse every absolute probability by uniformly shifting
+  logits down (see ``_train_reranker``).
 
 Dimensional contract: target document/section vectors must live in the
 encoder hidden space (``target_dim == hidden_size``), because hard-negative
@@ -39,6 +43,7 @@ interior block against target vectors directly.
 from __future__ import annotations
 
 import importlib
+import logging
 import math
 import random
 from dataclasses import asdict, dataclass
@@ -68,7 +73,12 @@ if TYPE_CHECKING:
 
     from numpy.typing import NDArray
 
-    from linkdiscovery.inline.records import AuditLabel, AuditSample, SpanCandidate
+    from linkdiscovery.inline.records import (
+        AuditLabel,
+        AuditSample,
+        InlineReviewDecision,
+        SpanCandidate,
+    )
 
 __all__ = [
     "DEFAULT_PAIR_FEATURE_NAMES",
@@ -84,8 +94,12 @@ __all__ = [
     "naturalness_training_arrays",
     "reranker_positive_examples",
     "retrieval_training_arrays",
+    "review_span_key",
+    "review_training_examples",
     "train_heads",
 ]
+
+_LOGGER = logging.getLogger(__name__)
 
 DEFAULT_PAIR_FEATURE_NAMES: Final = ("interior_target_cosine",)
 """Hand pair-feature order used by the trainer when building reranker rows."""
@@ -315,6 +329,9 @@ class TargetCatalog:
     def __len__(self) -> int:
         return len(self._document_ids)
 
+    def __contains__(self, document_id: object) -> bool:
+        return document_id in self._row_by_id
+
     def index_for(self, document_id: str) -> int:
         """Row index of ``document_id``; unknown ids are a contract error."""
         row = self._row_by_id.get(document_id)
@@ -396,6 +413,126 @@ def _naturalness_label_for(tier: Tier) -> float | None:
     return None
 
 
+def review_span_key(decision: InlineReviewDecision) -> str:
+    """The :class:`SpanRepTable` key of one review decision's span.
+
+    ``"review:" + fingerprint([source, start, end, target])`` — stable across
+    review files and engines, so the same reviewed (span, target) pairing
+    always maps to the same representation slot. The caller who builds the
+    rep table (:func:`~linkdiscovery.inline.workflow.train_inline_heads`)
+    must encode each decision's span under exactly this key.
+    """
+    return "review:" + fingerprint(
+        [
+            decision.source_document_id,
+            decision.span.start,
+            decision.span.end,
+            decision.target_document_id,
+        ]
+    )
+
+
+def _review_tier(decision: InlineReviewDecision) -> Tier:
+    """Retrieval/reranker routing tier for one review decision.
+
+    Accepted proposals are Tier A (full positives). A rejected proposal whose
+    target was nonetheless RIGHT (``target_ok``) is Tier B: the retrieval and
+    reranker heads should still learn the pairing even though the item as a
+    whole was rejected (bad anchor or placement). A wrong-target rejection is
+    Tier D — the recorded target is the WRONG one, which is exactly the
+    (span, wrong target) pair the reranker's negative-pair BCE consumes.
+    """
+    if decision.verdict == "accept":
+        return Tier.A
+    if decision.target_ok:
+        return Tier.B
+    return Tier.D
+
+
+def _review_examples_and_spans(
+    decisions: Sequence[InlineReviewDecision],
+    reps: SpanRepTable,
+    catalog: TargetCatalog,
+) -> tuple[list[TrainingExample], set[tuple[str, int, int]]]:
+    """Resolve review decisions into examples plus their reviewed span keys.
+
+    Skips are deterministic (input order preserved, each skip debug-logged):
+    ``broken_span`` decisions judge a span the reviewer could not even locate
+    — its coordinates are untrustworthy as supervision — and decisions whose
+    target has no catalog row cannot be routed to any target-aware head.
+    """
+    examples: list[TrainingExample] = []
+    spans: set[tuple[str, int, int]] = set()
+    for decision in decisions:
+        if decision.reason == "broken_span":
+            _LOGGER.debug(
+                "skipping review decision %s [%d, %d): reason is broken_span",
+                decision.source_document_id,
+                decision.span.start,
+                decision.span.end,
+            )
+            continue
+        if decision.target_document_id not in catalog:
+            _LOGGER.debug(
+                "skipping review decision %s [%d, %d): target %r is not in the catalog",
+                decision.source_document_id,
+                decision.span.start,
+                decision.span.end,
+                decision.target_document_id,
+            )
+            continue
+        key = review_span_key(decision)
+        examples.append(
+            TrainingExample(
+                key=key,
+                document_id=decision.source_document_id,
+                rep=reps.rep_for(key),
+                tier=_review_tier(decision),
+                target_index=catalog.index_for(decision.target_document_id),
+                naturalness_label=1.0 if decision.anchor_ok else 0.0,
+                group=decision.source_document_id,
+            )
+        )
+        spans.add((decision.source_document_id, decision.span.start, decision.span.end))
+    return examples, spans
+
+
+def review_training_examples(
+    decisions: Sequence[InlineReviewDecision],
+    *,
+    reps: SpanRepTable,
+    catalog: TargetCatalog,
+) -> list[TrainingExample]:
+    """Resolve review decisions into tier-routed training examples.
+
+    Routing deliberately DIFFERS from the audit-tier routing of
+    :func:`_naturalness_label_for`. Audit tiers are a *summary* judgment, so
+    the naturalness head only trusts the extremes (A positive, D negative,
+    B/C excluded as ambiguous). Review decisions instead carry *per-head*
+    ground truth — every reviewer explicitly judged the anchor via
+    ``anchor_ok`` — so each head is routed directly from its own boolean
+    rather than through tier semantics:
+
+    - ``naturalness_label = 1.0 if anchor_ok else 0.0`` — ALWAYS labeled,
+      never ``None``. Every review judged the anchor, and this is the scarce
+      signal the naturalness head needs (the audit path gave it ~124
+      positives against only ~9 negatives).
+    - The tier (see :func:`_review_tier`) routes the target-aware heads:
+      ``accept`` -> Tier A; ``reject`` with ``target_ok`` -> Tier B (a
+      retrieval/reranker positive — the target was right even though the
+      item was rejected); ``not target_ok`` -> Tier D, whose
+      ``target_index`` points at the recorded WRONG target — the pair the
+      reranker's Tier-D negative BCE (see ``_reranker_rows``) consumes.
+
+    Decisions with ``reason == "broken_span"`` or a target outside the
+    catalog are skipped deterministically with a debug log. Keys are
+    :func:`review_span_key`; the ``reps`` table must already contain them
+    (the caller encodes review spans — see ``train_inline_heads``).
+    """
+    examples, _ = _review_examples_and_spans(decisions, reps, catalog)
+    return examples
+
+
 def _labeled_examples(
     labels: Sequence[AuditLabel],
     sample: AuditSample,
@@ -468,7 +605,7 @@ def _unlabeled_examples(
     return examples
 
 
-def build_training_data(
+def build_training_data(  # noqa: PLR0913 -- stage-boundary signature fixed by the spec
     labels: Sequence[AuditLabel],
     sample: AuditSample,
     candidates_by_doc: Mapping[str, Sequence[SpanCandidate]],
@@ -477,6 +614,7 @@ def build_training_data(
     catalog: TargetCatalog,
     best_target_scores: Mapping[str, float] | None = None,
     confirmed_negative_threshold: float = 0.2,
+    reviews: Sequence[InlineReviewDecision] = (),
 ) -> TrainingData:
     """Assemble tier-routed training examples from audit labels + candidates.
 
@@ -486,6 +624,14 @@ def build_training_data(
     item is not in ``sample`` are ignored. Candidate spans that coincide with
     a labeled item's span (same document and character range) are dropped so
     a span is never both labeled and pseudo-negative.
+
+    ``reviews`` optionally adds human-standard review decisions as labeled
+    examples (:func:`review_training_examples` — per-head routing, not tier
+    semantics), appended after the audit-labeled examples. Reviewed spans
+    join the labeled-span set, so a candidate span the review judged (in
+    either direction) is never also a PU pseudo-negative. The ``reps`` table
+    must already contain the ``"review:..."`` keys — encoding review spans
+    is the caller's job (see ``train_inline_heads``).
 
     ``best_target_scores`` optionally maps candidate IDs to a precomputed
     best-target score (for example the frozen bi-encoder's top cosine);
@@ -505,6 +651,9 @@ def build_training_data(
             f"{reps.hidden_size}"
         )
     examples, labeled_spans = _labeled_examples(labels, sample, reps, catalog)
+    review_examples, review_spans = _review_examples_and_spans(reviews, reps, catalog)
+    examples.extend(review_examples)
+    labeled_spans.update(review_spans)
     examples.extend(
         _unlabeled_examples(
             candidates_by_doc,
@@ -778,13 +927,21 @@ def _train_retrieval(
 
 def _reranker_rows(
     data: TrainingData, config: TrainConfig, seed: int
-) -> tuple[list[NDArray[np.float32]], NDArray[np.float32]]:
-    """Build reranker groups (positive first) and standalone Tier-D negatives.
+) -> tuple[list[NDArray[np.float32]], NDArray[np.float32], NDArray[np.float32]]:
+    """Reranker groups (positive first), true-pair anchor rows, Tier-D negatives.
 
     Each Tier A/B positive gets ``negative_ratio`` mined negatives (clamped
     to the catalog size): ``hard_negative_count`` nearest non-positive
     targets plus seeded-random fills, keeping hard negatives a minority per
     spec §10.
+
+    The second element stacks each group's true-target row (``rows[0]``,
+    already built for the listwise loss) as standalone BCE anchors labeled
+    1.0, paired against the Tier-D wrong-target rows labeled 0.0 in the
+    third element. Both anchor sets exist because the absolute-scale BCE of
+    :func:`_train_reranker` needs positives AND negatives to pin the logit
+    scale (see the shift-invariance rationale there); empty sets are
+    zero-row arrays of the correct pair width.
     """
     positives = reranker_positive_examples(data)
     n_targets = len(data.catalog)
@@ -820,25 +977,52 @@ def _reranker_rows(
     ]
     span_dim = span_representation_dim(data.hidden_size, len(data.feature_names))
     pair_dim = reranker_input_dim(span_dim, data.hidden_size, len(DEFAULT_PAIR_FEATURE_NAMES))
-    negatives = (
-        np.stack(tier_d_rows).astype(np.float32)
-        if tier_d_rows
-        else np.zeros((0, pair_dim), dtype=np.float32)
+    empty = np.zeros((0, pair_dim), dtype=np.float32)
+    anchor_positives = (
+        np.stack([group[0] for group in groups]).astype(np.float32) if groups else empty
     )
-    return groups, negatives
+    negatives = np.stack(tier_d_rows).astype(np.float32) if tier_d_rows else empty
+    return groups, anchor_positives, negatives
 
 
 def _train_reranker(
     torch: Any, module: Any, data: TrainingData, config: TrainConfig, seed: int
 ) -> tuple[float, ...]:
-    """Listwise CE over retrieved lists + BCE on Tier-D wrong-target pairs."""
-    groups, negatives = _reranker_rows(data, config, seed)
+    """Listwise CE over retrieved lists + absolute-scale BCE anchored by both
+    true pairs (1) and Tier-D wrong-target pairs (0).
+
+    Why both anchors (regression rationale): the listwise cross-entropy is
+    SHIFT-INVARIANT within each group — ``softmax(logits + c) ==
+    softmax(logits)`` for any constant ``c`` — so it constrains only the
+    *relative* ordering of a group's logits, never their absolute level. A
+    per-epoch BCE step over Tier-D rows alone therefore hands the optimizer
+    a free direction: uniformly shifting every in-distribution logit down
+    satisfies the zeros-only BCE without disturbing any listwise term, and
+    with enough Tier-D data (the first supply arrived with the 160-item
+    review harvest — the audit produced zero Tier-D rows, so the term had
+    never actually run) every sigmoid probability collapses toward 0.0
+    while the training loss keeps falling and rankings stay intact.
+    Including each group's true-target row as a BCE positive (label 1.0)
+    removes that direction: the same shift now costs positive-anchor loss,
+    pinning the absolute scale that ``target_correctness`` — and everything
+    downstream of it, combined scores and calibration — reads off the
+    sigmoid. The combined BCE step runs whenever EITHER anchor set is
+    non-empty.
+    """
+    groups, anchor_positives, negatives = _reranker_rows(data, config, seed)
     if (not groups and negatives.shape[0] == 0) or config.epochs == 0:
         return ()
     functional = torch.nn.functional
     device = next(module.parameters()).device
     group_tensors = [torch.from_numpy(group).to(device) for group in groups]
+    anchor_tensor = torch.from_numpy(anchor_positives).to(device)
     negative_tensor = torch.from_numpy(negatives).to(device)
+    anchor_targets = torch.cat(
+        [
+            torch.ones(anchor_tensor.shape[0], device=device),
+            torch.zeros(negative_tensor.shape[0], device=device),
+        ]
+    )
     positive_position = torch.zeros(1, dtype=torch.long, device=device)
     sizes = {index: int(tensor.shape[0]) for index, tensor in enumerate(group_tensors)}
     optimizer = torch.optim.Adam(module.parameters(), lr=config.lr)
@@ -862,9 +1046,9 @@ def _train_reranker(
             optimizer.step()
             total += float(loss.detach()) * len(batch)
             count += len(batch)
-        if negative_tensor.shape[0]:
-            logits = module(negative_tensor).squeeze(-1)
-            loss = functional.binary_cross_entropy_with_logits(logits, torch.zeros_like(logits))
+        if anchor_targets.shape[0]:
+            logits = module(torch.cat([anchor_tensor, negative_tensor])).squeeze(-1)
+            loss = functional.binary_cross_entropy_with_logits(logits, anchor_targets)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

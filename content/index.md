@@ -1,10 +1,11 @@
 ---
 title: Elijah Melton's Technical Notes
 description: Elijah Melton's notes on algorithms, machine learning, recommender systems, LLM serving, software, hardware, and mathematics.
-updated: 2026-10-06
+updated: 2026-10-09
 authors:
   - elimelt
   - gpt-5.6-sol
+  - gpt-6
 ---
 
 Technical notes by Elijah Melton on algorithms, machine learning, systems,
@@ -18,7 +19,7 @@ papers, and implementation details that I want to be able to find again.
 - [[ml/recommender-systems/deep-neural-networks-for-youtube-recommendations|Deep Neural Networks for YouTube Recommendations]]: candidate generation, ranking, sampled softmax, and watch-time objectives.
 - [[ml/recommender-systems/predicting-clicks-on-ads-at-facebook|Practical Lessons from Predicting Clicks on Ads at Facebook]]: the GBDT plus logistic-regression model, data freshness, and online learning.
 - [[ml/recommender-systems/two-tower-retrieval|Two-tower retrieval with a MovieLens experiment]]: an executable look at embedding retrieval and ranking.
-- [[systems/operating-systems/benchmarks/store_fwd|Store-to-load forwarding benchmarks]]: recorded timings for aligned, independent, and partially overlapping x86 loads, with the missing setup details called out.
+- [[systems/operating-systems/benchmarks/store_fwd|Store-to-load forwarding benchmarks]]: a runnable x86 harness comparing exact-match, independent, and partially overlapping store/load pairs, with recorded setup and per-run timings.
 
 ## Browse by topic
 

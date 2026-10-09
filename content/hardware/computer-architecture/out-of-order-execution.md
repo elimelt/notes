@@ -12,7 +12,11 @@ tags:
   - speculation
   - cpu
 date: 2026-08-01
-updated: 2026-08-01
+updated: 2026-10-09
+authors:
+  - elimelt
+  - gpt-5.6-sol
+  - gpt-6
 status: draft
 description: Tomasulo's algorithm, register renaming, the reorder buffer, and load/store queue disambiguation, grounded in BOOM's rename and ROB source and the existing MLP/reduction benchmarks that measure the payoff.
 sources:
@@ -176,10 +180,11 @@ hardware, without needing a simulator:
   scale from 92.6 ns/access (1 chain) to 8.9 ns/access (16 chains), a 10.4x speedup, because the LSQ
   and MSHRs can hold roughly 10-12 independent outstanding misses at once; this ceiling *is* a
   measurement of the load queue's effective depth on that core, not a property of DRAM.
-- [[systems/operating-systems/benchmarks/store_fwd|Store-to-load forwarding]]: an aligned load that
-  exactly matches a recent store (0.52 ns) beats even an independent, non-conflicting load (0.70 ns),
-  because a forwarding hit skips the cache lookup entirely, direct evidence the LSQ's forwarding path
-  is a distinct, faster path than the normal load pipeline this note derives above.
+- [[systems/operating-systems/benchmarks/store_fwd|Store-to-load forwarding]]: a pinned x86-64 run
+  measured nearly identical reciprocal throughput for exact-match and independent store/load loops,
+  while a one-byte-shifted partial overlap made the loop about 16 times slower. The iterations can
+  overlap, so this result measures whole-loop throughput and partial-overlap backpressure rather than
+  isolated forwarding latency. It does not show that a forwarding hit is faster than an L1 load.
 
 A simple scoreboard (single in-order issue, but allowing out-of-order completion with WAR/WAW hazard
 tracking, as in the CDC 6600) sits between these: it can let a long-latency instruction fall behind

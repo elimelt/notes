@@ -12,6 +12,11 @@ tags:
   - false-sharing
   - synchronization
 date: 2026-08-01
+updated: 2026-10-09
+authors:
+  - elimelt
+  - gpt-5.6-sol
+  - gpt-6
 status: draft
 description: Coherence and consistency kept as separate axes - a MESI directory protocol traced through gem5's Ruby SLICC source, RVWMO preserved program order and two litmus tests, and the false-sharing benchmark's ping-pong explained state by state.
 sources:
@@ -99,15 +104,17 @@ RVWMO defines a total **global memory order** over every hart's loads and stores
 
 ### Litmus test: store buffering (SB)
 
-Two harts, `x` and `y` both start at 0:
+Two harts, `x` and `y` both start at 0, and `t0` contains 1 on both harts:
 
 ```text
-Hart 0:              Hart 1:
-sw x0, 0(x_addr)     sw x0, 0(y_addr)   # store 1 to y
-lw a0, 0(y_addr)     lw a1, 0(x_addr)   # load x into a1
+Hart 0:               Hart 1:
+sw t0, 0(x_addr)      sw t0, 0(y_addr)
+lw a0, 0(y_addr)      lw a1, 0(x_addr)
 ```
 
-Under RVWMO, `a0 = 0, a1 = 0` is a **legal** outcome, because neither hart's store-then-load pair has any address, data, or control dependency between them, and there is no fence. Each hart's own store can sit in a per-hart store buffer, invisible to the other hart, while its load to the *other* variable proceeds and returns the old value — this is precisely the store-buffer-forwarding behavior in [[systems/operating-systems/benchmarks/store_fwd|the store-forwarding benchmark]], generalized across cores instead of within one core's pipeline. Inserting a `fence rw, rw` (or `fence.tso`) between each hart's store and load forbids this outcome, because rule 4 of PPO (an explicit fence orders $a$ before $b$) then puts the store ahead of the load in the global order on both harts, which is inconsistent with both loads returning 0.
+Under RVWMO, `a0 = 0, a1 = 0` is a **legal** outcome, because neither hart's store-then-load pair has any address, data, or control dependency between them, and there is no fence. Each hart's own store can remain in a per-hart store buffer while its load from the *other* variable proceeds and returns the old value.
+
+The store and load on each hart access different addresses, so this litmus test has no store-to-load forwarding relationship. [[systems/operating-systems/benchmarks/store_fwd|The store-forwarding benchmark]] instead tests exact and overlapping addresses within one core. Both mechanisms involve the load/store machinery, but the SB outcome comes from the absence of cross-address ordering. Inserting a `fence w, r` or the stronger `fence rw, rw` between each hart's store and load forbids the outcome, because rule 4 of PPO orders each store before its following load in global memory order, which is inconsistent with both loads returning 0.
 
 ### Litmus test: message passing (MP)
 
@@ -118,7 +125,7 @@ fence w, w                 fence r, r
 sw x1, 0(flag_addr)        lw a1, 0(data_addr)
 ```
 
-Here the fences make it **illegal** for hart 1 to observe `flag == 1` but `data == 0`. `fence w, w` on hart 0 orders the write to `data` before the write to `flag` in PPO (rule 4); `fence r, r` on hart 1 orders the read of `flag` before the read of `data`. Combined with the load value axiom (a load returns the value of the store latest in global order among stores preceding it in that order or in program order), once hart 1 observes `flag == 1` it has observed a point in global order after hart 0's fenced store to `flag`, which itself is after the fenced store to `data` — so the read of `data` cannot return the stale value. Without the fences, RVWMO permits `flag == 1, data == 0`: this is the same reordering hazard that makes lock-free publish/subscribe code without explicit barriers unsafe on any weakly-ordered ISA, RISC-V included.
+Here the fences make it **illegal** for hart 1 to observe `flag == 1` but `data == 0`. `fence w, w` on hart 0 orders the write to `data` before the write to `flag` in PPO (rule 4); `fence r, r` on hart 1 orders the read of `flag` before the read of `data`. Combined with the load value axiom (a load returns the value of the store latest in global order among stores preceding it in that order or in program order), once hart 1 observes `flag == 1` it has observed a point in global order after hart 0's fenced store to `flag`, which itself is after the fenced store to `data` — so the read of `data` cannot return the stale value. Without the fences, RVWMO permits `flag == 1, data == 0`, which makes this publish/subscribe pattern unsafe under RVWMO unless the program supplies the required ordering.
 
 ## False sharing: coherence traffic without any real conflict
 

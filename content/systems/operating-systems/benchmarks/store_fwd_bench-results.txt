@@ -1,0 +1,66 @@
+measured_at_utc=2026-10-09T20:05:19Z
+source_sha256=d0bd64245d900fd2740833d28c6669155b7c6ab99b6b41933ff2bdf35147008a
+architecture=x86_64
+cpu_model=13th Gen Intel(R) Core(TM) i9-13900HK
+kernel=Linux 6.17.9-arch1-1 x86_64
+compiler=gcc 15.2.1 20251112
+build_flags=-O3 -std=gnu11 -Wall -Wextra -Wpedantic
+affinity_cpu=0
+timer=CLOCK_MONOTONIC_RAW
+measurement=elapsed wall time for the complete loop; no baseline subtraction
+accesses=8-byte movq store then 8-byte movq load at offsets exact 0/0, partial_overlap 1/0, independent 0/64
+iterations_per_sample=20000000
+warmup_iterations_per_pattern=1000000
+samples_per_pattern=21
+order_seed=0x6a09e667f3bcc909
+trial_order[1]=partial_overlap,exact,independent
+trial_order[2]=exact,independent,partial_overlap
+trial_order[3]=independent,partial_overlap,exact
+trial_order[4]=exact,partial_overlap,independent
+trial_order[5]=independent,exact,partial_overlap
+trial_order[6]=partial_overlap,independent,exact
+trial_order[7]=independent,partial_overlap,exact
+trial_order[8]=exact,independent,partial_overlap
+trial_order[9]=partial_overlap,exact,independent
+trial_order[10]=exact,independent,partial_overlap
+trial_order[11]=partial_overlap,exact,independent
+trial_order[12]=independent,partial_overlap,exact
+trial_order[13]=exact,partial_overlap,independent
+trial_order[14]=independent,exact,partial_overlap
+trial_order[15]=partial_overlap,independent,exact
+trial_order[16]=independent,partial_overlap,exact
+trial_order[17]=partial_overlap,exact,independent
+trial_order[18]=exact,independent,partial_overlap
+trial_order[19]=exact,independent,partial_overlap
+trial_order[20]=partial_overlap,exact,independent
+trial_order[21]=independent,partial_overlap,exact
+
+raw_samples_ns_per_op
+sample,exact,partial_overlap,independent
+1,0.193963,3.121178,0.193275
+2,0.193277,3.104669,0.193178
+3,0.193615,3.101688,0.193395
+4,0.192983,3.115412,0.193332
+5,0.194186,3.115010,0.193113
+6,0.193186,3.098831,0.193381
+7,0.193417,3.098807,0.193118
+8,0.193813,3.096530,0.193301
+9,0.193279,3.096285,0.193368
+10,0.193464,3.098044,0.193110
+11,0.193209,3.103830,0.193691
+12,0.193774,3.104544,0.193189
+13,0.193406,3.100824,0.193203
+14,0.192959,3.098613,0.193165
+15,0.193091,3.098112,0.194259
+16,0.194803,3.096254,0.193245
+17,0.194504,3.145774,0.193870
+18,0.193580,3.114108,0.193758
+19,0.195118,3.121185,0.195633
+20,0.193632,3.112222,0.193481
+21,0.193519,3.100978,0.193076
+
+summary_ns_per_op
+pattern,min,p25,median,p75,max,checksum_xor
+exact,0.192959,0.193277,0.193519,0.193813,0.195118,0x77a5c310ab2f9c2f
+partial_overlap,3.096254,3.098613,3.101688,3.114108,3.145774,0xa5b61dbc0acbac44
+independent,0.193076,0.193178,0.193301,0.193481,0.195633,0x7878797877b32fb9

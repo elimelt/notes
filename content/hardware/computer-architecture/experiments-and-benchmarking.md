@@ -8,7 +8,10 @@ tags:
   - microarchitecture
   - measurement
 date: 2026-08-01
-updated: 2026-08-01
+updated: 2026-10-09
+authors:
+  - elimelt
+  - gpt-6
 status: draft
 description: A measurement-record schema for computer-architecture experiments (hardware, software, method, evidence class, results), applied honestly against this repo's existing benchmark notes, most of which are missing the hardware model, compiler flags, or both.
 sources:
@@ -65,7 +68,7 @@ Three evidence classes cover essentially everything in this repo and its likely 
 
 ## Auditing this repo's benchmark notes against the schema
 
-Every benchmark note under `content/systems/operating-systems/benchmarks/` is marked `status: needs-review`, and reading them against the schema above shows exactly why. The table below is an honest accounting, not a criticism of the original notes' content (the interpretation and methodology in each one is careful), just their metadata completeness.
+The table below records the provenance of the original measurements under `content/systems/operating-systems/benchmarks/`. Missing fields remain missing for those measurements. The October 9, 2026 [[systems/operating-systems/benchmarks/store_fwd|store-forwarding experiment]] adds a separate runnable harness and measurement record with CPU model, compiler and flags, kernel, affinity, warmup, repetitions, and raw samples. It does not reconstruct the original experiment.
 
 | Note | `cpu_model` | `compiler`+flags | `os`/kernel | `repetitions` | `variance_reported` | Evidence class |
 |---|---|---|---|---|---|---|
@@ -73,15 +76,15 @@ Every benchmark note under `content/systems/operating-systems/benchmarks/` is ma
 | [[systems/operating-systems/benchmarks/mlp\|mlp]] | Missing | Missing | Missing | Missing | Missing | wall-clock |
 | [[systems/operating-systems/benchmarks/tlb\|tlb]] | Missing | Missing | Missing | Missing | Missing | wall-clock |
 | [[systems/operating-systems/benchmarks/branch\|branch]] | Missing | Missing | Missing | Missing | Missing | wall-clock (cycle estimate assumes 3 GHz) |
-| [[systems/operating-systems/benchmarks/store_fwd\|store_fwd]] | Missing | Missing | Missing | Missing | Missing | wall-clock (cycle estimate assumes 3 GHz) |
+| [[systems/operating-systems/benchmarks/store_fwd\|store_fwd (historical run)]] | Missing | Missing | Missing | Missing | Missing | wall-clock (cycle estimate assumed 3 GHz) |
 | [[systems/operating-systems/benchmarks/bandwidth\|bandwidth]] | Missing | Missing | Missing | Missing | Missing | wall-clock |
 | [[systems/operating-systems/benchmarks/reductions\|reductions]] | Missing (only "x86-64 with AVX2") | Recorded (`gcc -O3 -march=native`) | Missing | Missing | Missing | wall-clock + compiled assembly inspection |
 | [[systems/operating-systems/benchmarks/false_sharing\|false_sharing]] | Missing | Missing | Missing | Missing | Missing | wall-clock |
 | [[systems/performance/streaming_benchmarks/cache_line_efficiency/README\|cache_line_efficiency]] | Partial (24 GB LPDDR5, chip model unrecorded) | Recorded (`clang -O3 ... -march=armv8.5-a+simd`, from Makefile) | Missing | 5 passes, but no per-pass variance | No | wall-clock |
 
-Two patterns stand out. First, every note is missing OS/kernel details and repetition/variance policy entirely; none say whether the CPU frequency governor was pinned, whether the process was core-affinitized, or whether the reported number is a mean, median, or single run. Second, the notes that get closest to complete (`reductions`, `cache_line_efficiency`) are exactly the ones that recorded compiler flags from a Makefile that still exists, which suggests the missing fields elsewhere were dropped because the harness's build configuration wasn't captured at measurement time, not because they didn't matter.
+The original records above lack OS/kernel details, and most omit repetition and variability. These gaps prevent checking whether an apparent difference could reflect frequency changes, scheduling, or run-to-run noise. The new store-forwarding record shows how to preserve the source and individual samples alongside the setup; its limitations still include uncontrolled frequency and background activity.
 
-None of this invalidates the qualitative conclusions those notes draw (MLP scaling, TLB miss cost, branch misprediction penalty) since the relative comparisons hold regardless of the exact CPU model. It does mean the absolute numbers (92.6 ns per pointer-chase access, 0.85 ns per branchy element) can't be reproduced or checked against a different machine's numbers without knowing what machine produced them. Per `.notes/artifacts.yml`, the fix is not to guess the missing fields retroactively; it's to record them going forward and mark old notes `needs-review` until someone reruns the harness with full metadata, which is exactly the status they already carry.
+Relative comparisons also need a valid harness and controlled conditions; their size and sometimes their ordering can change across processors. Keep historical results separate when running a new experiment, and record enough detail to distinguish the observed behavior from its proposed explanation.
 
 ## What a complete record looks like
 

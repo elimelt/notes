@@ -8,6 +8,7 @@ from pathlib import Path
 
 
 MARKER = "// Notes site: request unicode-subsetted WOFF2 font CSS."
+PRIMARY_FONT_FILE = "ga6daw1J5X9T9RW6j9bNVls-hfgvz8JcMofYTYf6D30.woff2"
 
 OLD = """        const theme = ctx.cfg.configuration.theme
         const response = await fetch(googleFontHref(theme))
@@ -37,14 +38,26 @@ NEW = f"""        const theme = ctx.cfg.configuration.theme
           googleFontsStyleSheet += `\\n${{await response.text()}}`
         }}
 
+        // A preload normally makes the primary face available for first paint.
+        // On a slow cold load, avoid a late swap that moves the article.
+        googleFontsStyleSheet = googleFontsStyleSheet.replaceAll(
+          "font-display: swap",
+          "font-display: optional",
+        )
+
 """
 
 OLD_PROCESSED = """        googleFontsStyleSheet = processedStylesheet
 """
 
-NEW_PROCESSED = """        // Keep emitted font URLs portable across local preview and production.
+NEW_PROCESSED = f"""        const primaryFontFile = "{PRIMARY_FONT_FILE}"
+        if (!fontFiles.some((file) => `${{file.filename}}.${{file.extension}}` === primaryFontFile)) {{
+          throw new Error(`Primary font preload ${{primaryFontFile}} was not emitted`)
+        }}
+
+        // Keep emitted font URLs portable across local preview and production.
         googleFontsStyleSheet = processedStylesheet.replaceAll(
-          `https://${cfg.baseUrl}/static/fonts/`,
+          `https://${{cfg.baseUrl}}/static/fonts/`,
           "/static/fonts/",
         )
 """
@@ -55,6 +68,7 @@ def patch(path: Path) -> None:
     if MARKER in source:
         if (
             "fetch(googleFontSubsetHref(theme, title), fontRequest)" not in source
+            or '"font-display: optional"' not in source
             or NEW_PROCESSED not in source
         ):
             raise SystemExit(f"Google Fonts fetch patch is incomplete in {path}")

@@ -74,6 +74,7 @@ install_plugins() {
   patch_graph_loading
   patch_google_font_fetch
   patch_component_css
+  patch_search_loading
 }
 
 sync_plugins() {
@@ -85,6 +86,7 @@ sync_plugins() {
   patch_graph_loading
   patch_google_font_fetch
   patch_component_css
+  patch_search_loading
 }
 
 # Mermaid only wraps sequence-diagram note/message text when the client
@@ -136,6 +138,14 @@ patch_google_font_fetch() {
 patch_component_css() {
   python3 "$ROOT/scripts/patch_component_css.py" \
     "$QUARTZ_DIR/quartz/plugins/emitters/componentResources.ts"
+}
+
+# Search's full-text index covers the complete content corpus. Build it when a
+# visitor opens Search rather than on every initial page navigation.
+patch_search_loading() {
+  python3 "$ROOT/scripts/patch_search_loading.py" \
+    "$QUARTZ_DIR/node_modules/@quartz-community/search/dist/index.js" \
+    "$QUARTZ_DIR/node_modules/@quartz-community/search/dist/components/index.js"
 }
 
 prepare_notebooks() {

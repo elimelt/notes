@@ -72,6 +72,8 @@ install_plugins() {
   (cd "$QUARTZ_DIR" && npx quartz plugin install --concurrency 2)
   patch_mermaid_defaults
   patch_graph_loading
+  patch_google_font_fetch
+  patch_component_css
 }
 
 sync_plugins() {
@@ -81,6 +83,8 @@ sync_plugins() {
     "$ROOT/quartz.lock.json" "$QUARTZ_DIR" --portable
   patch_mermaid_defaults
   patch_graph_loading
+  patch_google_font_fetch
+  patch_component_css
 }
 
 # Mermaid only wraps sequence-diagram note/message text when the client
@@ -115,6 +119,23 @@ patch_graph_loading() {
   python3 "$ROOT/scripts/patch_graph_loading.py" \
     "$QUARTZ_DIR/node_modules/@quartz-community/graph/dist/index.js" \
     "$QUARTZ_DIR/node_modules/@quartz-community/graph/dist/components/index.js"
+}
+
+# Google Fonts returns large TrueType files to Quartz's default server-side
+# fetch. Request the same CSS as a modern browser so the built-in self-hosting
+# path emits unicode-subsetted WOFF2 files instead.
+patch_google_font_fetch() {
+  python3 "$ROOT/scripts/patch_google_font_fetch.py" \
+    "$QUARTZ_DIR/quartz/plugins/emitters/componentResources.ts"
+}
+
+# Quartz v5 emits one render-blocking stylesheet for every component. All of
+# those styles are global and present on every page, so fold them into the
+# existing hashed core stylesheet while preserving their registry order and
+# @layer/custom.scss cascade semantics.
+patch_component_css() {
+  python3 "$ROOT/scripts/patch_component_css.py" \
+    "$QUARTZ_DIR/quartz/plugins/emitters/componentResources.ts"
 }
 
 prepare_notebooks() {

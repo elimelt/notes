@@ -49,6 +49,23 @@
   margin-bottom: 0.75rem;
 }
 
+// Secondary controls and footer text need normal-text contrast against both
+// site backgrounds. Hover/focus states retain the themed accent color.
+.copy-markdown-button,
+.tts-btn,
+footer {
+  color: var(--darkgray);
+}
+
+.copy-markdown-button:hover,
+.tts-btn:hover {
+  color: var(--secondary);
+}
+
+footer {
+  opacity: 1;
+}
+
 .tags {
   margin-top: 0;
   margin-bottom: 1.5rem;

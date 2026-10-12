@@ -13,7 +13,9 @@ configuration:
     - .obsidian
   theme:
     fontOrigin: googleFonts
-    cdnCaching: true
+    # Quartz downloads and rewrites Google Fonts during the build when caching
+    # is disabled, so visitors load the font files from this site.
+    cdnCaching: false
     typography:
       header: Noto Serif
       body: Noto Serif

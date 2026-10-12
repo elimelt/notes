@@ -49,6 +49,23 @@
   margin-bottom: 0.75rem;
 }
 
+// Secondary controls and footer text need normal-text contrast against both
+// site backgrounds. Hover/focus states retain the themed accent color.
+.copy-markdown-button,
+.tts-btn,
+footer {
+  color: var(--darkgray);
+}
+
+.copy-markdown-button:hover,
+.tts-btn:hover {
+  color: var(--secondary);
+}
+
+footer {
+  opacity: 1;
+}
+
 .tags {
   margin-top: 0;
   margin-bottom: 1.5rem;
@@ -107,6 +124,14 @@ button.toc-header h3 {
   margin: 0;
   font-size: 1rem;
   line-height: 1.2rem;
+}
+
+// Copy and Listen attach to the metadata after hydration. On phones they wrap
+// onto a second line, so reserve that final line box before the scripts run.
+@media all and (max-width: 480px) {
+  .content-meta {
+    min-height: 3.32rem;
+  }
 }
 
 @media all and (max-width: 800px) {

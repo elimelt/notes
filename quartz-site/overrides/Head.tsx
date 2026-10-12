@@ -8,6 +8,11 @@ import { googleFontHref, googleFontSubsetHref } from "../util/theme"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { unescapeHTML } from "../util/escape"
 
+// Google Fonts' Latin subset for the normal Noto Serif variable face used by
+// body copy and headings. Keep this synchronized with the build-time font
+// validation in scripts/patch_google_font_fetch.py.
+const primaryFontPreload = "/static/fonts/ga6daw1J5X9T9RW6j9bNVls-hfgvz8JcMofYTYf6D30.woff2"
+
 export function canonicalUrl(baseUrl: string, slug: FullSlug): string {
   const path = simplifySlug(slug)
   return new URL(encodeURI(path), `https://${baseUrl}/`).toString()
@@ -51,6 +56,15 @@ export default (() => {
         {coreStylesheet && <link rel="preload" href={coreStylesheet} as="style" />}
         {coreScript && coreScript.contentType === "external" && (
           <link rel="preload" href={coreScript.src} as="script" />
+        )}
+        {!cfg.theme.cdnCaching && cfg.theme.fontOrigin === "googleFonts" && (
+          <link
+            rel="preload"
+            href={primaryFontPreload}
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
         )}
         {cfg.theme.cdnCaching && cfg.theme.fontOrigin === "googleFonts" && (
           <>

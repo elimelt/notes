@@ -54,6 +54,8 @@ sync_site() {
   fi
   cp "$ROOT/quartz-site/custom.scss" "$QUARTZ_DIR/quartz/styles/custom.scss"
   cp "$ROOT/quartz-site/overrides/Head.tsx" "$QUARTZ_DIR/quartz/components/Head.tsx"
+  cp "$ROOT/quartz-site/overrides/DefaultFrame.tsx" \
+    "$QUARTZ_DIR/quartz/components/frames/DefaultFrame.tsx"
   mkdir -p "$QUARTZ_DIR/quartz/static"
   cp -R "$ROOT/quartz-site/static/." "$QUARTZ_DIR/quartz/static/"
   if [[ -d "$ROOT/docs" ]]; then
@@ -69,6 +71,10 @@ enable_style_debug_panel() {
 install_plugins() {
   (cd "$QUARTZ_DIR" && npx quartz plugin install --concurrency 2)
   patch_mermaid_defaults
+  patch_graph_loading
+  patch_google_font_fetch
+  patch_component_css
+  patch_search_loading
 }
 
 sync_plugins() {
@@ -77,6 +83,10 @@ sync_plugins() {
   python3 "$ROOT/scripts/materialize_quartz_lock.py" \
     "$ROOT/quartz.lock.json" "$QUARTZ_DIR" --portable
   patch_mermaid_defaults
+  patch_graph_loading
+  patch_google_font_fetch
+  patch_component_css
+  patch_search_loading
 }
 
 # Mermaid only wraps sequence-diagram note/message text when the client
@@ -101,6 +111,41 @@ patch_mermaid_defaults() {
   if ! grep -q 'sequence:{wrap:!0}' "$ofm_dist" || ! grep -q 'document\.fonts\.ready' "$ofm_dist"; then
     echo "warning: mermaid default patch did not apply cleanly to $ofm_dist" >&2
   fi
+}
+
+# The graph component is desktop-only in this site layout, but the upstream
+# bundle immediately downloads D3 and the unminified Pixi build on every page,
+# including mobile pages where the graph is hidden. Keep the graph intact on
+# desktop while moving its large libraries off the initial render path.
+patch_graph_loading() {
+  python3 "$ROOT/scripts/patch_graph_loading.py" \
+    "$QUARTZ_DIR/node_modules/@quartz-community/graph/dist/index.js" \
+    "$QUARTZ_DIR/node_modules/@quartz-community/graph/dist/components/index.js"
+}
+
+# Google Fonts returns large TrueType files to Quartz's default server-side
+# fetch. Request the same CSS as a modern browser so the built-in self-hosting
+# path emits unicode-subsetted WOFF2 files instead.
+patch_google_font_fetch() {
+  python3 "$ROOT/scripts/patch_google_font_fetch.py" \
+    "$QUARTZ_DIR/quartz/plugins/emitters/componentResources.ts"
+}
+
+# Quartz v5 emits one render-blocking stylesheet for every component. All of
+# those styles are global and present on every page, so fold them into the
+# existing hashed core stylesheet while preserving their registry order and
+# @layer/custom.scss cascade semantics.
+patch_component_css() {
+  python3 "$ROOT/scripts/patch_component_css.py" \
+    "$QUARTZ_DIR/quartz/plugins/emitters/componentResources.ts"
+}
+
+# Search's full-text index covers the complete content corpus. Build it when a
+# visitor opens Search rather than on every initial page navigation.
+patch_search_loading() {
+  python3 "$ROOT/scripts/patch_search_loading.py" \
+    "$QUARTZ_DIR/node_modules/@quartz-community/search/dist/index.js" \
+    "$QUARTZ_DIR/node_modules/@quartz-community/search/dist/components/index.js"
 }
 
 prepare_notebooks() {

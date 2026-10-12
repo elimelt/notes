@@ -13,7 +13,9 @@ configuration:
     - .obsidian
   theme:
     fontOrigin: googleFonts
-    cdnCaching: true
+    # Quartz downloads and rewrites Google Fonts during the build when caching
+    # is disabled, so visitors load the font files from this site.
+    cdnCaching: false
     typography:
       header: Noto Serif
       body: Noto Serif
@@ -107,14 +109,6 @@ plugins:
   - source: ../quartz-site/math-tex-source
     enabled: true
     order: 85
-  - source: "@quartz-community/quartz-fonts"
-    enabled: true
-    options:
-      fontOrigin: googleFonts
-      title: Noto Serif
-      header: Noto Serif
-      body: Noto Serif
-      code: IBM Plex Mono
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/alias-redirects"

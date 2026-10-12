@@ -126,6 +126,14 @@ button.toc-header h3 {
   line-height: 1.2rem;
 }
 
+// Copy and Listen attach to the metadata after hydration. On phones they wrap
+// onto a second line, so reserve that final line box before the scripts run.
+@media all and (max-width: 480px) {
+  .content-meta {
+    min-height: 3.32rem;
+  }
+}
+
 @media all and (max-width: 800px) {
   .page-header {
     margin-bottom: 0.75rem;
